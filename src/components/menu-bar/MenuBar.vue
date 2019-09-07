@@ -1,6 +1,6 @@
 <template>
   <div class="menubar">
-    <template v-for="menu in getMenus()">
+    <template v-for="menu in menus">
       <slot name="delegate" v-bind:menu="menu">
         <menu-bar-item v-bind:menu="menu"></menu-bar-item>
       </slot>

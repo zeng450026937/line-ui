@@ -12,6 +12,7 @@
     "core-js": "^2.6.5",
     "lodash.debounce": "^4.0.8",
     "normalize.css": "^8.0.1",
+    "popper.js": "^1.15.0",
     "vue": "^2.6.10"
   },
   "devDependencies": {

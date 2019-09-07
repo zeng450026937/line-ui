@@ -41,6 +41,12 @@ export default {
   name: 'ApplicationWindow',
 
   extends: Window,
+
+  provide() {
+    return {
+      Overlay: null,
+    };
+  },
 };
 </script>
 

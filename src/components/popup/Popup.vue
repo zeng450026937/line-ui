@@ -1,25 +1,16 @@
 <template>
-  <div class="popup" v-if="$scopedSlots.default">
-    <slot></slot>
+  <div class="popup" v-show="visable">
   </div>
 </template>
 
 <script>
-// Close Policy
-const NoAutoClose = 0;
-const CloseOnPressOutside = 1;
-const CloseOnPressOutsideParent = 2;
-const CloseOnReleaseOutside = 3;
-const CloseOnReleaseOutsideParent = 4;
-const CloseOnEscape = 5;
-
-export {
-  NoAutoClose,
-  CloseOnPressOutside,
-  CloseOnPressOutsideParent,
-  CloseOnReleaseOutside,
-  CloseOnReleaseOutsideParent,
-  CloseOnEscape,
+export const ClosePolicy = {
+  NoAutoClose: 0,
+  CloseOnPressOutside: 1,
+  CloseOnPressOutsideParent: 2,
+  CloseOnReleaseOutside: 3,
+  CloseOnReleaseOutsideParent: 4,
+  CloseOnEscape: 5,
 };
 
 export default {
