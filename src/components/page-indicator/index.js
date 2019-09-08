@@ -1,3 +1,3 @@
-import { PageIndicator } from './PageIndicator.vue';
+import PageIndicator from './PageIndicator.vue';
 
 export { PageIndicator };

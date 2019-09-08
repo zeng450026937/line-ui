@@ -1,3 +1,3 @@
-import { CheckDelegate } from './CheckDelegate.vue';
+import CheckDelegate from './CheckDelegate.vue';
 
 export { CheckDelegate };

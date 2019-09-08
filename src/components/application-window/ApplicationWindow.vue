@@ -30,7 +30,7 @@
       <slot name="footer"></slot>
     </div>
 
-    <div class="overlay"></div>
+    <div class="overlay" ref="overlay"></div>
   </main>
 </template>
 
@@ -44,8 +44,13 @@ export default {
 
   provide() {
     return {
+      ApplicationWindow: this,
       Overlay: null,
     };
+  },
+
+  mounted() {
+    console.log(this);
   },
 };
 </script>

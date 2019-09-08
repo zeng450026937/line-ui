@@ -1,3 +1,3 @@
-import { SwipeDelegate } from './SwipeDelegate.vue';
+import SwipeDelegate from './SwipeDelegate.vue';
 
 export { SwipeDelegate };

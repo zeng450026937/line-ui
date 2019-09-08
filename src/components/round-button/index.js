@@ -1,3 +1,3 @@
-import { RoundButton } from './RoundButton.vue';
+import RoundButton from './RoundButton.vue';
 
 export { RoundButton };

@@ -1,3 +1,3 @@
-import { DelayButton } from './DelayButton.vue';
+import DelayButton from './DelayButton.vue';
 
 export { DelayButton };

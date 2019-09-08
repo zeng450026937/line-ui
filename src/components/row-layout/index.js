@@ -1,3 +1,3 @@
-import { RowLayout } from './RowLayout.vue';
+import RowLayout from './RowLayout.vue';
 
 export { RowLayout };

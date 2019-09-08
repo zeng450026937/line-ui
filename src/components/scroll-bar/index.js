@@ -1,3 +1,3 @@
-import { ScrollBar } from './ScrollBar.vue';
+import ScrollBar from './ScrollBar.vue';
 
 export { ScrollBar };

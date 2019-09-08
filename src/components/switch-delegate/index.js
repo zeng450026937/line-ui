@@ -1,3 +1,3 @@
-import { SwitchDelegate } from './SwitchDelegate.vue';
+import SwitchDelegate from './SwitchDelegate.vue';
 
 export { SwitchDelegate };

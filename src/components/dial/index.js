@@ -1,3 +1,3 @@
-import { Dial } from './Dial.vue';
+import Dial from './Dial.vue';
 
 export { Dial };

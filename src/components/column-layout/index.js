@@ -1,3 +1,3 @@
-import { ColumnLayout } from './ColumnLayout.vue';
+import ColumnLayout from './ColumnLayout.vue';
 
 export { ColumnLayout };

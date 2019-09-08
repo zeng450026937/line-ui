@@ -1,3 +1,3 @@
-import { MenuSeparator } from './MenuSeparator.vue';
+import MenuSeparator from './MenuSeparator.vue';
 
 export { MenuSeparator };

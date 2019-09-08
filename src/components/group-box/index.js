@@ -1,3 +1,3 @@
-import { GroupBox } from './GroupBox.vue';
+import GroupBox from './GroupBox.vue';
 
 export { GroupBox };

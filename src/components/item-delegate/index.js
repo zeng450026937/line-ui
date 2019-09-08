@@ -1,3 +1,3 @@
-import { ItemDelegate } from './ItemDelegate.vue';
+import ItemDelegate from './ItemDelegate.vue';
 
 export { ItemDelegate };

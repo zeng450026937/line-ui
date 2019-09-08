@@ -1,3 +1,3 @@
-import { GridLayout } from './GridLayout.vue';
+import GridLayout from './GridLayout.vue';
 
 export { GridLayout };

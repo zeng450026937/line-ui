@@ -1,3 +1,3 @@
-import { RadioDelegate } from './RadioDelegate.vue';
+import RadioDelegate from './RadioDelegate.vue';
 
 export { RadioDelegate };

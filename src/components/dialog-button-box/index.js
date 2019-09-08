@@ -1,3 +1,3 @@
-import { DialogButtonBox } from './DialogButtonBox.vue';
+import DialogButtonBox from './DialogButtonBox.vue';
 
 export { DialogButtonBox };

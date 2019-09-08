@@ -14,8 +14,6 @@
 
     <div>content</div>
 
-    <popup>popup</popup>
-
     <template v-slot:footer>
       <div>footer</div>
     </template>
@@ -25,9 +23,6 @@
 <script>
 import { ApplicationWindow } from './components/application-window';
 import { MenuBar } from './components/menu-bar';
-import { Menu } from './components/menu';
-import { Action } from './components/action';
-import { Popup } from './components/popup';
 
 export default {
   name: 'app',
@@ -35,9 +30,6 @@ export default {
   components: {
     ApplicationWindow,
     MenuBar,
-    Menu,
-    Action,
-    Popup,
   },
 
   data() {

@@ -1,3 +1,3 @@
-import { SpinBox } from './SpinBox.vue';
+import SpinBox from './SpinBox.vue';
 
 export { SpinBox };

@@ -1,3 +1,3 @@
-import { SwipeView } from './SwipeView.vue';
+import SwipeView from './SwipeView.vue';
 
 export { SwipeView };

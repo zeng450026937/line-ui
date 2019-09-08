@@ -1,3 +1,3 @@
-import { ButtonGroup } from './ButtonGroup.vue';
+import ButtonGroup from './ButtonGroup.vue';
 
 export { ButtonGroup };

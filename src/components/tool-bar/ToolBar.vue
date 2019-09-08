@@ -5,10 +5,8 @@
 
 <script>
 export const Position = {
-  Min: 0,
   Header: 0,
   Footer: 1,
-  Max: 1,
 };
 
 export default {

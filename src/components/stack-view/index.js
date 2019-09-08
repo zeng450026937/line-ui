@@ -1,3 +1,3 @@
-import { StackView } from './StackView.vue';
+import StackView from './StackView.vue';
 
 export { StackView };

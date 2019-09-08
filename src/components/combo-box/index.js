@@ -1,3 +1,3 @@
-import { ComboBox } from './ComboBox.vue';
+import ComboBox from './ComboBox.vue';
 
 export { ComboBox };

@@ -1,3 +1,3 @@
-import { RangeSlider } from './RangeSlider.vue';
+import RangeSlider from './RangeSlider.vue';
 
 export { RangeSlider };
