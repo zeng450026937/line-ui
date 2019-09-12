@@ -12,7 +12,9 @@
       <div>header</div>
     </template>
 
-    <div>content</div>
+    <div>content
+      <popup></popup>
+    </div>
 
     <template v-slot:footer>
       <div>footer</div>
@@ -23,6 +25,7 @@
 <script>
 import { ApplicationWindow } from './components/application-window';
 import { MenuBar } from './components/menu-bar';
+import { Popup } from './components/popup';
 
 export default {
   name: 'app',
@@ -30,6 +33,7 @@ export default {
   components: {
     ApplicationWindow,
     MenuBar,
+    Popup,
   },
 
   data() {

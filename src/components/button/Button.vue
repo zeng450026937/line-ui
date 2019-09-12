@@ -1,5 +1,7 @@
 <template>
   <div class="button">
+    <div v-if="display != AbstractButton.TextOnly"></div>
+    <div>{{text}}</div>
   </div>
 </template>
 
