@@ -1,9 +1,27 @@
 <template>
-  <div class="list-view">
+  <div class="list-view" ref="viewport">
+    <div class="placement"></div>
+    <div class="spacer" :style="{ 'padding-top': topSpace }"></div>
+    <!-- <template v-if="!!$refs.viewport"> -->
+    <template v-for="(item, index) in visiableList">
+      <lifecycle-logger
+        :tag="item.tag"
+        :label="item.index"
+        v-bind:key="item.text"
+        class="item"
+        v-observer="{viewport: $refs.viewport, callback: intersectionHandler, context: item}"
+      >
+        item {{item.text}}
+      </lifecycle-logger>
+    </template>
+    <!-- </template> -->
   </div>
 </template>
 
 <script>
+import observer from '@/directives/observer';
+import { DynamicTag, LifecycleLogger } from '@/components/functional';
+
 export const FooterPositioning = {
   InlineFooter: 0,
   OverlayFooter: 1,
@@ -51,6 +69,15 @@ export const VerticalLayoutDirection = {
 
 export default {
   name: 'ListView',
+
+  components: {
+    DynamicTag,
+    LifecycleLogger,
+  },
+
+  directives: {
+    observer,
+  },
 
   props: {
     add: {
@@ -201,7 +228,21 @@ export default {
     verticalLayoutDirection: {
       type: String,
       default: '',
-    }, 
+    },
+  },
+
+  data() {
+    const itemCount = 50;
+    const itemList = [];
+
+    for (let index = 0; index < itemCount; index++) {
+      itemList.push({ tag: `div${index}`, text: index, index });
+    }
+
+    return {
+      index: 0,
+      itemList,
+    };
   },
 
   computed: {
@@ -220,6 +261,22 @@ export default {
     highlightItem() {
       return null;
     },
+
+    visiableList() {
+      const bufferCount = 5;
+      const maxCount = this.itemList.length;
+      let start = this.index - bufferCount;
+      let end = this.index + bufferCount;
+      start = start < 0 ? 0 : start;
+      end = end > maxCount ? maxCount : end;
+      return this.itemList.slice(start, end);
+    },
+    topSpace() {
+      const bufferCount = 5;
+      let start = this.index - bufferCount;
+      start = start < 0 ? 0 : start;
+      return `${start * 200}px`;
+    },
   },
 
   methods: {
@@ -232,6 +289,23 @@ export default {
     positionViewAtBeginning() {},
     positionViewAtEnd() {},
     positionViewAtIndex(index, mode) {},
+
+    intersectionHandler(entries, ob, el, item) {
+      const visable = Boolean(
+        entries[0].isIntersecting || entries[0].intersectionRatio,
+      );
+      console.log('visable:', item.index, visable);
+      if (visable && this.index > item.index) {
+        this.index = item.index;
+      }
+      else if (!visable && this.index === item.index) {
+        this.index++;
+      }
+      else if (visable && this.index > item.index) {
+        this.index = item.index;
+      }
+      console.log('index:', this.index);
+    },
   },
 
   mounted() {
@@ -242,5 +316,23 @@ export default {
 </script>
 
 <style lang="scss">
+.list-view {
+  position: relative;
+  height: 200px;
+  overflow: auto;
 
+  .item {
+    display: block;
+    height: 200px;
+    border: dotted palevioletred;
+  }
+
+  .placement {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 10000px;
+  }
+}
 </style>

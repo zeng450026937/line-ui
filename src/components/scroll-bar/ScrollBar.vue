@@ -1,5 +1,8 @@
 <template>
   <div class="scroll-bar">
+    <div class="scroll-bar-track vertical">
+      <div class="scroll-bar-thumb"></div>
+    </div>
   </div>
 </template>
 
@@ -74,10 +77,10 @@ export default {
 
   computed: {
     horizontal() {
-      return false;
+      return this.orientation === Orientation.Horizontal;
     },
     vertical() {
-      return false;
+      return this.orientation === Orientation.Vertical;
     },
   },
 
@@ -89,5 +92,50 @@ export default {
 </script>
 
 <style lang="scss">
+
+.scroll-bar {
+  &-track {
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
+    border-radius: 3px;
+    background-color: rgba(0,0,0,.05);
+
+    &.vertical {
+      width: 6px;
+      top: 2px;
+
+      .scroll-bar-thumb {
+        width: 100%;
+      }
+    }
+
+    &.horizontal {
+      height: 6px;
+      left: 2px;
+
+      .scroll-bar-thumb {
+        height: 100%;
+      }
+    }
+  }
+
+  &-thumb {
+    position: relative;
+    display: block;
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    border-radius: inherit;
+    background-color: rgba(0,0,0,.15);
+    transform: translate3d(0,0,0);
+
+    &:hover,
+    &:active {
+      background-color: rgba(0,0,0,.25);
+    }
+  }
+}
+
 
 </style>

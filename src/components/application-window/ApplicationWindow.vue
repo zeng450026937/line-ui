@@ -48,10 +48,6 @@ export default {
       Overlay: null,
     };
   },
-
-  mounted() {
-    console.log(this);
-  },
 };
 </script>
 
@@ -68,6 +64,7 @@ export default {
     position: absolute;
     width: 100%;
     height: 100%;
+    display: none;
   }
 
   > .menubar,
@@ -80,6 +77,7 @@ export default {
   > .content {
     position: relative;
     flex-grow: 1;
+    overflow: auto;
   }
 }
 

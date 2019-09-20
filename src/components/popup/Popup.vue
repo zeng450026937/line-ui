@@ -1,11 +1,12 @@
 <template>
-  <div class="popup" v-show="visable" ref="popup">
-    popup
+  <div class="popup" v-show="visable">
   </div>
 </template>
 
 <script>
 import Popper from 'popper.js';
+
+window.Popper = Popper;
 
 export const ClosePolicy = {
   NoAutoClose: 0,
@@ -50,30 +51,6 @@ export default {
     this.$emit('aboutToShow');
     this.$emit('closed');
     this.$emit('opened');
-  },
-
-  async mounted() {
-    await this.$nextTick();
-    const activator = this.$parent.$el;
-    console.log(this.$refs.popup);
-    this.popper = new Popper(
-      activator,
-      this.$refs.popup,
-      {
-        modifiers: {
-          applyStyle: { enabled: false },
-          applyVueStyle: {
-            enabled: true,
-            fn(data) {
-              console.log(data);
-            },
-            order: 90,
-          },
-        },
-      },
-    );
-
-    console.log(activator, this.popper);
   },
 };
 </script>

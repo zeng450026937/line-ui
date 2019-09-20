@@ -1,7 +1,6 @@
 <template>
   <application-window
     title="application-window"
-    style="height: 100%"
   >
     <template v-slot:menubar>
       <menu-bar v-bind:menus="menus">
@@ -12,8 +11,8 @@
       <div>header</div>
     </template>
 
-    <div>content
-      <popup></popup>
+    <div>
+      <flipable></flipable>
     </div>
 
     <template v-slot:footer>
@@ -25,7 +24,7 @@
 <script>
 import { ApplicationWindow } from './components/application-window';
 import { MenuBar } from './components/menu-bar';
-import { Popup } from './components/popup';
+import { Flipable } from './components/flipable';
 
 export default {
   name: 'app',
@@ -33,7 +32,7 @@ export default {
   components: {
     ApplicationWindow,
     MenuBar,
-    Popup,
+    Flipable,
   },
 
   data() {
