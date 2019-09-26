@@ -1,3 +1,3 @@
-import Flicakble from './Flicakble.vue';
+import Flickable from './Flickable.vue';
 
-export { Flicakble };
+export { Flickable };

@@ -1,5 +1,5 @@
 <template>
-  <div class="flicable">
+  <div class="flicable" v-on:touchmove="onMove">
     <slot></slot>
   </div>
 </template>
@@ -15,6 +15,10 @@ export default {
     flick() {},
     resizeContent() {},
     returnToBounds() {},
+
+    onMove(e) {
+      console.log(e);
+    },
   },
 
   created() {
@@ -23,9 +27,21 @@ export default {
     this.$emit('movementEnded');
     this.$emit('movementStarted');
   },
+
+  mounted() {},
+
+  beforeDestroy() {},
 };
 </script>
 
 <style lang="scss">
+
+.flicable {
+  overflow: hidden;
+  position: relative;
+  width: 300px;
+  height: 300px;
+  border: dotted gray;
+}
 
 </style>

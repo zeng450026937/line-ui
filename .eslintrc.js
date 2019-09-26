@@ -18,6 +18,8 @@ module.exports = {
     'no-plusplus': 0,
     'no-multi-assign': 1,
     'import/prefer-default-export': 0,
+    'class-methods-use-this': 0,
+    'no-multi-assign': 0,
   },
   parserOptions: {
     parser: 'babel-eslint',

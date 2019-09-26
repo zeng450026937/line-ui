@@ -15,39 +15,39 @@ export default Vue.extend({
   },
 
   created() {
-    console.log(`${this.label} created hooked.`); 
+    console.log(`${this.label} created.`); 
   },
 
   beforeMount() {
-    console.log(`${this.label} beforeMount hooked.`); 
+    console.log(`${this.label} beforeMount.`); 
   },
 
   mounted() {
-    console.log(`${this.label} mounted hooked.`); 
+    console.log(`${this.label} mounted.`); 
   },
 
   beforeUpdate() {
-    console.log(`${this.label} beforeUpdate hooked.`); 
+    console.log(`${this.label} beforeUpdate.`); 
   },
 
   updated() {
-    console.log(`${this.label} updated hooked.`); 
+    console.log(`${this.label} updated.`); 
   },
 
   activated() {
-    console.log(`${this.label} activated hooked.`); 
+    console.log(`${this.label} activated.`); 
   },
 
   deactivated() {
-    console.log(`${this.label} deactivated hooked.`); 
+    console.log(`${this.label} deactivated.`); 
   },
 
   beforeDestroy() {
-    console.log(`${this.label} beforeDestroy hooked.`); 
+    console.log(`${this.label} beforeDestroy.`); 
   },
 
   destroyed() {
-    console.log(`${this.label} destroyed hooked.`); 
+    console.log(`${this.label} destroyed.`); 
   },
   
   render(h) {

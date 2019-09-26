@@ -1,26 +1,26 @@
 <template>
-  <div class="list-view" ref="viewport">
-    <div class="placement"></div>
-    <div class="spacer" :style="{ 'padding-top': topSpace }"></div>
-    <!-- <template v-if="!!$refs.viewport"> -->
-    <template v-for="(item, index) in visiableList">
-      <lifecycle-logger
-        :tag="item.tag"
-        :label="item.index"
-        v-bind:key="item.text"
-        class="item"
-        v-observer="{viewport: $refs.viewport, callback: intersectionHandler, context: item}"
+  <div class="list-view" v-on:scroll="onScroll" ref="viewport">
+    <div class="list-spacer" :style="{ 
+      width: `${estimatedWidth}px`,
+      height: `${estimatedHeight}px`
+    }">
+    </div>
+    
+    <template v-for="index in visibleItemCount">
+      <list-item
+        v-bind:key="mapToItemIndex(index - 1)"
+        :index="mapToItemIndex(index - 1)"
+        :style="itemStyleAtIndex(mapToItemIndex(index - 1))"
       >
-        item {{item.text}}
-      </lifecycle-logger>
+        <slot name="delegate" v-bind="itemAtIndex(mapToItemIndex(index - 1))"></slot>
+      </list-item>
     </template>
-    <!-- </template> -->
   </div>
 </template>
 
 <script>
-import observer from '@/directives/observer';
-import { DynamicTag, LifecycleLogger } from '@/components/functional';
+import ListItem from './ListItem.vue';
+import { Orientation, BoxLayout, LayoutItem } from '@/utils/layout';
 
 export const FooterPositioning = {
   InlineFooter: 0,
@@ -45,10 +45,7 @@ export const HighlightRangeMode = {
   NoHighlightRange: 2,
 };
 
-export const Orientation = {
-  Horizontal: 0,
-  Vertical: 1,
-};
+export { Orientation };
 
 export const ViewSection = {
   InlineLabels: 0,
@@ -71,12 +68,7 @@ export default {
   name: 'ListView',
 
   components: {
-    DynamicTag,
-    LifecycleLogger,
-  },
-
-  directives: {
-    observer,
+    ListItem,
   },
 
   props: {
@@ -173,8 +165,8 @@ export default {
       default: 0,
     },
     model: {
-      type: Object,
-      default: () => ({}),
+      type: [Object, Number, Array],
+      default: () => ([]),
     },
     move: {
       type: String,
@@ -186,7 +178,7 @@ export default {
     },
     orientation: {
       type: Number,
-      default: 0,
+      default: Orientation.Vertical,
     },
     populate: {
       type: String,
@@ -232,16 +224,15 @@ export default {
   },
 
   data() {
-    const itemCount = 50;
-    const itemList = [];
-
-    for (let index = 0; index < itemCount; index++) {
-      itemList.push({ tag: `div${index}`, text: index, index });
-    }
-
     return {
-      index: 0,
-      itemList,
+      visibleStartIndex: 0,
+      visibleEndIndex: 0,
+      scrollLeft: 0,
+      scrollTop: 0,
+      clientWidth: 400,
+      clientHeight: 400,
+      estimatedWidth: 400,
+      estimatedHeight: 400,
     };
   },
 
@@ -262,21 +253,28 @@ export default {
       return null;
     },
 
-    visiableList() {
-      const bufferCount = 5;
-      const maxCount = this.itemList.length;
-      let start = this.index - bufferCount;
-      let end = this.index + bufferCount;
-      start = start < 0 ? 0 : start;
-      end = end > maxCount ? maxCount : end;
-      return this.itemList.slice(start, end);
+    horizontal() {
+      return this.orientation === Orientation.Horizontal;
     },
-    topSpace() {
-      const bufferCount = 5;
-      let start = this.index - bufferCount;
-      start = start < 0 ? 0 : start;
-      return `${start * 200}px`;
+    vertical() {
+      return this.orientation === Orientation.Vertical;
     },
+
+    visibleItemCount() {
+      return this.visibleEndIndex - this.visibleStartIndex + 1;
+    },
+    itemCount() {
+      if (Array.isArray(this.model)) {
+        return this.model.length;
+      }
+      return this.model;
+    },
+  },
+
+  provide() {
+    return {
+      ListView: this,
+    };
   },
 
   methods: {
@@ -285,32 +283,175 @@ export default {
     incrementCurrentIndex() {},
     indexAt(x, y) {},
     itemAt(x, y) {},
-    itemAtIndex(index) {},
+    itemAtIndex(index) {
+      if (Array.isArray(this.model)) {
+        return this.model[index];
+      }
+      return index;
+    },
     positionViewAtBeginning() {},
     positionViewAtEnd() {},
     positionViewAtIndex(index, mode) {},
 
-    intersectionHandler(entries, ob, el, item) {
-      const visable = Boolean(
-        entries[0].isIntersecting || entries[0].intersectionRatio,
-      );
-      console.log('visable:', item.index, visable);
-      if (visable && this.index > item.index) {
-        this.index = item.index;
+    itemLayoutAtIndex(index) {
+      return this.layout.itemAt(index);
+    },
+    itemStyleAtIndex(index) {
+      const item = this.layout.itemAt(index);
+      const style = item.toStyle();
+      delete style.height;
+      style.left = '0px';
+      style.width = '100%';
+      return Object.freeze(style);
+    },
+    mapToItemIndex(visibleIndex) {
+      return this.visibleStartIndex + visibleIndex;
+    },
+    onScroll(event) {
+      const { scrollLeft, scrollTop } = event.target;
+
+      const threshold = 18;
+      if (Math.abs(this.scrollLeft - scrollLeft) >= threshold
+      || Math.abs(this.scrollTop - scrollTop) >= threshold
+      ) {
+        this.scrollLeft = scrollLeft;
+        this.scrollTop = scrollTop;
+
+        console.log('onScroll', scrollLeft, scrollTop);
+        this.onUpdate();
       }
-      else if (!visable && this.index === item.index) {
-        this.index++;
+    },
+    onLayout(index, offsetWidth, offsetHeight) {
+      console.log('onLayout', index, offsetWidth, offsetHeight);
+      this.layout.itemAt(index).setSize(offsetWidth, offsetHeight);
+
+      if (!this.pending) {
+        this.pending = setTimeout(() => {
+          this.layout.update();
+          this.onUpdate();
+          // this.$forceUpdate();
+          this.pending = null;
+        });
       }
-      else if (visable && this.index > item.index) {
-        this.index = item.index;
+    },
+    onUpdate() {
+      const { count } = this.layout;
+
+      let last;
+      let from = 0;
+      let to = count - 1;
+      /* eslint-disable no-bitwise */
+      let i = ~~(count / 2);
+      /* eslint-enable no-bitwise */
+      let offset = 0;
+
+      // binary search for start index
+      do {
+        last = i;
+        offset = this.layout.itemAt(i).geometry.bottom;
+        if (offset < this.scrollTop) {
+          from = i;
+        } else if (i < count - 1
+             && this.layout.itemAt(i + 1).geometry.bottom > this.scrollTop) {
+          to = i;
+        }
+        /* eslint-disable no-bitwise */
+        i = ~~((from + to) / 2);
+        /* eslint-enable no-bitwise */
+      } while (i !== last);
+
+      this.visibleStartIndex = Math.min(i, count - 1);
+
+      let left = this.scrollTop + this.clientHeight - offset;
+
+      while (i < count - 1 && left > 0) {
+        offset = this.layout.itemAt(++i).geometry.bottom;
+        left = this.scrollTop + this.clientHeight - offset;
       }
-      console.log('index:', this.index);
+
+      console.log('scrollTop', this.scrollTop, this.clientHeight);
+
+      this.visibleEndIndex = i;
+      
+      const ITEM_INITIAL_SIZE = 50;
+      const LIST_VIEW_INITIAL_SIZE = 400;
+
+      if (left > 0) {
+        const missed = left / count;
+        const needed = Math.ceil(left / (ITEM_INITIAL_SIZE - missed));
+        console.log('need more~', left, needed);
+        
+        for (let index = 0; index < needed; index++) {
+          const width = this.horizontal ? ITEM_INITIAL_SIZE : LIST_VIEW_INITIAL_SIZE;
+          const height = this.vertical ? ITEM_INITIAL_SIZE : LIST_VIEW_INITIAL_SIZE;
+          this.layout.addItem(new LayoutItem(width, height));
+        }
+        this.visibleEndIndex += needed;
+      }
+
+      this.visibleEndIndex = Math.min(count, this.visibleEndIndex);
+
+      console.log('onUpdate', this.visibleStartIndex, this.visibleEndIndex, this.visibleEndIndex - this.visibleStartIndex);
+      
+      const unestimatedCount = this.itemCount - this.layout.count;
+      const width = this.horizontal ? ITEM_INITIAL_SIZE : ITEM_INITIAL_SIZE;
+      const height = this.vertical ? ITEM_INITIAL_SIZE : ITEM_INITIAL_SIZE;
+      this.estimatedWidth = this.layout.width + unestimatedCount * width;
+      this.estimatedHeight = this.layout.height + unestimatedCount * height;
+
+      console.log('estimated', this.estimatedWidth, this.estimatedHeight);
+
+      console.log(this);
+    },
+    expandLayout(lastIndex) {
+      const { count } = this.layout;
+      const ITEM_INITIAL_SIZE = 50;
+      const LIST_VIEW_INITIAL_SIZE = 400;
+      for (let index = count; index < lastIndex; index++) {
+        const width = this.horizontal ? ITEM_INITIAL_SIZE : LIST_VIEW_INITIAL_SIZE;
+        const height = this.vertical ? ITEM_INITIAL_SIZE : LIST_VIEW_INITIAL_SIZE;
+        this.layout.addItem(new LayoutItem(width, height));
+      }
     },
   },
 
-  mounted() {
+  created() {
+    this.layout = new BoxLayout(this.orientation);
+
+    const ITEM_INITIAL_SIZE = 50;
+    const LIST_VIEW_INITIAL_SIZE = 400;
+
+    if (this.visibleEndIndex === 0) {
+      this.visibleEndIndex = Math.ceil(LIST_VIEW_INITIAL_SIZE / ITEM_INITIAL_SIZE); 
+    }
+
+    const { count } = this.layout;
+
+    for (let index = count; index < this.itemCount; index++) {
+      const width = this.horizontal ? ITEM_INITIAL_SIZE : LIST_VIEW_INITIAL_SIZE;
+      const height = this.vertical ? ITEM_INITIAL_SIZE : LIST_VIEW_INITIAL_SIZE;
+      this.layout.addItem(new LayoutItem(width, height));
+    }
+
+    console.log('created', this.visibleStartIndex, this.visibleEndIndex);
+
+    const unestimatedCount = this.itemCount - this.layout.count;
+    const width = this.horizontal ? ITEM_INITIAL_SIZE : ITEM_INITIAL_SIZE;
+    const height = this.vertical ? ITEM_INITIAL_SIZE : ITEM_INITIAL_SIZE;
+    this.estimatedWidth = this.layout.width + unestimatedCount * width;
+    this.estimatedHeight = this.layout.height + unestimatedCount * height;
+
+    console.log('estimated', this.estimatedWidth, this.estimatedHeight);
+  },
+
+  async mounted() {
     this.$emit('add');
     this.$emit('remove');
+
+    this.clientWidth = this.$refs.viewport.clientWidth;
+    this.clientHeight = this.$refs.viewport.clientHeight;
+
+    await this.$nextTick();
   },
 };
 </script>
@@ -318,21 +459,9 @@ export default {
 <style lang="scss">
 .list-view {
   position: relative;
-  height: 200px;
   overflow: auto;
-
-  .item {
-    display: block;
-    height: 200px;
-    border: dotted palevioletred;
-  }
-
-  .placement {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 10000px;
-  }
+  width: 400px;
+  height: 400px;
+  border: dotted palevioletred;
 }
 </style>
