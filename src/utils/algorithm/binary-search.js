@@ -1,0 +1,53 @@
+const DefaultCompare = (val, wanted) => (val < wanted ? -1 : val > wanted ? 1 : 0);
+
+/**
+ * @param array sorted array with compare func
+ * @param wanted search item
+ * @param compare (optional) custom compare func
+ * @param from (optional) start index
+ * @param to (optional) exclusive end index
+ * @param bound (optional) (-1) first index; (1) last index; (0) doesn't matter
+ */
+export function binarySearch(
+  array = [],
+  wanted,
+  compare = DefaultCompare,
+  from = 0,
+  to = array.length - 1,
+  bound = 0,
+) {
+  if (from >= to) return to;
+
+  let mid = 0;
+  let result = 0;
+  let found = -1;
+
+  /* eslint-disable no-continue */
+  while (from <= to) {
+    /* eslint-disable-next-line */
+    mid = from + to >>> 1;
+    result = compare(array[mid], wanted);
+    if (result < 0) {
+      from = mid + 1;
+      continue;
+    }
+    if (result > 0) {
+      to = mid - 1;
+      continue;
+    }
+
+    found = mid;
+
+    if (bound < 0) {
+      to = mid - 1;
+      continue;
+    }
+    if (bound > 0) {
+      from = mid + 1;
+      continue;
+    }
+    return mid;
+  }
+
+  return found >= 0 ? found : -from - 1;
+}
