@@ -1,4 +1,4 @@
-const DefaultCompare = (val, wanted) => (val < wanted ? -1 : val > wanted ? 1 : 0);
+const DefaultCompare = (val, wanted, index) => (val < wanted ? -1 : val > wanted ? 1 : 0);
 
 /**
  * @param array sorted array with compare func
@@ -17,6 +17,8 @@ export function binarySearch(
   bound = 0,
 ) {
   if (from >= to) return to;
+  const initFrom = from;
+  const initTo = to;
 
   let mid = 0;
   let result = 0;
@@ -26,7 +28,7 @@ export function binarySearch(
   while (from <= to) {
     /* eslint-disable-next-line */
     mid = from + to >>> 1;
-    result = compare(array[mid], wanted);
+    result = compare(array[mid], wanted, mid);
     if (result < 0) {
       from = mid + 1;
       continue;
@@ -35,9 +37,7 @@ export function binarySearch(
       to = mid - 1;
       continue;
     }
-
     found = mid;
-
     if (bound < 0) {
       to = mid - 1;
       continue;
@@ -48,6 +48,10 @@ export function binarySearch(
     }
     return mid;
   }
+  if (found < 0) {
+    console.log(initFrom, initTo, mid, to);
+    debugger;
+  }
 
-  return found >= 0 ? found : -from - 1;
+  return found >= 0 ? found : to;
 }

@@ -6,9 +6,9 @@
     }">
     </div>
     
-    <template v-for="index in (to - from)">
+    <template v-for="index in (to - from + 1)">
       <list-item
-        v-bind:key="mapToItemIndex(index - 1)"
+        :key="mapToItemIndex(index - 1)"
         :index="mapToItemIndex(index - 1)"
         :style="itemStyleAtIndex(mapToItemIndex(index - 1))"
       >
@@ -229,14 +229,6 @@ export default {
 
   data() {
     return {
-      visibleStartIndex: 0,
-      visibleEndIndex: 0,
-      scrollLeft: 0,
-      scrollTop: 0,
-      clientWidth: 400,
-      clientHeight: 400,
-      estimatedWidth: 400,
-      estimatedHeight: 400,
     };
   },
 
@@ -328,7 +320,6 @@ export default {
       return this.layout.itemAt(index);
     },
     itemStyleAtIndex(index) {
-      console.log(index, this.layout);
       const { geometry } = this.layout.itemAt(index);
       return Object.freeze({
         left: `${geometry.left}px`,
@@ -356,31 +347,47 @@ export default {
         this.scrollTop = scrollTop;
 
         console.log('onScroll', this.scrollLeft, this.scrollTop, this.incremental, this.decremental);
-        this.onUpdate();
+        if (!this.pending) {
+          this.onUpdate();
+        } else { console.warn('pending'); }
       }
     },
-    onLayout(index, offsetWidth, offsetHeight) {
+    async onLayout(index, offsetWidth, offsetHeight) {
       console.log('onLayout', index, offsetWidth, offsetHeight);
 
       const item = this.layout.itemAt(index);
       item.setSize(offsetWidth, offsetHeight);
 
+      this.minimumSize = Math.min(
+        16, this.minimumSize, this.horizontal ? offsetWidth : offsetHeight,
+      );
+      this.maximumSize = Math.min(
+        16, this.maximumSize, this.horizontal ? offsetWidth : offsetHeight,
+      );
+
       if (!this.pending) {
-        this.pending = setTimeout(() => {
-          this.layout.update(item);
-          this.onUpdate();
-          // this.$forceUpdate();
-          this.pending = null;
-        });
+        this.pending = true;
+        await this.$nextTick();
+        this.layout.update(item);
+        this.onUpdate();
+        // this.$forceUpdate();
+        this.pending = null;
       }
     },
-    onUpdate() {
+    async onUpdate() {
       const { count } = this.layout;
       const clientSize = this.horizontal ? this.clientWidth : this.clientHeight;
       const leftBoundary = this.horizontal ? this.scrollLeft : this.scrollTop;
       const rightBoundary = leftBoundary + clientSize;
+      const lastFrom = this.from;
+      const lastTo = this.to;
+      const last = this.layout.itemAt(count - 1);
+      const total = this.horizontal 
+        ? last.geometry.right 
+        : last.geometry.bottom;
 
-      this.from = binarySearch(
+      let newTo;
+      const newFrom = binarySearch(
         this.layout.items,
         leftBoundary,
         (item, wanted) => {
@@ -393,38 +400,96 @@ export default {
           if (leftBound > wanted) { return 1; }
           return 0;
         },
-        this.incremental ? this.from : 0,
-        this.incremental ? count - 1 : this.to,
+        this.incremental ? lastFrom : 0,
+        this.incremental ? count - 1 : Math.min(count - 1, lastFrom * 2),
       );
 
-      this.to = binarySearch(
-        this.layout.items,
-        rightBoundary,
-        (item, wanted) => {
-          const {
-            left, right, top, bottom, 
-          } = item.geometry;
-          const leftBound = this.horizontal ? left : top;
-          const rightBound = this.horizontal ? right : bottom;
-          if (rightBound < wanted) { return -1; }
-          if (leftBound > wanted) { return 1; }
-          return 0;
-        },
-        this.incremental ? this.to : 0,
-        this.incremental ? count - 1 : this.to,
+      if (total > rightBoundary) {
+        newTo = binarySearch(
+          this.layout.items,
+          rightBoundary,
+          (item, wanted) => {
+            const {
+              left, right, top, bottom, 
+            } = item.geometry;
+            const leftBound = this.horizontal ? left : top;
+            const rightBound = this.horizontal ? right : bottom;
+            if (rightBound < wanted) { return -1; }
+            if (leftBound > wanted) { return 1; }
+            return 0;
+          },
+          this.incremental ? lastTo : 0,
+          this.incremental ? count - 1 : Math.min(count - 1, lastTo * 2),
+        );
+        const visiable = this.layout.itemAt(newTo);
+        const visiableBoundary = this.horizontal 
+          ? visiable.geometry.right 
+          : visiable.geometry.bottom;
+        
+        const left = Math.floor(rightBoundary - visiableBoundary);
+
+        if (left > 0) {
+          const needed = Math.ceil(left / visiableBoundary * newTo); 
+          newTo += needed;
+          newTo = Math.min(count - 1, newTo);
+        }
+      } else {
+        newTo = count - 1;
+      }
+
+      console.log(
+        'onUpdate \n\n',
+        `total: ${total}, estimated: ${rightBoundary} \n`,
+        `from: ${lastFrom} -> ${newFrom} \n`,
+        `to: ${lastTo} -> ${newTo}`,
       );
 
-      console.log('onUpdate', this.from, this.to);
+      // if (this.incremental && newTo !== lastTo) {
+      //   console.log('incremental phase 1. diff:', newTo - lastTo);
+      //   if (newFrom > lastTo) {
+      //     this.from = newFrom;
+      //   }
+      //   this.to = newTo;
+      //   this.$forceUpdate();
+      //   if (this.from !== newFrom) {
+      //     await this.$nextTick();
+      //     console.log('incremental phase 2');
+      //     this.from = newFrom;
+      //     this.$forceUpdate();
+      //   }
+      // }
+      // if (this.decremental && newFrom !== lastFrom) {
+      //   console.log('decremental phase 1. diff:', lastFrom - newFrom);
+      //   if (lastFrom < newFrom) debugger;
+      //   this.from = newFrom;
+      //   if (newTo < lastFrom) {
+      //     this.to = newTo;
+      //   }
+      //   this.$forceUpdate();
+      //   if (this.to !== newTo) {
+      //     await this.$nextTick();
+      //     console.log('decremental phase 2');
+      //     this.to = newTo;
+      //     this.$forceUpdate();
+      //   }
+      // }
+
+      if (newFrom !== lastFrom || newTo !== lastTo) {
+        this.from = newFrom;
+        this.to = newTo;
+        this.$forceUpdate();
+      }
     },
   },
 
   created() {
+    console.log('create start');
     const ITEM_INITIAL_SIZE = 50;
     const LIST_VIEW_INITIAL_SIZE = 400;
     const count = LIST_VIEW_INITIAL_SIZE / ITEM_INITIAL_SIZE;
 
     this.layout = new BoxLayout(this.orientation);
-    this.layout.setCount(count);
+    this.layout.setCount(this.itemCount, () => new LayoutItem(50, 50));
 
     this.from = 0;
     this.to = count - 1;
@@ -438,6 +503,7 @@ export default {
     this.scrollTop = 0;
     this.incremental = true;
     this.decremental = false;
+    console.log('create end', this.layout, this.layout.count);
   },
 
   async mounted() {

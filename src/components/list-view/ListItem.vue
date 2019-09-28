@@ -35,7 +35,7 @@ export default {
     this.offsetHeight = item.geometry.height;
   },
 
-  async mounted() {
+  mounted() {
     this.onLayoutChanged();
   },
 

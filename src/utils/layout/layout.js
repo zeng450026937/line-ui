@@ -13,11 +13,11 @@ export class Layout extends LayoutItem {
   }
 
   setCount(count, item_creator = DefaultItemCreator) {
-    for (let index = 0; index < count; index++) {
+    for (let index = Math.max(0, this.count - 1); index < count; index++) {
       const item = item_creator(index);
       this.addItem(item);
     }
-    // this.items.length = count;
+    this.items.length = count;
   }
 
   addItem(item) {
@@ -42,14 +42,14 @@ export class Layout extends LayoutItem {
   }
 
   itemAt(index) {
-    if (index < this.count - 1) { 
+    if (index < this.count) { 
       return this.items[index];
     }
     return null;
   }
 
   takeAt(index) {
-    if (index < this.count - 1) {
+    if (index < this.count) {
       const item = this.items[index];
       const { previous, next } = item;
       item.layout = null;

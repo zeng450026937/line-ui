@@ -106,6 +106,10 @@ export class BoxLayout extends Layout {
       }
       current = next;
     }
+
+    const last = this.itemAt(this.count - 1);
+    this.geometry.right = last.geometry.right;
+    this.geometry.bottom = last.geometry.bottom;
   }
 }
 

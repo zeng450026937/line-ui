@@ -22,7 +22,7 @@ export class Rect {
   }
 
   set right(val) {
-    this.width = Math.min(0, val - this.x);
+    this.width = Math.max(0, val - this.x);
   }
 
   get top() {
@@ -38,7 +38,7 @@ export class Rect {
   }
 
   set bottom(val) {
-    this.height = Math.min(0, val - this.y);
+    this.height = Math.max(0, val - this.y);
   }
 
   setX(val) {
