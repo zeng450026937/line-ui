@@ -1,17 +1,44 @@
 <template>
   <div class="list-item">
-    <slot></slot>
+    <dynamic-node
+      v-if="cachedNode"
+      :vnode="cachedNode"
+    ></dynamic-node>
+    <slot
+      v-else
+      name="default" v-bind="item"
+    ></slot>
   </div>
 </template>
 
 <script>
+import { DynamicNode } from '@/components/functional';
+
 export default {
+  name: 'ListItem',
+
+  components: {
+    DynamicNode,
+  },
+
   inject: ['ListView'],
 
   props: {
     index: {
       type: Number,
       required: true,
+    },
+    item: {
+      type: [
+        String, Number, Boolean, Array, Object, Date, Function, Symbol,
+      ],
+      default: () => ({}),
+    },
+  },
+
+  watch: {
+    item() {
+      this.cachedNode = null;
     },
   },
 
@@ -34,6 +61,8 @@ export default {
   },
 
   created() {
+    this.cachedItem = this.item;
+    this.cachedNode = null;
     // console.debug('item created', this.index);
   },
 
@@ -43,6 +72,8 @@ export default {
 
   mounted() {
     // console.debug('item mounted', this.index);
+    /* eslint-disable-next-line */
+    this.cachedNode = this._vnode.children;
     this.onLayoutChanged();
   },
 

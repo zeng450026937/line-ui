@@ -7,12 +7,12 @@ export default Vue.extend({
 
   props: {
     vnode: {
-      type: Object,
+      type: [Object, Array],
       default: null,
     },
   },
 
-  render(h) {
-    return this.vnode;
+  render(h, context) {
+    return context.props.vnode;
   },
 });
