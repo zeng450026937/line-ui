@@ -6,13 +6,15 @@
     }">
     </div>
     
-    <template v-for="index in (to - from + 1)">
+    <template v-for="(value, key, index) in views">
       <list-item
-        :key="mapToItemIndex(index - 1)"
-        :index="mapToItemIndex(index - 1)"
+        :key="key"
+        :index="index - 1"
         :style="itemStyleAtIndex(mapToItemIndex(index - 1))"
       >
-        <slot name="delegate" v-bind="itemAtIndex(mapToItemIndex(index - 1))"></slot>
+        <template v-slot:default>
+          <slot name="delegate" v-bind="itemAtIndex(mapToItemIndex(index - 1))"></slot>
+        </template>
       </list-item>
     </template>
   </div>
@@ -331,13 +333,39 @@ export default {
     mapToItemIndex(visibleIndex) {
       return this.from + visibleIndex;
     },
+
+    addOrUpdateView(view) {
+      const {
+        key,
+        index,
+        layout,
+        item,
+      } = view;
+      const cached = this.views[key];
+      if (cached) {
+        cached.key = key;
+        cached.index = index;
+        cached.layout = layout;
+        cached.item = item;
+        return;
+      }
+      this.views[key] = view;
+    },
+    removeView(view) {
+      const { key } = view;
+      delete this.views[key];
+    },
+
     onScroll(event) {
       const { scrollLeft, scrollTop } = event.target;
 
-      const threshold = this.minimumSize;
+      // const threshold = this.minimumSize;
+      const threshold = 16;
       if (Math.abs(this.scrollLeft - scrollLeft) >= threshold
       || Math.abs(this.scrollTop - scrollTop) >= threshold
       ) {
+        const dx = scrollLeft - this.scrollLeft;
+        const dy = scrollTop - this.scrollTop;
         this.incremental = this.horizontal 
           ? scrollLeft > this.scrollLeft
           : scrollTop > this.scrollTop;
@@ -346,35 +374,48 @@ export default {
         this.scrollLeft = scrollLeft;
         this.scrollTop = scrollTop;
 
-        console.log('onScroll', this.scrollLeft, this.scrollTop, this.incremental, this.decremental);
+        console.log(
+          'onScroll \n\n',
+          `dx: ${dx} \n`,
+          `dy: ${dy} \n`,
+          `client width: ${this.clientWidth} height: ${this.clientHeight} \n`,
+          `layout width: ${this.layout.width} height: ${this.layout.height} \n`,
+          `scrollLeft: ${this.scrollLeft} \n`,
+          `scrollTop: ${this.scrollTop} \n`,
+          `incremental: ${this.incremental} \n`,
+          `decremental: ${this.decremental} \n`,
+        );
         if (!this.pending) {
           this.onUpdate();
         } else { console.warn('pending'); }
       }
     },
     async onLayout(index, offsetWidth, offsetHeight) {
-      console.log('onLayout', index, offsetWidth, offsetHeight);
+      // console.log('onLayout', index, offsetWidth, offsetHeight);
 
       const item = this.layout.itemAt(index);
       item.setSize(offsetWidth, offsetHeight);
 
       this.minimumSize = Math.min(
-        16, this.minimumSize, this.horizontal ? offsetWidth : offsetHeight,
+        this.minimumSize, this.horizontal ? offsetWidth : offsetHeight,
       );
-      this.maximumSize = Math.min(
-        16, this.maximumSize, this.horizontal ? offsetWidth : offsetHeight,
+      this.maximumSize = Math.max(
+        this.maximumSize, this.horizontal ? offsetWidth : offsetHeight,
       );
+
+      this.dirtyIndex = Math.min(this.dirtyIndex, index);
+      // console.log('dirty index: ', this.dirtyIndex);
 
       if (!this.pending) {
         this.pending = true;
         await this.$nextTick();
-        this.layout.update(item);
-        this.onUpdate();
-        // this.$forceUpdate();
-        this.pending = null;
+        this.layout.update(this.dirtyIndex);
+        this.dirtyIndex = this.layout.count - 1;
+        this.onUpdate(true);
+        this.pending = false;
       }
     },
-    async onUpdate() {
+    async onUpdate(force = false) {
       const { count } = this.layout;
       const clientSize = this.horizontal ? this.clientWidth : this.clientHeight;
       const leftBoundary = this.horizontal ? this.scrollLeft : this.scrollTop;
@@ -386,8 +427,10 @@ export default {
         ? last.geometry.right 
         : last.geometry.bottom;
 
+      let newFrom;
       let newTo;
-      const newFrom = binarySearch(
+      
+      newFrom = binarySearch(
         this.layout.items,
         leftBoundary,
         (item, wanted) => {
@@ -444,6 +487,24 @@ export default {
         `to: ${lastTo} -> ${newTo}`,
       );
 
+      // const availableLast = this.layout.itemAt(newTo);
+      // const availableLBoundary = this.horizontal 
+      //   ? availableLast.geometry.right 
+      //   : availableLast.geometry.bottom;
+
+      // if (availableLBoundary <= rightBoundary) {
+      //   newTo += 1;
+      // }
+
+      // if (this.incremental) {
+      //   newTo += 1;
+      // }
+      // if (this.decremental) {
+      //   newFrom -= 1;
+      // }
+      newFrom = Math.max(0, newFrom);
+      newTo = Math.min(count - 1, newTo);
+
       // if (this.incremental && newTo !== lastTo) {
       //   console.log('incremental phase 1. diff:', newTo - lastTo);
       //   if (newFrom > lastTo) {
@@ -474,7 +535,7 @@ export default {
       //   }
       // }
 
-      if (newFrom !== lastFrom || newTo !== lastTo) {
+      if (force || (newFrom !== lastFrom || newTo !== lastTo)) {
         this.from = newFrom;
         this.to = newTo;
         this.$forceUpdate();
@@ -491,19 +552,24 @@ export default {
     this.layout = new BoxLayout(this.orientation);
     this.layout.setCount(this.itemCount, () => new LayoutItem(50, 50));
 
+    this.views = Object.create(null);
+
     this.from = 0;
     this.to = count - 1;
 
     this.minimumSize = ITEM_INITIAL_SIZE;
     this.maximumSize = ITEM_INITIAL_SIZE;
 
-    this.pending = null;
+    this.dirtyIndex = this.itemCount - 1;
+    this.pending = false;
 
     this.scrollLeft = 0;
     this.scrollTop = 0;
     this.incremental = true;
     this.decremental = false;
     console.log('create end', this.layout, this.layout.count);
+
+    window.checkLayout = () => this.layout.check();
   },
 
   async mounted() {
@@ -514,6 +580,11 @@ export default {
     this.clientHeight = this.$refs.viewport.clientHeight;
 
     await this.$nextTick();
+  },
+
+  updated() {
+    this.clientWidth = this.$refs.viewport.clientWidth;
+    this.clientHeight = this.$refs.viewport.clientHeight;
   },
 };
 </script>
