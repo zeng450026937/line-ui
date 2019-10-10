@@ -6,12 +6,12 @@
     }">
     </div>
     
-    <template v-for="(value, key) in views">
+    <template v-for="view in views">
       <list-item
-        :key="key"
-        :index="value.index"
-        :item="value.item"
-        :style="itemStyleAtIndex(mapToItemIndex(value.index))"
+        :key="view.id"
+        :index="view.index"
+        :item="view.item"
+        :style="view.style"
       >
         <template v-slot:default="item">
           <slot name="delegate" v-bind="item"></slot>
@@ -25,6 +25,7 @@
 import ListItem from './ListItem.vue';
 import { Orientation, BoxLayout, LayoutItem } from '@/utils/layout';
 import { binarySearch } from '@/utils/algorithm/binary-search';
+import { exponentialSearch } from '@/utils/algorithm/exponential-search';
 
 export const FooterPositioning = {
   InlineFooter: 0,
@@ -339,27 +340,24 @@ export default {
       return this.views[id];
     },
     itemViewAtIndex(index) {
-      return Object.keys(this.views).find(id => this.views[id].index === index);
+      const id = Object.keys(this.views).find(id => this.views[id].index === index);
+      return this.itemViewAt(id);
     },
-    addOrUpdateView(view) {
-      const {
-        id,
-        index,
-        layout,
-        item,
-      } = view;
-      const cached = this.views[id];
-      if (cached) {
-        cached.index = index;
-        cached.layout = layout;
-        cached.item = item;
-        return;
-      }
+
+    addView(view) {
+      const count = Object.keys(this.views).length;
+      const { id = count } = view;
+      view.id = id;
       this.views[id] = view;
     },
-    removeView(view) {
-      const { key } = view;
-      delete this.views[key];
+    removeView(id) {
+      delete this.views[id];
+      delete this.cachedViews[id];
+    },
+    cacheView(id) {
+      const view = this.views[id];
+      view.style = { ...this.itemStyleAtIndex(view.index), display: 'none' };
+      this.cachedViews[id] = view;
     },
 
     onScroll(event) {
@@ -397,7 +395,7 @@ export default {
       }
     },
     async onLayout(index, offsetWidth, offsetHeight) {
-      // console.log('onLayout', index, offsetWidth, offsetHeight);
+      console.log('onLayout', index, offsetWidth, offsetHeight);
 
       const item = this.layout.itemAt(index);
       item.setSize(offsetWidth, offsetHeight);
@@ -466,7 +464,7 @@ export default {
             if (leftBound > wanted) { return 1; }
             return 0;
           },
-          this.incremental ? lastTo : 0,
+          this.incremental ? Math.min(newFrom, lastTo) : 0,
           this.incremental ? count - 1 : Math.min(count - 1, lastTo * 2),
         );
         const visiable = this.layout.itemAt(newTo);
@@ -487,7 +485,7 @@ export default {
 
       console.log(
         'onUpdate \n\n',
-        `total: ${total}, estimated: ${rightBoundary} \n`,
+        `total: ${rightBoundary}, estimated: ${total} \n`,
         `from: ${lastFrom} -> ${newFrom} \n`,
         `to: ${lastTo} -> ${newTo}`,
       );
@@ -510,30 +508,41 @@ export default {
       newFrom = Math.max(0, newFrom);
       newTo = Math.min(count - 1, newTo);
 
-      // full update
-      if (newFrom > lastTo || newTo < lastFrom) {
-        console.log(newFrom, newTo, lastFrom, lastTo);
-        for (let index = newFrom; index <= newTo; index++) {
-          this.addOrUpdateView({
-            id: index - newFrom,
-            index,
-            layout: this.layout.itemAt(index),
-            item: this.itemAtIndex(index),
-          });
+      Object.keys(this.views).forEach((id) => {
+        const view = this.views[id];
+        const { index } = view;
+        if (index < newFrom || index > newTo) {
+          this.cacheView(id);
+          console.log('avaliable', index, '@', id);
+        } else {
+          view.style = this.itemStyleAtIndex(index);
         }
-      } else {
-        const avaliable = [];
-        const needed = newTo - newFrom;
-      }
+      });
 
-      // for (let index = newFrom; index <= newTo; index++) {
-      //   this.addOrUpdateView({
-      //     id: index - newFrom,
-      //     index,
-      //     layout: this.layout.itemAt(index),
-      //     item: this.itemAtIndex(index),
-      //   });
-      // }
+      const avaliable = Object.keys(this.cachedViews);
+      for (let index = newFrom; index <= newTo; index++) {
+        if (index < lastFrom || index > lastTo) {
+          let view = this.itemViewAtIndex(index);
+
+          if (view) {
+            delete this.cachedViews[view.id];
+            view.style = this.itemStyleAtIndex(index);
+            continue;
+          } else if (avaliable.length) {
+            const id = avaliable.shift();
+            view = this.cachedViews[id];
+            delete this.cachedViews[id];
+          } else {
+            view = {};
+            this.addView(view);
+          }
+          view.index = index;
+          view.layout = this.layout.itemAt(index);
+          view.item = this.itemAtIndex(index);
+          view.style = this.itemStyleAtIndex(index);
+          console.log('needed', index, '@', view.id);
+        }
+      }
 
       if (force || (newFrom !== lastFrom || newTo !== lastTo)) {
         this.from = newFrom;
@@ -552,18 +561,10 @@ export default {
     this.layout.setCount(this.itemCount, () => new LayoutItem(50, 50));
 
     this.views = Object.create(null);
+    this.cachedViews = Object.create(null);
 
     this.from = 0;
     this.to = Math.min(count - 1, this.itemCount);
-
-    for (let index = this.from; index <= this.to; index++) {
-      this.addOrUpdateView({
-        id: index - this.from,
-        index,
-        layout: this.layout.itemAt(index),
-        item: this.itemAtIndex(index),
-      });
-    }
 
     this.minimumItemSize = ITEM_INITIAL_SIZE;
     this.maximumItemSize = ITEM_INITIAL_SIZE;
@@ -575,6 +576,16 @@ export default {
     this.scrollTop = 0;
     this.incremental = true;
     this.decremental = false;
+
+    // init view
+    for (let index = this.from; index <= this.to; index++) {
+      this.addView({
+        index,
+        layout: this.layout.itemAt(index),
+        item: this.itemAtIndex(index),
+        style: this.itemStyleAtIndex(index),
+      });
+    }
   },
 
   async mounted() {

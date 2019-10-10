@@ -8,7 +8,7 @@ export class LayoutItem {
     this.maxHeight = undefined;
     this.geometry = new Rect(0, 0, width, height);
     this.layout = null;
-    this.valid = false;
+    this.valid = true;
     this.previous = null;
     this.next = null;
   }
