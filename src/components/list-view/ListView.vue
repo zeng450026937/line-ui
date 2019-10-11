@@ -340,8 +340,8 @@ export default {
       return this.views[id];
     },
     itemViewAtIndex(index) {
-      const id = Object.keys(this.views).find(id => this.views[id].index === index);
-      return this.itemViewAt(id);
+      const viewId = Object.keys(this.views).find(id => this.views[id].index === index);
+      return this.itemViewAt(viewId);
     },
 
     addView(view) {
@@ -395,7 +395,7 @@ export default {
       }
     },
     async onLayout(index, offsetWidth, offsetHeight) {
-      console.log('onLayout', index, offsetWidth, offsetHeight);
+      // console.log('onLayout', index, offsetWidth, offsetHeight);
 
       const item = this.layout.itemAt(index);
       item.setSize(offsetWidth, offsetHeight);
@@ -409,13 +409,21 @@ export default {
 
       this.dirtyIndex = Math.min(this.dirtyIndex, index);
 
+      // if (!this.pending) {
+      //   this.pending = true;
+      //   await this.$nextTick();
+      //   this.layout.update(this.dirtyIndex);
+      //   this.dirtyIndex = this.layout.count;
+      //   this.onUpdate(true);
+      //   this.pending = false;
+      // }
       if (!this.pending) {
-        this.pending = true;
-        await this.$nextTick();
-        this.layout.update(this.dirtyIndex);
-        this.dirtyIndex = this.layout.count;
-        this.onUpdate(true);
-        this.pending = false;
+        this.pending = requestAnimationFrame(() => {
+          this.layout.update(this.dirtyIndex);
+          this.dirtyIndex = this.layout.count;
+          this.onUpdate(true);
+          this.pending = false;
+        });
       }
     },
     async onUpdate(force = false) {
@@ -446,12 +454,14 @@ export default {
           if (leftBound > wanted) { return 1; }
           return 0;
         },
-        this.incremental ? lastFrom : 0,
-        this.incremental ? count - 1 : Math.min(count - 1, lastFrom * 2),
+        this.incremental ? lastFrom : Math.floor(leftBoundary / this.maximumItemSize),
+        this.incremental ? Math.min(
+          count - 1, Math.ceil(leftBoundary / this.minimumItemSize),
+        ) : lastTo,
       );
 
       if (total > rightBoundary) {
-        newTo = binarySearch(
+        newTo = exponentialSearch(
           this.layout.items,
           rightBoundary,
           (item, wanted) => {
@@ -464,21 +474,9 @@ export default {
             if (leftBound > wanted) { return 1; }
             return 0;
           },
-          this.incremental ? Math.min(newFrom, lastTo) : 0,
-          this.incremental ? count - 1 : Math.min(count - 1, lastTo * 2),
+          newFrom,
+          count - 1,
         );
-        const visiable = this.layout.itemAt(newTo);
-        const visiableBoundary = this.horizontal 
-          ? visiable.geometry.right 
-          : visiable.geometry.bottom;
-        
-        const left = Math.floor(rightBoundary - visiableBoundary);
-
-        if (left > 0) {
-          const needed = Math.ceil(left / visiableBoundary * newTo); 
-          newTo += needed;
-          newTo = Math.min(count - 1, newTo);
-        }
       } else {
         newTo = count - 1;
       }
@@ -489,15 +487,6 @@ export default {
         `from: ${lastFrom} -> ${newFrom} \n`,
         `to: ${lastTo} -> ${newTo}`,
       );
-
-      // const availableLast = this.layout.itemAt(newTo);
-      // const availableLBoundary = this.horizontal 
-      //   ? availableLast.geometry.right 
-      //   : availableLast.geometry.bottom;
-
-      // if (availableLBoundary <= rightBoundary) {
-      //   newTo += 1;
-      // }
 
       // if (this.incremental) {
       //   newTo += 1;
@@ -513,13 +502,13 @@ export default {
         const { index } = view;
         if (index < newFrom || index > newTo) {
           this.cacheView(id);
-          console.log('avaliable', index, '@', id);
+          // console.log('avaliable', index, '@', id);
         } else {
           view.style = this.itemStyleAtIndex(index);
         }
       });
 
-      const avaliable = Object.keys(this.cachedViews);
+      let avaliable = Object.keys(this.cachedViews);
       for (let index = newFrom; index <= newTo; index++) {
         if (index < lastFrom || index > lastTo) {
           let view = this.itemViewAtIndex(index);
@@ -527,6 +516,7 @@ export default {
           if (view) {
             delete this.cachedViews[view.id];
             view.style = this.itemStyleAtIndex(index);
+            avaliable = Object.keys(this.cachedViews);
             continue;
           } else if (avaliable.length) {
             const id = avaliable.shift();
@@ -540,7 +530,7 @@ export default {
           view.layout = this.layout.itemAt(index);
           view.item = this.itemAtIndex(index);
           view.style = this.itemStyleAtIndex(index);
-          console.log('needed', index, '@', view.id);
+          // console.log('needed', index, '@', view.id);
         }
       }
 
@@ -554,7 +544,7 @@ export default {
 
   created() {
     const ITEM_INITIAL_SIZE = 50;
-    const LIST_VIEW_INITIAL_SIZE = 400;
+    const LIST_VIEW_INITIAL_SIZE = 500;
     const count = LIST_VIEW_INITIAL_SIZE / ITEM_INITIAL_SIZE;
 
     this.layout = new BoxLayout(this.orientation);
@@ -610,7 +600,7 @@ export default {
   position: relative;
   overflow: auto;
   width: 400px;
-  height: 400px;
+  height: 500px;
   border: dotted palevioletred;
 }
 </style>

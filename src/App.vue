@@ -15,7 +15,7 @@
       <list-view :model="list">
         <template v-slot:delegate="item">
           <!-- <lifecycle-logger style="height: 50px;" :label="item.index">item key: {{item.index}}</lifecycle-logger> -->
-          <div style="height: 60px;">item key: {{item.index}}</div>
+          <div style="height: 50px;">item key: {{item.index}}</div>
         </template>
       </list-view>
     </div>

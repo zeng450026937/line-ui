@@ -28,7 +28,12 @@ export function binarySearch(
   while (from <= to) {
     /* eslint-disable-next-line */
     mid = from + to >>> 1;
-    result = compare(array[mid], wanted, mid);
+    try {
+      result = compare(array[mid], wanted, mid);
+    } catch (e) {
+      console.log(initFrom, initTo, mid, to);
+      throw e;
+    }
     if (result < 0) {
       from = mid + 1;
       continue;

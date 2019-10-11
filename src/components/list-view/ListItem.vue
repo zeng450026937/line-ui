@@ -73,16 +73,24 @@ export default {
     // console.debug('item destroyed', this.index);
   },
 
-  mounted() {
+  async mounted() {
     // console.debug('item mounted', this.index);
     /* eslint-disable-next-line */
     this.cachedNode = this._vnode.children;
+
+    await this.$nextTick();
+    
+    // TBD
+    // calc $el size is very heavy.
     this.onLayoutChanged();
   },
 
-  updated() {
+  async updated() {
     // console.debug('item updated', this.index);
+    /* eslint-disable-next-line */
+    this.cachedNode = this._vnode.children;
 
+    await this.$nextTick();
     // TBD
     // calc $el size is very heavy.
     this.onLayoutChanged();
