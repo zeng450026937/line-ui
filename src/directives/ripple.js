@@ -82,7 +82,7 @@ const ripple = {
       animation.classList.remove('v-ripple__animation--enter');
       animation.classList.add('v-ripple__animation--in');
       transform(animation, `translate(${centerX}, ${centerY}) scale3d(1,1,1)`);
-      opacity(animation, 0.25);
+      opacity(animation, 0.15);
     }, 0);
   },
 
@@ -216,8 +216,10 @@ function update(el, binding) {
   updateRipple(el, binding, wasEnabled);
 }
 
-export default {
+export const Ripple = {
   bind: directive,
   unbind,
   update,
-};
+}
+
+export default Ripple;

@@ -1,5 +1,6 @@
 <template>
   <div class="button-group">
+    <slot name="default"></slot>
   </div>
 </template>
 
@@ -25,14 +26,46 @@ export default {
       default: true,
     },
   },
-  
+
+  provide() {
+    const vm = this;
+    return {
+      get ButtonGroup() {
+        return vm;
+      },
+    };
+  },
+
   methods: {
-    addButton() {},
-    removeButton() {},
+    addButton(button) {
+      this.children.add(button);
+    },
+
+    removeButton(button) {
+      this.children.delete(button);
+    },
+
+    buttonClicked(button) {
+      this.$emit('clicked', button);
+      
+      if (button.checked) {
+        this.checkedButton = button;
+      } else if (this.checkedButton === button) {
+        this.checkedButton = null;
+      }
+
+      if (this.exclusive) {
+        this.children.forEach((btn) => {
+          if (btn === button) return;
+          btn.checked = false;
+        });
+      }
+    },
   },
 
   created() {
     this.$emit('clicked');
+    this.children = new Set();
   },
 };
 </script>

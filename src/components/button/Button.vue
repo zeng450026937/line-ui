@@ -28,14 +28,33 @@ export default {
     },
   },
 
+  inject: [
+    'ButtonGroup',
+  ],
+
   created() {
     this.autoRepeatTimer = null;
     this.autoRepeatDelayTimer = null;
+    this.canExclusive = this.$parent === this.ButtonGroup;
+
+    if (this.canExclusive) {
+      this.$parent.addButton(this);
+    }
+  },
+
+  beforeDestroy() {
+    if (this.canExclusive) {
+      this.$parent.removeButton(this);
+    }
   },
 
   methods: {
     onClicked(event) {
       this.toggle();
+
+      if (this.canExclusive) {
+        this.$parent.buttonClicked(this);
+      }
     },
 
     onMouseDown(event) {
@@ -43,7 +62,7 @@ export default {
       this.pressX = event.x;
       this.pressX = event.y;
 
-      this.down = this.pressed;
+      // this.down = this.pressed;
 
       if (this.autoRepeat) {
         this.autoRepeatDelayTimer = setTimeout(() => {
@@ -67,7 +86,7 @@ export default {
       this.pressX = event.x;
       this.pressX = event.y;
 
-      this.down = this.pressed;
+      // this.down = this.pressed;
 
       if (this.autoRepeatDelayTimer) {
         clearTimeout(this.autoRepeatDelayTimer);
