@@ -60,28 +60,18 @@ const AbstractButton = Vue.extend({
 
   data() {
     return {
-      d: {
-        pressX: -1,
-        pressY: -1,
-        pressed: false,
-      },
+      pressX: -1,
+      pressY: -1,
+      pressed: false,
     };
   },
 
-  computed: {
-    pressX() {
-      return this.d.pressX;
-    },
-    pressY() {
-      return this.d.pressY;
-    },
-    pressed() {
-      return this.d.pressed;
-    },
-  },
-
   methods: {
-    toggle() {},
+    toggle() {
+      if (this.checkable) {
+        this.checked = !this.checked;
+      }
+    },
   },
 
   created() {
