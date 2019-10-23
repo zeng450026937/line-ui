@@ -28,11 +28,8 @@ export default {
   },
 
   provide() {
-    const vm = this;
     return {
-      get ButtonGroup() {
-        return vm;
-      },
+      ButtonGroup: this,
     };
   },
 

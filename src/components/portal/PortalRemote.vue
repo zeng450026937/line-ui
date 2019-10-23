@@ -2,7 +2,7 @@
 import wormhole from './wormhole';
 
 export default {
-  name: 'portal-anchor',
+  name: 'portal-remote',
 
   props: {
     name: String,

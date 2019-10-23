@@ -43,11 +43,8 @@ export default {
   extends: Window,
 
   provide() {
-    const vm = this;
     return {
-      get ApplicationWindow() {
-        return vm;
-      },
+      ApplicationWindow: this,
       Overlay: null,
     };
   },
