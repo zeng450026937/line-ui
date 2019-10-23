@@ -1,13 +1,6 @@
 <template>
   <div class="list-item">
-    <dynamic-node
-      v-if="cachedNode"
-      :vnode="cachedNode"
-    ></dynamic-node>
-    <slot
-      v-else
-      name="default" v-bind="item"
-    ></slot>
+    <dynamic-node :vnode="cachedNode"></dynamic-node>
   </div>
 </template>
 
@@ -36,9 +29,9 @@ export default {
     },
   },
 
-  watch: {
-    item() {
-      this.cachedNode = null;
+  computed: {
+    cachedNode() {
+      return this.$scopedSlots.default && this.$scopedSlots.default(this.item);
     },
   },
 
@@ -64,8 +57,6 @@ export default {
   },
 
   created() {
-    this.cachedItem = this.item;
-    this.cachedNode = null;
     // console.debug('item created', this.index);
   },
 
@@ -75,8 +66,6 @@ export default {
 
   async mounted() {
     // console.debug('item mounted', this.index);
-    /* eslint-disable-next-line */
-    this.cachedNode = this._vnode.children;
 
     await this.$nextTick();
     
@@ -87,8 +76,6 @@ export default {
 
   async updated() {
     // console.debug('item updated', this.index);
-    /* eslint-disable-next-line */
-    this.cachedNode = this._vnode.children;
 
     await this.$nextTick();
     // TBD
