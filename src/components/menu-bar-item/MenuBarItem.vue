@@ -5,9 +5,10 @@
 </template>
 
 <script>
+import Vue from 'vue';
 import AbstractButton from '@/mixins/abstract-button';
 
-export default {
+export default Vue.extend({
   name: 'MenuBarItem',
 
   extends: AbstractButton,
@@ -32,9 +33,8 @@ export default {
   mounted() {
     this.$emit('triggered');
   },
-};
+});
 </script>
 
 <style lang="scss">
-
 </style>

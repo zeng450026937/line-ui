@@ -71,7 +71,8 @@
   </application-window>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import { ApplicationWindow } from './components/application-window';
 import { MenuBar } from './components/menu-bar';
 // import { ListView } from './components/list-view';
@@ -79,8 +80,7 @@ import { MenuBar } from './components/menu-bar';
 import { BusyIndicator } from './components/busy-indicator';
 import { ProgressBar, ProgressBarCircular } from './components/progress-bar';
 
-
-export default {
+export default Vue.extend({
   name: 'app',
 
   components: {
@@ -112,7 +112,7 @@ export default {
       progress: 30,
     };
   },
-};
+});
 </script>
 
 <style lang="scss">

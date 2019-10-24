@@ -21,8 +21,10 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
   name: 'ProgressBar',
 
   props: {
@@ -68,10 +70,8 @@ export default {
     },
   },
 
-  watch: {
-
-  },
-};
+  watch: {},
+});
 </script>
 
 <style lang="scss">

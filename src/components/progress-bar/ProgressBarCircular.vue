@@ -31,8 +31,10 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import Vue from 'vue';
+
+export default Vue.extend({
   name: 'ProgressBarCircular',
 
   props: {
@@ -83,14 +85,10 @@ export default {
 
       return position;
     },
-
-
   },
 
-  watch: {
-
-  },
-};
+  watch: {},
+});
 </script>
 
 <style lang="scss">

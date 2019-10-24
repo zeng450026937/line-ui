@@ -1,17 +1,19 @@
 <template>
   <div class="menubar">
     <template v-for="menu in menus">
-      <slot name="delegate" v-bind:menu="menu">
+      <slot name="delegate"
+            v-bind:menu="menu">
         <menu-bar-item v-bind:menu="menu"></menu-bar-item>
       </slot>
     </template>
   </div>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue';
 import { MenuBarItem } from '@/components/menu-bar-item';
 
-export default {
+export default Vue.extend({
   name: 'MenuBar',
 
   components: {
@@ -25,7 +27,7 @@ export default {
     },
     menus: {
       type: Array,
-      default: () => ([]),
+      default: () => [],
     },
   },
 
@@ -36,15 +38,13 @@ export default {
     removeMenu() {},
     takeMenu() {},
   },
-};
+});
 </script>
 
 <style lang="scss">
-
 .menubar {
   position: relative;
   display: flex;
-  flex-direction: row; 
+  flex-direction: row;
 }
-
 </style>
