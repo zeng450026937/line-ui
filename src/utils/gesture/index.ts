@@ -1,7 +1,98 @@
 import { GESTURE_CONTROLLER } from './gesture-controller';
 import { createPointerEvents } from './pointer-events';
 import { createPanRecognizer } from './recognizers';
+import { now } from '../helpers';
 
+export { GESTURE_CONTROLLER };
+
+export interface GestureDetail {
+  type: string;
+  startX: number;
+  startY: number;
+  startTime: number;
+  currentX: number;
+  currentY: number;
+  velocityX: number;
+  velocityY: number;
+  deltaX: number;
+  deltaY: number;
+  currentTime: number;
+  event: UIEvent;
+  data?: any;
+}
+
+export type GestureCallback = (detail: GestureDetail) => boolean | void;
+
+export interface Gesture {
+  enable(enable?: boolean): void;
+  destroy(): void;
+}
+
+export interface GestureConfig {
+  el: Node;
+  disableScroll?: boolean;
+
+  direction?: 'x' | 'y';
+  gestureName: string;
+  gesturePriority?: number;
+  passive?: boolean;
+  maxAngle?: number;
+  threshold?: number;
+
+  canStart?: GestureCallback;
+  onWillStart?: (_: GestureDetail) => Promise<void>;
+  onStart?: GestureCallback;
+  onMove?: GestureCallback;
+  onEnd?: GestureCallback;
+  notCaptured?: GestureCallback;
+}
+
+const updateDetail = (ev: any, detail: GestureDetail) => {
+  // get X coordinates for either a mouse click
+  // or a touch depending on the given event
+  let x = 0;
+  let y = 0;
+  if (ev) {
+    const { changedTouches } = ev;
+    if (changedTouches && changedTouches.length > 0) {
+      const touch = changedTouches[0];
+      x = touch.clientX;
+      y = touch.clientY;
+    } else if (ev.pageX !== undefined) {
+      x = ev.pageX;
+      y = ev.pageY;
+    }
+  }
+  detail.currentX = x;
+  detail.currentY = y;
+};
+
+const calcGestureData = (detail: GestureDetail, ev: UIEvent | undefined) => {
+  if (!ev) {
+    return;
+  }
+  const prevX = detail.currentX;
+  const prevY = detail.currentY;
+  const prevT = detail.currentTime;
+
+  updateDetail(ev, detail);
+
+  const { currentX } = detail;
+  const { currentY } = detail;
+  const timestamp = detail.currentTime = now(ev);
+  const timeDelta = timestamp - prevT;
+  if (timeDelta > 0 && timeDelta < 100) {
+    const velocityX = (currentX - prevX) / timeDelta;
+    const velocityY = (currentY - prevY) / timeDelta;
+    detail.velocityX = velocityX * 0.7 + detail.velocityX * 0.3;
+    detail.velocityY = velocityY * 0.7 + detail.velocityY * 0.3;
+  }
+  detail.deltaX = currentX - detail.startX;
+  detail.deltaY = currentY - detail.startY;
+  detail.event = ev;
+};
+
+/* eslint-disable no-use-before-define */
 export const createGesture = (config: GestureConfig): Gesture => {
   let hasCapturedPan = false;
   let hasStartedPan = false;
@@ -16,16 +107,16 @@ export const createGesture = (config: GestureConfig): Gesture => {
     maxAngle: 40,
     threshold: 10,
 
-    ...config
+    ...config,
   };
 
-  const canStart = finalConfig.canStart;
-  const onWillStart = finalConfig.onWillStart;
-  const onStart = finalConfig.onStart;
-  const onEnd = finalConfig.onEnd;
-  const notCaptured = finalConfig.notCaptured;
-  const onMove = finalConfig.onMove;
-  const threshold = finalConfig.threshold;
+  const { canStart } = finalConfig;
+  const { onWillStart } = finalConfig;
+  const { onStart } = finalConfig;
+  const { onEnd } = finalConfig;
+  const { notCaptured } = finalConfig;
+  const { onMove } = finalConfig;
+  const { threshold } = finalConfig;
 
   const detail = {
     type: 'pan',
@@ -40,14 +131,16 @@ export const createGesture = (config: GestureConfig): Gesture => {
     deltaY: 0,
     currentTime: 0,
     event: undefined as any,
-    data: undefined
+    data: undefined,
   };
 
-  const pan = createPanRecognizer(finalConfig.direction, finalConfig.threshold, finalConfig.maxAngle);
+  const pan = createPanRecognizer(
+    finalConfig.direction, finalConfig.threshold, finalConfig.maxAngle,
+  );
   const gesture = GESTURE_CONTROLLER.createGesture({
     name: config.gestureName,
     priority: config.gesturePriority,
-    disableScroll: config.disableScroll
+    disableScroll: config.disableScroll,
   });
 
   const pointerDown = (ev: UIEvent): boolean => {
@@ -190,7 +283,7 @@ export const createGesture = (config: GestureConfig): Gesture => {
     pointerUp,
     {
       capture: false,
-    }
+    },
   );
 
   const abortGesture = () => {
@@ -211,99 +304,6 @@ export const createGesture = (config: GestureConfig): Gesture => {
     destroy() {
       gesture.destroy();
       pointerEvents.destroy();
-    }
+    },
   };
 };
-
-const calcGestureData = (detail: GestureDetail, ev: UIEvent | undefined) => {
-  if (!ev) {
-    return;
-  }
-  const prevX = detail.currentX;
-  const prevY = detail.currentY;
-  const prevT = detail.currentTime;
-
-  updateDetail(ev, detail);
-
-  const currentX = detail.currentX;
-  const currentY = detail.currentY;
-  const timestamp = detail.currentTime = now(ev);
-  const timeDelta = timestamp - prevT;
-  if (timeDelta > 0 && timeDelta < 100) {
-    const velocityX = (currentX - prevX) / timeDelta;
-    const velocityY = (currentY - prevY) / timeDelta;
-    detail.velocityX = velocityX * 0.7 + detail.velocityX * 0.3;
-    detail.velocityY = velocityY * 0.7 + detail.velocityY * 0.3;
-  }
-  detail.deltaX = currentX - detail.startX;
-  detail.deltaY = currentY - detail.startY;
-  detail.event = ev;
-};
-
-const updateDetail = (ev: any, detail: GestureDetail) => {
-  // get X coordinates for either a mouse click
-  // or a touch depending on the given event
-  let x = 0;
-  let y = 0;
-  if (ev) {
-    const changedTouches = ev.changedTouches;
-    if (changedTouches && changedTouches.length > 0) {
-      const touch = changedTouches[0];
-      x = touch.clientX;
-      y = touch.clientY;
-    } else if (ev.pageX !== undefined) {
-      x = ev.pageX;
-      y = ev.pageY;
-    }
-  }
-  detail.currentX = x;
-  detail.currentY = y;
-};
-
-const now = (ev: UIEvent) => {
-  return ev.timeStamp || Date.now();
-};
-
-export interface GestureDetail {
-  type: string;
-  startX: number;
-  startY: number;
-  startTime: number;
-  currentX: number;
-  currentY: number;
-  velocityX: number;
-  velocityY: number;
-  deltaX: number;
-  deltaY: number;
-  currentTime: number;
-  event: UIEvent;
-  data?: any;
-}
-
-export type GestureCallback = (detail: GestureDetail) => boolean | void;
-
-export interface Gesture {
-  enable(enable?: boolean): void;
-  destroy(): void;
-}
-
-export interface GestureConfig {
-  el: Node;
-  disableScroll?: boolean;
-
-  direction?: 'x' | 'y';
-  gestureName: string;
-  gesturePriority?: number;
-  passive?: boolean;
-  maxAngle?: number;
-  threshold?: number;
-
-  canStart?: GestureCallback;
-  onWillStart?: (_: GestureDetail) => Promise<void>;
-  onStart?: GestureCallback;
-  onMove?: GestureCallback;
-  onEnd?: GestureCallback;
-  notCaptured?: GestureCallback;
-}
-
-export { GESTURE_CONTROLLER };

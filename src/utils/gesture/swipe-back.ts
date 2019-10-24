@@ -26,8 +26,7 @@ export const createSwipeBackGesture = (
     const stepValue = delta / width;
     const velocity = detail.velocityX;
     const z = width / 2.0;
-    const shouldComplete =
-      velocity >= 0 && (velocity > 0.2 || detail.deltaX > z);
+    const shouldComplete = velocity >= 0 && (velocity > 0.2 || detail.deltaX > z);
 
     const missing = shouldComplete ? 1 - stepValue : stepValue;
     const missingDistance = missing * width;
@@ -54,6 +53,6 @@ export const createSwipeBackGesture = (
     canStart,
     onStart: onStartHandler,
     onMove,
-    onEnd
+    onEnd,
   });
 };

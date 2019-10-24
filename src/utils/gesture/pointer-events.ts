@@ -2,14 +2,19 @@ import { addEventListener } from './listener';
 
 const MOUSE_WAIT = 2000;
 
+const getDocument = (node: Node) => {
+  return node instanceof Document ? node : node.ownerDocument;
+};
+
+/* eslint-disable no-use-before-define */
+/* eslint-disable no-shadow */
 export const createPointerEvents = (
   el: Node,
   pointerDown: any,
   pointerMove: any,
   pointerUp: any,
-  options: EventListenerOptions
+  options: EventListenerOptions,
 ) => {
-
   let rmTouchStart: (() => void) | undefined;
   let rmTouchMove: (() => void) | undefined;
   let rmTouchEnd: (() => void) | undefined;
@@ -102,7 +107,6 @@ export const createPointerEvents = (
       }
       rmTouchStart = rmMouseStart = undefined;
       stop();
-
     } else {
       if (!rmTouchStart) {
         rmTouchStart = addEventListener(el, 'touchstart', handleTouchStart, options);
@@ -121,12 +125,8 @@ export const createPointerEvents = (
   return {
     enable,
     stop,
-    destroy
+    destroy,
   };
-};
-
-const getDocument = (node: Node) => {
-  return node instanceof Document ? node : node.ownerDocument;
 };
 
 export interface PointerEventsConfig {

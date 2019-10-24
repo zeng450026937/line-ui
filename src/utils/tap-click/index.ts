@@ -174,6 +174,7 @@ const getActivatableTarget = (ev: any): any => {
         return el;
       }
     }
+    return undefined;
   }
   return ev.target.closest('.activatable');
 };

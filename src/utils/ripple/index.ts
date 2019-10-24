@@ -80,10 +80,8 @@ function bind(
   el: HTMLElement,
   binding: VNodeDirective,
   vnode: VNode,
-  oldVnode: VNode,
 ) {
   const { modifiers } = binding;
-  console.log(modifiers, binding);
   (el as any).rippleEffect = createRippleEffect(el, modifiers as RippleOption);
 }
 
@@ -91,7 +89,6 @@ function unbind(
   el: HTMLElement,
   binding: VNodeDirective,
   vnode: VNode,
-  oldVnode: VNode,
 ) {
   delete (el as any).rippleEffect;
 }
