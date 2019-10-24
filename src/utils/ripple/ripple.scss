@@ -17,7 +17,7 @@ $opacity-duration: $fade-in-duration + $fade-out-duration;
   contain: strict;
   pointer-events: none;
 
-  .unbounded {
+  &.unbounded {
     contain: layout size style;
   }
 }

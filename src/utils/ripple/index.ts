@@ -7,13 +7,21 @@ import './ripple.scss';
 const PADDING = 10;
 const INITIAL_ORIGIN_SCALE = 0.5;
 
-function createRippleEffect(el: HTMLElement, unbounded: boolean) {
-  const removeRipple = (ripple: HTMLElement) => {
-    ripple.classList.add('fade-out');
-    setTimeout(() => {
-      ripple.remove();
-    }, 200);
-  };
+const removeRipple = (ripple: HTMLElement, effect?: HTMLElement) => {
+  ripple.classList.add('fade-out');
+  setTimeout(() => {
+    effect && effect.remove();
+    ripple.remove();
+  }, 200);
+};
+
+type RippleOption = {
+  unbounded: boolean,
+  delay: boolean | number,
+}
+
+function createRippleEffect(el: HTMLElement, options: RippleOption) {
+  const { unbounded = false, delay = true } = options;
 
   function addRipple(x: number, y: number) {
     return new Promise<() => void>((resolve) => {
@@ -36,9 +44,9 @@ function createRippleEffect(el: HTMLElement, unbounded: boolean) {
       const moveX = width * 0.5 - posX;
       const moveY = height * 0.5 - posY;
 
-      const div = document.createElement('div');
-      div.classList.add('ripple');
-      const { style } = div;
+      const ripple = document.createElement('div');
+      ripple.classList.add('ripple');
+      const { style } = ripple;
       style.top = `${styleY}px`;
       style.left = `${styleX}px`;
       style.width = style.height = `${initialSize}px`;
@@ -47,13 +55,16 @@ function createRippleEffect(el: HTMLElement, unbounded: boolean) {
 
       const effect = document.createElement('div');
       effect.classList.add('ripple-effect');
-      effect.appendChild(div);
+      if (unbounded) {
+        effect.classList.add('unbounded');
+      }
+      effect.appendChild(ripple);
 
       const container = el;
       container.appendChild(effect);
       setTimeout(() => {
         resolve(() => {
-          removeRipple(effect);
+          removeRipple(ripple, effect);
         });
       }, 225 + 100);
     });
@@ -61,7 +72,7 @@ function createRippleEffect(el: HTMLElement, unbounded: boolean) {
 
   return {
     addRipple,
-    removeRipple,
+    options,
   };
 }
 
@@ -71,7 +82,9 @@ function bind(
   vnode: VNode,
   oldVnode: VNode,
 ) {
-  (el as any).rippleEffect = createRippleEffect(el, false);
+  const { modifiers } = binding;
+  console.log(modifiers, binding);
+  (el as any).rippleEffect = createRippleEffect(el, modifiers as RippleOption);
 }
 
 function unbind(

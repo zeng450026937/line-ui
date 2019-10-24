@@ -1,40 +1,13 @@
+export const testUserAgent = (win: Window, expr: RegExp) => expr.test(win.navigator.userAgent);
 
-export type Platforms = keyof typeof PLATFORMS_MAP;
+const matchMedia = (win: Window, query: string): boolean => win.matchMedia(query).matches;
 
-interface IsPlatformSignature {
-  (plt: Platforms): boolean;
-  (win: Window, plt: Platforms): boolean;
-}
+const isMobile = (win: Window) => matchMedia(win, '(any-pointer:coarse)');
 
-export const getPlatforms = (win: any) => setupPlatforms(win);
-
-export const isPlatform: IsPlatformSignature = (winOrPlatform: Window | Platforms | undefined, platform?: Platforms) => {
-  if (typeof winOrPlatform === 'string') {
-    platform = winOrPlatform;
-    winOrPlatform = undefined;
-  }
-  return getPlatforms(winOrPlatform).includes(platform!);
-};
-
-export const setupPlatforms = (win: any = window) => {
-  win.Ionic = win.Ionic || {};
-
-  let platforms: Platforms[] | undefined | null = win.Ionic.platforms;
-  if (platforms == null) {
-    platforms = win.Ionic.platforms = detectPlatforms(win);
-    platforms.forEach(p => win.document.documentElement.classList.add(`plt-${p}`));
-  }
-  return platforms;
-};
-
-const detectPlatforms = (win: Window) =>
-  (Object.keys(PLATFORMS_MAP) as Platforms[]).filter(p => PLATFORMS_MAP[p](win));
-
-const isMobileWeb = (win: Window): boolean =>
-  isMobile(win) && !isHybrid(win);
+const isDesktop = (win: Window) => !isMobile(win);
 
 const isIpad = (win: Window) => {
-  // iOS 12 and below
+// iOS 12 and below
   if (testUserAgent(win, /iPad/i)) {
     return true;
   }
@@ -47,14 +20,11 @@ const isIpad = (win: Window) => {
   return false;
 };
 
-const isIphone = (win: Window) =>
-  testUserAgent(win, /iPhone/i);
+const isIphone = (win: Window) => testUserAgent(win, /iPhone/i);
 
-const isIOS = (win: Window) =>
-  testUserAgent(win, /iPhone|iPod/i) || isIpad(win);
+const isIOS = (win: Window) => testUserAgent(win, /iPhone|iPod/i) || isIpad(win);
 
-const isAndroid = (win: Window) =>
-  testUserAgent(win, /android|sink/i);
+const isAndroid = (win: Window) => testUserAgent(win, /android|sink/i);
 
 const isAndroidTablet = (win: Window) => {
   return isAndroid(win) && !testUserAgent(win, /mobile/i);
@@ -66,8 +36,8 @@ const isPhablet = (win: Window) => {
   const smallest = Math.min(width, height);
   const largest = Math.max(width, height);
 
-  return (smallest > 390 && smallest < 520) &&
-    (largest > 620 && largest < 800);
+  return (smallest > 390 && smallest < 520)
+  && (largest > 620 && largest < 800);
 };
 
 const isTablet = (win: Window) => {
@@ -77,57 +47,74 @@ const isTablet = (win: Window) => {
   const largest = Math.max(width, height);
 
   return (
-    isIpad(win) ||
-    isAndroidTablet(win) ||
-    (
-      (smallest > 460 && smallest < 820) &&
-      (largest > 780 && largest < 1400)
-    )
+    isIpad(win)
+  || isAndroidTablet(win)
+  || (
+    (smallest > 460 && smallest < 820)
+    && (largest > 780 && largest < 1400)
+  )
   );
 };
 
-const isMobile = (win: Window) =>
-  matchMedia(win, '(any-pointer:coarse)');
-
-const isDesktop = (win: Window) =>
-  !isMobile(win);
-
-const isHybrid = (win: Window) =>
-  isCordova(win) || isCapacitorNative(win);
-
-const isCordova = (win: any): boolean =>
-  !!(win['cordova'] || win['phonegap'] || win['PhoneGap']);
+const isCordova = (win: any): boolean => !!(win.cordova || win.phonegap || win.PhoneGap);
 
 const isCapacitorNative = (win: any): boolean => {
-  const capacitor = win['Capacitor'];
+  const capacitor = win.Capacitor;
   return !!(capacitor && capacitor.isNative);
 };
 
-const isElectron = (win: Window): boolean =>
-  testUserAgent(win, /electron/i);
+const isHybrid = (win: Window) => isCordova(win) || isCapacitorNative(win);
 
-const isPWA = (win: Window): boolean =>
-  !!(win.matchMedia('(display-mode: standalone)').matches || (win.navigator as any).standalone);
+const isMobileWeb = (win: Window): boolean => isMobile(win) && !isHybrid(win);
 
-export const testUserAgent = (win: Window, expr: RegExp) =>
-  expr.test(win.navigator.userAgent);
+const isElectron = (win: Window): boolean => testUserAgent(win, /electron/i);
 
-const matchMedia = (win: Window, query: string): boolean =>
-  win.matchMedia(query).matches;
+const isPWA = (win: Window): boolean => !!(win.matchMedia('(display-mode: standalone)').matches || (win.navigator as any).standalone);
 
 const PLATFORMS_MAP = {
-  'ipad': isIpad,
-  'iphone': isIphone,
-  'ios': isIOS,
-  'android': isAndroid,
-  'phablet': isPhablet,
-  'tablet': isTablet,
-  'cordova': isCordova,
-  'capacitor': isCapacitorNative,
-  'electron': isElectron,
-  'pwa': isPWA,
-  'mobile': isMobile,
-  'mobileweb': isMobileWeb,
-  'desktop': isDesktop,
-  'hybrid': isHybrid
+  ipad: isIpad,
+  iphone: isIphone,
+  ios: isIOS,
+  android: isAndroid,
+  phablet: isPhablet,
+  tablet: isTablet,
+  cordova: isCordova,
+  capacitor: isCapacitorNative,
+  electron: isElectron,
+  pwa: isPWA,
+  mobile: isMobile,
+  mobileweb: isMobileWeb,
+  desktop: isDesktop,
+  hybrid: isHybrid,
+};
+
+export type Platforms = keyof typeof PLATFORMS_MAP;
+
+interface IsPlatformSignature {
+  (plt: Platforms): boolean;
+  (win: Window, plt: Platforms): boolean;
+}
+
+/* eslint-disable max-len */
+const detectPlatforms = (win: Window) => (Object.keys(PLATFORMS_MAP) as Platforms[]).filter(p => PLATFORMS_MAP[p](win));
+
+export const setupPlatforms = (win: any = window) => {
+  win.Ionic = win.Ionic || {};
+
+  let { platforms } = win.Ionic;
+  if (platforms == null) {
+    platforms = win.Ionic.platforms = detectPlatforms(win);
+    platforms.forEach((p: Platforms) => win.document.documentElement.classList.add(`plt-${p}`));
+  }
+  return platforms;
+};
+
+export const getPlatforms = (win: any) => setupPlatforms(win);
+
+export const isPlatform: IsPlatformSignature = (winOrPlatform: Window | Platforms | undefined, platform?: Platforms) => {
+  if (typeof winOrPlatform === 'string') {
+    platform = winOrPlatform;
+    winOrPlatform = undefined;
+  }
+  return getPlatforms(winOrPlatform).includes(platform!);
 };
