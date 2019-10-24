@@ -1,6 +1,113 @@
+class GestureDelegate {
+  private ctrl?: GestureController;
+  private priority: number;
+
+  constructor(
+    ctrl: GestureController,
+    private id: number,
+    private name: string,
+    priority: number,
+    private disableScroll: boolean,
+  ) {
+    this.priority = priority * 1000000 + id;
+    this.ctrl = ctrl;
+  }
+
+  canStart(): boolean {
+    if (!this.ctrl) {
+      return false;
+    }
+
+    return this.ctrl.canStart(this.name);
+  }
+
+  start(): boolean {
+    if (!this.ctrl) {
+      return false;
+    }
+
+    return this.ctrl.start(this.name, this.id, this.priority);
+  }
+
+  capture(): boolean {
+    if (!this.ctrl) {
+      return false;
+    }
+
+    const captured = this.ctrl.capture(this.name, this.id, this.priority);
+    if (captured && this.disableScroll) {
+      this.ctrl.disableScroll(this.id);
+    }
+
+    return captured;
+  }
+
+  release() {
+    if (this.ctrl) {
+      this.ctrl.release(this.id);
+
+      if (this.disableScroll) {
+        this.ctrl.enableScroll(this.id);
+      }
+    }
+  }
+
+  destroy() {
+    this.release();
+    this.ctrl = undefined;
+  }
+}
+
+class BlockerDelegate {
+  private ctrl?: GestureController;
+
+  constructor(
+    ctrl: GestureController,
+    private id: number,
+    private disable: string[] | undefined,
+    private disableScroll: boolean,
+  ) {
+    this.ctrl = ctrl;
+  }
+
+  block() {
+    if (!this.ctrl) {
+      return;
+    }
+    if (this.disable) {
+      for (const gesture of this.disable) {
+        this.ctrl.disableGesture(gesture, this.id);
+      }
+    }
+
+    if (this.disableScroll) {
+      this.ctrl.disableScroll(this.id);
+    }
+  }
+
+  unblock() {
+    if (!this.ctrl) {
+      return;
+    }
+    if (this.disable) {
+      for (const gesture of this.disable) {
+        this.ctrl.enableGesture(gesture, this.id);
+      }
+    }
+    if (this.disableScroll) {
+      this.ctrl.enableScroll(this.id);
+    }
+  }
+
+  destroy() {
+    this.unblock();
+    this.ctrl = undefined;
+  }
+}
+
+const BACKDROP_NO_SCROLL = 'backdrop-no-scroll';
 
 class GestureController {
-
   private gestureId = 0;
   private requestedStart = new Map<number, number>();
   private disabledGestures = new Map<string, Set<number>>();
@@ -16,19 +123,20 @@ class GestureController {
       this.newID(),
       config.name,
       config.priority || 0,
-      !!config.disableScroll
+      !!config.disableScroll,
     );
   }
 
   /**
-   * Creates a blocker that will block any other gesture events from firing. Set in the ion-gesture component.
+   * Creates a blocker that will block any other gesture events from firing. Set
+   * in the ion-gesture component.
    */
   createBlocker(opts: BlockerConfig = {}): BlockerDelegate {
     return new BlockerDelegate(
       this,
       this.newID(),
       opts.disable,
-      !!opts.disableScroll
+      !!opts.disableScroll,
     );
   }
 
@@ -45,10 +153,10 @@ class GestureController {
     if (!this.start(gestureName, id, priority)) {
       return false;
     }
-    const requestedStart = this.requestedStart;
+    const { requestedStart } = this;
     let maxPriority = -10000;
 
-    requestedStart.forEach(value => {
+    requestedStart.forEach((value) => {
       maxPriority = Math.max(maxPriority, value);
     });
 
@@ -138,114 +246,6 @@ class GestureController {
   }
 }
 
-class GestureDelegate {
-  private ctrl?: GestureController;
-  private priority: number;
-
-  constructor(
-    ctrl: GestureController,
-    private id: number,
-    private name: string,
-    priority: number,
-    private disableScroll: boolean
-  ) {
-    this.priority = priority * 1000000 + id;
-    this.ctrl = ctrl;
-  }
-
-  canStart(): boolean {
-    if (!this.ctrl) {
-      return false;
-    }
-
-    return this.ctrl.canStart(this.name);
-  }
-
-  start(): boolean {
-    if (!this.ctrl) {
-      return false;
-    }
-
-    return this.ctrl.start(this.name, this.id, this.priority);
-  }
-
-  capture(): boolean {
-    if (!this.ctrl) {
-      return false;
-    }
-
-    const captured = this.ctrl.capture(this.name, this.id, this.priority);
-    if (captured && this.disableScroll) {
-      this.ctrl.disableScroll(this.id);
-    }
-
-    return captured;
-  }
-
-  release() {
-    if (this.ctrl) {
-      this.ctrl.release(this.id);
-
-      if (this.disableScroll) {
-        this.ctrl.enableScroll(this.id);
-      }
-    }
-  }
-
-  destroy() {
-    this.release();
-    this.ctrl = undefined;
-  }
-}
-
-class BlockerDelegate {
-
-  private ctrl?: GestureController;
-
-  constructor(
-    ctrl: GestureController,
-    private id: number,
-    private disable: string[] | undefined,
-    private disableScroll: boolean
-  ) {
-    this.ctrl = ctrl;
-  }
-
-  block() {
-    if (!this.ctrl) {
-      return;
-    }
-    if (this.disable) {
-      for (const gesture of this.disable) {
-        this.ctrl.disableGesture(gesture, this.id);
-      }
-    }
-
-    if (this.disableScroll) {
-      this.ctrl.disableScroll(this.id);
-    }
-  }
-
-  unblock() {
-    if (!this.ctrl) {
-      return;
-    }
-    if (this.disable) {
-      for (const gesture of this.disable) {
-        this.ctrl.enableGesture(gesture, this.id);
-      }
-    }
-    if (this.disableScroll) {
-      this.ctrl.enableScroll(this.id);
-    }
-  }
-
-  destroy() {
-    this.unblock();
-    this.ctrl = undefined;
-  }
-}
-
 export interface GestureConfig {
   name: string;
   priority?: number;
@@ -257,5 +257,4 @@ export interface BlockerConfig {
   disableScroll?: boolean;
 }
 
-const BACKDROP_NO_SCROLL = 'backdrop-no-scroll';
 export const GESTURE_CONTROLLER = new GestureController();
