@@ -26,10 +26,6 @@ const AbstractButton = Vue.extend({
       type: Boolean,
       default: false,
     },
-    checked: {
-      type: Boolean,
-      default: false,
-    },
     display: {
       type: Number,
       default: 0,
@@ -60,9 +56,7 @@ const AbstractButton = Vue.extend({
 
   data() {
     return {
-      pressX: -1,
-      pressY: -1,
-      pressed: false,
+      checked: false,
     };
   },
 

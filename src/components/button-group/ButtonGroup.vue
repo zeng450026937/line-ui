@@ -5,66 +5,14 @@
 </template>
 
 <script>
-export default {
+import Vue from 'vue';
+import { createGroup } from '@/components/group';
+
+export default Vue.extend({
   name: 'ButtonGroup',
 
-  props: {
-    buttons: {
-      type: Array,
-      default: () => ([]),
-    },
-    checkState: {
-      type: Array,
-      default: null,
-    },
-    checkedButton: {
-      type: Object,
-      default: null,
-    },
-    exclusive: {
-      type: Boolean,
-      default: true,
-    },
-  },
-
-  provide() {
-    return {
-      ButtonGroup: this,
-    };
-  },
-
-  methods: {
-    addButton(button) {
-      this.children.add(button);
-    },
-
-    removeButton(button) {
-      this.children.delete(button);
-    },
-
-    buttonClicked(button) {
-      this.$emit('clicked', button);
-      
-      if (button.checked) {
-        this.checkedButton = button;
-      } else if (this.checkedButton === button) {
-        this.checkedButton = null;
-      }
-
-      if (this.exclusive) {
-        this.children.forEach((btn) => {
-          if (btn === button) return;
-          btn.checked = false;
-        });
-      }
-    },
-  },
-
-  created() {
-    this.$emit('clicked');
-    this.children = new Set();
-  },
-};
+  extends: createGroup('ButtonGroup'),
+});
 </script>
 
 <style lang="scss">

@@ -56,8 +56,8 @@ function unbind(el: HTMLElement, binding: ClickOutsideDirective) {
   if (!binding.value) return;
   const { clickOutside } = el as any;
   const doc = document;
-  doc.addEventListener('mouseup', clickOutside.maybe, true);
-  doc.addEventListener('touchend', clickOutside.maybe, true);
+  doc.removeEventListener('mouseup', clickOutside.maybe, true);
+  doc.removeEventListener('touchend', clickOutside.maybe, true);
   delete (el as any).clickOutside;
 }
 

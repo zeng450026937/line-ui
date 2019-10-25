@@ -1,21 +1,33 @@
 <template>
   <div class="button"
-    @click="onClicked"
-    @mousedown="onMouseDown"
-    @mousemove="onMouseMove"
-    @mouseup="onMouseUp"
+    v-autorepeat="{
+      enable: autoRepeat,
+      delay: autoRepeatDelay,
+      interval: autoRepeatInterval
+   }"
   >
+    <slot name="icon"></slot>
+    <slot name="label"></slot>
     <div>{{text}}</div>
   </div>
 </template>
 
 <script>
+import Vue from 'vue';
+import { createGroupItem } from '@/components/group';
 import AbstractButton from '@/mixins/abstract-button';
+import autorepeat from '@/utils/autorepeat';
 
-export default {
+export default Vue.extend({
   name: 'Button',
 
+  mixins: [createGroupItem('ButtonGroup')],
+
   extends: AbstractButton,
+
+  directives: {
+    autorepeat,
+  },
 
   props: {
     flat: {
@@ -28,77 +40,38 @@ export default {
     },
   },
 
-  inject: [
-    'ButtonGroup',
-  ],
+  watch: {
+    checked(val) {
+      val && this.$emit('toggled', this);
+    },
+  },
 
   created() {
     this.autoRepeatTimer = null;
     this.autoRepeatDelayTimer = null;
-    this.canExclusive = this.$parent === this.ButtonGroup;
-
-    if (this.canExclusive) {
-      this.$parent.addButton(this);
-    }
-  },
-
-  beforeDestroy() {
-    if (this.canExclusive) {
-      this.$parent.removeButton(this);
-    }
   },
 
   methods: {
     onClicked(event) {
-      this.toggle();
-
-      if (this.canExclusive) {
-        this.$parent.buttonClicked(this);
-      }
+      console.log('onClicked', event);
     },
 
     onMouseDown(event) {
-      this.pressed = true;
       this.pressX = event.x;
       this.pressX = event.y;
-
-      // this.down = this.pressed;
-
-      if (this.autoRepeat) {
-        this.autoRepeatDelayTimer = setTimeout(() => {
-          this.autoRepeatTimer = setInterval(() => {
-            // dispatch click event
-            console.log('dispatch click event');
-          }, this.autoRepeatInterval);
-        }, this.autoRepeatDelay);
-      }
     },
 
     onMouseMove(event) {
-      if (!this.pressed) return;
-
       this.pressX = event.x;
       this.pressX = event.y;
     },
 
     onMouseUp(event) {
-      this.pressed = false;
       this.pressX = event.x;
       this.pressX = event.y;
-
-      // this.down = this.pressed;
-
-      if (this.autoRepeatDelayTimer) {
-        clearTimeout(this.autoRepeatDelayTimer);
-        this.autoRepeatDelayTimer = null;
-      }
-      if (this.autoRepeatTimer) {
-        clearInterval(this.autoRepeatTimer);
-        this.autoRepeatTimer = null;
-      }
     },
   },
-};
+});
 </script>
 
 <style lang="scss">
