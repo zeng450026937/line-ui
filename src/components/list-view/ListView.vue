@@ -1,11 +1,11 @@
 <template>
   <div class="list-view" v-on:scroll="onScroll" ref="viewport">
-    <div class="list-spacer" :style="{ 
+    <div class="list-spacer" :style="{
       width: `${layout.geometry.width}px`,
       height: `${layout.geometry.height}px`
     }">
     </div>
-    
+
     <template v-for="view in views">
       <list-item
         :key="view.id"
@@ -290,7 +290,7 @@ export default {
         this.horizontal ? x : y,
         (item, wanted) => {
           const {
-            left, right, top, bottom, 
+            left, right, top, bottom,
           } = item.geometry;
           const leftBoundary = this.horizontal ? left : top;
           const rightBoundary = this.horizontal ? right : bottom;
@@ -370,7 +370,7 @@ export default {
       ) {
         const dx = scrollLeft - this.scrollLeft;
         const dy = scrollTop - this.scrollTop;
-        this.incremental = this.horizontal 
+        this.incremental = this.horizontal
           ? scrollLeft > this.scrollLeft
           : scrollTop > this.scrollTop;
         this.decremental = !this.incremental;
@@ -434,19 +434,19 @@ export default {
       const lastFrom = this.from;
       const lastTo = this.to;
       const last = this.layout.itemAt(count - 1);
-      const total = this.horizontal 
-        ? last.geometry.right 
+      const total = this.horizontal
+        ? last.geometry.right
         : last.geometry.bottom;
 
       let newFrom;
       let newTo;
-      
+
       newFrom = binarySearch(
         this.layout.items,
         leftBoundary,
         (item, wanted) => {
           const {
-            left, right, top, bottom, 
+            left, right, top, bottom,
           } = item.geometry;
           const leftBound = this.horizontal ? left : top;
           const rightBound = this.horizontal ? right : bottom;
@@ -466,7 +466,7 @@ export default {
           rightBoundary,
           (item, wanted) => {
             const {
-              left, right, top, bottom, 
+              left, right, top, bottom,
             } = item.geometry;
             const leftBound = this.horizontal ? left : top;
             const rightBound = this.horizontal ? right : bottom;
