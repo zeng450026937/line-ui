@@ -22,10 +22,6 @@ const AbstractButton = Vue.extend({
       type: Number,
       default: 100,
     },
-    checkable: {
-      type: Boolean,
-      default: false,
-    },
     display: {
       type: Number,
       default: 0,
@@ -51,20 +47,6 @@ const AbstractButton = Vue.extend({
     text: {
       type: String,
       default: '',
-    },
-  },
-
-  data() {
-    return {
-      checked: false,
-    };
-  },
-
-  methods: {
-    toggle() {
-      if (this.checkable) {
-        this.checked = !this.checked;
-      }
     },
   },
 

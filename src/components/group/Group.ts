@@ -34,16 +34,15 @@ export function createGroup(name: string) {
         if (this.exclusive) {
           if (checked) {
             this.checkedItem = item;
-          } else if (this.checkedItem === item) {
-            this.item = null;
-          }
 
-          this.items.forEach((i: Vue) => {
-            if (i === item) return;
-            (i as any).checked = false;
-          });
+            this.items.forEach((i: Vue) => {
+              if (i === item) return;
+              (i as any).checked = false;
+            });
+          } else if (this.checkedItem === item) {
+            this.checkedItem = null;
+          }
         }
-        console.log('onItemChecked', this.items, this.checkedItem);
       },
       register(item: Vue) {
         this.items.push(item);

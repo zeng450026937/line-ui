@@ -1,5 +1,6 @@
 <template>
   <div class="button"
+    @click="onClick"
     v-autorepeat="{
       enable: autoRepeat,
       delay: autoRepeatDelay,
@@ -46,29 +47,9 @@ export default Vue.extend({
     },
   },
 
-  created() {
-    this.autoRepeatTimer = null;
-    this.autoRepeatDelayTimer = null;
-  },
-
   methods: {
-    onClicked(event) {
-      console.log('onClicked', event);
-    },
-
-    onMouseDown(event) {
-      this.pressX = event.x;
-      this.pressX = event.y;
-    },
-
-    onMouseMove(event) {
-      this.pressX = event.x;
-      this.pressX = event.y;
-    },
-
-    onMouseUp(event) {
-      this.pressX = event.x;
-      this.pressX = event.y;
+    onClick() {
+      this.toggle();
     },
   },
 });
