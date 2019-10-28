@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 export interface Animation {
   parentAnimation: Animation | undefined;
   elements: HTMLElement[];

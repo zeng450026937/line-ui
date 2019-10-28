@@ -1,3 +1,22 @@
+/* eslint-disable-next-line */
+declare const __zone_symbol__requestAnimationFrame: any;
+declare const requestAnimationFrame: any;
+
+/**
+ * Patched version of requestAnimationFrame that avoids ngzone
+ * Use only when you know ngzone should not run
+ */
+export const raf = (h: any) => {
+  /* eslint-disable-next-line */
+  if (typeof __zone_symbol__requestAnimationFrame === 'function') {
+    return __zone_symbol__requestAnimationFrame(h);
+  }
+  if (typeof requestAnimationFrame === 'function') {
+    return requestAnimationFrame(h);
+  }
+  return setTimeout(h);
+};
+
 export function keys<T extends Object>(o: T) {
   return Object.keys(o) as (keyof T)[];
 }

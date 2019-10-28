@@ -26,7 +26,7 @@ export function createGroupItem(name: string) {
     props: {
       checkable: {
         type: Boolean,
-        default: false,
+        default: true,
       },
       checked: {
         type: Boolean,

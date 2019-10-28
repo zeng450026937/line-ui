@@ -14,7 +14,7 @@ function inserted(el: HTMLElement, binding: ScrollVNodeDirective) {
 
   target.addEventListener('scroll', callback, options);
 
-  el._onScroll = {
+  (el as any).scrollHandler = {
     callback,
     options,
     target,
@@ -22,12 +22,12 @@ function inserted(el: HTMLElement, binding: ScrollVNodeDirective) {
 }
 
 function unbind(el: HTMLElement) {
-  if (!el._onScroll) return;
+  if (!(el as any).scrollHandler) return;
 
-  const { callback, options, target } = el._onScroll;
+  const { callback, options, target } = (el as any).scrollHandler;
 
   target.removeEventListener('scroll', callback, options);
-  delete el._onScroll;
+  delete (el as any).scrollHandler;
 }
 
 export const Scroll = {

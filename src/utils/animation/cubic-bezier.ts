@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /**
  * Based on:
  * https://stackoverflow.com/questions/7348009/y-coordinate-for-a-given-x-cubic-bezier

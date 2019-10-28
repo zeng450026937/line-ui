@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 /**
  * Does a simple sanitization of all elements
  * in an untrusted string

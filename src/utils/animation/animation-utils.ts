@@ -1,3 +1,4 @@
+/* eslint-disable */
 
 export const setStyleProperty = (element: HTMLElement, propertyName: string, value: string | null) => {
   element.style.setProperty(propertyName, value);

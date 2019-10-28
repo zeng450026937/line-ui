@@ -1,5 +1,5 @@
 import { VNodeDirective, VNode } from 'vue';
-import { keys } from '../helpers';
+import { keys } from '../../utils/helpers';
 
 export interface TouchStoredHandlers {
   touchstart: (e: TouchEvent) => void
@@ -35,23 +35,24 @@ interface TouchVNodeDirective extends VNodeDirective {
   }
 }
 
+const DIR_RATIO = 0.5;
+const MIN_DISTANCE = 16;
+
 const handleGesture = (wrapper: TouchWrapper) => {
   const {
     touchstartX, touchendX, touchstartY, touchendY,
   } = wrapper;
-  const dirRatio = 0.5;
-  const minDistance = 16;
   wrapper.offsetX = touchendX - touchstartX;
   wrapper.offsetY = touchendY - touchstartY;
 
-  if (Math.abs(wrapper.offsetY) < dirRatio * Math.abs(wrapper.offsetX)) {
-    wrapper.left && (touchendX < touchstartX - minDistance) && wrapper.left(wrapper);
-    wrapper.right && (touchendX > touchstartX + minDistance) && wrapper.right(wrapper);
+  if (Math.abs(wrapper.offsetY) < DIR_RATIO * Math.abs(wrapper.offsetX)) {
+    wrapper.left && (touchendX < touchstartX - MIN_DISTANCE) && wrapper.left(wrapper);
+    wrapper.right && (touchendX > touchstartX + MIN_DISTANCE) && wrapper.right(wrapper);
   }
 
-  if (Math.abs(wrapper.offsetX) < dirRatio * Math.abs(wrapper.offsetY)) {
-    wrapper.up && (touchendY < touchstartY - minDistance) && wrapper.up(wrapper);
-    wrapper.down && (touchendY > touchstartY + minDistance) && wrapper.down(wrapper);
+  if (Math.abs(wrapper.offsetX) < DIR_RATIO * Math.abs(wrapper.offsetY)) {
+    wrapper.up && (touchendY < touchstartY - MIN_DISTANCE) && wrapper.up(wrapper);
+    wrapper.down && (touchendY > touchstartY + MIN_DISTANCE) && wrapper.down(wrapper);
   }
 };
 
@@ -109,17 +110,17 @@ function createHandlers(value: TouchHandlers): TouchStoredHandlers {
   };
 }
 
-function inserted(el: HTMLElement, binding: TouchVNodeDirective, vnode: VNode) {
+function bind(el: HTMLElement, binding: TouchVNodeDirective, vnode: VNode) {
   const value = binding.value!;
-  const target = value.parent ? el.parentElement : el;
+  const target = el;
   const options = value.options || { passive: true };
 
   // Needed to pass unit tests
   if (!target) return;
 
   const handlers = createHandlers(binding.value!);
-  (target as any)._touchHandlers = Object((target as any)._touchHandlers);
-  (target as any)._touchHandlers![vnode.context!._uid] = handlers;
+  (target as any).touchHandlers = Object((target as any).touchHandlers);
+  (target as any).touchHandlers = handlers;
 
   keys(handlers).forEach((eventName) => {
     target.addEventListener(eventName, handlers[eventName] as EventListener, options);
@@ -128,17 +129,17 @@ function inserted(el: HTMLElement, binding: TouchVNodeDirective, vnode: VNode) {
 
 function unbind(el: HTMLElement, binding: TouchVNodeDirective, vnode: VNode) {
   const target = binding.value!.parent ? el.parentElement : el;
-  if (!target || !(target as any)._touchHandlers) return;
+  if (!target || !(target as any).touchHandlers) return;
 
-  const handlers = (target as any)._touchHandlers[vnode.context!._uid];
+  const handlers = (target as any).touchHandlers;
   keys(handlers).forEach((eventName) => {
     target.removeEventListener((eventName as any), handlers[eventName]);
   });
-  delete (target as any)._touchHandlers[vnode.context!._uid];
+  delete (target as any).touchHandlers;
 }
 
 export const Touch = {
-  inserted,
+  bind,
   unbind,
 };
 

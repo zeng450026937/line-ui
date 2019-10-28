@@ -1,3 +1,4 @@
+/* eslint-disable */
 // TODO: Add more tests. until then, be sure to manually test menu and swipe to go back/routing transitions
 
 import { raf } from '../helpers';
