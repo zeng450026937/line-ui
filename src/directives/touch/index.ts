@@ -119,8 +119,8 @@ function bind(el: HTMLElement, binding: TouchVNodeDirective, vnode: VNode) {
   if (!target) return;
 
   const handlers = createHandlers(binding.value!);
-  (target as any).touchHandlers = Object((target as any).touchHandlers);
-  (target as any).touchHandlers = handlers;
+  (target as any).vTouch = Object((target as any).vTouch);
+  (target as any).vTouch = handlers;
 
   keys(handlers).forEach((eventName) => {
     target.addEventListener(eventName, handlers[eventName] as EventListener, options);
@@ -129,13 +129,13 @@ function bind(el: HTMLElement, binding: TouchVNodeDirective, vnode: VNode) {
 
 function unbind(el: HTMLElement, binding: TouchVNodeDirective, vnode: VNode) {
   const target = binding.value!.parent ? el.parentElement : el;
-  if (!target || !(target as any).touchHandlers) return;
+  if (!target || !(target as any).vTouch) return;
 
-  const handlers = (target as any).touchHandlers;
+  const handlers = (target as any).vTouch;
   keys(handlers).forEach((eventName) => {
     target.removeEventListener((eventName as any), handlers[eventName]);
   });
-  delete (target as any).touchHandlers;
+  delete (target as any).vTouch;
 }
 
 export const Touch = {

@@ -4,12 +4,11 @@ const Window = Vue.extend({
   props: {
     title: {
       type: String,
-      default: '',
     },
   },
 
   methods: {
-    alert(msg) {
+    alert(msg: string) {
       if (!msg) return;
 
       if (window) {
@@ -64,7 +63,9 @@ const Window = Vue.extend({
   created() {
     if (!document) return;
 
-    document.title = this.title;
+    if (this.title) {
+      document.title = this.title;
+    }
   },
 });
 

@@ -36,7 +36,7 @@ function inserted(el: HTMLElement, binding: MutateVNodeDirective) {
     observer: MutationObserver,
   ) => {
     /* istanbul ignore if */
-    if (!(el as any).mutateHandler) return; // Just in case, should never fire
+    if (!(el as any).vMutate) return; // Just in case, should never fire
 
     callback(mutationsList, observer);
 
@@ -46,15 +46,15 @@ function inserted(el: HTMLElement, binding: MutateVNodeDirective) {
   });
 
   observer.observe(el, options);
-  (el as any).mutateHandler = { observer };
+  (el as any).vMutate = { observer };
 }
 
 function unbind(el: HTMLElement) {
   /* istanbul ignore if */
-  if (!(el as any).mutateHandler) return;
+  if (!(el as any).vMutate) return;
 
-  (el as any).mutateHandler.observer.disconnect();
-  delete (el as any).mutateHandler;
+  (el as any).vMutate.observer.disconnect();
+  delete (el as any).vMutate;
 }
 
 export const Mutate = {

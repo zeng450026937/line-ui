@@ -42,23 +42,23 @@ function createClickOutside(el: HTMLElement, options: ClickOutsideOption) {
 
 function bind(el: HTMLElement, binding: ClickOutsideDirective) {
   if (!binding.value) return;
-  const clickOutside = createClickOutside(el, {
+  const vClickOutside = createClickOutside(el, {
     ...binding.args,
     callback: binding.value,
   } as ClickOutsideOption);
   const doc = document;
-  doc.addEventListener('mouseup', clickOutside.maybe, true);
-  doc.addEventListener('touchend', clickOutside.maybe, true);
-  (el as any).clickOutside = clickOutside;
+  doc.addEventListener('mouseup', vClickOutside.maybe, true);
+  doc.addEventListener('touchend', vClickOutside.maybe, true);
+  (el as any).vClickOutside = vClickOutside;
 }
 
 function unbind(el: HTMLElement, binding: ClickOutsideDirective) {
   if (!binding.value) return;
-  const { clickOutside } = el as any;
+  const { vClickOutside } = el as any;
   const doc = document;
-  doc.removeEventListener('mouseup', clickOutside.maybe, true);
-  doc.removeEventListener('touchend', clickOutside.maybe, true);
-  delete (el as any).clickOutside;
+  doc.removeEventListener('mouseup', vClickOutside.maybe, true);
+  doc.removeEventListener('touchend', vClickOutside.maybe, true);
+  delete (el as any).vClickOutside;
 }
 
 export const ClickOutside = {

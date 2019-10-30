@@ -80,38 +80,38 @@ function createAutoRepeat(el: HTMLElement, options: AutoRepeatOption) {
 
 function bind(el: HTMLElement, binding: AutoRepeatDirective) {
   if (binding.value === false) return;
-  const autoRepeat = createAutoRepeat(el, binding.value as AutoRepeatOption);
+  const vAutoRepeat = createAutoRepeat(el, binding.value as AutoRepeatOption);
   const doc = document;
-  doc.addEventListener('mousedown', autoRepeat.pointerDown, true);
-  doc.addEventListener('mouseup', autoRepeat.pointerUp, true);
-  doc.addEventListener('touchstart', autoRepeat.pointerDown, true);
-  doc.addEventListener('touchend', autoRepeat.pointerUp, true);
-  doc.addEventListener('touchcancel', autoRepeat.pointerUp, true);
-  doc.addEventListener('dragstart', autoRepeat.pointerUp, true);
-  (el as any).autoRepeat = autoRepeat;
+  doc.addEventListener('mousedown', vAutoRepeat.pointerDown, true);
+  doc.addEventListener('mouseup', vAutoRepeat.pointerUp, true);
+  doc.addEventListener('touchstart', vAutoRepeat.pointerDown, true);
+  doc.addEventListener('touchend', vAutoRepeat.pointerUp, true);
+  doc.addEventListener('touchcancel', vAutoRepeat.pointerUp, true);
+  doc.addEventListener('dragstart', vAutoRepeat.pointerUp, true);
+  (el as any).vAutoRepeat = vAutoRepeat;
 }
 
 function update(el: HTMLElement, binding: AutoRepeatDirective) {
-  const { autoRepeat } = (el as any);
-  if (!autoRepeat) {
+  const { vAutoRepeat } = (el as any);
+  if (!vAutoRepeat) {
     bind(el, binding);
     return;
   }
-  autoRepeat.stop();
-  autoRepeat.update(binding.value);
+  vAutoRepeat.stop();
+  vAutoRepeat.update(binding.value);
 }
 
 function unbind(el: HTMLElement, binding: AutoRepeatDirective) {
-  const { autoRepeat } = el as any;
-  if (!autoRepeat) return;
+  const { vAutoRepeat } = el as any;
+  if (!vAutoRepeat) return;
   const doc = document;
-  doc.removeEventListener('mousedown', autoRepeat.pointerDown, true);
-  doc.removeEventListener('mouseup', autoRepeat.pointerUp, true);
-  doc.removeEventListener('touchstart', autoRepeat.pointerDown, true);
-  doc.removeEventListener('touchend', autoRepeat.pointerUp, true);
-  doc.removeEventListener('touchcancel', autoRepeat.pointerUp, true);
-  doc.removeEventListener('dragstart', autoRepeat.pointerUp, true);
-  delete (el as any).autoRepeat;
+  doc.removeEventListener('mousedown', vAutoRepeat.pointerDown, true);
+  doc.removeEventListener('mouseup', vAutoRepeat.pointerUp, true);
+  doc.removeEventListener('touchstart', vAutoRepeat.pointerDown, true);
+  doc.removeEventListener('touchend', vAutoRepeat.pointerUp, true);
+  doc.removeEventListener('touchcancel', vAutoRepeat.pointerUp, true);
+  doc.removeEventListener('dragstart', vAutoRepeat.pointerUp, true);
+  delete (el as any).vAutoRepeat;
 }
 
 export const AutoRepeat = {

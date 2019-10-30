@@ -1,6 +1,7 @@
 <template>
-  <div class="button"
+  <button class="button"
     @click="onClick"
+    v-on="$listeners"
     v-autorepeat="{
       enable: autoRepeat,
       delay: autoRepeatDelay,
@@ -10,14 +11,15 @@
     <slot name="icon"></slot>
     <slot name="label"></slot>
     <div>{{text}}</div>
-  </div>
+    <slot></slot>
+  </button>
 </template>
 
 <script>
 import Vue from 'vue';
 import { createGroupItem } from '@/components/group';
 import AbstractButton from '@/mixins/abstract-button';
-import autorepeat from '@/utils/autorepeat';
+import autorepeat from '@/directives/autorepeat';
 
 export default Vue.extend({
   name: 'Button',

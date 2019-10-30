@@ -82,7 +82,7 @@ function bind(
   vnode: VNode,
 ) {
   const { modifiers } = binding;
-  (el as any).rippleEffect = createRippleEffect(el, modifiers as RippleOption);
+  (el as any).vRipple = createRippleEffect(el, modifiers as RippleOption);
 }
 
 function unbind(
@@ -90,7 +90,7 @@ function unbind(
   binding: VNodeDirective,
   vnode: VNode,
 ) {
-  delete (el as any).rippleEffect;
+  delete (el as any).vRipple;
 }
 
 export const Ripple = {

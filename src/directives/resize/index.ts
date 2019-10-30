@@ -10,7 +10,7 @@ function inserted(el: HTMLElement, binding: ResizeVNodeDirective) {
   const options = binding.options || { passive: true };
 
   window.addEventListener('resize', callback, options);
-  (el as any).resizeHandler = {
+  (el as any).vResize = {
     callback,
     options,
   };
@@ -21,11 +21,11 @@ function inserted(el: HTMLElement, binding: ResizeVNodeDirective) {
 }
 
 function unbind(el: HTMLElement) {
-  if (!(el as any).resizeHandler) return;
+  if (!(el as any).vResize) return;
 
-  const { callback, options } = (el as any).resizeHandler;
+  const { callback, options } = (el as any).vResize;
   window.removeEventListener('resize', callback, options);
-  delete (el as any).resizeHandler;
+  delete (el as any).vResize;
 }
 
 export const Resize = {

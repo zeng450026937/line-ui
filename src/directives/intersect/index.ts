@@ -20,14 +20,14 @@ function inserted(el: HTMLElement, binding: ObserveVNodeDirective) {
     observer: IntersectionObserver,
   ) => {
     /* istanbul ignore if */
-    if (!(el as any).intersectHandler) return; // Just in case, should never fire
+    if (!(el as any).vIntersect) return; // Just in case, should never fire
 
     // If is not quiet or has already been
     // initted, invoke the user callback
     if (
       callback && (
         !modifiers.quiet
-        || (el as any).intersectHandler.init
+        || (el as any).vIntersect.init
       )
     ) {
       const isIntersecting = Boolean(entries.find(entry => entry.isIntersecting));
@@ -38,22 +38,22 @@ function inserted(el: HTMLElement, binding: ObserveVNodeDirective) {
     // If has already been initted and
     // has the once modifier, unbind
     /* eslint-disable-next-line */
-    if ((el as any).intersectHandler.init && modifiers.once) unbind(el);
+    if ((el as any).vIntersect.init && modifiers.once) unbind(el);
     // Otherwise, mark the observer as initted
-    else ((el as any).intersectHandler.init = true);
+    else ((el as any).vIntersect.init = true);
   }, options);
 
-  (el as any).intersectHandler = { init: false, observer };
+  (el as any).vIntersect = { init: false, observer };
 
   observer.observe(el);
 }
 
 function unbind(el: HTMLElement) {
   /* istanbul ignore if */
-  if (!(el as any).intersectHandler) return;
+  if (!(el as any).vIntersect) return;
 
-  (el as any).intersectHandler.observer.unobserve(el);
-  delete (el as any).intersectHandler;
+  (el as any).vIntersect.observer.unobserve(el);
+  delete (el as any).vIntersect;
 }
 
 export const Intersect = {

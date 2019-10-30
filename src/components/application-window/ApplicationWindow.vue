@@ -24,15 +24,13 @@
          v-if="$scopedSlots.footer">
       <slot name="footer"></slot>
     </div>
-
-    <div class="overlay"
-         ref="overlay"></div>
   </main>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import Window from '@/mixins/window';
+import { setupPortal } from '@/utils/portal';
 
 export default Vue.extend({
   name: 'ApplicationWindow',
@@ -43,6 +41,7 @@ export default Vue.extend({
     return {
       ApplicationWindow: this,
       Overlay: null,
+      Portal: setupPortal(),
     };
   },
 });
@@ -55,8 +54,7 @@ export default Vue.extend({
   display: flex;
   flex-direction: column;
 
-  > .background,
-  > .overlay {
+  > .background {
     position: absolute;
     width: 100%;
     height: 100%;

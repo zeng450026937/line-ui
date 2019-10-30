@@ -1,47 +1,37 @@
 <script>
-import wormhole from './wormhole';
+import Vue from 'vue';
 
-export default {
+export default Vue.extend({
   name: 'portal-remote',
 
   props: {
-    name: String,
+    name: {
+      type: String,
+      required: true,
+    },
 
     disabled: Boolean,
 
-    multi: {
-      type: Boolean,
-      default: true,
-    },
-
-    transition: [String, Object, Function],
+    transition: [String, Object],
   },
 
+  inject: ['Portal'],
+
   computed: {
-    computedTransports() {
-      const transports = wormhole.transports(this.name);
-
-      if (this.multi) return transports;
-
-      return [transports[transports.length - 1]];
-    },
-
-    computedPayloads() {
-      return this.computedTransports.map(transport => transport.payload());
+    payloads() {
+      return this.Portal.payloads(this.name).map(payload => payload.slot());
     },
   },
 
   render(h) {
-    if (this.disabled) return h();
-
-    const tag = this.transition || 'div';
-    const children = this.computedPayloads;
-
-    return h(tag, children);
+    if (this.disabled) {
+      return h();
+    }
+    return h(
+      this.transition || 'div',
+      { staticClass: `${this.name}` },
+      this.payloads,
+    );
   },
-};
+});
 </script>
-
-<style lang="stylus">
-
-</style>

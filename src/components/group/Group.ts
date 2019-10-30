@@ -1,8 +1,14 @@
 import Vue from 'vue';
 
+type GroupData = {
+  checkState: boolean,
+  checkedItem: Vue | null,
+  items: Array<Vue>,
+}
+
 export function createGroup(name: string) {
   return Vue.extend({
-    provide() {
+    provide(): Object {
       return {
         [name]: this,
       };
@@ -15,7 +21,7 @@ export function createGroup(name: string) {
       },
     },
 
-    data() {
+    data(): GroupData {
       return {
         checkState: false,
         checkedItem: null,
@@ -44,11 +50,11 @@ export function createGroup(name: string) {
           }
         }
       },
-      register(item: Vue) {
+      registerItem(item: Vue) {
         this.items.push(item);
         item.$watch('checked', val => this.onItemChecked(item, val));
       },
-      unregister(item: Vue) {
+      unregisterItem(item: Vue) {
         const index = this.items.indexOf(item);
         this.items.splice(index, 1);
       },

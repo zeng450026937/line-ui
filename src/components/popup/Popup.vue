@@ -1,14 +1,26 @@
 <template>
-  <div class="popup">
-    <slot name="overlay">
-      <div></div>
-    </slot>
-    <slot></slot>
+  <div class="popup" v-show="visable" v-remote="global">
+    <div class="overlay"
+      :style="{opacity: dim ? 0.32 : 0.01}"
+      @touchstart.capture="onTouchStart"
+      @click.capture="onMouseDown"
+      @mousedown.capture="onMouseDown"
+    >
+      <slot name="overlay" v-bind="{modal, dim}"></slot>
+    </div>
+
+    <div class="arrow"></div>
+    <div class="content" ref="content">
+      <slot name="default"></slot>
+    </div>
   </div>
 </template>
 
 <script>
-import Popper from 'popper.js';
+import Vue from 'vue';
+import remote from '@/directives/remote';
+import { now } from '@/utils/helpers';
+import { GESTURE_CONTROLLER } from '@/utils/gesture';
 
 export const ClosePolicy = {
   NoAutoClose: 0,
@@ -19,10 +31,18 @@ export const ClosePolicy = {
   CloseOnEscape: 5,
 };
 
-export default {
+export default Vue.extend({
   name: 'Popup',
 
+  directives: {
+    remote,
+  },
+
   props: {
+    global: {
+      type: Boolean,
+      default: false,
+    },
     closePolicy: {
       type: Number,
       default: 0,
@@ -37,7 +57,7 @@ export default {
     },
     visable: {
       type: Boolean,
-      default: true,
+      default: false,
     },
   },
 
@@ -45,102 +65,80 @@ export default {
     close() {},
     focus() {},
     open() {},
+
+    onTouchStart(ev) {
+      console.log('onTouchStart');
+      this.lastClick = now(ev);
+      this.emitTap(ev);
+    },
+
+    onMouseDown(ev) {
+      console.log('onMouseDown');
+      if (this.lastClick < now(ev) - 2500) {
+        this.emitTap(ev);
+      }
+    },
+
+    emitTap(ev) {
+      console.log('emitTap');
+      if (this.modal) {
+        ev.preventDefault();
+        ev.stopPropagation();
+      }
+      if (this.tappable) {
+        this.$emit('tap');
+      }
+    },
   },
 
   created() {
-    // abstract signal defines
-    this.$emit('aboutToHide');
-    this.$emit('aboutToShow');
-    this.$emit('closed');
-    this.$emit('opened');
-  },
-
-  async mounted() {
-    // const reference = this.$parent.$el;
-    // this.popper = new Popper(reference, this.$el, {
-    //   placement: 'bottom',
-    //   eventsEnabled: false,
-    //   modifiers: {
-    //     flip: { enabled: false },
-    //     preventOverflow: { enabled: true, escapeWithReference: true, boundariesElement: document.querySelector('.application-window') },
-    //     applyStyle: { enabled: true },
-    //     applyReactStyle: {
-    //       enabled: true,
-    //       fn(data) {
-    //         console.log(data);
-    //         return data;
-    //       },
-    //       order: 900,
-    //     },
-    //   },
-    // });
-
-    // await this.$nextTick();
-
-    console.log(this.$el);
-
-    const target = document.querySelector('main');
-    console.log(target);
-    target.insertBefore(
-      this.$el,
-      target.firstChild,
-    );
-
-    const reference = this.$parent.$el;
-    this.popper = new Popper(reference, this.$el, {
-      placement: 'bottom',
-      eventsEnabled: false,
-      modifiers: {
-        flip: { enabled: false },
-        preventOverflow: { 
-          enabled: true,
-          escapeWithReference: false,
-          boundariesElement: target,
-        },
-        applyStyle: { enabled: true },
-        applyCustomStyle: {
-          enabled: true,
-          fn(data) {
-            console.log(data);
-            return data;
-          },
-          order: 900,
-        },
-      },
+    this.lastClick = -10000;
+    this.blocker = GESTURE_CONTROLLER.createBlocker({
+      disableScroll: true,
     });
-  },
 
-  updated() {
-    console.log('updated');
-    this.popper.update();
+    if (this.modal) {
+      this.blocker.block();
+    }
+    // abstract signal defines
+    // this.$emit('aboutToHide');
+    // this.$emit('aboutToShow');
+    // this.$emit('closed');
+    // this.$emit('opened');
   },
 
   beforeDestroy() {
-    console.log('beforeDestroy');
-    if (this.$el.parentNode) {
-      this.$el.parentNode.removeChild(this.$el);
-    }
-    
-    this.popper.destroy();
-    this.popper = null;
+    this.$emit('aboutToHide');
+    this.blocker.unblock();
   },
-};
+});
 </script>
 
 <style lang="scss">
 
 .popup {
-  width: 100px;
-  height: 100px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   border: dotted plum;
+  transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1), z-index 1ms;
 
-  .reference {
-    height: 30px;
-    background-color: aquamarine;
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: inherit;
+    transition: inherit;
+    background-color: rgba(0, 0, 0, 0.87);
+    opacity: 0.32;
   }
+
   .content {
-    height: 30px;
-    border: dotted red;
+    position: absolute;
   }
 }
 

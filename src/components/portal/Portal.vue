@@ -1,36 +1,19 @@
-<template>
-  <div v-if="disabled && $scopedSlots.default">
-    <slot></slot>
-  </div>
-</template>
-
 <script>
-import wormhole from './wormhole';
-
-window.wormhole = wormhole;
-
 let globalId = 1;
 
 export default {
   name: 'portal',
 
   props: {
-    remote: [String, Array],
-
-    order: Number,
+    remote: {
+      type: String,
+      required: true,
+    },
 
     disabled: Boolean,
   },
 
-  computed: {
-    transport() {
-      return {
-        payload: this.payload(),
-        order: this.order,
-        to: this.remote,
-      };
-    },
-  },
+  inject: ['Portal'],
 
   watch: {
     remote: 'transfer',
@@ -38,36 +21,43 @@ export default {
   },
 
   methods: {
-    payload() {
-      return this.disabled ? null : this.$scopedSlots.default;
+    transfer() {
+      this.portal.transfer(this.payload);
     },
-
-    async transfer() {
-      // debounce
-      await this.$nextTick();
-      this.hole.transfer(this.transport);
-    },
-  },
-
-  updated() {
-    if (this.disabled) return;
-    this.transport.payload = this.payload();
   },
 
   created() {
+    const { Portal } = this;
     this.id = `portal-${globalId++}`;
-    this.hole = wormhole.open(this.id);
+    this.portal = Portal.open(this.id);
+    this.payload = {
+      to: this.remote,
+      slot: null,
+    };
   },
 
   mounted() {
     if (this.disabled) return;
+    this.payload.slot = this.$scopedSlots.default;
     this.transfer();
   },
 
+  updated() {
+    if (this.disabled) return;
+    this.payload.slot = this.disabled ? null : this.$scopedSlots.default;
+  },
+
   beforeDestroy() {
-    if (this.hole) {
-      this.hole.close();
+    if (this.portal) {
+      this.portal.close();
     }
+  },
+
+  render(h) {
+    if (this.disabled && this.$scopedSlots.default) {
+      return this.$scopedSlots.default();
+    }
+    return h();
   },
 };
 </script>

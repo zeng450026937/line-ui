@@ -1,8 +1,8 @@
 import Vue from 'vue';
 
 const NullGroup = {
-  register() {},
-  unregister() {},
+  registerItem() {},
+  unregisterItem() {},
 };
 
 export function createGroupItem(name: string) {
@@ -45,14 +45,14 @@ export function createGroupItem(name: string) {
     created() {
       const group = (this as any)[name];
       if (isGroupAvailable(this)) {
-        group.register(this, this.$parent);
+        group.registerItem(this, this.$parent);
       }
     },
 
     beforeDestroy() {
       const group = (this as any)[name];
       if (isGroupAvailable(this)) {
-        group.unregister(this, this.$parent);
+        group.unregisterItem(this, this.$parent);
       }
     },
   });
