@@ -1,49 +1,28 @@
-<template>
-  <i :class="'font-icon icon'+ name"
-     :style="{fontSize: size}">
-  </i>
-</template>
-
 <script>
 import AbstractIcon from './abstract-icon';
+import '@/iconfont/material-icons.scss';
 
 export default {
   name: 'FontIcon',
 
+  functional: true,
+
   extends: AbstractIcon,
 
-  props: {
-    size: {
-      type: [Number, String],
-      default: '16px',
-    },
-  },
-
-  computed: {
-    style() {
-      let size = '16px';
-      const sizes = {
-        small: '16px',
-        medium: '24px',
-        large: '36px',
-      };
-      size = sizes[this.size] === undefined
-        ? size = `${ this.size.toString().replace(/px/, '') }px` : size = sizes[this.size];
-
-      return { fontSize: size };
-    },
+  render(h, { props, data, scopedSlots }) {
+    const text = props.name || (scopedSlots.default && scopedSlots.default()[0].text.trim());
+    return h('i', {
+      ...data,
+      style: {
+        'font-size': `${ props.height || props.width }px`,
+        'vertical-align': 'middle',
+      },
+      staticClass: 'material-icons',
+    }, text);
   },
 };
 </script>
 
 <style lang="scss">
-.font-icon {
-  display: inline-block;
-  font-style: normal;
-  font-weight: 400;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  vertical-align: baseline;
-}
+
 </style>

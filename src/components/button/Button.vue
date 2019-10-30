@@ -1,24 +1,7 @@
-<template>
-  <button class="button"
-          @click="onClick"
-          v-on="$listeners"
-          v-autorepeat="{
-      enable: autoRepeat,
-      delay: autoRepeatDelay,
-      interval: autoRepeatInterval
-   }">
-    <slot name="icon"></slot>
-    <slot name="label"></slot>
-    <div>{{text}}</div>
-    <slot></slot>
-  </button>
-</template>
-
-<script>
+<script lang="js">
 import Vue from 'vue';
+import AbstractButton from './AbstractButton.vue';
 import { createGroupItem } from '@/components/group';
-import AbstractButton from '@/mixins/abstract-button';
-import autorepeat from '@/directives/autorepeat';
 
 export default Vue.extend({
   name: 'Button',
@@ -26,10 +9,6 @@ export default Vue.extend({
   mixins: [createGroupItem('ButtonGroup')],
 
   extends: AbstractButton,
-
-  directives: {
-    autorepeat,
-  },
 
   props: {
     flat: {
@@ -42,16 +21,22 @@ export default Vue.extend({
     },
   },
 
-  watch: {
-    checked(val) {
-      val && this.$emit('toggled', this);
-    },
-  },
-
   methods: {
     onClick() {
       this.toggle();
     },
+  },
+
+  render(h) {
+    const vnode = AbstractButton.options.render.call(this, h);
+    vnode.data.staticClass += ' button';
+    vnode.data.on = {
+      ...this.$listeners,
+      click: () => {
+        this.onClick();
+      },
+    };
+    return vnode;
   },
 });
 </script>

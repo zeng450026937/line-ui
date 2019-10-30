@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import Vue, { VueConstructor } from 'vue';
 
 type GroupData = {
   checkState: boolean;
@@ -6,7 +6,18 @@ type GroupData = {
   items: Array<Vue>;
 };
 
-export function createGroup(name: string) {
+export type Group<T extends string, C extends VueConstructor | null = null> =
+  VueConstructor<Vue & {
+    exclusive: boolean
+    checkState: boolean
+    checkedItem: Vue | null
+    registerItem (...args: any[]): void
+    unregisterItem (...args: any[]): void
+  }>;
+
+export function createGroup<T extends string, C extends VueConstructor | null = null>(
+  name: string,
+): Group<T, C> {
   return Vue.extend({
     provide(): Object {
       return {
@@ -43,7 +54,6 @@ export function createGroup(name: string) {
             this.items.forEach((i: Vue) => {
               if (i === item) return;
               (i as any).checked = false;
-              i.$emit('change', false);
             });
           } else if (this.checkedItem === item) {
             this.checkedItem = null;

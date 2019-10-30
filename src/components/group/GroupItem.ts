@@ -1,11 +1,21 @@
-import Vue from 'vue';
+import Vue, { VueConstructor } from 'vue';
 
 const NullGroup = {
   registerItem() {},
   unregisterItem() {},
 };
 
-export function createGroupItem(name: string) {
+export type GroupItem<T extends string, C extends VueConstructor | null = null> =
+  VueConstructor<Vue &
+  {
+    checkable: boolean
+    checked: boolean
+    toggle (): void
+  }>;
+
+export function createGroupItem<T extends string, C extends VueConstructor | null = null>(
+  name: string,
+): GroupItem<T, C> {
   function isGroupAvailable(item: Vue) {
     const group = (item as any)[name];
     return group && item.$parent === group;
@@ -31,18 +41,10 @@ export function createGroupItem(name: string) {
       };
     },
 
-    watch: {
-      value(val) {
-        console.log('watch value');
-        this.checked = val;
-      },
-    },
-
     methods: {
       toggle() {
         if (this.checkable) {
           this.checked = !this.checked;
-          this.$emit('change', this.checked);
         }
       },
     },
