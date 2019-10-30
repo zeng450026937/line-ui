@@ -27,6 +27,7 @@ module.exports = {
     'lines-between-class-members': 0,
     'class-methods-use-this': 1,
     'import/prefer-default-export': 0,
+    "template-curly-spacing": ["warn", "always"]
   },
   parserOptions: {
     parser: '@typescript-eslint/parser',

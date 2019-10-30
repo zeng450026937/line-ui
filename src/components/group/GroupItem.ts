@@ -18,26 +18,31 @@ export function createGroupItem(name: string) {
       },
     },
 
-    model: {
-      prop: 'checked',
-      event: 'change',
-    },
-
     props: {
       checkable: {
         type: Boolean,
         default: true,
       },
-      checked: {
-        type: Boolean,
-        default: false,
+    },
+
+    data() {
+      return {
+        checked: false,
+      };
+    },
+
+    watch: {
+      value(val) {
+        console.log('watch value');
+        this.checked = val;
       },
     },
 
     methods: {
       toggle() {
         if (this.checkable) {
-          this.$emit('change', !this.checked);
+          this.checked = !this.checked;
+          this.$emit('change', this.checked);
         }
       },
     },

@@ -1,15 +1,18 @@
 <template>
-  <div class="swiper-slide">
-    <slot name="default"></slot>
+  <div class="swiper swiper-container">
+    <div class="swiper-wrapper">
+      <slot name="default"></slot>
+    </div>
   </div>
 </template>
 
 <script>
+import Swiper from 'swiper';
 
 export const Orientation = {
-  Min: 0,
   Horizontal: 0,
   Vertical: 1,
+  Min: 0,
   Max: 1,
 };
 
@@ -27,6 +30,12 @@ export default {
     },
   },
 
+  data() {
+    return {
+      swiper: null,
+    };
+  },
+
   computed: {
     horizontal() {
       return true;
@@ -34,6 +43,7 @@ export default {
     vertical() {
       return true;
     },
+
   },
 
   provide() {
@@ -53,10 +63,16 @@ export default {
   },
 
   mounted() {
-
+    const swiper = new Swiper('.swiper-container');
+    this.swiper = swiper;
   },
 };
 </script>
 
 <style lang="scss">
+@import './swiper.scss';
+.swiper {
+  width: 100%;
+  height: 100%;
+}
 </style>
