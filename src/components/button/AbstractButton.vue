@@ -2,6 +2,8 @@
 import Vue, {
   VNode, VNodeChildren, VNodeData,
 } from 'vue';
+import { Icon } from '@/components/icon';
+import { isObject } from '@/utils/helpers';
 import { mergeListener } from './merge-listener';
 
 export const Dispaly = {
@@ -12,6 +14,8 @@ export const Dispaly = {
 };
 
 export default Vue.extend({
+  name: 'AbstractButton',
+
   props: {
     action: {
       type: Object,
@@ -19,27 +23,18 @@ export default Vue.extend({
     },
     display: {
       type: Number,
-      default: 0,
+      default: Dispaly.TextBesideIcon,
     },
     down: {
       type: Boolean,
       default: false,
     },
-    icon: {
-      type: [String, Object],
-      default: () => ({
-        name: '',
-        source: '',
-        width: 24,
-        height: 24,
-        color: '',
-      }),
-    },
+    icon: [String, Object],
     text: String,
   },
 
   computed: {
-    cachedIndicator(): VNodeChildren {
+    cachedIndicator(): VNodeChildren | VNode {
       const slot = this.$scopedSlots.indicator;
       if (slot) {
         const context = {};
@@ -57,7 +52,7 @@ export default Vue.extend({
       ] as VNodeChildren;
       return this.$createElement('div', data, children);
     },
-    cachedIcon(): VNodeChildren {
+    cachedIcon(): VNodeChildren | VNode {
       const slot = this.$scopedSlots.icon;
       if (slot) {
         const context = {};
@@ -65,7 +60,7 @@ export default Vue.extend({
       }
       return this.genIcon();
     },
-    cachedLabel(): VNodeChildren {
+    cachedLabel(): VNodeChildren | VNode {
       const slot = this.$scopedSlots.label;
       if (slot) {
         const context = {};
@@ -77,10 +72,23 @@ export default Vue.extend({
 
   methods: {
     genIndicator(): VNodeChildren { return null; },
-    genIcon(): VNodeChildren { return null; },
-    genLabel(): VNodeChildren { return null; },
+    genIcon(): VNode | null {
+      if (!this.icon) return null;
+      if (this.display === Dispaly.TextOnly) return null;
+      const props = isObject(this.icon) ? this.icon : { name: this.icon };
+      return this.$createElement(Icon, { props });
+    },
+    genLabel(): VNode | null {
+      if (!this.text) return null;
+      if (this.display === Dispaly.IconOnly) return null;
+      return this.$createElement('div', this.text);
+    },
 
     onClick(ev: UIEvent) {},
+  },
+
+  created() {
+    (this as any).staticClass = 'abstract-button';
   },
 
   render(h): VNode {
@@ -89,7 +97,8 @@ export default Vue.extend({
       click: (ev: UIEvent) => this.onClick(ev),
     };
     const data = {
-      staticClass: 'abstract-button',
+      staticClass: (this as any).staticClass,
+      class: (this as any).class,
       on: mergeListener(on, this.$listeners),
     };
     const context = {};

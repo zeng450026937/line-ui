@@ -29,8 +29,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import Window from '@/mixins/window';
-import { setupPortal } from '@/utils/portal';
+import Window from './Window.vue';
 
 export default Vue.extend({
   name: 'ApplicationWindow',
@@ -41,7 +40,6 @@ export default Vue.extend({
     return {
       ApplicationWindow: this,
       Overlay: null,
-      Portal: setupPortal(),
     };
   },
 });

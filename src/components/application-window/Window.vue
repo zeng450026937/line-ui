@@ -1,6 +1,7 @@
+<script lang="ts">
 import Vue from 'vue';
 
-const Window = Vue.extend({
+export default Vue.extend({
   props: {
     title: {
       type: String,
@@ -17,18 +18,12 @@ const Window = Vue.extend({
         /* eslint-enable no-alert */
       }
     },
-    async close() {
+    close() {
       const closeEvent = {
         accepted: true,
       };
-
       this.$emit('closing', closeEvent);
-
       if (!closeEvent.accepted) return;
-
-      await this.$nextTick();
-
-      // is it ok?
       this.$destroy();
     },
     hide() {
@@ -62,11 +57,9 @@ const Window = Vue.extend({
 
   created() {
     if (!document) return;
-
     if (this.title) {
       document.title = this.title;
     }
   },
 });
-
-export default Window;
+</script>

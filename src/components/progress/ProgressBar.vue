@@ -36,17 +36,21 @@ export default Vue.extend({
       type: Number,
       default: 100,
     },
-    color: {
-      type: String,
-      default: '#10c29b',
+    value: {
+      type: Number,
+      default: 0,
     },
     indeterminate: {
       type: Boolean,
       default: false,
     },
-    value: {
-      type: Number,
-      default: 0,
+    height: {
+      type: [Number, String],
+      default: 4,
+    },
+    color: {
+      type: String,
+      default: '#10c29b',
     },
   },
 

@@ -54,8 +54,10 @@ export default Vue.extend({
   methods: {
     genIndicator() {
       return this.$createElement(SvgIcon, {
-        props: {
-          path: 'M1.73,12.91 8.1,19.28 22.79,4.59',
+        scopedSlots: {
+          content: () => this.$createElement(
+            'path', { attrs: { d: 'M1.73,12.91 8.1,19.28 22.79,4.59' } },
+          ),
         },
       });
     },

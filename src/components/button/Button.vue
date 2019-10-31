@@ -27,10 +27,8 @@ export default Vue.extend({
     },
   },
 
-  render(h) {
-    const vnode = AbstractButton.options.render.call(this, h);
-    vnode.data.staticClass += ' button';
-    return vnode;
+  created() {
+    this.staticClass += ' button';
   },
 });
 </script>

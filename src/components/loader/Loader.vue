@@ -1,5 +1,5 @@
-<script>
-import Vue from 'vue';
+<script lang="ts">
+import Vue, { VNode } from 'vue';
 
 export default Vue.extend({
   name: 'Loader',
@@ -11,28 +11,21 @@ export default Vue.extend({
       type: Boolean,
       default: true,
     },
-    component: {
-      type: [Object, Function],
-      default: null,
-    },
-    properties: {
-      type: Object,
-      default: () => ({}),
-    },
+    vnode: [Object, Array],
+    component: [Object, Function],
+    properties: Object,
   },
 
   render(h, {
     props, data, children, parent,
-  }) {
-    const { active, component } = props;
-    if (!active || !component) return h();
+  }): VNode {
+    const { active, vnode, component } = props;
+    if (!active) return h();
+    if (!component && !vnode) return h();
+    if (vnode) return vnode;
     h = parent.$createElement;
     data.props = props.properties;
     return h(component, data, children);
   },
 });
 </script>
-
-<style>
-
-</style>

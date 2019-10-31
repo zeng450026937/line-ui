@@ -15,42 +15,42 @@ export default Vue.extend({
   },
 
   created() {
-    console.log(`${this.label} created.`); 
+    console.log(`${ this.label } created.`);
   },
 
   beforeMount() {
-    console.log(`${this.label} beforeMount.`); 
+    console.log(`${ this.label } beforeMount.`);
   },
 
   mounted() {
-    console.log(`${this.label} mounted.`); 
+    console.log(`${ this.label } mounted.`);
   },
 
   beforeUpdate() {
-    console.log(`${this.label} beforeUpdate.`); 
+    console.log(`${ this.label } beforeUpdate.`);
   },
 
   updated() {
-    console.log(`${this.label} updated.`); 
+    console.log(`${ this.label } updated.`);
   },
 
   activated() {
-    console.log(`${this.label} activated.`); 
+    console.log(`${ this.label } activated.`);
   },
 
   deactivated() {
-    console.log(`${this.label} deactivated.`); 
+    console.log(`${ this.label } deactivated.`);
   },
 
   beforeDestroy() {
-    console.log(`${this.label} beforeDestroy.`); 
+    console.log(`${ this.label } beforeDestroy.`);
   },
 
   destroyed() {
-    console.log(`${this.label} destroyed.`); 
+    console.log(`${ this.label } destroyed.`);
   },
-  
+
   render(h) {
-    return h(this.tag, this.$scopedSlots.default());
+    return h(this.tag, this.$scopedSlots.default!(null));
   },
 });

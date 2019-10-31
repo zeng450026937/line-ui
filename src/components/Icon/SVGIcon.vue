@@ -1,5 +1,6 @@
 <script>
 import AbstractIcon from './abstract-icon';
+import { convertToUnit } from '@/utils/helpers';
 
 export default {
   name: 'SvgIcon',
@@ -15,21 +16,13 @@ export default {
   render(h, { props, data, scopedSlots }) {
     data.attrs = Object(data.attrs);
     const text = props.name || (scopedSlots.default && scopedSlots.default()[0].text.trim());
-    const d = props.path;
+    const content = scopedSlots.content && scopedSlots.content();
     const tag = 'div';
     let use;
-    let path;
     if (text) {
       use = h('use', {
         attrs: {
           'xlink:href': `${ props.source || '' }#${ text }`,
-        },
-      });
-    }
-    if (d) {
-      path = h('path', {
-        attrs: {
-          d: `${ d }`,
         },
       });
     }
@@ -43,13 +36,13 @@ export default {
         'aria-hidden': data.attrs['aria-label'],
         'aria-label': data.attrs['aria-label'],
       },
-    }, [use || path]);
+    }, [use || content]);
     return h(tag, {
       ...data,
       staticClass: 'svg-icon',
       style: {
-        width: `${ props.width }px`,
-        height: `${ props.height }px`,
+        width: convertToUnit(props.width),
+        height: convertToUnit(props.height),
       },
     }, [svg]);
   },

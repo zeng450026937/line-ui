@@ -106,3 +106,19 @@ export const capitalize = (str: string): string => {
 export const hasChanged = (value: any, oldValue: any): boolean => (
   value !== oldValue && (value === value || oldValue === oldValue)
 );
+
+/* eslint-enable */
+
+// copied from vuetify
+
+/* eslint-disable */
+export function convertToUnit(str: string | number | null | undefined, unit = 'px'): string | undefined {
+  if (str == null || str === '') {
+    return undefined;
+  } if (isNaN(+str!)) {
+    return String(str);
+  }
+  return `${ Number(str) }${ unit }`;
+}
+
+/* eslint-enable */
