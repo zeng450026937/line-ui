@@ -1,8 +1,8 @@
 <template functional>
   <div class="busy-indicator"
-    :class="{'is-running': props.running}"
-  >
-    <slot name="content">
+       :class="{'is-running': props.running}">
+    <slot name="content"
+          v-bind={running:props.running}>
       busy~
     </slot>
   </div>
@@ -14,8 +14,7 @@ import Vue from 'vue';
 export default Vue.extend({
   name: 'BusyIndicator',
 
-  components: {
-  },
+  components: {},
 
   props: {
     running: {
@@ -27,7 +26,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-
 .busy-indicator {
   display: flex;
   flex-direction: column;
@@ -50,5 +48,4 @@ export default Vue.extend({
     transform: rotate(360deg);
   }
 }
-
 </style>

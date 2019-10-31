@@ -22,7 +22,7 @@ export default Vue.extend({
   },
 
   model: {
-    prop: 'checked',
+    prop: 'value',
     event: 'change',
   },
 
@@ -45,15 +45,24 @@ export default Vue.extend({
       type: Boolean,
       default: true,
     },
-    checked: {
+    disabled: {
       type: Boolean,
       default: false,
+    },
+    value: {
+      type: Boolean,
+      default: false,
+    },
+    label: {
+      type: [String, Number, Boolean],
+      default: null,
     },
   },
 
   methods: {
     genIndicator() {
       return this.$createElement(SvgIcon, {
+        props: { width: 20, height: 20 },
         scopedSlots: {
           content: () => this.$createElement(
             'path', { attrs: { d: 'M1.73,12.91 8.1,19.28 22.79,4.59' } },
@@ -63,9 +72,25 @@ export default Vue.extend({
     },
 
     onClick() {
-      if (this.checkable) {
-        this.$emit('change', !this.checked);
+      if (this.checkable && !this.disabled) {
+        this.$emit('change', !this.value);
       }
+    },
+  },
+
+  watch: {
+    value: {
+      handler(val) {
+        this.checked = val;
+      },
+      immediate: true,
+    },
+
+    checked: {
+      handler(val) {
+        this.$emit('change', val);
+      },
+      immediate: true,
     },
   },
 
@@ -75,6 +100,7 @@ export default Vue.extend({
     vnode.data.class = {
       ...vnode.data.class,
       'is-checked': this.checked,
+      'is-disabled': this.disabled,
     };
     return vnode;
   },
@@ -82,9 +108,9 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-
 .check-box {
   margin: 4px;
+  cursor: pointer;
 
   .svg-icon {
     margin-right: 4px;
@@ -116,10 +142,19 @@ export default Vue.extend({
       }
     }
   }
+  &.is-disabled {
+    .svg-icon {
+      border-color: #afafaf;
+    }
+  }
+  &.is-disabled.is-checked {
+    .svg-icon {
+      background-color: #afafaf;
+    }
+  }
 }
 
-.check-box + .check-box {
-  margin-left: 8px;
-}
-
+// .check-box + .check-box {
+//   margin-left: 8px;
+// }
 </style>

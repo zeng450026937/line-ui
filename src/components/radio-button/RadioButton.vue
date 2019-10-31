@@ -20,7 +20,7 @@
 
 <script>
 import Vue from 'vue';
-import AbstractButton from '@/mixins/abstract-button';
+import { AbstractButton } from '@/components/button';
 import { createGroupItem } from '@/components/group';
 
 export default Vue.extend({
