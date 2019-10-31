@@ -74,12 +74,6 @@ export default Vue.extend({
       ...vnode.data.class,
       'is-checked': this.checked,
     };
-    vnode.data.on = {
-      ...this.$listeners,
-      click: () => {
-        this.onClick();
-      },
-    };
     return vnode;
   },
 });

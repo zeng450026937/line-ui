@@ -2,6 +2,7 @@
 import Vue, {
   VNode, VNodeChildren, VNodeData,
 } from 'vue';
+import { mergeListener } from './merge-listener';
 
 export const Dispaly = {
   IconOnly: 0,
@@ -78,18 +79,24 @@ export default Vue.extend({
     genIndicator(): VNodeChildren { return null; },
     genIcon(): VNodeChildren { return null; },
     genLabel(): VNodeChildren { return null; },
+
+    onClick(ev: UIEvent) {},
   },
 
   render(h): VNode {
     const tag = 'div';
+    const on = {
+      click: (ev: UIEvent) => this.onClick(ev),
+    };
     const data = {
       staticClass: 'abstract-button',
-      on: this.$listeners,
+      on: mergeListener(on, this.$listeners),
     };
+    const context = {};
     const children = [
       this.cachedIndicator,
       this.cachedContent,
-      this.$scopedSlots.default && this.$scopedSlots.default(null),
+      this.$scopedSlots.default && this.$scopedSlots.default(context),
     ];
     return h(tag, data, children);
   },

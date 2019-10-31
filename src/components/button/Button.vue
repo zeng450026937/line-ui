@@ -30,12 +30,6 @@ export default Vue.extend({
   render(h) {
     const vnode = AbstractButton.options.render.call(this, h);
     vnode.data.staticClass += ' button';
-    vnode.data.on = {
-      ...this.$listeners,
-      click: () => {
-        this.onClick();
-      },
-    };
     return vnode;
   },
 });
