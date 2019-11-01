@@ -1,85 +1,66 @@
-import Vue, { VueConstructor } from 'vue';
+import Vue from 'vue';
+import { ModelOptions, useModel, DEFAULT_PROP } from './use-model';
 
-type GroupData = {
-  checkState: number
-  checkedItem: Array<any>
-  items: Array<Vue>
-};
+export enum CheckState {
+  Unchecked = 1,
+  PartiallyChecked = 2,
+  Checked = 3,
+}
 
-export type Group<T extends string, C extends VueConstructor | null = null> =
-  VueConstructor<Vue & {
-    exclusive: boolean
-    checkState: number
-    checkedItem: Array<any>
-    items: Array<Vue>
-    registerItem (...args: any[]): void
-    unregisterItem (...args: any[]): void
-  }>;
-
-export const CheckState = {
-  Unchecked: 1,
-  PartiallyChecked: 2,
-  Checked: 3,
-};
-
-export function createGroup<T extends string, C extends VueConstructor | null = null>(
-  name: string, prop:string = 'modelValue', event:string = 'change',
-): Group<T, C> {
-  return Vue.extend({
-    provide(): Object {
+export function useGroup(name: string, options?: ModelOptions) {
+  const modelProp = (options && options.prop) || DEFAULT_PROP;
+  return useModel('checkedItem', options).extend({
+    provide() {
       return {
         [name]: this,
       };
     },
 
-    model: { prop, event },
-
     props: {
-      [prop]: {
-        type: Array,
-        default: (): Array<any> => ([]),
-      },
-
       exclusive: {
         type: Boolean,
         default: false,
       },
     },
 
-    data(): GroupData {
+    data() {
       return {
+        // This property holds the check state of the checkbox.
         checkState: CheckState.Unchecked,
-        checkedItem: this[prop] as Array<Vue>,
-        items: [],
+        checkedItem: [] as Array<any>,
+        items: [] as Array<any>,
       };
     },
 
-    mounted() {
-      const { length: count } = this[prop] as Array<Vue>;
-      this.checkState = count === 0
-        ? CheckState.Unchecked
-        : count === this.items.length
-          ? CheckState.Checked
-          : CheckState.PartiallyChecked;
-
-      this.items.forEach((item) => {
-        (item as any).checked = this.checkedItem.includes(item);
-      });
+    computed: {
+      // This property holds whether the checkbox is a tri-state checkbox.
+      tristate(): boolean {
+        return this.checkState === CheckState.PartiallyChecked;
+      },
     },
 
     watch: {
-      [prop](val) {
-        this.checkedItem = val;
-      },
-      checkedItem(val) {
-        event && this.$emit(event, val);
-      },
       exclusive(val) {
         if (!val) return;
         if (this.checkedItem.length > 1) {
           const [first] = this.checkedItem;
           this.checkedItem = [first];
         }
+      },
+      checkedItem(val: Array<any>[]) {
+        const count = val.length;
+        this.checkState = count === 0
+          ? CheckState.Unchecked
+          : count === this.items.length
+            ? CheckState.Checked
+            : CheckState.PartiallyChecked;
+      },
+      [modelProp](val: Array<any>[]) {
+        this.items.forEach((item: any) => {
+          if (val.includes(item.value)) {
+            item.checked = true;
+          }
+        });
       },
     },
 
@@ -106,7 +87,7 @@ export function createGroup<T extends string, C extends VueConstructor | null = 
           }
         }
       },
-      registerItem(item: Vue): number {
+      registerItem(item: Vue) {
         const index = this.items.push(item);
         item.$watch('checked', val => this.onItemChecked(item, val));
         return index;
@@ -115,6 +96,9 @@ export function createGroup<T extends string, C extends VueConstructor | null = 
         const index = this.items.indexOf(item);
         this.items.splice(index, 1);
       },
+    },
+
+    mounted() {
     },
   });
 }

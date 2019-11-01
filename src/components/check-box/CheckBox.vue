@@ -1,19 +1,15 @@
-<script lang="js">
+<script>
 import Vue from 'vue';
 import { AbstractButton } from '@/components/button';
 import { SvgIcon } from '@/components/icon';
-import { createGroupItem } from '@/components/group';
+import { useGroupItem, CheckState } from '@/components/group';
 
-export const CheckState = {
-  Unchecked: 1,
-  PartiallyChecked: 2,
-  Checked: 3,
-};
+const NAMESPACE = 'CheckBoxGroup';
 
 export default Vue.extend({
   name: 'CheckBox',
 
-  mixins: [createGroupItem('CheckBoxGroup')],
+  mixins: [useGroupItem(NAMESPACE)],
 
   extends: AbstractButton,
 
@@ -21,41 +17,25 @@ export default Vue.extend({
     SvgIcon,
   },
 
-  model: {
-    prop: 'value',
-    event: 'change',
-  },
-
   props: {
-    checkState: {
-      type: Number,
-      default: CheckState.Unchecked,
-    },
-    nextCheckState: {
-      type: Function,
-      default() {
-        return this.checkState === Checked ? Unchecked : Checked;
-      },
-    },
-    tristate: {
-      type: Boolean,
-      default: false,
-    },
-    checkable: {
-      type: Boolean,
-      default: true,
-    },
     disabled: {
       type: Boolean,
       default: false,
     },
-    value: {
+    indeterminate: {
       type: Boolean,
       default: false,
     },
-    label: {
-      type: [String, Number, Boolean],
-      default: null,
+  },
+
+  computed: {
+    class() {
+      return {
+        'is-unchecked': !this.indeterminate && !this.checked,
+        'is-checked': !this.indeterminate && this.checked,
+        'is-indeterminate': this.indeterminate,
+        'is-disabled': this.disabled,
+      };
     },
   },
 
@@ -73,36 +53,13 @@ export default Vue.extend({
 
     onClick() {
       if (this.checkable && !this.disabled) {
-        this.$emit('change', !this.value);
+        this.checked = !this.checked;
       }
     },
   },
 
-  watch: {
-    value: {
-      handler(val) {
-        this.checked = val;
-      },
-      immediate: true,
-    },
-
-    checked: {
-      handler(val) {
-        this.$emit('change', val);
-      },
-      immediate: true,
-    },
-  },
-
-  render(h) {
-    const vnode = AbstractButton.options.render.call(this, h);
-    vnode.data.staticClass += ' check-box';
-    vnode.data.class = {
-      ...vnode.data.class,
-      'is-checked': this.checked,
-      'is-disabled': this.disabled,
-    };
-    return vnode;
+  created() {
+    this.staticClass += ' check-box';
   },
 });
 </script>

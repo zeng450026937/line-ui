@@ -1,4 +1,5 @@
 import Vue, { VueConstructor } from 'vue';
+import { isEmpty } from '@/utils/helpers';
 
 const NullGroup = {
   registerItem() {},
@@ -14,7 +15,7 @@ export type GroupItem<T extends string, C extends VueConstructor | null = null> 
   }>;
 
 export function createGroupItem<T extends string, C extends VueConstructor | null = null>(
-  name: string,
+  name: string, prop: string = 'modelValue', event: string = 'change',
 ): GroupItem<T, C> {
   function isGroupAvailable(item: Vue) {
     const group = (item as any)[name];
@@ -28,17 +29,35 @@ export function createGroupItem<T extends string, C extends VueConstructor | nul
       },
     },
 
+    model: { prop, event },
+
     props: {
+      [prop]: {
+        type: Boolean,
+        default: false,
+      },
       checkable: {
         type: Boolean,
         default: true,
+      },
+      value: {
+        default: null,
       },
     },
 
     data() {
       return {
-        checked: false,
+        checked: this[prop],
       };
+    },
+
+    watch: {
+      [prop](val) {
+        this.checked = val;
+      },
+      checked(val) {
+        event && this.$emit(event, val);
+      },
     },
 
     methods: {

@@ -3,7 +3,7 @@ import Vue, {
   VNode, VNodeChildren, VNodeData,
 } from 'vue';
 import { Icon } from '@/components/icon';
-import { isObject } from '@/utils/helpers';
+import { isObject, isEmpty } from '@/utils/helpers';
 import { mergeListener } from './merge-listener';
 
 export const Dispaly = {
@@ -30,7 +30,7 @@ export default Vue.extend({
       default: false,
     },
     icon: [String, Object],
-    text: String,
+    text: null as any,
   },
 
   computed: {
@@ -73,15 +73,15 @@ export default Vue.extend({
   methods: {
     genIndicator(): VNodeChildren { return null; },
     genIcon(): VNode | null {
-      if (!this.icon) return null;
+      if (isEmpty(this.icon)) return null;
       if (this.display === Dispaly.TextOnly) return null;
       const props = isObject(this.icon) ? this.icon : { name: this.icon };
       return this.$createElement(Icon, { props });
     },
     genLabel(): VNode | null {
-      if (!this.text) return null;
+      if (isEmpty(this.text)) return null;
       if (this.display === Dispaly.IconOnly) return null;
-      return this.$createElement('div', this.text);
+      return this.$createElement('div', String(this.text));
     },
 
     onClick(ev: UIEvent) {},

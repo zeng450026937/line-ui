@@ -6,41 +6,31 @@
 
 <script>
 import Vue from 'vue';
-import { createGroup } from '@/components/group';
+import { useGroup, CheckState } from '@/components/group';
+
+export { CheckState };
+
+const NAMESPACE = 'CheckBoxGroup';
 
 export default Vue.extend({
   name: 'CheckBoxGroup',
 
-  extends: createGroup('CheckBoxGroup'),
+  mixins: [useGroup(NAMESPACE)],
 
   props: {
-    value: {
-      type: Array,
-      default: () => [],
+    nextCheckState: {
+      type: Function,
+      default(checkState) {
+        return checkState === CheckState.Checked ? CheckState.Unchecked : CheckState.Checked;
+      },
     },
   },
 
-  computed: {},
-
-  created() {
-    this.$nextTick(() => {
-      this.items.forEach((item) => {
-        item.checked = this.value.includes(item.label);
-      });
-    });
-  },
-
   methods: {
-    onItemChecked(item, checked) {
-      const { label } = item;
-      const { value } = this;
-      const index = value.findIndex(el => el === label);
-      if (checked && index === -1) {
-        value.push(label);
-      } else if (!checked && index !== -1) {
-        value.splice(index, 1);
+    onClick() {
+      if (this.checkable && !this.disabled) {
+        this.checkState = this.nextCheckState(this.checkState);
       }
-      this.$emit('input', value);
     },
   },
 });

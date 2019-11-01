@@ -47,7 +47,16 @@ export const debounce = (func: (...args: any[]) => void, wait = 0) => {
   };
 };
 
+export const isEmpty = (val: unknown): val is any => {
+  return (val === undefined
+    || val === null
+    || val === ''
+    || (Array.isArray(val) && val.length === 0)
+    || (typeof (val) === 'number' && Number.isNaN(val)));
+};
+
 // copied from vue-next
+
 /* eslint-disable */
 
 export const NOOP = () => {};
@@ -85,8 +94,6 @@ export const objectToString = Object.prototype.toString;
 export const toTypeString = (value: unknown): string => objectToString.call(value);
 
 export const isPlainObject = (val: unknown): val is object => toTypeString(val) === '[object Object]';
-
-export const isReservedProp = (key: string): boolean => key === 'key' || key === 'ref' || key.startsWith('onVnode');
 
 const camelizeRE = /-(\w)/g;
 export const camelize = (str: string): string => {
