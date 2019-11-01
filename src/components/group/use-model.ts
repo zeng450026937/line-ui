@@ -3,15 +3,17 @@ import Vue from 'vue';
 export interface ModelOptions {
   prop?: string,
   event?: string,
+  watch?: boolean,
 }
 
 export const DEFAULT_PROP = 'modelValue';
 export const DEFAULT_EVENT = 'change';
 
-export function useModel(proxy: string, options?: ModelOptions) {
+export function useModel<T extends unknown>(proxy: string, options?: ModelOptions) {
   const {
     prop = DEFAULT_PROP,
     event = DEFAULT_EVENT,
+    watch = true,
   } = options || {};
 
   return Vue.extend({
@@ -23,7 +25,7 @@ export function useModel(proxy: string, options?: ModelOptions) {
 
     data() {
       return {
-        [proxy]: this[prop],
+        [proxy]: this[prop] as T,
       };
     },
 

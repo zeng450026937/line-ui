@@ -6,8 +6,8 @@ const NullGroup = {
   unregisterItem() {},
 };
 
-export function useGroupItem(name: string, model: boolean = true, options?: ModelOptions) {
-  return useModel('checked', options).extend({
+export function useGroupItem(name: string, options?: ModelOptions) {
+  return useModel<boolean>('checked', options).extend({
     inject: {
       [name]: {
         default: NullGroup,
@@ -20,12 +20,6 @@ export function useGroupItem(name: string, model: boolean = true, options?: Mode
         default: true,
       },
       value: null as any,
-    },
-
-    data() {
-      return {
-        checked: false,
-      };
     },
 
     methods: {

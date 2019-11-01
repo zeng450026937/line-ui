@@ -9,7 +9,7 @@ export enum CheckState {
 
 export function useGroup(name: string, options?: ModelOptions) {
   const modelProp = (options && options.prop) || DEFAULT_PROP;
-  return useModel('checkedItem', options).extend({
+  return useModel<Array<any>>('checkedItem', options).extend({
     provide() {
       return {
         [name]: this,
@@ -27,7 +27,6 @@ export function useGroup(name: string, options?: ModelOptions) {
       return {
         // This property holds the check state of the checkbox.
         checkState: CheckState.Unchecked,
-        checkedItem: [] as Array<any>,
         items: [] as Array<any>,
       };
     },
@@ -57,22 +56,20 @@ export function useGroup(name: string, options?: ModelOptions) {
       },
       [modelProp](val: Array<any>[]) {
         this.items.forEach((item: any) => {
-          if (val.includes(item.value)) {
-            item.checked = true;
-          }
+          item.checked = val.includes(item.value);
         });
       },
     },
 
     methods: {
-      onItemChecked(item: Vue, checked: boolean) {
-        const { value } = item as any;
+      onItemChecked(item: any, checked: boolean) {
+        const { value } = item;
         if (this.exclusive) {
           if (checked) {
             this.checkedItem = [value];
-            this.items.forEach((i: Vue) => {
+            this.items.forEach((i: any) => {
               if (i === item) return;
-              (i as any).checked = false;
+              i.checked = false;
             });
           } else if (this.checkedItem[0] === value) {
             this.checkedItem = [];
@@ -87,18 +84,21 @@ export function useGroup(name: string, options?: ModelOptions) {
           }
         }
       },
-      registerItem(item: Vue) {
+      registerItem(item: any) {
         const index = this.items.push(item);
-        item.$watch('checked', val => this.onItemChecked(item, val));
+        item.$watch('checked', (val: boolean) => this.onItemChecked(item, val));
         return index;
       },
-      unregisterItem(item: Vue) {
+      unregisterItem(item: any) {
         const index = this.items.indexOf(item);
         this.items.splice(index, 1);
       },
     },
 
     mounted() {
+      this.items.forEach((item: any) => {
+        item.checked = this[modelProp].includes(item.value);
+      });
     },
   });
 }
