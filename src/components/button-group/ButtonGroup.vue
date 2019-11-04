@@ -6,12 +6,14 @@
 
 <script>
 import Vue from 'vue';
-import { createGroup } from '@/components/group';
+import { useGroup } from '@/components/group';
+
+const NAMESPACE = 'ButtonGroup';
 
 export default Vue.extend({
   name: 'ButtonGroup',
 
-  extends: createGroup('ButtonGroup'),
+  extends: useGroup(NAMESPACE),
 });
 </script>
 

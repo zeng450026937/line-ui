@@ -1,12 +1,14 @@
 <script lang="js">
 import Vue from 'vue';
 import AbstractButton from './AbstractButton.vue';
-import { createGroupItem } from '@/components/group';
+import { useGroupItem } from '@/components/group';
+
+const NAMESPACE = 'ButtonGroup';
 
 export default Vue.extend({
   name: 'Button',
 
-  mixins: [createGroupItem('ButtonGroup')],
+  mixins: [useGroupItem(NAMESPACE)],
 
   extends: AbstractButton,
 
