@@ -27,12 +27,15 @@ export function useGroup(name: string, options?: ModelOptions) {
       return {
         // This property holds the check state of the checkbox.
         checkState: CheckState.Unchecked,
+        // checkedItem: [] as Array<any>,
         items: [] as Array<any>,
       };
     },
 
     computed: {
       // This property holds whether the checkbox is a tri-state checkbox.
+      // TODO
+      // remove it
       tristate(): boolean {
         return this.checkState === CheckState.PartiallyChecked;
       },
@@ -97,7 +100,7 @@ export function useGroup(name: string, options?: ModelOptions) {
 
     mounted() {
       this.items.forEach((item: any) => {
-        item.checked = this[modelProp].includes(item.value);
+        item.checked = this.checkedItem.includes(item.value);
       });
     },
   });

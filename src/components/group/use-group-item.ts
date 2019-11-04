@@ -22,6 +22,12 @@ export function useGroupItem(name: string, options?: ModelOptions) {
       value: null as any,
     },
 
+    data() {
+      return {
+        checked: false,
+      };
+    },
+
     methods: {
       toggle() {
         if (this.checkable) {

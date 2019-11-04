@@ -1,3 +1,4 @@
+import CheckIndicator from './CheckIndicator.vue';
 import CheckBox from './CheckBox.vue';
 
-export { CheckBox };
+export { CheckIndicator, CheckBox };

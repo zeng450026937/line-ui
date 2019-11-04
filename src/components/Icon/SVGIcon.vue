@@ -39,10 +39,11 @@ export default {
     }, [use || content]);
     return h(tag, {
       ...data,
-      staticClass: 'svg-icon',
+      staticClass: `svg-icon ${ data.staticClass || '' }`.trim(),
       style: {
         width: convertToUnit(props.width),
         height: convertToUnit(props.height),
+        ...data.style,
       },
     }, [svg]);
   },

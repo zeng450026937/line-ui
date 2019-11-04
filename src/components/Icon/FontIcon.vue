@@ -15,11 +15,12 @@ export default {
     const size = props.height || props.width;
     return h('i', {
       ...data,
+      staticClass: `svg-icon ${ data.staticClass || '' }`.trim(),
       style: {
-        'font-size': convertToUnit(size),
         'vertical-align': 'middle',
+        'font-size': convertToUnit(size),
+        ...data.style,
       },
-      staticClass: 'material-icons',
     }, text);
   },
 };
