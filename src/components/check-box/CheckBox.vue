@@ -56,7 +56,6 @@ export default Vue.extend({
 
 .check-box {
   margin: 4px;
-  cursor: pointer;
 }
 
 </style>

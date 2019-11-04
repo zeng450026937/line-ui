@@ -33,10 +33,10 @@ export default Vue.extend({
       ...data,
       staticClass: `check-indicator ${ data.staticClass || '' }`.trim(),
       class: {
-        ...data.class,
         'is-checked': props.checked,
         'is-indeterminate': props.indeterminate,
         'is-disabled': props.disabled,
+        ...data.class,
       },
       scopedSlots: {
         content: () => vOnce || (vOnce = h('path', { attrs: { d: 'M1.73,12.91 8.1,19.28 22.79,4.59' } })),

@@ -42,20 +42,18 @@ export default Vue.extend({
       }
       return this.genIndicator();
     },
-    cachedContent(): VNode {
-      const data = {
-        staticClass: 'content',
-      } as VNodeData;
-      const children = [
-        this.cachedIcon,
-        this.cachedLabel,
-      ] as VNodeChildren;
-      return this.$createElement('div', data, children);
+    cachedContent(): VNodeChildren | VNode {
+      const slot = this.$scopedSlots.content;
+      if (slot) {
+        const context = {};
+        return slot(context);
+      }
+      return this.genContent();
     },
     cachedIcon(): VNodeChildren | VNode {
       const slot = this.$scopedSlots.icon;
       if (slot) {
-        const context = {};
+        const context = { icon: this.icon };
         return slot(context);
       }
       if (isEmpty(this.icon)) return null;
@@ -65,7 +63,7 @@ export default Vue.extend({
     cachedLabel(): VNodeChildren | VNode {
       const slot = this.$scopedSlots.label;
       if (slot) {
-        const context = {};
+        const context = { label: this.label };
         return slot(context);
       }
       if (isEmpty(this.label)) return null;
@@ -76,6 +74,17 @@ export default Vue.extend({
 
   methods: {
     genIndicator(): VNodeChildren { return null; },
+    genContent(): VNode | null {
+      if (!this.cachedIcon && !this.cachedLabel) return null;
+      const data = {
+        staticClass: 'content',
+      } as VNodeData;
+      const children = [
+        this.cachedIcon,
+        this.cachedLabel,
+      ] as VNodeChildren;
+      return this.$createElement('div', data, children);
+    },
     genIcon(): VNode {
       const props = isObject(this.icon) ? this.icon : { name: this.icon };
       return this.$createElement(Icon, { props });
@@ -119,6 +128,7 @@ export default Vue.extend({
   flex-direction: row;
   align-items: center;
   justify-items: center;
+  cursor: pointer;
 
   & .content {
     display: flex;

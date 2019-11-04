@@ -23,9 +23,9 @@ export default Vue.extend({
       ...data,
       staticClass: `radio-indicator ${ data.staticClass || '' }`.trim(),
       class: {
-        ...data.class,
         'is-checked': props.checked,
         'is-disabled': props.disabled,
+        ...data.class,
       },
     });
   },

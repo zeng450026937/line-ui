@@ -1,3 +1,4 @@
+import SwitchIndicator from './SwitchIndicator.vue';
 import Switch from './Switch.vue';
 
-export { Switch };
+export { SwitchIndicator, Switch };
