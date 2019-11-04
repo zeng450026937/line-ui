@@ -1,78 +1,47 @@
-<template>
-  <div class="radio-button"
-       :class="{'radio-button--checked': checked,
-                  'radio-button--disabled': disabled }"
-       @click="toggle">
-    <span class="radio-button__icon">
-      <input type="radio"
-             ref="radio"
-             :value="value"
-             :disabled="disabled"
-             @focus="focus = true"
-             @blur="focus = false">
-    </span>
-    <span class="radio-button__label">
-      <slot>
-      </slot>
-    </span>
-  </div>
-</template>
+
 
 <script>
 import Vue from 'vue';
+import RadioIndicator from './RadioIndicator.vue';
 import { AbstractButton } from '@/components/button';
-import { createGroupItem } from '@/components/group';
+import { useGroupItem } from '@/components/group';
+
+const NAMESPACE = 'RadioButtonGroup';
 
 export default Vue.extend({
   name: 'RadioButton',
 
-  mixins: [createGroupItem('RadioButtonGroup')],
+  mixins: [useGroupItem(NAMESPACE)],
+
   extends: AbstractButton,
 
   props: {
-    autoExclusive: {
-      type: Boolean,
-      default: true,
-    },
-    label: {
-      type: String,
-      default: '',
-    },
-    value: {
-      type: [String, Number, Boolean],
-      default: null,
-    },
     disabled: {
       type: Boolean,
       default: false,
     },
   },
 
-  data() {
-    return {
-      focus: false,
-    };
-  },
-
-  computed: {
-
-  },
-
   methods: {
-    toggle() {
-      if (this.disabled) {
-        return;
-      }
-      if (!this.checked) {
+    genIndicator() {
+      return this.$createElement(RadioIndicator, {
+        props: {
+          checked: this.checked,
+          disabled: this.disabled,
+        },
+      });
+    },
+
+    onClick() {
+      if (this.disabled || this.checked) return;
+      if (this.checkable) {
         this.checked = !this.checked;
       }
     },
   },
 
-  watch: {
-    checked(newVal) {
-      console.log('checked - ', this.label, newVal);
-    },
+  created() {
+    this.staticClass += ' radio-button';
   },
 });
 </script>

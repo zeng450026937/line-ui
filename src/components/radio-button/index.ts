@@ -1,3 +1,4 @@
+import RadioIndicator from './RadioIndicator.vue';
 import RadioButton from './RadioButton.vue';
 
-export { RadioButton };
+export { RadioIndicator, RadioButton };

@@ -30,7 +30,7 @@ export default Vue.extend({
       default: false,
     },
     icon: [String, Object],
-    text: null as any,
+    label: null as any,
   },
 
   computed: {
@@ -58,6 +58,8 @@ export default Vue.extend({
         const context = {};
         return slot(context);
       }
+      if (isEmpty(this.icon)) return null;
+      if (this.display === Dispaly.TextOnly) return null;
       return this.genIcon();
     },
     cachedLabel(): VNodeChildren | VNode {
@@ -66,22 +68,20 @@ export default Vue.extend({
         const context = {};
         return slot(context);
       }
+      if (isEmpty(this.label)) return null;
+      if (this.display === Dispaly.IconOnly) return null;
       return this.genLabel();
     },
   },
 
   methods: {
     genIndicator(): VNodeChildren { return null; },
-    genIcon(): VNode | null {
-      if (isEmpty(this.icon)) return null;
-      if (this.display === Dispaly.TextOnly) return null;
+    genIcon(): VNode {
       const props = isObject(this.icon) ? this.icon : { name: this.icon };
       return this.$createElement(Icon, { props });
     },
-    genLabel(): VNode | null {
-      if (isEmpty(this.text)) return null;
-      if (this.display === Dispaly.IconOnly) return null;
-      return this.$createElement('div', String(this.text));
+    genLabel(): VNode {
+      return this.$createElement('div', String(this.label));
     },
 
     onClick(ev: UIEvent) {},
