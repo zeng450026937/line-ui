@@ -14,6 +14,13 @@ export default Vue.extend({
   name: 'RadioButtonGroup',
 
   extends: useGroup(NAMESPACE),
+
+  props: {
+    exclusive: {
+      type: Boolean,
+      default: true,
+    },
+  },
 });
 </script>
 

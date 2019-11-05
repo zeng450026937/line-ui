@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import AbstractButton from '@/mixins/abstract-button';
+import { AbstractButton } from '@/components/button';
 
 export default {
   name: 'ItemDelegate',

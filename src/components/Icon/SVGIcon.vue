@@ -33,7 +33,7 @@ export default {
         width: '24',
         height: '24',
         role: 'img',
-        'aria-hidden': data.attrs['aria-label'],
+        'aria-hidden': !data.attrs['aria-label'],
         'aria-label': data.attrs['aria-label'],
       },
     }, [use || content]);

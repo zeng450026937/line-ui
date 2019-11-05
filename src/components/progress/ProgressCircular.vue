@@ -8,27 +8,20 @@
       xmlns="http://www.w3.org/2000/svg"
       :viewBox="`${viewBoxSize} ${viewBoxSize} ${2 * viewBoxSize} ${2 * viewBoxSize}`"
     >
-      <circle
-        v-if="!indeterminate"
-        class="underlay"
-        fill="transparent"
-        :cx="2 * viewBoxSize"
-        :cy="2 * viewBoxSize"
-        :r="radius"
-        :stroke-width="strokeWidth"
-        :stroke-dasharray="strokeDashArray"
-        :stroke-dashoffset="0"
-      ></circle>
-      <circle
-        class="overlay"
-        fill="transparent"
-        :cx="2 * viewBoxSize"
-        :cy="2 * viewBoxSize"
-        :r="radius"
-        :stroke-width="strokeWidth"
-        :stroke-dasharray="strokeDashArray"
-        :stroke-dashoffset="strokeDashOffset"
-      ></circle>
+      <template v-for="index in 2">
+        <circle
+          v-if="!indeterminate || index === 2"
+          :key="index"
+          :class="index === 1 ? 'underlay' : 'overlay'"
+          fill="transparent"
+          :cx="2 * viewBoxSize"
+          :cy="2 * viewBoxSize"
+          :r="radius"
+          :stroke-width="strokeWidth"
+          :stroke-dasharray="strokeDashArray"
+          :stroke-dashoffset="index === 1 ? 0 : strokeDashOffset"
+        ></circle>
+      </template>
     </svg>
 
     <div class="info">
@@ -143,7 +136,7 @@ export default Vue.extend({
 $progress-circular-rotate-animation: progress-circular-rotate 1.4s linear infinite !default;
 $progress-circular-rotate-dash: progress-circular-dash 1.4s ease-in-out infinite !default;
 $process-circular-intermediate-svg-transition: all .2s ease-in-out !default;
-$progress-circular-underlay-stroke: rgba(#FFFFFF, 0.1) !default;
+$progress-circular-underlay-stroke: rgba(#000000, 0.1) !default;
 $progress-circular-overlay-transition: all .6s ease-in-out !default;
 
 .progress-circular {

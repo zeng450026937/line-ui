@@ -33,8 +33,7 @@ export default Vue.extend({
     },
 
     onClick() {
-      if (this.disabled || this.checked) return;
-      if (this.checkable) {
+      if (this.checkable && !this.disabled) {
         this.checked = !this.checked;
       }
     },

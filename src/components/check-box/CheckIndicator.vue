@@ -82,10 +82,6 @@ export default Vue.extend({
   &.is-disabled {
     border-color: #afafaf;
   }
-
-  &.is-disabled.is-checked {
-    background-color: #afafaf;
-  }
 }
 
 </style>
