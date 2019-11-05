@@ -34,6 +34,14 @@ export default Vue.extend({
   },
 
   computed: {
+    cachedBackground(): VNodeChildren | VNode {
+      const slot = this.$scopedSlots.background;
+      if (slot) {
+        const context = {};
+        return slot(context);
+      }
+      return this.genBackground();
+    },
     cachedIndicator(): VNodeChildren | VNode {
       const slot = this.$scopedSlots.indicator;
       if (slot) {
@@ -73,7 +81,8 @@ export default Vue.extend({
   },
 
   methods: {
-    genIndicator(): VNodeChildren { return null; },
+    genBackground(): VNode | null { return null; },
+    genIndicator(): VNode | null { return null; },
     genContent(): VNode | null {
       if (!this.cachedIcon && !this.cachedLabel) return null;
       const data = {
@@ -112,6 +121,7 @@ export default Vue.extend({
     };
     const context = {};
     const children = [
+      this.cachedBackground,
       this.cachedIndicator,
       this.cachedContent,
       this.$scopedSlots.default && this.$scopedSlots.default(context),
@@ -124,13 +134,14 @@ export default Vue.extend({
 <style lang="scss">
 
 .abstract-button {
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-items: center;
   cursor: pointer;
 
-  & .content {
+  .content {
     display: flex;
     justify-items: center;
     flex-direction: column;

@@ -15,7 +15,7 @@ export default {
     const size = props.height || props.width;
     return h('i', {
       ...data,
-      staticClass: `svg-icon ${ data.staticClass || '' }`.trim(),
+      staticClass: `font-icon material-icons ${ data.staticClass || '' }`.trim(),
       style: {
         'vertical-align': 'middle',
         'font-size': convertToUnit(size),
