@@ -54,7 +54,8 @@ export default Vue.extend({
   position: relative;
   width: 100%;
   height: 5px;
-  margin: 3px 0;
+  margin: 0;
+  padding: 0;
 
   .progress {
     position: absolute;

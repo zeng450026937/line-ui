@@ -23,8 +23,8 @@ export default {
   methods: {
     genBackground() {
       return this.$createElement(ProgressIndicator, {
-        props: { value: progress },
-        style: { 'transform-duration': `${ delay }ms` },
+        props: { value: this.progress },
+        style: { 'transform-duration': `${ this.delay }ms` },
       });
     },
 
@@ -45,6 +45,12 @@ export default {
 
 <style lang="scss">
 
-.delay-button {}
+.delay-button {
+  height: 32px;
+
+  .progress-indicator {
+    height: 100%;
+  }
+}
 
 </style>
