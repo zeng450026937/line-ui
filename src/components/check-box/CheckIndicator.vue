@@ -47,7 +47,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-
 .check-indicator {
   margin-right: 4px;
   border-radius: 2px;
@@ -83,5 +82,4 @@ export default Vue.extend({
     border-color: #afafaf;
   }
 }
-
 </style>

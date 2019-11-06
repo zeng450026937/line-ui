@@ -1,18 +1,21 @@
 <template>
-  <div class="popup" v-show="visable" v-remote="global">
+  <div class="popup"
+       v-show="visable"
+       v-remote="global">
     <div class="overlay"
-      :style="{opacity: dim ? 0.32 : 0.01}"
-      @touchstart.capture="onTouchStart"
-      @click.capture="onMouseDown"
-      @mousedown.capture="onMouseDown"
-    >
-      <slot name="overlay" v-bind="{modal, dim}"></slot>
+         :style="{opacity: dim ? 0.32 : 0.01}"
+         @touchstart.capture="onTouchStart"
+         @click.capture="onMouseDown"
+         @mousedown.capture="onMouseDown">
+      <slot name="overlay"
+            v-bind="{modal, dim}"></slot>
     </div>
 
-    <div class="arrow"></div>
-    <div class="content" ref="content">
-      <slot name="default"></slot>
-    </div>
+    <!-- <div class="arrow"></div>
+    <div class="content"
+         ref="content"> -->
+    <slot name="default"></slot>
+    <!-- </div> -->
   </div>
 </template>
 
@@ -38,6 +41,11 @@ export default Vue.extend({
     remote,
   },
 
+  model: {
+    prop: 'value',
+    event: 'change',
+  },
+
   props: {
     global: {
       type: Boolean,
@@ -55,16 +63,27 @@ export default Vue.extend({
       type: Boolean,
       default: false,
     },
-    visable: {
+    tappable: {
+      type: Boolean,
+      default: false,
+    },
+    value: {
       type: Boolean,
       default: false,
     },
   },
 
+  data() {
+    return {
+      visable: this.value,
+    };
+  },
+
+
   methods: {
-    close() {},
-    focus() {},
-    open() {},
+    close() { },
+    focus() { },
+    open() { },
 
     onTouchStart(ev) {
       console.log('onTouchStart');
@@ -107,6 +126,12 @@ export default Vue.extend({
     // this.$emit('opened');
   },
 
+  watch: {
+    value(val) {
+      this.visable = val;
+    },
+  },
+
   beforeDestroy() {
     this.$emit('aboutToHide');
     this.blocker.unblock();
@@ -115,15 +140,16 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-
 .popup {
+  // position: fixed;
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  border: dotted plum;
+  // border: dotted plum;
   transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1), z-index 1ms;
+  z-index: 9;
 
   .overlay {
     position: absolute;
@@ -137,9 +163,13 @@ export default Vue.extend({
     opacity: 0.32;
   }
 
-  .content {
-    position: absolute;
-  }
+  // .content {
+  // width: 100%;
+  // position: absolute;
+  // top: 0;
+  // left: 0;
+  // right: 0;
+  // bottom: 0;
+  // }
 }
-
 </style>

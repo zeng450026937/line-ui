@@ -9,7 +9,7 @@ export enum CheckState {
 
 export function useGroup(name: string, options?: ModelOptions) {
   const modelProp = (options && options.prop) || DEFAULT_PROP;
-  return useModel<Array<any>>('checkedItem', options).extend({
+  return useModel<any>('checkedItem', options).extend({
     provide() {
       return {
         [name]: this,
@@ -49,7 +49,7 @@ export function useGroup(name: string, options?: ModelOptions) {
           this.checkedItem = [first];
         }
       },
-      checkedItem(val: Array<any>[]) {
+      checkedItem(val: any) {
         const count = val.length;
         this.checkState = count === 0
           ? CheckState.Unchecked
@@ -57,9 +57,13 @@ export function useGroup(name: string, options?: ModelOptions) {
             ? CheckState.Checked
             : CheckState.PartiallyChecked;
       },
-      [modelProp](val: Array<any>[]) {
+      [modelProp](val: any) {
         this.items.forEach((item: any) => {
-          item.checked = val.includes(item.value);
+          if (Array.isArray(val)) {
+            item.checked = val.includes(item.value);
+          } else {
+            item.checked = item.value === val;
+          }
         });
       },
     },
@@ -69,13 +73,13 @@ export function useGroup(name: string, options?: ModelOptions) {
         const { value } = item;
         if (this.exclusive) {
           if (checked) {
-            this.checkedItem = [value];
+            this.checkedItem = value;
             this.items.forEach((i: any) => {
               if (i === item) return;
               i.checked = false;
             });
-          } else if (this.checkedItem[0] === value) {
-            this.checkedItem = [];
+          } else if (this.checkedItem === value) {
+            this.checkedItem = null;
           }
         } else {
           this.checkedItem = this.checkedItem || [];
@@ -99,9 +103,15 @@ export function useGroup(name: string, options?: ModelOptions) {
     },
 
     mounted() {
-      this.items.forEach((item: any) => {
-        item.checked = this.checkedItem.includes(item.value);
-      });
+      for (let i = 0; i < this.items.length; i++) {
+        const item = this.items[i];
+        if (Array.isArray(this.checkedItem)) {
+          item.checked = this.checkedItem.includes(item.value);
+        } else if (item.value === this.checkedItem) {
+          item.checked = true;
+          break;
+        }
+      }
     },
   });
 }

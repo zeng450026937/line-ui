@@ -1,8 +1,16 @@
 <template>
   <div class="popover">
-    <div class="popover-content" ref="content" v-remote>
-      <slot></slot>
-    </div>
+    <slot name="default"
+          v-bind:present="present"
+          v-bind:dismiss="dismiss"></slot>
+    <transition>
+      <div class="popover-content"
+           v-show="visable"
+           ref="content"
+           v-remote>
+        <slot name="content"></slot>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -18,6 +26,11 @@ export default Vue.extend({
 
   directives: {
     remote,
+  },
+
+  model: {
+    prop: 'visable',
+    event: 'change',
   },
 
   props: {
@@ -36,6 +49,15 @@ export default Vue.extend({
   },
 
   methods: {
+    present() {
+      console.log('present');
+      this.$emit('change', true);
+    },
+    dismiss() {
+      console.log('dismiss');
+      this.$emit('change', false);
+    },
+
     prepare() {
       const reference = this.$parent.$el;
       const { content } = this.$refs;
@@ -47,7 +69,7 @@ export default Vue.extend({
           preventOverflow: {
             enabled: true,
             escapeWithReference: false,
-          // boundariesElement: target,
+            // boundariesElement: target,
           },
           applyStyle: { enabled: true },
           applyCustomStyle: {
@@ -83,9 +105,7 @@ export default Vue.extend({
 </script>
 
 <style>
-
 .popover-content {
   position: absolute;
 }
-
 </style>

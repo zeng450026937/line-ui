@@ -51,7 +51,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .svg-icon {
   position: relative;
   display: inline-flex;
@@ -68,7 +67,7 @@ export default {
     left: 0;
     right: 0;
     z-index: 0;
-    transition: all .6s ease-in-out
+    transition: all 0.6s ease-in-out;
   }
 }
 </style>

@@ -1,15 +1,36 @@
 <template>
-  <div class="tool-tip">
+  <div class="tool-tip"
+       ref="reference"
+       v-remote="false">
+    <span class="tool-tip__content"
+          v-show="visible"
+          ref="content">
+      {{ text }}
+    </span>
+    <span @mouseenter="onMouseenter"
+          @touchStart="onMouseenter"
+          @mouseleave="onMouseleave"
+          @touchEnd="onMouseleave">
+      <slot name="default"></slot>
+    </span>
   </div>
 </template>
 
 <script>
-import Popup from '@/components/popup';
+import Popper, { Placement } from 'popper.js';
+import { Popup } from '@/components/popup';
+
+export { Placement };
 
 export default {
   name: 'ToolTip',
 
   extends: Popup,
+
+  model: {
+    prop: 'value',
+    event: 'change',
+  },
 
   props: {
     delay: {
@@ -23,6 +44,14 @@ export default {
     timeout: {
       type: Number,
       default: 0,
+    },
+    value: {
+      type: Boolean,
+      default: false,
+    },
+    placement: {
+      type: String,
+      default: 'top',
     },
   },
 
@@ -38,9 +67,10 @@ export default {
     };
   },
 
-  methods: {
-    hide() {},
-    show() {},
+  data() {
+    return {
+      visible: this.value,
+    };
   },
 
   created() {
@@ -51,9 +81,62 @@ export default {
     this.$emit('rejected');
     this.$emit('reset');
   },
+
+  mounted() {
+
+  },
+
+  beforeDestroy() {
+    this.popper.destroy();
+    this.popper = null;
+  },
+
+  methods: {
+    hide() { },
+    show() { },
+    onMouseenter() {
+      const { reference, content } = this.$refs;
+      this.visible = true;
+      this.popper = new Popper(reference, content, {
+        placement: this.placement,
+        eventsEnabled: false,
+        modifiers: {
+          flip: { enabled: true },
+          preventOverflow: {
+            enabled: true,
+            escapeWithReference: false,
+          },
+        },
+      });
+    },
+    onMouseleave() {
+      this.visible = false;
+    },
+  },
+  watch: {
+    visible(val) {
+      this.$emit('change', val);
+    },
+  },
+
 };
 </script>
 
 <style lang="scss">
-
+.tool-tip {
+  position: relative;
+  &__content {
+    height: 32px;
+    color: #ffffff;
+    background-color: var(--dark);
+    font-size: 14px;
+    border-radius: 4px;
+    padding: 0 20px;
+    margin: 10px;
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    line-height: 1.2;
+  }
+}
 </style>

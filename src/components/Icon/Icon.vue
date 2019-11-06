@@ -1,7 +1,7 @@
 <script lang="ts">
 import Vue, { VNode } from 'vue';
 import FontIcon from './FontIcon.vue';
-import SvgIcon from './SvgIcon.vue';
+import SvgIcon from '@/components/icon/SvgIcon.vue';
 
 export default Vue.extend({
   name: 'Icon',

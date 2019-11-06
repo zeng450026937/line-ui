@@ -1,27 +1,31 @@
 <template>
-  <div class="progress-bar">
+  <div class="progress"
+       :style="style">
     <template v-if="indeterminate">
-      <div class="progress__wrap--indeterminate">
-        <span class="progress-indeterminate-bar"
+      <div class="progress__bar-wrap">
+        <span class="progress__indeterminate-bar"
               :style="{ backgroundColor: color }"></span>
       </div>
-      <div class="progress__wrap--indeterminate">
-        <span class="progress-indeterminate-bar"
+      <div class="progress__bar-wrap">
+        <span class="progress__indeterminate-bar"
               :style="{ backgroundColor: color }"></span>
       </div>
     </template>
     <div v-else
-         class="progress"
+         class="progress__bar"
          :style="{ backgroundColor: color, transform: `scaleX(${position})` }">
     </div>
-    <div class="progress-buffer-bar"
-         :style="{ backgroundColor: `${this.color}20` }">
-
+    <div class="progress__buffer-bar"
+         :style="bufferBarStyle">
+    </div>
+    <div class="progress__stream-bar"
+         :style="streamBarStyle"
+         v-if="stream">
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script lang="js">
 import Vue from 'vue';
 
 export default Vue.extend({
@@ -40,6 +44,14 @@ export default Vue.extend({
       type: Number,
       default: 0,
     },
+    bufferValue: {
+      type: Number,
+      default: 0,
+    },
+    stream: {
+      type: Boolean,
+      default: false,
+    },
     indeterminate: {
       type: Boolean,
       default: false,
@@ -55,20 +67,73 @@ export default Vue.extend({
   },
 
   computed: {
+    style() {
+      const style = { height: '4px' };
+      style.height = `${ this.height.toString().replace(/px/, '') }px`;
+      return style;
+    },
+
+    bufferBarStyle() {
+      const { color, bufferPosition } = this;
+      const style = {
+        backgroundColor: `${ color }20`,
+        transform: `scaleX(${ bufferPosition })`,
+      };
+      if (this.bufferValue) {
+        style.backgroundColor = `${ color }60`;
+      }
+      return style;
+    },
+
+    streamBarStyle() {
+      if (!this.stream) {
+        return {};
+      }
+      const { color, position, bufferPosition } = this;
+      const style = {
+        borderColor: `${ color }80`,
+        width: `${ (1 - position) * 100 }%`,
+      };
+
+      if (this.bufferValue) {
+        style.width = `${ (1 - bufferPosition) * 100 }%`;
+      }
+
+      return style;
+    },
+
+    bufferPosition() {
+      let { bufferValue } = this;
+      if (!bufferValue) {
+        return 1;
+      }
+      const { to, from } = this;
+      if (bufferValue > to) {
+        bufferValue = to;
+        console.warn('bufferValue', this.bufferValue);
+      } else if (bufferValue < from) {
+        bufferValue = from;
+        console.warn('bufferValue', this.bufferValue);
+      }
+      const position = (bufferValue - from) / (to - from);
+
+      return position;
+    },
+
     position() {
       if (this.indeterminate) {
         return 0;
       }
+      const { to, from } = this;
       let { value } = this;
-
-      if (value > this.to) {
-        value = this.to;
+      if (value > to) {
+        value = to;
         console.warn('value', this.value);
-      } else if (value < this.from) {
-        value = this.from;
+      } else if (value < from) {
+        value = from;
         console.warn('value', this.value);
       }
-      const position = (value - this.from) / (this.to - this.from);
+      const position = (value - from) / (to - from);
 
       return position;
     },
@@ -79,13 +144,15 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-.progress-bar {
-  height: 5px;
+.progress {
+  width: 100%;
+  height: 4px;
   margin: 3px 0;
   position: relative;
   overflow: hidden;
+  transition: transform 0.4s linear 0s;
 
-  .progress {
+  &__bar {
     width: 100%;
     height: 100%;
     left: 0px;
@@ -94,9 +161,10 @@ export default Vue.extend({
     bottom: 0px;
     position: absolute;
     transform-origin: left top;
-    transition: transform 0.4s linear 0s;
+    transition: inherit;
+    z-index: 1;
   }
-  .progress-buffer-bar {
+  &__buffer-bar {
     width: 100%;
     height: 100%;
     left: 0px;
@@ -104,12 +172,22 @@ export default Vue.extend({
     top: 0px;
     bottom: 0px;
     position: absolute;
+    transform-origin: left top;
+    transition: inherit;
   }
 
-  .progress__wrap--indeterminate {
+  &__stream-bar {
+    border-top: dotted 4px #10c29b80;
+    position: absolute;
+    right: 0;
+    transition: width 0.6s linear 0s;
+    animation: stream 0.25s infinite linear;
+  }
+
+  .progress__bar-wrap {
     width: 100%;
     height: 100%;
-    left: -130%; // -145.166611%;
+    left: -130%;
     right: 0px;
     top: 0px;
     bottom: 0px;
@@ -120,7 +198,7 @@ export default Vue.extend({
     animation-iteration-count: infinite;
     animation-timing-function: linear;
 
-    .progress-indeterminate-bar {
+    .progress__indeterminate-bar {
       width: 100%;
       height: 100%;
       position: absolute;
@@ -135,15 +213,14 @@ export default Vue.extend({
       animation-play-state: inherit;
     }
   }
-  .progress__wrap--indeterminate:nth-of-type(2) {
+  .progress__bar-wrap:nth-of-type(2) {
     top: 0;
     right: 0;
     bottom: 0;
     left: -54.888891%;
-
     animation: secondary-indeterminate-translate 2s infinite linear;
 
-    .progress-indeterminate-bar {
+    .progress__indeterminate-bar {
       animation: secondary-indeterminate-scale 2s infinite linear;
       animation-play-state: inherit;
     }
@@ -254,6 +331,11 @@ export default Vue.extend({
 
   100% {
     transform: scaleX(0.08);
+  }
+}
+@keyframes stream {
+  to {
+    transform: translateX(8px);
   }
 }
 </style>

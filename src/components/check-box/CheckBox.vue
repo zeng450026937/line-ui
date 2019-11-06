@@ -53,9 +53,7 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-
 .check-box {
   margin: 4px;
 }
-
 </style>
