@@ -1,31 +1,4 @@
-<template>
-  <div class="progress"
-       :style="style">
-    <template v-if="indeterminate">
-      <div class="progress__bar-wrap">
-        <span class="progress__indeterminate-bar"
-              :style="{ backgroundColor: color }"></span>
-      </div>
-      <div class="progress__bar-wrap">
-        <span class="progress__indeterminate-bar"
-              :style="{ backgroundColor: color }"></span>
-      </div>
-    </template>
-    <div v-else
-         class="progress__bar"
-         :style="{ backgroundColor: color, transform: `scaleX(${position})` }">
-    </div>
-    <div class="progress__buffer-bar"
-         :style="bufferBarStyle">
-    </div>
-    <div class="progress__stream-bar"
-         :style="streamBarStyle"
-         v-if="stream">
-    </div>
-  </div>
-</template>
-
-<script lang="js">
+<script>
 import Vue from 'vue';
 
 export default Vue.extend({
@@ -139,7 +112,49 @@ export default Vue.extend({
     },
   },
 
-  watch: {},
+  render(h) {
+    const tag = 'div';
+    const { color, indeterminate, stream } = this;
+    const bufferBar = h(tag, {
+      staticClass: 'progress__buffer-bar',
+      style: this.bufferBarStyle,
+    });
+    let children = [];
+    if (indeterminate) {
+      const indeterminateBar = h(tag, {
+        staticClass: 'progress__bar-wrap',
+      }, [h(tag, {
+        staticClass: 'progress__indeterminate-bar',
+        style: {
+          'background-color': color,
+        },
+      })]);
+
+      children = [indeterminateBar, indeterminateBar, bufferBar];
+    } else {
+      const progressBar = h(tag, {
+        staticClass: 'progress__bar',
+        style: {
+          'background-color': color,
+          transform: `scaleX(${ this.position })`,
+        },
+      });
+      children = [progressBar, bufferBar];
+    }
+
+    if (stream) {
+      const streamBar = h(tag, {
+        staticClass: 'progress__stream-bar',
+        style: this.streamBarStyle,
+      });
+      children.push(streamBar);
+    }
+
+    return h(tag, {
+      staticClass: 'progress',
+      style: this.style,
+    }, children);
+  },
 });
 </script>
 
