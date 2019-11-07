@@ -121,16 +121,17 @@ export default Vue.extend({
     });
     let children = [];
     if (indeterminate) {
-      const indeterminateBar = h(tag, {
-        staticClass: 'progress__bar-wrap',
-      }, [h(tag, {
-        staticClass: 'progress__indeterminate-bar',
-        style: {
-          'background-color': color,
-        },
-      })]);
-
-      children = [indeterminateBar, indeterminateBar, bufferBar];
+      [1, 2].forEach(() => {
+        const indeterminateBar = h(tag, {
+          staticClass: 'progress__bar-wrap',
+        }, [h(tag, {
+          staticClass: 'progress__indeterminate-bar',
+          style: {
+            'background-color': color,
+          },
+        })]);
+        children.push(indeterminateBar);
+      });
     } else {
       const progressBar = h(tag, {
         staticClass: 'progress__bar',
@@ -139,10 +140,12 @@ export default Vue.extend({
           transform: `scaleX(${ this.position })`,
         },
       });
-      children = [progressBar, bufferBar];
-    }
 
-    if (stream) {
+      children = [progressBar];
+    }
+    children.push(bufferBar);
+
+    if (!indeterminate && stream) {
       const streamBar = h(tag, {
         staticClass: 'progress__stream-bar',
         style: this.streamBarStyle,

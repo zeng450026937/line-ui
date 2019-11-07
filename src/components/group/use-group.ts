@@ -79,7 +79,7 @@ export function useGroup(name: string, options?: ModelOptions) {
               i.checked = false;
             });
           } else if (this.checkedItem === value) {
-            this.checkedItem = null;
+            this.checkedItem = '';
           }
         } else {
           this.checkedItem = this.checkedItem || [];
