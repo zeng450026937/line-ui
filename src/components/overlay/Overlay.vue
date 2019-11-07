@@ -1,30 +1,84 @@
 <template>
-  <div class="overlay">
-    <div class="overlay-scrim"></div>
+  <div class="overlay"
+    @touchstart.capture="onTouchStart"
+    @click.capture="onMouseDown"
+    @mousedown.capture="onMouseDown"
+    :style="style"
+  >
     <slot></slot>
   </div>
 </template>
 
 <script>
-export default {
+import Vue from 'vue';
+import { now } from '@/utils/helpers';
+import { GESTURE_CONTROLLER } from '@/utils/gesture';
+
+export default Vue.extend({
   name: 'Overlay',
 
   props: {
-    modal: {
-      type: Object,
-      default: () => ({}),
+    visable: {
+      type: Boolean,
+      default: true,
     },
-    modeless: {
-      type: Object,
-      default: () => ({}),
+    tappable: {
+      type: Boolean,
+      default: true,
+    },
+    stopPropagation: {
+      type: Boolean,
+      default: true,
     },
   },
 
-  mounted() {
-    this.$emit('pressed');
-    this.$emit('released');
+  computed: {
+    style() {
+      return {
+        background: this.visable ? '#000' : 'transparent',
+        cursor: this.tappable ? 'pointer' : 'auto',
+      };
+    },
   },
-};
+
+  created() {
+    this.lastClick = -10000;
+    this.blocker = GESTURE_CONTROLLER.createBlocker({
+      disableScroll: true,
+    });
+
+    if (this.stopPropagation) {
+      this.blocker.block();
+    }
+  },
+
+  beforeDestroy() {
+    this.blocker.unblock();
+  },
+
+  methods: {
+    onTouchStart(ev) {
+      this.lastClick = now(ev);
+      this.emitTap(ev);
+    },
+
+    onMouseDown(ev) {
+      if (this.lastClick < now(ev) - 2500) {
+        this.emitTap(ev);
+      }
+    },
+
+    emitTap(ev) {
+      if (this.stopPropagation) {
+        ev.preventDefault();
+        ev.stopPropagation();
+      }
+      if (this.tappable) {
+        this.$emit('tap');
+      }
+    },
+  },
+});
 </script>
 
 <style lang="scss">

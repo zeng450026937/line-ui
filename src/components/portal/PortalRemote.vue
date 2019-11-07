@@ -29,7 +29,7 @@ export default Vue.extend({
     }
     return h(
       this.transition || 'div',
-      { staticClass: `${this.name}` },
+      { staticClass: `${ this.name }` },
       this.payloads,
     );
   },

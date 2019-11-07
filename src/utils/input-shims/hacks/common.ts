@@ -4,7 +4,7 @@ export const relocateInput = (
   componentEl: HTMLElement,
   inputEl: HTMLInputElement | HTMLTextAreaElement,
   shouldRelocate: boolean,
-  inputRelativeY = 0
+  inputRelativeY = 0,
 ) => {
   if (cloneMap.has(componentEl) === shouldRelocate) {
     return;
@@ -43,7 +43,7 @@ const addClone = (componentEl: HTMLElement, inputEl: HTMLInputElement | HTMLText
   const doc = componentEl.ownerDocument!;
   const tx = doc.dir === 'rtl' ? 9999 : -9999;
   componentEl.style.pointerEvents = 'none';
-  inputEl.style.transform = `translate3d(${tx}px,${inputRelativeY}px,0) scale(0)`;
+  inputEl.style.transform = `translate3d(${ tx }px,${ inputRelativeY }px,0) scale(0)`;
 };
 
 const removeClone = (componentEl: HTMLElement, inputEl: HTMLElement) => {

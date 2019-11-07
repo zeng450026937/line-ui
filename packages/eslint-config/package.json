@@ -1,0 +1,13 @@
+{
+  "name": "@skyline/eslint-config",
+  "version": "1.0.0",
+  "description": "eslint config of skyline.",
+  "main": "index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "peerDependencies": {
+    "eslint": "^6.0.0"
+  }
+}

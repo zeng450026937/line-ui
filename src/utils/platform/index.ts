@@ -104,7 +104,7 @@ export const setupPlatforms = (win: any = window) => {
   let { platforms } = win.Ionic;
   if (platforms == null) {
     platforms = win.Ionic.platforms = detectPlatforms(win);
-    platforms.forEach((p: Platforms) => win.document.documentElement.classList.add(`plt-${p}`));
+    platforms.forEach((p: Platforms) => win.document.documentElement.classList.add(`plt-${ p }`));
   }
   return platforms;
 };

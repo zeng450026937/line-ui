@@ -1,270 +1,90 @@
 <template>
   <application-window title="application-window">
-    <template v-slot:menubar>
-      <menu-bar v-bind:menus="menus">
-      </menu-bar>
-    </template>
+    <abstract-button
+      label="aa"
+      @click="onClicked"
+    >
+      <template v-slot:background>
+        <div>background</div>
+      </template>
+      <template v-slot:indicator>
+        <div>indicator</div>
+      </template>
+      <template v-slot:icon>
+        <div>icon</div>
+      </template>
+      <template v-slot:label>
+        <div>label</div>
+      </template>
 
-    <template v-slot:header>
-      <div>header</div>
-    </template>
+      button
+    </abstract-button>
+    <Button @click="onClicked">Button</Button>
 
-    <!-- <div>
-      <list-view :model="list">
-        <template v-slot:delegate="item">
-          <lifecycle-logger style="height: 50px;"
-              :label="item.index">item key: {{item.index}}</lifecycle-logger>
-          <div style="height: 50px;">item key: {{item.index}}</div>
-        </template>
-      </list-view>
-    </div> -->
+    <check-indicator></check-indicator>
+    <check-box v-model="checked">check box</check-box>
 
-    <div class="loading">
-      <busy-indicator :running="true"></busy-indicator>
-      <div class="loading-text">
-        加载中...
-      </div>
-    </div>
+    <loader :component="comp" :properties="{ label: 'hello loader!' }"></loader>
 
-    <div class="progress-bar__container">
-      <progress-bar class="item--indeterminate"
-                    indeterminate
-                    :value="progress"></progress-bar>
-      <progress-bar class="item--indeterminate"
-                    indeterminate
-                    color="#ff0000"
-                    :value="progress"></progress-bar>
-      <progress-bar class="item--indeterminate"
-                    indeterminate
-                    color="#0ff0ff"
-                    :value="progress"></progress-bar>
+    <check-box-group v-model="checkedGroup">
+      <check-box value="A">Option A</check-box>
+      <check-box value="B">Option B</check-box>
+    </check-box-group>
 
-      <progress-bar class="item"
-                    :value="progress"></progress-bar>
+    <busy-indicator></busy-indicator>
 
-      <progress-bar class="item"
-                    color="#ff0000"
-                    :value="progress"></progress-bar>
+    <radio-button>radio</radio-button>
+    <radio-indicator></radio-indicator>
 
-      <progress-bar class="item"
-                    color="#0ff0ff"
-                    :value="progress"></progress-bar>
+    <switch-indicator checked disabled></switch-indicator>
+    <x-switch>xx</x-switch>
 
-    </div>
+    <avatar>avatar</avatar>
 
-    <div class="group">
-      <progress-bar-circular :value="progress"></progress-bar-circular>
-      <progress-bar-circular :value="progress"
-                             color="#ff0000"></progress-bar-circular>
-      <progress-bar-circular :value="progress"
-                             color="#0ff0ff"></progress-bar-circular>
-      <span class="value">
-        checkState -> {{progress}}
-      </span>
-    </div>
-    <div class="group">
-      <button @click="progress = progress - 10 <= 0 ? 0 : progress - 10 ">-</button>
-      <button @click="progress = progress + 10 >= 100 ? 100 : progress + 10">+</button>
-    </div>
+    <progress-circular v-model="value"></progress-circular>
 
-    <div class="group">
-      <check-box v-model="checkState">checkbox</check-box>
-      <span class="value">
-        checkState -> {{checkState}}
-      </span>
-    </div>
-    <div class="slide-item">
-      <slider v-model="value"></slider>
-    </div>
-    <div class="group">
-      <span class="value">
-        value -> {{value}}
-      </span>
-    </div>
-    <div class="slide-item">
-      <slider :orientation="1"
-              height="300px"
-              v-model="value"></slider>
-    </div>
-    <div class="slide-item">
-      <slider v-model="value"
-              :stepSize="10"></slider>
-    </div>
-    <div class="group">
-      <span class="value">
-        value -> {{value}}
-      </span>
-    </div>
-    <div class="slide-item">
-      <slider v-model="value"
-              :orientation="1"
-              :stepSize="10"
-              height="300px"></slider>
-    </div>
+    <progress-indicator :value="value"></progress-indicator>
+    <delay-button></delay-button>
 
-    <div class="slide-item">
-      <range-slider v-model="rangeValue"></range-slider>
-    </div>
-    <div class="group">
-      <span class="value">
-        rangeValue -> {{rangeValue}}
-      </span>
-    </div>
-    <div class="slide-item">
-      <range-slider v-model="rangeValue"
-                    :orientation="1"
-                    height="300px"></range-slider>
-    </div>
-
-    <div class="slide-item">
-      <range-slider v-model="rangeValue"
-                    :stepSize="10"></range-slider>
-    </div>
-    <div class="group">
-      <span class="value">
-        rangeValue -> {{rangeValue}}
-      </span>
-    </div>
-    <div class="slide-item">
-      <range-slider v-model="rangeValue"
-                    :orientation="1"
-                    :stepSize="10"
-                    height="300px"></range-slider>
-    </div>
-
-    <div class="group">
-      <radio-button label="0"
-                    border>RadioButton-0</radio-button>
-    </div>
-    <div class="group">
-      <radio-button-group v-model="radio">
-        <radio-button value="1">RadioButton-1</radio-button>
-        <radio-button value="2">RadioButton-2</radio-button>
-        <radio-button value="3"
-                      disabled>RadioButton-3</radio-button>
-      </radio-button-group>
-
-      <span class="value">
-        radio-value -> {{radio}}
-      </span>
-    </div>
-
-    <div class="group">
-      <z-switch v-model="switchValue"></z-switch>
-      <span class="value">
-        {{switchValue}}
-      </span>
-    </div>
-
-    <div class="view">
-      <swiper>
-        <swipe-view>
-          Slide 1
-        </swipe-view>
-        <swipe-view>
-          Slide 2
-        </swipe-view>
-        <swipe-view>
-          Slide 3
-        </swipe-view>
-      </swiper>
-    </div>
-
-    <div class="group">
-      <chip>Default</chip>
-      <chip>Primary</chip>
-      <chip border>Primary</chip>
-    </div>
-
-    <div class="group">
-      <z-button>
-        button
-      </z-button>
-    </div>
-
-    <div class="group">
-      <badge :value="10">
-        <z-button>
-          button
-        </z-button>
-      </badge>
-      <badge :value="10"
-             :visible="false">
-        <z-button>
-          button
-        </z-button>
-      </badge>
-      <badge :value="10"
-             :visible="badgeVisible"
-             @click="setBadgeVisible">
-        <z-button @click="badgeVisible = !badgeVisible">
-          button
-        </z-button>
-      </badge>
-      <!-- @mouseover="show = true"
-          @mouseout="show = false" -->
-      <badge :value="99">
-        <z-button>
-          button
-        </z-button>
-      </badge>
-      <badge :value="999">
-        <z-button>
-          button
-        </z-button>
-      </badge>
-    </div>
-
-    <template v-slot:footer>
-      <div>footer</div>
-
-    </template>
-
+    checked: {{checked}} <br/>
+    checkedGroup: {{checkedGroup}} <br/>
   </application-window>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
 import { ApplicationWindow } from './components/application-window';
-import { MenuBar } from './components/menu-bar';
-// import { ListView } from './components/list-view';
-// import { LifecycleLogger } from './components/functional';
+import { AbstractButton, Button } from './components/button';
+import { CheckBox, CheckIndicator, CheckBoxGroup } from './components/check-box';
+import { RadioButton, RadioIndicator } from './components/radio-button';
+import { Switch, SwitchIndicator } from './components/switch';
+import { Avatar } from './components/avatar';
+import { Loader } from './components/loader';
 import { BusyIndicator } from './components/busy-indicator';
-import { ProgressBar, ProgressBarCircular } from './components/progress-bar';
-import { CheckBox } from './components/check-box';
-import { RadioButton } from './components/radio-button';
-import { Slider } from './components/slider';
-import { RangeSlider } from './components/range-slider';
-import { RadioButtonGroup } from './components/radio-button-group';
-import { Switch as ZSwitch } from './components/switch';
-import { Swiper } from './components/swiper';
-import { SwipeView } from './components/swipe-view';
-import { Chip } from './components/chip';
-import { Button as ZButton } from './components/button';
-import { Badge } from './components/badge';
+import { SvgIcon } from '@/components/icon';
+import { ProgressIndicator, DelayButton } from './components/delay-button';
+import { ProgressBar, ProgressCircular } from './components/progress';
 
 export default Vue.extend({
   name: 'app',
 
   components: {
     ApplicationWindow,
-    MenuBar,
-    // ListView,
-    // LifecycleLogger,
-    BusyIndicator,
-    ProgressBar,
-    ProgressBarCircular,
+    AbstractButton,
+    Button,
     CheckBox,
+    CheckIndicator,
+    CheckBoxGroup,
     RadioButton,
-    Slider,
-    RangeSlider,
-    RadioButtonGroup,
-    ZSwitch,
-    Swiper,
-    SwipeView,
-    Chip,
-    ZButton,
-    Badge,
+    RadioIndicator,
+    SwitchIndicator,
+    XSwitch: Switch,
+    Loader,
+    BusyIndicator,
+    ProgressCircular,
+    ProgressIndicator,
+    DelayButton,
+    Avatar,
   },
 
   data() {
@@ -296,18 +116,47 @@ export default Vue.extend({
       switchValue: false,
 
       badgeVisible: false,
+
+      text: '3d_rotation',
+
+      checked: false,
+      checkedGroup: ['A', 'B'],
+
+      comp: Button,
     };
+  },
+
+  watch: {
+    checkedGroup(val) {
+      console.log(val);
+    },
   },
 
   methods: {
     setBadgeVisible() {
       console.log('?//');
     },
+
+    onClicked() {
+      console.log('clicked');
+    },
+  },
+
+  created() {
+    setTimeout(() => {
+      this.checked = !this.checked;
+      this.value = 90;
+    }, 3000);
   },
 });
 </script>
 
 <style lang="scss">
+
+.application-window {
+  height: 100%;
+}
+
 .loading {
   width: 300px;
   height: 100px;

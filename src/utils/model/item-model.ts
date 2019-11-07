@@ -30,7 +30,7 @@ export class ModelIndex {
   }
 
   toString() {
-    return `${this.row}:${this.column}`;
+    return `${ this.row }:${ this.column }`;
   }
 }
 
@@ -54,7 +54,7 @@ export class ItemModel extends EventEmitter {
   insertColum(column, parent) {}
 
   insertColums(column, count, parent) {}
-  
+
   insertRow(row, parent) {}
 
   insertRows(row, count, parent) {}
@@ -62,7 +62,7 @@ export class ItemModel extends EventEmitter {
   removeColum(column, parent) {}
 
   removeColums(column, count, parent) {}
-  
+
   removeRow(row, parent) {}
 
   removeRows(row, count, parent) {}

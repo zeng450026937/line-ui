@@ -79,7 +79,7 @@ export class BoxLayout extends Layout {
       current = next;
     }
 
-    console.log(`layout all right. count: ${this.count}`, this);
+    console.log(`layout all right. count: ${ this.count }`, this);
   }
 
   update(

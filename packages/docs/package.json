@@ -1,0 +1,11 @@
+{
+  "name": "@skyline/docs",
+  "version": "1.0.0",
+  "description": "skyline docs",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "dependencies": {
+  }
+}

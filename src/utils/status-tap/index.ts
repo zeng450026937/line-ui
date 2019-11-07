@@ -1,4 +1,3 @@
-
 export const setupStatusTap = () => {
   const win = window;
   win.addEventListener('statusTap', () => {
@@ -10,7 +9,7 @@ export const setupStatusTap = () => {
     }
     const contentEl = el.closest('ion-content');
     if (contentEl) {
-      contentEl.scrollToTop(300));
+      (contentEl as any).scrollToTop(300);
     }
   });
 };

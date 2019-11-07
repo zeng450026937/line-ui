@@ -7,7 +7,7 @@ export const enableScrollAssist = (
   componentEl: HTMLElement,
   inputEl: HTMLInputElement | HTMLTextAreaElement,
   contentEl: HTMLIonContentElement,
-  keyboardHeight: number
+  keyboardHeight: number,
 ) => {
   let coord: any;
   const touchStart = (ev: Event) => {
@@ -45,7 +45,7 @@ const jsSetFocus = (
   componentEl: HTMLElement,
   inputEl: HTMLInputElement | HTMLTextAreaElement,
   contentEl: HTMLIonContentElement,
-  keyboardHeight: number
+  keyboardHeight: number,
 ) => {
   const scrollData = getScrollData(componentEl, contentEl, keyboardHeight);
   if (Math.abs(scrollData.scrollAmount) < 4) {

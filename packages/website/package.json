@@ -1,0 +1,11 @@
+{
+  "name": "@skyline/website",
+  "version": "1.0.0",
+  "description": "skyline website",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "dependencies": {
+  }
+}

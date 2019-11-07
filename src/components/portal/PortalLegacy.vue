@@ -50,7 +50,7 @@ export default {
   },
 
   created() {
-    this.id = `portal-${globalId++}`;
+    this.id = `portal-${ globalId++ }`;
     this.hole = wormhole.open(this.id);
   },
 

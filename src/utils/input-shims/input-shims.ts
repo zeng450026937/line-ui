@@ -1,4 +1,4 @@
-
+/* eslint-disable */
 import { Config } from '../../interface';
 
 import { enableHideCaretOnScroll } from './hacks/hide-caret';

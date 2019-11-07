@@ -326,8 +326,8 @@ export default {
     itemStyleAtIndex(index) {
       const { geometry } = this.layout.itemAt(index);
       return Object.freeze({
-        left: `${geometry.left}px`,
-        top: `${geometry.top}px`,
+        left: `${ geometry.left }px`,
+        top: `${ geometry.top }px`,
         width: this.horizontal ? 'auto' : '100%',
         height: this.horizontal ? '100%' : 'auto',
       });
@@ -380,14 +380,14 @@ export default {
 
         console.log(
           'onScroll \n\n',
-          `dx: ${dx} \n`,
-          `dy: ${dy} \n`,
-          `client width: ${this.clientWidth} height: ${this.clientHeight} \n`,
-          `layout width: ${this.layout.width} height: ${this.layout.height} \n`,
-          `scrollLeft: ${this.scrollLeft} \n`,
-          `scrollTop: ${this.scrollTop} \n`,
-          `incremental: ${this.incremental} \n`,
-          `decremental: ${this.decremental} \n`,
+          `dx: ${ dx } \n`,
+          `dy: ${ dy } \n`,
+          `client width: ${ this.clientWidth } height: ${ this.clientHeight } \n`,
+          `layout width: ${ this.layout.width } height: ${ this.layout.height } \n`,
+          `scrollLeft: ${ this.scrollLeft } \n`,
+          `scrollTop: ${ this.scrollTop } \n`,
+          `incremental: ${ this.incremental } \n`,
+          `decremental: ${ this.decremental } \n`,
         );
         if (!this.pending) {
           this.onUpdate();
@@ -483,9 +483,9 @@ export default {
 
       console.log(
         'onUpdate \n\n',
-        `total: ${rightBoundary}, estimated: ${total} \n`,
-        `from: ${lastFrom} -> ${newFrom} \n`,
-        `to: ${lastTo} -> ${newTo}`,
+        `total: ${ rightBoundary }, estimated: ${ total } \n`,
+        `from: ${ lastFrom } -> ${ newFrom } \n`,
+        `to: ${ lastTo } -> ${ newTo }`,
       );
 
       // if (this.incremental) {

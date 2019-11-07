@@ -14,7 +14,7 @@ export const getScrollData = (componentEl: HTMLElement, contentEl: HTMLElement, 
     itemEl.getBoundingClientRect(),
     contentEl.getBoundingClientRect(),
     keyboardHeight,
-    (componentEl as any).ownerDocument.defaultView.innerHeight
+    (componentEl as any).ownerDocument.defaultView.innerHeight,
   );
 };
 
@@ -22,7 +22,7 @@ const calcScrollData = (
   inputRect: ClientRect,
   contentRect: ClientRect,
   keyboardHeight: number,
-  platformHeight: number
+  platformHeight: number,
 ): ScrollData => {
   // compute input's Y values relative to the body
   const inputTop = inputRect.top;
@@ -59,6 +59,6 @@ const calcScrollData = (
     scrollAmount,
     scrollDuration,
     scrollPadding: keyboardHeight,
-    inputSafeY: -(inputTop - safeAreaTop) + 4
+    inputSafeY: -(inputTop - safeAreaTop) + 4,
   };
 };

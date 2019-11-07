@@ -31,7 +31,7 @@ export default {
     reuseItems: {
       type: Boolean,
       default: true,
-    }, 
+    },
     rowHeightProvider: {
       type: Function,
       default: column => (0),

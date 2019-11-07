@@ -1,0 +1,19 @@
+{
+  "name": "@skyline/cli",
+  "version": "1.0.0",
+  "description": "skyline cli tools",
+  "main": "./src/index.js",
+  "bin": {
+    "skyline": "./src/index.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^4.0.0",
+    "execa": "^3.2.0",
+    "chalk": "^2.4.2",
+    "lint-staged": "^9.4.2"
+  }
+}

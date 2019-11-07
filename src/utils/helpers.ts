@@ -47,6 +47,11 @@ export const debounce = (func: (...args: any[]) => void, wait = 0) => {
   };
 };
 
+
+export function isDef(value: any): boolean {
+  return value !== undefined && value !== null;
+}
+
 export const isEmpty = (val: unknown): val is any => {
   return (val === undefined
     || val === null
@@ -54,6 +59,17 @@ export const isEmpty = (val: unknown): val is any => {
     || (Array.isArray(val) && val.length === 0)
     || (typeof (val) === 'number' && Number.isNaN(val)));
 };
+
+export function get(object: any, path: string): any {
+  const keyPath = path.split('.');
+  let result = object;
+
+  keyPath.forEach((key) => {
+    result = isDef(result[key]) ? result[key] : '';
+  });
+
+  return result;
+}
 
 // copied from vue-next
 

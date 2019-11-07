@@ -47,11 +47,11 @@ function createRippleEffect(el: HTMLElement, options: RippleOption) {
       const ripple = document.createElement('div');
       ripple.classList.add('ripple');
       const { style } = ripple;
-      style.top = `${styleY}px`;
-      style.left = `${styleX}px`;
-      style.width = style.height = `${initialSize}px`;
-      style.setProperty('--final-scale', `${finalScale}`);
-      style.setProperty('--translate-end', `${moveX}px, ${moveY}px`);
+      style.top = `${ styleY }px`;
+      style.left = `${ styleX }px`;
+      style.width = style.height = `${ initialSize }px`;
+      style.setProperty('--final-scale', `${ finalScale }`);
+      style.setProperty('--translate-end', `${ moveX }px, ${ moveY }px`);
 
       const effect = document.createElement('div');
       effect.classList.add('ripple-effect');

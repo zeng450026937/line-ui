@@ -41,12 +41,12 @@ export default {
       const item = itemLayoutAtIndex(this.index);
       this.offsetWidth = item.geometry.width;
       this.offsetHeight = item.geometry.height;
-    
+
       const { offsetWidth, offsetHeight } = this.$el;
       const { onLayout, horizontal, vertical } = this.ListView;
 
       if (!offsetWidth || !offsetHeight) return;
-      
+
       if ((this.offsetWidth !== offsetWidth && horizontal)
       || (this.offsetHeight !== offsetHeight && vertical)) {
         this.offsetWidth = offsetWidth;
@@ -68,7 +68,7 @@ export default {
     // console.debug('item mounted', this.index);
 
     await this.$nextTick();
-    
+
     // TBD
     // calc $el size is very heavy.
     this.onLayoutChanged();

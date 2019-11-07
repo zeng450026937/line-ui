@@ -1,0 +1,11 @@
+{
+  "name": "@skyline/icons",
+  "version": "1.0.0",
+  "description": "skyline icons",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "dependencies": {
+  }
+}

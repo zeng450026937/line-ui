@@ -1,0 +1,10 @@
+{
+  "name": "@skyline/touch-emulator",
+  "version": "1.0.0",
+  "description": "skyline touch emulator",
+  "main": "index.js",
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT"
+}

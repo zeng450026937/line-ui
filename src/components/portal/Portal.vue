@@ -28,7 +28,7 @@ export default {
 
   created() {
     const { Portal } = this;
-    this.id = `portal-${globalId++}`;
+    this.id = `portal-${ globalId++ }`;
     this.portal = Portal.open(this.id);
     this.payload = {
       to: this.remote,

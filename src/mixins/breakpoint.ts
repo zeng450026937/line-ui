@@ -14,7 +14,7 @@ function getClientWidth() {
 
 function getClientHeight() {
   if (typeof document === 'undefined') return 0; // SSR
-  
+
   return Math.max(
     document.documentElement.clientHeight,
     window.innerHeight || 0,
