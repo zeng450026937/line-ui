@@ -87,8 +87,10 @@ export default {
   },
 
   beforeDestroy() {
-    this.popper.destroy();
-    this.popper = null;
+    if (this.popper) {
+      this.popper.destroy();
+      this.popper = null;
+    }
   },
 
   methods: {
