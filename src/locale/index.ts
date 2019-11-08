@@ -15,7 +15,7 @@ const { defineReactive } = Vue.util;
 
 defineReactive(proto, '$vantLang', 'zh-CN');
 defineReactive(proto, '$vantMessages', {
-  'zh-CN': defaultMessages,
+  'zh-CN' : defaultMessages,
 });
 
 export default {

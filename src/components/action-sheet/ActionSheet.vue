@@ -18,44 +18,44 @@ import Vue from 'vue';
 import { Popup } from '@/components/popup';
 
 export default Vue.extend({
-  name: 'ActionSheet',
+  name : 'ActionSheet',
 
-  components: {
+  components : {
     Popup,
   },
 
-  model: {
-    prop: 'value',
-    event: 'change',
+  model : {
+    prop  : 'value',
+    event : 'change',
   },
 
-  props: {
-    value: {
-      type: [String, Boolean, Number],
-      default: null,
+  props : {
+    value : {
+      type    : [String, Boolean, Number],
+      default : null,
     },
-    height: {
-      type: [Number, String],
-      default: 200,
+    height : {
+      type    : [Number, String],
+      default : 200,
     },
   },
 
   data() {
     return {
-      visible: this.value,
+      visible : this.value,
     };
   },
 
-  computed: {},
+  computed : {},
 
-  methods: {
+  methods : {
     setVisible(value) {
       this.visible = value;
       this.$emit('change', value);
     },
   },
 
-  watch: {
+  watch : {
     value(val) {
       this.visible = val;
     },

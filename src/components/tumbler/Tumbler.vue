@@ -5,45 +5,45 @@
 
 <script>
 export default {
-  name: 'Tumbler',
+  name : 'Tumbler',
 
-  props: {
-    currentIndex: {
-      type: Number,
-      default: 0,
+  props : {
+    currentIndex : {
+      type    : Number,
+      default : 0,
     },
-    delegate: {
-      type: Object,
-      default: () => ({}),
+    delegate : {
+      type    : Object,
+      default : () => ({}),
     },
-    model: {
-      type: Object,
-      default: () => ({}),
+    model : {
+      type    : Object,
+      default : () => ({}),
     },
-    moving: {
-      type: Boolean,
-      default: true,
+    moving : {
+      type    : Boolean,
+      default : true,
     },
-    visibleItemCount: {
-      type: Number,
-      default: 0,
+    visibleItemCount : {
+      type    : Number,
+      default : 0,
     },
-    wrap: {
-      type: Boolean,
-      default: true,
+    wrap : {
+      type    : Boolean,
+      default : true,
     },
   },
 
   provide() {
     return {
-      Tumbler: {
-        displacement: this.displacement,
-        tumbler: this,
+      Tumbler : {
+        displacement : this.displacement,
+        tumbler      : this,
       },
     };
   },
 
-  computed: {
+  computed : {
     count() {
       return 0;
     },
@@ -52,7 +52,7 @@ export default {
     },
   },
 
-  methods: {
+  methods : {
     positionViewAtIndex() {},
   },
 };

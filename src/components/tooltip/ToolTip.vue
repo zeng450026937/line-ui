@@ -23,53 +23,53 @@ import { Popup } from '@/components/popup';
 export { Placement };
 
 export default {
-  name: 'ToolTip',
+  name : 'ToolTip',
 
-  extends: Popup,
+  extends : Popup,
 
-  model: {
-    prop: 'value',
-    event: 'change',
+  model : {
+    prop  : 'value',
+    event : 'change',
   },
 
-  props: {
-    delay: {
-      type: Number,
-      default: 0,
+  props : {
+    delay : {
+      type    : Number,
+      default : 0,
     },
-    text: {
-      type: String,
-      default: '',
+    text : {
+      type    : String,
+      default : '',
     },
-    timeout: {
-      type: Number,
-      default: 0,
+    timeout : {
+      type    : Number,
+      default : 0,
     },
-    value: {
-      type: Boolean,
-      default: false,
+    value : {
+      type    : Boolean,
+      default : false,
     },
-    placement: {
-      type: String,
-      default: 'top',
+    placement : {
+      type    : String,
+      default : 'top',
     },
   },
 
   provide() {
     return {
-      ToolTip: {
-        delay: this.delay,
-        text: this.text,
-        timeout: this.timeout,
-        toolTip: this,
-        visible: this.visible,
+      ToolTip : {
+        delay   : this.delay,
+        text    : this.text,
+        timeout : this.timeout,
+        toolTip : this,
+        visible : this.visible,
       },
     };
   },
 
   data() {
     return {
-      visible: this.value,
+      visible : this.value,
     };
   },
 
@@ -93,20 +93,20 @@ export default {
     }
   },
 
-  methods: {
+  methods : {
     hide() { },
     show() { },
     onMouseenter() {
       const { reference, content } = this.$refs;
       this.visible = true;
       this.popper = new Popper(reference, content, {
-        placement: this.placement,
-        eventsEnabled: false,
-        modifiers: {
-          flip: { enabled: true },
-          preventOverflow: {
-            enabled: true,
-            escapeWithReference: false,
+        placement     : this.placement,
+        eventsEnabled : false,
+        modifiers     : {
+          flip            : { enabled: true },
+          preventOverflow : {
+            enabled             : true,
+            escapeWithReference : false,
           },
         },
       });
@@ -115,7 +115,7 @@ export default {
       this.visible = false;
     },
   },
-  watch: {
+  watch : {
     visible(val) {
       this.$emit('change', val);
     },

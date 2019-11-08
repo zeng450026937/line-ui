@@ -44,7 +44,7 @@ function bind(el: HTMLElement, binding: ClickOutsideDirective) {
   if (!binding.value) return;
   const vClickOutside = createClickOutside(el, {
     ...binding.args,
-    callback: binding.value,
+    callback : binding.value,
   } as ClickOutsideOption);
   const doc = document;
   doc.addEventListener('mouseup', vClickOutside.maybe, true);

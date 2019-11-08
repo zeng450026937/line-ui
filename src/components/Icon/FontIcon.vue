@@ -4,21 +4,21 @@ import { convertToUnit } from '@/utils/helpers';
 import '@/iconfont/material-icons.scss';
 
 export default {
-  name: 'FontIcon',
+  name : 'FontIcon',
 
-  functional: true,
+  functional : true,
 
-  extends: AbstractIcon,
+  extends : AbstractIcon,
 
   render(h, { props, data, scopedSlots }) {
     const text = props.name || (scopedSlots.default && scopedSlots.default()[0].text.trim());
     const size = props.height || props.width;
     return h('i', {
       ...data,
-      staticClass: `font-icon material-icons ${ data.staticClass || '' }`.trim(),
-      style: {
-        'vertical-align': 'middle',
-        'font-size': convertToUnit(size),
+      staticClass : `font-icon material-icons ${ data.staticClass || '' }`.trim(),
+      style       : {
+        'vertical-align' : 'middle',
+        'font-size'      : convertToUnit(size),
         ...data.style,
       },
     }, text);

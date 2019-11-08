@@ -3,11 +3,11 @@ import Vue from 'vue';
 const Wormhole = Vue.extend({
   data() {
     return {
-      holes: {},
+      holes : {},
     };
   },
 
-  methods: {
+  methods : {
     open(name: string) {
       let opened = this.holes[name];
 
@@ -15,8 +15,8 @@ const Wormhole = Vue.extend({
         const wormhole = this;
         const hole = {
           name,
-          transports: {},
-          remote: null,
+          transports : {},
+          remote     : null,
           addTransport(id, transport) {
             Vue.set(this.transports, id, transport);
           },

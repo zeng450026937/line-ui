@@ -29,7 +29,7 @@ export const TouchMixin = Vue.extend({
     return { direction: '' } as TouchMixinData;
   },
 
-  methods: {
+  methods : {
     touchStart(event: TouchEvent) {
       this.resetTouchStatus();
       this.startX = event.touches[0].clientX;

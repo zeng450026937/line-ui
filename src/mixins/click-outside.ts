@@ -10,10 +10,10 @@ export type ClickOutsideMixinConfig = {
 };
 
 export const ClickOutsideMixin = (config: ClickOutsideMixinConfig) => Vue.extend({
-  props: {
-    closeOnClickOutside: {
-      type: Boolean,
-      default: true,
+  props : {
+    closeOnClickOutside : {
+      type    : Boolean,
+      default : true,
     },
   },
 

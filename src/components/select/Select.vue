@@ -39,35 +39,35 @@ import { useGroup } from '@/components/group';
 const NAMESPACE = 'Select';
 
 export default Vue.extend({
-  name: 'Select',
+  name : 'Select',
 
-  mixins: [useGroup(NAMESPACE)],
+  mixins : [useGroup(NAMESPACE)],
 
-  components: {
+  components : {
     FontIcon,
     Popup,
   },
 
-  props: {
-    exclusive: {
-      type: Boolean,
-      default: true,
+  props : {
+    exclusive : {
+      type    : Boolean,
+      default : true,
     },
-    label: {
-      type: String,
-      default: 'select',
+    label : {
+      type    : String,
+      default : 'select',
     },
   },
 
   data() {
     return {
-      visible: false,
+      visible : false,
     };
   },
 
-  computed: {},
+  computed : {},
 
-  methods: {
+  methods : {
     hide() {
       this.visible = false;
     },
@@ -78,7 +78,7 @@ export default Vue.extend({
     },
   },
 
-  watch: {
+  watch : {
     checkedItem(newVal) {
       this.hide();
       this.$emit('change', newVal);

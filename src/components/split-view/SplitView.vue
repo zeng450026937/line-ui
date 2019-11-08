@@ -5,26 +5,26 @@
 
 <script>
 export default {
-  name: 'SplitView',
+  name : 'SplitView',
 
-  props: {
-    handle: {
-      type: Object,
-      default: () => ({}),
+  props : {
+    handle : {
+      type    : Object,
+      default : () => ({}),
     },
-    orientation: {
-      type: Number,
-      default: 0,
+    orientation : {
+      type    : Number,
+      default : 0,
     },
   },
 
-  computed: {
+  computed : {
     resizing() {
       return false;
     },
   },
 
-  methods: {
+  methods : {
     restoreState() {},
     saveState() {},
   },

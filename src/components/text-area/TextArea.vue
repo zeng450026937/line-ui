@@ -5,48 +5,48 @@
 
 <script>
 export default {
-  name: 'TextArea',
+  name : 'TextArea',
 
-  props: {
-    canPaste: {
-      type: Boolean,
-      default: true,
+  props : {
+    canPaste : {
+      type    : Boolean,
+      default : true,
     },
-    canRedo: {
-      type: Boolean,
-      default: true,
+    canRedo : {
+      type    : Boolean,
+      default : true,
     },
-    canUndo: {
-      type: Boolean,
-      default: true,
+    canUndo : {
+      type    : Boolean,
+      default : true,
     },
-    persistentSelection: {
-      type: Boolean,
-      default: false,
+    persistentSelection : {
+      type    : Boolean,
+      default : false,
     },
-    readOnly: {
-      type: Boolean,
-      default: false,
+    readOnly : {
+      type    : Boolean,
+      default : false,
     },
-    text: {
-      type: String,
-      default: '',
+    text : {
+      type    : String,
+      default : '',
     },
-    hoverEnabled: {
-      type: Boolean,
-      default: true,
+    hoverEnabled : {
+      type    : Boolean,
+      default : true,
     },
-    placeholderText: {
-      type: String,
-      default: '',
+    placeholderText : {
+      type    : String,
+      default : '',
     },
-    placeholderTextColor: {
-      type: String,
-      default: '',
+    placeholderTextColor : {
+      type    : String,
+      default : '',
     },
   },
 
-  computed: {
+  computed : {
     selectedText() {
       return '';
     },

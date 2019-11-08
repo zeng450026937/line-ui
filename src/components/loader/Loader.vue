@@ -2,18 +2,18 @@
 import Vue, { VNode } from 'vue';
 
 export default Vue.extend({
-  name: 'Loader',
+  name : 'Loader',
 
-  functional: true,
+  functional : true,
 
-  props: {
-    active: {
-      type: Boolean,
-      default: true,
+  props : {
+    active : {
+      type    : Boolean,
+      default : true,
     },
-    vnode: [Object, Array],
-    component: [Object, Function],
-    properties: Object,
+    vnode      : [Object, Array],
+    component  : [Object, Function],
+    properties : Object,
   },
 
   render(h, {

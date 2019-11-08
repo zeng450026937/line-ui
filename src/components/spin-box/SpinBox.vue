@@ -7,74 +7,74 @@
 import AbstractButton from '@/mixins/abstract-button';
 
 export default {
-  name: 'SpinBox',
+  name : 'SpinBox',
 
-  extends: AbstractButton,
+  extends : AbstractButton,
 
-  props: {
-    down: {
-      type: Object,
-      default: () => ({
-        pressed: false,
-        indicator: {},
-        hovered: false,
-        implicitIndicatorWidth: 24,
-        implicitIndicatorHeight: 24,
+  props : {
+    down : {
+      type    : Object,
+      default : () => ({
+        pressed                 : false,
+        indicator               : {},
+        hovered                 : false,
+        implicitIndicatorWidth  : 24,
+        implicitIndicatorHeight : 24,
       }),
     },
-    editable: {
-      type: Boolean,
-      default: false,
+    editable : {
+      type    : Boolean,
+      default : false,
     },
-    from: {
-      type: Number,
-      default: 0,
+    from : {
+      type    : Number,
+      default : 0,
     },
-    inputMethodHints: {
-      type: Number,
-      default: 100,
+    inputMethodHints : {
+      type    : Number,
+      default : 100,
     },
-    stepSize: {
-      type: Number,
-      default: 0,
+    stepSize : {
+      type    : Number,
+      default : 0,
     },
-    textFromValue: {
-      type: Function,
-      default: () => {},
+    textFromValue : {
+      type    : Function,
+      default : () => {},
     },
-    to: {
-      type: Number,
-      default: 0,
+    to : {
+      type    : Number,
+      default : 0,
     },
-    up: {
-      type: Object,
-      default: () => ({
-        pressed: false,
-        indicator: {},
-        hovered: false,
-        implicitIndicatorWidth: 24,
-        implicitIndicatorHeight: 24,
+    up : {
+      type    : Object,
+      default : () => ({
+        pressed                 : false,
+        indicator               : {},
+        hovered                 : false,
+        implicitIndicatorWidth  : 24,
+        implicitIndicatorHeight : 24,
       }),
     },
-    validator: {
-      type: Function,
-      default: () => {},
+    validator : {
+      type    : Function,
+      default : () => {},
     },
-    value: {
-      type: Number,
-      default: 0,
+    value : {
+      type    : Number,
+      default : 0,
     },
-    valueFromText: {
-      type: Function,
-      default: () => {},
+    valueFromText : {
+      type    : Function,
+      default : () => {},
     },
-    wrap: {
-      type: Boolean,
-      default: false,
+    wrap : {
+      type    : Boolean,
+      default : false,
     },
   },
 
-  computed: {
+  computed : {
     displayText() {
       return '';
     },
@@ -83,7 +83,7 @@ export default {
     },
   },
 
-  methods: {
+  methods : {
     decrease() {},
     increase() {},
   },

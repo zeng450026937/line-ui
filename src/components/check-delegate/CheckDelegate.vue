@@ -11,24 +11,24 @@ const PartiallyChecked = 2;
 const Checked = 3;
 
 export default {
-  name: 'CheckDelegate',
+  name : 'CheckDelegate',
 
-  extends: AbstractButton,
+  extends : AbstractButton,
 
-  props: {
-    checkState: {
-      type: Number,
-      default: Unchecked,
+  props : {
+    checkState : {
+      type    : Number,
+      default : Unchecked,
     },
-    nextCheckState: {
-      type: Function,
+    nextCheckState : {
+      type : Function,
       default() {
         return this.checkState === Checked ? Unchecked : Checked;
       },
     },
-    tristate: {
-      type: Boolean,
-      default: false,
+    tristate : {
+      type    : Boolean,
+      default : false,
     },
   },
 };

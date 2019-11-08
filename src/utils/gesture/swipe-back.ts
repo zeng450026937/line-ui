@@ -47,11 +47,11 @@ export const createSwipeBackGesture = (
 
   return createGesture({
     el,
-    gestureName: 'goback-swipe',
-    gesturePriority: 40,
-    threshold: 10,
+    gestureName     : 'goback-swipe',
+    gesturePriority : 40,
+    threshold       : 10,
     canStart,
-    onStart: onStartHandler,
+    onStart         : onStartHandler,
     onMove,
     onEnd,
   });

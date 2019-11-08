@@ -1,7 +1,7 @@
 import Vue from 'vue';
 
 export const PatchMixin = Vue.extend({
-  methods: {
+  methods : {
     slots(name = 'default', props: any) {
       const { $slots, $scopedSlots } = this;
       const scopedSlot = $scopedSlots[name];

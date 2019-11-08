@@ -10,18 +10,18 @@ import { useGroup } from '@/components/group';
 const NAMESPACE = 'Collapse';
 
 export default {
-  name: 'Collapse',
+  name : 'Collapse',
 
-  mixins: [useGroup(NAMESPACE)],
+  mixins : [useGroup(NAMESPACE)],
 
-  props: {
-    exclusive: {
-      type: Boolean,
-      default: true,
+  props : {
+    exclusive : {
+      type    : Boolean,
+      default : true,
     },
   },
 
-  methods: {
+  methods : {
 
   },
 };

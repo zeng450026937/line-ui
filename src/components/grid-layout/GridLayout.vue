@@ -5,37 +5,37 @@
 
 <script>
 export const LayoutDirection = {
-  LeftToRight: 0,
-  RightToLeft: 1,
+  LeftToRight : 0,
+  RightToLeft : 1,
 };
 
 export default {
-  name: 'GridLayout',
+  name : 'GridLayout',
 
-  props: {
-    columnSpacing: {
-      type: Number,
-      default: 0,
+  props : {
+    columnSpacing : {
+      type    : Number,
+      default : 0,
     },
-    columns: {
-      type: Number,
-      default: 0,
+    columns : {
+      type    : Number,
+      default : 0,
     },
-    flow: {
-      type: Number,
-      default: 0,
+    flow : {
+      type    : Number,
+      default : 0,
     },
-    layoutDirection: {
-      type: Number,
-      default: 0,
+    layoutDirection : {
+      type    : Number,
+      default : 0,
     },
-    rowSpacing: {
-      type: Number,
-      default: 0,
+    rowSpacing : {
+      type    : Number,
+      default : 0,
     },
-    rows: {
-      type: Number,
-      default: 0,
+    rows : {
+      type    : Number,
+      default : 0,
     },
   },
 };

@@ -2,18 +2,18 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  name: 'RadioIndicator',
+  name : 'RadioIndicator',
 
-  functional: true,
+  functional : true,
 
-  props: {
-    checked: {
-      type: Boolean,
-      default: false,
+  props : {
+    checked : {
+      type    : Boolean,
+      default : false,
     },
-    disabled: {
-      type: Boolean,
-      default: false,
+    disabled : {
+      type    : Boolean,
+      default : false,
     },
   },
 
@@ -21,10 +21,10 @@ export default Vue.extend({
     const tag = 'div';
     return h(tag, {
       ...data,
-      staticClass: `radio-indicator ${ data.staticClass || '' }`.trim(),
-      class: {
-        'is-checked': props.checked,
-        'is-disabled': props.disabled,
+      staticClass : `radio-indicator ${ data.staticClass || '' }`.trim(),
+      class       : {
+        'is-checked'  : props.checked,
+        'is-disabled' : props.disabled,
         ...data.class,
       },
     });

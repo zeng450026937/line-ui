@@ -26,84 +26,84 @@
 
 <script>
 export const Orientation = {
-  Horizontal: 0,
-  Vertical: 1,
+  Horizontal : 0,
+  Vertical   : 1,
 };
 
 export const SnapMode = {
-  AsNeeded: 0,
-  AlwaysOff: 1,
-  AlwaysOn: 2,
-  NoSnap: 3,
-  SnapAlways: 4,
-  SnapOnRelease: 5,
+  AsNeeded      : 0,
+  AlwaysOff     : 1,
+  AlwaysOn      : 2,
+  NoSnap        : 3,
+  SnapAlways    : 4,
+  SnapOnRelease : 5,
 };
 
 export default {
-  name: 'Slider',
+  name : 'Slider',
 
-  props: {
-    from: {
-      type: Number,
-      default: 0,
+  props : {
+    from : {
+      type    : Number,
+      default : 0,
     },
-    handle: {
-      type: Object,
-      default: () => ({}),
+    handle : {
+      type    : Object,
+      default : () => ({}),
     },
-    live: {
-      type: Boolean,
-      default: true,
+    live : {
+      type    : Boolean,
+      default : true,
     },
-    orientation: {
-      type: Number,
-      default: 0,
+    orientation : {
+      type    : Number,
+      default : 0,
     },
-    pressed: {
-      type: Boolean,
-      default: true,
+    pressed : {
+      type    : Boolean,
+      default : true,
     },
-    snapMode: {
-      type: Number,
-      default: 0,
+    snapMode : {
+      type    : Number,
+      default : 0,
     },
-    stepSize: {
-      type: Number,
-      default: 0,
+    stepSize : {
+      type    : Number,
+      default : 0,
     },
-    to: {
-      type: Number,
-      default: 100,
+    to : {
+      type    : Number,
+      default : 100,
     },
-    touchDragThreshold: {
-      type: Number,
-      default: 0,
+    touchDragThreshold : {
+      type    : Number,
+      default : 0,
     },
-    value: {
-      type: Number,
-      default: 0,
+    value : {
+      type    : Number,
+      default : 0,
     },
-    height: {
-      type: String,
-      default: '100px',
+    height : {
+      type    : String,
+      default : '100px',
     },
-    disabled: {
-      type: Boolean,
-      default: false,
+    disabled : {
+      type    : Boolean,
+      default : false,
     },
   },
 
   data() {
     return {
-      dragging: false,
-      startX: 0,
-      currentX: 0,
-      startY: 0,
-      currentY: 0,
+      dragging : false,
+      startX   : 0,
+      currentX : 0,
+      startY   : 0,
+      currentY : 0,
     };
   },
 
-  computed: {
+  computed : {
     containerStyle() {
       const style = {};
       if (this.vertical) {
@@ -180,7 +180,7 @@ export default {
     },
   },
 
-  methods: {
+  methods : {
     decrease() { },
     increase() { },
     valueAt() { },

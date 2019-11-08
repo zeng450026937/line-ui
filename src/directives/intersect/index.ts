@@ -11,7 +11,7 @@ function inserted(el: HTMLElement, binding: ObserveVNodeDirective) {
   const isObject = value !== null && typeof value === 'object';
   const callback = isObject ? value.handler : value;
   const options = {
-    root: document.querySelector(binding.arg),
+    root : document.querySelector(binding.arg),
     ...Object(value),
   };
   const observer = new IntersectionObserver((

@@ -7,34 +7,34 @@
 import { Popup } from '@/components/popup';
 
 export default {
-  name: 'Menu',
+  name : 'Menu',
 
-  extends: Popup,
+  extends : Popup,
 
-  props: {
-    cascade: {
-      type: Boolean,
-      default: false,
+  props : {
+    cascade : {
+      type    : Boolean,
+      default : false,
     },
-    currentIndex: {
-      type: Number,
-      default: 0,
+    currentIndex : {
+      type    : Number,
+      default : 0,
     },
-    delegate: {
-      type: Object,
-      default: () => ({}),
+    delegate : {
+      type    : Object,
+      default : () => ({}),
     },
-    overlap: {
-      type: Number,
-      default: 0,
+    overlap : {
+      type    : Number,
+      default : 0,
     },
-    title: {
-      type: String,
-      default: '',
+    title : {
+      type    : String,
+      default : '',
     },
   },
 
-  computed: {
+  computed : {
     contentModel() {
       return {};
     },
@@ -43,7 +43,7 @@ export default {
     },
   },
 
-  methods: {
+  methods : {
     popup() {},
     actionAt() {},
     addAction() {},

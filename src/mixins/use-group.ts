@@ -12,27 +12,27 @@ export function useGroup(name: string, options?: ModelOptions) {
   return useModel<any>('checkedItem', options).extend({
     provide() {
       return {
-        [name]: this,
+        [name] : this,
       };
     },
 
-    props: {
-      exclusive: {
-        type: Boolean,
-        default: false,
+    props : {
+      exclusive : {
+        type    : Boolean,
+        default : false,
       },
     },
 
     data() {
       return {
         // This property holds the check state of the checkbox.
-        checkState: CheckState.Unchecked,
+        checkState : CheckState.Unchecked,
         // checkedItem: [] as Array<any>,
-        items: [] as Array<any>,
+        items      : [] as Array<any>,
       };
     },
 
-    computed: {
+    computed : {
       // This property holds whether the checkbox is a tri-state checkbox.
       // TODO
       // remove it
@@ -41,7 +41,7 @@ export function useGroup(name: string, options?: ModelOptions) {
       },
     },
 
-    watch: {
+    watch : {
       exclusive(val) {
         if (!val) return;
         if (this.checkedItem.length > 1) {
@@ -68,7 +68,7 @@ export function useGroup(name: string, options?: ModelOptions) {
       },
     },
 
-    methods: {
+    methods : {
       onItemChecked(item: any, checked: boolean) {
         const { value } = item;
         if (this.exclusive) {

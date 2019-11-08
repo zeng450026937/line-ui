@@ -1,26 +1,26 @@
 import Vue from 'vue';
 
 const ActionGroup = Vue.extend({
-  props: {
-    actions: {
-      type: Array,
-      default: () => ([]),
+  props : {
+    actions : {
+      type    : Array,
+      default : () => ([]),
     },
-    checkedAction: {
-      type: Object,
-      default: null,
+    checkedAction : {
+      type    : Object,
+      default : null,
     },
-    enabled: {
-      type: Boolean,
-      default: false,
+    enabled : {
+      type    : Boolean,
+      default : false,
     },
-    exclusive: {
-      type: Boolean,
-      default: true,
+    exclusive : {
+      type    : Boolean,
+      default : true,
     },
   },
 
-  methods: {
+  methods : {
     addAction() {},
     removeAction() {},
   },

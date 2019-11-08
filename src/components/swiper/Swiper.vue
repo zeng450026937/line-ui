@@ -10,23 +10,23 @@
 import Swiper from 'swiper';
 
 export const Orientation = {
-  Horizontal: 0,
-  Vertical: 1,
-  Min: 0,
-  Max: 1,
+  Horizontal : 0,
+  Vertical   : 1,
+  Min        : 0,
+  Max        : 1,
 };
 
 export default {
-  name: 'SwipeView',
+  name : 'SwipeView',
 
-  props: {
-    interactive: {
-      type: Boolean,
-      default: true,
+  props : {
+    interactive : {
+      type    : Boolean,
+      default : true,
     },
-    orientation: {
-      type: Number,
-      default: 0,
+    orientation : {
+      type    : Number,
+      default : 0,
     },
   },
 
@@ -36,7 +36,7 @@ export default {
     };
   },
 
-  computed: {
+  computed : {
     horizontal() {
       return true;
     },
@@ -48,12 +48,12 @@ export default {
 
   provide() {
     return {
-      SwipeView: {
-        index: this.index,
-        isCurrentItem: this.isCurrentItem,
-        isNextItem: this.isNextItem,
-        isPreviousItem: this.isPreviousItem,
-        view: this,
+      SwipeView : {
+        index          : this.index,
+        isCurrentItem  : this.isCurrentItem,
+        isNextItem     : this.isNextItem,
+        isPreviousItem : this.isPreviousItem,
+        view           : this,
       },
     };
   },

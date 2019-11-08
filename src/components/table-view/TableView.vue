@@ -5,48 +5,48 @@
 
 <script>
 export default {
-  name: 'TableView',
+  name : 'TableView',
 
-  props: {
-    columnSpacing: {
-      type: Number,
-      default: 0,
+  props : {
+    columnSpacing : {
+      type    : Number,
+      default : 0,
     },
-    columnWidthProvider: {
-      type: Function,
-      default: column => (0),
+    columnWidthProvider : {
+      type    : Function,
+      default : column => (0),
     },
-    columns: {
-      type: Number,
-      default: 1,
+    columns : {
+      type    : Number,
+      default : 1,
     },
-    delegate: {
-      type: Object,
-      default: () => ({}),
+    delegate : {
+      type    : Object,
+      default : () => ({}),
     },
-    model: {
-      type: Object,
-      default: () => ({}),
+    model : {
+      type    : Object,
+      default : () => ({}),
     },
-    reuseItems: {
-      type: Boolean,
-      default: true,
+    reuseItems : {
+      type    : Boolean,
+      default : true,
     },
-    rowHeightProvider: {
-      type: Function,
-      default: column => (0),
+    rowHeightProvider : {
+      type    : Function,
+      default : column => (0),
     },
-    rowSpacing: {
-      type: Number,
-      default: 0,
+    rowSpacing : {
+      type    : Number,
+      default : 0,
     },
-    rows: {
-      type: Number,
-      default: 1,
+    rows : {
+      type    : Number,
+      default : 1,
     },
   },
 
-  methods: {
+  methods : {
     forceLayout() {},
   },
 

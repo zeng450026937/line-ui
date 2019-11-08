@@ -28,206 +28,206 @@ import { binarySearch } from '@/utils/algorithm/binary-search';
 import { exponentialSearch } from '@/utils/algorithm/exponential-search';
 
 export const FooterPositioning = {
-  InlineFooter: 0,
-  OverlayFooter: 1,
-  PullBackFooter: 2,
+  InlineFooter   : 0,
+  OverlayFooter  : 1,
+  PullBackFooter : 2,
 };
 
 export const HeaderPositioning = {
-  InlineFooter: 0,
-  OverlayFooter: 1,
-  PullBackFooter: 2,
+  InlineFooter   : 0,
+  OverlayFooter  : 1,
+  PullBackFooter : 2,
 };
 
 export const LayoutDirection = {
-  LeftToRight: 0,
-  RightToLeft: 1,
+  LeftToRight : 0,
+  RightToLeft : 1,
 };
 
 export const HighlightRangeMode = {
-  ApplyRange: 0,
-  StrictlyEnforceRange: 1,
-  NoHighlightRange: 2,
+  ApplyRange           : 0,
+  StrictlyEnforceRange : 1,
+  NoHighlightRange     : 2,
 };
 
 export { Orientation };
 
 export const ViewSection = {
-  InlineLabels: 0,
-  CurrentLabelAtStart: 1,
-  NextLabelAtEnd: 2,
+  InlineLabels        : 0,
+  CurrentLabelAtStart : 1,
+  NextLabelAtEnd      : 2,
 };
 
 export const SnapMode = {
-  NoSnap: 0,
-  SnapToItem: 1,
-  SnapOneItem: 2,
+  NoSnap      : 0,
+  SnapToItem  : 1,
+  SnapOneItem : 2,
 };
 
 export const VerticalLayoutDirection = {
-  TopToBottom: 0,
-  BottomToTop: 1,
+  TopToBottom : 0,
+  BottomToTop : 1,
 };
 
 export default {
-  name: 'ListView',
+  name : 'ListView',
 
-  components: {
+  components : {
     ListItem,
   },
 
-  props: {
-    add: {
-      type: String,
-      default: '',
+  props : {
+    add : {
+      type    : String,
+      default : '',
     },
-    addDisplaced: {
-      type: String,
-      default: '',
+    addDisplaced : {
+      type    : String,
+      default : '',
     },
-    cacheBuffer: {
-      type: Number,
-      default: 3,
+    cacheBuffer : {
+      type    : Number,
+      default : 3,
     },
-    count: {
-      type: Number,
-      default: 0,
+    count : {
+      type    : Number,
+      default : 0,
     },
-    currentIndex: {
-      type: Number,
-      default: -1,
+    currentIndex : {
+      type    : Number,
+      default : -1,
     },
-    delegate: {
-      type: Object,
-      default: () => ({}),
+    delegate : {
+      type    : Object,
+      default : () => ({}),
     },
-    displaced: {
-      type: String,
-      default: '',
+    displaced : {
+      type    : String,
+      default : '',
     },
-    displayMarginBeginning: {
-      type: Number,
-      default: 0,
+    displayMarginBeginning : {
+      type    : Number,
+      default : 0,
     },
-    displayMarginEnd: {
-      type: Number,
-      default: 0,
+    displayMarginEnd : {
+      type    : Number,
+      default : 0,
     },
-    footer: {
-      type: Object,
-      default: () => ({}),
+    footer : {
+      type    : Object,
+      default : () => ({}),
     },
-    footerPositioning: {
-      type: Number,
-      default: 0,
+    footerPositioning : {
+      type    : Number,
+      default : 0,
     },
-    header: {
-      type: Object,
-      default: () => ({}),
+    header : {
+      type    : Object,
+      default : () => ({}),
     },
-    headerPositioning: {
-      type: Number,
-      default: 0,
+    headerPositioning : {
+      type    : Number,
+      default : 0,
     },
-    highlight: {
-      type: Object,
-      default: () => ({}),
+    highlight : {
+      type    : Object,
+      default : () => ({}),
     },
-    highlightFollowsCurrentItem: {
-      type: Boolean,
-      default: true,
+    highlightFollowsCurrentItem : {
+      type    : Boolean,
+      default : true,
     },
-    highlightMoveDuration: {
-      type: Number,
-      default: 1000,
+    highlightMoveDuration : {
+      type    : Number,
+      default : 1000,
     },
-    highlightMoveVelocity: {
-      type: Number,
-      default: -1,
+    highlightMoveVelocity : {
+      type    : Number,
+      default : -1,
     },
-    highlightRangeMode: {
-      type: Number,
-      default: 0,
+    highlightRangeMode : {
+      type    : Number,
+      default : 0,
     },
-    highlightResizeDuration: {
-      type: Number,
-      default: 0,
+    highlightResizeDuration : {
+      type    : Number,
+      default : 0,
     },
-    highlightResizeVelocity: {
-      type: Number,
-      default: 0,
+    highlightResizeVelocity : {
+      type    : Number,
+      default : 0,
     },
-    keyNavigationEnabled: {
-      type: Boolean,
-      default: true,
+    keyNavigationEnabled : {
+      type    : Boolean,
+      default : true,
     },
-    keyNavigationWraps: {
-      type: Boolean,
-      default: false,
+    keyNavigationWraps : {
+      type    : Boolean,
+      default : false,
     },
-    layoutDirection: {
-      type: Number,
-      default: 0,
+    layoutDirection : {
+      type    : Number,
+      default : 0,
     },
-    model: {
-      type: [Object, Number, Array],
-      default: () => ([]),
+    model : {
+      type    : [Object, Number, Array],
+      default : () => ([]),
     },
-    move: {
-      type: String,
-      default: '',
+    move : {
+      type    : String,
+      default : '',
     },
-    moveDisplaced: {
-      type: String,
-      default: '',
+    moveDisplaced : {
+      type    : String,
+      default : '',
     },
-    orientation: {
-      type: Number,
-      default: Orientation.Vertical,
+    orientation : {
+      type    : Number,
+      default : Orientation.Vertical,
       validator(val) {
         return val === Orientation.Vertical || val === Orientation.Horizontal;
       },
     },
-    populate: {
-      type: String,
-      default: '',
+    populate : {
+      type    : String,
+      default : '',
     },
-    preferredHighlightBegin: {
-      type: Number,
-      default: 0,
+    preferredHighlightBegin : {
+      type    : Number,
+      default : 0,
     },
-    preferredHighlightEnd: {
-      type: Number,
-      default: 0,
+    preferredHighlightEnd : {
+      type    : Number,
+      default : 0,
     },
-    remove: {
-      type: String,
-      default: '',
+    remove : {
+      type    : String,
+      default : '',
     },
-    removeDisplaced: {
-      type: String,
-      default: '',
+    removeDisplaced : {
+      type    : String,
+      default : '',
     },
-    section: {
-      type: Object,
-      default: () => ({
-        property: '',
-        criteria: 0,
-        delegate: null,
-        labelPositioning: 0,
+    section : {
+      type    : Object,
+      default : () => ({
+        property         : '',
+        criteria         : 0,
+        delegate         : null,
+        labelPositioning : 0,
       }),
     },
-    snapMode: {
-      type: Number,
-      default: 0,
+    snapMode : {
+      type    : Number,
+      default : 0,
     },
-    spacing: {
-      type: Number,
-      default: 0,
+    spacing : {
+      type    : Number,
+      default : 0,
     },
-    verticalLayoutDirection: {
-      type: String,
-      default: '',
+    verticalLayoutDirection : {
+      type    : String,
+      default : '',
     },
   },
 
@@ -236,7 +236,7 @@ export default {
     };
   },
 
-  computed: {
+  computed : {
     currentItem() {
       return null;
     },
@@ -273,14 +273,14 @@ export default {
 
   provide() {
     return {
-      ListView: this,
+      ListView : this,
     };
   },
 
-  watch: {
+  watch : {
   },
 
-  methods: {
+  methods : {
     decrementCurrentIndex() {},
     forceLayout() {},
     incrementCurrentIndex() {},
@@ -326,10 +326,10 @@ export default {
     itemStyleAtIndex(index) {
       const { geometry } = this.layout.itemAt(index);
       return Object.freeze({
-        left: `${ geometry.left }px`,
-        top: `${ geometry.top }px`,
-        width: this.horizontal ? 'auto' : '100%',
-        height: this.horizontal ? '100%' : 'auto',
+        left   : `${ geometry.left }px`,
+        top    : `${ geometry.top }px`,
+        width  : this.horizontal ? 'auto' : '100%',
+        height : this.horizontal ? '100%' : 'auto',
       });
     },
     mapToItemIndex(visibleIndex) {
@@ -571,9 +571,9 @@ export default {
     for (let index = this.from; index <= this.to; index++) {
       this.addView({
         index,
-        layout: this.layout.itemAt(index),
-        item: this.itemAtIndex(index),
-        style: this.itemStyleAtIndex(index),
+        layout : this.layout.itemAt(index),
+        item   : this.itemAtIndex(index),
+        style  : this.itemStyleAtIndex(index),
       });
     }
   },

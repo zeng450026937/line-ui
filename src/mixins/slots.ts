@@ -5,7 +5,7 @@
 import Vue from 'vue';
 
 export const SlotsMixin = Vue.extend({
-  methods: {
+  methods : {
     slots(name = 'default', props: any) {
       const { $slots, $scopedSlots } = this;
       const scopedSlot = $scopedSlots[name];

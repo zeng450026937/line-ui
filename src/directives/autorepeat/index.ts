@@ -70,11 +70,11 @@ function createAutoRepeat(el: HTMLElement, options: AutoRepeatOption) {
 
   return {
     enable,
-    update: setOptions,
+    update    : setOptions,
     start,
     stop,
     pointerDown,
-    pointerUp: stop,
+    pointerUp : stop,
   };
 }
 

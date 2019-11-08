@@ -3,15 +3,15 @@ import AbstractIcon from './abstract-icon';
 import { convertToUnit } from '@/utils/helpers';
 
 export default {
-  name: 'SvgIcon',
+  name : 'SvgIcon',
 
-  extends: AbstractIcon,
+  extends : AbstractIcon,
 
-  props: {
-    path: String,
+  props : {
+    path : String,
   },
 
-  functional: true,
+  functional : true,
 
   render(h, { props, data, scopedSlots }) {
     data.attrs = Object(data.attrs);
@@ -21,28 +21,28 @@ export default {
     let use;
     if (text) {
       use = h('use', {
-        attrs: {
-          'xlink:href': `${ props.source || '' }#${ text }`,
+        attrs : {
+          'xlink:href' : `${ props.source || '' }#${ text }`,
         },
       });
     }
     const svg = h('svg', {
-      attrs: {
-        xmlns: 'http://www.w3.org/2000/svg',
-        viewBox: '0 0 24 24',
-        width: '24',
-        height: '24',
-        role: 'img',
-        'aria-hidden': !data.attrs['aria-label'],
-        'aria-label': data.attrs['aria-label'],
+      attrs : {
+        xmlns         : 'http://www.w3.org/2000/svg',
+        viewBox       : '0 0 24 24',
+        width         : '24',
+        height        : '24',
+        role          : 'img',
+        'aria-hidden' : !data.attrs['aria-label'],
+        'aria-label'  : data.attrs['aria-label'],
       },
     }, [use || content]);
     return h(tag, {
       ...data,
-      staticClass: `svg-icon ${ data.staticClass || '' }`.trim(),
-      style: {
-        width: convertToUnit(props.width),
-        height: convertToUnit(props.height),
+      staticClass : `svg-icon ${ data.staticClass || '' }`.trim(),
+      style       : {
+        width  : convertToUnit(props.width),
+        height : convertToUnit(props.height),
         ...data.style,
       },
     }, [svg]);

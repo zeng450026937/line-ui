@@ -1,16 +1,16 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  name: 'LifecycleLogger',
+  name : 'LifecycleLogger',
 
-  props: {
-    tag: {
-      type: String,
-      default: () => ('div'),
+  props : {
+    tag : {
+      type    : String,
+      default : () => ('div'),
     },
 
-    label: {
-      required: true,
+    label : {
+      required : true,
     },
   },
 

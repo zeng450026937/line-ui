@@ -9,25 +9,25 @@ import { useGroupItem } from '@/components/group';
 const NAMESPACE = 'RadioButtonGroup';
 
 export default Vue.extend({
-  name: 'RadioButton',
+  name : 'RadioButton',
 
-  mixins: [useGroupItem(NAMESPACE)],
+  mixins : [useGroupItem(NAMESPACE)],
 
-  extends: AbstractButton,
+  extends : AbstractButton,
 
-  props: {
-    disabled: {
-      type: Boolean,
-      default: false,
+  props : {
+    disabled : {
+      type    : Boolean,
+      default : false,
     },
   },
 
-  methods: {
+  methods : {
     genIndicator() {
       return this.$createElement(RadioIndicator, {
-        props: {
-          checked: this.checked,
-          disabled: this.disabled,
+        props : {
+          checked  : this.checked,
+          disabled : this.disabled,
         },
       });
     },

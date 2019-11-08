@@ -8,9 +8,9 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  name: 'Avatar',
+  name : 'Avatar',
 
-  functional: true,
+  functional : true,
 });
 </script>
 

@@ -21,28 +21,28 @@ import { FontIcon } from '../icon';
 const colors = ['primary', 'success', 'warning', 'danger', 'light', 'dark'];
 
 export default Vue.extend({
-  name: 'Chip',
+  name : 'Chip',
 
-  components: {
+  components : {
     FontIcon,
   },
 
-  props: {
-    color: {
-      type: String,
-      default: '',
+  props : {
+    color : {
+      type    : String,
+      default : '',
     },
-    border: {
-      type: Boolean,
-      default: false,
+    border : {
+      type    : Boolean,
+      default : false,
     },
-    closeIcon: {
-      type: String,
-      default: '',
+    closeIcon : {
+      type    : String,
+      default : '',
     },
   },
 
-  computed: {
+  computed : {
     classes() {
       const { border, color } = this;
       const classes = { 'chip--border': border };
@@ -54,7 +54,7 @@ export default Vue.extend({
     },
   },
 
-  watch: {
+  watch : {
 
   },
 
@@ -62,7 +62,7 @@ export default Vue.extend({
 
   },
 
-  methods: {
+  methods : {
     onClick() {
       this.$emit('close');
     },

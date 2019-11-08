@@ -2,22 +2,22 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  name: 'portal-remote',
+  name : 'portal-remote',
 
-  props: {
-    name: {
-      type: String,
-      required: true,
+  props : {
+    name : {
+      type     : String,
+      required : true,
     },
 
-    disabled: Boolean,
+    disabled : Boolean,
 
-    transition: [String, Object],
+    transition : [String, Object],
   },
 
-  inject: ['Portal'],
+  inject : ['Portal'],
 
-  computed: {
+  computed : {
     payloads() {
       return this.Portal.payloads(this.name).map(payload => payload.slot());
     },

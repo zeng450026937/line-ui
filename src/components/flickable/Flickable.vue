@@ -6,11 +6,11 @@
 
 <script>
 export default {
-  name: 'Flicable',
+  name : 'Flicable',
 
-  props: {},
+  props : {},
 
-  methods: {
+  methods : {
     cancelFlick() {},
     flick() {},
     resizeContent() {},

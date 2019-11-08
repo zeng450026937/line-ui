@@ -5,7 +5,7 @@
 
 <script>
 export default {
-  name: 'Label',
+  name : 'Label',
 };
 </script>
 

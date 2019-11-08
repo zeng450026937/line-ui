@@ -9,8 +9,8 @@ export type OverlayConfig = {
 };
 
 const defaultConfig: OverlayConfig = {
-  className: '',
-  customStyle: {},
+  className   : '',
+  customStyle : {},
 };
 
 let overlay: any;
@@ -34,8 +34,8 @@ function onClickOverlay(): void {
 export function updateOverlay(): void {
   if (!overlay) {
     overlay = mount(Overlay, {
-      on: {
-        click: onClickOverlay,
+      on : {
+        click : onClickOverlay,
       },
     });
   }
@@ -51,7 +51,7 @@ export function updateOverlay(): void {
     }
 
     Object.assign(overlay, defaultConfig, config, {
-      show: true,
+      show : true,
     });
   } else {
     overlay.show = false;

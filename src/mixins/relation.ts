@@ -29,13 +29,13 @@ export function ChildrenMixin(parent: string, options: ChildrenMixinOptions = {}
   const indexKey = options.indexKey || 'index';
 
   return Vue.extend({
-    inject: {
-      [parent]: {
-        default: null,
+    inject : {
+      [parent] : {
+        default : null,
       },
     },
 
-    computed: {
+    computed : {
       parent() {
         if ((this as ChildrenMixinThis).disableBindRelation) {
           return null;
@@ -60,7 +60,7 @@ export function ChildrenMixin(parent: string, options: ChildrenMixinOptions = {}
       }
     },
 
-    methods: {
+    methods : {
       bindRelation() {
         if (!this.parent || this.parent.children.indexOf(this) !== -1) {
           return;
@@ -80,13 +80,13 @@ export function ParentMixin(parent: string) {
   return {
     provide() {
       return {
-        [parent]: this,
+        [parent] : this,
       };
     },
 
     data() {
       return {
-        children: [],
+        children : [],
       };
     },
   };

@@ -17,17 +17,17 @@ function inserted(el: HTMLElement, binding: MutateVNodeDirective) {
   const options = hasOptions ? value.options : hasModifiers
     // If we have modifiers, use only those provided
     ? {
-      attributes: modifierKeys.attr,
-      childList: modifierKeys.child,
-      subtree: modifierKeys.sub,
-      characterData: modifierKeys.char,
+      attributes    : modifierKeys.attr,
+      childList     : modifierKeys.child,
+      subtree       : modifierKeys.sub,
+      characterData : modifierKeys.char,
     }
     // Defaults to everything on
     : {
-      attributes: true,
-      childList: true,
-      subtree: true,
-      characterData: true,
+      attributes    : true,
+      childList     : true,
+      subtree       : true,
+      characterData : true,
     };
 
   const observer = new MutationObserver((

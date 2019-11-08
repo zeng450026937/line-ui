@@ -66,9 +66,9 @@ import { ProgressIndicator, DelayButton } from './components/delay-button';
 import { ProgressBar, ProgressCircular } from './components/progress';
 
 export default Vue.extend({
-  name: 'app',
+  name : 'app',
 
-  components: {
+  components : {
     ApplicationWindow,
     AbstractButton,
     Button,
@@ -78,7 +78,7 @@ export default Vue.extend({
     RadioButton,
     RadioIndicator,
     SwitchIndicator,
-    XSwitch: Switch,
+    XSwitch : Switch,
     Loader,
     BusyIndicator,
     ProgressCircular,
@@ -95,44 +95,44 @@ export default Vue.extend({
     }
 
     return {
-      menus: [
+      menus : [
         // { title: 'File' },
         // { title: 'Edit' },
         // { title: 'View' },
         // { title: 'Help' },
       ],
-      list: Object.freeze(list),
+      list : Object.freeze(list),
 
-      progress: 30,
+      progress : 30,
 
-      checkState: 3,
+      checkState : 3,
 
-      radio: '1',
+      radio : '1',
 
-      value: 10,
+      value : 10,
 
-      rangeValue: [0, 20],
+      rangeValue : [0, 20],
 
-      switchValue: false,
+      switchValue : false,
 
-      badgeVisible: false,
+      badgeVisible : false,
 
-      text: '3d_rotation',
+      text : '3d_rotation',
 
-      checked: false,
-      checkedGroup: ['A', 'B'],
+      checked      : false,
+      checkedGroup : ['A', 'B'],
 
-      comp: Button,
+      comp : Button,
     };
   },
 
-  watch: {
+  watch : {
     checkedGroup(val) {
       console.log(val);
     },
   },
 
-  methods: {
+  methods : {
     setBadgeVisible() {
       console.log('?//');
     },

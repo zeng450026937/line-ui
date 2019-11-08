@@ -7,33 +7,33 @@
 import { Popup } from '@/components/popup';
 
 export const Edge = {
-  TopEdge: 0,
-  LeftEdge: 1,
-  RightEdge: 2,
-  BottomEdge: 3,
+  TopEdge    : 0,
+  LeftEdge   : 1,
+  RightEdge  : 2,
+  BottomEdge : 3,
 };
 
 export default {
-  name: 'Drawer',
+  name : 'Drawer',
 
-  extends: Popup,
+  extends : Popup,
 
-  props: {
-    dragMargin: {
-      type: Number,
-      default: 0,
+  props : {
+    dragMargin : {
+      type    : Number,
+      default : 0,
     },
-    edge: {
-      type: Number,
-      default: 0,
+    edge : {
+      type    : Number,
+      default : 0,
     },
-    interactive: {
-      type: Boolean,
-      default: true,
+    interactive : {
+      type    : Boolean,
+      default : true,
     },
-    position: {
-      type: Number,
-      default: 0,
+    position : {
+      type    : Number,
+      default : 0,
     },
   },
 };

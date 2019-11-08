@@ -4,9 +4,9 @@ import FontIcon from './FontIcon.vue';
 import SvgIcon from '@/components/icon/SvgIcon.vue';
 
 export default Vue.extend({
-  name: 'Icon',
+  name : 'Icon',
 
-  functional: true,
+  functional : true,
 
   render(h, { data, children }): VNode {
     const hasSource = data.attrs && 'source' in data.attrs;

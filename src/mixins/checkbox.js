@@ -6,27 +6,27 @@ import { ChildrenMixin } from './relation';
 import { addUnit } from '../utils';
 
 export const CheckboxMixin = ({ parent, bem, role }) => ({
-  mixins: [ChildrenMixin(parent)],
+  mixins : [ChildrenMixin(parent)],
 
-  props: {
-    name: null,
-    value: null,
-    disabled: Boolean,
-    iconSize: [Number, String],
-    checkedColor: String,
-    labelPosition: String,
-    labelDisabled: Boolean,
-    shape: {
-      type: String,
-      default: 'round',
+  props : {
+    name          : null,
+    value         : null,
+    disabled      : Boolean,
+    iconSize      : [Number, String],
+    checkedColor  : String,
+    labelPosition : String,
+    labelDisabled : Boolean,
+    shape         : {
+      type    : String,
+      default : 'round',
     },
-    bindGroup: {
-      type: Boolean,
-      default: true,
+    bindGroup : {
+      type    : Boolean,
+      default : true,
     },
   },
 
-  computed: {
+  computed : {
     disableBindRelation() {
       return !this.bindGroup;
     },
@@ -39,8 +39,8 @@ export const CheckboxMixin = ({ parent, bem, role }) => ({
       const checkedColor = this.checkedColor || (this.parent && this.parent.checkedColor);
       if (checkedColor && this.checked && !this.isDisabled) {
         return {
-          borderColor: checkedColor,
-          backgroundColor: checkedColor,
+          borderColor     : checkedColor,
+          backgroundColor : checkedColor,
         };
       }
     },
@@ -54,7 +54,7 @@ export const CheckboxMixin = ({ parent, bem, role }) => ({
     },
   },
 
-  methods: {
+  methods : {
     onClick(event) {
       const { label } = this.$refs;
       const { target } = event;

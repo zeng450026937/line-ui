@@ -5,7 +5,7 @@
 
 <script>
 export default {
-  name: 'MenuSeparator',
+  name : 'MenuSeparator',
 };
 </script>
 

@@ -100,12 +100,12 @@ export const createGesture = (config: GestureConfig): Gesture => {
   let isMoveQueued = false;
 
   const finalConfig = {
-    disableScroll: false,
-    direction: 'x',
-    gesturePriority: 0,
-    passive: true,
-    maxAngle: 40,
-    threshold: 10,
+    disableScroll   : false,
+    direction       : 'x',
+    gesturePriority : 0,
+    passive         : true,
+    maxAngle        : 40,
+    threshold       : 10,
 
     ...config,
   };
@@ -119,28 +119,28 @@ export const createGesture = (config: GestureConfig): Gesture => {
   const { threshold } = finalConfig;
 
   const detail = {
-    type: 'pan',
-    startX: 0,
-    startY: 0,
-    startTime: 0,
-    currentX: 0,
-    currentY: 0,
-    velocityX: 0,
-    velocityY: 0,
-    deltaX: 0,
-    deltaY: 0,
-    currentTime: 0,
-    event: undefined as any,
-    data: undefined,
+    type        : 'pan',
+    startX      : 0,
+    startY      : 0,
+    startTime   : 0,
+    currentX    : 0,
+    currentY    : 0,
+    velocityX   : 0,
+    velocityY   : 0,
+    deltaX      : 0,
+    deltaY      : 0,
+    currentTime : 0,
+    event       : undefined as any,
+    data        : undefined,
   };
 
   const pan = createPanRecognizer(
     finalConfig.direction, finalConfig.threshold, finalConfig.maxAngle,
   );
   const gesture = GESTURE_CONTROLLER.createGesture({
-    name: config.gestureName,
-    priority: config.gesturePriority,
-    disableScroll: config.disableScroll,
+    name          : config.gestureName,
+    priority      : config.gesturePriority,
+    disableScroll : config.disableScroll,
   });
 
   const pointerDown = (ev: UIEvent): boolean => {
@@ -282,7 +282,7 @@ export const createGesture = (config: GestureConfig): Gesture => {
     pointerMove,
     pointerUp,
     {
-      capture: false,
+      capture : false,
     },
   );
 

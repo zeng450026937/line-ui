@@ -5,17 +5,17 @@
 
 <script>
 export const Position = {
-  Header: 0,
-  Footer: 1,
+  Header : 0,
+  Footer : 1,
 };
 
 export default {
-  name: 'ToolBar',
+  name : 'ToolBar',
 
-  props: {
-    position: {
-      type: Number,
-      default: 0,
+  props : {
+    position : {
+      type    : Number,
+      default : 0,
     },
   },
 };

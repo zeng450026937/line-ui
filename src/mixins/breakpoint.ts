@@ -24,20 +24,20 @@ function getClientHeight() {
 export default Vue.extend({
   data() {
     return {
-      clientWidth: getClientWidth(),
-      clientHeight: getClientHeight(),
+      clientWidth  : getClientWidth(),
+      clientHeight : getClientHeight(),
 
-      thresholds: {
-        xs: 600,
-        sm: 960,
-        md: 1280,
-        lg: 1920,
+      thresholds : {
+        xs : 600,
+        sm : 960,
+        md : 1280,
+        lg : 1920,
       },
-      scrollbarWidth: 16,
+      scrollbarWidth : 16,
     };
   },
 
-  computed: {
+  computed : {
     breakpoint() {
       const xs = this.clientWidth < this.thresholds.xs;
       const sm = this.clientWidth < this.thresholds.sm && !xs;
@@ -101,16 +101,16 @@ export default Vue.extend({
         xlOnly,
 
         // For custom breakpoint logic.
-        width: this.clientWidth,
-        height: this.clientHeight,
-        thresholds: this.thresholds,
-        scrollbarWidth: this.scrollbarWidth,
+        width          : this.clientWidth,
+        height         : this.clientHeight,
+        thresholds     : this.thresholds,
+        scrollbarWidth : this.scrollbarWidth,
       };
     },
   },
 
-  methods: {
-    onResize: debounce(function onResize() {
+  methods : {
+    onResize : debounce(function onResize() {
       this.setDimensions();
     }, 200),
 

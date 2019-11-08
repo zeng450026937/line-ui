@@ -7,14 +7,14 @@
 import { AbstractButton } from '@/components/button';
 
 export default {
-  name: 'ItemDelegate',
+  name : 'ItemDelegate',
 
-  extends: AbstractButton,
+  extends : AbstractButton,
 
-  props: {
-    highlighted: {
-      type: Boolean,
-      default: false,
+  props : {
+    highlighted : {
+      type    : Boolean,
+      default : false,
     },
   },
 };

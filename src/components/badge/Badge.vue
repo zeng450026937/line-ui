@@ -17,36 +17,36 @@ import Vue from 'vue';
 const colors = ['primary', 'success', 'warning', 'danger', 'light', 'dark'];
 
 export default Vue.extend({
-  name: 'Badge',
+  name : 'Badge',
 
-  props: {
-    color: {
-      type: String,
-      default: 'danger', // primary, success, warning, danger, light, dark
+  props : {
+    color : {
+      type    : String,
+      default : 'danger', // primary, success, warning, danger, light, dark
     },
-    value: {
-      type: Number,
-      default: 0,
+    value : {
+      type    : Number,
+      default : 0,
     },
-    visible: {
-      type: Boolean,
-      default: true,
+    visible : {
+      type    : Boolean,
+      default : true,
     },
-    dot: {
-      type: Boolean,
-      default: false,
+    dot : {
+      type    : Boolean,
+      default : false,
     },
-    left: {
-      type: Boolean,
-      default: false,
+    left : {
+      type    : Boolean,
+      default : false,
     },
-    bottom: {
-      type: Boolean,
-      default: false,
+    bottom : {
+      type    : Boolean,
+      default : false,
     },
   },
 
-  computed: {
+  computed : {
     badgeValue() {
       const value = this.dot ? null : this.value;
 
@@ -55,9 +55,9 @@ export default Vue.extend({
 
     classes() {
       const classes = {
-        'badge--left': this.left,
-        'badge--bottom': this.bottom,
-        'badge--dot': this.dot,
+        'badge--left'   : this.left,
+        'badge--bottom' : this.bottom,
+        'badge--dot'    : this.dot,
       };
       if (colors.includes(this.color)) {
         classes[`badge--${ this.color }`] = true;
@@ -80,11 +80,11 @@ export default Vue.extend({
 
   },
 
-  methods: {
+  methods : {
 
   },
 
-  watch: {
+  watch : {
 
   },
 });

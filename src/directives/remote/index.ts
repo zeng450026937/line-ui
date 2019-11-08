@@ -18,8 +18,8 @@ function inserted(el: HTMLElement, binding: RemoteVNodeDirective) {
   const containerEl = el.closest(container) || document.querySelector(container);
   if (containerEl) {
     (el as any).vRemote = {
-      parentElement: el.parentElement,
-      nextElementSibling: el.nextElementSibling,
+      parentElement      : el.parentElement,
+      nextElementSibling : el.nextElementSibling,
     } as VRemote;
     containerEl.appendChild(el);
   }

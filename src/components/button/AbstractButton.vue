@@ -7,33 +7,33 @@ import { isObject, isEmpty } from '@/utils/helpers';
 import { mergeListener } from './merge-listener';
 
 export const Dispaly = {
-  IconOnly: 0,
-  TextOnly: 1,
-  TextBesideIcon: 2,
-  TextUnderIcon: 3,
+  IconOnly       : 0,
+  TextOnly       : 1,
+  TextBesideIcon : 2,
+  TextUnderIcon  : 3,
 };
 
 export default Vue.extend({
-  name: 'AbstractButton',
+  name : 'AbstractButton',
 
-  props: {
-    action: {
-      type: Object,
-      default: null,
+  props : {
+    action : {
+      type    : Object,
+      default : null,
     },
-    display: {
-      type: Number,
-      default: Dispaly.TextBesideIcon,
+    display : {
+      type    : Number,
+      default : Dispaly.TextBesideIcon,
     },
-    down: {
-      type: Boolean,
-      default: false,
+    down : {
+      type    : Boolean,
+      default : false,
     },
-    icon: [String, Object],
-    label: null as any,
+    icon  : [String, Object],
+    label : null as any,
   },
 
-  computed: {
+  computed : {
     cachedBackground(): VNodeChildren | VNode {
       const slot = this.$scopedSlots.background;
       if (slot) {
@@ -80,13 +80,13 @@ export default Vue.extend({
     },
   },
 
-  methods: {
+  methods : {
     genBackground(): VNode | null { return null; },
     genIndicator(): VNode | null { return null; },
     genContent(): VNode | null {
       if (!this.cachedIcon && !this.cachedLabel) return null;
       const data = {
-        staticClass: 'content',
+        staticClass : 'content',
       } as VNodeData;
       const children = [
         this.cachedIcon,
@@ -112,12 +112,12 @@ export default Vue.extend({
   render(h): VNode {
     const tag = 'div';
     const on = {
-      click: (ev: UIEvent) => this.onClick(ev),
+      click : (ev: UIEvent) => this.onClick(ev),
     };
     const data = {
-      staticClass: (this as any).staticClass,
-      class: (this as any).class,
-      on: mergeListener(on, this.$listeners),
+      staticClass : (this as any).staticClass,
+      class       : (this as any).class,
+      on          : mergeListener(on, this.$listeners),
     };
     const context = {};
     const children = [

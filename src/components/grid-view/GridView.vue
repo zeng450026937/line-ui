@@ -5,12 +5,12 @@
 
 <script>
 export default {
-  name: 'GridView',
+  name : 'GridView',
 
-  props: {
-    model: {
-      type: Object,
-      default: () => ({}),
+  props : {
+    model : {
+      type    : Object,
+      default : () => ({}),
     },
   },
 };

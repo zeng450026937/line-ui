@@ -3,28 +3,28 @@ import ProgressIndicator from './ProgressIndicator.vue';
 import { AbstractButton } from '@/components/button';
 
 export default {
-  name: 'DelayButton',
+  name : 'DelayButton',
 
-  extends: AbstractButton,
+  extends : AbstractButton,
 
-  props: {
-    delay: {
-      type: Number,
-      default: 3000,
+  props : {
+    delay : {
+      type    : Number,
+      default : 3000,
     },
   },
 
   data() {
     return {
-      progress: 0,
+      progress : 0,
     };
   },
 
-  methods: {
+  methods : {
     genBackground() {
       return this.$createElement(ProgressIndicator, {
-        props: { value: this.progress },
-        style: { 'transform-duration': `${ this.delay }ms` },
+        props : { value: this.progress },
+        style : { 'transform-duration': `${ this.delay }ms` },
       });
     },
 

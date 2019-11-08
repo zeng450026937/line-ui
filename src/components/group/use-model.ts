@@ -17,19 +17,19 @@ export function useModel<T extends unknown>(proxy: string, options?: ModelOption
   } = options || {};
 
   return Vue.extend({
-    model: { prop, event },
+    model : { prop, event },
 
-    props: {
-      [prop]: null as any,
+    props : {
+      [prop] : null as any,
     },
 
     data() {
       return {
-        [proxy]: this[prop] as T,
+        [proxy] : this[prop] as T,
       };
     },
 
-    watch: {
+    watch : {
       [prop](val: any) {
         this[proxy] = val;
       },

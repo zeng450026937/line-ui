@@ -7,9 +7,9 @@
 import { Button } from '@/components/button';
 
 export default {
-  name: 'ToolButton',
+  name : 'ToolButton',
 
-  extends: Button,
+  extends : Button,
 };
 </script>
 

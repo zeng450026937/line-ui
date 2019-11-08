@@ -19,31 +19,31 @@
 // http://css3.bradshawenterprises.com/flip/
 
 export const Side = {
-  Front: 0,
-  Back: 1,
+  Front : 0,
+  Back  : 1,
 };
 
 export default {
-  name: 'Flipable',
+  name : 'Flipable',
 
-  props: {
-    back: {
-      type: Object,
-      default: () => ({}),
+  props : {
+    back : {
+      type    : Object,
+      default : () => ({}),
     },
-    front: {
-      type: Object,
-      default: () => ({}),
+    front : {
+      type    : Object,
+      default : () => ({}),
     },
-    side: {
-      type: Number,
-      default: 0,
+    side : {
+      type    : Number,
+      default : 0,
     },
   },
 
-  model: {
-    prop: 'side',
-    event: 'sideChanged',
+  model : {
+    prop  : 'side',
+    event : 'sideChanged',
   },
 };
 </script>

@@ -32,14 +32,14 @@ import Vue from 'vue';
 import Window from './Window.vue';
 
 export default Vue.extend({
-  name: 'ApplicationWindow',
+  name : 'ApplicationWindow',
 
-  extends: Window,
+  extends : Window,
 
   provide() {
     return {
-      ApplicationWindow: this,
-      Overlay: null,
+      ApplicationWindow : this,
+      Overlay           : null,
     };
   },
 });

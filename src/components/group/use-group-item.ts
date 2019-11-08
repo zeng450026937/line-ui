@@ -8,27 +8,27 @@ const NullGroup = {
 
 export function useGroupItem(name: string, options?: ModelOptions) {
   return useModel<boolean>('checked', options).extend({
-    inject: {
-      [name]: {
-        default: NullGroup,
+    inject : {
+      [name] : {
+        default : NullGroup,
       },
     },
 
-    props: {
-      checkable: {
-        type: Boolean,
-        default: true,
+    props : {
+      checkable : {
+        type    : Boolean,
+        default : true,
       },
-      value: null as any,
+      value : null as any,
     },
 
     data() {
       return {
-        checked: false,
+        checked : false,
       };
     },
 
-    methods: {
+    methods : {
       toggle() {
         if (this.checkable) {
           this.checked = !this.checked;

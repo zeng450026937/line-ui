@@ -26,61 +26,61 @@ import { now } from '@/utils/helpers';
 import { GESTURE_CONTROLLER } from '@/utils/gesture';
 
 export const ClosePolicy = {
-  NoAutoClose: 0,
-  CloseOnPressOutside: 1,
-  CloseOnPressOutsideParent: 2,
-  CloseOnReleaseOutside: 3,
-  CloseOnReleaseOutsideParent: 4,
-  CloseOnEscape: 5,
+  NoAutoClose                 : 0,
+  CloseOnPressOutside         : 1,
+  CloseOnPressOutsideParent   : 2,
+  CloseOnReleaseOutside       : 3,
+  CloseOnReleaseOutsideParent : 4,
+  CloseOnEscape               : 5,
 };
 
 export default Vue.extend({
-  name: 'Popup',
+  name : 'Popup',
 
-  directives: {
+  directives : {
     remote,
   },
 
-  model: {
-    prop: 'value',
-    event: 'change',
+  model : {
+    prop  : 'value',
+    event : 'change',
   },
 
-  props: {
-    global: {
-      type: Boolean,
-      default: false,
+  props : {
+    global : {
+      type    : Boolean,
+      default : false,
     },
-    closePolicy: {
-      type: Number,
-      default: 0,
+    closePolicy : {
+      type    : Number,
+      default : 0,
     },
-    dim: {
-      type: Boolean,
-      default: false,
+    dim : {
+      type    : Boolean,
+      default : false,
     },
-    modal: {
-      type: Boolean,
-      default: false,
+    modal : {
+      type    : Boolean,
+      default : false,
     },
-    tappable: {
-      type: Boolean,
-      default: false,
+    tappable : {
+      type    : Boolean,
+      default : false,
     },
-    value: {
-      type: Boolean,
-      default: false,
+    value : {
+      type    : Boolean,
+      default : false,
     },
   },
 
   data() {
     return {
-      visable: this.value,
+      visable : this.value,
     };
   },
 
 
-  methods: {
+  methods : {
     close() { },
     focus() { },
     open() { },
@@ -113,7 +113,7 @@ export default Vue.extend({
   created() {
     this.lastClick = -10000;
     this.blocker = GESTURE_CONTROLLER.createBlocker({
-      disableScroll: true,
+      disableScroll : true,
     });
 
     if (this.modal) {
@@ -126,7 +126,7 @@ export default Vue.extend({
     // this.$emit('opened');
   },
 
-  watch: {
+  watch : {
     value(val) {
       this.visable = val;
     },

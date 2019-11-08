@@ -22,33 +22,33 @@ import remote from '@/directives/remote';
 export { Placement };
 
 export default Vue.extend({
-  name: 'Popover',
+  name : 'Popover',
 
-  directives: {
+  directives : {
     remote,
   },
 
-  model: {
-    prop: 'visable',
-    event: 'change',
+  model : {
+    prop  : 'visable',
+    event : 'change',
   },
 
-  props: {
-    placement: {
-      type: String,
-      default: 'bottom',
+  props : {
+    placement : {
+      type    : String,
+      default : 'bottom',
     },
-    visable: {
-      type: Boolean,
-      default: false,
+    visable : {
+      type    : Boolean,
+      default : false,
     },
   },
 
-  watch: {
-    placement: 'prepare',
+  watch : {
+    placement : 'prepare',
   },
 
-  methods: {
+  methods : {
     present() {
       console.log('present');
       this.$emit('change', true);
@@ -62,22 +62,22 @@ export default Vue.extend({
       const reference = this.$parent.$el;
       const { content } = this.$refs;
       this.popper = new Popper(reference, content, {
-        placement: 'bottom',
-        eventsEnabled: false,
-        modifiers: {
-          flip: { enabled: false },
-          preventOverflow: {
-            enabled: true,
-            escapeWithReference: false,
+        placement     : 'bottom',
+        eventsEnabled : false,
+        modifiers     : {
+          flip            : { enabled: false },
+          preventOverflow : {
+            enabled             : true,
+            escapeWithReference : false,
             // boundariesElement: target,
           },
-          applyStyle: { enabled: true },
-          applyCustomStyle: {
-            enabled: true,
+          applyStyle       : { enabled: true },
+          applyCustomStyle : {
+            enabled : true,
             fn(data) {
               return data;
             },
-            order: 900,
+            order : 900,
           },
         },
       });

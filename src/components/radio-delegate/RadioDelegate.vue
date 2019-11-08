@@ -7,14 +7,14 @@
 import { ItemDelegate } from '@/components/item-delegate';
 
 export default {
-  name: 'RadioDelegate',
+  name : 'RadioDelegate',
 
-  extends: ItemDelegate,
+  extends : ItemDelegate,
 
-  props: {
-    autoExclusive: {
-      type: Boolean,
-      default: true,
+  props : {
+    autoExclusive : {
+      type    : Boolean,
+      default : true,
     },
   },
 };

@@ -6,29 +6,29 @@ import { useGroupItem } from '@/components/group';
 
 const NAMESPACE = 'TabBar';
 export default Vue.extend({
-  name: 'TabButton',
+  name : 'TabButton',
 
-  mixins: [useGroupItem(NAMESPACE)],
+  mixins : [useGroupItem(NAMESPACE)],
 
-  extends: AbstractButton,
+  extends : AbstractButton,
 
-  props: {
-    disabled: {
-      type: Boolean,
-      default: false,
+  props : {
+    disabled : {
+      type    : Boolean,
+      default : false,
     },
   },
 
-  computed: {
+  computed : {
     class() {
       return {
-        'is--active': this.checked,
-        'is--disabled': this.disabled,
+        'is--active'   : this.checked,
+        'is--disabled' : this.disabled,
       };
     },
   },
 
-  methods: {
+  methods : {
     onClick() {
       if (this.checked) {
         return;

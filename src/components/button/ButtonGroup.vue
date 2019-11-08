@@ -11,9 +11,9 @@ import { useGroup } from '@/components/group';
 const NAMESPACE = 'ButtonGroup';
 
 export default Vue.extend({
-  name: 'ButtonGroup',
+  name : 'ButtonGroup',
 
-  extends: useGroup(NAMESPACE),
+  extends : useGroup(NAMESPACE),
 });
 </script>
 

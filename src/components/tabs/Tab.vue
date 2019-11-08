@@ -15,22 +15,22 @@ import { useGroupItem } from '@/components/group';
 const NAMESPACE = 'Tabs';
 
 export default {
-  name: 'Tab',
+  name : 'Tab',
 
-  mixins: [useGroupItem(NAMESPACE)],
+  mixins : [useGroupItem(NAMESPACE)],
 
-  components: {
+  components : {
 
   },
 
-  props: {
-    title: {
-      type: String,
-      default: '',
+  props : {
+    title : {
+      type    : String,
+      default : '',
     },
-    disabled: {
-      type: Boolean,
-      default: false,
+    disabled : {
+      type    : Boolean,
+      default : false,
     },
   },
 
@@ -40,7 +40,7 @@ export default {
     };
   },
 
-  computed: {
+  computed : {
 
   },
 
@@ -52,7 +52,7 @@ export default {
 
   },
 
-  methods: {
+  methods : {
     onClick() {
       if (this.checked) {
         return;
@@ -63,7 +63,7 @@ export default {
     },
   },
 
-  watch: {
+  watch : {
 
   },
 };

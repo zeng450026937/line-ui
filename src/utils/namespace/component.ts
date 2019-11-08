@@ -51,10 +51,10 @@ export function unifySlots(context: RenderContext) {
 // should be removed after Vue 3
 function transformFunctionComponent(pure: FunctionComponent): VantComponentOptions {
   return {
-    functional: true,
-    props: pure.props,
-    model: pure.model,
-    render: (h, context): any => pure(h, context.props, unifySlots(context), context),
+    functional : true,
+    props      : pure.props,
+    model      : pure.model,
+    render     : (h, context): any => pure(h, context.props, unifySlots(context), context),
   };
 }
 

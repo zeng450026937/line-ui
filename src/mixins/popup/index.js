@@ -7,7 +7,7 @@ import { openOverlay, closeOverlay, updateOverlay } from './overlay';
 import { getScrollEventTarget } from '../../utils/dom/scroll';
 
 export const PopupMixin = {
-  mixins: [
+  mixins : [
     TouchMixin,
     CloseOnPopstateMixin,
     PortalMixin({
@@ -19,44 +19,44 @@ export const PopupMixin = {
     }),
   ],
 
-  props: {
+  props : {
     // whether to show popup
-    value: Boolean,
+    value               : Boolean,
     // whether to show overlay
-    overlay: Boolean,
+    overlay             : Boolean,
     // overlay custom style
-    overlayStyle: Object,
+    overlayStyle        : Object,
     // overlay custom class name
-    overlayClass: String,
+    overlayClass        : String,
     // whether to close popup when click overlay
-    closeOnClickOverlay: Boolean,
+    closeOnClickOverlay : Boolean,
     // z-index
-    zIndex: [Number, String],
+    zIndex              : [Number, String],
     // prevent body scroll
-    lockScroll: {
-      type: Boolean,
-      default: true,
+    lockScroll          : {
+      type    : Boolean,
+      default : true,
     },
     // whether to lazy render
-    lazyRender: {
-      type: Boolean,
-      default: true,
+    lazyRender : {
+      type    : Boolean,
+      default : true,
     },
   },
 
   data() {
     return {
-      inited: this.value,
+      inited : this.value,
     };
   },
 
-  computed: {
+  computed : {
     shouldRender() {
       return this.inited || !this.lazyRender;
     },
   },
 
-  watch: {
+  watch : {
     value(val) {
       const type = val ? 'open' : 'close';
       this.inited = this.inited || this.value;
@@ -64,7 +64,7 @@ export const PopupMixin = {
       this.$emit(type);
     },
 
-    overlay: 'renderOverlay',
+    overlay : 'renderOverlay',
   },
 
   mounted() {
@@ -93,7 +93,7 @@ export const PopupMixin = {
     this.close();
   },
 
-  methods: {
+  methods : {
     open() {
       /* istanbul ignore next */
       if (this.$isServer || this.opened) {
@@ -173,10 +173,10 @@ export const PopupMixin = {
 
         if (this.overlay) {
           openOverlay(this, {
-            zIndex: context.zIndex++,
-            duration: this.duration,
-            className: this.overlayClass,
-            customStyle: this.overlayStyle,
+            zIndex      : context.zIndex++,
+            duration    : this.duration,
+            className   : this.overlayClass,
+            customStyle : this.overlayStyle,
           });
         } else {
           closeOverlay(this);

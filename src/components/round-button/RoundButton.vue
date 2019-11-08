@@ -7,14 +7,14 @@
 import AbstractButton from '@/mixins/abstract-button';
 
 export default {
-  name: 'Button',
+  name : 'Button',
 
-  extends: AbstractButton,
+  extends : AbstractButton,
 
-  props: {
-    radius: {
-      type: Number,
-      default: 3,
+  props : {
+    radius : {
+      type    : Number,
+      default : 3,
     },
   },
 };

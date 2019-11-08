@@ -9,22 +9,22 @@ import Vue from 'vue';
 import AbstractButton from '@/mixins/abstract-button';
 
 export default Vue.extend({
-  name: 'MenuBarItem',
+  name : 'MenuBarItem',
 
-  extends: AbstractButton,
+  extends : AbstractButton,
 
-  props: {
-    highlighted: {
-      type: Boolean,
-      default: false,
+  props : {
+    highlighted : {
+      type    : Boolean,
+      default : false,
     },
-    menu: {
-      type: Object,
-      default: () => ({}),
+    menu : {
+      type    : Object,
+      default : () => ({}),
     },
   },
 
-  computed: {
+  computed : {
     menuBar() {
       return null;
     },

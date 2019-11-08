@@ -2,13 +2,13 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  props: {
-    title: {
-      type: String,
+  props : {
+    title : {
+      type : String,
     },
   },
 
-  methods: {
+  methods : {
     alert(msg: string) {
       if (!msg) return;
 
@@ -20,7 +20,7 @@ export default Vue.extend({
     },
     close() {
       const closeEvent = {
-        accepted: true,
+        accepted : true,
       };
       this.$emit('closing', closeEvent);
       if (!closeEvent.accepted) return;

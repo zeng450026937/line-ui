@@ -15,28 +15,28 @@ import { now } from '@/utils/helpers';
 import { GESTURE_CONTROLLER } from '@/utils/gesture';
 
 export default Vue.extend({
-  name: 'Overlay',
+  name : 'Overlay',
 
-  props: {
-    visable: {
-      type: Boolean,
-      default: true,
+  props : {
+    visable : {
+      type    : Boolean,
+      default : true,
     },
-    tappable: {
-      type: Boolean,
-      default: true,
+    tappable : {
+      type    : Boolean,
+      default : true,
     },
-    stopPropagation: {
-      type: Boolean,
-      default: true,
+    stopPropagation : {
+      type    : Boolean,
+      default : true,
     },
   },
 
-  computed: {
+  computed : {
     style() {
       return {
-        background: this.visable ? '#000' : 'transparent',
-        cursor: this.tappable ? 'pointer' : 'auto',
+        background : this.visable ? '#000' : 'transparent',
+        cursor     : this.tappable ? 'pointer' : 'auto',
       };
     },
   },
@@ -44,7 +44,7 @@ export default Vue.extend({
   created() {
     this.lastClick = -10000;
     this.blocker = GESTURE_CONTROLLER.createBlocker({
-      disableScroll: true,
+      disableScroll : true,
     });
 
     if (this.stopPropagation) {
@@ -56,7 +56,7 @@ export default Vue.extend({
     this.blocker.unblock();
   },
 
-  methods: {
+  methods : {
     onTouchStart(ev) {
       this.lastClick = now(ev);
       this.emitTap(ev);

@@ -11,9 +11,9 @@ import { useGroup } from '@/components/group';
 const NAMESPACE = 'SwitchGroup';
 
 export default Vue.extend({
-  name: 'SwitchGroup',
+  name : 'SwitchGroup',
 
-  extends: useGroup(NAMESPACE),
+  extends : useGroup(NAMESPACE),
 });
 </script>
 

@@ -5,21 +5,21 @@
 
 <script>
 export const Orientation = {
-  Horizontal: 0,
-  Vertical: 1,
+  Horizontal : 0,
+  Vertical   : 1,
 };
 
 export default {
-  name: 'ToolSeparator',
+  name : 'ToolSeparator',
 
-  props: {
-    orientation: {
-      type: Number,
-      default: 0,
+  props : {
+    orientation : {
+      type    : Number,
+      default : 0,
     },
   },
 
-  computed: {
+  computed : {
     horizontal() {
       return false;
     },

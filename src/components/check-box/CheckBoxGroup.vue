@@ -13,20 +13,20 @@ export { CheckState };
 const NAMESPACE = 'CheckBoxGroup';
 
 export default Vue.extend({
-  name: 'CheckBoxGroup',
+  name : 'CheckBoxGroup',
 
-  mixins: [useGroup(NAMESPACE)],
+  mixins : [useGroup(NAMESPACE)],
 
-  props: {
-    nextCheckState: {
-      type: Function,
+  props : {
+    nextCheckState : {
+      type : Function,
       default(checkState) {
         return checkState === CheckState.Checked ? CheckState.Unchecked : CheckState.Checked;
       },
     },
   },
 
-  methods: {
+  methods : {
     onClick() {
       if (this.checkable && !this.disabled) {
         this.checkState = this.nextCheckState(this.checkState);

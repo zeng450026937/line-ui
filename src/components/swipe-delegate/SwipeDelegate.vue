@@ -7,38 +7,38 @@
 import { ItemDelegate } from '@/components/item-delegate';
 
 export default {
-  name: 'SwipeDelegate',
+  name : 'SwipeDelegate',
 
-  extends: ItemDelegate,
+  extends : ItemDelegate,
 
-  props: {
-    swipe: {
-      type: Object,
-      default: () => ({
-        position: null,
-        complete: null,
-        enabled: null,
-        left: null,
-        behind: null,
-        right: null,
-        leftItem: null,
-        behindItem: null,
-        rightItem: null,
-        transition: null,
+  props : {
+    swipe : {
+      type    : Object,
+      default : () => ({
+        position   : null,
+        complete   : null,
+        enabled    : null,
+        left       : null,
+        behind     : null,
+        right      : null,
+        leftItem   : null,
+        behindItem : null,
+        rightItem  : null,
+        transition : null,
       }),
     },
   },
 
   provide() {
     return {
-      SwipeDelegate: {
-        pressed: this.pressed,
-        clicked: () => {},
+      SwipeDelegate : {
+        pressed : this.pressed,
+        clicked : () => {},
       },
     };
   },
 
-  methods: {
+  methods : {
     close() {},
     open() {},
   },

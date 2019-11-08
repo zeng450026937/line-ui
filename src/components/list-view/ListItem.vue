@@ -8,34 +8,34 @@
 import { DynamicNode } from '@/components/functional';
 
 export default {
-  name: 'ListItem',
+  name : 'ListItem',
 
-  components: {
+  components : {
     DynamicNode,
   },
 
-  inject: ['ListView'],
+  inject : ['ListView'],
 
-  props: {
-    index: {
-      type: Number,
-      required: true,
+  props : {
+    index : {
+      type     : Number,
+      required : true,
     },
-    item: {
-      type: [
+    item : {
+      type : [
         String, Number, Boolean, Array, Object, Date, Function, Symbol,
       ],
-      default: () => ({}),
+      default : () => ({}),
     },
   },
 
-  computed: {
+  computed : {
     cachedNode() {
       return this.$scopedSlots.default && this.$scopedSlots.default(this.item);
     },
   },
 
-  methods: {
+  methods : {
     onLayoutChanged() {
       const { itemLayoutAtIndex } = this.ListView;
       const item = itemLayoutAtIndex(this.index);

@@ -29,32 +29,32 @@ import { useGroupItem } from '@/components/group';
 const NAMESPACE = 'Collapse';
 
 export default {
-  name: 'CollapseItem',
+  name : 'CollapseItem',
 
-  mixins: [useGroupItem(NAMESPACE)],
+  mixins : [useGroupItem(NAMESPACE)],
 
-  components: {
+  components : {
     FontIcon,
   },
 
-  props: {
-    title: {
-      type: String,
-      default: '',
+  props : {
+    title : {
+      type    : String,
+      default : '',
     },
-    disabled: {
-      type: Boolean,
-      default: false,
+    disabled : {
+      type    : Boolean,
+      default : false,
     },
   },
 
-  computed: {
+  computed : {
     iconName() {
       return this.checked ? 'expand_less' : 'expand_more';
     },
   },
 
-  methods: {
+  methods : {
     onClick() {
       if (this.checkable && !this.disabled) {
         this.checked = !this.checked;

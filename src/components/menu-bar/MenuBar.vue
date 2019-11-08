@@ -14,24 +14,24 @@ import Vue from 'vue';
 import { MenuBarItem } from '@/components/menu-bar-item';
 
 export default Vue.extend({
-  name: 'MenuBar',
+  name : 'MenuBar',
 
-  components: {
+  components : {
     MenuBarItem,
   },
 
-  props: {
-    delegate: {
-      type: Object,
-      default: () => ({}),
+  props : {
+    delegate : {
+      type    : Object,
+      default : () => ({}),
     },
-    menus: {
-      type: Array,
-      default: () => [],
+    menus : {
+      type    : Array,
+      default : () => [],
     },
   },
 
-  methods: {
+  methods : {
     addMenu() {},
     insertMenu() {},
     menuAt() {},

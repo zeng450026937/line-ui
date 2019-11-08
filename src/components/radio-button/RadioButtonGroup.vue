@@ -11,14 +11,14 @@ import { useGroup } from '@/components/group';
 const NAMESPACE = 'RadioButtonGroup';
 
 export default Vue.extend({
-  name: 'RadioButtonGroup',
+  name : 'RadioButtonGroup',
 
-  extends: useGroup(NAMESPACE),
+  extends : useGroup(NAMESPACE),
 
-  props: {
-    exclusive: {
-      type: Boolean,
-      default: true,
+  props : {
+    exclusive : {
+      type    : Boolean,
+      default : true,
     },
   },
 });

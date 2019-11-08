@@ -10,32 +10,32 @@
 import { useGroup } from '@/components/group';
 
 export const Position = {
-  Header: 0,
-  Footer: 1,
+  Header : 0,
+  Footer : 1,
 };
 const NAMESPACE = 'TabBar';
 
 export default {
-  name: 'TabBar',
+  name : 'TabBar',
 
-  mixins: [useGroup(NAMESPACE)],
+  mixins : [useGroup(NAMESPACE)],
 
-  props: {
-    contentHeight: {
-      type: Number,
-      default: 0,
+  props : {
+    contentHeight : {
+      type    : Number,
+      default : 0,
     },
-    contentWidth: {
-      type: Number,
-      default: 0,
+    contentWidth : {
+      type    : Number,
+      default : 0,
     },
-    position: {
-      type: Number,
-      default: 0,
+    position : {
+      type    : Number,
+      default : 0,
     },
-    exclusive: {
-      type: Boolean,
-      default: true,
+    exclusive : {
+      type    : Boolean,
+      default : true,
     },
   },
 

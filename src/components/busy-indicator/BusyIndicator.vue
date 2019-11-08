@@ -12,14 +12,14 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  name: 'BusyIndicator',
+  name : 'BusyIndicator',
 
-  components: {},
+  components : {},
 
-  props: {
-    running: {
-      type: Boolean,
-      default: false,
+  props : {
+    running : {
+      type    : Boolean,
+      default : false,
     },
   },
 });

@@ -4,16 +4,16 @@ export function createTransition(name: string, mode?: string) {
   return Vue.extend({
     name,
 
-    functional: true,
+    functional : true,
 
-    props: {
-      group: {
-        type: Boolean,
-        default: false,
+    props : {
+      group : {
+        type    : Boolean,
+        default : false,
       },
-      mode: {
-        type: String,
-        default: mode,
+      mode : {
+        type    : String,
+        default : mode,
       },
     },
 
@@ -22,7 +22,7 @@ export function createTransition(name: string, mode?: string) {
       const tag = `transition${ props!.group ? '-group' : '' }`;
       context.data.props = {
         name,
-        mode: props!.mode,
+        mode : props!.mode,
       };
       return h(tag, context.data, context.children);
     },

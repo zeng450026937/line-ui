@@ -6,23 +6,23 @@ import { useGroup } from '@/components/group';
 const NAMESPACE = 'Tabs';
 
 export default Vue.extend({
-  name: 'Tabs',
+  name : 'Tabs',
 
-  mixins: [useGroup(NAMESPACE)],
+  mixins : [useGroup(NAMESPACE)],
 
-  props: {
-    exclusive: {
-      type: Boolean,
-      default: true,
+  props : {
+    exclusive : {
+      type    : Boolean,
+      default : true,
     },
   },
 
-  computed: {
+  computed : {
     navBarStyle() {
       const { checkedItem, items } = this;
       const style = {
-        width: '0px',
-        transform: 'translateX(0px)',
+        width     : '0px',
+        transform : 'translateX(0px)',
       };
 
       if (checkedItem) {
@@ -52,7 +52,7 @@ export default Vue.extend({
 
   },
 
-  methods: {
+  methods : {
     getWH(el, name) {
       let val = name === 'width' ? el.offsetWidth : el.offsetHeight;
       const which = name === 'width' ? ['Left', 'Right'] : ['Top', 'Bottom'];
@@ -76,7 +76,7 @@ export default Vue.extend({
     },
   },
 
-  watch: {
+  watch : {
 
   },
 
@@ -87,35 +87,35 @@ export default Vue.extend({
       if (item.$slots.default) {
         contentChildren.push(
           h(tag, {
-            ref: item.value || index,
-            staticClass: 'tabs__content-pane',
-            class: {
-              'is-active': item.value === this.checkedItem,
+            ref         : item.value || index,
+            staticClass : 'tabs__content-pane',
+            class       : {
+              'is-active' : item.value === this.checkedItem,
             },
           }, item.$slots.default),
         );
       } else {
         contentChildren.push(h(tag, {
-          staticClass: 'tabs__content-pane',
+          staticClass : 'tabs__content-pane',
         }));
       }
     });
 
     const navBar = h(tag, {
-      staticClass: 'tabs__nav-bar',
-      style: this.navBarStyle,
+      staticClass : 'tabs__nav-bar',
+      style       : this.navBarStyle,
     });
     const nav = h(tag, {
-      ref: 'nav',
-      staticClass: 'tabs__nav',
+      ref         : 'nav',
+      staticClass : 'tabs__nav',
     }, [navBar, ...this.$slots.default]);
     const content = h(tag, {
-      staticClass: 'tabs__content',
+      staticClass : 'tabs__content',
     }, contentChildren);
 
 
     return h(tag, {
-      staticClass: 'tabs',
+      staticClass : 'tabs',
     }, [nav, content]);
   },
 });

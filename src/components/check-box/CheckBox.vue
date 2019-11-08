@@ -7,32 +7,32 @@ import { useGroupItem } from '@/components/group';
 const NAMESPACE = 'CheckBoxGroup';
 
 export default Vue.extend({
-  name: 'CheckBox',
+  name : 'CheckBox',
 
-  mixins: [useGroupItem(NAMESPACE)],
+  mixins : [useGroupItem(NAMESPACE)],
 
-  extends: AbstractButton,
+  extends : AbstractButton,
 
-  props: {
-    disabled: {
-      type: Boolean,
-      default: false,
+  props : {
+    disabled : {
+      type    : Boolean,
+      default : false,
     },
-    indeterminate: {
-      type: Boolean,
-      default: false,
+    indeterminate : {
+      type    : Boolean,
+      default : false,
     },
   },
 
-  methods: {
+  methods : {
     genIndicator() {
       return this.$createElement(CheckIndicator, {
-        props: {
-          checked: this.checked,
-          indeterminate: this.indeterminate,
-          disabled: this.disabled,
-          width: 20,
-          height: 20,
+        props : {
+          checked       : this.checked,
+          indeterminate : this.indeterminate,
+          disabled      : this.disabled,
+          width         : 20,
+          height        : 20,
         },
       });
     },

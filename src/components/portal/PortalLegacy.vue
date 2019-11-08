@@ -6,32 +6,32 @@ window.wormhole = wormhole;
 let globalId = 1;
 
 export default {
-  name: 'portal',
+  name : 'portal',
 
-  props: {
-    remote: [String, Array],
+  props : {
+    remote : [String, Array],
 
-    order: Number,
+    order : Number,
 
-    disabled: Boolean,
+    disabled : Boolean,
   },
 
-  computed: {
+  computed : {
     transport() {
       return {
-        payload: this.payload(),
-        order: this.order,
-        to: this.remote,
+        payload : this.payload(),
+        order   : this.order,
+        to      : this.remote,
       };
     },
   },
 
-  watch: {
-    remote: 'transfer',
-    disabled: 'transfer',
+  watch : {
+    remote   : 'transfer',
+    disabled : 'transfer',
   },
 
-  methods: {
+  methods : {
     payload() {
       return this.disabled ? null : this.$scopedSlots.default;
     },

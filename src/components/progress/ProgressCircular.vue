@@ -37,44 +37,44 @@ import Vue from 'vue';
 import { convertToUnit } from '@/utils/helpers';
 
 export default Vue.extend({
-  name: 'ProgressCircular',
+  name : 'ProgressCircular',
 
-  props: {
-    from: {
-      type: Number,
-      default: 0,
+  props : {
+    from : {
+      type    : Number,
+      default : 0,
     },
-    to: {
-      type: Number,
-      default: 100,
+    to : {
+      type    : Number,
+      default : 100,
     },
-    value: {
-      type: Number,
-      default: 0,
+    value : {
+      type    : Number,
+      default : 0,
     },
-    indeterminate: {
-      type: Boolean,
-      default: false,
+    indeterminate : {
+      type    : Boolean,
+      default : false,
     },
-    size: {
-      type: Number,
-      default: 32,
+    size : {
+      type    : Number,
+      default : 32,
     },
-    width: {
-      type: [Number, String],
-      default: 4,
+    width : {
+      type    : [Number, String],
+      default : 4,
     },
-    rotate: {
-      type: [Number, String],
-      default: 0,
+    rotate : {
+      type    : [Number, String],
+      default : 0,
     },
-    color: {
-      type: String,
-      default: '#10c29b',
+    color : {
+      type    : String,
+      default : '#10c29b',
     },
   },
 
-  computed: {
+  computed : {
     position(): number {
       let normalizedValue = this.value;
       const { from, to } = this;
@@ -105,16 +105,16 @@ export default Vue.extend({
 
     styles(): object {
       return {
-        height: convertToUnit(this.size),
-        width: convertToUnit(this.size),
-        color: this.color,
-        'caret-color': this.color,
+        height        : convertToUnit(this.size),
+        width         : convertToUnit(this.size),
+        color         : this.color,
+        'caret-color' : this.color,
       };
     },
 
     svgStyles(): object {
       return {
-        transform: `rotate(${ Number(this.rotate) }deg)`,
+        transform : `rotate(${ Number(this.rotate) }deg)`,
       };
     },
 

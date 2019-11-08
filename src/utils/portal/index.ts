@@ -24,21 +24,21 @@ type PortalData = {
 export const PortalContext = Vue.extend({
   data(): PortalData {
     return {
-      portals: {},
+      portals : {},
     };
   },
 
-  methods: {
+  methods : {
     open(id: string) {
       let opened = this.portals[id];
 
       if (!opened) {
         const context = this;
         const portal = {
-          _isVue: true,
+          _isVue   : true,
           id,
-          payloads: Vue.observable({}),
-          remote: null,
+          payloads : Vue.observable({}),
+          remote   : null,
           addOrUpdatePayload(remoteId: string, payload: Payload) {
             Vue.set(this.payloads, remoteId, payload);
           },

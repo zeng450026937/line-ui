@@ -16,19 +16,19 @@ import { useGroupItem } from '@/components/group';
 const NAMESPACE = 'Select';
 
 export default {
-  name: 'SelectOption',
+  name : 'SelectOption',
 
-  mixins: [useGroupItem(NAMESPACE)],
+  mixins : [useGroupItem(NAMESPACE)],
 
-  props: {
-    value: {
-      type: [String, Boolean, Number],
-      default: null,
-      required: true,
+  props : {
+    value : {
+      type     : [String, Boolean, Number],
+      default  : null,
+      required : true,
     },
-    label: {
-      type: [String, Boolean, Number],
-      default: null,
+    label : {
+      type    : [String, Boolean, Number],
+      default : null,
     },
   },
 
@@ -38,11 +38,11 @@ export default {
     };
   },
 
-  computed: {
+  computed : {
 
   },
 
-  methods: {
+  methods : {
     toggle() {
       if (!this.checked) {
         this.checked = true;
@@ -52,7 +52,7 @@ export default {
     },
   },
 
-  watch: {
+  watch : {
 
   },
 };

@@ -2,44 +2,44 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  name: 'ProgressBar',
+  name : 'ProgressBar',
 
-  props: {
-    from: {
-      type: Number,
-      default: 0,
+  props : {
+    from : {
+      type    : Number,
+      default : 0,
     },
-    to: {
-      type: Number,
-      default: 100,
+    to : {
+      type    : Number,
+      default : 100,
     },
-    value: {
-      type: Number,
-      default: 0,
+    value : {
+      type    : Number,
+      default : 0,
     },
-    bufferValue: {
-      type: Number,
-      default: 0,
+    bufferValue : {
+      type    : Number,
+      default : 0,
     },
-    stream: {
-      type: Boolean,
-      default: false,
+    stream : {
+      type    : Boolean,
+      default : false,
     },
-    indeterminate: {
-      type: Boolean,
-      default: false,
+    indeterminate : {
+      type    : Boolean,
+      default : false,
     },
-    height: {
-      type: [Number, String],
-      default: 4,
+    height : {
+      type    : [Number, String],
+      default : 4,
     },
-    color: {
-      type: String,
-      default: '#10c29b',
+    color : {
+      type    : String,
+      default : '#10c29b',
     },
   },
 
-  computed: {
+  computed : {
     style() {
       const style = { height: '4px' };
       style.height = `${ this.height.toString().replace(/px/, '') }px`;
@@ -49,8 +49,8 @@ export default Vue.extend({
     bufferBarStyle() {
       const { color, bufferPosition } = this;
       const style = {
-        backgroundColor: `${ color }20`,
-        transform: `scaleX(${ bufferPosition })`,
+        backgroundColor : `${ color }20`,
+        transform       : `scaleX(${ bufferPosition })`,
       };
       if (this.bufferValue) {
         style.backgroundColor = `${ color }60`;
@@ -64,8 +64,8 @@ export default Vue.extend({
       }
       const { color, position, bufferPosition } = this;
       const style = {
-        borderColor: `${ color }80`,
-        width: `${ (1 - position) * 100 }%`,
+        borderColor : `${ color }80`,
+        width       : `${ (1 - position) * 100 }%`,
       };
 
       if (this.bufferValue) {
@@ -116,28 +116,28 @@ export default Vue.extend({
     const tag = 'div';
     const { color, indeterminate, stream } = this;
     const bufferBar = h(tag, {
-      staticClass: 'progress__buffer-bar',
-      style: this.bufferBarStyle,
+      staticClass : 'progress__buffer-bar',
+      style       : this.bufferBarStyle,
     });
     let children = [];
     if (indeterminate) {
       [1, 2].forEach(() => {
         const indeterminateBar = h(tag, {
-          staticClass: 'progress__bar-wrap',
+          staticClass : 'progress__bar-wrap',
         }, [h(tag, {
-          staticClass: 'progress__indeterminate-bar',
-          style: {
-            'background-color': color,
+          staticClass : 'progress__indeterminate-bar',
+          style       : {
+            'background-color' : color,
           },
         })]);
         children.push(indeterminateBar);
       });
     } else {
       const progressBar = h(tag, {
-        staticClass: 'progress__bar',
-        style: {
-          'background-color': color,
-          transform: `scaleX(${ this.position })`,
+        staticClass : 'progress__bar',
+        style       : {
+          'background-color' : color,
+          transform          : `scaleX(${ this.position })`,
         },
       });
 
@@ -147,15 +147,15 @@ export default Vue.extend({
 
     if (!indeterminate && stream) {
       const streamBar = h(tag, {
-        staticClass: 'progress__stream-bar',
-        style: this.streamBarStyle,
+        staticClass : 'progress__stream-bar',
+        style       : this.streamBarStyle,
       });
       children.push(streamBar);
     }
 
     return h(tag, {
-      staticClass: 'progress',
-      style: this.style,
+      staticClass : 'progress',
+      style       : this.style,
     }, children);
   },
 });

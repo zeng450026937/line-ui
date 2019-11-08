@@ -6,24 +6,24 @@ import { useGroupItem } from '@/components/group';
 const NAMESPACE = 'ButtonGroup';
 
 export default Vue.extend({
-  name: 'Button',
+  name : 'Button',
 
-  mixins: [useGroupItem(NAMESPACE)],
+  mixins : [useGroupItem(NAMESPACE)],
 
-  extends: AbstractButton,
+  extends : AbstractButton,
 
-  props: {
-    flat: {
-      type: Boolean,
-      default: false,
+  props : {
+    flat : {
+      type    : Boolean,
+      default : false,
     },
-    highlighted: {
-      type: Boolean,
-      default: false,
+    highlighted : {
+      type    : Boolean,
+      default : false,
     },
   },
 
-  methods: {
+  methods : {
     onClick() {
       this.toggle();
     },

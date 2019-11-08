@@ -5,20 +5,20 @@
 
 <script>
 export default {
-  name: 'Page',
+  name : 'Page',
 
-  props: {
-    footer: {
-      type: Object,
-      default: () => ({}),
+  props : {
+    footer : {
+      type    : Object,
+      default : () => ({}),
     },
-    header: {
-      type: Object,
-      default: () => ({}),
+    header : {
+      type    : Object,
+      default : () => ({}),
     },
-    title: {
-      type: String,
-      default: '',
+    title : {
+      type    : String,
+      default : '',
     },
   },
 };

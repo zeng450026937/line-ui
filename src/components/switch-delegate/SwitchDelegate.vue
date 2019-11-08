@@ -7,11 +7,11 @@
 import { ItemDelegate } from '@/components/item-delegate';
 
 export default {
-  name: 'SwitchDelegate',
+  name : 'SwitchDelegate',
 
-  extends: ItemDelegate,
+  extends : ItemDelegate,
 
-  computed: {
+  computed : {
     position() {
       return 0;
     },

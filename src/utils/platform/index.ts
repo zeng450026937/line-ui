@@ -72,20 +72,20 @@ const isElectron = (win: Window): boolean => testUserAgent(win, /electron/i);
 const isPWA = (win: Window): boolean => !!(win.matchMedia('(display-mode: standalone)').matches || (win.navigator as any).standalone);
 
 const PLATFORMS_MAP = {
-  ipad: isIpad,
-  iphone: isIphone,
-  ios: isIOS,
-  android: isAndroid,
-  phablet: isPhablet,
-  tablet: isTablet,
-  cordova: isCordova,
-  capacitor: isCapacitorNative,
-  electron: isElectron,
-  pwa: isPWA,
-  mobile: isMobile,
-  mobileweb: isMobileWeb,
-  desktop: isDesktop,
-  hybrid: isHybrid,
+  ipad      : isIpad,
+  iphone    : isIphone,
+  ios       : isIOS,
+  android   : isAndroid,
+  phablet   : isPhablet,
+  tablet    : isTablet,
+  cordova   : isCordova,
+  capacitor : isCapacitorNative,
+  electron  : isElectron,
+  pwa       : isPWA,
+  mobile    : isMobile,
+  mobileweb : isMobileWeb,
+  desktop   : isDesktop,
+  hybrid    : isHybrid,
 };
 
 export type Platforms = keyof typeof PLATFORMS_MAP;

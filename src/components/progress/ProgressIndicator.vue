@@ -8,22 +8,22 @@ function clamp(value, min, max) {
 }
 
 export default Vue.extend({
-  name: 'ProgressIndicator',
+  name : 'ProgressIndicator',
 
-  functional: true,
+  functional : true,
 
-  props: {
-    from: {
-      type: Number,
-      default: 0,
+  props : {
+    from : {
+      type    : Number,
+      default : 0,
     },
-    to: {
-      type: Number,
-      default: 100,
+    to : {
+      type    : Number,
+      default : 100,
     },
-    value: {
-      type: Number,
-      default: 0,
+    value : {
+      type    : Number,
+      default : 0,
     },
   },
 
@@ -33,15 +33,15 @@ export default Vue.extend({
     const tag = 'div';
     const position = (normalizedValue - from) / (to - from);
     const progress = h(tag, {
-      staticClass: 'progress',
-      style: {
-        'background-color': '#10c29b',
-        transform: `scaleX(${ position })`,
+      staticClass : 'progress',
+      style       : {
+        'background-color' : '#10c29b',
+        transform          : `scaleX(${ position })`,
       },
     });
 
     return h(tag, {
-      staticClass: 'progress-indicator',
+      staticClass : 'progress-indicator',
     }, [progress]);
   },
 });

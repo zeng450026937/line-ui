@@ -2,18 +2,18 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  name: 'SwitchIndicator',
+  name : 'SwitchIndicator',
 
-  functional: true,
+  functional : true,
 
-  props: {
-    checked: {
-      type: Boolean,
-      default: false,
+  props : {
+    checked : {
+      type    : Boolean,
+      default : false,
     },
-    disabled: {
-      type: Boolean,
-      default: false,
+    disabled : {
+      type    : Boolean,
+      default : false,
     },
   },
 
@@ -24,10 +24,10 @@ export default Vue.extend({
     ];
     return h(tag, {
       ...data,
-      staticClass: `switch-indicator ${ data.staticClass || '' }`.trim(),
-      class: {
-        'is-checked': props.checked,
-        'is-disabled': props.disabled,
+      staticClass : `switch-indicator ${ data.staticClass || '' }`.trim(),
+      class       : {
+        'is-checked'  : props.checked,
+        'is-disabled' : props.disabled,
         ...data.class,
       },
     }, children);

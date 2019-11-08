@@ -5,16 +5,16 @@
 
 <script>
 export default {
-  name: 'GroupBox',
+  name : 'GroupBox',
 
-  props: {
-    label: {
-      type: Object,
-      default: () => ({}),
+  props : {
+    label : {
+      type    : Object,
+      default : () => ({}),
     },
-    title: {
-      type: String,
-      default: '',
+    title : {
+      type    : String,
+      default : '',
     },
   },
 };

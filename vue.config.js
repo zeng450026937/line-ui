@@ -1,5 +1,5 @@
 module.exports = {
-  chainWebpack: (config) => {
+  chainWebpack : (config) => {
     const mdRule = config.module.rule('md').test(/\.md$/);
     const addLoader = ({ loader, options }) => {
       mdRule.use(loader).loader(loader).options(options);

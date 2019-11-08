@@ -7,25 +7,25 @@ import { useGroupItem } from '@/components/group';
 const NAMESPACE = 'SwitchGroup';
 
 export default {
-  name: 'Switch',
+  name : 'Switch',
 
-  mixins: [useGroupItem(NAMESPACE)],
+  mixins : [useGroupItem(NAMESPACE)],
 
-  extends: AbstractButton,
+  extends : AbstractButton,
 
-  props: {
-    disabled: {
-      type: Boolean,
-      default: false,
+  props : {
+    disabled : {
+      type    : Boolean,
+      default : false,
     },
   },
 
-  methods: {
+  methods : {
     genIndicator() {
       return this.$createElement(SwitchIndicator, {
-        props: {
-          checked: this.checked,
-          disabled: this.disabled,
+        props : {
+          checked  : this.checked,
+          disabled : this.disabled,
         },
       });
     },

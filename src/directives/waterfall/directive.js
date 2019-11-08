@@ -108,8 +108,8 @@ export default function (type) {
       if (!el[CONTEXT]) {
         el[CONTEXT] = {
           el,
-          vm: vnode.context,
-          cb: {},
+          vm : vnode.context,
+          cb : {},
         };
       }
       el[CONTEXT].cb[type] = binding.value;

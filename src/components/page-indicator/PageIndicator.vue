@@ -5,24 +5,24 @@
 
 <script>
 export default {
-  name: 'PageIndicator',
+  name : 'PageIndicator',
 
-  props: {
-    count: {
-      type: Number,
-      default: 0,
+  props : {
+    count : {
+      type    : Number,
+      default : 0,
     },
-    currentIndex: {
-      type: Number,
-      default: 0,
+    currentIndex : {
+      type    : Number,
+      default : 0,
     },
-    delegate: {
-      type: Object,
-      default: () => ({}),
+    delegate : {
+      type    : Object,
+      default : () => ({}),
     },
-    interactive: {
-      type: Boolean,
-      default: true,
+    interactive : {
+      type    : Boolean,
+      default : true,
     },
   },
 };
