@@ -1,5 +1,5 @@
-import { isDef, isObj } from '.';
-import { ObjectIndex } from './types';
+import { isDef, isObject } from '../helpers';
+import { ObjectIndex } from '../types';
 
 const { hasOwnProperty } = Object.prototype;
 
@@ -10,7 +10,7 @@ function assignKey(to: ObjectIndex, from: ObjectIndex, key: string) {
     return;
   }
 
-  if (!hasOwnProperty.call(to, key) || !isObj(val) || typeof val === 'function') {
+  if (!hasOwnProperty.call(to, key) || !isObject(val) || typeof val === 'function') {
     to[key] = val;
   } else {
     // eslint-disable-next-line no-use-before-define

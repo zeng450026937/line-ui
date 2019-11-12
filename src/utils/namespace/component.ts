@@ -6,10 +6,13 @@ import Vue, {
   VNode, VueConstructor, ComponentOptions, RenderContext,
 } from 'vue';
 import { camelize } from '../format/string';
-import { SlotsMixin } from '../../mixins/slots';
+import { usePatch } from '@/mixins/use-patch';
+import { useSlots } from '@/mixins/use-slots';
+import { useBEM } from '@/mixins/use-bem';
+import { useI18N } from '@/mixins/use-i18n';
 import { DefaultProps, FunctionComponent } from '../types';
 
-export interface VantComponentOptions extends ComponentOptions<Vue> {
+export interface LineComponentOptions extends ComponentOptions<Vue> {
   functional?: boolean;
   install?: (Vue: VueConstructor) => void;
 }
@@ -49,7 +52,7 @@ export function unifySlots(context: RenderContext) {
 }
 
 // should be removed after Vue 3
-function transformFunctionComponent(pure: FunctionComponent): VantComponentOptions {
+function transformFunctionComponent(pure: FunctionComponent): LineComponentOptions {
   return {
     functional : true,
     props      : pure.props,
@@ -58,22 +61,24 @@ function transformFunctionComponent(pure: FunctionComponent): VantComponentOptio
   };
 }
 
+export type LineComponent = LineComponentOptions | FunctionComponent;
+
 export function createComponent(name: string) {
   return function<Props = DefaultProps, Events = {}, Slots = {}> (
-    sfc: VantComponentOptions | FunctionComponent,
-  ): TsxComponent<Props, Events, Slots> {
+    sfc: LineComponent,
+  ): LineComponent extends FunctionComponent ? TsxComponent<Props, Events, Slots> : LineComponentOptions {
     if (typeof sfc === 'function') {
       sfc = transformFunctionComponent(sfc);
     }
 
     if (!sfc.functional) {
       sfc.mixins = sfc.mixins || [];
-      sfc.mixins.push(SlotsMixin);
+      sfc.mixins.push(usePatch(), useSlots(name), useBEM(name), useI18N(name));
     }
 
     sfc.name = name;
     sfc.install = install;
 
-    return sfc as TsxComponent<Props, Events, Slots>;
+    return sfc;
   };
 }

@@ -1,22 +1,12 @@
-<template>
-  <div class="overlay"
-    @touchstart.capture="onTouchStart"
-    @click.capture="onMouseDown"
-    @mousedown.capture="onMouseDown"
-    :style="style"
-  >
-    <slot></slot>
-  </div>
-</template>
-
 <script>
 import Vue from 'vue';
-import { now } from '@/utils/helpers';
+import { createNamespace } from '@/utils/namespace';
 import { GESTURE_CONTROLLER } from '@/utils/gesture';
+import { now } from '@/utils/helpers';
 
-export default Vue.extend({
-  name : 'Overlay',
+const [createComponent, bem] = createNamespace('overlay');
 
+export default createComponent({
   props : {
     visable : {
       type    : Boolean,
@@ -28,16 +18,7 @@ export default Vue.extend({
     },
     stopPropagation : {
       type    : Boolean,
-      default : true,
-    },
-  },
-
-  computed : {
-    style() {
-      return {
-        background : this.visable ? '#000' : 'transparent',
-        cursor     : this.tappable ? 'pointer' : 'auto',
-      };
+      default : false,
     },
   },
 
@@ -78,37 +59,68 @@ export default Vue.extend({
       }
     },
   },
+
+  render() {
+    return (
+      <div tabindex="-1"
+        class={bem({
+          hide          : !this.visable,
+          'no-tappable' : !this.tappable,
+        })}
+        on={{
+          '!touchstart' : this.onTouchStart,
+          '!click'      : this.onMouseDown,
+          '!mousedown'  : this.onMouseDown,
+        }}
+      >
+        {this.slots()}
+      </div>
+    );
+  },
 });
+
 </script>
 
 <style lang="scss">
 
-.overlay {
-  align-items: center;
-  border-radius: inherit;
-  display: flex;
-  justify-content: center;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  pointer-events: none;
-  transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1), z-index 1ms;
-}
+$overlay-color: rgba(0, 0, 0, 0.5) !default;
+$overlay-z-index: 2 !default;
 
-.overlay-scrim {
-  border-radius: inherit;
-  bottom: 0;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
-  transition: inherit;
-  width: 100%;
-  background-color: rgba(0, 0, 0, 0.87);
-  opacity: 0.45;
+.line {
+  &-overlay {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    align-items: center;
+    justify-content: center;
+
+    transform: translateZ(0);
+
+    transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1), z-index 1ms;
+    // pointer-events: none;
+
+    border-radius: inherit;
+
+    background-color: $overlay-color;
+
+    contain: strict;
+    cursor: pointer;
+    touch-action: none;
+    z-index: $overlay-z-index;
+
+    &--hide {
+      background: transparent;
+    }
+
+    &--no-tappable {
+      cursor: auto;
+      pointer-events: none;
+    }
+  }
 }
 
 </style>

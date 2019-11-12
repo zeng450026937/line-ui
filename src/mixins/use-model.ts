@@ -6,7 +6,7 @@ export interface ModelOptions {
   watch?: object,
 }
 
-export const DEFAULT_PROP = 'modelValue';
+export const DEFAULT_PROP = 'value';
 export const DEFAULT_EVENT = 'change';
 
 export function useModel<T extends unknown>(proxy: string, options?: ModelOptions) {

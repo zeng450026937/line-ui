@@ -13,9 +13,10 @@ type VRemote = {
 }
 
 function inserted(el: HTMLElement, binding: RemoteVNodeDirective) {
+  debugger;
   if (binding.value === false) return;
   const container = binding.arg || CONTAINER;
-  const containerEl = el.closest(container) || document.querySelector(container);
+  const containerEl = el.closest(container) || document.querySelector(container) || document.body;
   if (containerEl) {
     (el as any).vRemote = {
       parentElement      : el.parentElement,

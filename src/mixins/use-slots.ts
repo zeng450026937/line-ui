@@ -19,6 +19,6 @@ export const SlotsMixin = Vue.extend({
   },
 });
 
-export function useSlots() {
+export function useSlots(name?: string) {
   return SlotsMixin;
 }

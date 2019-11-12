@@ -60,9 +60,9 @@ export function useGroup(name: string, options?: ModelOptions) {
       [modelProp](val: any) {
         this.items.forEach((item: any) => {
           if (Array.isArray(val)) {
-            item.checked = val.includes(item.value);
+            item.checked = val.includes(item.modelValue);
           } else {
-            item.checked = item.value === val;
+            item.checked = item.modelValue === val;
           }
         });
       },
@@ -70,22 +70,22 @@ export function useGroup(name: string, options?: ModelOptions) {
 
     methods : {
       onItemChecked(item: any, checked: boolean) {
-        const { value } = item;
+        const { modelValue } = item;
         if (this.exclusive) {
           if (checked) {
-            this.checkedItem = value;
+            this.checkedItem = modelValue;
             this.items.forEach((i: any) => {
               if (i === item) return;
               i.checked = false;
             });
-          } else if (this.checkedItem === value) {
+          } else if (this.checkedItem === modelValue) {
             this.checkedItem = null;
           }
         } else {
           this.checkedItem = this.checkedItem || [];
-          const index = this.checkedItem.indexOf(value);
+          const index = this.checkedItem.indexOf(modelValue);
           if (checked && index === -1) {
-            this.checkedItem.push(value);
+            this.checkedItem.push(modelValue);
           } else if (!checked && index !== -1) {
             this.checkedItem.splice(index, 1);
           }

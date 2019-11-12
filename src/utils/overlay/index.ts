@@ -1,17 +1,17 @@
 
 let lastId = 0;
 
-export const getOverlays = (doc: Document, selector?: string): HTMLIonOverlayElement[] => {
+export const getOverlays = (doc: Document, selector?: string): HTMLElement[] => {
   if (selector === undefined) {
     selector = 'ion-alert,ion-action-sheet,ion-loading,ion-modal,ion-picker,ion-popover,ion-toast';
   }
-  return (Array.from(doc.querySelectorAll(selector)) as HTMLIonOverlayElement[])
-    .filter(c => c.overlayIndex > 0);
+  return (Array.from(doc.querySelectorAll(selector)) as HTMLElement[])
+    .filter(c => (c as any).overlayIndex > 0);
 };
 
 export const getOverlay = (
   doc: Document, overlayTag?: string, id?: string,
-): HTMLIonOverlayElement | undefined => {
+): HTMLElement | undefined => {
   const overlays = getOverlays(doc, overlayTag);
   return (id === undefined)
     ? overlays[overlays.length - 1]
@@ -24,7 +24,7 @@ export const connectListeners = (doc: Document) => {
     // trap focus inside overlays
     doc.addEventListener('focusin', (ev) => {
       const lastOverlay = getOverlay(doc);
-      if (lastOverlay && lastOverlay.backdropDismiss && !isDescendant(lastOverlay, ev.target as HTMLElement)) {
+      if (lastOverlay && (lastOverlay as any).backdropDismiss && !isDescendant(lastOverlay, ev.target as HTMLElement)) {
         const firstInput = lastOverlay.querySelector('input,button') as HTMLElement | null;
         if (firstInput) {
           firstInput.focus();
@@ -35,7 +35,7 @@ export const connectListeners = (doc: Document) => {
     // handle back-button click
     doc.addEventListener('ionBackButton', (ev) => {
       const lastOverlay = getOverlay(doc);
-      if (lastOverlay && lastOverlay.backdropDismiss) {
+      if (lastOverlay && (lastOverlay).backdropDismiss) {
         (ev as BackButtonEvent).detail.register(100, () => {
           return lastOverlay.dismiss(undefined, BACKDROP);
         });

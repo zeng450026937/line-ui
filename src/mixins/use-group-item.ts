@@ -19,7 +19,7 @@ export function useGroupItem(name: string, options?: ModelOptions) {
         type    : Boolean,
         default : true,
       },
-      value : null as any,
+      modelValue : null as any,
     },
 
     data() {
