@@ -14,8 +14,10 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "build:website": "vue-cli-service build:website",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "lint:style": "stylelint 'src/**/*.scss'"
   },
   "gitHooks": {
     "pre-commit": "",
@@ -27,7 +29,7 @@
       "git add"
     ],
     "*.{vue,css,less}": [
-      "stylelint",
+      "stylelint 'src/**/*.scss' -- --fix",
       "git add"
     ]
   },
@@ -65,7 +67,9 @@
   },
   "vuePlugins": {
     "service": [
-      "packages/cli/index.js"
+      "packages/cli/build.js",
+      "packages/cli/lint.js",
+      "packages/cli/serve.js"
     ]
   }
 }

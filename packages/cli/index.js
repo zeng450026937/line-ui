@@ -1,40 +1,28 @@
-module.exports = (api, options) => {
-  api.registerCommand(
-    'serve:website',
-    {
-      description : 'serve skyline website(homepage)',
-      usage       : 'vue-cli-service serve:website',
-      details     : 'TBD',
-    },
-    (args, rawArgs) => {
-      api.chainWebpack(config => {
-        config.entry('app')
-          .clear()
-          .add(api.resolve('./packages/website/desktop/main.ts'));
-      });
-      api.service.run('serve', args);
-    },
-  );
+const Service = require('@vue/cli-service');
 
-  api.registerCommand(
-    'build:website',
-    {
-      description : 'build skyline website(homepage)',
-      usage       : 'vue-cli-service build:website',
-      details     : 'TBD',
-    },
-    (args, rawArgs) => {
-      api.chainWebpack(config => {
-        config.entry('app')
-          .clear()
-          .add(api.resolve('./packages/website/desktop/main.ts'));
-      });
-      api.service.run('build', args);
-    },
-  );
-};
+const service = new Service(process.env.VUE_CLI_CONTEXT || process.cwd());
 
-module.exports.defaultModes = {
-  'serve:website' : 'development',
-  'build:website' : 'production',
-};
+const rawArgv = process.argv.slice(2);
+const args = require('minimist')(rawArgv, {
+  boolean : [
+    // build
+    'modern',
+    'report',
+    'report-json',
+    'inline-vue',
+    'watch',
+    // serve
+    'open',
+    'copy',
+    'https',
+    // inspect
+    'verbose',
+  ],
+});
+
+const command = args._[0];
+
+service.run(command, args, rawArgv).catch(err => {
+  error(err);
+  process.exit(1);
+});

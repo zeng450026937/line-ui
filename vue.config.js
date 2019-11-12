@@ -1,4 +1,7 @@
 module.exports = {
+  publicPath : process.env.NODE_ENV === 'production'
+    ? '/server/client/web_app/skyline/'
+    : '/',
   chainWebpack : (config) => {
     const mdRule = config.module.rule('md').test(/\.md$/);
     const addLoader = ({ loader, options }) => {
