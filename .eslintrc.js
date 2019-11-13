@@ -1,12 +1,12 @@
 module.exports = {
-  root: true,
+  root : true,
 
-  extends: [
+  extends : [
     '@skyline',
   ],
 
-  rules: {
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+  rules : {
+    'no-console'  : process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    'no-debugger' : process.env.NODE_ENV === 'production' ? 'error' : 'off',
   },
-}
+};

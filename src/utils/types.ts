@@ -20,7 +20,11 @@ export type ModelOptions = {
   event?: string;
 };
 
+export type DefaultData<V> = object | ((this: V) => object);
 export type DefaultProps = ObjectIndex;
+export type DefaultMethods<V> = { [key: string]: (this: V, ...args: any[]) => any };
+export type DefaultComputed = { [key: string]: any };
+export { PropsDefinition };
 
 export type FunctionComponent<Props = DefaultProps, PropDefs = PropsDefinition<Props>> = {
   (h: CreateElement, props: Props, slots: ScopedSlots, context: RenderContext<Props>):

@@ -1,0 +1,6 @@
+!.*.js
+!{src,tests,packages}/**/.*.js
+
+dist
+node_modules
+**/node_modules
