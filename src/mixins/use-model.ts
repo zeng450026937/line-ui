@@ -9,7 +9,10 @@ export interface ModelOptions {
 export const DEFAULT_PROP = 'value';
 export const DEFAULT_EVENT = 'change';
 
-export function useModel<T extends unknown>(proxy: string, options?: ModelOptions) {
+export function useModel<
+  T extends unknown,
+  ProxyName extends string,
+>(proxy: ProxyName, options?: ModelOptions) {
   const {
     prop = DEFAULT_PROP,
     event = DEFAULT_EVENT,
@@ -26,7 +29,7 @@ export function useModel<T extends unknown>(proxy: string, options?: ModelOption
     data() {
       return {
         [proxy] : this[prop] as T,
-      };
+      } as Record<ProxyName, T>;
     },
 
     watch : {
@@ -34,7 +37,7 @@ export function useModel<T extends unknown>(proxy: string, options?: ModelOption
         this[proxy] = val;
       },
       [proxy](val: any) {
-        val !== this[prop] && (this as any).$emit(event, val);
+        val !== this[prop] && this.$emit(event, val);
       },
       ...watch,
     },

@@ -1,4 +1,4 @@
-import Overlay from './Overlay.vue';
-import Popup from './Popup.vue';
+import Overlay from './overlay';
+import Popup from './popup';
 
 export { Overlay, Popup };

@@ -6,12 +6,15 @@ import Vue, {
   ComponentOptions,
   RenderContext,
   FunctionalComponentOptions,
+  VNode,
 } from 'vue';
+/* eslint-disable import/extensions */
 import {
   ThisTypedComponentOptionsWithArrayProps,
   ThisTypedComponentOptionsWithRecordProps,
   RecordPropsDefinition,
 } from 'vue/types/options';
+/* eslint-enable import/extensions */
 import '@/locale';
 import { camelize } from '@/utils/format/string';
 import { usePatch } from '@/mixins/use-patch';
@@ -20,6 +23,7 @@ import { useBEM } from '@/mixins/use-bem';
 import { useI18N } from '@/mixins/use-i18n';
 import { BEM } from './bem';
 import { Translate } from './i18n';
+import { DefaultSlots, DefaultEvents } from '@/utils/types';
 
 export function install(this: ComponentOptions<Vue>, Vue: VueConstructor) {
   const { name } = this;
@@ -54,40 +58,73 @@ export function transformFunctionComponent(pure: FunctionalComponentOptions) {
   pure.render = (h, context): any => render && render.call(undefined, h, unifySlots(context));
 }
 
+export type TsxBaseProps<Slots> = {
+  // hack for jsx prop spread
+  key: string | number;
+  ref: string;
+  refInFor: boolean;
+  slot: string;
+  props: object;
+  domProps: object;
+  class: object;
+  style: string | object[] | object;
+  scopedSlots: Slots & DefaultSlots;
+  on: object;
+  nativeOn: object;
+};
+
+export type TsxComponent<Props = Record<string, any>, Events = {}, Slots = DefaultSlots> = (
+  props: Partial<Props & Events & TsxBaseProps<Slots>> & { [attributes: string]: string | true }
+) => VNode;
+
 export type LineComponent<
+  Event = any,
+  Slots = any,
   Data = any,
   Methods = any,
   Computed = any,
   Props = any,
-> = FunctionalComponentOptions<Props> | ComponentOptions<never, Data, Methods, Computed, Props>;
-
-export type Slots = {
-  (name?: string, ctx?: any): any;
-}
+> = (
+  FunctionalComponentOptions<Props> |
+  ComponentOptions<never, Data, Methods, Computed, Props>
+) &
+ { name: string, install: typeof install } &
+ TsxComponent<Props, Event, Slots>;
 
 export type InjectedType = {
-  slots: Slots;
+  slots(name?: string, props?: any): any;
   bem: BEM;
   t: Translate;
   [key: string]: any
 }
 
+export type InjectOptions<Events = DefaultEvents, Slots = DefaultSlots> = {
+  // use-patch
+  shouldRender?(): boolean;
+  afterRender?(vnode: VNode, ctx: RenderContext): void;
+  // namespace
+  install?: (Vue: VueConstructor) => void;
+  // extend
+  events?: Events;
+  slots?: Slots;
+}
+
 export function createComponent<V extends Vue = Vue>(name: string): {
-  <Data, Computed, Methods, PropNames extends string = never>(
-    sfc: ThisTypedComponentOptionsWithArrayProps<V & InjectedType, Data, Methods, Computed, PropNames>
-  ): LineComponent<Data, Methods, Computed>;
+  <Events, Slots, Data, Computed, Methods, PropNames extends string = never>(
+    sfc: ThisTypedComponentOptionsWithArrayProps<V & InjectedType, Data, Methods, Computed, PropNames> & InjectOptions<Events, Slots>
+  ): LineComponent<Events, Slots, Data, Methods, Computed>;
 
-  <Data, Methods, Computed, Props>(
-    sfc: ThisTypedComponentOptionsWithRecordProps<V & InjectedType, Data, Methods, Computed, Props>
-  ): LineComponent<Data, Methods, Computed, Props>;
+  <Events, Slots, Data, Methods, Computed, Props>(
+    sfc: ThisTypedComponentOptionsWithRecordProps<V & InjectedType, Data, Methods, Computed, Props> & InjectOptions<Events, Slots>
+  ): LineComponent<Events, Slots, Data, Methods, Computed, Props>;
 
-  <PropNames extends string = never>(
-    sfc: FunctionalComponentOptions<Record<PropNames, any>, PropNames[]>
-  ): LineComponent<any, any, any, Record<PropNames, any>>;
+  <Events, Slots, PropNames extends string = never>(
+    sfc: FunctionalComponentOptions<Record<PropNames, any>, PropNames[]> & InjectOptions<Events, Slots>
+  ): LineComponent<Events, Slots, any, any, any, Record<PropNames, any>>;
 
-  <Props>(
-    sfc: FunctionalComponentOptions<Props, RecordPropsDefinition<Props>>
-  ): LineComponent<any, any, any, Props>;
+  <Events, Slots, Props>(
+    sfc: FunctionalComponentOptions<Props, RecordPropsDefinition<Props>> & InjectOptions<Events, Slots>
+  ): LineComponent<Events, Slots, any, any, any, Props>;
 
   (sfc: ComponentOptions<Vue & {[others: string]: any}>): LineComponent<any, any, any, any>;
 }
@@ -95,7 +132,7 @@ export function createComponent<V extends Vue = Vue>(name: string): {
 export function createComponent(name: string) {
   return function (
     sfc: any,
-  ): LineComponent {
+  ) {
     if (sfc.functional) {
       transformFunctionComponent(sfc);
     } else {

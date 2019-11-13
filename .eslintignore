@@ -4,3 +4,7 @@
 dist
 node_modules
 **/node_modules
+
+# temporarily stop lint
+src/utils
+src/mixins

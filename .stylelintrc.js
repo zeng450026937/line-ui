@@ -1,5 +1,5 @@
 module.exports = {
-  extends: [
-    "@skyline/stylelint-config"
-  ]
+  extends : [
+    '@skyline/stylelint-config',
+  ],
 };

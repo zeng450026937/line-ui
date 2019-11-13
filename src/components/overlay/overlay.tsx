@@ -1,9 +1,17 @@
-import Vue from 'vue';
 import { createNamespace } from '@/utils/namespace';
 import { GESTURE_CONTROLLER } from '@/utils/gesture';
 import { now } from '@/utils/helpers';
+import { EventHandler, ScopedSlot } from '@/utils/types';
 
 const [createComponent, bem] = createNamespace('overlay');
+
+export type OverlayEvents = {
+  onTap?: EventHandler;
+};
+
+export type OverlaySlots = {
+  content?: ScopedSlot;
+};
 
 export default createComponent({
   props : {
@@ -20,6 +28,10 @@ export default createComponent({
       default : false,
     },
   },
+
+  events : {} as OverlayEvents,
+
+  slots : {} as OverlaySlots,
 
   created() {
     this.lastClick = -10000;

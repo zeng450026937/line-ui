@@ -1,7 +1,11 @@
 import { VNode, CreateElement, RenderContext } from 'vue';
 import { InjectOptions, PropsDefinition } from 'vue/types/options';
 
-export type EventHandler = (event: Event) => void;
+export type EventHandler<T extends Event = UIEvent> = (event?: T) => void;
+
+export type DefaultEvents = {
+  [key: string]: EventHandler;
+};
 
 export type ObjectIndex = Record<string, any>;
 
@@ -12,7 +16,7 @@ export type DefaultSlots = {
 };
 
 export type ScopedSlots = DefaultSlots & {
-  [key: string]: ScopedSlot | undefined;
+  [key: string]: ScopedSlot;
 };
 
 export type ModelOptions = {
