@@ -1,19 +1,19 @@
 # .gitlab-ci.yml
-image: node:9.4.0
-
-before_script:
-  - yarn install
+image: node:latest
 
 pages:
-  image: yarn:latest
+  image: cr.yealinkops.com/common/yarn:1.19.1
   stage: deploy
+  tags:
+    - devops_docker_runner
   cache:
     paths:
       - node_modules/
-      - .yarn
+      - yarn.lock
   script:
+    - yarn install -f
     - yarn run build:website
-    - mv public public-vue # GitLab Pages 的钩子设置在 public 文件夹
+    - mv public public-bak # GitLab Pages 的钩子设置在 public 文件夹
     - mv dist public # 重命名 dist 文件夹 (yarn run build:website 之后的输出位置)
   artifacts:
     paths:
