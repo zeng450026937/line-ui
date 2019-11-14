@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { createMixins } from '@/utils/mixins';
 
 export interface ModelOptions {
   prop?: string,
@@ -10,8 +10,8 @@ export const DEFAULT_PROP = 'value';
 export const DEFAULT_EVENT = 'change';
 
 export function useModel<
-  T extends unknown,
-  ProxyName extends string,
+  T extends unknown = any,
+  ProxyName extends string = string,
 >(proxy: ProxyName, options?: ModelOptions) {
   const {
     prop = DEFAULT_PROP,
@@ -19,7 +19,7 @@ export function useModel<
     watch,
   } = options || {};
 
-  return Vue.extend({
+  return createMixins({
     model : { prop, event },
 
     props : {

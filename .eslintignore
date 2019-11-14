@@ -6,5 +6,6 @@ node_modules
 **/node_modules
 
 # temporarily stop lint
-src/utils
-src/mixins
+# src/utils
+src/mixins/popup
+!src/utils/namespace

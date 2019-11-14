@@ -1,13 +1,19 @@
-import { VNode, CreateElement, RenderContext } from 'vue';
+/* eslint-disable import/extensions */
+import {
+  VNode,
+  CreateElement,
+  RenderContext,
+  VueConstructor,
+} from 'vue';
 import { InjectOptions, PropsDefinition } from 'vue/types/options';
+import { BEM } from '@/utils/namespace/bem';
+import { Translate } from '@/utils/namespace/i18n';
 
-export type EventHandler<T extends Event = UIEvent> = (event?: T) => void;
+export type EventHandler<T extends Event = UIEvent> = (event: T) => void;
 
 export type DefaultEvents = {
-  [key: string]: EventHandler;
+  [key: string]: (...args: any[]) => void;
 };
-
-export type ObjectIndex = Record<string, any>;
 
 export type ScopedSlot<Props = any> = (props?: Props) => VNode[] | VNode | undefined;
 
@@ -25,7 +31,7 @@ export type ModelOptions = {
 };
 
 export type DefaultData<V> = object | ((this: V) => object);
-export type DefaultProps = ObjectIndex;
+export type DefaultProps = Record<string, any>;
 export type DefaultMethods<V> = { [key: string]: (this: V, ...args: any[]) => any };
 export type DefaultComputed = { [key: string]: any };
 export { PropsDefinition };
@@ -38,3 +44,22 @@ export type FunctionComponent<Props = DefaultProps, PropDefs = PropsDefinition<P
   model?: ModelOptions;
   inject?: InjectOptions;
 };
+
+// Injected Vue
+export type InjectedKeys = {
+  slots: (name?: string, props?: any) => any;
+  bem: BEM;
+  t: Translate;
+  [key: string]: any
+}
+
+export interface InjectOptions<Events = DefaultEvents, Slots = ScopedSlots> {
+  // use-patch
+  shouldRender?: () => boolean;
+  afterRender?: (vnode: VNode, ctx: RenderContext) => void;
+  // namespace
+  install?: (Vue: VueConstructor) => void;
+  // extend
+  events?: Events;
+  slots?: Slots;
+}

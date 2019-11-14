@@ -1,6 +1,6 @@
-import { get } from '../helpers';
-import { camelize } from '../format/string';
-import locale from '../../locale';
+import { get } from '@/utils/helpers';
+import { camelize } from '@/utils/format/string';
+import locale from '@/locale';
 
 export function createI18N(name: string) {
   const prefix = `${ camelize(name) }.`;

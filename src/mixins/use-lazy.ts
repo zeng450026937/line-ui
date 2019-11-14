@@ -1,9 +1,9 @@
-import Vue from 'vue';
+import { createMixins } from '@/utils/mixins';
 
 export const DEFAULT_VALUE = 'value';
 
 export function useLazy(value: string = DEFAULT_VALUE) {
-  return Vue.extend({
+  return createMixins({
     props : {
       [value] : null as any,
       lazy    : {

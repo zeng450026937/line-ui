@@ -1,6 +1,3 @@
-/**
- * Create a basic component with common options
- */
 import Vue, {
   VueConstructor,
   ComponentOptions,
@@ -8,22 +5,24 @@ import Vue, {
   FunctionalComponentOptions,
   VNode,
 } from 'vue';
-/* eslint-disable import/extensions */
+/* eslint-disable import/extensions, max-len */
 import {
   ThisTypedComponentOptionsWithArrayProps,
   ThisTypedComponentOptionsWithRecordProps,
   RecordPropsDefinition,
 } from 'vue/types/options';
-/* eslint-enable import/extensions */
+import {
+  ScopedSlots,
+  DefaultEvents,
+  InjectedKeys,
+  InjectOptions,
+} from '@/utils/types';
 import '@/locale';
 import { camelize } from '@/utils/format/string';
 import { usePatch } from '@/mixins/use-patch';
 import { useSlots } from '@/mixins/use-slots';
 import { useBEM } from '@/mixins/use-bem';
 import { useI18N } from '@/mixins/use-i18n';
-import { BEM } from './bem';
-import { Translate } from './i18n';
-import { DefaultSlots, DefaultEvents } from '@/utils/types';
 
 export function install(this: ComponentOptions<Vue>, Vue: VueConstructor) {
   const { name } = this;
@@ -68,17 +67,19 @@ export type TsxBaseProps<Slots> = {
   domProps: object;
   class: object;
   style: string | object[] | object;
-  scopedSlots: Slots & DefaultSlots;
+  scopedSlots: ScopedSlots & Slots;
   on: object;
   nativeOn: object;
 };
 
-export type TsxComponent<Props = Record<string, any>, Events = {}, Slots = DefaultSlots> = (
-  props: Partial<Props & Events & TsxBaseProps<Slots>> & { [attributes: string]: string | true }
+type PropsDef<Props, Events, Slots> = Props & Events & TsxBaseProps<Slots>;
+
+export type TsxComponent<Props, Events = DefaultEvents, Slots = ScopedSlots> = (
+  props: Partial<PropsDef<Props, Events, Slots>> & { [K: string]: string | true | Function | any }
 ) => VNode;
 
 export type LineComponent<
-  Event = any,
+  Events = any,
   Slots = any,
   Data = any,
   Methods = any,
@@ -89,33 +90,15 @@ export type LineComponent<
   ComponentOptions<never, Data, Methods, Computed, Props>
 ) &
  { name: string, install: typeof install } &
- TsxComponent<Props, Event, Slots>;
-
-export type InjectedType = {
-  slots(name?: string, props?: any): any;
-  bem: BEM;
-  t: Translate;
-  [key: string]: any
-}
-
-export type InjectOptions<Events = DefaultEvents, Slots = DefaultSlots> = {
-  // use-patch
-  shouldRender?(): boolean;
-  afterRender?(vnode: VNode, ctx: RenderContext): void;
-  // namespace
-  install?: (Vue: VueConstructor) => void;
-  // extend
-  events?: Events;
-  slots?: Slots;
-}
+ TsxComponent<Props, Events, Slots>;
 
 export function createComponent<V extends Vue = Vue>(name: string): {
   <Events, Slots, Data, Computed, Methods, PropNames extends string = never>(
-    sfc: ThisTypedComponentOptionsWithArrayProps<V & InjectedType, Data, Methods, Computed, PropNames> & InjectOptions<Events, Slots>
+    sfc: ThisTypedComponentOptionsWithArrayProps<V & InjectedKeys, Data, Methods, Computed, PropNames> & InjectOptions<Events, Slots>
   ): LineComponent<Events, Slots, Data, Methods, Computed>;
 
   <Events, Slots, Data, Methods, Computed, Props>(
-    sfc: ThisTypedComponentOptionsWithRecordProps<V & InjectedType, Data, Methods, Computed, Props> & InjectOptions<Events, Slots>
+    sfc: ThisTypedComponentOptionsWithRecordProps<V & InjectedKeys, Data, Methods, Computed, Props> & InjectOptions<Events, Slots>
   ): LineComponent<Events, Slots, Data, Methods, Computed, Props>;
 
   <Events, Slots, PropNames extends string = never>(

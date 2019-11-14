@@ -1,5 +1,8 @@
-import Vue from 'vue';
-import { ModelOptions, useModel, DEFAULT_PROP } from './use-model';
+/* eslint-disable-next-line import/extensions */
+import { CombinedVueInstance, Vue } from 'vue/types/vue';
+import { createMixins } from '@/utils/mixins';
+import { ModelOptions, useModel, DEFAULT_PROP } from '@/mixins/use-model';
+import { GroupItem } from '@/mixins/use-group-item';
 
 export enum CheckState {
   Unchecked = 1,
@@ -7,9 +10,19 @@ export enum CheckState {
   Checked = 3,
 }
 
+export type GroupProps = {
+  exclusive: boolean;
+  checkState: CheckState;
+  checkedItem: any;
+  items: Array<any>;
+};
+export type Group<T = GroupProps> = CombinedVueInstance<Vue, any, any, any, T>
+
 export function useGroup(name: string, options?: ModelOptions) {
   const modelProp = (options && options.prop) || DEFAULT_PROP;
-  return useModel<any>('checkedItem', options).extend({
+  return createMixins({
+    mixins : [useModel('checkedItem', options)],
+
     provide() {
       return {
         [name] : this,
@@ -69,7 +82,7 @@ export function useGroup(name: string, options?: ModelOptions) {
     },
 
     methods : {
-      onItemChecked(item: any, checked: boolean) {
+      onItemChecked(item: GroupItem, checked: boolean) {
         const { modelValue } = item;
         if (this.exclusive) {
           if (checked) {
@@ -91,12 +104,12 @@ export function useGroup(name: string, options?: ModelOptions) {
           }
         }
       },
-      registerItem(item: any) {
+      registerItem(item: GroupItem) {
         const index = this.items.push(item);
         item.$watch('checked', (val: boolean) => this.onItemChecked(item, val));
         return index;
       },
-      unregisterItem(item: any) {
+      unregisterItem(item: GroupItem) {
         const index = this.items.indexOf(item);
         this.items.splice(index, 1);
       },

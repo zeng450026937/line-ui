@@ -1,8 +1,8 @@
-import Vue from 'vue';
+import { createMixins } from '@/utils/mixins';
 import { createBEM } from '@/utils/namespace/bem';
 
 export function useBEM(name: string) {
-  return Vue.extend({
+  return createMixins({
     methods : {
       bem : createBEM(name),
     },
