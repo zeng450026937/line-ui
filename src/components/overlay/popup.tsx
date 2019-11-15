@@ -1,37 +1,10 @@
-import Vue from 'vue';
 import { createNamespace } from '@/utils/namespace';
-import { useModel } from '@/mixins/use-model';
-import Overlay from './overlay';
+import { usePopup } from '@/mixins/use-popup';
 
 const [createComponent, bem] = createNamespace('popup');
 
-Vue.use(Overlay);
-
 export default createComponent({
-  mixins : [useModel('visable')],
-
-  props : {
-    global : {
-      type    : Boolean,
-      default : false,
-    },
-    closePolicy : {
-      type    : Number,
-      default : 0,
-    },
-    dim : {
-      type    : Boolean,
-      default : false,
-    },
-    modal : {
-      type    : Boolean,
-      default : false,
-    },
-    tappable : {
-      type    : Boolean,
-      default : true,
-    },
-  },
+  mixins : [usePopup({ bem })],
 
   methods : {
     onTap() {
@@ -41,15 +14,15 @@ export default createComponent({
   },
 
   render() {
+    console.log(`${ this.overlayIndex }`);
     return (
       <div
         v-show={this.visable}
-        class={bem({
-          dim   : this.dim,
-          modal : this.modal,
-        })}
+        class={bem()}
+        style={{
+          'z-index' : `${ this.overlayIndex }`,
+        }}
       >
-        <Overlay></Overlay>
         <div class={bem('content')}>
           {this.slots()}
         </div>
