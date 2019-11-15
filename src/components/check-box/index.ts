@@ -1,5 +1,5 @@
-import CheckIndicator from './CheckIndicator.vue';
-import CheckBox from './CheckBox.vue';
-import CheckBoxGroup from './CheckBoxGroup.vue';
+import CheckIndicator from '@/components/check-box/check-Indicator';
+import CheckBox from '@/components/check-box/check-box';
+import CheckBoxGroup from '@/components/check-box/check-box-group';
 
 export { CheckIndicator, CheckBox, CheckBoxGroup };
