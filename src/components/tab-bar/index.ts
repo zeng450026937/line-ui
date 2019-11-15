@@ -1,3 +1,3 @@
-import TabBar from './TabBar.vue';
+import TabBar from './tabBar';
 
 export { TabBar };

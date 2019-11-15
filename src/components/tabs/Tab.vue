@@ -5,7 +5,6 @@
     <slot name="title">
       {{title}}
     </slot>
-    <!-- <slot name="default"></slot> -->
   </div>
 </template>
 

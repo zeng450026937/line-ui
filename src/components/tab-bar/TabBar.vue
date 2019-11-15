@@ -38,16 +38,6 @@ export default {
       default : true,
     },
   },
-
-  // provide() {
-  //   return {
-  //     TabBar: {
-  //       index: this.index,
-  //       position: this.position,
-  //       tabBar: this,
-  //     },
-  //   };
-  // },
 };
 </script>
 
@@ -56,8 +46,8 @@ export default {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2),
-    0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 10px 0px rgba(0, 0, 0, 0.12);
   padding: 10px 0;
   &.is--header {
     width: 100%;

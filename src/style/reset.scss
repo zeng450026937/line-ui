@@ -1,4 +1,4 @@
-@import "../../node_modules/normalize.css/normalize.css";
+@import '../../node_modules/normalize.css/normalize.css';
 
 /* Border-Box */
 *,
@@ -11,12 +11,20 @@ html {
 }
 
 /* iPad Input Shadows */
-input[type="text"], input[type="email"], input[type="search"], input[type="password"] {
+input[type='text'],
+input[type='email'],
+input[type='search'],
+input[type='password'] {
   -webkit-appearance: none;
   -moz-appearance: none; /* mobile firefox too! */
 }
 
 ::-ms-clear,
 ::-ms-reveal {
-  display: none
+  display: none;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
 }

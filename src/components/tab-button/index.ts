@@ -1,3 +1,3 @@
-import TabButton from './TabButton.vue';
+import TabButton from './tabButton';
 
 export { TabButton };

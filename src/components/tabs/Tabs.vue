@@ -44,14 +44,6 @@ export default Vue.extend({
     },
   },
 
-  created() {
-
-  },
-
-  mounted() {
-
-  },
-
   methods : {
     getWH(el, name) {
       let val = name === 'width' ? el.offsetWidth : el.offsetHeight;
@@ -62,7 +54,7 @@ export default Vue.extend({
       }
       let reduceVal = 0;
       const style = window.getComputedStyle(el, null);
-      // 左右或上下两边的都减去
+      // 减去左右或上下
       /* eslint-disable-next-line */
       for (let i = 0, position; position = which[i++];) {
         const [border = 0, padding = 0] = [

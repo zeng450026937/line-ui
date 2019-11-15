@@ -1,3 +1,4 @@
-import Menu from './Menu.vue';
+import Menu from '@/components/menu/Menu.vue';
+import MenuItem from '@/components/menu/MenuItem.vue';
 
-export { Menu };
+export { Menu, MenuItem };
