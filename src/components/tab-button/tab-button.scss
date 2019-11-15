@@ -1,0 +1,18 @@
+.line-tab-button {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  .content {
+    margin-bottom: 8px;
+  }
+  &.is--active {
+    color: var(--primary);
+  }
+
+  &.is--disabled {
+    color: #9f9f9f;
+    cursor: not-allowed;
+  }
+}

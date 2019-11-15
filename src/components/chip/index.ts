@@ -1,3 +1,3 @@
-import Chip from './chip';
+import Chip from '@/components/chip/chip';
 
 export { Chip };

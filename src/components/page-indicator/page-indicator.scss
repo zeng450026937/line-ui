@@ -1,0 +1,32 @@
+.line-page-indicator {
+  width: 100%;
+  height: 28px;
+  display: flex;
+  justify-content: center;
+
+  &__item {
+    min-width: 36px;
+    height: 36px;
+    color: #1a1a1a;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 5px;
+    border-radius: 4px;
+    box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+  }
+
+  &__item--active {
+    background-color: var(--primary);
+    color: #ffffff;
+  }
+  &__item--disabled {
+    color: #9f9f9f;
+    cursor: not-allowed;
+  }
+  &__item:nth-of-type(1),
+  &__item:nth-last-of-type(1) {
+    user-select: none;
+  }
+}

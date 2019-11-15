@@ -1,0 +1,33 @@
+.line-textarea {
+  width: 100%;
+  position: relative;
+  textarea {
+    display: block;
+    width: 100%;
+    min-height: 38px;
+    color: #1a1a1a;
+    font-size: inherit;
+    line-height: 1.5;
+    background-color: #ffffff;
+    border: 1px solid #ebebeb;
+    padding: 5px 16px;
+    padding-right: 22px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    outline: none;
+    resize: none;
+  }
+  &__clearable {
+    position: absolute;
+    right: 4px;
+    top: 7px;
+    color: #999999;
+    cursor: pointer;
+    &:hover {
+      color: #afafaf;
+    }
+  }
+  &.is--resize {
+    resize: vertical;
+  }
+}

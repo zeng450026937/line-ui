@@ -1,3 +1,3 @@
-import Slider from './Slider.vue';
+import Slider from '@/components/slider/slider';
 
 export { Slider };

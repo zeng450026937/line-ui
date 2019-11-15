@@ -6,7 +6,7 @@
 
 <script>
 import Vue from 'vue';
-import AbstractButton from '@/mixins/abstract-button';
+import { AbstractButton } from '@/components/button';
 
 export default Vue.extend({
   name : 'MenuBarItem',

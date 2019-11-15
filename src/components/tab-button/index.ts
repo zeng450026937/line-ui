@@ -1,3 +1,3 @@
-import TabButton from './tabButton';
+import TabButton from '@/components/tab-button/tab-button';
 
 export { TabButton };

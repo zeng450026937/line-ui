@@ -1,3 +1,3 @@
-import Refresher from './refresher';
+import Refresher from '@/components/refresher/refresher';
 
 export { Refresher };

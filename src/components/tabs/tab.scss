@@ -1,0 +1,9 @@
+.tabs__nav-item {
+  &:hover {
+    color: var(--primary);
+  }
+}
+
+.tabs__nav-item--active {
+  color: var(--primary);
+}
