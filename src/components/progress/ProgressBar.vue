@@ -202,7 +202,7 @@ export default Vue.extend({
     animation: stream 0.25s infinite linear;
   }
 
-  .progress__bar-wrap {
+  &__bar-wrap {
     width: 100%;
     height: 100%;
     left: -130%;
@@ -231,7 +231,7 @@ export default Vue.extend({
       animation-play-state: inherit;
     }
   }
-  .progress__bar-wrap:nth-of-type(2) {
+  &__bar-wrap:nth-of-type(2) {
     top: 0;
     right: 0;
     bottom: 0;
@@ -315,34 +315,19 @@ export default Vue.extend({
 
 @keyframes secondary-indeterminate-scale {
   0% {
-    animation-timing-function: cubic-bezier(
-      0.205028,
-      0.057051,
-      0.57661,
-      0.453971
-    );
+    animation-timing-function: cubic-bezier(0.205028, 0.057051, 0.57661, 0.453971);
 
     transform: scaleX(0.08);
   }
 
   19.15% {
-    animation-timing-function: cubic-bezier(
-      0.152313,
-      0.196432,
-      0.648374,
-      1.004315
-    );
+    animation-timing-function: cubic-bezier(0.152313, 0.196432, 0.648374, 1.004315);
 
     transform: scaleX(0.457104);
   }
 
   44.15% {
-    animation-timing-function: cubic-bezier(
-      0.257759,
-      -0.003163,
-      0.211762,
-      1.38179
-    );
+    animation-timing-function: cubic-bezier(0.257759, -0.003163, 0.211762, 1.38179);
 
     transform: scaleX(0.72796);
   }

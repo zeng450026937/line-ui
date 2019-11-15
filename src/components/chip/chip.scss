@@ -1,0 +1,83 @@
+.line-chip {
+  height: 32px;
+  font-size: 14px;
+  color: #1a1a1a;
+  background-color: rgba($color: #1a1a1a, $alpha: 0.1);
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  margin: 8px;
+  padding: 0 12px;
+  position: relative;
+  cursor: pointer;
+  &__content {
+    display: inline-flex;
+    align-items: center;
+  }
+  &__close {
+    width: 16px;
+    height: 16px;
+    margin-left: 8px;
+    &:hover {
+      opacity: 0.6;
+    }
+  }
+  &.line-chip--border {
+    border: 1px solid #1a1a1a;
+  }
+
+  &.line-chip--border.line-chip--primary {
+    border: 1px solid var(--primary);
+    background-color: var(--primary-light);
+    color: var(--primary);
+  }
+  &.line-chip--border.line-chip--success {
+    border: 1px solid var(--success);
+    background-color: var(--success-light);
+    color: var(--success);
+  }
+  &.line-chip--border.line-chip--warning {
+    border: 1px solid var(--warning);
+    background-color: var(--warning-light);
+    color: var(--warning);
+  }
+  &.line-chip--border.line-chip--danger {
+    border: 1px solid var(--danger);
+    background-color: var(--danger-light);
+    color: var(--danger);
+  }
+  &.line-chip--border.line-chip--light {
+    border: 1px solid var(--light);
+    background-color: var(--light-light);
+  }
+  &.line-chip--border.line-chip--dark {
+    border: 1px solid var(--dark);
+    background-color: var(--dark-light);
+    color: var(--dark);
+  }
+
+  &.line-chip--primary {
+    background-color: var(--primary);
+    color: #ffffff;
+  }
+  &.line-chip--success {
+    background-color: var(--success);
+    color: #ffffff;
+  }
+  &.line-chip--warning {
+    background-color: var(--warning);
+    color: #ffffff;
+  }
+  &.line-chip--danger {
+    background-color: var(--danger);
+    color: #ffffff;
+  }
+  &.line-chip--light {
+    background-color: var(--light);
+    color: #1a1a1a;
+  }
+  &.line-chip--dark {
+    background-color: var(--dark);
+    color: #ffffff;
+  }
+}

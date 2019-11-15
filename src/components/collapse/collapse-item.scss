@@ -1,0 +1,38 @@
+.line-collapse-item {
+  width: 100%;
+  background-color: #ffffff;
+  border-bottom: 1px solid #ebebeb;
+  transition: all 0.3s;
+
+  &__title {
+    width: 100%;
+    height: 48px;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #1a1a1a;
+    cursor: pointer;
+
+    &-icon {
+      color: #666666;
+      transition: transform 0.3s;
+      user-select: none;
+
+    }
+    &-icon--rotate {
+      transform: rotate(-180deg);
+    }
+  }
+  &__title--disabled {
+    color: #999999;
+    cursor: not-allowed;
+    .line-collapse-item__title-icon {
+      color: #9f9f9f;
+    }
+  }
+  &__content {
+    width: 100%;
+    padding: 24px 12px;
+  }
+}

@@ -1,3 +1,3 @@
-import Chip from './Chip.vue';
+import Chip from './chip';
 
 export { Chip };

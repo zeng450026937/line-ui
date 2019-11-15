@@ -1,4 +1,4 @@
-import ProgressBar from './ProgressBar.vue';
-import ProgressCircular from './ProgressCircular.vue';
+import ProgressBar from '@/components/progress/progress-bar';
+import ProgressCircular from '@/components/progress/progress-circular';
 
 export { ProgressBar, ProgressCircular };
