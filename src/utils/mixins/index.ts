@@ -31,7 +31,7 @@ export function createMixins<Events, Slots, Props>(
   definition: FunctionalComponentOptions<Props, RecordPropsDefinition<Props>> & InjectOptions<Events, Slots>
   ): ExtendedVue<Vue & InjectedKeys, {}, {}, {}, Props>;
 
-export function createMixins(options?: ComponentOptions<Vue & {[others: string]: any}>): ExtendedVue<Vue & InjectedKeys, {}, {}, {}, {}>;
+export function createMixins(options?: ComponentOptions<Vue & InjectedKeys>): ExtendedVue<Vue & InjectedKeys, {}, {}, {}, {}>;
 
 export function createMixins(options: any) {
   return Vue.extend(options);

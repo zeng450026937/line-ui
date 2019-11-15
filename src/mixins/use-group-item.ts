@@ -1,5 +1,5 @@
 /* eslint-disable-next-line import/extensions */
-import { CombinedVueInstance, Vue } from 'vue/types/vue';
+import { Vue } from 'vue/types/vue';
 import { createMixins } from '@/utils/mixins';
 import { ModelOptions, useModel } from '@/mixins/use-model';
 
@@ -11,8 +11,9 @@ const NullGroup = {
 export type GroupItemProps = {
   checkable: boolean;
   modelValue: any;
+  [K: string]: any
 };
-export type GroupItem<T = GroupItemProps> = CombinedVueInstance<Vue, any, any, any, T>
+export type GroupItem<T = GroupItemProps> = Vue & T;
 
 export function useGroupItem(name: string, options?: ModelOptions) {
   return createMixins({

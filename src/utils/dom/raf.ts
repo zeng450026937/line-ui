@@ -2,7 +2,7 @@
  * requestAnimationFrame polyfill
  */
 
-import { isServer } from '..';
+import { isServer } from '@/utils/dom/is-server';
 
 let prev = Date.now();
 

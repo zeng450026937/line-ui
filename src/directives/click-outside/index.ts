@@ -3,11 +3,11 @@ import { VNodeDirective, DirectiveOptions } from 'vue';
 interface ClickOutsideOption {
   enabled?: (ev?: UIEvent) => boolean
   include?: () => HTMLElement[]
-  callback: (e: UIEvent) => void
+  callback: (ev: UIEvent) => void
 }
 
 interface ClickOutsideDirective extends VNodeDirective {
-  value?: (e: UIEvent) => void
+  value?: (ev: UIEvent) => void
   args?: ClickOutsideOption
 }
 

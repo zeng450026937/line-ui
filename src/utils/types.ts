@@ -9,7 +9,8 @@ import { InjectOptions, PropsDefinition } from 'vue/types/options';
 import { BEM } from '@/utils/namespace/bem';
 import { Translate } from '@/utils/namespace/i18n';
 
-export type EventHandler<T extends Event = UIEvent> = (event: T) => void;
+export type EventHandler<T extends Event = Event> = (event: T) => void;
+export type DomEventHandler<T extends Event = Event> = (event: T) => void;
 
 export type DefaultEvents = {
   [key: string]: (...args: any[]) => void;
@@ -56,6 +57,7 @@ export type InjectedKeys = {
 export interface InjectOptions<Events = DefaultEvents, Slots = ScopedSlots> {
   // use-patch
   shouldRender?: () => boolean;
+  beforeRender?: () => void;
   afterRender?: (vnode: VNode, ctx: RenderContext) => void;
   // namespace
   install?: (Vue: VueConstructor) => void;

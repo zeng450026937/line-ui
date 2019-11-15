@@ -11,6 +11,7 @@ declare module 'vue/types/options' {
   interface ComponentOptions<V extends Vue> {
     // use-patch
     shouldRender?: () => boolean;
+    beforeRender?: () => void;
     afterRender?: (vnode: VNode, ctx: RenderContext) => void;
     // namespace
     events?: Record<string, any>;

@@ -3,6 +3,7 @@ import { createMixins } from '@/utils/mixins';
 
 const strategies = Vue.config.optionMergeStrategies;
 strategies.shouldRender; // default strategy
+strategies.beforeRender = strategies.created;
 strategies.afterRender = strategies.created;
 
 type RenderHook = (vnode: VNode, ctx: RenderContext) => void;

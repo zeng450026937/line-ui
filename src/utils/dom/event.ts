@@ -1,5 +1,5 @@
-import { isServer } from '..';
-import { EventHandler } from '../types';
+import { isServer } from '@/utils/dom/is-server';
+import { EventHandler } from '@/utils/types';
 
 // eslint-disable-next-line import/no-mutable-exports
 export let supportsPassive = false;
@@ -20,22 +20,23 @@ if (!isServer) {
 }
 
 export function on(
-  target: HTMLElement | Document | Window,
+  target: Element | Document | Window,
   event: string,
   handler: EventHandler,
   passive = false,
+  capture = false,
 ) {
   if (!isServer) {
     target.addEventListener(
       event,
       handler,
-      supportsPassive ? { capture: false, passive } : false,
+      supportsPassive ? { capture, passive } : false,
     );
   }
 }
 
 export function off(
-  target: HTMLElement | Document | Window,
+  target: Element | Document | Window,
   event: string,
   handler: EventHandler,
 ) {

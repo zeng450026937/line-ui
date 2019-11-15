@@ -19,10 +19,7 @@ export function useRemote() {
       if (!container) return;
 
       vnode.data = vnode.data || {};
-      const { data } = vnode;
-      data.directives = data.directives || [];
-      const { directives } = data;
-      directives.push({
+      (vnode.data.directives || (vnode.data.directives = [])).push({
         name  : 'remote',
         value : true,
         arg   : container,

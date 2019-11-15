@@ -5,7 +5,7 @@ interface RemoteVNodeDirective extends VNodeDirective {
   arg: string
 }
 
-const CONTAINER = '.application-window';
+const CONTAINER = '[skyline-app]';
 
 type VRemote = {
   parentElement: HTMLElement,

@@ -95,7 +95,7 @@ export type LineComponent<
 export function createComponent<V extends Vue = Vue>(name: string): {
   <Events, Slots, Data, Computed, Methods, PropNames extends string = never>(
     sfc: ThisTypedComponentOptionsWithArrayProps<V & InjectedKeys, Data, Methods, Computed, PropNames> & InjectOptions<Events, Slots>
-  ): LineComponent<Events, Slots, Data, Methods, Computed>;
+  ): LineComponent<Events, Slots, Data, Methods, Computed, Record<PropNames, any>>;
 
   <Events, Slots, Data, Methods, Computed, Props>(
     sfc: ThisTypedComponentOptionsWithRecordProps<V & InjectedKeys, Data, Methods, Computed, Props> & InjectOptions<Events, Slots>
@@ -103,13 +103,13 @@ export function createComponent<V extends Vue = Vue>(name: string): {
 
   <Events, Slots, PropNames extends string = never>(
     sfc: FunctionalComponentOptions<Record<PropNames, any>, PropNames[]> & InjectOptions<Events, Slots>
-  ): LineComponent<Events, Slots, any, any, any, Record<PropNames, any>>;
+  ): LineComponent<Events, Slots, {}, {}, {}, Record<PropNames, any>>;
 
   <Events, Slots, Props>(
     sfc: FunctionalComponentOptions<Props, RecordPropsDefinition<Props>> & InjectOptions<Events, Slots>
-  ): LineComponent<Events, Slots, any, any, any, Props>;
+  ): LineComponent<Events, Slots, {}, {}, {}, Props>;
 
-  (sfc: ComponentOptions<Vue & {[others: string]: any}>): LineComponent<any, any, any, any>;
+  (sfc: ComponentOptions<V & InjectedKeys>): LineComponent<{}, {}, {}, {}>;
 }
 
 export function createComponent(name: string) {

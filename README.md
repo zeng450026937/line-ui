@@ -1,4 +1,4 @@
-# galaxy
+# Skyline
 
 ## Project setup
 ```
