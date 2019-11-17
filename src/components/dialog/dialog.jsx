@@ -1,0 +1,19 @@
+import { createNamespace } from '@/utils/namespace';
+import { usePopup } from '@/mixins/use-popup';
+
+const [createComponent, bem] = createNamespace('dialog');
+const CONTENT_ELEMENT = 'content';
+
+export default createComponent({
+  mixins : [usePopup()],
+
+  render() {
+    return (
+      <div v-show={this.visable} class={bem()}>
+        <div class={bem(CONTENT_ELEMENT)} ref={CONTENT_ELEMENT}>
+          {this.slots()}
+        </div>
+      </div>
+    );
+  },
+});

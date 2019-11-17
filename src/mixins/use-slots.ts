@@ -4,10 +4,14 @@ import { createMixins } from '@/utils/mixins';
 
 export function useSlots(name?: string) {
   return createMixins({
+    props : {
+      scopedSlots : Object,
+    },
+
     methods : {
       slots(name = 'default', props: any) {
-        const { $slots, $scopedSlots } = this;
-        const scopedSlot = $scopedSlots[name];
+        const { $slots, $scopedSlots, scopedSlots = {} } = this;
+        const scopedSlot = $scopedSlots[name] || scopedSlots[name];
 
         if (scopedSlot) {
           return scopedSlot(props);

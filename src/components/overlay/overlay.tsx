@@ -10,6 +10,14 @@ export default createComponent({
       type    : Boolean,
       default : true,
     },
+    dim : {
+      type    : Boolean,
+      default : false,
+    },
+    translucent : {
+      type    : Boolean,
+      default : false,
+    },
     tappable : {
       type    : Boolean,
       default : true,
@@ -63,7 +71,8 @@ export default createComponent({
       <div tabindex="-1"
         class={bem({
           hide          : !this.visable,
-          'no-tappable' : !this.tappable,
+          'no-tappable' : this.visable && !this.tappable,
+          dim           : this.visable && this.dim,
         })}
         on={{
           '!touchstart' : this.onTouchStart,

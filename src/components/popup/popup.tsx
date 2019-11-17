@@ -2,28 +2,26 @@ import { createNamespace } from '@/utils/namespace';
 import { usePopup } from '@/mixins/use-popup';
 
 const [createComponent, bem] = createNamespace('popup');
+const CONTENT_ELEMENT = 'content';
 
 export default createComponent({
-  mixins : [usePopup({ bem })],
+  mixins : [usePopup()],
 
   methods : {
-    onTap() {
+    focous() {
+      // focus content element or focusable element in content element
+      // TBD
+    },
+    onOverlayTap() {
       console.log('onTap');
       this.visable = !this.visable;
     },
   },
 
   render() {
-    console.log(`${ this.overlayIndex }`);
     return (
-      <div
-        v-show={this.visable}
-        class={bem()}
-        style={{
-          'z-index' : `${ this.overlayIndex }`,
-        }}
-      >
-        <div class={bem('content')}>
+      <div v-show={this.visable} class={bem()}>
+        <div class={bem(CONTENT_ELEMENT)} ref={CONTENT_ELEMENT}>
           {this.slots()}
         </div>
       </div>

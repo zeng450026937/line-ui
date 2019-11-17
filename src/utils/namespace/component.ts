@@ -19,7 +19,7 @@ import {
 } from '@/utils/types';
 import '@/locale';
 import { camelize } from '@/utils/format/string';
-import { usePatch } from '@/mixins/use-patch';
+import { useRender } from '@/mixins/use-render';
 import { useSlots } from '@/mixins/use-slots';
 import { useBEM } from '@/mixins/use-bem';
 import { useI18N } from '@/mixins/use-i18n';
@@ -120,7 +120,7 @@ export function createComponent(name: string) {
       transformFunctionComponent(sfc);
     } else {
       sfc.mixins = sfc.mixins || [];
-      sfc.mixins.push(usePatch(), useSlots(name), useBEM(name), useI18N(name));
+      sfc.mixins.push(useRender(), useSlots(name), useBEM(name), useI18N(name));
     }
 
     sfc.name = name;

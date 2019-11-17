@@ -9,10 +9,6 @@ export function useRemote() {
       ripple,
     },
 
-    props : {
-      container : [String, Function],
-    },
-
     afterRender(vnode: VNode) {
       vnode.data = vnode.data || {};
       (vnode.data.directives || (vnode.data.directives = [])).push({

@@ -27,8 +27,9 @@ export function useClickOutside(options?: ClickOutsideOptions) {
        || ('pointerType' in ev && !(ev as PointerEvent).pointerType)
       ) return false;
 
-      const elements = options.includes ? invoke(this, options.includes) as Array<Element> : [];
-      elements.push(this.$el);
+      const elements = options.includes
+        ? invoke(this, options.includes) as Array<Element>
+        : [this.$el];
 
       return !elements.some(element => element.contains(ev.target as Node));
     },
