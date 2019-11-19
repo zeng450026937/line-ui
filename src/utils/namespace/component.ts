@@ -12,6 +12,9 @@ import {
   RecordPropsDefinition,
 } from 'vue/types/options';
 import {
+  ScopedSlot,
+} from 'vue/types/vnode';
+import {
   ScopedSlots,
   DefaultEvents,
   InjectedKeys,
@@ -19,7 +22,12 @@ import {
 } from '@/utils/types';
 import '@/locale';
 import { camelize } from '@/utils/format/string';
-import { useRender } from '@/mixins/use-render';
+import {
+  useRender,
+  shallowCompare,
+  BeforeRenderHook,
+  AfterRenderHook,
+} from '@/mixins/use-render';
 import { useSlots } from '@/mixins/use-slots';
 import { useBEM } from '@/mixins/use-bem';
 import { useI18N } from '@/mixins/use-i18n';
@@ -31,30 +39,51 @@ export function install(this: ComponentOptions<Vue>, Vue: VueConstructor) {
 }
 
 // unify slots & scopedSlots
+// should be removed after Vue 3
 export function unifySlots(context: RenderContext): RenderContext {
-  const originalSlots = context.slots;
-
-  context.slots = (name: string = 'default', ctx?: any) => {
-    // use data.scopedSlots in lower Vue version
-    const scopedSlots = context.scopedSlots || context.data.scopedSlots || {};
-    const scopedSlot = scopedSlots[name];
-
-    if (scopedSlot) {
-      return scopedSlot(ctx);
-    }
-
-    const slots = originalSlots();
-
-    return slots[name];
+  // TODO: use proxy instead of object spread
+  return {
+    ...context,
+    slots(name: string = 'default', ctx?: any) {
+      // use data.scopedSlots in lower Vue version
+      const scopedSlots = context.scopedSlots || context.data.scopedSlots || {};
+      const scopedSlot = scopedSlots[name];
+      if (scopedSlot) {
+        return scopedSlot(ctx);
+      }
+      const slots = context.slots();
+      return slots[name];
+    },
   };
-
-  return context;
 }
 
-// should be removed after Vue 3
 export function transformFunctionComponent(pure: FunctionalComponentOptions) {
-  const { render } = pure;
-  pure.render = (h, context): any => render && render.call(undefined, h, unifySlots(context));
+  const {
+    shouldRender,
+    beforeRender,
+    render,
+    afterRender,
+  } = pure;
+  let prevProps: Record<string, any>;
+  let prevVNode: VNode | VNode[];
+  pure.render = render && function patchedRender(h, ctx) {
+    if (prevProps && !shallowCompare(prevProps, ctx.props)) return prevVNode;
+    const renderProxy = undefined;
+    if (shouldRender && !shouldRender.call(renderProxy, prevProps, ctx)) {
+      return prevVNode;
+    }
+    if (beforeRender) {
+      (beforeRender as unknown as Array<BeforeRenderHook>).forEach((fn) => fn.call(renderProxy, ctx));
+    }
+    ctx.prevProps = prevProps;
+    const vnode = render.call(renderProxy, h, unifySlots(ctx));
+    if (afterRender) {
+      (afterRender as unknown as Array<AfterRenderHook>).forEach((fn) => fn.call(renderProxy, vnode as VNode, ctx));
+    }
+    prevProps = ctx.props;
+    prevVNode = vnode;
+    return vnode;
+  };
 }
 
 export type TsxBaseProps<Slots> = {
@@ -67,7 +96,7 @@ export type TsxBaseProps<Slots> = {
   domProps: object;
   class: object;
   style: string | object[] | object;
-  scopedSlots: ScopedSlots & Slots;
+  scopedSlots: { [key: string]: ScopedSlot | undefined } & Slots;
   on: object;
   nativeOn: object;
 };
