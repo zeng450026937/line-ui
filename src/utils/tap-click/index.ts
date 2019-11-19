@@ -170,6 +170,9 @@ const getActivatableTarget = (ev: any): any => {
     const path = ev.composedPath() as HTMLElement[];
     for (let i = 0; i < path.length - 2; i++) {
       const el = path[i];
+      if ((el as any).vRipple) {
+        return el;
+      }
       if (el.classList && el.classList.contains('activatable')) {
         return el;
       }
@@ -184,5 +187,5 @@ const isInstant = (el: HTMLElement) => {
 };
 
 const getRippleEffect = (el: HTMLElement) => {
-  return (el as any).rippleEffect;
+  return (el as any).vRipple;
 };

@@ -1,5 +1,5 @@
-import FontIcon from './FontIcon.vue';
-import SvgIcon from '@/components/icon/SvgIcon.vue';
+import FontIcon from '@/components/icon/font-icon';
+import SvgIcon from '@/components/icon/svg-icon';
 import { createNamespace } from '@/utils/namespace';
 
 const [createComponent] = createNamespace('icon');

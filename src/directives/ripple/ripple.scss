@@ -7,12 +7,13 @@ $fade-out-duration: 150ms;
 $opacity-duration: $fade-in-duration + $fade-out-duration;
 
 .ripple-effect {
+  position: absolute;
   top: 0;
+  right: 0;
   bottom: 0;
   left: 0;
-  right: 0;
 
-  position: absolute;
+  border-radius: inherit;
 
   contain: strict;
   pointer-events: none;
@@ -23,9 +24,9 @@ $opacity-duration: $fade-in-duration + $fade-out-duration;
 }
 
 .ripple {
-  border-radius: 50%;
-
   position: absolute;
+
+  border-radius: 50%;
 
   // Should remain static for performance reasons
   background-color: currentColor;

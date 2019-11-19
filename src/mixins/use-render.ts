@@ -31,8 +31,10 @@ export function useRender() {
         render,
         afterRender,
       } = this.$options;
+      // let prevProps: Record<string, any>;
       let prevVNode: VNode;
       this.$options.render = render && function patchedRender(this: Vue, h, ctx) {
+        // if (prevProps && !shallowCompare(prevProps, this.$props)) return prevVNode;
         const renderProxy = this;
         const renderContext = {
           props       : this.$props,
@@ -51,11 +53,12 @@ export function useRender() {
           (beforeRender as unknown as Array<BeforeRenderHook>)
             .forEach((fn) => fn.call(renderProxy, renderContext));
         }
-        const vnode = render.call(renderProxy, h, ctx);
+        const vnode = render.call(renderProxy, h, renderContext);
         if (afterRender) {
           (afterRender as unknown as Array<AfterRenderHook>)
             .forEach((fn) => fn.call(renderProxy, vnode, renderContext));
         }
+        // prevProps = { ...this.$props };
         prevVNode = vnode;
         return vnode;
       };

@@ -6,7 +6,7 @@ const NAMESPACE = 'RadioButtonGroup';
 const [createComponent, bem] = createNamespace('radio-button-group');
 
 export default createComponent({
-  extends : useGroup(NAMESPACE),
+  mixins : [useGroup(NAMESPACE)],
 
   props : {
     exclusive : {

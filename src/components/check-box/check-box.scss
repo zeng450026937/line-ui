@@ -1,3 +1,10 @@
 .line-check-box {
+  display: flex;
+  position: relative;
+
+  align-items: center;
+
   margin: 4px;
+
+  cursor: pointer;
 }

@@ -31,6 +31,7 @@ import {
 import { useSlots } from '@/mixins/use-slots';
 import { useBEM } from '@/mixins/use-bem';
 import { useI18N } from '@/mixins/use-i18n';
+import { Mods } from '@/utils/namespace/bem';
 
 export function install(this: ComponentOptions<Vue>, Vue: VueConstructor) {
   const { name } = this;
@@ -67,7 +68,7 @@ export function transformFunctionComponent(pure: FunctionalComponentOptions) {
   let prevProps: Record<string, any>;
   let prevVNode: VNode | VNode[];
   pure.render = render && function patchedRender(h, ctx) {
-    if (prevProps && !shallowCompare(prevProps, ctx.props)) return prevVNode;
+    // if (prevProps && !shallowCompare(prevProps, ctx.props)) return prevVNode;
     const renderProxy = undefined;
     if (shouldRender && !shouldRender.call(renderProxy, prevProps, ctx)) {
       return prevVNode;
@@ -76,6 +77,7 @@ export function transformFunctionComponent(pure: FunctionalComponentOptions) {
       (beforeRender as unknown as Array<BeforeRenderHook>).forEach((fn) => fn.call(renderProxy, ctx));
     }
     ctx.prevProps = prevProps;
+    ctx.prevVNode = prevVNode;
     const vnode = render.call(renderProxy, h, unifySlots(ctx));
     if (afterRender) {
       (afterRender as unknown as Array<AfterRenderHook>).forEach((fn) => fn.call(renderProxy, vnode as VNode, ctx));
@@ -94,7 +96,7 @@ export type TsxBaseProps<Slots> = {
   slot: string;
   props: object;
   domProps: object;
-  class: object;
+  class: object | Mods;
   style: string | object[] | object;
   scopedSlots: { [key: string]: ScopedSlot | undefined } & Slots;
   on: object;

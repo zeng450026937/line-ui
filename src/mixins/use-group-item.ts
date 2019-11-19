@@ -3,6 +3,7 @@ import { Vue } from 'vue/types/vue';
 import { createMixins } from '@/utils/mixins';
 import { useModel, ModelOptions } from '@/mixins/use-model';
 import { mergeListener } from '@/utils/vnode';
+import { isDef } from '@/utils/helpers';
 
 const NullGroup = {
   registerItem() {},
@@ -18,10 +19,12 @@ export type GroupItem<T = GroupItemProps> = Vue & T;
 
 export type GroupItemOptions = ModelOptions & {
   autoCheck?: boolean;
+  // Uncheckable by click
+  uncheckable?: boolean;
 };
 
 export function useGroupItem(name: string, options?: GroupItemOptions) {
-  const { autoCheck = true } = options || {};
+  const { autoCheck = true, uncheckable = true } = options || {};
   return createMixins({
     mixins : [useModel<boolean>('checked', options)],
 
@@ -36,6 +39,8 @@ export function useGroupItem(name: string, options?: GroupItemOptions) {
         type    : Boolean,
         default : true,
       },
+      disabled   : Boolean,
+      modelValue : null as any,
     },
 
     data() {
@@ -46,7 +51,8 @@ export function useGroupItem(name: string, options?: GroupItemOptions) {
 
     methods : {
       toggle() {
-        if (this.checkable) {
+        if (!uncheckable && this.checked) return;
+        if (this.checkable && !this.disabled) {
           this.checked = !this.checked;
         }
       },
@@ -57,6 +63,10 @@ export function useGroupItem(name: string, options?: GroupItemOptions) {
       if (group) {
         group.registerItem(this);
       }
+    },
+
+    beforeMount() {
+      this.checked = !!isDef(this.$attrs.checked);
     },
 
     beforeDestroy() {

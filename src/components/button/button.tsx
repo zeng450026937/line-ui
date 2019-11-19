@@ -1,6 +1,7 @@
 import { createNamespace } from '@/utils/namespace';
 import { useGroupItem } from '@/mixins/use-group-item';
 import { useRipple } from '@/mixins/use-ripple';
+import '@/components/button/button.scss';
 
 const NAMESPACE = 'ButtonGroup';
 const [createComponent, bem] = createNamespace('button');
@@ -16,8 +17,6 @@ export default createComponent({
     down        : Boolean,
     // This property holds whether the button is highlighted.
     highlighted : Boolean,
-    // This property holds whether the button is disabled.
-    disabled    : Boolean,
     // This property holds whether the button is flat.
     flat        : Boolean,
     // This property holds whether the button is block.
@@ -28,11 +27,10 @@ export default createComponent({
     round       : Boolean,
     // This property holds whether the button is outline.
     outline     : Boolean,
-  },
-
-  methods : {
-    onClick() {
-      this.toggle();
+    // override default
+    checkable   : {
+      type    : Boolean,
+      default : false,
     },
   },
 
@@ -51,7 +49,6 @@ export default createComponent({
           outline     : this.outline,
         })}
         on={ this.$listeners }
-        onClick={ this.onClick }
       >
         { this.slots() || this.text }
       </div>

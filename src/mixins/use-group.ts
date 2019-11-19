@@ -41,7 +41,7 @@ export function useGroup(name: string, options?: ModelOptions) {
       return {
         // This property holds the check state of the checkbox.
         checkState : CheckState.Unchecked,
-        // checkedItem: [] as Array<any>,
+        // checkedItem : [] as Array<any>,
         items      : [] as Array<any>,
       };
     },

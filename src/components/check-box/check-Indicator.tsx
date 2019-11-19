@@ -1,10 +1,9 @@
 import { VNode } from 'vue';
 import { SvgIcon } from '@/components/icon';
 import { createNamespace } from '@/utils/namespace';
+import '@/components/check-box/check-indicator.scss';
 
-import '@/components/check-box/check-box.scss';
-
-const [createComponent, bem] = createNamespace('check-box');
+const [createComponent, bem] = createNamespace('check-indicator');
 let path: VNode;
 
 export default createComponent({
@@ -29,14 +28,11 @@ export default createComponent({
     return (
       <SvgIcon
         {...data}
-        class={[
-          bem({
-            checked       : props.checked,
-            indeterminate : props.indeterminate,
-            disabled      : props.disabled,
-          }),
-          data.class,
-        ]}
+        class={bem({
+          checked       : props.checked,
+          indeterminate : props.indeterminate,
+          disabled      : props.disabled,
+        })}
         scopedSlots={{
           content : () => path || (path = h('path', { attrs: { d: 'M1.73,12.91 8.1,19.28 22.79,4.59' } })),
         }}

@@ -9,19 +9,10 @@ const NAMESPACE = 'RadioButtonGroup';
 const [createComponent, bem] = createNamespace('radio-button');
 
 export default createComponent({
-  mixins : [useGroupItem(NAMESPACE), useRipple()],
+  mixins : [useGroupItem(NAMESPACE, { uncheckable: false }), useRipple()],
 
   props : {
-    disabled : Boolean,
-    text     : String,
-  },
-
-  methods : {
-    onClick() {
-      if (this.checked) return;
-      if (this.disabled) return;
-      this.toggle();
-    },
+    text : String,
   },
 
   render() {
@@ -29,10 +20,9 @@ export default createComponent({
       <div
         class={bem()}
         on={this.$listeners}
-        onClick={this.onClick}
       >
         <RadioIndicator
-          checked={this.cheched}
+          checked={this.checked}
           disabled={this.disabled}
         ></RadioIndicator>
         { this.slots() || this.text }

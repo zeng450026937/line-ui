@@ -4,6 +4,12 @@ import '@/components/icon/svg-icon.scss';
 
 const [createComponent, bem] = createNamespace('svg-icon');
 
+function getDefaultText(slots: Function) {
+  const nodes = slots();
+  const text = (nodes && nodes[0].text) || '';
+  return text.trim();
+}
+
 export default createComponent({
   functional : true,
 
@@ -23,17 +29,14 @@ export default createComponent({
 
   render(h, { props, data, slots }) {
     data.attrs = Object(data.attrs);
-    const text = props.name || slots()[0].text.trim();
+    const text = props.name || getDefaultText(slots);
     return (
-      <div {...data}
-        class ={[
-          bem(),
-          data.class,
-        ]}
+      <div
+        {...data}
+        class ={bem()}
         style = {{
           width  : convertToUnit(props.width),
           height : convertToUnit(props.height),
-          ...data.style as object,
         }}
       >
         <svg

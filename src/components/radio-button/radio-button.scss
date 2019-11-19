@@ -1,7 +1,12 @@
-.line-radio-button {
-  margin: 4px;
-}
+.line {
+  &-radio-button {
+    display: flex;
+    position: relative;
+    
+    align-items: center;
 
-.line-radio-button + .radio-button {
-  margin-left: 8px;
+    margin: 4px;
+
+    cursor: pointer;
+  }
 }

@@ -79,22 +79,38 @@ function createRippleEffect(el: HTMLElement, options: RippleOption) {
 function bind(
   el: HTMLElement,
   binding: VNodeDirective,
-  vnode: VNode,
+  vnode?: VNode,
 ) {
-  const { modifiers } = binding;
+  const { modifiers, value } = binding;
+  if (value === false) return;
   (el as any).vRipple = createRippleEffect(el, modifiers as RippleOption);
 }
 
 function unbind(
   el: HTMLElement,
   binding: VNodeDirective,
-  vnode: VNode,
+  vnode?: VNode,
 ) {
   delete (el as any).vRipple;
 }
 
+function update(
+  el: HTMLElement,
+  binding: VNodeDirective,
+  vnode: VNode,
+) {
+  if (binding.value === binding.oldValue) {
+    return;
+  }
+  if (binding.oldValue !== false) {
+    unbind(el, binding);
+  }
+  bind(el, binding);
+}
+
 export const Ripple = {
   bind,
+  update,
   unbind,
 } as DirectiveOptions;
 

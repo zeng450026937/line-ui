@@ -21,7 +21,7 @@ export function useRipple() {
       vnode.data = vnode.data || {};
       (vnode.data.directives || (vnode.data.directives = [])).push({
         name  : 'ripple',
-        value : true,
+        value : this.ripple,
       });
     },
   });

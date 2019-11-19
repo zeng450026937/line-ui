@@ -4,6 +4,12 @@ import '@/iconfont/material-icons.scss';
 
 const [createComponent, bem] = createNamespace('font-icon');
 
+function getDefaultText(slots: Function) {
+  const nodes = slots();
+  const text = (nodes && nodes[0].text) || '';
+  return text.trim();
+}
+
 export default createComponent({
   functional : true,
 
@@ -22,16 +28,16 @@ export default createComponent({
   },
 
   render(h, { props, data, slots }) {
-    const text = props.name || slots()[0].text.trim();
+    const text = props.name || getDefaultText(slots);
     const size = props.height || props.width;
     return (
-      <i {...data}
-        class={[bem(), 'material-icons', data.class]}
+      <i
+        class={[bem(), 'material-icons']}
         style={{
           'vertical-align' : 'middle',
           'font-size'      : convertToUnit(size),
-          ...data.style as object,
         }}
+        {...data}
       >
         {text}
       </i>

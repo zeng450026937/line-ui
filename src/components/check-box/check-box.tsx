@@ -12,16 +12,8 @@ export default createComponent({
   mixins : [useGroupItem(NAMESPACE), useRipple()],
 
   props : {
-    disabled      : Boolean,
     indeterminate : Boolean,
     text          : String,
-  },
-
-  methods : {
-    onClick() {
-      if (this.disabled) return;
-      this.toggle();
-    },
   },
 
   render() {
@@ -29,10 +21,9 @@ export default createComponent({
       <div
         class={bem()}
         on={this.$listeners}
-        onClick={this.onClick}
       >
         <CheckIndicator
-          checked={this.cheched}
+          checked={this.checked}
           indeterminate={this.indeterminate}
           disabled={this.disabled}
           width={20}
