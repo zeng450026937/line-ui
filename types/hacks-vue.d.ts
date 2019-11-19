@@ -11,7 +11,7 @@ declare module 'vue/types/options' {
   interface ComponentOptions<V extends Vue> {
     // use-patch
     shouldRender?: () => boolean;
-    beforeRender?: () => void;
+    beforeRender?: (ctx: RenderContext) => void;
     afterRender?: (vnode: VNode, ctx: RenderContext) => void;
     // namespace
     events?: Record<string, any>;
@@ -19,13 +19,22 @@ declare module 'vue/types/options' {
     install?: (Vue: VueConstructor) => void;
   }
 
-  interface RenderContext {
+  interface RenderContext<Props=DefaultProps> {
+    prevProps: Props;
     slots(name?: string, props?: any): any;
+    [K: string]: any;
   }
 
   interface FunctionalComponentOptions {
+    mixins?: (ComponentOptions<Vue> | typeof Vue)[];
+    extends?: ComponentOptions<Vue> | typeof Vue;
+    // use-patch
+    shouldRender?: (prevProps: Record<string, any>, ctx: RenderContext) => boolean;
+    beforeRender?: (ctx: RenderContext) => void;
+    afterRender?: (vnode: VNode, ctx: RenderContext) => void;
     // namespace
-    slots?: object;
+    events?: Record<string, any>;
+    slots?: Record<string, any>;
     install?: (Vue: VueConstructor) => void;
   }
 }

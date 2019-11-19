@@ -67,6 +67,7 @@ export default createComponent({
   },
 
   render() {
+    console.log('overlay');
     return (
       <div tabindex="-1"
         class={bem({

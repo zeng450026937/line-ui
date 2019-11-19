@@ -5,6 +5,7 @@ import { createMixins } from '@/utils/mixins';
 export function useSlots(name?: string) {
   return createMixins({
     props : {
+      // TODO: test if it is ok to work with jsx
       scopedSlots : Object,
     },
 

@@ -1,80 +1,33 @@
 import { createNamespace } from '@/utils/namespace';
-import AbstractButton from '@/components/button/abstract-button';
-import { useGroupItem } from '@/components/group';
-import '@/components/button/button.scss';
+import { useGroupItem } from '@/mixins/use-group-item';
+import { useRipple } from '@/mixins/use-ripple';
 
 const NAMESPACE = 'ButtonGroup';
 const [createComponent, bem] = createNamespace('button');
 
 export default createComponent({
-  mixins : [useGroupItem(NAMESPACE)],
-
-  extends : AbstractButton,
+  mixins : [useGroupItem(NAMESPACE), useRipple()],
 
   props : {
-    flat : {
-      type    : Boolean,
-      default : false,
-    },
-    highlighted : {
-      type    : Boolean,
-      default : false,
-    },
-    type : {
-      type    : String,
-      default : 'default', // primary success warning danger light dark
-    },
-    plain : {
-      type    : Boolean,
-      default : false,
-    },
-    round : {
-      type    : Boolean,
-      default : false,
-    },
-    circle : {
-      type    : Boolean,
-      default : false,
-    },
-    loading : {
-      type    : Boolean,
-      default : false,
-    },
-    size : {
-      type    : String,
-      default : 'normal',
-    },
-    disabled : {
-      type    : Boolean,
-      default : false,
-    },
-  },
-
-  computed : {
-    class() {
-      const {
-        round,
-        plain,
-        circle,
-        disabled,
-        loading,
-        type,
-        size,
-      } = this;
-      return {
-        'is--round'       : round,
-        'is--plain'       : plain,
-        'is--circle'      : circle,
-        'is--disabled'    : disabled,
-        'is--loading'     : loading,
-        [`is--${ type }`] : type,
-        [`is--${ size }`] : size,
-      };
-    },
-  },
-
-  created() {
-    this.staticClass += ' line-button';
+    // This property holds a textual description of the button.
+    text        : String,
+    // This property holds whether the button is visually down.
+    // Unless explicitly set, this property follows the value of pressed.
+    down        : Boolean,
+    // This property holds whether the button is highlighted.
+    highlighted : Boolean,
+    // This property holds whether the button is disabled.
+    disabled    : Boolean,
+    // This property holds whether the button is flat.
+    flat        : Boolean,
+    // This property holds whether the button is block.
+    block       : Boolean,
+    // This property holds whether the button is circle.
+    circle      : Boolean,
+    // This property holds whether the button is round.
+    round       : Boolean,
+    // This property holds whether the button is outline.
+    outline     : Boolean,
   },
 
   methods : {
@@ -83,4 +36,25 @@ export default createComponent({
     },
   },
 
+  render() {
+    return (
+      <div
+        class={bem({
+          down        : this.down,
+          highlighted : this.highlighted,
+          checked     : this.checked,
+          disabled    : this.disabled,
+          flat        : this.flat,
+          block       : this.block,
+          circle      : this.circle,
+          round       : this.round,
+          outline     : this.outline,
+        })}
+        on={ this.$listeners }
+        onClick={ this.onClick }
+      >
+        { this.slots() || this.text }
+      </div>
+    );
+  },
 });

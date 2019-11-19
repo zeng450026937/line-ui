@@ -1,53 +1,45 @@
-import { AbstractButton } from '@/components/button';
-import CheckIndicator from '@/components/check-box/CheckIndicator.vue';
-import { useGroupItem } from '@/components/group';
 import { createNamespace } from '@/utils/namespace';
+import { useGroupItem } from '@/mixins/use-group-item';
+import { useRipple } from '@/mixins/use-ripple';
+import CheckIndicator from '@/components/check-box/check-indicator';
 
 import '@/components/check-box/check-box.scss';
 
 const NAMESPACE = 'CheckBoxGroup';
-
 const [createComponent, bem] = createNamespace('check-box');
 
 export default createComponent({
-  mixins : [useGroupItem(NAMESPACE)],
-
-  extends : AbstractButton,
+  mixins : [useGroupItem(NAMESPACE), useRipple()],
 
   props : {
-    disabled : {
-      type    : Boolean,
-      default : false,
-    },
-    indeterminate : {
-      type    : Boolean,
-      default : false,
-    },
+    disabled      : Boolean,
+    indeterminate : Boolean,
+    text          : String,
   },
 
   methods : {
-    genIndicator() {
-      return this.$createElement(CheckIndicator, {
-        props : {
-          checked       : this.checked,
-          indeterminate : this.indeterminate,
-          disabled      : this.disabled,
-          width         : 20,
-          height        : 20,
-        },
-      });
-    },
-
     onClick() {
-      if (this.checkable && !this.disabled) {
-        this.checked = !this.checked;
-        // TODO
-        // check all children if has
-      }
+      if (this.disabled) return;
+      this.toggle();
     },
   },
 
-  created() {
-    this.staticClass += ' line-check-box';
+  render() {
+    return (
+      <div
+        class={bem()}
+        on={this.$listeners}
+        onClick={this.onClick}
+      >
+        <CheckIndicator
+          checked={this.cheched}
+          indeterminate={this.indeterminate}
+          disabled={this.disabled}
+          width={20}
+          height={20}
+        ></CheckIndicator>
+        { this.slots() || this.text }
+      </div>
+    );
   },
 });

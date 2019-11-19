@@ -3,10 +3,18 @@ import { VNode } from 'vue/types/vnode';
 import { createMixins } from '@/utils/mixins';
 import ripple from '@/directives/ripple';
 
-export function useRemote() {
+export function useRipple() {
   return createMixins({
     directives : {
       ripple,
+    },
+
+    props : {
+      ripple : {
+        type    : Boolean,
+        // default should be platform specified
+        default : false,
+      },
     },
 
     afterRender(vnode: VNode) {

@@ -1,7 +1,8 @@
 /* eslint-disable-next-line import/extensions */
 import { Vue } from 'vue/types/vue';
 import { createMixins } from '@/utils/mixins';
-import { ModelOptions, useModel } from '@/mixins/use-model';
+import { useModel, ModelOptions } from '@/mixins/use-model';
+import { mergeListener } from '@/utils/vnode';
 
 const NullGroup = {
   registerItem() {},
@@ -10,12 +11,17 @@ const NullGroup = {
 
 export type GroupItemProps = {
   checkable: boolean;
-  modelValue: any;
+  value: any;
   [K: string]: any
 };
 export type GroupItem<T = GroupItemProps> = Vue & T;
 
-export function useGroupItem(name: string, options?: ModelOptions) {
+export type GroupItemOptions = ModelOptions & {
+  autoCheck?: boolean;
+};
+
+export function useGroupItem(name: string, options?: GroupItemOptions) {
+  const { autoCheck = true } = options || {};
   return createMixins({
     mixins : [useModel<boolean>('checked', options)],
 
@@ -30,7 +36,6 @@ export function useGroupItem(name: string, options?: ModelOptions) {
         type    : Boolean,
         default : true,
       },
-      modelValue : null as any,
     },
 
     data() {
@@ -48,17 +53,27 @@ export function useGroupItem(name: string, options?: ModelOptions) {
     },
 
     created() {
-      const group = (this as any)[name];
+      const group = this[name];
       if (group) {
         group.registerItem(this);
       }
     },
 
     beforeDestroy() {
-      const group = (this as any)[name];
+      const group = this[name];
       if (group) {
         group.unregisterItem(this);
       }
+    },
+
+    // TODO: need discussion
+    afterRender(vnode) {
+      if (!autoCheck) return;
+      // Inject click listener
+      const on = {
+        click : this.toggle,
+      };
+      vnode.data!.on = mergeListener(on, vnode.data!.on || {});
     },
   });
 }

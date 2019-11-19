@@ -1,8 +1,7 @@
-import { AbstractButton } from '@/components/button';
-import RadioIndicator from './RadioIndicator.vue';
-import { useGroupItem } from '@/components/group';
 import { createNamespace } from '@/utils/namespace';
-
+import { useGroupItem } from '@/mixins/use-group-item';
+import { useRipple } from '@/mixins/use-ripple';
+import RadioIndicator from '@/components/radio-button/radio-indicator';
 import '@/components/radio-button/radio-button.scss';
 
 const NAMESPACE = 'RadioButtonGroup';
@@ -10,42 +9,34 @@ const NAMESPACE = 'RadioButtonGroup';
 const [createComponent, bem] = createNamespace('radio-button');
 
 export default createComponent({
-  mixins : [useGroupItem(NAMESPACE)],
-
-  extends : AbstractButton,
+  mixins : [useGroupItem(NAMESPACE), useRipple()],
 
   props : {
-    disabled : {
-      type    : Boolean,
-      default : false,
-    },
-    indeterminate : {
-      type    : Boolean,
-      default : false,
-    },
+    disabled : Boolean,
+    text     : String,
   },
 
   methods : {
-    genIndicator() {
-      return this.$createElement(RadioIndicator, {
-        props : {
-          checked  : this.checked,
-          disabled : this.disabled,
-        },
-      });
-    },
-
     onClick() {
-      if (this.checked) {
-        return;
-      }
-      if (this.checkable && !this.disabled) {
-        this.checked = true;
-      }
+      if (this.checked) return;
+      if (this.disabled) return;
+      this.toggle();
     },
   },
 
-  created() {
-    this.staticClass += ' line-radio-button';
+  render() {
+    return (
+      <div
+        class={bem()}
+        on={this.$listeners}
+        onClick={this.onClick}
+      >
+        <RadioIndicator
+          checked={this.cheched}
+          disabled={this.disabled}
+        ></RadioIndicator>
+        { this.slots() || this.text }
+      </div>
+    );
   },
 });

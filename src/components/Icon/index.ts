@@ -1,5 +1,5 @@
-import SvgIcon from './SvgIcon.vue';
-import FontIcon from './FontIcon.vue';
-import Icon from './Icon.vue';
+import SvgIcon from './svg-icon';
+import FontIcon from './font-icon';
+import Icon from './icon';
 
 export { FontIcon, SvgIcon, Icon };

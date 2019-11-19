@@ -1,13 +1,13 @@
 
 import { createNamespace } from '@/utils/namespace';
-import { useGroup } from '@/components/group';
+import { useGroup } from '@/mixins/use-group';
 import '@/components/button/button-group.scss';
 
 const NAMESPACE = 'ButtonGroup';
 const [createComponent, bem] = createNamespace('button-group');
 
 export default createComponent({
-  extends : useGroup(NAMESPACE),
+  mixins : [useGroup(NAMESPACE)],
 
   render() {
     return (

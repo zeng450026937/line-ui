@@ -18,15 +18,17 @@ export default createComponent({
   },
 
   render(h, { props, data }) {
-    const tag = 'div';
-    return h(tag, {
-      ...data,
-      staticClass : `radio-indicator ${ data.staticClass || '' }`.trim(),
-      class       : {
-        'is--checked'  : props.checked,
-        'is--disabled' : props.disabled,
-        ...data.class,
-      },
-    });
+    return (
+      <div
+        {...data}
+        class={[
+          bem({
+            checked  : props.checked,
+            disabled : props.disabled,
+          }),
+          data.class,
+        ]}
+      ></div>
+    );
   },
 });

@@ -1,6 +1,6 @@
-import { Icon } from '@/components/icon';
 import { createNamespace } from '@/utils/namespace';
-import { useGroupItem } from '@/components/group';
+import { useGroupItem } from '@/mixins/use-group-item';
+import { Icon } from '@/components/icon';
 import '@/components/collapse/collapse-item.scss';
 
 const NAMESPACE = 'Collapse';

@@ -1,5 +1,5 @@
-import { useGroup } from '@/components/group';
 import { createNamespace } from '@/utils/namespace';
+import { useGroup } from '@/mixins/use-group';
 import '@/components/tabs/tabs.scss';
 
 const NAMESPACE = 'Tabs';

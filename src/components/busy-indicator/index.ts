@@ -1,3 +1,3 @@
-import BusyIndicator from './BusyIndicator.vue';
+import BusyIndicator from './busy-indicator';
 
 export { BusyIndicator };

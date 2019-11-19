@@ -1,5 +1,5 @@
 import { createNamespace } from '@/utils/namespace';
-import { useGroup } from '@/components/group';
+import { useGroup } from '@/mixins/use-group';
 import '@/components/collapse/collapse.scss';
 
 const NAMESPACE = 'Collapse';

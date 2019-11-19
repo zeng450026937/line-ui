@@ -4,17 +4,11 @@ import { createNamespace } from '@/utils/namespace';
 
 import '@/components/check-box/check-box.scss';
 
-
 const [createComponent, bem] = createNamespace('check-box');
-
-let vOnce: VNode;
+let path: VNode;
 
 export default createComponent({
   functional : true,
-
-  components : {
-    SvgIcon,
-  },
 
   props : {
     checked : {
@@ -32,18 +26,21 @@ export default createComponent({
   },
 
   render(h, { props, data }) {
-    return h(SvgIcon, {
-      ...data,
-      staticClass : `check-indicator ${ data.staticClass || '' }`.trim(),
-      class       : {
-        'is-checked'       : props.checked,
-        'is-indeterminate' : props.indeterminate,
-        'is-disabled'      : props.disabled,
-        ...data.class,
-      },
-      scopedSlots : {
-        content : () => vOnce || (vOnce = h('path', { attrs: { d: 'M1.73,12.91 8.1,19.28 22.79,4.59' } })),
-      },
-    });
+    return (
+      <SvgIcon
+        {...data}
+        class={[
+          bem({
+            checked       : props.checked,
+            indeterminate : props.indeterminate,
+            disabled      : props.disabled,
+          }),
+          data.class,
+        ]}
+        scopedSlots={{
+          content : () => path || (path = h('path', { attrs: { d: 'M1.73,12.91 8.1,19.28 22.79,4.59' } })),
+        }}
+      ></SvgIcon>
+    );
   },
 });
