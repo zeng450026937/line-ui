@@ -1,0 +1,130 @@
+$animation-duration-base: 1.3s !default;
+$animation-duration-fast: .2s !default;
+
+@keyframes line-slide-up-enter {
+  from {
+    transform: translate3d(0, 100%, 0);
+  }
+}
+
+@keyframes line-slide-up-leave {
+  to {
+    transform: translate3d(0, 100%, 0);
+  }
+}
+
+@keyframes line-slide-down-enter {
+  from {
+    transform: translate3d(0, -100%, 0);
+  }
+}
+
+@keyframes line-slide-down-leave {
+  to {
+    transform: translate3d(0, -100%, 0);
+  }
+}
+
+@keyframes line-slide-left-enter {
+  from {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+@keyframes line-slide-left-leave {
+  to {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+
+@keyframes line-slide-right-enter {
+  from {
+    transform: translate3d(100%, 0, 0);
+  }
+}
+
+@keyframes line-slide-right-leave {
+  to {
+    transform: translate3d(100%, 0, 0);
+  }
+}
+
+@keyframes line-fade-in {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes line-fade-out {
+  from {
+    opacity: 1;
+  }
+
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes line-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.line-fade {
+  &-enter-active {
+    animation: $animation-duration-base line-fade-in;
+  }
+
+  &-leave-active {
+    animation: $animation-duration-base line-fade-out;
+  }
+}
+
+.line-slide-up {
+  &-enter-active {
+    animation: line-slide-up-enter $animation-duration-base both ease;
+  }
+
+  &-leave-active {
+    animation: line-slide-up-leave $animation-duration-base both ease;
+  }
+}
+
+.line-slide-down {
+  &-enter-active {
+    animation: line-slide-down-enter $animation-duration-base both ease;
+  }
+
+  &-leave-active {
+    animation: line-slide-down-leave $animation-duration-base both ease;
+  }
+}
+
+.line-slide-left {
+  &-enter-active {
+    animation: line-slide-left-enter $animation-duration-base both ease;
+  }
+
+  &-leave-active {
+    animation: line-slide-left-leave $animation-duration-base both ease;
+  }
+}
+
+.line-slide-right {
+  &-enter-active {
+    animation: line-slide-right-enter $animation-duration-base both ease;
+  }
+
+  &-leave-active {
+    animation: line-slide-right-leave $animation-duration-base both ease;
+  }
+}

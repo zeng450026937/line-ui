@@ -35,6 +35,21 @@ export function on(
   }
 }
 
+export function once(
+  target: Element | Document | Window,
+  event: string,
+  handler: EventHandler,
+  options: boolean | AddEventListenerOptions = false,
+) {
+  if (!isServer) {
+    const once = (ev: Event) => {
+      handler(ev);
+      target.removeEventListener(event, once, options);
+    };
+    target.addEventListener(event, once, options);
+  }
+}
+
 export function off(
   target: Element | Document | Window,
   event: string,

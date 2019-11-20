@@ -1,5 +1,6 @@
 import { createNamespace } from '@/utils/namespace';
 import { usePopup } from '@/mixins/use-popup';
+import '@/components/popup/popup.scss';
 
 const [createComponent, bem] = createNamespace('popup');
 const CONTENT_ELEMENT = 'content';
@@ -11,17 +12,28 @@ export default createComponent({
     focous() {
       // focus content element or focusable element in content element
       // TBD
+      (this.$refs[CONTENT_ELEMENT] as HTMLElement).focus();
     },
-    onOverlayTap() {
-      console.log('onTap');
-      this.visable = !this.visable;
+
+    onClick(e: Event) {
+      console.log(e);
     },
   },
 
   render() {
     return (
-      <div v-show={this.visable} class={bem()}>
-        <div class={bem(CONTENT_ELEMENT)} ref={CONTENT_ELEMENT}>
+      <div
+        aria-modal="true"
+        v-show={this.visable}
+        class={bem()}
+      >
+        <div
+          // role="dialog"
+          class={bem(CONTENT_ELEMENT)}
+          ref={CONTENT_ELEMENT}
+          on={this.$listeners}
+          onClick={this.onClick}
+        >
           {this.slots()}
         </div>
       </div>

@@ -78,9 +78,12 @@ export function transformFunctionComponent(pure: FunctionalComponentOptions) {
     }
     ctx.prevProps = prevProps;
     ctx.prevVNode = prevVNode;
-    const vnode = render.call(renderProxy, h, unifySlots(ctx));
+    let vnode = render.call(renderProxy, h, unifySlots(ctx));
     if (afterRender) {
-      (afterRender as unknown as Array<AfterRenderHook>).forEach((fn) => fn.call(renderProxy, vnode as VNode, ctx));
+      (afterRender as unknown as Array<AfterRenderHook>)
+        .forEach((fn) => {
+          vnode = fn.call(renderProxy, vnode as VNode, ctx) || vnode;
+        });
     }
     prevProps = ctx.props;
     prevVNode = vnode;

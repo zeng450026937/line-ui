@@ -12,7 +12,7 @@ declare module 'vue/types/options' {
     // use-patch
     shouldRender?: () => boolean;
     beforeRender?: (ctx: RenderContext) => void;
-    afterRender?: (vnode: VNode, ctx: RenderContext) => void;
+    afterRender?: (vnode: VNode, ctx: RenderContext) => VNode | void | null | undefined;
     // namespace
     events?: Record<string, any>;
     slots?: Record<string, any>;
@@ -31,7 +31,7 @@ declare module 'vue/types/options' {
     // use-patch
     shouldRender?: (prevProps: Record<string, any>, ctx: RenderContext) => boolean;
     beforeRender?: (ctx: RenderContext) => void;
-    afterRender?: (vnode: VNode, ctx: RenderContext) => void;
+    afterRender?: (vnode: VNode, ctx: RenderContext) => VNode | void | null | undefined;
     // namespace
     events?: Record<string, any>;
     slots?: Record<string, any>;

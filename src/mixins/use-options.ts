@@ -21,7 +21,7 @@ export function useOptions(options: Array<string>, namsespace: string = 'options
           if (hit) break;
         }
       }
-      ctx[namsespace] = hit;
+      ctx[namsespace] = hit || options[0];
     },
   });
 }

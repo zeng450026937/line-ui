@@ -8,7 +8,7 @@ type CreateNamespaceReturn = [
   Translate
 ];
 
-export function createNamespace(name: string): CreateNamespaceReturn {
-  name = `line-${ name }`;
+export function createNamespace(name: string, prefix: string = 'line'): CreateNamespaceReturn {
+  name = `${ prefix }-${ name }`;
   return [createComponent(name), createBEM(name), createI18N(name)];
 }

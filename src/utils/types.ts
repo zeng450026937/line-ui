@@ -58,7 +58,7 @@ export interface InjectOptions<Events = DefaultEvents, Slots = ScopedSlots> {
   // use-patch
   shouldRender?: (prevProps?: Record<string, any>, ctx?: RenderContext) => boolean;
   beforeRender?: (ctx: RenderContext) => void;
-  afterRender?: (vnode: VNode, ctx: RenderContext) => void;
+  afterRender?: (vnode: VNode, ctx: RenderContext) => VNode | void | null | undefined;
   // namespace
   install?: (Vue: VueConstructor) => void;
   // extend

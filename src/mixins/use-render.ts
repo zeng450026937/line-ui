@@ -7,7 +7,7 @@ strategies.beforeRender = strategies.created;
 strategies.afterRender = strategies.created;
 
 export type BeforeRenderHook = (ctx: RenderContext) => void;
-export type AfterRenderHook = (vnode: VNode, ctx: RenderContext) => void;
+export type AfterRenderHook = (vnode: VNode, ctx: RenderContext) => VNode | void;
 
 type ObjectIndex = Record<string, any>;
 
@@ -41,7 +41,7 @@ export function useRender() {
           children    : this.$slots.default,
           slots       : () => this.$slots,
           scopedSlots : this.$scopedSlots,
-          data        : this.$vnode.data,
+          data        : this.$vnode && this.$vnode.data,
           parent      : this.$parent,
           listeners   : this.$listeners,
           injections  : this,
@@ -53,10 +53,12 @@ export function useRender() {
           (beforeRender as unknown as Array<BeforeRenderHook>)
             .forEach((fn) => fn.call(renderProxy, renderContext));
         }
-        const vnode = render.call(renderProxy, h, renderContext);
+        let vnode = render.call(renderProxy, h, renderContext);
         if (afterRender) {
           (afterRender as unknown as Array<AfterRenderHook>)
-            .forEach((fn) => fn.call(renderProxy, vnode, renderContext));
+            .forEach((fn) => {
+              vnode = fn.call(renderProxy, vnode, renderContext) || vnode;
+            });
         }
         // prevProps = { ...this.$props };
         prevVNode = vnode;

@@ -1,4 +1,4 @@
-$overlay-color: rgba(0, 0, 0, 0.5) !default;
+$overlay-color: #000000 !default;
 $overlay-z-index: 2 !default;
 
 .line {
@@ -10,29 +10,21 @@ $overlay-z-index: 2 !default;
     bottom: 0;
     left: 0;
 
-    align-items: center;
-    justify-content: center;
-
     transform: translateZ(0);
 
-    transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1), z-index 1ms;
-    // pointer-events: none;
+    transition: 1.3s cubic-bezier(0.25, 0.8, 0.5, 1), z-index 1ms;
 
     border-radius: inherit;
 
     background-color: $overlay-color;
 
-    contain: strict;
-    cursor: pointer;
+    cursor: auto;
+    opacity: 0;
     touch-action: none;
-    z-index: $overlay-z-index;
+    // z-index: $overlay-z-index;
 
-    &--hide {
-      background: transparent;
-    }
-
-    &--no-tappable {
-      cursor: auto;
+    &--dim {
+      opacity: 0.46;
     }
   }
 }

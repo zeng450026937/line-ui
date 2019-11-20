@@ -66,7 +66,10 @@ export function useGroupItem(name: string, options?: GroupItemOptions) {
     },
 
     beforeMount() {
-      this.checked = !!isDef(this.$attrs.checked);
+      this.checked = this.checked || (
+        isDef(this.$attrs.checked)
+          && (this.$attrs.checked as string | boolean) !== false
+      );
     },
 
     beforeDestroy() {
