@@ -8,31 +8,18 @@ const CONTENT_ELEMENT = 'content';
 export default createComponent({
   mixins : [usePopup()],
 
-  methods : {
-    focous() {
-      // focus content element or focusable element in content element
-      // TBD
-      (this.$refs[CONTENT_ELEMENT] as HTMLElement).focus();
-    },
-
-    onClick(e: Event) {
-      console.log(e);
-    },
-  },
-
   render() {
     return (
       <div
-        aria-modal="true"
-        v-show={this.visable}
+        v-show={this.visible}
+        aria-modal="false"
+        role="dialog"
         class={bem()}
       >
         <div
-          // role="dialog"
+          role="dialog"
           class={bem(CONTENT_ELEMENT)}
           ref={CONTENT_ELEMENT}
-          on={this.$listeners}
-          onClick={this.onClick}
         >
           {this.slots()}
         </div>

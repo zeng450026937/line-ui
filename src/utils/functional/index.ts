@@ -98,10 +98,6 @@ export function createDelegate(Component: any) {
       if (component) return;
       component = mount(Component, data);
     },
-    props(val: object) {
-      Vue.set(data, 'props', val);
-      return this;
-    },
     on(val: object) {
       Vue.set(data, 'on', val);
       return this;

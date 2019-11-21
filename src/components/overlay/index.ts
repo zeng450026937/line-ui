@@ -1,4 +1,3 @@
-import Overlay from './overlay';
-import './overlay.scss';
+import Overlay from '@/components/overlay/overlay';
 
 export { Overlay };

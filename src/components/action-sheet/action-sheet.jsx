@@ -9,7 +9,7 @@ export default createComponent({
 
   render() {
     return (
-      <div v-show={this.visable} class={bem()}>
+      <div v-show={this.visible} class={bem()}>
         <div class={bem(CONTENT_ELEMENT)} ref={CONTENT_ELEMENT}>
           {this.slots()}
         </div>

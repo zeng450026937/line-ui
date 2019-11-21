@@ -15,7 +15,13 @@ const TRANSITION_EVENTS = [
   'appear-cancelled',
 ];
 
-export function useTransition(appear: boolean = true) {
+export interface TransitionOptions {
+  appear?: boolean,
+  css?: boolean,
+}
+
+export function useTransition(options?: TransitionOptions) {
+  const { appear = true, css = true } = options || {};
   return createMixins({
     props : {
       transition : String,
@@ -23,14 +29,15 @@ export function useTransition(appear: boolean = true) {
 
     afterRender(vnode, ctx) {
       const { transition = this.transition } = ctx;
-      if (!transition) return;
+      if (css && !transition) return;
       const data = {
         props : {
           name : transition,
           appear,
+          css,
         },
         on : TRANSITION_EVENTS.reduce((prev, val) => {
-          prev[val] = (...args: any[]) => this.$emit('val', ...args);
+          prev[val] = (...args: any[]) => this.$emit(val, ...args);
           return prev;
         }, {} as Record<string, any>),
       };

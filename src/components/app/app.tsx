@@ -2,6 +2,7 @@ import { createNamespace } from '@/utils/namespace';
 import { setupPlatforms, isPlatform } from '@/utils/platform';
 
 const [createComponent, bem] = createNamespace('app');
+const CONTENT_ELEMENT = 'content';
 
 export default createComponent({
   props : {
@@ -24,7 +25,9 @@ export default createComponent({
   render() {
     return (
       <div id={this.id} skyline-app class={bem()}>
-        {this.slots()}
+        <div class={bem(CONTENT_ELEMENT)} ref="CONTENT_ELEMENT">
+          {this.slots()}
+        </div>
       </div>
     );
   },

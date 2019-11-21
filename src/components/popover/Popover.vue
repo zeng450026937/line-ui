@@ -5,7 +5,7 @@
           v-bind:dismiss="dismiss"></slot>
     <transition>
       <div class="popover-content"
-           v-show="visable"
+           v-show="visible"
            ref="content"
            v-remote>
         <slot name="content"></slot>
@@ -29,7 +29,7 @@ export default Vue.extend({
   },
 
   model : {
-    prop  : 'visable',
+    prop  : 'visible',
     event : 'change',
   },
 
@@ -38,7 +38,7 @@ export default Vue.extend({
       type    : String,
       default : 'bottom',
     },
-    visable : {
+    visible : {
       type    : Boolean,
       default : false,
     },

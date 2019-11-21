@@ -1,4 +1,4 @@
-$overlay-color: #000000 !default;
+$overlay-color: rgba(0, 0, 0, 0.45) !default;
 $overlay-z-index: 2 !default;
 
 .line {
@@ -12,19 +12,23 @@ $overlay-z-index: 2 !default;
 
     transform: translateZ(0);
 
-    transition: 1.3s cubic-bezier(0.25, 0.8, 0.5, 1), z-index 1ms;
+    // transition: 0.4s cubic-bezier(0.36, 0.66, 0.04, 1), z-index 1ms;
 
     border-radius: inherit;
 
     background-color: $overlay-color;
 
+    contain: strict;
     cursor: auto;
-    opacity: 0;
     touch-action: none;
-    // z-index: $overlay-z-index;
+    z-index: $overlay-z-index;
 
-    &--dim {
-      opacity: 0.46;
+    &--hide {
+      background: transparent;
+    }
+    
+    &--tappable {
+      cursor: pointer;
     }
   }
 }

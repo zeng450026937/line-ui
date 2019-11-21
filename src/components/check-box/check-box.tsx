@@ -22,13 +22,17 @@ export default createComponent({
         class={bem()}
         on={this.$listeners}
       >
-        <CheckIndicator
-          checked={this.checked}
-          indeterminate={this.indeterminate}
-          disabled={this.disabled}
-          width={20}
-          height={20}
-        ></CheckIndicator>
+        {
+          this.slots('indicator') || (
+            <CheckIndicator
+              checked={this.checked}
+              indeterminate={this.indeterminate}
+              disabled={this.disabled}
+              width={20}
+              height={20}
+            ></CheckIndicator>
+          )
+        }
         { this.slots() || this.text }
       </div>
     );

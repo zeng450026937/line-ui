@@ -18,7 +18,7 @@
                     'left': position === 1,
                     'right': position === 2,
                     'bottom': position === 3})"
-       v-show="visable"
+       v-show="visible"
        v-remote="global">
     <div class="overlay"
          :style="{opacity: !dim ? 0.32 : 0.01}"

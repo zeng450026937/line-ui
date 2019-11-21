@@ -1,50 +1,128 @@
+import Vue from 'vue';
 import { createMixins } from '@/utils/mixins';
 import { useLazy } from '@/mixins/use-lazy';
 import { useRemote } from '@/mixins/use-remote';
 import { useModel } from '@/mixins/use-model';
-import { useOptions } from '@/mixins/use-options';
 import { useClickOutside } from '@/mixins/use-click-outside';
+import { useTransition } from '@/mixins/use-transition';
 import { isDef } from '@/utils/helpers';
 import { Overlay } from '@/components/overlay';
-import { createDelegate } from '@/utils/functional';
 import { once } from '@/utils/dom/event';
+import { createAnimation } from '@/utils/animation';
+import { Animation } from '@/utils/animation/animation-interface';
 
 let popupId = 0;
 
-type PopupType = 'scoped' | 'parent' | 'app' | 'body';
-
 export interface PopupOptions {
-  type?: PopupType;
+  scoped?: boolean;
 }
 
-function getAnchor(el: Element, type: PopupType) {
-  const parent = type === 'scoped'
-    ? el
-    : type === 'parent'
-      ? el.parentNode
-      : type === 'app'
-        ? document.querySelector('[line-app]')
-        : null;
-  return parent || document.body;
-}
+const getAppRoot = (doc: Document = document) => {
+  return doc.querySelector('[line-app]') || doc.body;
+};
+const getAnimationDuration = (el: Element) => {
+  const style = window.getComputedStyle(el);
+  return style.getPropertyValue('animation-duration')
+   || style.getPropertyValue('transition-duration');
+};
+const getIndex = () => {
+  return `${ 2000 + popupId++ }`;
+};
+
+const popupStack = [] as Array<any>;
+const overlayStack = [] as Array<any>;
+let overlay: Vue & { value: boolean, zIndex: Number | String } | null;
 
 export function usePopup(options?: PopupOptions) {
-  const { type = 'app' } = options || {};
-  const scoped = type === 'scoped';
-  const delegate = createDelegate(Overlay);
+  const { scoped = false } = options || {};
   let opened = false;
   let closed = true;
+
+  async function openOverlay(baseEl: Element) {
+    if (!overlay) {
+      overlay = new (Vue.extend(Overlay))({
+        propsData : {
+          transition : 'line-fade',
+        },
+      });
+      overlay.$mount();
+    }
+
+    const parent = scoped ? baseEl.parentNode! : getAppRoot();
+    // parent.appendChild(overlay.$el);
+    parent.insertBefore(overlay.$el, parent.firstChild);
+
+    opened = false;
+    closed = false;
+
+    overlay.$once('after-enter', () => {
+      opened = true;
+      closed = false;
+    });
+    overlay.value = true;
+
+    // const animation = createAnimation()
+    //   .addElement(overlay.$el)
+    //   .fromTo('opacity', 0, 1)
+    //   .easing('cubic-bezier(0.36,0.66,0.04,1)')
+    //   .duration(1400);
+
+    // await animation.play();
+    // opened = true;
+    // closed = false;
+  }
+  async function closeOverlay() {
+    if (!overlay) return;
+    opened = false;
+    closed = false;
+
+    overlay.$once('after-leave', () => {
+      opened = false;
+      closed = true;
+      if (!overlay) return;
+      // overlay!.$el.remove();
+      // overlay!.$destroy();
+      // overlay = null;
+      if (popupStack.length === 0) {
+        overlay.$el.remove();
+        overlay.$destroy();
+        overlay = null;
+      }
+    });
+    overlay.value = false;
+    // const animation = createAnimation()
+    //   .addElement(overlay.$el)
+    //   .fromTo('opacity', 1, 0)
+    //   .easing('ease-out')
+    //   .duration(1250);
+
+    // await animation.play();
+
+    // opened = false;
+    // closed = true;
+    // overlay.value = false;
+
+    // if (popupStack.length === 0) {
+    //   overlay!.$el.remove();
+    //   overlay!.$destroy();
+    //   overlay = null;
+    // }
+  }
 
   return createMixins({
     mixins : [
       useRemote(),
       useLazy(),
-      useModel('visable'),
+      useModel('visible'),
       useClickOutside(),
-      useOptions(['center', 'top', 'right', 'down', 'left'], 'position'),
+      useTransition(),
     ],
 
     props : {
+      transition : {
+        type    : String,
+        default : 'line-fade',
+      },
       // This property holds whether the popup show the overlay.
       overlay : {
         type    : Boolean,
@@ -88,16 +166,16 @@ export function usePopup(options?: PopupOptions) {
     },
 
     watch : {
-      visable(val) {
+      visible(val) {
         const action = val ? 'open' : 'close';
         this[action]();
       },
     },
 
     beforeMount() {
-      this.visable = this.inited = this.visable || (
-        isDef(this.$attrs.visable)
-          && (this.$attrs.visable as string | boolean) !== false
+      this.visible = this.inited = this.visible || (
+        isDef(this.$attrs.visible)
+          && (this.$attrs.visible as string | boolean) !== false
       );
     },
 
@@ -118,7 +196,6 @@ export function usePopup(options?: PopupOptions) {
     },
 
     beforeDestroy() {
-      delegate.destroy();
       this.close();
     },
 
@@ -126,112 +203,31 @@ export function usePopup(options?: PopupOptions) {
       async open() {
         if (this.$isServer) return;
         if (opened) return;
-        if (!this.visable) {
-          this.visable = true;
-          return;
-        }
 
-        this.$nextTick(() => {
-          if (!delegate.mounted()) {
-            delegate.on({
-              click : this.onOverlayTap,
-            });
-            delegate.style({
-              zIndex   : 0,
-              opacity  : 0,
-              position : 'absolute',
-            });
-            delegate.mount();
-            const parent = getAnchor(this.$el, type);
-            parent.insertBefore(delegate.el!, parent.firstChild);
-          }
-          // update z-index
-          (this.$el as HTMLElement).style.zIndex = String(++popupId + 1000);
+        popupStack.push(this);
+        popupId++;
 
-          if (!scoped) {
-            requestAnimationFrame(() => {
-              delegate.style({
-                zIndex   : popupId + 1000,
-                opacity  : 0.45,
-                position : 'fixed',
-              });
-            });
-          }
-        });
+        await this.$nextTick();
+        openOverlay(this.$el);
+        (this.$el as HTMLElement).style.zIndex = String(overlay.zIndex);
       },
       async close() {
         if (this.$isServer) return;
         if (closed) return;
-        if (this.visable) {
-          this.visable = false;
-          return;
-        }
-        if (delegate.mounted()) {
-          delegate.style({
-            zIndex   : popupId + 1000,
-            opacity  : 0,
-            position : scoped ? 'absolute' : 'fixed',
-          });
-          once(delegate.el!, 'transitionend', () => {
-            if (this.visable) return;
-            delegate.destroy();
-          });
-        }
-      },
 
-      onBeforeEnter() {
-        opened = false;
-        closed = false;
-        this.$emit('aboutToShow');
-      },
-      onAfterEnter() {
-        opened = true;
-        closed = false;
-        this.$emit('opened');
-      },
-      onBeforeLeave() {
-        opened = false;
-        closed = false;
-        this.$emit('aboutToHide');
-      },
-      onAfterLeave() {
-        opened = false;
-        closed = true;
-        this.$emit('closed');
-      },
-      onOverlayTap() {
-        if (!this.closeOnClickOutside) return;
-        this.visable = false;
-      },
-      onClickOutside() {
-        if (!this.closeOnClickOutside) return;
-        this.visable = false;
-      },
-    },
+        const index = popupStack.indexOf(this);
+        popupStack.splice(index, 1);
+        popupId--;
 
-    afterRender(vnode, ctx) {
-      const { position } = ctx;
-      const transition = position === 'center'
-        ? 'line-fade'
-        : `line-slide-${ position }`;
-
-      console.log(position, transition);
-      const data = {
-        props : {
-          name   : transition,
-          appear : true,
-          // css    : false,
-        },
-        on : {
-          'before-enter' : this.onBeforeEnter,
-          'after-enter'  : this.onAfterEnter,
-          'before-leave' : this.onBeforeLeave,
-          'after-leave'  : this.onAfterLeave,
-        },
-      };
-      return this.$createElement(
-        'transition', data, [vnode],
-      );
+        await this.$nextTick();
+        closeOverlay();
+      },
+      focous() {
+        // focus content element or focusable element in content element
+        // shake dialog
+        // TBD
+        this.$el && (this.$el as HTMLElement).focus();
+      },
     },
   });
 }

@@ -34,6 +34,7 @@ export function useClickOutside(options?: ClickOutsideOptions) {
       return !elements.some(element => element.contains(ev.target as Node));
     },
   } = options || {};
+
   return createMixins({
     mixins : [
       useEvent<ClickOutsideOptions>({ event, handler, condition }),

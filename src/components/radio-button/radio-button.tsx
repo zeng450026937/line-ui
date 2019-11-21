@@ -21,10 +21,14 @@ export default createComponent({
         class={bem()}
         on={this.$listeners}
       >
-        <RadioIndicator
-          checked={this.checked}
-          disabled={this.disabled}
-        ></RadioIndicator>
+        {
+          this.slots('indicator') || (
+            <RadioIndicator
+              checked={this.checked}
+              disabled={this.disabled}
+            ></RadioIndicator>
+          )
+        }
         { this.slots() || this.text }
       </div>
     );
