@@ -28,9 +28,7 @@ import {
   BeforeRenderHook,
   AfterRenderHook,
 } from '@/mixins/use-render';
-import { useSlots } from '@/mixins/use-slots';
-import { useBEM } from '@/mixins/use-bem';
-import { useI18N } from '@/mixins/use-i18n';
+import { useComponent } from '@/mixins/use-component';
 import { Mods } from '@/utils/namespace/bem';
 
 export function install(this: ComponentOptions<Vue>, Vue: VueConstructor) {
@@ -154,7 +152,7 @@ export function createComponent(name: string) {
       transformFunctionComponent(sfc);
     } else {
       sfc.mixins = sfc.mixins || [];
-      sfc.mixins.push(useRender(), useSlots(name), useBEM(name), useI18N(name));
+      sfc.mixins.push(useComponent(name), useRender());
     }
 
     sfc.name = name;

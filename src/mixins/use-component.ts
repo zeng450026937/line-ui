@@ -1,15 +1,19 @@
-// Use scopedSlots in Vue 2.6+
-// downgrade to slots in lower version
-import { createMixins } from '@/utils/mixins';
 
-export function useSlots(name?: string) {
+import { createMixins } from '@/utils/mixins';
+import { createBEM } from '@/utils/namespace/bem';
+import { createI18N } from '@/utils/namespace/i18n';
+
+import '@/locale';
+
+export function useComponent(name: string) {
   return createMixins({
     props : {
-      // TODO: test if it is ok to work with jsx
       scopedSlots : Object,
     },
 
     methods : {
+      // Use scopedSlots in Vue 2.6+
+      // downgrade to slots in lower version
       slots(name = 'default', props: any) {
         const { $slots, $scopedSlots, scopedSlots = {} } = this;
         const scopedSlot = $scopedSlots[name] || scopedSlots[name];
@@ -20,6 +24,10 @@ export function useSlots(name?: string) {
 
         return $slots[name];
       },
+
+      bem : createBEM(name),
+
+      t : createI18N(name),
     },
   });
 }

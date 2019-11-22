@@ -5,108 +5,97 @@ import { useRemote } from '@/mixins/use-remote';
 import { useModel } from '@/mixins/use-model';
 import { useClickOutside } from '@/mixins/use-click-outside';
 import { useTransition } from '@/mixins/use-transition';
+import { popupStack, PopupInterface } from '@/utils/popup';
 import { isDef } from '@/utils/helpers';
 import { Overlay } from '@/components/overlay';
-import { once } from '@/utils/dom/event';
-import { createAnimation } from '@/utils/animation';
-import { Animation } from '@/utils/animation/animation-interface';
-
-let popupId = 0;
 
 export interface PopupOptions {
   scoped?: boolean;
 }
 
-const getAppRoot = (doc: Document = document) => {
+function getAppRoot(doc: Document = document) {
   return doc.querySelector('[line-app]') || doc.body;
-};
-const getAnimationDuration = (el: Element) => {
-  const style = window.getComputedStyle(el);
-  return style.getPropertyValue('animation-duration')
-   || style.getPropertyValue('transition-duration');
-};
-const getIndex = () => {
-  return `${ 2000 + popupId++ }`;
-};
+}
 
-const popupStack = [] as Array<any>;
-const overlayStack = [] as Array<any>;
-let overlay: Vue & { value: boolean, zIndex: Number | String } | null;
+function getZIndex() {
+  return String(popupStack.length + 2000);
+}
+
+type OverlayInterface = Vue & {
+  value: boolean;
+  zIndex: Number | String;
+}
+
+let appOverlay: OverlayInterface | null;
 
 export function usePopup(options?: PopupOptions) {
   const { scoped = false } = options || {};
+  let overlay: OverlayInterface | null;
   let opened = false;
   let closed = true;
+  let zIndex: string | null;
 
-  async function openOverlay(baseEl: Element) {
+  function createOverlay() {
+    return new (Vue.extend(Overlay))({
+      propsData : {
+        transition : 'line-fade',
+      },
+    }).$mount();
+  }
+
+  let onTap: any;
+
+  function openOverlay(vm: PopupInterface) {
+    popupStack.push(vm);
+
     if (!overlay) {
-      overlay = new (Vue.extend(Overlay))({
-        propsData : {
-          transition : 'line-fade',
-        },
-      });
-      overlay.$mount();
+      overlay = scoped
+        ? createOverlay() as OverlayInterface
+        : (appOverlay || (appOverlay = createOverlay() as OverlayInterface));
     }
 
-    const parent = scoped ? baseEl.parentNode! : getAppRoot();
+    const parent = scoped ? vm.$el.parentNode! : getAppRoot();
     // parent.appendChild(overlay.$el);
     parent.insertBefore(overlay.$el, parent.firstChild);
 
-    opened = false;
-    closed = false;
+    zIndex = getZIndex();
 
-    overlay.$once('after-enter', () => {
-      opened = true;
-      closed = false;
-    });
+    overlay.zIndex = zIndex;
     overlay.value = true;
 
-    // const animation = createAnimation()
-    //   .addElement(overlay.$el)
-    //   .fromTo('opacity', 0, 1)
-    //   .easing('cubic-bezier(0.36,0.66,0.04,1)')
-    //   .duration(1400);
+    (vm.$el as HTMLElement).style.zIndex = zIndex;
 
-    // await animation.play();
-    // opened = true;
-    // closed = false;
+    if (onTap) {
+      overlay.$off('tap', onTap);
+      onTap = null;
+    }
+    onTap = (...args: any[]) => vm.$emit('overlay:tap', ...args);
+    overlay.$on('tap', onTap);
   }
-  async function closeOverlay() {
+
+  function closeOverlay(vm: PopupInterface) {
+    popupStack.splice(popupStack.indexOf(vm), 1);
+
     if (!overlay) return;
-    opened = false;
-    closed = false;
 
     overlay.$once('after-leave', () => {
-      opened = false;
-      closed = true;
-      if (!overlay) return;
-      // overlay!.$el.remove();
-      // overlay!.$destroy();
-      // overlay = null;
-      if (popupStack.length === 0) {
-        overlay.$el.remove();
-        overlay.$destroy();
-        overlay = null;
+      if (scoped || !!popupStack.length) return;
+
+      overlay!.$el.remove();
+      overlay!.$destroy();
+      overlay = null;
+
+      if (!scoped) {
+        appOverlay = null;
       }
     });
+    overlay.zIndex = getZIndex();
     overlay.value = false;
-    // const animation = createAnimation()
-    //   .addElement(overlay.$el)
-    //   .fromTo('opacity', 1, 0)
-    //   .easing('ease-out')
-    //   .duration(1250);
 
-    // await animation.play();
-
-    // opened = false;
-    // closed = true;
-    // overlay.value = false;
-
-    // if (popupStack.length === 0) {
-    //   overlay!.$el.remove();
-    //   overlay!.$destroy();
-    //   overlay = null;
-    // }
+    if (onTap) {
+      overlay.$off('tap', onTap);
+      onTap = null;
+    }
   }
 
   return createMixins({
@@ -172,6 +161,13 @@ export function usePopup(options?: PopupOptions) {
       },
     },
 
+    created() {
+      this.$on('overlay:tap', () => {
+        if (!this.closeOnClickOutside) return;
+        this.visible = false;
+      });
+    },
+
     beforeMount() {
       this.visible = this.inited = this.visible || (
         isDef(this.$attrs.visible)
@@ -204,29 +200,47 @@ export function usePopup(options?: PopupOptions) {
         if (this.$isServer) return;
         if (opened) return;
 
-        popupStack.push(this);
-        popupId++;
+        this.visible = true;
+
+        opened = false;
+        closed = false;
+        this.$emit('aboutToShow');
 
         await this.$nextTick();
-        openOverlay(this.$el);
-        (this.$el as HTMLElement).style.zIndex = String(overlay.zIndex);
+
+        openOverlay(this as any);
+
+        // TODO: find some a way to know animation end
+        // or if there is no animation, fire immediately
+        opened = true;
+        closed = false;
+        this.$emit('opened');
       },
       async close() {
         if (this.$isServer) return;
         if (closed) return;
 
-        const index = popupStack.indexOf(this);
-        popupStack.splice(index, 1);
-        popupId--;
+        this.visible = false;
+
+        opened = false;
+        closed = false;
+        this.$emit('aboutToHide');
 
         await this.$nextTick();
-        closeOverlay();
+
+        closeOverlay(this as any);
+
+        // TODO: find some a way to know animation end
+        // or if there is no animation, fire immediately
+        opened = false;
+        closed = true;
+        this.$emit('closed');
       },
       focous() {
-        // focus content element or focusable element in content element
-        // shake dialog
-        // TBD
-        this.$el && (this.$el as HTMLElement).focus();
+        const firstInput = this.$el.querySelector('input,button') as HTMLElement | null;
+        if (firstInput) {
+          firstInput.focus();
+        }
       },
     },
   });

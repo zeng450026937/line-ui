@@ -33,8 +33,6 @@ class OverlayDelegate {
   }
 }
 
-interface OverlayInfo
-
 class OverlayController {
   stack: Array<any> = [];
 

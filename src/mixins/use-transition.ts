@@ -1,4 +1,5 @@
 import { createMixins } from '@/utils/mixins';
+import { isObject } from '@/utils/helpers';
 
 const TRANSITION_EVENTS = [
   'before-enter',
@@ -16,27 +17,36 @@ const TRANSITION_EVENTS = [
 ];
 
 export interface TransitionOptions {
+  // fallback transition name
+  name?: string,
   appear?: boolean,
   css?: boolean,
 }
 
 export function useTransition(options?: TransitionOptions) {
-  const { appear = true, css = true } = options || {};
+  const { name, appear = true, css = true } = options || {};
   return createMixins({
     props : {
-      transition : String,
+      transition : [String, Object],
     },
 
-    afterRender(vnode, ctx) {
-      const { transition = this.transition } = ctx;
-      if (css && !transition) return;
-      const data = {
-        props : {
-          name : transition,
+    afterRender(vnode) {
+      const transition = isObject(this.transition)
+        ? this.transition
+        : {
+          name : this.transition || name,
           appear,
           css,
-        },
-        on : TRANSITION_EVENTS.reduce((prev, val) => {
+        };
+      // allow user to change transition
+      // for internally use
+      this.$emit('transition', transition);
+
+      if (transition.css && !transition.name) return;
+
+      const data = {
+        props : transition,
+        on    : TRANSITION_EVENTS.reduce((prev, val) => {
           prev[val] = (...args: any[]) => this.$emit(val, ...args);
           return prev;
         }, {} as Record<string, any>),

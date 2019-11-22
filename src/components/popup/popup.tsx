@@ -12,7 +12,7 @@ export default createComponent({
     return (
       <div
         v-show={this.visible}
-        aria-modal="false"
+        aria-modal="true"
         role="dialog"
         class={bem()}
       >
