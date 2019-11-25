@@ -51,10 +51,12 @@ export function useGroupItem(name: string, options?: GroupItemOptions) {
 
     methods : {
       toggle() {
+        if (this.disabled) return;
+        this.$emit('clicked');
         if (!uncheckable && this.checked) return;
-        if (this.checkable && !this.disabled) {
-          this.checked = !this.checked;
-        }
+        if (!this.checkable) return;
+        this.checked = !this.checked;
+        this.$emit('toggled', this.checked);
       },
     },
 
@@ -79,7 +81,6 @@ export function useGroupItem(name: string, options?: GroupItemOptions) {
       }
     },
 
-    // TODO: need discussion
     afterRender(vnode) {
       if (!autoCheck) return;
       // Inject click listener

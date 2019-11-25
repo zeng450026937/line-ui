@@ -1,34 +1,26 @@
-$overlay-color: rgba(0, 0, 0, 0.45) !default;
-$overlay-z-index: 2 !default;
+@import "./overlay.vars";
 
 .line {
   &-overlay {
+    @include position(0, 0, 0, 0);
+
     display: block;
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-
+  
     transform: translateZ(0);
-
-    // transition: 0.4s cubic-bezier(0.36, 0.66, 0.04, 1), z-index 1ms;
-
-    border-radius: inherit;
-
-    background-color: $overlay-color;
-
+  
     contain: strict;
-    cursor: auto;
+    cursor: pointer;
+    opacity: .4;
     touch-action: none;
-    z-index: $overlay-z-index;
+    z-index: $z-index-backdrop;
 
     &--hide {
       background: transparent;
     }
     
-    &--tappable {
-      cursor: pointer;
+    &--no-tappable {
+      cursor: auto;
     }
   }
 }

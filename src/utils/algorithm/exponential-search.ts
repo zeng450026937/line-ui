@@ -6,7 +6,7 @@ export function exponentialSearch<T>(
   compare: CompareFunc<T>,
   from: number,
   to: number,
-  bound: number,
+  bound?: number,
 ): number {
   let index = from;
   let interval = 1;

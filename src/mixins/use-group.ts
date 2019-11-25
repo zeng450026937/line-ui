@@ -108,6 +108,7 @@ export function useGroup(name: string, options?: ModelOptions) {
       registerItem(item: GroupItem) {
         const index = this.items.push(item);
         item.$watch('checked', (val: boolean) => this.onItemChecked(item, val));
+        item.$on('clicked', () => this.$emit('clicked', item));
         return index;
       },
       unregisterItem(item: GroupItem) {

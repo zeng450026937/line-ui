@@ -1,15 +1,12 @@
 import { createNamespace } from '@/utils/namespace';
-import { useLazy } from '@/mixins/use-lazy';
-import { useTransition } from '@/mixins/use-transition';
 import { GESTURE_CONTROLLER } from '@/utils/gesture';
 import { now } from '@/utils/helpers';
 import '@/components/overlay/overlay.scss';
+import '@/components/overlay/overlay.ios.scss';
 
 const [createComponent, bem] = createNamespace('overlay');
 
 export default createComponent({
-  mixins : [useLazy(), useTransition()],
-
   props : {
     visible : {
       type    : Boolean,
@@ -22,10 +19,6 @@ export default createComponent({
     stopPropagation : {
       type    : Boolean,
       default : true,
-    },
-    zIndex : {
-      type    : [Number, String],
-      default : 2000,
     },
   },
 
@@ -71,14 +64,10 @@ export default createComponent({
   render() {
     return (
       <div tabindex="-1"
-        v-show={!!this.value}
         class={bem({
-          hide     : !this.visible,
-          tappable : this.tappable,
+          hide          : !this.visible,
+          'no-tappable' : !this.tappable,
         })}
-        style={{
-          zIndex : this.zIndex,
-        }}
         on={{
           '!touchstart' : this.onTouchStart,
           '!click'      : this.onMouseDown,

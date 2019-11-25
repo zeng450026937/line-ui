@@ -10,10 +10,10 @@ const TRANSITION_EVENTS = [
   'leave',
   'after-leave',
   'leave-cancelled',
-  'before-appear',
-  'appear',
-  'after-appear',
-  'appear-cancelled',
+  // 'before-appear',
+  // 'appear',
+  // 'after-appear',
+  // 'appear-cancelled',
 ];
 
 export interface TransitionOptions {

@@ -5,7 +5,7 @@ const getAppRoot = (doc: Document = document) => {
   return doc.querySelector('[line-app]') || doc.body;
 };
 
-let overlay: any
+let overlay: any;
 const stack = [] as Array<any>;
 
 class OverlayDelegate {

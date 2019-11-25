@@ -1,5 +1,5 @@
 
-export type CompareFunc<T> = (val: T, wanted: T, index?: number) => number;
+export type CompareFunc<T> = (val: T, wanted: number, index?: number) => number;
 
 export const DefaultCompare: CompareFunc<any> = (val, wanted) => (
   val < wanted
@@ -17,9 +17,9 @@ export const DefaultCompare: CompareFunc<any> = (val, wanted) => (
  * @param to (optional) exclusive end index
  * @param bound (optional) (-1) first index; (1) last index; (0) doesn't matter
  */
-export function binarySearch<T>(
+export function binarySearch<T = any>(
   array: Array<T> = [],
-  wanted: T,
+  wanted: number,
   compare: CompareFunc<T> = DefaultCompare,
   from: number = 0,
   to: number = array.length - 1,

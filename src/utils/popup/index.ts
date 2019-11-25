@@ -3,6 +3,9 @@ import { Vue } from 'vue/types/vue';
 import { BackButtonEvent } from '@/utils/hardware-back-button';
 
 export type PopupInterface = Vue & {
+  dim: boolean;
+  translucent: boolean;
+  modal: boolean;
   open(): Promise<void> | void;
   close(): Promise<void> | void;
   focus(): void;

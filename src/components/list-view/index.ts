@@ -1,3 +1,3 @@
-import ListView from './ListView.vue';
+import ListView from '@/components/list-view/list-view';
 
 export { ListView };
