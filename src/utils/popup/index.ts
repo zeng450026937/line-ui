@@ -8,10 +8,11 @@ export type PopupInterface = Vue & {
   translucent: boolean;
   modal: boolean;
   open(): Promise<void> | void;
-  close(): Promise<void> | void;
+  close(reason?: string): Promise<void> | void;
   focus(): void;
   closeOnClickOutside: boolean;
   closeOnEscape: boolean;
+  destroyWhenClose: boolean;
 };
 
 export const popupStack = [] as Array<PopupInterface>;
@@ -36,7 +37,7 @@ export function setupPopup(doc: Document = document) {
     const lastPopup = getPopup();
     if (lastPopup && lastPopup.closeOnClickOutside) {
       (ev as BackButtonEvent).detail.register(100, () => {
-        return lastPopup.close();
+        lastPopup.close();
       });
     }
   });

@@ -36,7 +36,6 @@
   "sideEffects": false,
   "dependencies": {
     "core-js": "^3.3.3",
-    "normalize.css": "^8.0.1",
     "popper.js": "^1.16.0",
     "swiper": "^5.2.0",
     "vue": "^2.6.10"

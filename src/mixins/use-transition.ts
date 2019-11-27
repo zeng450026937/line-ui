@@ -37,7 +37,6 @@ export function useTransition(options?: TransitionOptions) {
     ...LEAVE_EVENTS,
     ...(appearHook ? APPEAR_EVENTS : []),
   ];
-  let hooks: any;
 
   return createMixins({
     props : {
@@ -46,7 +45,7 @@ export function useTransition(options?: TransitionOptions) {
     },
 
     created() {
-      hooks = events.reduce((prev, val) => {
+      this.hooks = events.reduce((prev, val) => {
         // Vue check hook funcion's argments length with Function.length
         // While ...args will left Function.length to be 0
         // and the hook will not work right
@@ -75,7 +74,7 @@ export function useTransition(options?: TransitionOptions) {
 
       const data = {
         props : transition,
-        on    : hooks,
+        on    : this.hooks,
       };
       /* eslint-disable-next-line */
       return this.$createElement(

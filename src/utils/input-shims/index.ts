@@ -11,7 +11,7 @@ const SCROLL_ASSIST = true;
 const SCROLL_PADDING = true;
 const HIDE_CARET = true;
 
-export const startInputShims = (config: Config) => {
+export const setupInputShims = (config: Config) => {
   const doc = document;
   const keyboardHeight = config.getNumber('keyboardHeight', 290);
   const scrollAssist = config.getBoolean('scrollAssist', true);

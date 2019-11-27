@@ -14,7 +14,7 @@ export interface PopupOptions {
 }
 
 function getAppRoot(doc: Document = document) {
-  return doc.querySelector('[line-app]') || doc.body;
+  return doc.querySelector('[skyline-app]') || doc.body;
 }
 
 function getZIndex() {

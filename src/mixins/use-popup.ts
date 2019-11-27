@@ -12,8 +12,8 @@ export interface PopupOptions {
   disableScroll?: boolean;
 }
 
-function prepare(popup: PopupInterface) {
-  (popup.$el as HTMLElement).style.zIndex = String(popupStack.length + 2000);
+function prepare(baseEl: HTMLElement) {
+  baseEl.style.zIndex = String(popupStack.length + 2000);
 }
 
 export function usePopup(options?: PopupOptions) {
@@ -119,16 +119,13 @@ export function usePopup(options?: PopupOptions) {
       this.blocker = GESTURE_CONTROLLER.createBlocker({
         disableScroll,
       });
+      // internal flag
+      this.destroyWhenClose = false;
 
       const onEnter = async (el: HTMLElement, done: Function) => {
-        if (!this._isMounted) {
-          // Ensure child element exsit
-          await this.$nextTick();
-        }
-
         this.$emit('aboutToShow');
 
-        prepare(this as any);
+        prepare(el);
         popupStack.push(this as any);
 
         const builder = {};
@@ -161,6 +158,12 @@ export function usePopup(options?: PopupOptions) {
 
         done();
         this.$emit('closed', closeReason);
+
+        if (this.destroyWhenClose) {
+          await this.$nextTick();
+          this.$destroy();
+          this.$el.remove();
+        }
       };
       const onCancel = async () => {
         if (!animation) return;
@@ -223,6 +226,7 @@ export function usePopup(options?: PopupOptions) {
         if (this.$isServer) return;
         if (this.opened) return;
 
+        this.inited = true;
         this.visible = true;
 
         // this.blocker.block();
