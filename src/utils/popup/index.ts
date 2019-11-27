@@ -2,8 +2,26 @@
 import { Vue } from 'vue/types/vue';
 import { BackButtonEvent } from '@/utils/hardware-back-button';
 
+export type Transition = {
+  name: string;
+  appear: boolean;
+  css: boolean;
+  mode: string;
+  type: string;
+  enterClass: string;
+  leaveClass: string;
+  enterToClass: string;
+  leaveToClass: string;
+  enterActiveClass: string;
+  leaveActiveClass: string;
+  appearClass: string;
+  appearActiveClass: string;
+  appearToClass: string;
+  duration: number | string | object;
+};
+
 export type PopupInterface = Vue & {
-  transition: string | object,
+  transition: string | Transition,
   dim: boolean;
   translucent: boolean;
   modal: boolean;

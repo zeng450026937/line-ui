@@ -26,7 +26,6 @@ export const getMode = (elm: any) => {
 };
 
 export const getSkylineMode = (ref?: any): Mode => {
-  console.log('default', defaultMode);
   return (ref && getMode(ref)) || defaultMode;
 };
 

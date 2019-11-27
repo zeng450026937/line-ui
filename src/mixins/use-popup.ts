@@ -3,9 +3,10 @@ import { useLazy } from '@/mixins/use-lazy';
 import { useRemote } from '@/mixins/use-remote';
 import { useModel } from '@/mixins/use-model';
 import { useTransition } from '@/mixins/use-transition';
-import { popupStack, PopupInterface } from '@/utils/popup';
+import { popupStack, PopupInterface, Transition } from '@/utils/popup';
 import { GESTURE_CONTROLLER } from '@/utils/gesture';
 import { AnimationBuilder } from '@/utils/animation';
+import { config } from '@/utils/config';
 import { isDef } from '@/utils/helpers';
 
 export interface PopupOptions {
@@ -33,8 +34,7 @@ export function usePopup(options?: PopupOptions) {
 
     animation = animationBuilder(baseEl, options);
 
-    // if (!popup.transition || !config.getBoolean('animated', true)) {
-    if (!popup.transition) {
+    if (popup.transition || !config.getBoolean('animated', true)) {
       animation.duration(0);
     }
 
@@ -58,17 +58,12 @@ export function usePopup(options?: PopupOptions) {
       useLazy(),
       useRemote(),
       useModel('visible'),
-      useTransition(),
+      // Alway use transition
+      // as our lifecycle event depends on it
+      useTransition({ css: false }),
     ],
 
     props : {
-      transition : {
-        type : [String, Object],
-        // Use javascript animation/transition by default
-        default() {
-          return { css: false };
-        },
-      },
       // This property holds whether the popup show the overlay.
       overlay : {
         type    : Boolean,

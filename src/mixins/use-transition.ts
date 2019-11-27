@@ -58,7 +58,7 @@ export function useTransition(options?: TransitionOptions) {
       const transition = isObject(this.transition)
         ? {
           appear,
-          css,
+          // css,
           ...this.transition,
         }
         : {
