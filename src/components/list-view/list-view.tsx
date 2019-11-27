@@ -501,7 +501,10 @@ export default createComponent({
           }}
         ></div>
 
-        <transition-group tag={'div'} class={bem('content')}>
+        <transition-group
+          tag={'div'}
+          class={bem('content')}
+        >
           {
             Object.keys(this.views).map((index: any) => {
               const view = this.views[index];

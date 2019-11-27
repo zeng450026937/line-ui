@@ -3,6 +3,7 @@ import { Vue } from 'vue/types/vue';
 import { BackButtonEvent } from '@/utils/hardware-back-button';
 
 export type PopupInterface = Vue & {
+  transition: string | object,
   dim: boolean;
   translucent: boolean;
   modal: boolean;
@@ -40,7 +41,7 @@ export function setupPopup(doc: Document = document) {
     }
   });
 
-  // handle ESC to close overlay
+  // handle ESC to close popup
   doc.addEventListener('keyup', ev => {
     if (ev.key === 'Escape') {
       const lastPopup = getPopup();

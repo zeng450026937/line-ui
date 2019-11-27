@@ -1,119 +1,73 @@
-import Vue from 'vue';
 import { createMixins } from '@/utils/mixins';
 import { useLazy } from '@/mixins/use-lazy';
 import { useRemote } from '@/mixins/use-remote';
 import { useModel } from '@/mixins/use-model';
-import { useClickOutside } from '@/mixins/use-click-outside';
 import { useTransition } from '@/mixins/use-transition';
 import { popupStack, PopupInterface } from '@/utils/popup';
+import { GESTURE_CONTROLLER } from '@/utils/gesture';
+import { AnimationBuilder } from '@/utils/animation';
 import { isDef } from '@/utils/helpers';
-import { Overlay } from '@/components/overlay';
 
 export interface PopupOptions {
-  scoped?: boolean;
+  disableScroll?: boolean;
 }
 
-function getAppRoot(doc: Document = document) {
-  return doc.querySelector('[line-app]') || doc.body;
+function prepare(popup: PopupInterface) {
+  (popup.$el as HTMLElement).style.zIndex = String(popupStack.length + 2000);
 }
-
-function getZIndex() {
-  return String(popupStack.length + 2000);
-}
-
-type OverlayInterface = Vue & {
-  value: boolean;
-  zIndex: Number | String;
-  dim: boolean;
-  translucent: boolean;
-}
-
-let appOverlay: OverlayInterface | null;
 
 export function usePopup(options?: PopupOptions) {
-  const { scoped = false } = options || {};
-  let overlay: OverlayInterface | null;
-  let opened = false;
-  let closed = true;
-  let zIndex: string | null;
+  const { disableScroll = true } = options || {};
+  let closeReason: any;
+  let animation: any;
 
-  function createOverlay() {
-    return new (Vue.extend(Overlay))({
-      propsData : {
-        transition : 'line-fade',
-      },
-    }).$mount();
-  }
+  async function animate(
+    baseEl: HTMLElement,
+    popup: PopupInterface,
+    builder: { build: AnimationBuilder, options?: any },
+  ): Promise<boolean> {
+    const {
+      build: animationBuilder,
+      options,
+    } = builder;
 
-  let onTap: any;
+    animation = animationBuilder(baseEl, options);
 
-  function openOverlay(vm: PopupInterface) {
-    popupStack.push(vm);
-
-    if (!overlay) {
-      overlay = scoped
-        ? createOverlay() as OverlayInterface
-        : (appOverlay || (appOverlay = createOverlay() as OverlayInterface));
+    // if (!popup.transition || !config.getBoolean('animated', true)) {
+    if (!popup.transition) {
+      animation.duration(0);
     }
 
-    const parent = scoped ? vm.$el.parentNode! : getAppRoot();
-    // parent.appendChild(overlay.$el);
-    parent.insertBefore(overlay.$el, parent.firstChild);
-
-    zIndex = getZIndex();
-
-    overlay.zIndex = zIndex;
-    overlay.value = true;
-
-    (vm.$el as HTMLElement).style.zIndex = zIndex;
-
-    if (onTap) {
-      overlay.$off('tap', onTap);
-      onTap = null;
+    if (popup.closeOnEscape) {
+      animation.beforeAddWrite(() => {
+        const activeElement = baseEl.ownerDocument!.activeElement as HTMLElement;
+        if (activeElement && activeElement.matches('input, ion-input, ion-textarea')) {
+          activeElement.blur();
+        }
+      });
     }
-    onTap = (...args: any[]) => vm.$emit('overlay:tap', ...args);
-    overlay.$on('tap', onTap);
-  }
 
-  function closeOverlay(vm: PopupInterface) {
-    popupStack.splice(popupStack.indexOf(vm), 1);
+    await animation.play();
 
-    if (!overlay) return;
-
-    overlay.$once('after-leave', () => {
-      if (scoped || !!popupStack.length) return;
-
-      overlay!.$el.remove();
-      overlay!.$destroy();
-      overlay = null;
-
-      if (!scoped) {
-        appOverlay = null;
-      }
-    });
-    overlay.dim = vm.dim;
-    overlay.zIndex = getZIndex();
-    overlay.value = false;
-
-    if (onTap) {
-      overlay.$off('tap', onTap);
-      onTap = null;
-    }
+    animation = null;
+    return true;
   }
 
   return createMixins({
     mixins : [
-      useRemote(),
       useLazy(),
+      useRemote(),
       useModel('visible'),
-      useClickOutside(),
       useTransition(),
     ],
 
     props : {
       transition : {
-        type    : String,
-        default : 'line-fade',
+        type : [String, Object],
+        // Use javascript animation/transition by default
+        default() {
+          return { css: false };
+        },
       },
       // This property holds whether the popup show the overlay.
       overlay : {
@@ -126,7 +80,7 @@ export function usePopup(options?: PopupOptions) {
         type    : Boolean,
         default : undefined,
       },
-      // This property holds whether the popup translucent the background.
+      // This property holds whether the popup translucent the content.
       translucent : {
         type    : Boolean,
         default : false,
@@ -157,18 +111,84 @@ export function usePopup(options?: PopupOptions) {
       },
     },
 
-    watch : {
-      visible(val) {
-        const action = val ? 'open' : 'close';
-        this[action]();
-      },
-    },
-
     created() {
-      this.$on('overlay:tap', () => {
+      // This property holds whether the popup is fully open. The popup is considered opened when it's visible
+      // and neither the enter nor exit transitions are running.
+      this.opened = false;
+      // Scroll blocker
+      this.blocker = GESTURE_CONTROLLER.createBlocker({
+        disableScroll,
+      });
+
+      const onEnter = async (el: HTMLElement, done: Function) => {
+        if (!this._isMounted) {
+          // Ensure child element exsit
+          await this.$nextTick();
+        }
+
+        this.$emit('aboutToShow');
+
+        prepare(this as any);
+        popupStack.push(this as any);
+
+        const builder = {};
+        this.$emit('animation:enter', builder);
+
+        try {
+          await animate(el, this as any, builder as any);
+        } catch (e) {
+          console.error(e);
+        }
+
+        done();
+        this.opened = true;
+        this.$emit('opened');
+      };
+      const onLeave = async (el: HTMLElement, done: Function) => {
+        this.$emit('aboutToHide');
+        this.opened = false;
+
+        popupStack.splice(popupStack.indexOf(this as any), 1);
+
+        const builder = {};
+        this.$emit('animation:leave', builder);
+
+        try {
+          await animate(el, this as any, builder as any);
+        } catch (e) {
+          console.error(e);
+        }
+
+        done();
+        this.$emit('closed', closeReason);
+      };
+      const onCancel = async () => {
+        if (!animation) return;
+        animation.destroy();
+        animation = null;
+      };
+
+      const onBeforeEnter = () => {
+        this.blocker.block();
+      };
+      const onAfterLeave = () => {
+        this.blocker.unblock();
+      };
+
+      this.$on('before-enter', onBeforeEnter);
+      this.$on('after-leave', onAfterLeave);
+      this.$on('enter', onEnter);
+      this.$on('enter-cancelled', onCancel);
+      this.$on('leave', onLeave);
+      this.$on('leave-cancelled', onCancel);
+
+      // TODO:
+      // Find some way to create overlay inside mixins
+      const onTap = () => {
         if (!this.closeOnClickOutside) return;
         this.visible = false;
-      });
+      };
+      this.$on('overlay:tap', onTap);
     },
 
     beforeMount() {
@@ -201,43 +221,20 @@ export function usePopup(options?: PopupOptions) {
     methods : {
       async open() {
         if (this.$isServer) return;
-        if (opened) return;
+        if (this.opened) return;
 
         this.visible = true;
 
-        opened = false;
-        closed = false;
-        this.$emit('aboutToShow');
-
-        await this.$nextTick();
-
-        openOverlay(this as any);
-
-        // TODO: find some a way to know animation end
-        // or if there is no animation, fire immediately
-        opened = true;
-        closed = false;
-        this.$emit('opened');
+        // this.blocker.block();
       },
-      async close() {
+      async close(reason?: any) {
         if (this.$isServer) return;
-        if (closed) return;
+        if (!this.opened) return;
 
         this.visible = false;
+        closeReason = reason;
 
-        opened = false;
-        closed = false;
-        this.$emit('aboutToHide');
-
-        await this.$nextTick();
-
-        closeOverlay(this as any);
-
-        // TODO: find some a way to know animation end
-        // or if there is no animation, fire immediately
-        opened = false;
-        closed = true;
-        this.$emit('closed');
+        // this.blocker.unblock();
       },
       focous() {
         const firstInput = this.$el.querySelector('input,button') as HTMLElement | null;

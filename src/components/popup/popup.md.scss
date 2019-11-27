@@ -1,0 +1,29 @@
+@import "./popup";
+@import "./popup.md.vars";
+
+
+// Material Design Modals
+// --------------------------------------------------
+
+.line {
+  &-popup {
+    --backdrop-opacity: var(--ion-backdrop-opacity, 0.32);
+  }
+}
+
+@media only screen and (min-width: $popup-inset-min-width) and (min-height: $popup-inset-min-height-small) {
+  .line {
+    &-popup {
+      --border-radius: 2px;
+      --box-shadow: #{$popup-inset-box-shadow};
+    }
+  }
+}
+
+.line {
+  &-popup__wrapper {
+    @include transform(translate3d(0, 40px, 0));
+
+    opacity: .01;
+  }
+}

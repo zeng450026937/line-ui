@@ -1,6 +1,6 @@
 export interface SkylinConfig {
   rippleEffect?: boolean;
-  overlay?: boolean;
+  animated?: boolean;
 }
 
 export function setupConfig(config: SkylinConfig) {
@@ -20,7 +20,7 @@ export function setupConfig(config: SkylinConfig) {
 
 export function getMode() {
   const win = window as any;
-  const config = win && win.Ionic && win.Ionic.config;
+  const config = win && win.Skyline && win.Skyline.config;
   if (config) {
     if (config.mode) {
       return config.mode;

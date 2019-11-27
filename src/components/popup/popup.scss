@@ -1,31 +1,92 @@
+@import "./popup.vars";
+
 .line {
   &-popup {
-    position: fixed;
-    // position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
+     /**
+      * @prop --background: Background of the popup content
+      *
+      * @prop --border-color: Border color of the popup content
+      * @prop --border-radius: Border radius of the popup content
+      * @prop --border-width: Border width of the popup content
+      * @prop --border-style: Border style of the popup content
+      *
+      * @prop --min-width: Minimum width of the popup
+      * @prop --width: Width of the popup
+      * @prop --max-width: Maximum width of the popup
+      *
+      * @prop --min-height: Minimum height of the popup
+      * @prop --height: Height of the popup
+      * @prop --max-height: Maximum height of the popup
+      *
+      * @prop --backdrop-opacity: Opacity of the backdrop
+      */
+    --width: 100%;
+    --min-width: auto;
+    --max-width: auto;
+    --height: 100%;
+    --min-height: auto;
+    --max-height: auto;
+    --overflow: hidden;
+    --border-radius: 0;
+    --border-width: 0;
+    --border-style: none;
+    --border-color: transparent;
+    --background: #{$background-color};
+    --box-shadow: none;
 
-    // border: dotted plum;
-    // transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1), z-index 1ms;
+    @include position(0, 0, 0, 0);
 
-    &__content {
-      display: flex;
-      position: fixed;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
+    display: flex;
+    position: absolute;
+  
+    align-items: center;
+    justify-content: center;
+  
+    contain: strict;
 
-      flex-direction: column;
+    &__wrapper {
+      @include border-radius(var(--border-radius));
 
-      width: 100%;
-      height: 50%;
+      width: var(--width);
+      min-width: var(--min-width);
+      max-width: var(--max-width);
+    
+      height: var(--height);
+      min-height: var(--min-height);
+      max-height: var(--max-height);
+    
+      border-width: var(--border-width);
+      border-style: var(--border-style);
+      border-color: var(--border-color);
+    
+      background: var(--background);
+    
+      box-shadow: var(--box-shadow);
+      overflow: var(--overflow);
+      z-index: 10;
+    }
+  }
+}
 
-      background-color: whitesmoke;
 
-      z-index: inherit;
+@media only screen and (min-width: $popup-inset-min-width) and (min-height: $popup-inset-min-height-small) {
+  .line {
+    &-popup {
+      --width: #{$popup-inset-width};
+      --height: #{$popup-inset-height-small};
+      --ion-safe-area-top: 0px;
+      --ion-safe-area-bottom: 0px;
+      --ion-safe-area-right: 0px;
+      --ion-safe-area-left: 0px;
+    }
+  }
+}
+
+@media only screen and (min-width: $popup-inset-min-width) and (min-height: $popup-inset-min-height-large) {
+  .line {
+    &-popup {
+      --width: #{$popup-inset-width};
+      --height: #{$popup-inset-height-large};
     }
   }
 }

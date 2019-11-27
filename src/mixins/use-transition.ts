@@ -1,42 +1,71 @@
 import { createMixins } from '@/utils/mixins';
-import { isObject } from '@/utils/helpers';
+import { isObject, isDef } from '@/utils/helpers';
 
-const TRANSITION_EVENTS = [
+const ENTER_EVENTS = [
   'before-enter',
   'enter',
   'after-enter',
-  'before-leave',
   'enter-cancelled',
+];
+const LEAVE_EVENTS = [
+  'before-leave',
   'leave',
   'after-leave',
   'leave-cancelled',
-  // 'before-appear',
-  // 'appear',
-  // 'after-appear',
-  // 'appear-cancelled',
+];
+const APPEAR_EVENTS = [
+  'before-appear',
+  'appear',
+  'after-appear',
+  'appear-cancelled',
 ];
 
 export interface TransitionOptions {
-  // fallback transition name
-  name?: string,
-  appear?: boolean,
-  css?: boolean,
+  appear?: boolean;
+  css?: boolean;
+  appearHook?: boolean;
 }
 
 export function useTransition(options?: TransitionOptions) {
-  const { name, appear = true, css = true } = options || {};
+  const {
+    appear = true,
+    css = true,
+    appearHook = false,
+  } = options || {};
+  const events = [
+    ...ENTER_EVENTS,
+    ...LEAVE_EVENTS,
+    ...(appearHook ? APPEAR_EVENTS : []),
+  ];
+  let hooks: any;
+
   return createMixins({
     props : {
-      transition : [String, Object],
+      // string | object | false
+      transition : null as any,
+    },
+
+    created() {
+      hooks = events.reduce((prev, val) => {
+        // Vue check hook funcion's argments length with Function.length
+        // While ...args will left Function.length to be 0
+        // and the hook will not work right
+        prev[val] = (el: HTMLElement, done: Function) => this.$emit(val, el, done);
+        return prev;
+      }, {} as Record<string, any>);
     },
 
     afterRender(vnode) {
       const transition = isObject(this.transition)
-        ? this.transition
-        : {
-          name : this.transition || name,
+        ? {
           appear,
           css,
+          ...this.transition,
+        }
+        : {
+          name   : this.transition,
+          appear : !!this.transition || appear,
+          css    : !!this.transition || css,
         };
       // allow user to change transition
       // for internally use
@@ -46,10 +75,7 @@ export function useTransition(options?: TransitionOptions) {
 
       const data = {
         props : transition,
-        on    : TRANSITION_EVENTS.reduce((prev, val) => {
-          prev[val] = (...args: any[]) => this.$emit(val, ...args);
-          return prev;
-        }, {} as Record<string, any>),
+        on    : hooks,
       };
       /* eslint-disable-next-line */
       return this.$createElement(

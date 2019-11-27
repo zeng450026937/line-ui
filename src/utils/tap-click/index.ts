@@ -8,7 +8,7 @@ const ADD_ACTIVATED_DEFERS = 200;
 const CLEAR_STATE_DEFERS = 200;
 const MOUSE_WAIT = 2500;
 
-export const setupTapClick = (config: any) => {
+export const setupTapClick = (config?: any) => {
   let lastTouch = -MOUSE_WAIT * 10;
   let lastActivated = 0;
   let scrollingEl: HTMLElement | undefined;

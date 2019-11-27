@@ -1,3 +1,5 @@
+export const isDev = process.env.NODE_ENV === 'development';
+
 /* eslint-disable-next-line */
 declare const __zone_symbol__requestAnimationFrame: any;
 declare const requestAnimationFrame: any;
@@ -48,9 +50,9 @@ export const debounce = (func: (...args: any[]) => void, wait = 0) => {
 };
 
 
-export function isDef(value: any): boolean {
+export const isDef = (value: any): boolean => {
   return value !== undefined && value !== null;
-}
+};
 
 export const isEmpty = (val: unknown): val is any => {
   return (val === undefined

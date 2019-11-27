@@ -1,8 +1,10 @@
 import { createNamespace } from '@/utils/namespace';
 import { setupPlatforms, isPlatform } from '@/utils/platform';
+import { setupTapClick } from '@/utils/tap-click';
+import { setupFocusVisible } from '@/utils/focus-visible';
+import { setupPopup } from '@/utils/popup';
 
 const [createComponent, bem] = createNamespace('app');
-const CONTENT_ELEMENT = 'content';
 
 export default createComponent({
   props : {
@@ -20,14 +22,15 @@ export default createComponent({
 
   created() {
     setupPlatforms();
+    setupTapClick();
+    setupFocusVisible();
+    setupPopup();
   },
 
   render() {
     return (
-      <div id={this.id} skyline-app class={bem()}>
-        <div class={bem(CONTENT_ELEMENT)} ref="CONTENT_ELEMENT">
-          {this.slots()}
-        </div>
+      <div id={this.id} skyline-app class={[bem(), 'ion-page']}>
+        {this.slots()}
       </div>
     );
   },

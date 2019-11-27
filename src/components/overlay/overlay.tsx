@@ -1,5 +1,4 @@
 import { createNamespace } from '@/utils/namespace';
-import { GESTURE_CONTROLLER } from '@/utils/gesture';
 import { now } from '@/utils/helpers';
 import '@/components/overlay/overlay.scss';
 import '@/components/overlay/overlay.ios.scss';
@@ -24,17 +23,6 @@ export default createComponent({
 
   created() {
     this.lastClick = -10000;
-    this.blocker = GESTURE_CONTROLLER.createBlocker({
-      disableScroll : true,
-    });
-
-    if (this.stopPropagation) {
-      this.blocker.block();
-    }
-  },
-
-  beforeDestroy() {
-    this.blocker.unblock();
   },
 
   methods : {

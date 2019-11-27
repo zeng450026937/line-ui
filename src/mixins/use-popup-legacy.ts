@@ -1,23 +1,113 @@
+import Vue from 'vue';
 import { createMixins } from '@/utils/mixins';
 import { useLazy } from '@/mixins/use-lazy';
 import { useRemote } from '@/mixins/use-remote';
 import { useModel } from '@/mixins/use-model';
+import { useClickOutside } from '@/mixins/use-click-outside';
+import { useTransition } from '@/mixins/use-transition';
 import { popupStack, PopupInterface } from '@/utils/popup';
 import { isDef } from '@/utils/helpers';
-import { createAnimation } from '@/utils/animation';
+import { Overlay } from '@/components/overlay';
+
+export interface PopupOptions {
+  scoped?: boolean;
+}
+
+function getAppRoot(doc: Document = document) {
+  return doc.querySelector('[line-app]') || doc.body;
+}
 
 function getZIndex() {
   return String(popupStack.length + 2000);
 }
 
-export function usePopup() {
+type OverlayInterface = Vue & {
+  value: boolean;
+  zIndex: Number | String;
+  dim: boolean;
+  translucent: boolean;
+}
+
+let appOverlay: OverlayInterface | null;
+
+export function usePopup(options?: PopupOptions) {
+  const { scoped = false } = options || {};
+  let overlay: OverlayInterface | null;
   let opened = false;
+  let closed = true;
+  let zIndex: string | null;
+
+  function createOverlay() {
+    return new (Vue.extend(Overlay))({
+      propsData : {
+        transition : 'line-fade',
+      },
+    }).$mount();
+  }
+
+  let onTap: any;
+
+  function openOverlay(vm: PopupInterface) {
+    popupStack.push(vm);
+
+    if (!overlay) {
+      overlay = scoped
+        ? createOverlay() as OverlayInterface
+        : (appOverlay || (appOverlay = createOverlay() as OverlayInterface));
+    }
+
+    const parent = scoped ? vm.$el.parentNode! : getAppRoot();
+    // parent.appendChild(overlay.$el);
+    parent.insertBefore(overlay.$el, parent.firstChild);
+
+    zIndex = getZIndex();
+
+    overlay.zIndex = zIndex;
+    overlay.value = true;
+
+    (vm.$el as HTMLElement).style.zIndex = zIndex;
+
+    if (onTap) {
+      overlay.$off('tap', onTap);
+      onTap = null;
+    }
+    onTap = (...args: any[]) => vm.$emit('overlay:tap', ...args);
+    overlay.$on('tap', onTap);
+  }
+
+  function closeOverlay(vm: PopupInterface) {
+    popupStack.splice(popupStack.indexOf(vm), 1);
+
+    if (!overlay) return;
+
+    overlay.$once('after-leave', () => {
+      if (scoped || !!popupStack.length) return;
+
+      overlay!.$el.remove();
+      overlay!.$destroy();
+      overlay = null;
+
+      if (!scoped) {
+        appOverlay = null;
+      }
+    });
+    overlay.dim = vm.dim;
+    overlay.zIndex = getZIndex();
+    overlay.value = false;
+
+    if (onTap) {
+      overlay.$off('tap', onTap);
+      onTap = null;
+    }
+  }
 
   return createMixins({
     mixins : [
-      useRemote(),
       useLazy(),
+      useRemote(),
       useModel('visible'),
+      useClickOutside(),
+      useTransition(),
     ],
 
     props : {
@@ -65,8 +155,7 @@ export function usePopup() {
 
     watch : {
       visible(val) {
-        const action = val ? 'open' : 'close';
-        this[action]();
+        this[val ? 'open' : 'close']();
       },
     },
 
@@ -112,29 +201,37 @@ export function usePopup() {
         this.visible = true;
 
         opened = false;
+        closed = false;
         this.$emit('aboutToShow');
 
         await this.$nextTick();
 
+        openOverlay(this as any);
+
         // TODO: find some a way to know animation end
         // or if there is no animation, fire immediately
         opened = true;
+        closed = false;
         this.$emit('opened');
       },
       async close() {
         if (this.$isServer) return;
-        if (!opened) return;
+        if (closed) return;
 
         this.visible = false;
 
         opened = false;
+        closed = false;
         this.$emit('aboutToHide');
 
         await this.$nextTick();
 
+        closeOverlay(this as any);
+
         // TODO: find some a way to know animation end
         // or if there is no animation, fire immediately
         opened = false;
+        closed = true;
         this.$emit('closed');
       },
       focous() {

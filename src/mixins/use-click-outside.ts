@@ -16,7 +16,9 @@ export interface ClickOutsideOptions extends EventOptions {
 export function useClickOutside(options?: ClickOutsideOptions) {
   const {
     event = ['mouseup', 'touchend'],
-    handler = 'onClickOutside',
+    handler = function (this: VueInstance) {
+      this.$emit('clickoutside');
+    },
     condition = function (this: VueInstance, ev: Event, options: ClickOutsideOptions) {
       // If click was triggered programmaticaly (domEl.click()) then
       // it shouldn't be treated as click-outside

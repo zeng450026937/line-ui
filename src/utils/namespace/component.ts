@@ -118,8 +118,9 @@ export type LineComponent<
   Computed = any,
   Props = any,
 > = (
+  typeof Vue |
   FunctionalComponentOptions<Props> |
-  ComponentOptions<never, Data, Methods, Computed, Props>
+  ComponentOptions<Vue, Data, Methods, Computed, Props>
 ) &
  { name: string, install: typeof install } &
  TsxComponent<Props, Events, Slots>;

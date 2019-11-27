@@ -1,0 +1,26 @@
+@import "./popup";
+@import "./popup.ios.vars";
+
+// iOS Modals
+// --------------------------------------------------
+
+.line {
+  &-popup {
+    --backdrop-opacity: var(--ion-backdrop-opacity, 0.4);
+  }
+}
+
+@media only screen and (min-width: $popup-inset-min-width) and (min-height: $popup-inset-min-height-small) {
+  .line {
+    &-popup {
+      --border-radius: #{$popup-ios-border-radius};
+    }
+  }
+}
+
+.line {
+  &-popup__wrapper {
+    // hidden by default to prevent flickers, the animation will show it
+    @include transform(translate3d(0, 100%, 0));
+  }
+}

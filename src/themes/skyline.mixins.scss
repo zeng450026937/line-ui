@@ -168,9 +168,14 @@
 @mixin rtl() {
   $root: #{&};
 
-  @at-root #{add-root-selector($root, "[dir=rtl]")} {
-    @content;
+  @at-root [dir=rtl] {
+    #{$root} {
+      @content;
+    }
   }
+  // @at-root #{add-root-selector($root, "[dir=rtl]")} {
+  //   @content;
+  // }
 }
 
 @mixin ltr() {

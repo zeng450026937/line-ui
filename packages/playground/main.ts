@@ -1,13 +1,14 @@
 import Vue from 'vue';
 import App from './App.vue';
-import '@/style/reset.scss';
-import '@/style/ui.scss';
+// TODO:
+// Move var.scss to somewhere else, maybe move to theme default ?
 import '@/style/var.scss';
-import { setupTapClick } from '@/utils/tap-click';
+import '@/style/skyline.bundle.scss';
+import '@/style/animation.scss';
+import '@/themes/skyline.globals.scss';
+// import '@/themes/skyline.globals.ios.scss';
 
 Vue.config.productionTip = false;
-
-setupTapClick({});
 
 new Vue({
   render : h => h(App),
