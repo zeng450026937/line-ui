@@ -29,7 +29,7 @@ declare module 'vue/types/options' {
     mixins?: (ComponentOptions<Vue> | typeof Vue)[];
     extends?: ComponentOptions<Vue> | typeof Vue;
     // use-patch
-    shouldRender?: (prevProps: Record<string, any>, ctx: RenderContext) => boolean;
+    shouldRender?: (ctx: RenderContext) => boolean;
     beforeRender?: (ctx: RenderContext) => void;
     afterRender?: (vnode: VNode, ctx: RenderContext) => VNode | void | null | undefined;
     // namespace

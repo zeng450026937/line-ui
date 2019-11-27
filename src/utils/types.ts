@@ -55,8 +55,9 @@ export type InjectedKeys = {
 }
 
 export interface InjectOptions<Events = DefaultEvents, Slots = ScopedSlots> {
+  optimize?: boolean;
   // use-patch
-  shouldRender?: (prevProps?: Record<string, any>, ctx?: RenderContext) => boolean;
+  shouldRender?: (ctx?: RenderContext) => boolean;
   beforeRender?: (ctx: RenderContext) => void;
   afterRender?: (vnode: VNode, ctx: RenderContext) => VNode | void | null | undefined;
   // namespace

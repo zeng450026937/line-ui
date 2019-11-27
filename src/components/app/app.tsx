@@ -1,5 +1,6 @@
 import { createNamespace } from '@/utils/namespace';
-import { setupPlatforms, isPlatform } from '@/utils/platform';
+import { setupPlatforms } from '@/utils/platform';
+import { setupConfig } from '@/utils/config';
 import { setupTapClick } from '@/utils/tap-click';
 import { setupFocusVisible } from '@/utils/focus-visible';
 import { setupPopup } from '@/utils/popup';
@@ -21,7 +22,11 @@ export default createComponent({
   },
 
   created() {
+    // TODO:
+    // config must be setup before using
+    // child content is rendered before created
     setupPlatforms();
+    setupConfig();
     setupTapClick();
     setupFocusVisible();
     setupPopup();

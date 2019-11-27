@@ -1,6 +1,27 @@
+/* eslint-disable-next-line */
+import { Mode } from '@/types/interface';
+
 export interface SkylinConfig {
-  rippleEffect?: boolean;
+  /**
+   * The mode determines which platform styles to use for the whole application.
+   */
+  mode?: Mode;
+  /**
+   * When it's set to `false`, disables all animation and transition across the app.
+   * Can be useful to make ionic smoother in slow devices, when animations can't run smoothly.
+   */
   animated?: boolean;
+
+  /**
+   * When it's set to `false`, it disables all material-design ripple-effects across the app.
+   * Defaults to `true`.
+   */
+  rippleEffect?: boolean;
+
+  spinner?: string;
+
+  persistConfig?: boolean;
+  testing?: boolean;
 }
 
 const startsWith = (input: string, search: string): boolean => {

@@ -58,24 +58,15 @@ export function unifySlots(context: RenderContext): RenderContext {
 
 export function transformFunctionComponent(pure: FunctionalComponentOptions) {
   const {
-    shouldRender,
     beforeRender,
     render,
     afterRender,
   } = pure;
-  let prevProps: Record<string, any>;
-  let prevVNode: VNode | VNode[];
   pure.render = render && function patchedRender(h, ctx) {
-    // if (prevProps && !shallowCompare(prevProps, ctx.props)) return prevVNode;
     const renderProxy = undefined;
-    if (shouldRender && !shouldRender.call(renderProxy, prevProps, ctx)) {
-      return prevVNode;
-    }
     if (beforeRender) {
       (beforeRender as unknown as Array<BeforeRenderHook>).forEach((fn) => fn.call(renderProxy, ctx));
     }
-    ctx.prevProps = prevProps;
-    ctx.prevVNode = prevVNode;
     let vnode = render.call(renderProxy, h, unifySlots(ctx));
     if (afterRender) {
       (afterRender as unknown as Array<AfterRenderHook>)
@@ -83,8 +74,6 @@ export function transformFunctionComponent(pure: FunctionalComponentOptions) {
           vnode = fn.call(renderProxy, vnode as VNode, ctx) || vnode;
         });
     }
-    prevProps = ctx.props;
-    prevVNode = vnode;
     return vnode;
   };
 }

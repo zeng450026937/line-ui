@@ -1,31 +1,69 @@
-export interface SkylinConfig {
-  rippleEffect?: boolean;
-  animated?: boolean;
-}
+/* eslint-disable-next-line */
+import { Mode } from '@/types/interface';
+import { isPlatform } from '@/utils/platform';
+import {
+  config,
+  configFromSession,
+  configFromURL,
+  saveConfig,
+} from '@/utils/config/config';
+// export config
+export * from '@/utils/config/config';
 
-export function setupConfig(config: SkylinConfig) {
-  const win = window as any;
-  const { Skyline } = win;
-  if (Skyline && Skyline.config && Skyline.config.constructor.name !== 'Object') {
-    console.error('ionic config was already initialized');
-    return null;
-  }
-  win.Skyline = win.Skyline || {};
-  win.Skyline.config = {
-    ...win.Skyline.config,
-    ...config,
-  };
-  return win.Skyline.config;
-}
+let defaultMode: Mode;
 
-export function getMode() {
-  const win = window as any;
-  const config = win && win.Skyline && win.Skyline.config;
-  if (config) {
-    if (config.mode) {
-      return config.mode;
+export const getMode = (elm: any) => {
+  while (elm) {
+    const elmMode = (elm as any).mode || elm.getAttribute('mode');
+
+    if (elmMode) {
+      return elmMode;
     }
-    return config.get('mode');
+
+    elm = elm.parentElement;
   }
-  return 'md';
+  return defaultMode;
+};
+
+export const getSkylineMode = (ref?: any): Mode => {
+  console.log('default', defaultMode);
+  return (ref && getMode(ref)) || defaultMode;
+};
+
+export function setupConfig() {
+  console.log('setupConfig');
+  const doc = document;
+  const win = window;
+  const Skyline = (win as any).Skyline = (win as any).Skyline || {};
+
+  // create the Ionic.config from raw config object (if it exists)
+  // and convert Ionic.config into a ConfigApi that has a get() fn
+  const configObj = {
+    ...configFromSession(win),
+    persistConfig : false,
+    ...Skyline.config,
+    ...configFromURL(win),
+  };
+
+  config.reset(configObj);
+
+  if (config.getBoolean('persistConfig')) {
+    saveConfig(win, configObj);
+  }
+
+  // first see if the mode was set as an attribute on <html>
+  // which could have been set by the user, or by pre-rendering
+  // otherwise get the mode via config settings, and fallback to md
+  Skyline.config = config;
+  Skyline.mode = defaultMode = config.get(
+    'mode',
+    (doc.documentElement.getAttribute('mode')) || (isPlatform(win, 'ios') ? 'ios' : 'md'),
+  );
+  config.set('mode', defaultMode);
+  doc.documentElement.setAttribute('mode', defaultMode);
+  doc.documentElement.classList.add(defaultMode);
+
+  if (config.getBoolean('testing')) {
+    config.set('animated', false);
+  }
 }
