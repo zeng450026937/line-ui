@@ -3,11 +3,10 @@ import { createAnimation, Animation } from '@/utils/animation';
 /**
  * iOS Toast Enter Animation
  */
-export const iosEnterAnimation = (baseEl: ShadowRoot, position: string): Animation => {
+export const iosEnterAnimation = (baseEl: HTMLElement, position: string): Animation => {
   const baseAnimation = createAnimation();
   const wrapperAnimation = createAnimation();
 
-  const hostEl = baseEl.host || baseEl;
   const wrapperEl = baseEl.querySelector('.line-toast__wrapper') as HTMLElement;
 
   const bottom = 'calc(-10px - var(--ion-safe-area-bottom, 0px))';
@@ -22,7 +21,7 @@ export const iosEnterAnimation = (baseEl: ShadowRoot, position: string): Animati
     case 'middle':
       /* eslint-disable-next-line */
       const topPosition = Math.floor(
-        hostEl.clientHeight / 2 - wrapperEl.clientHeight / 2,
+        baseEl.clientHeight / 2 - wrapperEl.clientHeight / 2,
       );
       wrapperEl.style.top = `${ topPosition }px`;
       wrapperAnimation.fromTo('opacity', 0.01, 1);
@@ -32,7 +31,7 @@ export const iosEnterAnimation = (baseEl: ShadowRoot, position: string): Animati
       break;
   }
   return baseAnimation
-    .addElement(hostEl)
+    .addElement(baseEl)
     .easing('cubic-bezier(.155,1.105,.295,1.12)')
     .duration(400)
     .addAnimation(wrapperAnimation);

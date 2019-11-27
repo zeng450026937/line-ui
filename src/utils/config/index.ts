@@ -30,7 +30,6 @@ export const getSkylineMode = (ref?: any): Mode => {
 };
 
 export function setupConfig() {
-  console.log('setupConfig');
   const doc = document;
   const win = window;
   const Skyline = (win as any).Skyline = (win as any).Skyline || {};

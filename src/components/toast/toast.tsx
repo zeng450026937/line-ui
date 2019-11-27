@@ -28,9 +28,11 @@ export default createComponent({
   created() {
     this.$on('animation:enter', (builder: any) => {
       builder.build = iosEnterAnimation;
+      builder.options = this.position;
     });
     this.$on('animation:leave', (builder: any) => {
       builder.build = iosLeaveAnimation;
+      builder.options = this.position;
     });
 
     this.$on('opened', () => {
@@ -46,13 +48,14 @@ export default createComponent({
   },
 
   render() {
+    const { position } = this;
     return (
       <div
         v-show={this.visible}
         class={[bem()]}
       >
         <div
-          class={bem('wrapper', { bottom: true })}
+          class={bem('wrapper', { [position]: true })}
         >
           <div
             class={bem('container')}

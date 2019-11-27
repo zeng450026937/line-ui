@@ -30,6 +30,7 @@ export type PopupInterface = Vue & {
   focus(): void;
   closeOnClickOutside: boolean;
   closeOnEscape: boolean;
+  event?: Event;
   destroyWhenClose: boolean;
 };
 

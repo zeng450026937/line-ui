@@ -1,0 +1,21 @@
+@import "./popover";
+@import "./popover.md.vars";
+
+// Material Design Popover
+// --------------------------------------------------
+
+.line-popover {
+  --width: #{$popover-md-width};
+  --max-height: #{$popover-md-max-height};
+  --box-shadow: #{$popover-md-box-shadow};
+  --backdrop-opacity: var(--ion-backdrop-opacity, 0.32);
+}
+
+.line-popover__content {
+  @include border-radius($popover-md-border-radius);
+  @include transform-origin(start, top);
+}
+
+.line-popover__viewport {
+  transition-delay: 100ms;
+}

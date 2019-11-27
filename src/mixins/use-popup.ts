@@ -117,11 +117,17 @@ export function usePopup(options?: PopupOptions) {
       // internal flag
       this.destroyWhenClose = false;
 
-      const onEnter = async (el: HTMLElement, done: Function) => {
+      const onBeforeEnter = () => {
+        this.blocker.block();
         this.$emit('aboutToShow');
 
-        prepare(el);
         popupStack.push(this as any);
+      };
+      const onEnter = async (el: HTMLElement, done: Function) => {
+        // Ensure element & element's child is inserted as animation may need to calc element's size
+        await this.$nextTick();
+
+        prepare(el);
 
         const builder = {};
         this.$emit('animation:enter', builder);
@@ -133,15 +139,17 @@ export function usePopup(options?: PopupOptions) {
         }
 
         done();
+      };
+      const onAfterEnter = () => {
         this.opened = true;
         this.$emit('opened');
       };
-      const onLeave = async (el: HTMLElement, done: Function) => {
+
+      const onBeforeLeave = () => {
         this.$emit('aboutToHide');
         this.opened = false;
-
-        popupStack.splice(popupStack.indexOf(this as any), 1);
-
+      };
+      const onLeave = async (el: HTMLElement, done: Function) => {
         const builder = {};
         this.$emit('animation:leave', builder);
 
@@ -152,7 +160,12 @@ export function usePopup(options?: PopupOptions) {
         }
 
         done();
+      };
+      const onAfterLeave = async () => {
+        popupStack.splice(popupStack.indexOf(this as any), 1);
+
         this.$emit('closed', closeReason);
+        this.blocker.unblock();
 
         if (this.destroyWhenClose) {
           await this.$nextTick();
@@ -160,21 +173,19 @@ export function usePopup(options?: PopupOptions) {
           this.$el.remove();
         }
       };
+
       const onCancel = async () => {
         if (!animation) return;
         animation.destroy();
         animation = null;
       };
 
-      const onBeforeEnter = () => {
-        this.blocker.block();
-      };
-      const onAfterLeave = () => {
-        this.blocker.unblock();
-      };
-
       this.$on('before-enter', onBeforeEnter);
+      this.$on('after-enter', onAfterEnter);
+
+      this.$on('before-leave', onBeforeLeave);
       this.$on('after-leave', onAfterLeave);
+
       this.$on('enter', onEnter);
       this.$on('enter-cancelled', onCancel);
       this.$on('leave', onLeave);
@@ -217,10 +228,11 @@ export function usePopup(options?: PopupOptions) {
     },
 
     methods : {
-      async open() {
+      async open(ev?: Event) {
         if (this.$isServer) return;
         if (this.opened) return;
 
+        this.event = ev;
         this.inited = true;
         this.visible = true;
 

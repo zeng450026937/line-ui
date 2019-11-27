@@ -3,11 +3,10 @@ import { createAnimation, Animation } from '@/utils/animation';
 /**
  * MD Toast Enter Animation
  */
-export const mdEnterAnimation = (baseEl: ShadowRoot, position: string): Animation => {
+export const mdEnterAnimation = (baseEl: HTMLElement, position: string): Animation => {
   const baseAnimation = createAnimation();
   const wrapperAnimation = createAnimation();
 
-  const hostEl = baseEl.host || baseEl;
   const wrapperEl = baseEl.querySelector('.line-toast__wrapper') as HTMLElement;
 
   const bottom = 'calc(8px + var(--ion-safe-area-bottom, 0px))';
@@ -23,7 +22,7 @@ export const mdEnterAnimation = (baseEl: ShadowRoot, position: string): Animatio
     case 'middle':
       /* eslint-disable-next-line */
       const topPosition = Math.floor(
-        hostEl.clientHeight / 2 - wrapperEl.clientHeight / 2,
+        baseEl.clientHeight / 2 - wrapperEl.clientHeight / 2,
       );
       wrapperEl.style.top = `${ topPosition }px`;
       wrapperAnimation.fromTo('opacity', 0.01, 1);
@@ -34,7 +33,7 @@ export const mdEnterAnimation = (baseEl: ShadowRoot, position: string): Animatio
       break;
   }
   return baseAnimation
-    .addElement(hostEl)
+    .addElement(baseEl)
     .easing('cubic-bezier(.36,.66,.04,1)')
     .duration(400)
     .addAnimation(wrapperAnimation);

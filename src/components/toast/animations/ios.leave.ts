@@ -3,11 +3,10 @@ import { createAnimation, Animation } from '@/utils/animation';
 /**
  * iOS Toast Leave Animation
  */
-export const iosLeaveAnimation = (baseEl: ShadowRoot, position: string): Animation => {
+export const iosLeaveAnimation = (baseEl: HTMLElement, position: string): Animation => {
   const baseAnimation = createAnimation();
   const wrapperAnimation = createAnimation();
 
-  const hostEl = baseEl.host || baseEl;
   const wrapperEl = baseEl.querySelector('.line-toast__wrapper') as HTMLElement;
 
   const bottom = 'calc(-10px - var(--ion-safe-area-bottom, 0px))';
@@ -27,7 +26,7 @@ export const iosLeaveAnimation = (baseEl: ShadowRoot, position: string): Animati
       break;
   }
   return baseAnimation
-    .addElement(hostEl)
+    .addElement(baseEl)
     .easing('cubic-bezier(.36,.66,.04,1)')
     .duration(300)
     .addAnimation(wrapperAnimation);
