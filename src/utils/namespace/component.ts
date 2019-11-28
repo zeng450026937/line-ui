@@ -22,13 +22,9 @@ import {
 } from '@/utils/types';
 import '@/locale';
 import { camelize } from '@/utils/format/string';
-import {
-  useRender,
-  shallowCompare,
-  BeforeRenderHook,
-  AfterRenderHook,
-} from '@/mixins/use-render';
+import { useRender } from '@/mixins/use-render';
 import { useComponent } from '@/mixins/use-component';
+import { useMode } from '@/mixins/use-mode';
 import { Mods } from '@/utils/namespace/bem';
 
 export function install(this: ComponentOptions<Vue>, Vue: VueConstructor) {
@@ -57,23 +53,10 @@ export function unifySlots(context: RenderContext): RenderContext {
 }
 
 export function transformFunctionComponent(pure: FunctionalComponentOptions) {
-  const {
-    beforeRender,
-    render,
-    afterRender,
-  } = pure;
+  const { render } = pure;
   pure.render = render && function patchedRender(h, ctx) {
     const renderProxy = undefined;
-    if (beforeRender) {
-      (beforeRender as unknown as Array<BeforeRenderHook>).forEach((fn) => fn.call(renderProxy, ctx));
-    }
-    let vnode = render.call(renderProxy, h, unifySlots(ctx));
-    if (afterRender) {
-      (afterRender as unknown as Array<AfterRenderHook>)
-        .forEach((fn) => {
-          vnode = fn.call(renderProxy, vnode as VNode, ctx) || vnode;
-        });
-    }
+    const vnode = render.call(renderProxy, h, unifySlots(ctx));
     return vnode;
   };
 }
@@ -142,7 +125,7 @@ export function createComponent(name: string) {
       transformFunctionComponent(sfc);
     } else {
       sfc.mixins = sfc.mixins || [];
-      sfc.mixins.push(useComponent(name), useRender());
+      sfc.mixins.push(useComponent(name), useRender(), useMode());
     }
 
     sfc.name = name;

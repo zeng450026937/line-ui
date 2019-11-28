@@ -20,18 +20,11 @@ declare module 'vue/types/options' {
   }
 
   interface RenderContext<Props=DefaultProps> {
-    prevProps: Props;
     slots(name?: string, props?: any): any;
-    [K: string]: any;
+    [injectedKey: string]: any;
   }
 
   interface FunctionalComponentOptions {
-    mixins?: (ComponentOptions<Vue> | typeof Vue)[];
-    extends?: ComponentOptions<Vue> | typeof Vue;
-    // use-patch
-    shouldRender?: (ctx: RenderContext) => boolean;
-    beforeRender?: (ctx: RenderContext) => void;
-    afterRender?: (vnode: VNode, ctx: RenderContext) => VNode | void | null | undefined;
     // namespace
     events?: Record<string, any>;
     slots?: Record<string, any>;

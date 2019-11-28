@@ -21,7 +21,7 @@ export default createComponent({
     };
   },
 
-  created() {
+  beforeCreate() {
     // TODO:
     // config must be setup before using
     // child content is rendered before created
