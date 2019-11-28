@@ -1,14 +1,12 @@
-import { AnimationBuilder, ComponentProps, ComponentRef, FrameworkDelegate, Mode } from '../../interface';
+/* eslint-disable-next-line */
+import { AnimationBuilder, Mode } from '@/types/interface';
 
-export interface PopoverOptions<T extends ComponentRef = ComponentRef> {
-  component: T;
-  componentProps?: ComponentProps<T>;
+export interface PopoverOptions {
   showBackdrop?: boolean;
   backdropDismiss?: boolean;
   translucent?: boolean;
   cssClass?: string | string[];
   event?: Event;
-  delegate?: FrameworkDelegate;
   animated?: boolean;
 
   mode?: Mode;

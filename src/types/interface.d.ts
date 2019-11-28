@@ -1,7 +1,7 @@
 // Types from utils
 export { Animation, AnimationBuilder } from '@/utils/animation/animation-interface';
 export * from '@/utils/popup';
-export * from '@/global/config';
+export * from '@/utils/config';
 export { Gesture, GestureConfig, GestureDetail } from '@/utils/gesture';
 
 export type TextFieldTypes = 'date' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'url' | 'time';

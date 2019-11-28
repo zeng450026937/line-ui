@@ -34,6 +34,7 @@ export default createComponent({
       <i
         class={[bem(), 'material-icons']}
         style={{
+          'aria-label'     : text,
           'vertical-align' : 'middle',
           'font-size'      : convertToUnit(size),
         }}

@@ -32,12 +32,12 @@ export default createComponent({
     const text = props.name || getDefaultText(slots);
     return (
       <div
-        {...data}
         class ={bem()}
         style = {{
           width  : convertToUnit(props.width),
           height : convertToUnit(props.height),
         }}
+        {...data}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -46,7 +46,7 @@ export default createComponent({
           height="24"
           role="img"
           aria-hidden={!data.attrs!['aria-label']}
-          aria-label={data.attrs!['aria-label']}
+          aria-label={data.attrs!['aria-label'] || text}
         >
           {
             text

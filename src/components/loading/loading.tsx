@@ -51,6 +51,8 @@ export default createComponent({
     return (
       <div
         v-show={this.visible}
+        role="dialog"
+        aria-modal="true"
         class={bem({
           translucent : this.translucent,
         })}
@@ -61,7 +63,10 @@ export default createComponent({
         >
         </Overlay>
 
-        <div class={bem('wrapper')} role="dialog">
+        <div
+          role="dialog"
+          class={bem('wrapper')}
+        >
           {
             spinner && (
               <div class={bem('spinner')}>

@@ -1,4 +1,6 @@
-import { AnimationBuilder, Mode, SpinnerTypes } from '../../interface';
+/* eslint-disable-next-line */
+import { AnimationBuilder, Mode } from '@/types/interface';
+import { SpinnerTypes } from '@/components/spinner/spinner-configs';
 
 export interface LoadingOptions {
   spinner?: SpinnerTypes | null;

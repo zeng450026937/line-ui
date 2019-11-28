@@ -4,6 +4,8 @@
 import { now, pointerCoord } from '../helpers';
 
 const ACTIVATED = 'activated';
+const ACTIVATABLE = 'activatable';
+const ACTIVATABLE_INSTANT = 'activatable-instant';
 const ADD_ACTIVATED_DEFERS = 200;
 const CLEAR_STATE_DEFERS = 200;
 const MOUSE_WAIT = 2500;
@@ -173,7 +175,7 @@ const getActivatableTarget = (ev: any): any => {
       if ((el as any).vRipple) {
         return el;
       }
-      if (el.classList && el.classList.contains('activatable')) {
+      if (el.classList && el.classList.contains(ACTIVATABLE)) {
         return el;
       }
     }
@@ -183,7 +185,7 @@ const getActivatableTarget = (ev: any): any => {
 };
 
 const isInstant = (el: HTMLElement) => {
-  return el.classList.contains('activatable-instant');
+  return el.classList.contains(ACTIVATABLE_INSTANT);
 };
 
 const getRippleEffect = (el: HTMLElement) => {
