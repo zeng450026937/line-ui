@@ -1,3 +1,3 @@
-import Label from './Label.vue';
+import Label from '@/components/label/label';
 
 export { Label };

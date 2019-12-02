@@ -1,5 +1,13 @@
 import { createMixins } from '@/utils/mixins';
 import { config } from '@/utils/config';
+import { isString } from '@/utils/helpers';
+
+export function createModeClasses(mode: string) {
+  if (!isString(mode) || !mode) return undefined;
+  return {
+    [mode] : true,
+  };
+}
 
 export function useMode() {
   return createMixins({

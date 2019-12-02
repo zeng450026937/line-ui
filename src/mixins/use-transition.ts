@@ -21,6 +21,7 @@ const APPEAR_EVENTS = [
 ];
 
 export interface TransitionOptions {
+  group?: boolean;
   appear?: boolean;
   css?: boolean;
   appearHook?: boolean;
@@ -28,6 +29,7 @@ export interface TransitionOptions {
 
 export function useTransition(options?: TransitionOptions) {
   const {
+    group = false,
     appear = true,
     css = true,
     appearHook = false,
@@ -78,7 +80,7 @@ export function useTransition(options?: TransitionOptions) {
       };
       /* eslint-disable-next-line */
       return this.$createElement(
-        'transition', data, [vnode],
+        `transition${ group ? '-group' : '' }`, data, [vnode],
       );
     },
   });

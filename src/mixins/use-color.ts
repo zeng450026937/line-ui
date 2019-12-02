@@ -15,6 +15,19 @@ const COLORS = [
   'dark',
 ];
 
+export function createColorClasses(color: string) {
+  if (!isString(color) || !color) return undefined;
+  return {
+    'ion-color'              : true,
+    [`ion-color-${ color }`] : true,
+  };
+}
+
+export function getClassList(color?: Record<string, any>) {
+  if (!color) return [];
+  return Object.keys(color).filter(c => !!color[c]);
+}
+
 export function useColor() {
   return createMixins({
     props : {
@@ -35,10 +48,7 @@ export function useColor() {
     afterRender(vnode) {
       if (!vnode || !vnode.data) return;
       if (!isString(this.color) || !this.color) return;
-      const colorClasses = [
-        'ion-color',
-        `ion-color-${ this.color }`,
-      ];
+      const colorClasses = getClassList(createColorClasses(this.color));
       vnode.data.staticClass = `${ vnode.data.staticClass || '' } ${ colorClasses.join(' ') } `.trim();
     },
   });

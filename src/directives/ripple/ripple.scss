@@ -1,3 +1,5 @@
+@import "../../themes/skyline.globals";
+
 // Material Design Ripple Effect
 // --------------------------------------------------
 
@@ -7,11 +9,9 @@ $fade-out-duration: 150ms;
 $opacity-duration: $fade-in-duration + $fade-out-duration;
 
 .ripple-effect {
+  @include position(0, 0, 0, 0);
+
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
 
   border-radius: inherit;
 
@@ -24,9 +24,9 @@ $opacity-duration: $fade-in-duration + $fade-out-duration;
 }
 
 .ripple {
-  position: absolute;
+  @include border-radius(50%);
 
-  border-radius: 50%;
+  position: absolute;
 
   // Should remain static for performance reasons
   background-color: currentColor;

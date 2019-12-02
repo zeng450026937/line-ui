@@ -1,56 +1,88 @@
 import { createNamespace } from '@/utils/namespace';
 import { useGroupItem } from '@/mixins/use-group-item';
-import { useRipple } from '@/mixins/use-ripple';
+import { useMode } from '@/mixins/use-mode';
+import { useColor } from '@/mixins/use-color';
+import { isDef } from '@/utils/helpers';
+import ripple from '@/directives/ripple';
 import '@/components/button/button.scss';
+import '@/components/button/button.ios.scss';
 
 const NAMESPACE = 'ButtonGroup';
 const [createComponent, bem] = createNamespace('button');
 
 export default createComponent({
-  mixins : [useGroupItem(NAMESPACE), useRipple()],
+  mixins : [useMode(), useColor(), useGroupItem(NAMESPACE)],
+
+  directives : { ripple },
 
   props : {
-    // This property holds a textual description of the button.
-    text        : String,
-    // This property holds whether the button is visually down.
-    // Unless explicitly set, this property follows the value of pressed.
-    down        : Boolean,
-    // This property holds whether the button is highlighted.
-    highlighted : Boolean,
-    // This property holds whether the button is flat.
-    flat        : Boolean,
-    // This property holds whether the button is block.
-    block       : Boolean,
-    // This property holds whether the button is circle.
-    circle      : Boolean,
-    // This property holds whether the button is round.
-    round       : Boolean,
-    // This property holds whether the button is outline.
-    outline     : Boolean,
+    text      : String,
+    vertical  : Boolean,
+    disabled  : Boolean,
+    activated : Boolean,
+    focused   : Boolean,
+    // full | block
+    expand    : String,
+    // clear | outline | solid
+    fill      : String,
+    // round | circle
+    shape     : String,
+    // small | large
+    size      : String,
+    // 'submit' | 'reset' | 'button' = 'button';
+    type      : String,
+    download  : String,
+    href      : String,
+    rel       : String,
+    strong    : Boolean,
+    target    : String,
     // override default
-    checkable   : {
+    checkable : {
       type    : Boolean,
       default : false,
     },
   },
 
   render() {
+    const {
+      type, download, href, rel, target, text,
+    } = this;
+    const {
+      disabled, strong, shape, expand, fill = 'solid', size, vertical,
+    } = this;
+    const TagType = isDef(href) ? 'a' : 'button' as any;
+    const attrs = (TagType === 'button')
+      ? { type }
+      : {
+        download,
+        href,
+        rel,
+        target,
+      };
+
     return (
       <div
-        class={bem({
-          down        : this.down,
-          highlighted : this.highlighted,
-          checked     : this.checked,
-          disabled    : this.disabled,
-          flat        : this.flat,
-          block       : this.block,
-          circle      : this.circle,
-          round       : this.round,
-          outline     : this.outline,
-        })}
-        on={ this.$listeners }
+        {...{ attrs }}
+        disabled={disabled}
+        aria-disabled={disabled ? 'true' : null}
+        class={[
+          'activatable',
+          'ion-focusable',
+          bem({
+            [expand] : isDef(expand),
+            [size]   : isDef(size),
+            [shape]  : isDef(shape),
+            [fill]   : true,
+            strong,
+            disabled,
+          }),
+        ]}
       >
-        { this.slots() || this.text }
+        <TagType v-ripple class={bem('content', { vertical })}>
+          {this.slots('start')}
+          {this.slots() || text}
+          {this.slots('end')}
+        </TagType>
       </div>
     );
   },

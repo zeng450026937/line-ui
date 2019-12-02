@@ -90,7 +90,7 @@ export type LineComponent<
   Computed = any,
   Props = any,
 > = (
-  typeof Vue |
+  // typeof Vue |
   FunctionalComponentOptions<Props> |
   ComponentOptions<Vue, Data, Methods, Computed, Props>
 ) &
