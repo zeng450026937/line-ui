@@ -1,7 +1,6 @@
 import { createNamespace } from '@/utils/namespace';
-import { useGroupItem } from '@/mixins/use-group-item';
-import { useMode } from '@/mixins/use-mode';
 import { useColor } from '@/mixins/use-color';
+import { useGroupItem } from '@/mixins/use-group-item';
 import { isDef } from '@/utils/helpers';
 import ripple from '@/directives/ripple';
 import '@/components/button/button.scss';
@@ -11,11 +10,12 @@ const NAMESPACE = 'ButtonGroup';
 const [createComponent, bem] = createNamespace('button');
 
 export default createComponent({
-  mixins : [useMode(), useColor(), useGroupItem(NAMESPACE)],
+  mixins : [useColor(), useGroupItem(NAMESPACE)],
 
   directives : { ripple },
 
   props : {
+    ripple    : Boolean,
     text      : String,
     vertical  : Boolean,
     disabled  : Boolean,
@@ -45,7 +45,7 @@ export default createComponent({
 
   render() {
     const {
-      type, download, href, rel, target, text,
+      type = 'button', download, href, rel, target, text,
     } = this;
     const {
       disabled, strong, shape, expand, fill = 'solid', size, vertical,
@@ -78,10 +78,13 @@ export default createComponent({
           }),
         ]}
       >
-        <TagType v-ripple class={bem('content', { vertical })}>
-          {this.slots('start')}
+        <TagType
+          v-ripple={this.ripple}
+          disabled={disabled}
+          class={bem('content', { vertical })}
+        >
+          {this.slots('indicator')}
           {this.slots() || text}
-          {this.slots('end')}
         </TagType>
       </div>
     );

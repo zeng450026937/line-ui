@@ -20,6 +20,8 @@ const APPEAR_EVENTS = [
   'appear-cancelled',
 ];
 
+export function createTransition() {}
+
 export interface TransitionOptions {
   group?: boolean;
   appear?: boolean;

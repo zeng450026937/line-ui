@@ -3,7 +3,7 @@
 // Floating Action Buttons
 // --------------------------------------------------
 
-:host {
+.line-fab-button {
   /**
    * @prop --background: Background of the button
    * @prop --background-activated: Background of the button when pressed
@@ -61,7 +61,7 @@
 }
 
 
-.button-native {
+.line-fab-button__content {
   @include border-radius(var(--border-radius));
   @include padding(var(--padding-top), var(--padding-end), var(--padding-bottom), var(--padding-start));
   @include text-inherit();
@@ -101,7 +101,7 @@
   line-height: 1;
 }
 
-.button-inner {
+.line-fab-button__inner {
   @include position(0, 0, null, 0);
 
   display: flex;
@@ -122,7 +122,7 @@
 // FAB Button: Color
 // --------------------------------------------------
 
-:host(.ion-color) .button-native {
+.line-fab-button.ion-color .line-fab-button__content {
   background: #{current-color(base)};
   color: #{current-color(contrast)};
 }
@@ -131,13 +131,13 @@
 // FAB Button: Disabled
 // --------------------------------------------------
 
-:host(.fab-button-disabled) {
+.line-fab-button.fab-button--disabled {
   opacity: .5;
 
   pointer-events: none;
 }
 
-:host(.fab-button-disabled) .button-native {
+.line-fab-button.fab-button--disabled .line-fab-button__content {
   cursor: default;
   pointer-events: none;
 }
@@ -147,12 +147,12 @@
 // --------------------------------------------------
 
 @media (any-hover: hover) {
-  :host(:hover) .button-native {
+  .line-fab-button:hover .line-fab-button__content {
     background: var(--background-hover);
     color: var(--color-hover);
   }
 
-  :host(.ion-color:hover) .button-native {
+  .line-fab-button.ion-color:hover .line-fab-button__content {
     background: #{current-color(tint)};
     color: #{current-color(contrast)};
   }
@@ -161,26 +161,26 @@
 // FAB Button: Focused
 // --------------------------------------------------
 
-:host(.ion-focused) .button-native {
+.line-fab-button.ion-focused .line-fab-button__content {
   background: var(--background-focused);
   color: var(--color-focused);
 }
 
-:host(.ion-color.ion-focused) .button-native {
+.line-fab-button.ion-color.ion-focused .line-fab-button__content {
   background: #{current-color(shade)};
 }
 
 // FAB Button: Activated
 // --------------------------------------------------
 
-:host(.activated) .button-native {
+.line-fab-button.activated .line-fab-button__content {
   background: var(--background-activated);
   color: var(--color-activated);
 }
 
 // Focused/Activated Button with Color
-:host(.ion-color.ion-focused) .button-native,
-:host(.ion-color.activated) .button-native {
+.line-fab-button.ion-color.ion-focused .line-fab-button__content,
+.line-fab-button.ion-color.activated .line-fab-button__content {
   background: #{current-color(shade)};
   color: #{current-color(contrast)};
 }
@@ -197,7 +197,7 @@
 // FAB small (mini
 // --------------------------------------------------
 
-:host(.fab-button-small) {
+.line-fab-button.line-fab-button--small {
   @include margin(($fab-size - $fab-small-size) / 2);
 
   width: #{$fab-small-size};
@@ -207,7 +207,7 @@
 // FAB Close Icon
 // --------------------------------------------------
 
-.close-icon {
+.line-fab-button__indicator {
   @include position(0, 0, null, 0);
 
   display: flex;
@@ -229,19 +229,19 @@
 // FAB Animation
 // --------------------------------------------------
 
-:host(.fab-button-close-active) .close-icon {
+.line-fab-button.line-fab-button--close-active .line-fab-button__indicator {
   transform: scale(1) rotateZ(0deg);
 
   opacity: 1;
 }
 
-:host(.fab-button-close-active) .button-inner {
+.line-fab-button.line-fab-button--close-active .line-fab-button__inner {
   transform: scale(.4) rotateZ(45deg);
 
   opacity: 0;
 }
 
-ion-ripple-effect {
+.ripple-effect {
   color: var(--ripple-color);
 }
 
@@ -249,7 +249,7 @@ ion-ripple-effect {
 // --------------------------------------------------
 
 @supports (backdrop-filter: blur(0)) {
-  :host(.fab-button-translucent) .button-native {
+  .line-fab-button.line-fab-button--translucent .line-fab-button__content {
     backdrop-filter: var(--backdrop-filter);
   }
 }

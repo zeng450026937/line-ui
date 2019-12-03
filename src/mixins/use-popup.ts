@@ -3,7 +3,7 @@ import { useLazy } from '@/mixins/use-lazy';
 import { useRemote } from '@/mixins/use-remote';
 import { useModel } from '@/mixins/use-model';
 import { useTransition } from '@/mixins/use-transition';
-import { popupStack, PopupInterface, Transition } from '@/utils/popup';
+import { popupStack, PopupInterface } from '@/utils/popup';
 import { GESTURE_CONTROLLER } from '@/utils/gesture';
 import { AnimationBuilder } from '@/utils/animation';
 import { config } from '@/utils/config';

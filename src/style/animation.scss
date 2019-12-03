@@ -1,4 +1,4 @@
-$animation-duration-base: 2.3s !default;
+$animation-duration-base: .3s !default;
 $animation-duration-fast: .2s !default;
 
 @keyframes line-slide-up-enter {
@@ -126,5 +126,39 @@ $animation-duration-fast: .2s !default;
 
   &-leave-active {
     animation: line-slide-right-leave $animation-duration-base both ease;
+  }
+}
+
+@keyframes line-fab-in {
+  from {
+    opacity: 0;
+    transform: scale(.4) rotateZ(-45deg);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) rotateZ(0deg);
+  }
+}
+
+@keyframes line-fab-out {
+  from {
+    opacity: 1;
+    transform: scale(1) rotateZ(0deg);
+  }
+
+  to {
+    opacity: 0;
+    transform: scale(.4) rotateZ(-45deg);
+  }
+}
+
+.line-fab {
+  &-enter-active {
+    animation: line-fab-in $animation-duration-base both ease-in-out;
+  }
+
+  &-leave-active {
+    animation: line-fab-out $animation-duration-base both ease-in-out;
   }
 }

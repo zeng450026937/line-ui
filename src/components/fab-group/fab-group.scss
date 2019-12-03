@@ -1,0 +1,69 @@
+@import "./fab-group.vars";
+
+// Floating Action Button List
+// --------------------------------------------------
+
+.line-fab-group {
+  @include margin($fab-size + $fab-list-margin, 0);
+
+  display: flex;
+  position: absolute;
+  top: 0;
+
+  flex-direction: column;
+  align-items: center;
+
+  min-width: $fab-size;
+  min-height: $fab-size;
+}
+
+.line-fab-group .line-fab-button--in-list {
+  @include margin(8px, 0);
+
+  width: #{$fab-small-size};
+  height: #{$fab-small-size};
+
+  // transform: scale(0);
+
+  // opacity: 0;
+  // visibility: hidden;
+}
+
+.line-fab-group.line-fab-group-side--top .line-fab-button--in-list,
+.line-fab-group.line-fab-group-side--bottom .line-fab-button--in-list {
+  @include margin(5px, 0, 5px, 0);
+}
+
+.line-fab-group.line-fab-group-side--start .line-fab-button--in-list,
+.line-fab-group.line-fab-group-side--end .line-fab-button--in-list {
+  @include margin(0, 5px, 0, 5px);
+}
+
+.line-fab-group .line-fab-button--in-list.line-fab-button--show {
+  transform: scale(1);
+
+  opacity: 1;
+  visibility: visible;
+}
+
+
+.line-fab-group.line-fab-group-side--top {
+  top: auto;
+  bottom: 0;
+
+  flex-direction: column-reverse;
+}
+
+.line-fab-group.line-fab-group-side--start {
+  @include margin(0, $fab-size + $fab-list-margin);
+  @include position-horizontal(null, 0);
+
+  flex-direction: row-reverse;
+}
+
+.line-fab-group.line-fab-group-side--end {
+  @include margin(0, $fab-size + $fab-list-margin);
+  @include position(null, null, null, 0);
+
+  flex-direction: row;
+}

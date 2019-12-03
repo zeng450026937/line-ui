@@ -4,7 +4,7 @@
 // Material Design FAB Button
 // --------------------------------------------------
 
-:host {
+.line-fab-button {
   --background: #{$fab-md-background-color};
   --background-activated: var(--background);
   --background-focused: var(--background-activated);
@@ -21,12 +21,12 @@
   };
 }
 
-:host(.activated) {
+.line-fab-button.activated {
   --box-shadow: #{$fab-md-box-shadow-activated};
 }
 
 ::slotted(ion-icon),
-.close-icon {
+.line-fab-button__indicator {
   font-size: $fab-md-icon-font-size;
 }
 
@@ -34,7 +34,7 @@
 // FAB buttons in a list
 // --------------------------------------------------
 
-:host(.fab-button-in-list) {
+.line-fab-button.line-fab-button--in-list {
   --color: #{$fab-md-list-button-text-color};
   --color-activated: #{$fab-md-list-button-text-color};
   --color-focused: var(--color-activated);
@@ -44,6 +44,6 @@
   --background-hover: #{$fab-md-list-button-background-color-hover};
 }
 
-:host(.fab-button-in-list) ::slotted(ion-icon) {
+.line-fab-button.line-fab-button--in-list ::slotted(ion-icon) {
   font-size: $fab-md-list-button-icon-font-size;
 }

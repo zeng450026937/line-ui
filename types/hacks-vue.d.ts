@@ -25,6 +25,8 @@ declare module 'vue/types/options' {
   }
 
   interface FunctionalComponentOptions {
+    directives?: { [key: string]: DirectiveFunction | DirectiveOptions };
+
     // namespace
     events?: Record<string, any>;
     slots?: Record<string, any>;

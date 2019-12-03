@@ -64,6 +64,8 @@ export function useGroupItem(name: string, options?: GroupItemOptions) {
       const group = this[name];
       if (group) {
         group.registerItem(this);
+        this.inGroup = true;
+        this.inParentGroup = group === this.$parent;
       }
     },
 

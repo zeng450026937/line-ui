@@ -39,6 +39,12 @@ export function unifySlots(context: RenderContext): RenderContext {
   // TODO: use proxy instead of object spread
   return {
     ...context,
+    hasSlot(name: string = 'default') {
+      // use data.scopedSlots in lower Vue version
+      const scopedSlots = context.scopedSlots || context.data.scopedSlots || {};
+      const scopedSlot = scopedSlots[name];
+      return scopedSlot || context.slots()[name];
+    },
     slots(name: string = 'default', ctx?: any) {
       // use data.scopedSlots in lower Vue version
       const scopedSlots = context.scopedSlots || context.data.scopedSlots || {};
@@ -46,8 +52,7 @@ export function unifySlots(context: RenderContext): RenderContext {
       if (scopedSlot) {
         return scopedSlot(ctx);
       }
-      const slots = context.slots();
-      return slots[name];
+      return context.slots()[name];
     },
   };
 }

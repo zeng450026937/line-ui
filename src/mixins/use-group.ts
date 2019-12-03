@@ -3,6 +3,7 @@ import { Vue } from 'vue/types/vue';
 import { createMixins } from '@/utils/mixins';
 import { ModelOptions, useModel, DEFAULT_PROP } from '@/mixins/use-model';
 import { GroupItem } from '@/mixins/use-group-item';
+import { isArray } from '@/utils/helpers';
 
 export enum CheckState {
   Unchecked = 1,
@@ -19,7 +20,9 @@ export type GroupProps = {
 };
 export type Group<T = GroupProps> = Vue & T;
 
-export function useGroup(name: string, options?: ModelOptions) {
+export type GroupOptions = ModelOptions & {};
+
+export function useGroup(name: string, options?: GroupOptions) {
   const modelProp = (options && options.prop) || DEFAULT_PROP;
   return createMixins({
     mixins : [useModel('checkedItem', options)],
@@ -64,7 +67,7 @@ export function useGroup(name: string, options?: ModelOptions) {
         }
       },
       checkedItem(val: any) {
-        const count = val.length;
+        const count = isArray(val) ? val.length : 1;
         this.checkState = count === 0
           ? CheckState.Unchecked
           : count === this.items.length
@@ -109,6 +112,7 @@ export function useGroup(name: string, options?: ModelOptions) {
         const index = this.items.push(item);
         item.$watch('checked', (val: boolean) => this.onItemChecked(item, val));
         item.$on('clicked', () => this.$emit('clicked', item));
+        item.$on('toggled', () => this.$emit('toggled', item));
         return index;
       },
       unregisterItem(item: GroupItem) {
@@ -118,6 +122,8 @@ export function useGroup(name: string, options?: ModelOptions) {
     },
 
     mounted() {
+      if (!this.checkedItem) return;
+
       for (let i = 0; i < this.items.length; i++) {
         const item = this.items[i];
         if (Array.isArray(this.checkedItem)) {

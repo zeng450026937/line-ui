@@ -48,7 +48,7 @@ export type FunctionComponent<Props = DefaultProps, PropDefs = PropsDefinition<P
 
 // Injected Vue
 export type InjectedKeys = {
-  slots: (name?: string, props?: any) => any;
+  slots: (name?: string, props?: any) => VNode[] | undefined;
   bem: BEM;
   t: Translate;
   [key: string]: any
