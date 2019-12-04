@@ -1,9 +1,19 @@
-import { VNode } from 'vue';
+import { VNode, VNodeData } from 'vue';
+/* eslint-disable-next-line */
+import { NormalizedScopedSlot } from 'vue/types/vnode';
 import { createMixins } from '@/utils/mixins';
 import { createBEM } from '@/utils/namespace/bem';
 import { createI18N } from '@/utils/namespace/i18n';
+import { patchVNode } from '@/utils/vnode';
 
 import '@/locale';
+import { isFunction } from '@/utils/helpers';
+
+type ScopedSlots = {
+  [key: string]: NormalizedScopedSlot | undefined;
+};
+
+type PacthFn = (index: number) => VNodeData;
 
 export function useComponent(name: string) {
   return createMixins({
@@ -12,7 +22,7 @@ export function useComponent(name: string) {
     },
 
     methods : {
-      hasSlot(name = 'default') {
+      hasSlot(name = 'default'): boolean {
         const { $slots, $scopedSlots, scopedSlots = {} } = this;
         const scopedSlot = $scopedSlots[name] || scopedSlots[name];
         return scopedSlot || $slots[name];
@@ -20,15 +30,16 @@ export function useComponent(name: string) {
 
       // Use scopedSlots in Vue 2.6+
       // downgrade to slots in lower version
-      slots(name = 'default', props: any): VNode[] | undefined {
+      slots(name = 'default', ctx?: any, patch?: VNodeData | PacthFn): VNode[] | undefined {
         const { $slots, $scopedSlots, scopedSlots = {} } = this;
-        const scopedSlot = $scopedSlots[name] || scopedSlots[name];
-
-        if (scopedSlot) {
-          return scopedSlot(props);
+        const scopedSlot = $scopedSlots[name] || (scopedSlots as ScopedSlots)[name];
+        const vnodes = scopedSlot ? scopedSlot(ctx) : $slots[name];
+        if (vnodes && patch) {
+          vnodes.forEach((vnode, index) => {
+            patchVNode(vnode, isFunction(patch) ? patch(index) : patch);
+          });
         }
-
-        return $slots[name];
+        return vnodes;
       },
 
       bem : createBEM(name),

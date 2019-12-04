@@ -162,3 +162,27 @@ $animation-duration-fast: .2s !default;
     animation: line-fab-out $animation-duration-base both ease-in-out;
   }
 }
+
+@keyframes line-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+@keyframes line-scale-out {
+  to {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+
+.line-scale {
+  &-enter-active {
+    animation: line-scale-in $animation-duration-base both ease-in-out;
+  }
+
+  &-leave-active {
+    animation: line-scale-out $animation-duration-base both ease-in-out;
+  }
+}

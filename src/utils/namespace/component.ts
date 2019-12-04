@@ -4,6 +4,7 @@ import Vue, {
   RenderContext,
   FunctionalComponentOptions,
   VNode,
+  VNodeData,
 } from 'vue';
 /* eslint-disable import/extensions, max-len */
 import {
@@ -13,6 +14,7 @@ import {
 } from 'vue/types/options';
 import {
   ScopedSlot,
+  ScopedSlotChildren,
 } from 'vue/types/vnode';
 import {
   ScopedSlots,
@@ -22,6 +24,7 @@ import {
 } from '@/utils/types';
 import '@/locale';
 import { camelize } from '@/utils/format/string';
+import { patchVNode } from '@/utils/vnode';
 import { useRender } from '@/mixins/use-render';
 import { useComponent } from '@/mixins/use-component';
 import { useMode } from '@/mixins/use-mode';
@@ -45,14 +48,17 @@ export function unifySlots(context: RenderContext): RenderContext {
       const scopedSlot = scopedSlots[name];
       return scopedSlot || context.slots()[name];
     },
-    slots(name: string = 'default', ctx?: any) {
+    slots(name: string = 'default', ctx?: any, patch?: VNodeData) {
       // use data.scopedSlots in lower Vue version
       const scopedSlots = context.scopedSlots || context.data.scopedSlots || {};
       const scopedSlot = scopedSlots[name];
-      if (scopedSlot) {
-        return scopedSlot(ctx);
+      const vnodes = scopedSlot ? scopedSlot(ctx) : context.slots()[name] as ScopedSlotChildren;
+      if (vnodes && patch) {
+        vnodes.forEach((vnode) => {
+          patchVNode(vnode, patch);
+        });
       }
-      return context.slots()[name];
+      return vnodes;
     },
   };
 }

@@ -29,13 +29,13 @@
   // visibility: hidden;
 }
 
-.line-fab-group.line-fab-group-side--top .line-fab-button--in-list,
-.line-fab-group.line-fab-group-side--bottom .line-fab-button--in-list {
+.line-fab-group.line-fab-group--side-top .line-fab-button--in-list,
+.line-fab-group.line-fab-group--side-bottom .line-fab-button--in-list {
   @include margin(5px, 0, 5px, 0);
 }
 
-.line-fab-group.line-fab-group-side--start .line-fab-button--in-list,
-.line-fab-group.line-fab-group-side--end .line-fab-button--in-list {
+.line-fab-group.line-fab-group--side-start .line-fab-button--in-list,
+.line-fab-group.line-fab-group--side-end .line-fab-button--in-list {
   @include margin(0, 5px, 0, 5px);
 }
 
@@ -47,21 +47,21 @@
 }
 
 
-.line-fab-group.line-fab-group-side--top {
+.line-fab-group.line-fab-group--side-top {
   top: auto;
   bottom: 0;
 
   flex-direction: column-reverse;
 }
 
-.line-fab-group.line-fab-group-side--start {
+.line-fab-group.line-fab-group--side-start {
   @include margin(0, $fab-size + $fab-list-margin);
   @include position-horizontal(null, 0);
 
   flex-direction: row-reverse;
 }
 
-.line-fab-group.line-fab-group-side--end {
+.line-fab-group.line-fab-group--side-end {
   @include margin(0, $fab-size + $fab-list-margin);
   @include position(null, null, null, 0);
 

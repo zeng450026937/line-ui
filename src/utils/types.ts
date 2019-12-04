@@ -1,6 +1,7 @@
 /* eslint-disable import/extensions */
 import {
   VNode,
+  VNodeData,
   CreateElement,
   RenderContext,
   VueConstructor,
@@ -46,9 +47,12 @@ export type FunctionComponent<Props = DefaultProps, PropDefs = PropsDefinition<P
   inject?: InjectOptions;
 };
 
+type PacthFn = (index: number) => VNodeData;
+
 // Injected Vue
 export type InjectedKeys = {
-  slots: (name?: string, props?: any) => VNode[] | undefined;
+  hasSlot(name?: string): boolean;
+  slots: (name?: string, props?: any, patch?: VNodeData | PacthFn) => VNode[] | undefined;
   bem: BEM;
   t: Translate;
   [key: string]: any

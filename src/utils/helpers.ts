@@ -1,4 +1,5 @@
 export const isDev = process.env.NODE_ENV === 'development';
+export const wait = (duration: number = 0) => new Promise(resolve => setTimeout(resolve, duration));
 
 /* eslint-disable-next-line */
 declare const __zone_symbol__requestAnimationFrame: any;

@@ -1,6 +1,7 @@
 type Listener = { [key: string]: Function | Function[] }
 
-export function mergeListener(exist: Listener, value: Listener): Listener {
+export function mergeListener(exist: Listener, value?: Listener): Listener {
+  if (!value) return exist;
   const listener: Listener = { ...exist };
   // eslint-disable-next-line
   for (const key in value) {

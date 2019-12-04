@@ -4,6 +4,7 @@ import {
   VueConstructor,
   ComponentOptions,
   FunctionalComponentOptions,
+  VNodeData,
 } from 'vue';
 import { Vue } from 'vue/types/vue';
 
@@ -20,7 +21,8 @@ declare module 'vue/types/options' {
   }
 
   interface RenderContext<Props=DefaultProps> {
-    slots(name?: string, props?: any): any;
+    hasSlot(name?: string): boolean;
+    slots(name?: string, props?: any, patch?: VNodeData): any;
     [injectedKey: string]: any;
   }
 

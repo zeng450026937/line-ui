@@ -9,17 +9,17 @@ import {
 
 export type IncludeHandler<T = RestAny> = (this: VueInstance<T>) => Array<Element>;
 
-export interface ClickOutsideOptions extends EventOptions {
+export type ClickOutsideOptions = Partial<EventOptions & {
   includes?: string | IncludeHandler;
-}
+}>;
 
-export function useClickOutside(options?: ClickOutsideOptions) {
+export function useClickOutside(options: ClickOutsideOptions = {}) {
   const {
     event = ['mouseup', 'touchend'],
     handler = function (this: VueInstance) {
       this.$emit('clickoutside');
     },
-    condition = function (this: VueInstance, ev: Event, options: ClickOutsideOptions) {
+    condition = function (this: VueInstance, ev: Event) {
       // If click was triggered programmaticaly (domEl.click()) then
       // it shouldn't be treated as click-outside
       // Chrome/Firefox support isTrusted property
@@ -29,17 +29,17 @@ export function useClickOutside(options?: ClickOutsideOptions) {
        || ('pointerType' in ev && !(ev as PointerEvent).pointerType)
       ) return false;
 
-      const elements = options.includes
-        ? invoke(this, options.includes) as Array<Element>
+      const elements = options!.includes
+        ? invoke(this, options!.includes) as Array<Element>
         : [this.$el];
 
       return !elements.some(element => element.contains(ev.target as Node));
     },
-  } = options || {};
+  } = options;
 
   return createMixins({
     mixins : [
-      useEvent<ClickOutsideOptions>({ event, handler, condition }),
+      useEvent<EventOptions>({ event, handler, condition }),
     ],
   });
 }

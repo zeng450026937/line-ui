@@ -95,10 +95,10 @@
   appearance: none;
 
   box-sizing: border-box;
-}
 
-::slotted(ion-icon) {
-  line-height: 1;
+  .line-font-icon {
+    line-height: 1;
+  }
 }
 
 .line-fab-button__inner {

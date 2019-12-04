@@ -1,0 +1,59 @@
+@import "./fab.vars";
+
+// Floating Action Button Container
+// --------------------------------------------------
+
+.line-fab {
+  position: absolute;
+
+  z-index: $z-index-fixed-content;
+}
+
+
+// FAB Horizontal Positioning
+// --------------------------------------------------
+
+.line-fab.line-fab--horizontal-center {
+  @include position(null, null, null, 50%);
+  @include margin-horizontal(-$fab-size / 2, null);
+}
+
+.line-fab.line-fab--horizontal-start {
+  @include position-horizontal(
+    calc(#{$fab-content-margin} + var(--ion-safe-area-left, 0px)), null
+  );
+}
+
+.line-fab.line-fab--horizontal-end {
+  @include position-horizontal(
+    null, calc(#{$fab-content-margin} + var(--ion-safe-area-right, 0px))
+  );
+}
+
+
+// FAB Vertical Positioning
+// --------------------------------------------------
+
+.line-fab.line-fab--vertical-top {
+  top: $fab-content-margin;
+}
+
+.line-fab.line-fab--vertical-top.line-fab--edge {
+  top: -$fab-size / 2;
+}
+
+
+.line-fab.line-fab--vertical-bottom {
+  bottom: $fab-content-margin;
+}
+
+.line-fab.line-fab--vertical-bottom.line-fab--edge {
+  bottom: -$fab-size / 2;
+}
+
+
+.line-fab.line-fab--vertical-center {
+  @include margin(-$fab-size / 2, null, null, null);
+
+  top: 50%;
+}

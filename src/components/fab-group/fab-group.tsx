@@ -2,8 +2,7 @@ import { createNamespace } from '@/utils/namespace';
 import { useGroup } from '@/mixins/use-group';
 import { useLazy } from '@/mixins/use-lazy';
 import { useModel } from '@/mixins/use-model';
-import { useTransition } from '@/mixins/use-transition';
-import { isDef } from '@/utils/helpers';
+import { isDef, isObject } from '@/utils/helpers';
 import '@/components/fab-group/fab-group.scss';
 
 const NAMESPACE = 'FabGroup';
@@ -11,16 +10,20 @@ const [createComponent, bem] = createNamespace('fab-group');
 
 export default createComponent({
   mixins : [
+    useGroup(NAMESPACE, { model: false }),
     useLazy(),
     useModel('visible'),
-    useGroup(NAMESPACE),
   ],
 
   props : {
+    // string | object | false
+    transition : null as any,
+
     exclusive : {
       type    : Boolean,
       default : true,
     },
+    // 'start' | 'end' | 'top' | 'bottom' = 'bottom'
     side : String,
   },
 
@@ -33,15 +36,33 @@ export default createComponent({
 
   render() {
     const { side = 'bottom' } = this;
+    const TransitionGroup = 'transition-group';
+    const transition = isObject(this.transition)
+      ? this.transition
+      : { name: this.transition || 'line-scale' };
     return (
-      <div
-        v-show={this.visible}
+      <TransitionGroup
+        {...{ props: transition }}
+        tag="div"
+        appear
         class={bem({
-          [side] : true,
+          [`side-${ side }`] : true,
         })}
+        on={this.$listeners}
       >
-        {/* {this.slots() && this.slots()!.map((vnode) => { return vnode; })} */}
-      </div>
+        {
+          this.visible && this.slots(
+            'default',
+            { side },
+            (index) => ({
+              key   : index,
+              style : {
+                animationDelay : `${ index * 0.03 }s`,
+              },
+            }),
+          )
+        }
+      </TransitionGroup>
     );
   },
 });

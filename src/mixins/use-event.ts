@@ -25,9 +25,7 @@ export function invoke(vm: any, name: string | Function, ...args: any[]) {
 }
 
 export function useEvent<T extends EventOptions = EventOptions>(options: T) {
-  let binded = false;
   let app = document.body;
-  let handler: DomEventHandler;
   const { global = false } = options;
 
   function eventHandler(this: VueInstance, ev: Event) {
@@ -37,23 +35,28 @@ export function useEvent<T extends EventOptions = EventOptions>(options: T) {
   }
 
   function bind(this: VueInstance) {
-    if (binded) return;
+    const { useEvent } = this;
+    if (useEvent.binded) return;
     app = document.querySelector('[skyline-app]') || app;
-    handler = eventHandler.bind(this);
+    const handler = useEvent.handler = eventHandler.bind(this);
     const { event, passive = false, capture = false } = options;
     const events = isArray(event) ? event : [event];
     events.forEach(event => on(global ? app : this.$el, event, handler, passive, capture));
-    binded = true;
+    useEvent.binded = true;
   }
 
   function unbind(this: VueInstance) {
-    if (!binded) return;
+    const { useEvent } = this;
+    if (!useEvent.binded) return;
     const events = isArray(options.event) ? options.event : [options.event];
-    events.forEach(event => off(global ? app : this.$el, event, handler));
-    binded = false;
+    events.forEach(event => off(global ? app : this.$el, event, useEvent.handler));
+    useEvent.binded = false;
   }
 
   return createMixins({
+    created() {
+      this.useEvent = {};
+    },
     mounted       : bind,
     activated     : bind,
     deactivated   : unbind,

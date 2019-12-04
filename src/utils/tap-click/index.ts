@@ -115,13 +115,15 @@ export const setupTapClick = (config?: any) => {
 
   const addActivated = (el: HTMLElement, x: number, y: number) => {
     lastActivated = Date.now();
-    el.classList.add(ACTIVATED);
+    setTimeout(() => {
+      el.classList.add(ACTIVATED);
 
-    const rippleEffect = useRippleEffect && getRippleEffect(el);
-    if (rippleEffect && rippleEffect.addRipple) {
-      removeRipple();
-      activeRipple = rippleEffect.addRipple(x, y);
-    }
+      const rippleEffect = useRippleEffect && getRippleEffect(el);
+      if (rippleEffect && rippleEffect.addRipple) {
+        removeRipple();
+        activeRipple = rippleEffect.addRipple(x, y);
+      }
+    });
   };
 
   const removeRipple = () => {

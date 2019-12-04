@@ -21,16 +21,21 @@ export type GroupItemOptions = ModelOptions & {
   autoCheck?: boolean;
   // Uncheckable by click
   uncheckable?: boolean;
+  model?: boolean;
 };
 
 export function useGroupItem(name: string, options?: GroupItemOptions) {
-  const { autoCheck = true, uncheckable = true } = options || {};
+  const {
+    autoCheck = true,
+    uncheckable = true,
+    model: hasModel = true,
+  } = options || {};
   return createMixins({
-    mixins : [useModel<boolean>('checked', options)],
+    mixins : hasModel && [useModel<boolean>('checked', options)] as any,
 
     inject : {
       [name] : {
-        default : NullGroup,
+        default : undefined,
       },
     },
 
@@ -89,7 +94,7 @@ export function useGroupItem(name: string, options?: GroupItemOptions) {
       const on = {
         click : this.toggle,
       };
-      vnode.data!.on = mergeListener(on, vnode.data!.on || {});
+      vnode.data!.on = mergeListener(on, vnode.data!.on);
     },
   });
 }

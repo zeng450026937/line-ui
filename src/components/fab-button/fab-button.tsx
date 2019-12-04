@@ -46,10 +46,9 @@ export default createComponent({
         target,
       };
 
-    const inList = this.inParentGroup;
+    const inList = this.inGroup;
     return (
       <div
-        {...{ attrs }}
         aria-disabled={disabled ? 'true' : null}
         class={[
           'activatable',
@@ -66,6 +65,7 @@ export default createComponent({
         ]}
       >
         <TagType
+          {...{ attrs }}
           v-ripple={this.ripple}
           disabled={disabled}
           class={bem('content', { vertical })}

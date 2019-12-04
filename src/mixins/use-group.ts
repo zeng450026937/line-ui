@@ -20,12 +20,14 @@ export type GroupProps = {
 };
 export type Group<T = GroupProps> = Vue & T;
 
-export type GroupOptions = ModelOptions & {};
+export type GroupOptions = ModelOptions & {
+  model?: boolean;
+};
 
 export function useGroup(name: string, options?: GroupOptions) {
-  const modelProp = (options && options.prop) || DEFAULT_PROP;
+  const { prop: modelProp = DEFAULT_PROP, model: hasModel = true } = options || {};
   return createMixins({
-    mixins : [useModel('checkedItem', options)],
+    mixins : hasModel && [useModel('checkedItem', options)] as any,
 
     provide() {
       return {
@@ -43,18 +45,16 @@ export function useGroup(name: string, options?: GroupOptions) {
     data() {
       return {
         // This property holds the check state of the checkbox.
-        checkState : CheckState.Unchecked,
-        // checkedItem : [] as Array<any>,
-        items      : [] as Array<any>,
+        checkState  : CheckState.Unchecked,
+        checkedItem : hasModel && this[modelProp],
+        items       : [] as Array<any>,
       };
     },
 
     computed : {
       // This property holds whether the checkbox is a tri-state checkbox.
-      // TODO
-      // remove it
       tristate(): boolean {
-        return this.checkState === CheckState.PartiallyChecked;
+        return !!this.items.length;
       },
     },
 
