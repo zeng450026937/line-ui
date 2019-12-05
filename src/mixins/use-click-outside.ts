@@ -15,6 +15,7 @@ export type ClickOutsideOptions = Partial<EventOptions & {
 
 export function useClickOutside(options: ClickOutsideOptions = {}) {
   const {
+    global = true,
     event = ['mouseup', 'touchend'],
     handler = function (this: VueInstance) {
       this.$emit('clickoutside');
@@ -39,7 +40,9 @@ export function useClickOutside(options: ClickOutsideOptions = {}) {
 
   return createMixins({
     mixins : [
-      useEvent<EventOptions>({ event, handler, condition }),
+      useEvent<EventOptions>({
+        event, handler, condition, global,
+      }),
     ],
   });
 }

@@ -46,7 +46,7 @@ export default createComponent({
         target,
       };
 
-    const inList = this.inGroup;
+    const inList = this.itemInGroup;
     return (
       <div
         aria-disabled={disabled ? 'true' : null}

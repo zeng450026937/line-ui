@@ -1,9 +1,10 @@
 import { createMixins } from '@/utils/mixins';
+import { isDef } from '@/utils/helpers';
 
 export interface ModelOptions {
-  prop?: string,
-  event?: string,
-  watch?: object,
+  prop?: string;
+  event?: string;
+  default?: any;
 }
 
 export const DEFAULT_PROP = 'value';
@@ -12,22 +13,23 @@ export const DEFAULT_EVENT = 'change';
 export function useModel<
   T extends unknown = any,
   ProxyName extends string = string,
->(proxy: ProxyName, options?: ModelOptions) {
+>(proxy: ProxyName, options: ModelOptions = {}, defined = false) {
   const {
     prop = DEFAULT_PROP,
     event = DEFAULT_EVENT,
-    watch,
-  } = options || {};
-
+    default: defaultValue,
+  } = options;
   return createMixins({
     model : { prop, event },
 
     props : {
-      [prop] : null as any,
+      [prop] : {
+        default : defaultValue,
+      },
     },
 
     data() {
-      return {
+      return defined ? {} : {
         [proxy] : this[prop] as T,
       } as Record<ProxyName, T>;
     },
@@ -39,7 +41,11 @@ export function useModel<
       [proxy](val: any) {
         val !== this[prop] && this.$emit(event, val);
       },
-      ...watch,
+    },
+
+    created() {
+      if (!isDef(this[prop])) return;
+      this[proxy] = this[prop];
     },
   });
 }

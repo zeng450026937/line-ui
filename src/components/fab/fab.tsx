@@ -31,6 +31,7 @@ export default createComponent({
   created() {
     this.$on('clickoutside', () => {
       console.log('clickoutside');
+      this.activated = false;
     });
   },
 
@@ -44,12 +45,6 @@ export default createComponent({
   methods : {
     toggle() {
       this.activated = !this.activated;
-    },
-  },
-
-  watch : {
-    activated() {
-      debugger;
     },
   },
 
@@ -72,12 +67,12 @@ export default createComponent({
           this.slots(
             'indicator',
             { activated },
-            // { on: { click: this.toggle } },
+            { on: { click: this.toggle } },
           )
         }
         {
           FAB_SIDES.map((side) => (
-            this.hasSlot(side) && <FabGroup vModel={this.activated} side={side}>
+            this.hasSlot(side) && <FabGroup vModel={this.activated} side={side} onClicked={this.toggle}>
               { this.slots(side) }
             </FabGroup>
           ))
