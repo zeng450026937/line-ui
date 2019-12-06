@@ -3,7 +3,6 @@ import { on, off } from '@/utils/dom/event';
 import { isFunction, isArray } from '@/utils/helpers';
 /* eslint-disable-next-line */
 import { Vue } from 'vue/types/vue';
-import { DomEventHandler } from '@/utils/types';
 
 export type RestAny = {[K: string]: any};
 export type VueInstance<T = RestAny> = Vue & T;
@@ -35,7 +34,7 @@ export function useEvent<T extends EventOptions = EventOptions>(options: T) {
   }
 
   function bind(this: VueInstance) {
-    const { useEvent } = this;
+    const { useEvent = {} } = this;
     if (useEvent.binded) return;
     app = document.querySelector('[skyline-app]') || app;
     const handler = useEvent.handler = eventHandler.bind(this);
@@ -46,7 +45,7 @@ export function useEvent<T extends EventOptions = EventOptions>(options: T) {
   }
 
   function unbind(this: VueInstance) {
-    const { useEvent } = this;
+    const { useEvent = {} } = this;
     if (!useEvent.binded) return;
     const events = isArray(options.event) ? options.event : [options.event];
     events.forEach(event => off(global ? app : this.$el, event, useEvent.handler));
@@ -54,9 +53,6 @@ export function useEvent<T extends EventOptions = EventOptions>(options: T) {
   }
 
   return createMixins({
-    created() {
-      this.useEvent = {};
-    },
     mounted       : bind,
     activated     : bind,
     deactivated   : unbind,
