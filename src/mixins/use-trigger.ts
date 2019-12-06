@@ -12,7 +12,7 @@ export function useTrigger() {
     },
 
     computed : {
-      triggerEl(): HTMLElement | null {
+      $triggerEl(): HTMLElement | null {
         const { trigger, $vnode } = this;
 
         if (!trigger) return null;
@@ -22,7 +22,7 @@ export function useTrigger() {
         const target = refs[trigger] || baseEl.querySelector(trigger);
 
         if (isArray(target)) {
-          console.warn('\nThere are more than one triggers in the context.\nWhile trigger element should be only one.');
+          console.warn('\nThere are more than one triggers in the context.\nTrigger element should be only one.');
           return null;
         }
         return (isVue(target) ? target.$el : target) as HTMLElement;

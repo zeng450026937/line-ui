@@ -1,0 +1,20 @@
+@import "./tooltip.vars";
+
+.line-tooltip {
+  --background: #{ion-color(light, base)};
+  --color: #{ion-color(light, contrast)};
+
+  z-index: 10;
+}
+
+.line-tooltip__content {
+  position: relative;
+
+  background: var(--background);
+  color: var(--color);
+}
+
+.line-tooltip.ion-color .line-tooltip__content {
+  background: current-color(base);
+  color: current-color(contrast);
+}

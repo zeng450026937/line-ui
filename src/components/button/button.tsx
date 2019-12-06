@@ -93,7 +93,10 @@ export default createComponent({
 
   render() {
     return (
-      <ButtonDelegate scopedSlots={this.$scopedSlots}>
+      <ButtonDelegate
+        {...{ attrs: this.$attrs, props: this.$props }}
+        scopedSlots={this.$scopedSlots}
+      >
         {this.slots()}
       </ButtonDelegate>
     );
