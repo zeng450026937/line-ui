@@ -9,57 +9,43 @@ import '@/components/button/button.ios.scss';
 const NAMESPACE = 'ButtonGroup';
 const [createComponent, bem] = createNamespace('button');
 
-export default createComponent({
-  mixins : [useColor(), useGroupItem(NAMESPACE)],
-
-  directives : { ripple },
+export const ButtonDelegate = createComponent({
+  functional : true,
 
   props : {
-    ripple    : Boolean,
-    text      : String,
-    vertical  : Boolean,
-    disabled  : Boolean,
-    activated : Boolean,
-    focused   : Boolean,
+    text     : String,
+    strong   : Boolean,
+    disabled : Boolean,
+    ripple   : Boolean,
+    // display in vertical mode, default horizontal
+    vertical : Boolean,
     // full | block
-    expand    : String,
+    expand   : String,
     // clear | outline | solid
-    fill      : String,
+    fill     : String,
     // round | circle
-    shape     : String,
+    shape    : String,
     // small | large
-    size      : String,
+    size     : String,
     // 'submit' | 'reset' | 'button' = 'button';
-    type      : String,
-    download  : String,
-    href      : String,
-    rel       : String,
-    strong    : Boolean,
-    target    : String,
-    // override default
-    checkable : {
-      type    : Boolean,
-      default : false,
-    },
+    type     : String,
+    download : String,
+    href     : String,
+    rel      : String,
+    target   : String,
   },
 
-  render() {
+  render(h, { props, slots }) {
     const {
-      type = 'button', download, href, rel, target, text,
-    } = this;
-    const {
-      disabled, strong, shape, expand, fill = 'solid', size, vertical,
-    } = this;
+      text, strong, disabled, ripple, vertical, expand, fill = 'solid', shape, size,
+      type = 'button', download, href, rel, target,
+    } = props;
     const TagType = isDef(href) ? 'a' : 'button' as any;
     const attrs = (TagType === 'button')
       ? { type }
       : {
-        download,
-        href,
-        rel,
-        target,
+        download, href, rel, target,
       };
-
     return (
       <div
         {...{ attrs }}
@@ -79,14 +65,37 @@ export default createComponent({
         ]}
       >
         <TagType
-          v-ripple={this.ripple}
+          v-ripple={ripple}
           disabled={disabled}
           class={bem('content', { vertical })}
         >
-          {this.slots('indicator')}
-          {this.slots() || text}
+          {slots('indicator')}
+          {slots() || text}
         </TagType>
       </div>
+    );
+  },
+});
+
+export default createComponent({
+  mixins : [useColor(), useGroupItem(NAMESPACE)],
+
+  directives : { ripple },
+
+  props : {
+    ...ButtonDelegate.props,
+    // override default
+    checkable : {
+      type    : Boolean,
+      default : false,
+    },
+  },
+
+  render() {
+    return (
+      <ButtonDelegate scopedSlots={this.$scopedSlots}>
+        {this.slots()}
+      </ButtonDelegate>
     );
   },
 });
