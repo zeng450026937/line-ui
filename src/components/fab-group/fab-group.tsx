@@ -10,7 +10,7 @@ const [createComponent, bem] = createNamespace('fab-group');
 
 export default createComponent({
   mixins : [
-    useGroup(NAMESPACE, { model: false }),
+    useGroup(NAMESPACE),
     useLazy(),
     useModel('visible'),
   ],

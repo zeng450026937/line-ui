@@ -1,10 +1,12 @@
 import { createNamespace } from '@/utils/namespace';
-import { useTreeItem, useTreeItemWithModel } from '@/mixins/use-tree-item';
+import { useTreeItem } from '@/mixins/use-tree';
 
 const [createComponent, bem] = createNamespace('tree-item');
 
 export default createComponent({
-  mixins : [useTreeItemWithModel('Tree')],
+  mixins : [
+    useTreeItem('Tree'),
+  ],
 
   methods : {
     onClick(e: UIEvent) {
@@ -14,11 +16,9 @@ export default createComponent({
   },
 
   render() {
-    console.warn('render', this.itemIndex, this.checkState, this.modelValue, this.checkedItemValue);
     return (
       <div class={bem()} onClick={this.onClick}>
         { this.slots() }
-        { `tree item ${ this.modelValue }: ${ this.checkState }` }
       </div>
     );
   },

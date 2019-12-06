@@ -10,7 +10,7 @@ export function useGroupItem(name: string) {
     },
 
     created() {
-      this.itemIndex = -1;
+      this.itemIndex = 0;
       this.itemInGroup = false;
 
       const group = this[name] as Group;
@@ -27,7 +27,7 @@ export function useGroupItem(name: string) {
       if (group) {
         group.unregisterItem(this);
       }
-      this.itemIndex = -1;
+      this.itemIndex = 0;
       this.itemInGroup = false;
     },
   });

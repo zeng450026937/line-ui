@@ -4,10 +4,11 @@ import { useCheckGroupWithModel } from '@/mixins/use-check-group';
 const [createComponent, bem] = createNamespace('check-group');
 
 export default createComponent({
-  mixins : [useCheckGroupWithModel('Check')],
+  mixins : [
+    useCheckGroupWithModel('Group'),
+  ],
 
   render() {
-    console.warn('render');
     return (
       <div class={bem()}>
         { this.slots() }

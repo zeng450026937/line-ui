@@ -28,7 +28,6 @@ export function useCheckGroup(name: string) {
         // Vue 3
         // Use Set() instead of Array()
         checkedItem : [] as any,
-        items       : [] as Array<any>,
       };
     },
 
