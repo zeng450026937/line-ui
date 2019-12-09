@@ -1,11 +1,11 @@
 <script>
 import ProgressIndicator from './ProgressIndicator.vue';
-import { AbstractButton } from '@/components/button';
+// import { AbstractButton } from '@/components/button';
 
 export default {
   name : 'DelayButton',
 
-  extends : AbstractButton,
+  // extends : AbstractButton,
 
   props : {
     delay : {

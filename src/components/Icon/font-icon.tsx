@@ -1,6 +1,7 @@
 import { convertToUnit } from '@/utils/helpers';
 import { createNamespace } from '@/utils/namespace';
 import '@/iconfont/material-icons.scss';
+import '@/components/icon/font-icon.scss';
 
 const [createComponent, bem] = createNamespace('font-icon');
 

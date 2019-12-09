@@ -8,6 +8,11 @@ import '@/style/animation.scss';
 import '@/themes/skyline.globals.scss';
 // import '@/themes/skyline.globals.ios.scss';
 
+import SkyLine from '@/index';
+
+Vue.use(SkyLine);
+
+
 Vue.config.productionTip = false;
 
 new Vue({

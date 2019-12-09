@@ -1,0 +1,52 @@
+.home {
+  .card {
+    display: flex;
+
+    flex-direction: column;
+
+    margin: 40px 0px;
+
+    pre {
+      margin-top: 20px;
+
+      padding: 20px;
+
+      border: 1px solid #ebebeb;
+      border-radius: 8px;
+
+      // background-color: #000;
+    }
+
+    pre {
+      color: #1a1a1a;
+
+      font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+      font-size: 1em;
+      font-size: 14px;
+      font-weight: 600;
+
+
+      .hljs-tag {
+        color: #999999;;
+
+        line-height: 1.8;
+      }
+      .hljs-name {
+        // color: rgb(202, 84, 94);
+        color: #f44336;
+      }
+      .hljs-attr {
+        // color: rgb(12, 169, 180);
+        color: #10c29b;
+
+        line-height: 1.8;
+      }
+      .hljs-string {
+        // color: rgb(81, 182, 81);
+        color: #75c94c;
+
+        line-height: 1.8;
+      }
+    }
+  }
+}

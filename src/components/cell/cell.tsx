@@ -28,15 +28,22 @@ export default createComponent({
     const { arrow } = this;
 
     return (
-      <div class={bem({ arrow })}>
+      <div
+        class={bem({ arrow })}
+        on={ this.$listeners }
+      >
         <div class={bem('title')}>
-          {this.slots('title') ? this.slots('title') : this.title}
+          { this.slots('title') || this.title }
         </div>
         <div class={bem('content')}>
-          {this.slots('content') ? this.slots('content') : this.content}
+          { this.slots('content') || this.content }
           {arrow && (
           <span class={bem('arrow')} >
-            <icon name='chevron_right' width="24" height="24"></icon>
+            <icon
+              name='chevron_right'
+              width="24"
+              height="24"
+             ></icon>
           </span>)}
         </div>
       </div>

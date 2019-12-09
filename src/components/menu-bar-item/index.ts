@@ -1,3 +1,3 @@
-import MenuBarItem from './MenuBarItem.vue';
+import MenuBarItem from '@/components/menu-bar-item/menu-bar-item';
 
 export { MenuBarItem };

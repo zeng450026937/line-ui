@@ -1,27 +1,40 @@
 .line-textarea {
-  width: 100%;
   position: relative;
+
+  width: 100%;
+
   textarea {
     display: block;
+
     width: 100%;
     min-height: 38px;
-    color: #1a1a1a;
-    font-size: inherit;
-    line-height: 1.5;
-    background-color: #ffffff;
-    border: 1px solid #ebebeb;
+
     padding: 5px 16px;
     padding-right: 22px;
+
+    border: 1px solid #ebebeb;
     border-radius: 4px;
-    box-sizing: border-box;
+
     outline: none;
+
+    background-color: #ffffff;
+    color: #1a1a1a;
+
+    font-size: inherit;
+
+    line-height: 1.5;
+
+    box-sizing: border-box;
+
     resize: none;
   }
   &__clearable {
     position: absolute;
-    right: 4px;
     top: 7px;
+    right: 4px;
+
     color: #999999;
+
     cursor: pointer;
     &:hover {
       color: #afafaf;

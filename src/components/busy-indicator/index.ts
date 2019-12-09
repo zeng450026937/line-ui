@@ -1,3 +1,3 @@
-import BusyIndicator from './busy-indicator';
+import BusyIndicator from '@/components/busy-indicator/busy-indicator';
 
 export { BusyIndicator };

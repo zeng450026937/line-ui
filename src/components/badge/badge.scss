@@ -1,0 +1,81 @@
+.line-badge {
+  display: inline-block;
+  position: relative;
+  &__content {
+    display: inline-flex;
+
+    position: absolute;
+    top: -9px;
+    right: 0px;
+
+    align-items: center;
+    justify-content: center;
+
+    height: 20px;
+
+    padding: 0 8px;
+
+    transform: translateX(50%);
+
+    border: 1px solid #fff;
+    border-radius: 10px;
+
+    background-color: #ed4014;
+    color: #fff;
+
+    font-size: 12px;
+  }
+  &.line-badge--dot {
+    .badge__content {
+      top: -5px;
+
+      width: 10px;
+      height: 10px;
+
+      padding: 0;
+    }
+  }
+
+  // TODO
+  /*
+    &.badge--left {
+      left: 0;
+    }
+    &.badge--bottom {
+      bottom: 0;
+    }
+  */
+
+  &.line-badge--primary {
+    .line-badge__content {
+      background-color: var(--primary);
+    }
+  }
+  &.line-badge--success {
+    .line-badge__content {
+      background-color: var(--success);
+    }
+  }
+  &.line-badge--warning {
+    .line-badge__content {
+      background-color: var(--warning);
+    }
+  }
+  &.line-badge--danger {
+    .line-badge__content {
+      background-color: var(--danger);
+    }
+  }
+  &.line-badge--light {
+    .line-badge__content {
+      background-color: var(--light);
+      color: #1a1a1a;
+    }
+  }
+  &.line-badge--dark {
+    .line-badge__content {
+      background-color: var(--dark);
+      color: #ffffff;
+    }
+  }
+}

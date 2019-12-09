@@ -1,44 +1,65 @@
 .line-stepper {
-  height: 44px;
-  color: #1a1a1a;
-  font-size: inherit;
   display: flex;
+
+  height: 44px;
+
+  color: #1a1a1a;
+
+  font-size: inherit;
+
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+
   input {
-    min-width: 50px;
     width: 80px;
+    min-width: 50px;
     height: 44px;
-    padding: 0 8px;
-    text-align: center;
-    background-color: #ffffff;
+
     margin: 0 4px;
+
+    padding: 0 8px;
+
     border: none;
+
     outline: none;
+
+    background-color: #ffffff;
+
+    text-align: center;
+
     box-shadow: none;
   }
   &__button {
+    display: flex;
+    position: relative;
+
+    align-items: center;
+    justify-content: center;
+
     width: 54px;
     height: 44px;
+
     background-color: var(--dark-light);
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
     cursor: pointer;
+
     user-select: none;
-    position: relative;
   }
   &__button--disabled {
     pointer-events: none;
     &::after {
-      content: '';
       display: block;
       position: absolute;
-      left: 0;
-      right: 0;
       top: 0;
+      right: 0;
       bottom: 0;
-      opacity: 0.4;
+      left: 0;
+
       background-color: #ffffff;
+
+      content: "";
+
+      opacity: 0.4;
+
       z-index: 99;
     }
   }
@@ -56,6 +77,6 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
-input[type='number'] {
+input[type="number"] {
   -moz-appearance: textfield;
 }

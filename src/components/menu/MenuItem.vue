@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { useGroupItem } from '@/components/group';
+import { useGroupItem } from '@/mixins/use-group-item';
 import { createNamespace } from '@/utils/namespace';
 
 const [createComponent, bem, t] = createNamespace('menu-item');

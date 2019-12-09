@@ -1,19 +1,28 @@
 .line-page-indicator {
-  width: 100%;
-  height: 28px;
   display: flex;
+
   justify-content: center;
 
+  width: 100%;
+  height: 28px;
+
   &__item {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
     min-width: 36px;
     height: 36px;
-    color: #1a1a1a;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+
     margin: 5px;
+
     border-radius: 4px;
+
+    color: #1a1a1a;
+
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+
     cursor: pointer;
   }
 
@@ -23,6 +32,7 @@
   }
   &__item--disabled {
     color: #9f9f9f;
+
     cursor: not-allowed;
   }
   &__item:nth-of-type(1),

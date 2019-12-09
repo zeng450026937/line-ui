@@ -24,4 +24,20 @@ module.exports = {
     addLoader({ loader: 'vue-loader' });
     addLoader({ loader: '@skyline/markdown-loader' });
   },
+
+  pages : {
+    index  : './packages/playground/main.ts',
+    mobile : {
+      entry    : 'packages/website/mobile/main.ts',
+      template : 'public/index.html',
+      title    : 'Mobile',
+      filename : 'mobile.html',
+    },
+    website : {
+      entry    : 'packages/website/desktop/main.ts',
+      template : 'public/index.html',
+      title    : 'WebSite',
+      filename : 'website.html',
+    },
+  },
 };

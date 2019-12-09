@@ -2,7 +2,10 @@
   display: flex;
   // box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
   .line-button {
+    margin: 0;
+
     border-radius: 0;
+
     box-shadow: none;
     &:active {
       box-shadow: none;
@@ -15,17 +18,37 @@
   .line-button + .line-button {
     margin-left: 1px;
     &::before {
-      content: '';
       display: block;
+      position: absolute;
+      top: 0px;
+      left: -1px;
+
       width: 1px;
       height: 100%;
-      position: absolute;
-      left: -1px;
-      top: 0px;
+
       background-color: #fff;
+
+      content: "";
     }
   }
-  .line-button.is--circle:nth-of-type(1) {
+  .line-button.line-button--round:nth-of-type(1) {
+    border-top-left-radius: 44px;
+    border-bottom-left-radius: 44px;
+    &::after {
+      border-top-left-radius: 44px;
+      border-bottom-left-radius: 44px;
+    }
+  }
+  .line-button.line-button--round:nth-last-of-type(1) {
+    border-top-right-radius: 44px;
+    border-bottom-right-radius: 44px;
+    &::after {
+      border-top-right-radius: 44px;
+      border-bottom-right-radius: 44px;
+    }
+  }
+
+  .line-button.line-button--circle:nth-of-type(1) {
     border-top-left-radius: 50%;
     border-bottom-left-radius: 50%;
     &::after {
@@ -33,7 +56,8 @@
       border-bottom-left-radius: 50%;
     }
   }
-  .line-button.is--circle:nth-last-of-type(1) {
+
+  .line-button.line-button--circle:nth-last-of-type(1) {
     border-top-right-radius: 50%;
     border-bottom-right-radius: 50%;
     &::after {

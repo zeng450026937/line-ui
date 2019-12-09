@@ -1,0 +1,62 @@
+.switch-indicator {
+  display: inline-flex;
+  position: relative;
+
+  align-items: center;
+
+  width: 42px;
+  height: 20px;
+
+  transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.12);
+
+  border-radius: 10px;
+
+  background-color: rgba($color: #000000, $alpha: 0.15);
+
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12) inset,
+    0 0 6px rgba(0, 0, 0, 0.04) inset;
+  cursor: pointer;
+
+  &__thumb {
+    display: block;
+    position: absolute;
+    left: 2px;
+
+    width: 16px;
+    height: 16px;
+
+    transition: inherit;
+
+    border-radius: 50%;
+
+    background-color: #fff;
+
+    box-shadow: 0 2px 12px 0 rgba($color: #000000, $alpha: 0.1) inset;
+
+  }
+
+  &.is-checked {
+    background-color: rgba($color: #10c29b, $alpha: 0.2);
+
+    box-shadow: 0 2px 4px rgba($color: #10c29b, $alpha: 0.22) inset,
+      0 0 6px rgba($color: #10c29b, $alpha: 0.14) inset;
+
+    .switch-indicator__thumb {
+      left: calc(100% - 18px);
+
+      background-color: #10c29b;
+    }
+  }
+
+  &.is-disabled {
+    background-color: rgba($color: #000000, $alpha: 0.2);
+
+    box-shadow: 0 2px 4px rgba($color: #000000, $alpha: 0.22) inset,
+    0 0 6px rgba($color: #000000, $alpha: 0.14) inset;
+    cursor: not-allowed;
+
+    .switch-indicator__thumb {
+      background-color: rgba($color: #000000, $alpha: 0.2);
+    }
+  }
+}

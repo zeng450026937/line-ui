@@ -146,7 +146,7 @@ export default createComponent({
       return style;
     },
 
-    stepList(): { position?: number}[] {
+    stepList(): { position: number}[] {
       let list = [];
       const { from, to, stepSize } = this;
       if (!stepSize || stepSize < 0) {
@@ -364,10 +364,13 @@ export default createComponent({
           ref="slider">
       <div class="range-slider__container"
             onClick={this.handleSliderClick}>
-        <span class="step"
-              v-for="(item, index) in stepList"
-              key="index"
-              style="getStepStyle(item.position)"></span>
+        {
+          this.stepList.map((item, index) => (
+            <span class="step"
+                  key={index}
+                  style={this.getStepStyle(item.position)}></span>
+          ))
+        }
       </div>
       <div class="range-slider__bar"
             style={barStyle}

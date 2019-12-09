@@ -1,3 +1,3 @@
-import SelectOption from './SelectOption.vue';
+import SelectOption from '@/components/select-option/select-option';
 
 export { SelectOption };

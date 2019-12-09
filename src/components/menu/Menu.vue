@@ -18,7 +18,7 @@
 import Popper, { Placement } from 'popper.js';
 import { Popup } from '@/components/popup';
 import { ClickOutsideMixin } from '@/mixins/click-outside';
-import { useGroup } from '@/components/group';
+import { useGroup } from '@/mixins/use-group';
 import { createNamespace } from '@/utils/namespace';
 
 const NAMESPACE = 'Menu';
