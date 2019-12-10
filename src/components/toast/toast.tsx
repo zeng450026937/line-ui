@@ -1,5 +1,7 @@
 import { createNamespace } from '@/utils/namespace';
 import { usePopup } from '@/mixins/use-popup';
+import { usePopupDuration } from '@/mixins/use-popup-duration';
+import { useColor } from '@/mixins/use-color';
 import '@/components/toast/toast.scss';
 import '@/components/toast/toast.ios.scss';
 import { iosEnterAnimation } from '@/components/toast/animations/ios.enter';
@@ -10,27 +12,27 @@ import { mdLeaveAnimation } from '@/components/toast/animations/md.leave';
 const [createComponent, bem] = createNamespace('toast');
 
 export default createComponent({
-  mixins : [usePopup()],
+  mixins : [
+    usePopup(),
+    usePopupDuration(),
+    useColor(),
+  ],
 
   props : {
-    color : String,
-
-    duration : Number,
     /**
      * The position of the toast on the screen.
      */
     // top | bottom | middle
     position : String,
-
-    message : String,
+    message  : String,
   },
 
   created() {
-    this.$on('animation:enter', (builder: any) => {
+    this.$on('animation-enter', (builder: any) => {
       builder.build = iosEnterAnimation;
       builder.options = this.position;
     });
-    this.$on('animation:leave', (builder: any) => {
+    this.$on('animation-leave', (builder: any) => {
       builder.build = iosLeaveAnimation;
       builder.options = this.position;
     });

@@ -1,5 +1,6 @@
 import { createNamespace } from '@/utils/namespace';
 import { usePopup } from '@/mixins/use-popup';
+import { usePopupDuration } from '@/mixins/use-popup-duration';
 import { Overlay } from '@/components/overlay';
 import { Spinner } from '@/components/spinner';
 import '@/components/loading/loading.scss';
@@ -12,37 +13,28 @@ import { mdLeaveAnimation } from '@/components/loading/animations/md.leave';
 const [createComponent, bem] = createNamespace('loading');
 
 export default createComponent({
-  mixins : [usePopup()],
+  mixins : [
+    usePopup(),
+    usePopupDuration(),
+  ],
 
   props : {
-    message  : String,
-    duration : Number,
-    spinner  : String,
+    message : String,
+    spinner : String,
   },
 
   created() {
-    this.$on('animation:enter', (builder: any) => {
+    this.$on('animation-enter', (builder: any) => {
       builder.build = iosEnterAnimation;
     });
-    this.$on('animation:leave', (builder: any) => {
+    this.$on('animation-leave', (builder: any) => {
       builder.build = iosLeaveAnimation;
-    });
-
-    this.$on('opened', () => {
-      if (this.duration > 0) {
-        this.durationTimeout = setTimeout(() => this.close('timeout'), this.duration);
-      }
-    });
-    this.$on('aboutToHide', () => {
-      if (this.durationTimeout) {
-        clearTimeout(this.durationTimeout);
-      }
     });
   },
 
   methods : {
     onTap() {
-      this.$emit('overlay:tap');
+      this.$emit('overlay-tap');
     },
   },
 

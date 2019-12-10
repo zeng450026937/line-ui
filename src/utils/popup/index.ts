@@ -3,21 +3,21 @@ import { Vue } from 'vue/types/vue';
 import { BackButtonEvent } from '@/utils/hardware-back-button';
 
 export type Transition = {
-  name: string;
-  appear: boolean;
-  css: boolean;
-  mode: string;
-  type: string;
-  enterClass: string;
-  leaveClass: string;
-  enterToClass: string;
-  leaveToClass: string;
-  enterActiveClass: string;
-  leaveActiveClass: string;
-  appearClass: string;
-  appearActiveClass: string;
-  appearToClass: string;
-  duration: number | string | object;
+  name?: string;
+  appear?: boolean;
+  css?: boolean;
+  mode?: string;
+  type?: string;
+  enterClass?: string;
+  leaveClass?: string;
+  enterToClass?: string;
+  leaveToClass?: string;
+  enterActiveClass?: string;
+  leaveActiveClass?: string;
+  appearClass?: string;
+  appearActiveClass?: string;
+  appearToClass?: string;
+  duration?: number | string | object;
 };
 
 export type PopupInterface = Vue & {
@@ -30,44 +30,85 @@ export type PopupInterface = Vue & {
   focus(): void;
   closeOnClickOutside: boolean;
   closeOnEscape: boolean;
+  activeFocus: boolean;
   event?: Event;
   destroyWhenClose: boolean;
 };
 
 export const popupStack = [] as Array<PopupInterface>;
 
-export function getPopup() {
-  return popupStack[popupStack.length - 1];
+export class PopupContext {
+  private stack: Array<PopupInterface>;
+  private base: number = 2000;
+  private index: number = 0;
+
+  constructor(stack: Array<PopupInterface>) {
+    this.stack = stack;
+  }
+
+  getPopup(index: number = this.stack.length - 1) {
+    return this.stack[index];
+  }
+  getActiveFocusPopup() {
+    let index = this.stack.length - 1;
+    let popup = this.stack[index];
+    while (popup) {
+      if (popup.activeFocus) {
+        break;
+      }
+      index--;
+      popup = this.stack[index];
+    }
+    return popup;
+  }
+  getOverlayIndex() {
+    return this.base + this.index;
+  }
+
+  push(popup: PopupInterface) {
+    this.stack.push(popup);
+    this.index++;
+  }
+
+  pop(popup: PopupInterface) {
+    this.stack.splice(this.stack.indexOf(popup), 1);
+    if (!this.stack.length) {
+      this.index = 0;
+    }
+  }
 }
+
+export const popupContext = new PopupContext(popupStack);
 
 export function setupPopup(doc: Document = document) {
   doc.addEventListener('focusin', ev => {
-    const lastPopup = getPopup();
-    if (lastPopup
-      && lastPopup.closeOnClickOutside
-      && !lastPopup.$el.contains(ev.target as HTMLElement)
-    ) {
-      lastPopup.focus();
-    }
+    const lastPopup = popupContext.getActiveFocusPopup();
+    if (!lastPopup) return;
+    if (lastPopup.closeOnClickOutside) return;
+    if (lastPopup.$el.contains(ev.target as HTMLElement)) return;
+    lastPopup.focus();
   });
 
   // handle back-button click
   doc.addEventListener('lineBackButton', ev => {
-    const lastPopup = getPopup();
-    if (lastPopup && lastPopup.closeOnClickOutside) {
-      (ev as BackButtonEvent).detail.register(100, () => {
-        lastPopup.close();
-      });
-    }
+    const lastPopup = popupContext.getPopup();
+    if (!lastPopup) return;
+    if (!lastPopup.closeOnClickOutside) return;
+    (ev as BackButtonEvent)
+      .detail
+      .register(
+        100,
+        () => lastPopup.close(),
+      );
   });
 
   // handle ESC to close popup
   doc.addEventListener('keyup', ev => {
     if (ev.key === 'Escape') {
-      const lastPopup = getPopup();
-      if (lastPopup && lastPopup.closeOnEscape) {
-        lastPopup.close();
-      }
+      const lastPopup = popupContext.getPopup();
+      if (!lastPopup) return;
+      if (!lastPopup.closeOnEscape) return;
+      lastPopup.close();
     }
   });
 }

@@ -1,12 +1,14 @@
 import Popper from 'popper.js';
 import { createNamespace } from '@/utils/namespace';
 import { useColor } from '@/mixins/use-color';
-import { useLazy } from '@/mixins/use-lazy';
-import { useModel } from '@/mixins/use-model';
+import { usePopup } from '@/mixins/use-popup';
+import { usePopupDuration } from '@/mixins/use-popup-duration';
+import { usePopupDelay } from '@/mixins/use-popup-delay';
 import { useTrigger } from '@/mixins/use-trigger';
-import { useTransition } from '@/mixins/use-transition';
 import { isDef } from '@/utils/helpers';
 import '@/components/tooltip/tooltip.scss';
+import { iosEnterAnimation } from '@/components/tooltip/animations/ios.enter';
+import { iosLeaveAnimation } from '@/components/tooltip/animations/ios.leave';
 
 const [createComponent, bem] = createNamespace('tooltip');
 
@@ -30,58 +32,101 @@ export type Placement =
 export default createComponent({
   mixins : [
     useColor(),
-    useLazy(),
-    useModel('visible'),
-    useTrigger(),
-    useTransition(),
+    usePopup(),
+    usePopupDuration(),
+    usePopupDelay(),
+    useTrigger('visible'),
   ],
 
   props : {
     // This property holds the text shown on the tool tip.
-    text  : String,
-    // This property holds the delay (milliseconds) after which the tool tip is shown.
-    // A tooltip with a negative delay is shown immediately.
-    // The default value is 0.
-    delay : {
-      type    : Number,
-      default : 0,
-    },
-    // This property holds the timeout (milliseconds) after which the tool tip is hidden.
-    // A tooltip with a negative timeout does not hide automatically.
-    // The default value is -1.
-    timeout : {
-      type    : Number,
-      default : -1,
-    },
+    text      : String,
     placement : {
       type    : String,
       default : 'top',
     },
-  },
-
-  watch : {
-    async visible(val) {
-      this.clear();
-
-      if (!val) return;
-
-      const { delay } = this;
-
-      this.delayTimer = setTimeout(this.show, delay);
+    arrow : {
+      type    : Boolean,
+      default : true,
+    },
+    activeFocus : {
+      type    : Boolean,
+      default : false,
     },
   },
+  /*
+  watch : {
+    async visible(val) {
+      if (!val) return;
 
-  beforeMount() {
-    this.visible = this.visible || (
-      isDef(this.$attrs.visible)
-        && (this.$attrs.visible as string | boolean) !== false
-    );
+      await this.$nextTick();
+
+      const {
+        $triggerEl = document.body,
+        $el,
+        placement,
+        arrow,
+      } = this;
+
+      this.popper = new Popper(
+        $triggerEl,
+        $el,
+        {
+          placement     : placement as any,
+          positionFixed : true,
+          eventsEnabled : false,
+          modifiers     : {
+            arrow : {
+              enabled : arrow,
+            },
+            computeStyle : {
+              // TODO
+              // use gpuAcceleration will cause animation work failed
+              // while don't use gpuAcceleration may impact scroll perf.
+              gpuAcceleration : false,
+            },
+          },
+        },
+      );
+    },
   },
+*/
+  created() {
+    this.$on('animation-enter', (builder: any) => {
+      builder.build = (baseEl: HTMLElement) => {
+        const {
+          $triggerEl = document.body,
+          $el,
+          placement,
+          arrow,
+        } = this;
 
-  mounted() {
-    if (this.visible) {
-      this.show();
-    }
+        this.popper = new Popper(
+          $triggerEl,
+          $el,
+          {
+            placement     : placement as any,
+            positionFixed : true,
+            eventsEnabled : false,
+            modifiers     : {
+              arrow : {
+                enabled : arrow,
+              },
+              computeStyle : {
+              // TODO
+              // use gpuAcceleration will cause animation work failed
+              // while don't use gpuAcceleration may impact scroll perf.
+                gpuAcceleration : false,
+              },
+            },
+          },
+        );
+        return iosEnterAnimation(baseEl);
+      };
+    });
+    this.$on('animation-leave', (builder: any) => {
+      builder.build = iosLeaveAnimation;
+    });
   },
 
   updated() {
@@ -94,69 +139,28 @@ export default createComponent({
     if (this.popper) {
       this.popper.destroy();
     }
-    this.clear();
   },
 
   methods : {
-    clear() {
-      if (this.delayTimer) {
-        clearTimeout(this.delayTimer);
-        this.delayTimer = null;
-      }
-      if (this.disappearTimer) {
-        clearTimeout(this.disappearTimer);
-        this.disappearTimer = null;
-      }
-      this.popper = null;
-    },
     hide() {
-      this.clear();
-      this.visible = false;
+      this.close();
     },
-    show(text?: string, timeout: number = -1, delay: number = 0) {
-      this.clear();
-      this.visible = true;
-
-      const {
-        $triggerEl = document.body,
-        $el,
-        placement,
-      } = this;
-
-      text = text || this.text;
-      timeout = timeout || this.timeout;
-      delay = delay || this.delay;
-
-      if (timeout > -1) {
-        this.disappearTimer = setTimeout(() => this.visible = false, timeout);
-      }
-
-      this.popper = new Popper(
-        $triggerEl,
-        $el,
-        {
-          placement     : placement as any,
-          positionFixed : true,
-          eventsEnabled : false,
-          modifiers     : {
-            computeStyle : {
-              // TODO
-              // use gpuAcceleration will cause animation work failed
-              // while don't use gpuAcceleration may impact scroll perf.
-              gpuAcceleration : false,
-            },
-          },
-        },
-      );
+    show() {
+      this.open();
     },
   },
 
   render() {
-    const { visible } = this;
+    const { delayedVisible, text } = this;
     return (
-      <div vShow={visible} class={bem()}>
+      <div
+        vShow={delayedVisible}
+        role="tooltip"
+        class={bem()}
+      >
+        <div class={bem('arrow')} x-arrow></div>
         <div class={bem('content')}>
-          { this.slots() }
+          { this.slots() || text }
         </div>
       </div>
     );

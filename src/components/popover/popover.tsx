@@ -14,17 +14,17 @@ export default createComponent({
   mixins : [usePopup()],
 
   created() {
-    this.$on('animation:enter', (builder: any) => {
-      builder.build = mdEnterAnimation;
+    this.$on('animation-enter', (builder: any) => {
+      builder.build = iosEnterAnimation;
     });
-    this.$on('animation:leave', (builder: any) => {
-      builder.build = mdLeaveAnimation;
+    this.$on('animation-leave', (builder: any) => {
+      builder.build = iosLeaveAnimation;
     });
   },
 
   methods : {
     onTap() {
-      this.$emit('overlay:tap');
+      this.$emit('overlay-tap');
     },
   },
 

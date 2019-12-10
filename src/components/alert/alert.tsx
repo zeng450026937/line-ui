@@ -30,10 +30,10 @@ export default createComponent({
   },
 
   created() {
-    this.$on('animation:enter', (builder: any) => {
+    this.$on('animation-enter', (builder: any) => {
       builder.build = iosEnterAnimation;
     });
-    this.$on('animation:leave', (builder: any) => {
+    this.$on('animation-leave', (builder: any) => {
       builder.build = iosLeaveAnimation;
     });
   },
@@ -100,7 +100,7 @@ export default createComponent({
 
   methods : {
     onTap() {
-      this.$emit('overlay:tap');
+      this.$emit('overlay-tap');
     },
 
     /* eslint-disable-next-line consistent-return */

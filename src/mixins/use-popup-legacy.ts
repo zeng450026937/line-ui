@@ -71,7 +71,7 @@ export function usePopup(options?: PopupOptions) {
       overlay.$off('tap', onTap);
       onTap = null;
     }
-    onTap = (...args: any[]) => vm.$emit('overlay:tap', ...args);
+    onTap = (...args: any[]) => vm.$emit('overlay-tap', ...args);
     overlay.$on('tap', onTap);
   }
 
@@ -160,7 +160,7 @@ export function usePopup(options?: PopupOptions) {
     },
 
     created() {
-      this.$on('overlay:tap', () => {
+      this.$on('overlay-tap', () => {
         if (!this.closeOnClickOutside) return;
         this.visible = false;
       });

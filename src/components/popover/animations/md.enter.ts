@@ -95,7 +95,7 @@ export const mdEnterAnimation = (baseEl: HTMLElement, ev?: Event): Animation => 
       left               : `${ popoverCSS.left }px`,
       'transform-origin' : `${ originY } ${ originX }`,
     })
-    .fromTo('transform', 'scale(0.001)', 'scale(1)');
+    .fromTo('transform', 'scale(0.01)', 'scale(1)');
 
   viewportAnimation
     .addElement(baseEl.querySelector('.popover-viewport')!)

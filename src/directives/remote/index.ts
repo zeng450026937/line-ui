@@ -33,6 +33,10 @@ function unbind(el: HTMLElement, binding: RemoteVNodeDirective) {
   const { vRemote } = (el as any);
   if (vRemote) {
     const { parentElement, nextElementSibling } = vRemote;
+    if (!parentElement.contains(el)) {
+      el.remove();
+      return;
+    }
     parentElement.insertBefore(el, nextElementSibling);
   }
 }

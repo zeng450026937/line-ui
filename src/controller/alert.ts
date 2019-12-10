@@ -1,6 +1,6 @@
 import { Alert } from '@/components/alert';
 import { createFactory } from '@/controller/factory';
-import { getPopup, PopupInterface } from '@/utils/popup';
+import { popupContext, PopupInterface } from '@/utils/popup';
 
 export class LoadingController {
   private factory: ReturnType<typeof createFactory>;
@@ -20,6 +20,6 @@ export class LoadingController {
 
   /* eslint-disable-next-line class-methods-use-this */
   getTop(): PopupInterface {
-    return getPopup();
+    return popupContext.getPopup();
   }
 }

@@ -1,41 +1,6 @@
-/* eslint-disable-next-line */
-import { Vue } from 'vue/types/vue';
 import { createMixins } from '@/utils/mixins';
+import { createTransitionHooks } from '@/utils/transition';
 import { isObject } from '@/utils/helpers';
-
-const ENTER_EVENTS = [
-  'before-enter',
-  'enter',
-  'after-enter',
-  'enter-cancelled',
-];
-const LEAVE_EVENTS = [
-  'before-leave',
-  'leave',
-  'after-leave',
-  'leave-cancelled',
-];
-const APPEAR_EVENTS = [
-  'before-appear',
-  'appear',
-  'after-appear',
-  'appear-cancelled',
-];
-
-export function createTransitionHooks(delegate: Vue, appear: boolean = false) {
-  const events = [
-    ...ENTER_EVENTS,
-    ...LEAVE_EVENTS,
-    ...(appear ? APPEAR_EVENTS : []),
-  ];
-  return events.reduce((prev, val) => {
-    // Vue check hook funcion's argments length with Function.length
-    // While ...args will left Function.length to be 0
-    // and the hook will not work right
-    prev[val] = (el: HTMLElement, done: Function) => delegate.$emit(val, el, done);
-    return prev;
-  }, {} as Record<string, any>);
-}
 
 export interface TransitionOptions {
   appear?: boolean;
@@ -57,7 +22,12 @@ export function useTransition(options?: TransitionOptions) {
     },
 
     created() {
-      this.hooks = createTransitionHooks(this, appearHook);
+      this.useTransition = {
+        transition : {
+          appear,
+          css,
+        },
+      };
     },
 
     afterRender(vnode) {
@@ -78,10 +48,18 @@ export function useTransition(options?: TransitionOptions) {
 
       if (transition.css && !transition.name) return;
 
+      const { useTransition } = this;
+
+      if (!useTransition.hooks || useTransition.transition.css !== transition.css) {
+        useTransition.transition = transition;
+        useTransition.hooks = createTransitionHooks(this, appearHook, transition.css);
+      }
+
       const data = {
         props : transition,
-        on    : this.hooks,
+        on    : useTransition.hooks,
       };
+
       /* eslint-disable-next-line */
       return this.$createElement(
         'transition', data, [vnode],

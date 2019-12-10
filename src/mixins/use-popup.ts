@@ -1,11 +1,11 @@
 import { createMixins } from '@/utils/mixins';
 import { useLazy } from '@/mixins/use-lazy';
-import { useRemote } from '@/mixins/use-remote';
 import { useModel } from '@/mixins/use-model';
+import { useRemote } from '@/mixins/use-remote';
 import { useTransition } from '@/mixins/use-transition';
-import { popupStack, PopupInterface } from '@/utils/popup';
+import { popupContext, PopupInterface } from '@/utils/popup';
 import { GESTURE_CONTROLLER } from '@/utils/gesture';
-import { AnimationBuilder } from '@/utils/animation';
+import { AnimationBuilder, createAnimation } from '@/utils/animation';
 import { config } from '@/utils/config';
 import { isDef } from '@/utils/helpers';
 
@@ -13,13 +13,11 @@ export interface PopupOptions {
   disableScroll?: boolean;
 }
 
-function prepare(baseEl: HTMLElement) {
-  baseEl.style.zIndex = String(popupStack.length + 2000);
-}
-
 export function usePopup(options?: PopupOptions) {
   const { disableScroll = true } = options || {};
   let closeReason: any;
+  // TODO
+  // animation should move to instance
   let animation: any;
 
   async function animate(
@@ -41,7 +39,7 @@ export function usePopup(options?: PopupOptions) {
     if (popup.closeOnEscape) {
       animation.beforeAddWrite(() => {
         const activeElement = baseEl.ownerDocument!.activeElement as HTMLElement;
-        if (activeElement && activeElement.matches('input, ion-input, ion-textarea')) {
+        if (activeElement && activeElement.matches('input, textarea')) {
           activeElement.blur();
         }
       });
@@ -56,14 +54,18 @@ export function usePopup(options?: PopupOptions) {
   return createMixins({
     mixins : [
       useLazy(),
-      useRemote(),
       useModel('visible'),
+      useRemote(),
       // Alway use transition
       // as our lifecycle event depends on it
       useTransition({ css: false }),
     ],
 
     props : {
+      container : {
+        type    : [String, Function],
+        default : '[skyline-app]',
+      },
       // This property holds whether the popup show the overlay.
       overlay : {
         type    : Boolean,
@@ -104,10 +106,15 @@ export function usePopup(options?: PopupOptions) {
         type    : Boolean,
         default : true,
       },
+      activeFocus : {
+        type    : Boolean,
+        default : true,
+      },
     },
 
     created() {
-      // This property holds whether the popup is fully open. The popup is considered opened when it's visible
+      // This property holds whether the popup is fully open.
+      // The popup is considered opened when it's visible
       // and neither the enter nor exit transitions are running.
       this.opened = false;
       // Scroll blocker
@@ -121,16 +128,17 @@ export function usePopup(options?: PopupOptions) {
         this.blocker.block();
         this.$emit('aboutToShow');
 
-        popupStack.push(this as any);
+        popupContext.push(this as any);
       };
       const onEnter = async (el: HTMLElement, done: Function) => {
         // Ensure element & element's child is inserted as animation may need to calc element's size
         await this.$nextTick();
 
-        prepare(el);
+        // update zIndex
+        el.style.zIndex = `${ popupContext.getOverlayIndex() }`;
 
         const builder = {};
-        this.$emit('animation:enter', builder);
+        this.$emit('animation-enter', builder);
 
         try {
           await animate(el, this as any, builder as any);
@@ -151,7 +159,7 @@ export function usePopup(options?: PopupOptions) {
       };
       const onLeave = async (el: HTMLElement, done: Function) => {
         const builder = {};
-        this.$emit('animation:leave', builder);
+        this.$emit('animation-leave', builder);
 
         try {
           await animate(el, this as any, builder as any);
@@ -162,7 +170,7 @@ export function usePopup(options?: PopupOptions) {
         done();
       };
       const onAfterLeave = async () => {
-        popupStack.splice(popupStack.indexOf(this as any), 1);
+        popupContext.pop(this as any);
 
         this.$emit('closed', closeReason);
         this.blocker.unblock();
@@ -193,11 +201,12 @@ export function usePopup(options?: PopupOptions) {
 
       // TODO:
       // Find some way to create overlay inside mixins
-      const onTap = () => {
+      const onClickOutside = () => {
         if (!this.closeOnClickOutside) return;
         this.visible = false;
       };
-      this.$on('overlay:tap', onTap);
+      this.$on('overlay-tap', onClickOutside);
+      this.$on('click-outside', onClickOutside);
     },
 
     beforeMount() {
@@ -247,12 +256,39 @@ export function usePopup(options?: PopupOptions) {
 
         // this.blocker.unblock();
       },
-      focous() {
+      focus() {
+        // TODO
+        // if modal
+        // add shake animation
+        const builder = {
+          build : (baseEl: HTMLElement) => {
+            const baseAnimation = createAnimation();
+            (window as any).baseAnimation = baseAnimation;
+            return baseAnimation
+              .addElement(baseEl.querySelector('.line-tooltip__content')!)
+              .easing('cubic-bezier(0.25, 0.8, 0.25, 1)')
+              .duration(150)
+              .beforeStyles({ 'transform-origin': 'center' })
+              .keyframes([
+                { offset: 0, transform: 'scale(1)' },
+                { offset: 0.5, transform: 'scale(1.03)' },
+                { offset: 1, transform: 'scale(1)' },
+              ]);
+          },
+        };
+        this.$emit('animation-focus', builder);
+
+        animate(this.$el as HTMLElement, this as any, builder as any);
+
         const firstInput = this.$el.querySelector('input,button') as HTMLElement | null;
         if (firstInput) {
           firstInput.focus();
         }
       },
+    },
+
+    afterRender(vnode) {
+      console.log(vnode);
     },
   });
 }
