@@ -25,13 +25,14 @@ export type PopupInterface = Vue & {
   dim: boolean;
   translucent: boolean;
   modal: boolean;
-  open(): Promise<void> | void;
+  open(ev?: Event): Promise<void> | void;
   close(reason?: string): Promise<void> | void;
   focus(): void;
   closeOnClickOutside: boolean;
   closeOnEscape: boolean;
   activeFocus: boolean;
   event?: Event;
+  visible: boolean;
   destroyWhenClose: boolean;
 };
 

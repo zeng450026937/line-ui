@@ -20,6 +20,10 @@ export function usePopupDelay() {
 
     watch : {
       visible(val: boolean) {
+        if (this.appearTimer) {
+          clearTimeout(this.appearTimer);
+        }
+
         if (val === this.delayedVisible) return;
 
         if (!val) {
@@ -29,9 +33,6 @@ export function usePopupDelay() {
 
         const delay = Math.max(this.delay, 0);
 
-        if (this.appearTimer) {
-          clearTimeout(this.appearTimer);
-        }
         this.appearTimer = setTimeout(() => this.delayedVisible = val, delay);
       },
     },

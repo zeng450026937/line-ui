@@ -62,10 +62,6 @@ export function usePopup(options?: PopupOptions) {
     ],
 
     props : {
-      container : {
-        type    : [String, Function],
-        default : '[skyline-app]',
-      },
       // This property holds whether the popup show the overlay.
       overlay : {
         type    : Boolean,
@@ -109,6 +105,12 @@ export function usePopup(options?: PopupOptions) {
       activeFocus : {
         type    : Boolean,
         default : true,
+      },
+    },
+
+    computed : {
+      opening() {
+        return this.visible && !this.opened;
       },
     },
 
@@ -183,6 +185,7 @@ export function usePopup(options?: PopupOptions) {
       };
 
       const onCancel = async () => {
+        this.$emit('canceled');
         if (!animation) return;
         animation.destroy();
         animation = null;
@@ -237,24 +240,26 @@ export function usePopup(options?: PopupOptions) {
     },
 
     methods : {
-      async open(ev?: Event) {
-        if (this.$isServer) return;
-        if (this.opened) return;
+      open(ev?: Event) {
+        if (this.$isServer) return false;
+        if (this.opened) return false;
 
         this.event = ev;
         this.inited = true;
         this.visible = true;
 
         // this.blocker.block();
+        return true;
       },
-      async close(reason?: any) {
-        if (this.$isServer) return;
-        if (!this.opened) return;
+      close(reason?: any) {
+        if (this.$isServer) return false;
+        if (!this.opened) return false;
 
         this.visible = false;
         closeReason = reason;
 
         // this.blocker.unblock();
+        return true;
       },
       focus() {
         // TODO
@@ -285,10 +290,6 @@ export function usePopup(options?: PopupOptions) {
           firstInput.focus();
         }
       },
-    },
-
-    afterRender(vnode) {
-      console.log(vnode);
     },
   });
 }

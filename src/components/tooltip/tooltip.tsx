@@ -32,7 +32,7 @@ export type Placement =
 export default createComponent({
   mixins : [
     useColor(),
-    usePopup(),
+    usePopup({ disableScroll: false }),
     usePopupDuration(),
     usePopupDelay(),
     useTrigger('visible'),
@@ -54,48 +54,12 @@ export default createComponent({
       default : false,
     },
   },
-  /*
-  watch : {
-    async visible(val) {
-      if (!val) return;
 
-      await this.$nextTick();
-
-      const {
-        $triggerEl = document.body,
-        $el,
-        placement,
-        arrow,
-      } = this;
-
-      this.popper = new Popper(
-        $triggerEl,
-        $el,
-        {
-          placement     : placement as any,
-          positionFixed : true,
-          eventsEnabled : false,
-          modifiers     : {
-            arrow : {
-              enabled : arrow,
-            },
-            computeStyle : {
-              // TODO
-              // use gpuAcceleration will cause animation work failed
-              // while don't use gpuAcceleration may impact scroll perf.
-              gpuAcceleration : false,
-            },
-          },
-        },
-      );
-    },
-  },
-*/
   created() {
     this.$on('animation-enter', (builder: any) => {
       builder.build = (baseEl: HTMLElement) => {
         const {
-          $triggerEl = document.body,
+          $triggerEl = (this.event && this.event.target) || document.body,
           $el,
           placement,
           arrow,
