@@ -71,6 +71,7 @@ export default createComponent({
 
   async mounted() {
     await this.$nextTick();
+    if (!this.$triggerEl) return;
     this.vHover = createDirective(vHover, this.$triggerEl, { name: 'hover' });
     this.vHover.inserted();
     if (this.openOnHover) {

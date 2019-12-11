@@ -108,17 +108,13 @@ export function usePopup(options?: PopupOptions) {
       },
     },
 
-    computed : {
-      opening() {
-        return this.visible && !this.opened;
-      },
-    },
-
     created() {
       // This property holds whether the popup is fully open.
       // The popup is considered opened when it's visible
       // and neither the enter nor exit transitions are running.
       this.opened = false;
+      this.opening = false;
+      this.closing = false;
       // Scroll blocker
       this.blocker = GESTURE_CONTROLLER.createBlocker({
         disableScroll,
@@ -128,6 +124,8 @@ export function usePopup(options?: PopupOptions) {
 
       const onBeforeEnter = () => {
         this.blocker.block();
+        this.opened = false;
+        this.opening = true;
         this.$emit('aboutToShow');
 
         popupContext.push(this as any);
@@ -152,12 +150,14 @@ export function usePopup(options?: PopupOptions) {
       };
       const onAfterEnter = () => {
         this.opened = true;
+        this.opening = false;
         this.$emit('opened');
       };
 
       const onBeforeLeave = () => {
         this.$emit('aboutToHide');
         this.opened = false;
+        this.closing = true;
       };
       const onLeave = async (el: HTMLElement, done: Function) => {
         const builder = {};
@@ -172,6 +172,8 @@ export function usePopup(options?: PopupOptions) {
         done();
       };
       const onAfterLeave = async () => {
+        this.closing = false;
+
         popupContext.pop(this as any);
 
         this.$emit('closed', closeReason);
@@ -185,8 +187,13 @@ export function usePopup(options?: PopupOptions) {
       };
 
       const onCancel = async () => {
+        this.opening = false;
+        this.closing = false;
+
         this.$emit('canceled');
+
         if (!animation) return;
+
         animation.destroy();
         animation = null;
       };
@@ -241,7 +248,7 @@ export function usePopup(options?: PopupOptions) {
 
     methods : {
       open(ev?: Event) {
-        if (this.$isServer) return false;
+        if (this.$isServer) return true;
         if (this.opened) return false;
 
         this.event = ev;
@@ -252,7 +259,7 @@ export function usePopup(options?: PopupOptions) {
         return true;
       },
       close(reason?: any) {
-        if (this.$isServer) return false;
+        if (this.$isServer) return true;
         if (!this.opened) return false;
 
         this.visible = false;
