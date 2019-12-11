@@ -9,8 +9,8 @@ export class TooltipController {
     this.factory = createFactory(ToolTip);
   }
 
-  create(props?: any): PopupInterface {
-    return this.factory.create(props) as any;
+  create(props?: any, destroyWhenClose?: boolean): PopupInterface {
+    return this.factory.create(props, destroyWhenClose) as any;
   }
 
   close(reason?: string) {

@@ -7,11 +7,11 @@ const getAppRoot = (doc: Document = document) => {
 export function createFactory(sfc: any) {
   const Component = Vue.extend(sfc);
 
-  function create(props: any) {
+  function create(props: any, destroyWhenClose: boolean = true) {
     return new Component({
       propsData : props,
       mounted() {
-        (this as any).destroyWhenClose = true;
+        (this as any).destroyWhenClose = destroyWhenClose;
         getAppRoot().appendChild(this.$el);
       },
       beforeDestroy() {

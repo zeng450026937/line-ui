@@ -48,7 +48,6 @@ export const ButtonDelegate = createComponent({
       };
     return (
       <div
-        {...{ attrs }}
         disabled={disabled}
         aria-disabled={disabled ? 'true' : null}
         class={[
@@ -65,7 +64,8 @@ export const ButtonDelegate = createComponent({
         ]}
       >
         <TagType
-          v-ripple={ripple}
+          {...{ attrs }}
+          vRipple={ripple}
           disabled={disabled}
           class={bem('content', { vertical })}
         >

@@ -131,6 +131,9 @@ export function usePopup(options?: PopupOptions) {
         popupContext.push(this as any);
       };
       const onEnter = async (el: HTMLElement, done: Function) => {
+        // TODO
+        // hide root element by add some classes
+        //
         // Ensure element & element's child is inserted as animation may need to calc element's size
         await this.$nextTick();
 

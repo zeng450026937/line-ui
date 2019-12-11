@@ -17,23 +17,29 @@ export default createComponent({
   },
 
   render() {
+    const {
+      checked, indeterminate, disabled, text,
+    } = this;
     return (
       <div
         class={bem()}
         on={this.$listeners}
       >
         {
-          this.slots('indicator') || (
+          this.slots(
+            'indicator',
+            { checked, indeterminate, disabled },
+          ) || (
             <CheckIndicator
-              checked={this.checked}
-              indeterminate={this.indeterminate}
-              disabled={this.disabled}
+              checked={checked}
+              indeterminate={indeterminate}
+              disabled={disabled}
               width={20}
               height={20}
             ></CheckIndicator>
           )
         }
-        { this.slots() || this.text }
+        { this.slots() || text }
       </div>
     );
   },
