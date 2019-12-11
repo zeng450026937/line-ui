@@ -103,7 +103,7 @@ export function usePopup(options?: PopupOptions) {
 
   return createMixins({
     mixins : [
-      useLazy(),
+      useLazy('visible'),
       useRemote(),
       useModel('visible'),
       useClickOutside(),

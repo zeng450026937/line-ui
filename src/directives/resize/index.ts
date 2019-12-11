@@ -6,13 +6,23 @@ interface ResizeVNodeDirective extends VNodeDirective {
 }
 
 function inserted(el: HTMLElement, binding: ResizeVNodeDirective) {
-  const callback = binding.value!;
-  const options = binding.options || { passive: true };
+  if (!binding.value) return;
+
+  const {
+    value: callback,
+    modifiers: options = { passive: true },
+  } = binding;
 
   window.addEventListener('resize', callback, options);
+
+  function destroy() {
+    window.removeEventListener('resize', callback, options);
+  }
+
   (el as any).vResize = {
     callback,
     options,
+    destroy,
   };
 
   if (!binding.modifiers || !binding.modifiers.quiet) {
@@ -22,15 +32,24 @@ function inserted(el: HTMLElement, binding: ResizeVNodeDirective) {
 
 function unbind(el: HTMLElement) {
   if (!(el as any).vResize) return;
-
-  const { callback, options } = (el as any).vResize;
-  window.removeEventListener('resize', callback, options);
+  (el as any).vResize.destroy();
   delete (el as any).vResize;
+}
+
+function update(el: HTMLElement, binding: ResizeVNodeDirective) {
+  if (binding.value === binding.oldValue) {
+    return;
+  }
+  if (binding.oldValue) {
+    unbind(el);
+  }
+  inserted(el, binding);
 }
 
 export const Resize = {
   inserted,
   unbind,
+  update,
 };
 
 export default Resize;

@@ -5,29 +5,13 @@ import { usePopup } from '@/mixins/use-popup';
 import { usePopupDuration } from '@/mixins/use-popup-duration';
 import { usePopupDelay } from '@/mixins/use-popup-delay';
 import { useTrigger } from '@/mixins/use-trigger';
-import { isDef } from '@/utils/helpers';
 import '@/components/tooltip/tooltip.scss';
 import { iosEnterAnimation } from '@/components/tooltip/animations/ios.enter';
 import { iosLeaveAnimation } from '@/components/tooltip/animations/ios.leave';
+import { createDirective } from '@/utils/directive';
+import vHover from '@/directives/hover';
 
 const [createComponent, bem] = createNamespace('tooltip');
-
-export type Placement =
-  | 'auto-start'
-  | 'auto'
-  | 'auto-end'
-  | 'top-start'
-  | 'top'
-  | 'top-end'
-  | 'right-start'
-  | 'right'
-  | 'right-end'
-  | 'bottom-end'
-  | 'bottom'
-  | 'bottom-start'
-  | 'left-end'
-  | 'left'
-  | 'left-start';
 
 export default createComponent({
   mixins : [
@@ -35,7 +19,7 @@ export default createComponent({
     usePopup({ disableScroll: false }),
     usePopupDuration(),
     usePopupDelay(),
-    useTrigger('visible'),
+    useTrigger(),
   ],
 
   props : {
@@ -45,13 +29,16 @@ export default createComponent({
       type    : String,
       default : 'top',
     },
-    arrow : {
-      type    : Boolean,
-      default : true,
-    },
     activeFocus : {
       type    : Boolean,
       default : false,
+    },
+    openOnHover : Boolean,
+  },
+
+  watch : {
+    openOnHover(val) {
+      this.vHover.update(val && this.onHover);
     },
   },
 
@@ -62,7 +49,6 @@ export default createComponent({
           $triggerEl = (this.event && this.event.target) || document.body,
           $el,
           placement,
-          arrow,
         } = this;
 
         this.popper = new Popper(
@@ -72,25 +58,24 @@ export default createComponent({
             placement     : placement as any,
             positionFixed : true,
             eventsEnabled : false,
-            modifiers     : {
-              arrow : {
-                enabled : arrow,
-              },
-              computeStyle : {
-              // TODO
-              // use gpuAcceleration will cause animation work failed
-              // while don't use gpuAcceleration may impact scroll perf.
-                gpuAcceleration : false,
-              },
-            },
           },
         );
         return iosEnterAnimation(baseEl);
       };
     });
+
     this.$on('animation-leave', (builder: any) => {
       builder.build = iosLeaveAnimation;
     });
+  },
+
+  async mounted() {
+    await this.$nextTick();
+    this.vHover = createDirective(vHover, this.$triggerEl, { name: 'hover' });
+    this.vHover.inserted();
+    if (this.openOnHover) {
+      this.vHover.update(this.onHover);
+    }
   },
 
   updated() {
@@ -103,14 +88,15 @@ export default createComponent({
     if (this.popper) {
       this.popper.destroy();
     }
+    if (this.vHover) {
+      this.vHover.unbind();
+    }
   },
 
   methods : {
-    hide() {
-      this.close();
-    },
-    show() {
-      this.open();
+    onHover(hover: boolean) {
+      if (!this.openOnHover) return;
+      this.visible = hover;
     },
   },
 
@@ -120,7 +106,7 @@ export default createComponent({
       <div
         vShow={delayedVisible}
         role="tooltip"
-        class={bem()}
+        class={bem({ translucent: this.translucent })}
       >
         <div class={bem('arrow')} x-arrow></div>
         <div class={bem('content')}>

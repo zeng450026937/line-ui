@@ -44,9 +44,9 @@ export const pointerCoord = (ev: any): { x: number, y: number } => {
 
 export const debounce = (func: (...args: any[]) => void, wait = 0) => {
   let timer: any;
-  return (...args: any[]): any => {
+  return function (this: any, ...args: any[]): any {
     clearTimeout(timer);
-    timer = setTimeout(func, wait, ...args);
+    timer = setTimeout(() => func.call(this, ...args), wait, ...args);
   };
 };
 
@@ -81,6 +81,7 @@ export function get(object: any, path: string): any {
 export const NOOP = () => {};
 
 export const NO = () => false;
+export const YES = () => true;
 
 /* eslint-disable-next-line */
 export const extend = <T extends object, U extends object>(

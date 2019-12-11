@@ -5,8 +5,7 @@ export const DEFAULT_VALUE = 'value';
 export function useLazy(value: string = DEFAULT_VALUE) {
   return createMixins({
     props : {
-      [value] : null as any,
-      lazy    : {
+      lazy : {
         type    : Boolean,
         default : true,
       },

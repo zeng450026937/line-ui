@@ -53,8 +53,8 @@ export function usePopup(options?: PopupOptions) {
 
   return createMixins({
     mixins : [
-      useLazy(),
       useModel('visible'),
+      useLazy('visible'),
       useRemote(),
       // Alway use transition
       // as our lifecycle event depends on it
@@ -209,7 +209,7 @@ export function usePopup(options?: PopupOptions) {
         this.visible = false;
       };
       this.$on('overlay-tap', onClickOutside);
-      this.$on('click-outside', onClickOutside);
+      this.$on('clickoutside', onClickOutside);
     },
 
     beforeMount() {
