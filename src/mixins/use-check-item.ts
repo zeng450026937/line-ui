@@ -3,7 +3,7 @@ import { Vue } from 'vue/types/vue';
 import { createMixins } from '@/utils/mixins';
 import { useGroupItem } from '@/mixins/use-group-item';
 import { isDef } from '@/utils/helpers';
-import { useModel, ModelOptions } from './use-model';
+import { ModelOptions, useModel } from './use-model';
 
 export type CheckItemProps = {
   checkable: boolean;

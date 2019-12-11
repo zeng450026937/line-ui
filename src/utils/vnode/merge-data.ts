@@ -1,6 +1,6 @@
 import { VNodeData } from 'vue';
 import { mergeListener } from '@/utils/vnode/merge-listener';
-import { isObject, isArray } from '@/utils/helpers';
+import { isArray, isObject } from '@/utils/helpers';
 
 export function mergeData(exist: VNodeData, value?: VNodeData) {
   if (!value) return exist;

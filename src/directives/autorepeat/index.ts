@@ -1,4 +1,4 @@
-import { VNodeDirective, DirectiveOptions } from 'vue';
+import { DirectiveOptions, VNodeDirective } from 'vue';
 
 interface AutoRepeatOption {
   enable?: boolean

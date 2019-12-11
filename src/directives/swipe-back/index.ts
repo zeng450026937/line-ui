@@ -1,6 +1,6 @@
 import { VNodeDirective } from 'vue';
 import { createSwipeBackGesture } from '@/utils/gesture/swipe-back';
-import { NOOP, NO } from '@/utils/helpers';
+import { NO, NOOP } from '@/utils/helpers';
 
 interface SwipeBackVNodeDirective extends VNodeDirective {
   value?: {

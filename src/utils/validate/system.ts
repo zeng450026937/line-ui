@@ -1,4 +1,6 @@
-import { isServer } from '..';
+import Vue from 'vue';
+
+const isServer: boolean = Vue.prototype.$isServer;
 
 export function isAndroid(): boolean {
   /* istanbul ignore next */

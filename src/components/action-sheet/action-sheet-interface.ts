@@ -1,4 +1,5 @@
-import { AnimationBuilder, Mode } from '../../interface';
+/* eslint-disable-next-line */
+import { AnimationBuilder, Mode } from '@/types/interface';
 
 export interface ActionSheetOptions {
   header?: string;

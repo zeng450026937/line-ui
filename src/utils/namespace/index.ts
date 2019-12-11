@@ -1,4 +1,4 @@
-import { createBEM, BEM } from './bem';
+import { BEM, createBEM } from './bem';
 import { createComponent } from './component';
 import { createI18N, Translate } from './i18n';
 

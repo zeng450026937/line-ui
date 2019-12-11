@@ -1,4 +1,4 @@
-import { CompareFunc, binarySearch } from './binary-search';
+import { binarySearch, CompareFunc } from './binary-search';
 
 export function exponentialSearch<T>(
   array: Array<T> = [],

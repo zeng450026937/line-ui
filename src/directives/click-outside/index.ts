@@ -1,4 +1,4 @@
-import { VNodeDirective, DirectiveOptions } from 'vue';
+import { DirectiveOptions, VNodeDirective } from 'vue';
 
 interface ClickOutsideOption {
   enabled?: (ev?: UIEvent) => boolean

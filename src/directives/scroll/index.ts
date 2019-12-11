@@ -1,4 +1,4 @@
-import { VNodeDirective, DirectiveOptions } from 'vue';
+import { DirectiveOptions, VNodeDirective } from 'vue';
 
 interface ScrollVNodeDirective extends VNodeDirective {
   arg: string

@@ -3,7 +3,7 @@ import { Vue } from 'vue/types/vue';
 import { createMixins } from '@/utils/mixins';
 import { useGroup } from '@/mixins/use-group';
 import { useGroupItem } from '@/mixins/use-group-item';
-import { useModel, ModelOptions } from '@/mixins/use-model';
+import { ModelOptions, useModel } from '@/mixins/use-model';
 import { isArray, isDef } from '@/utils/helpers';
 
 export enum CheckState {

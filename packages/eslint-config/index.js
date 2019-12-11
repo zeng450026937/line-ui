@@ -65,6 +65,12 @@ module.exports = {
     'import/no-unresolved'              : 0,
     'import/no-extraneous-dependencies' : 0,
     'template-curly-spacing'            : ['warn', 'always'],
+    'sort-imports'                      : ['warn', {
+      ignoreCase            : true,
+      ignoreDeclarationSort : true,
+      ignoreMemberSort      : false,
+      memberSyntaxSortOrder : ['none', 'all', 'multiple', 'single'],
+    }],
   },
 
   parserOptions : {

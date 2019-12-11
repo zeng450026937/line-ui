@@ -1,4 +1,4 @@
-import { VNodeDirective, VNode } from 'vue';
+import { VNode, VNodeDirective } from 'vue';
 import { keys } from '../../utils/helpers';
 
 export interface TouchStoredHandlers {

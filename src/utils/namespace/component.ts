@@ -1,26 +1,26 @@
 import Vue, {
-  VueConstructor,
   ComponentOptions,
-  RenderContext,
   FunctionalComponentOptions,
+  RenderContext,
   VNode,
   VNodeData,
+  VueConstructor,
 } from 'vue';
 /* eslint-disable import/extensions, max-len */
 import {
+  RecordPropsDefinition,
   ThisTypedComponentOptionsWithArrayProps,
   ThisTypedComponentOptionsWithRecordProps,
-  RecordPropsDefinition,
 } from 'vue/types/options';
 import {
   ScopedSlot,
   ScopedSlotChildren,
 } from 'vue/types/vnode';
 import {
-  ScopedSlots,
   DefaultEvents,
   InjectedKeys,
   InjectOptions,
+  ScopedSlots,
 } from '@/utils/types';
 import '@/locale';
 import { camelize } from '@/utils/format/string';

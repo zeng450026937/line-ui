@@ -6,6 +6,6 @@ node_modules
 **/node_modules
 
 # temporarily stop lint
-# src/utils
-src/mixins/popup
-!src/utils/namespace
+src/components/**/test
+src/utils/model
+src/utils/input-shims

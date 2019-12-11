@@ -1,6 +1,6 @@
 /* eslint-disable-next-line */
 import { Vue } from 'vue/types/vue';
-import { on, off } from '@/utils/dom/event';
+import { off, on } from '@/utils/dom/event';
 
 export const isVue = (val: any): val is Vue => val && val._isVue;
 

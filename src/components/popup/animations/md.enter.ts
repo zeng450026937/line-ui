@@ -1,4 +1,4 @@
-import { createAnimation, Animation } from '@/utils/animation';
+import { Animation, createAnimation } from '@/utils/animation';
 
 /**
  * Md Modal Enter Animation

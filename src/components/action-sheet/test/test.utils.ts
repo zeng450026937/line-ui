@@ -6,13 +6,13 @@ export const testActionSheet = async (
   type: string,
   selector: string,
   rtl = false,
-  afterScreenshotHook = async (..._args: any[]): Promise<void> => {/**/ }
+  afterScreenshotHook = async (..._args: any[]): Promise<void> => { /**/ },
 ) => {
   try {
     const pageUrl = generateE2EUrl('action-sheet', type, rtl);
 
     const page = await newE2EPage({
-      url: pageUrl
+      url : pageUrl,
     });
 
     const screenshotCompares = [];
@@ -38,7 +38,6 @@ export const testActionSheet = async (
     for (const screenshotCompare of screenshotCompares) {
       expect(screenshotCompare).toMatchScreenshot();
     }
-
   } catch (err) {
     throw err;
   }
@@ -47,13 +46,13 @@ export const testActionSheet = async (
 export const testActionSheetBackdrop = async (
   page: any,
   screenshotCompares: any,
-  actionSheet: any
+  actionSheet: any,
 ) => {
   try {
     const backdrop = await page.find('.line-overlay');
     await backdrop.click();
 
-    screenshotCompares.push(await page.compareScreenshot(`dismiss backdrop`));
+    screenshotCompares.push(await page.compareScreenshot('dismiss backdrop'));
 
     const isVisible = await actionSheet.isVisible();
     expect(isVisible).toBe(true);
@@ -64,7 +63,7 @@ export const testActionSheetBackdrop = async (
 
 export const testActionSheetAlert = async (
   page: any,
-  screenshotCompares: any
+  screenshotCompares: any,
 ) => {
   const openAlertBtn = await page.find({ text: 'Open Alert' });
   await openAlertBtn.click();
@@ -73,7 +72,7 @@ export const testActionSheetAlert = async (
   await alert.waitForVisible();
   await page.waitFor(250);
 
-  screenshotCompares.push(await page.compareScreenshot(`alert open`));
+  screenshotCompares.push(await page.compareScreenshot('alert open'));
 
   const alertOkayBtn = await page.find({ contains: 'Okay' });
   await alertOkayBtn.click();

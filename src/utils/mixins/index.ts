@@ -8,9 +8,9 @@ import Vue, {
   FunctionalComponentOptions,
 } from 'vue';
 import {
+  RecordPropsDefinition,
   ThisTypedComponentOptionsWithArrayProps,
   ThisTypedComponentOptionsWithRecordProps,
-  RecordPropsDefinition,
 } from 'vue/types/options';
 import { ExtendedVue } from 'vue/types/vue';
 import { InjectedKeys, InjectOptions } from '@/utils/types';

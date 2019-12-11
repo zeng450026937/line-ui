@@ -1,7 +1,7 @@
 /* eslint-disable-next-line import/extensions */
 import { VNode } from 'vue/types/vnode';
 import { createMixins } from '@/utils/mixins';
-import { isFunction, isDef } from '@/utils/helpers';
+import { isDef, isFunction } from '@/utils/helpers';
 import remote from '@/directives/remote';
 
 export function useRemote() {

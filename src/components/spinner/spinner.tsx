@@ -1,7 +1,7 @@
 import { CreateElement } from 'vue';
 import { createNamespace } from '@/utils/namespace';
 import { config, getSkylineMode } from '@/utils/config';
-import { SPINNERS, SpinnerTypes, SpinnerConfig } from '@/components/spinner/spinner-configs';
+import { SpinnerConfig, SPINNERS, SpinnerTypes } from '@/components/spinner/spinner-configs';
 import '@/components/spinner/spinner.scss';
 
 const [createComponent, bem] = createNamespace('spinner');

@@ -1,10 +1,10 @@
 import { createMixins } from '@/utils/mixins';
 import {
-  RestAny,
-  VueInstance,
   EventOptions,
   invoke,
+  RestAny,
   useEvent,
+  VueInstance,
 } from '@/mixins/use-event';
 
 export type IncludeHandler<T = RestAny> = (this: VueInstance<T>) => Array<Element>;

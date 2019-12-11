@@ -1,5 +1,5 @@
 import { createNamespace } from '@/utils/namespace';
-import { useGroup, CheckState } from '@/mixins/use-group';
+import { CheckState, useGroup } from '@/mixins/use-group';
 import '@/components/check-box/check-box-group.scss';
 
 export { CheckState };

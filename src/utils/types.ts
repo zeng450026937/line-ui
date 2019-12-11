@@ -1,9 +1,9 @@
 /* eslint-disable import/extensions */
 import {
-  VNode,
-  VNodeData,
   CreateElement,
   RenderContext,
+  VNode,
+  VNodeData,
   VueConstructor,
 } from 'vue';
 import { InjectOptions, PropsDefinition } from 'vue/types/options';

@@ -7,7 +7,7 @@ import { iosEnterAnimation } from '@/components/alert/animations/ios.enter';
 import { iosLeaveAnimation } from '@/components/alert/animations/ios.leave';
 import { mdEnterAnimation } from '@/components/alert/animations/md.enter';
 import { mdLeaveAnimation } from '@/components/alert/animations/md.leave';
-import { AlertInput, AlertButton } from '@/components/alert/alert-interface';
+import { AlertButton, AlertInput } from '@/components/alert/alert-interface';
 
 const [createComponent, bem] = createNamespace('alert');
 

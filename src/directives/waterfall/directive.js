@@ -1,9 +1,9 @@
-import { on, off } from './event';
+import { off, on } from './event';
 import {
-  getScrollTop,
   getElementTop,
-  getVisibleHeight,
   getScrollEventTarget,
+  getScrollTop,
+  getVisibleHeight,
 } from './scroll';
 
 const CONTEXT = '@@Waterfall';

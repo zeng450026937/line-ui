@@ -1,4 +1,4 @@
-import { Gesture, GestureDetail, createGesture } from './index';
+import { createGesture, Gesture, GestureDetail } from './index';
 
 export const createSwipeBackGesture = (
   el: HTMLElement,

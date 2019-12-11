@@ -5,7 +5,7 @@ import { useRemote } from '@/mixins/use-remote';
 import { useModel } from '@/mixins/use-model';
 import { useClickOutside } from '@/mixins/use-click-outside';
 import { useTransition } from '@/mixins/use-transition';
-import { popupStack, PopupInterface } from '@/utils/popup';
+import { PopupInterface, popupStack } from '@/utils/popup';
 import { isDef } from '@/utils/helpers';
 import { Overlay } from '@/components/overlay';
 

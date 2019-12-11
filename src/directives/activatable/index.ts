@@ -1,5 +1,5 @@
 import {
-  VNodeDirective, VNode, DirectiveOptions,
+  DirectiveOptions, VNode, VNodeDirective,
 } from 'vue';
 
 function bind(

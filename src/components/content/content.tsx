@@ -3,8 +3,8 @@ import { useColor } from '@/mixins/use-color';
 import { isPlatform } from '@/utils/platform';
 import {
   scrollByPoint,
-  scrollToElement,
   scrollToBottom,
+  scrollToElement,
   scrollToPoint,
   scrollToTop,
 } from '@/utils/scroll-to';

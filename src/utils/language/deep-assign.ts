@@ -1,4 +1,4 @@
-import { isDef, isObject, hasOwn } from '@/utils/helpers';
+import { hasOwn, isDef, isObject } from '@/utils/helpers';
 
 type ObjectIndex = Record<string, any>;
 

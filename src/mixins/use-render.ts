@@ -1,4 +1,4 @@
-import Vue, { VNode, VNodeData, RenderContext } from 'vue';
+import Vue, { RenderContext, VNode, VNodeData } from 'vue';
 import { createMixins } from '@/utils/mixins';
 
 const strategies = Vue.config.optionMergeStrategies;

@@ -1,6 +1,6 @@
 import { createMixins } from '@/utils/mixins';
-import { on, off } from '@/utils/dom/event';
-import { isFunction, isArray } from '@/utils/helpers';
+import { off, on } from '@/utils/dom/event';
+import { isArray, isFunction } from '@/utils/helpers';
 /* eslint-disable-next-line */
 import { Vue } from 'vue/types/vue';
 
