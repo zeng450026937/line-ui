@@ -33,18 +33,25 @@ export default createComponent({
 
   render() {
     const { border, color, closeIcon } = this;
-
     return (
-      <div class={bem({ border, [color]: colors.includes(color) })}>
-        <span class={bem('content')}>
+      <div
+        class={bem({ border, [color]: colors.includes(color) })}
+      >
+        <span
+          class={bem('content')}
+        >
           {this.slots()}
         </span>
         {closeIcon && (
-        <span class={bem('close')}
-          onClick={() => { this.onClick(); }}>
-          <icon name={closeIcon}
+        <span
+          class={bem('close')}
+          onClick={this.onClick}
+        >
+          <icon
+            name={closeIcon}
             height="18"
-            width="18"></icon>
+            width="18"
+          ></icon>
         </span>)}
       </div>
     );

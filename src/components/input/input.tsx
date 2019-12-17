@@ -1,15 +1,14 @@
-import { Icon } from '@/components/icon';
+import { getSkylineMode } from '@/utils/config';
+// import { Icon } from '@/components/icon';
 import { createNamespace } from '@/utils/namespace';
-import { isObject } from '@/utils/helpers';
+// import { isObject } from '@/utils/helpers';
+
+import '@/components/input/input.md.scss';
 import '@/components/input/input.scss';
 
 const [createComponent, bem] = createNamespace('input');
 
 export default createComponent({
-  components : {
-    Icon,
-  },
-
   props : {
     prefixIcon : {
       type : [String, Object],
@@ -26,23 +25,40 @@ export default createComponent({
       default : '',
     },
     type : {
-      type    : [String],
+      type    : String,
       default : 'text',
     },
     placeholderText : {
       type    : String,
       default : '',
     },
+    max : {
+      type : String,
+    },
     maxlength : {
+      type : Number,
+    },
+    min : {
+      type : String,
+    },
+    size : {
       type : Number,
     },
     readonly : {
       type    : Boolean,
       default : false,
     },
+    autofocus : {
+      type    : Boolean,
+      default : false,
+    },
     autocomplete : {
       type    : String,
       default : 'off',
+    },
+    clearOnEdit : {
+      type    : Boolean,
+      default : false,
     },
     disabled : {
       type    : Boolean,
@@ -60,44 +76,62 @@ export default createComponent({
 
   data() {
     return {
-      isFocus     : false,
-      nativeValue : '',
+      hasFocus         : false,
+      didBlurAfterEdit : false,
+      // nativeValue      : '',
     };
   },
 
   computed : {
-    inputValue() {
-      let { value } = this;
-      value = value === null || value === undefined ? '' : String(value);
-      return value;
-    },
+
   },
 
   mounted() {
-    this.$nextTick(this.setInputValue);
+    // this.$nextTick(this.setInputValue);
   },
 
   methods : {
-    onInput(event: InputEvent): void {
-      if (event.isComposing || !event.target) return;
-      this.$emit('input', (event.target as HTMLInputElement).value);
-      this.$nextTick(this.setInputValue);
-    },
-
     setInputValue(): void {
       const { input } = this.$refs;
       if ((input as HTMLInputElement).value === this.inputValue || !input) return;
       (input as HTMLInputElement).value = this.inputValue;
     },
 
-    onFocus(): void {
-      this.isFocus = true;
-      this.$emit('onFocus');
+    onInput(ev: Event): void {
+      const input = ev.target as HTMLInputElement | null;
+      if (input) {
+        // this.value = input.value || '';
+        this.$emit('input', input.value);
+      }
     },
 
     onBlur(): void {
-      this.isFocus = false;
+      this.hasFocus = false;
+      this.focusChanged();
+      // this.emitStyle(); ?
+
       this.$emit('onBlur');
+    },
+
+    onFocus(): void {
+      this.hasFocus = true;
+      this.focusChanged();
+      // this.emitStyle(); ?
+
+      this.$emit('onFocus');
+    },
+
+    onKeydown() {
+      if (this.shouldClearOnEdit()) {
+        // Did the input value change after it was blurred and edited?
+        if (this.didBlurAfterEdit && this.hasValue()) {
+          // Clear the input
+          this.clearTextInput();
+        }
+
+        // Reset the flag
+        this.didBlurAfterEdit = false;
+      }
     },
 
     onClearValue(event: MouseEvent): void {
@@ -107,60 +141,81 @@ export default createComponent({
       this.$emit('input', '');
       this.$emit('clear', event);
     },
+
+    getValue(): string {
+      return this.value as string || '';
+    },
+
+    hasValue(): boolean {
+      return this.getValue().length > 0;
+    },
+
+    shouldClearOnEdit(): boolean {
+      const { type, clearOnEdit } = this;
+      return (clearOnEdit === undefined)
+        ? type === 'password'
+        : clearOnEdit;
+    },
+
+    focusChanged(): void {
+      // If clearOnEdit is enabled and the input blurred but has a value, set a flag
+      if (!this.hasFocus && this.shouldClearOnEdit() && this.hasValue()) {
+        this.didBlurAfterEdit = true;
+      }
+    },
   },
 
   watch : {
-    inputValue() {
-      this.setInputValue();
-    },
+
   },
 
   render() {
     const {
-      prefixIcon, suffixIcon, clearable, value, isFocus, label, type,
-      maxlength, readonly, placeholderText, autocomplete, disabled,
+      value, hasFocus, accept, type, maxlength, readonly, placeholderText, autocomplete, disabled,
+      max, min, size, autoFocus, pattern, required,
     } = this;
+    const mode = getSkylineMode(this);
 
     return (
-      <div class={bem({
-        prefix       : prefixIcon,
-        suffix       : suffixIcon,
-        suffix_clear : clearable && value && isFocus && suffixIcon,
-      })}>
-        <span class={bem('prefix')}>
-          {this.slots('prefix') ? this.slots('prefix')
-            : (<icon class='prefix-icon'
-               {...{ props: isObject(prefixIcon) ? prefixIcon : { name: prefixIcon } }}
-               width="18"
-               height="18"></icon>)}
-        </span>
-        <span class={bem('label')}>
-          {this.slots('label') ? this.slots('label') : label }
-        </span>
-        <input ref="input"
-              type={type}
-              maxlength={maxlength}
-              readonly={readonly}
-              placeholder={placeholderText}
-              autocomplete={autocomplete}
-              disabled={disabled}
-              onInput={this.onInput}
-              onFocus={this.onFocus}
-              onBlur={this.onBlur}>
+      <div
+        class={[
+          bem(),
+          {
+            [mode]      : true,
+            // 'has-value' : this.value.length,
+            'has-focus' : hasFocus,
+          },
+        ]}
+      >
+        <input
+          class="native-input"
+          ref="input"
+          accept={accept}
+          type={type}
+          value={value}
+          size={size}
+          maxlength={maxlength}
+          max={max}
+          min={min}
+          readonly={readonly}
+          placeholder={placeholderText}
+          pattern={pattern}
+          required={required}
+          autocomplete={autocomplete}
+          autoFocus={autoFocus}
+          disabled={disabled}
+          onInput={this.onInput}
+          onFocus={this.onFocus}
+          onBlur={this.onBlur}
+        >
         </input>
-        <span class={bem('suffix')}>
-          {this.slots('suffix') ? this.slots('suffix')
-            : (<icon class='suffix-icon'
-               {...{ props: isObject(suffixIcon) ? suffixIcon : { name: suffixIcon } }}
-               width="18"
-               height="18"></icon>)}
-          {clearable && value && isFocus && (
-            <icon class="clearable-icon"
-              onMmousedown={(event: MouseEvent) => { this.onClearValue(event); }}
-              {...{ props: isObject(this.clearableIcon) ? this.clearableIcon : { name: this.clearableIcon } }}
-              width="18"
-              height="18"></icon>)}
-        </span>
+        {(this.clearInput && !readonly && !disabled) && <button
+          type="button"
+          class="input-clear-icon"
+          tabindex="-1"
+          onTouchStart={this.clearTextInput}
+          onMouseDown={this.clearTextInput}
+        />}
     </div>
     );
   },

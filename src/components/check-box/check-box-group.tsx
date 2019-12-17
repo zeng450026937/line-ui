@@ -1,22 +1,22 @@
 import { createNamespace } from '@/utils/namespace';
-import { CheckState, useGroup } from '@/mixins/use-group';
+import { useCheckGroup } from '@/mixins/use-check-group';
 import '@/components/check-box/check-box-group.scss';
 
-export { CheckState };
+// export { CheckState };
 
 const NAMESPACE = 'CheckBoxGroup';
 const [createComponent, bem] = createNamespace('check-box-group');
 
 export default createComponent({
-  mixins : [useGroup(NAMESPACE)],
+  mixins : [useCheckGroup(NAMESPACE)],
 
   props : {
-    nextCheckState : {
-      type : Function,
-      default(checkState: CheckState) {
-        return checkState === CheckState.Checked ? CheckState.Unchecked : CheckState.Checked;
-      },
-    },
+    // nextCheckState : {
+    //   type : Function,
+    //   default(checkState: CheckState) {
+    //     return checkState === CheckState.Checked ? CheckState.Unchecked : CheckState.Checked;
+    //   },
+    // },
   },
 
 
@@ -25,6 +25,7 @@ export default createComponent({
       this.checkState = (this.nextCheckState as Function)(this.checkState);
     },
   },
+
 
   render() {
     return (

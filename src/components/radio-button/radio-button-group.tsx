@@ -1,12 +1,12 @@
 import { createNamespace } from '@/utils/namespace';
-import { useGroup } from '@/mixins/use-group';
+import { useCheckGroup } from '@/mixins/use-check-group';
 import '@/components/radio-button/radio-button-group.scss';
 
 const NAMESPACE = 'RadioButtonGroup';
 const [createComponent, bem] = createNamespace('radio-button-group');
 
 export default createComponent({
-  mixins : [useGroup(NAMESPACE)],
+  mixins : [useCheckGroup(NAMESPACE)],
 
   props : {
     exclusive : {

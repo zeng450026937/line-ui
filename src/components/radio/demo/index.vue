@@ -1,18 +1,17 @@
 <template>
-  <div>
-    <!-- TextAreaDemo -->
-    <line-text-area></line-text-area>
-  </div>
+   <div class="">
+    <line-radio>test</line-radio>
+   </div>
 </template>
 
 <script>
-import { TextArea as LineTextArea } from '@/components/text-area';
+import { Radio as LineRadio } from '@/components/radio';
 
 export default {
-  name : 'TextAreaDemo',
+  name : 'RadioDemo',
 
   components : {
-    LineTextArea,
+    LineRadio,
   },
 
   props : {
@@ -48,4 +47,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+
 </style>

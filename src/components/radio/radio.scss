@@ -1,0 +1,52 @@
+@import "../../themes/skyline.globals.ios";
+
+// Radio
+// --------------------------------------------------
+
+.line-radio {
+  /**
+   * @prop --color: Color of the radio
+   * @prop --color-checked: Color of the checked radio
+   */
+
+  // display: inline-block;
+  display: flex;
+  position: relative;
+  box-sizing: border-box;
+
+  align-items: center;
+  justify-content: flex-start;
+
+  user-select: none;
+
+  z-index: $z-index-item-input;
+}
+
+.line-radio--disabled {
+  pointer-events: none;
+}
+
+
+.line-radio__icon {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  // width: 100%;
+  width: 20px;
+  height: 100%;
+
+  margin-right: 4px;
+
+  contain: layout size style;
+}
+
+button {
+  @include input-cover();
+}
+
+.line-radio__icon,
+.line-radio__inner {
+  box-sizing: border-box;
+}

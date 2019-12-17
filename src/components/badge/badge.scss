@@ -1,81 +1,55 @@
+@import "./badge.vars";
+
+// Badge
+// --------------------------------------------------
+
 .line-badge {
+  /**
+   * @prop --background: Background of the badge
+   * @prop --color: Text color of the badge
+   *
+   * @prop --padding-top: Top padding of the badge
+   * @prop --padding-end: Right padding if direction is left-to-right, and left padding if direction is right-to-left of the badge
+   * @prop --padding-bottom: Bottom padding of the badge
+   * @prop --padding-start: Left padding if direction is left-to-right, and right padding if direction is right-to-left of the badge
+   */
+  --background: #{ion-color(primary, base)};
+  --color: #{ion-color(primary, contrast)};
+  --padding-top: #{$badge-padding-top};
+  --padding-end: #{$badge-padding-end};
+  --padding-bottom: #{$badge-padding-bottom};
+  --padding-start: #{$badge-padding-start};
+
+  @include font-smoothing();
+  @include padding(var(--padding-top), var(--padding-end), var(--padding-bottom), var(--padding-start));
+
   display: inline-block;
-  position: relative;
-  &__content {
-    display: inline-flex;
 
-    position: absolute;
-    top: -9px;
-    right: 0px;
+  min-width: $badge-min-width;
 
-    align-items: center;
-    justify-content: center;
+  background: var(--background);
+  color: var(--color);
 
-    height: 20px;
+  font-family: $font-family-base;
+  font-size: $badge-font-size;
+  font-weight: $badge-font-weight;
 
-    padding: 0 8px;
+  line-height: 1;
 
-    transform: translateX(50%);
+  text-align: center;
 
-    border: 1px solid #fff;
-    border-radius: 10px;
+  white-space: nowrap;
 
-    background-color: #ed4014;
-    color: #fff;
+  contain: content;
+  vertical-align: baseline;
+}
 
-    font-size: 12px;
-  }
-  &.line-badge--dot {
-    .badge__content {
-      top: -5px;
+// TODO
+:host(.ion-color) {
+  background: #{current-color(base)};
+  color: #{current-color(contrast)};
+}
 
-      width: 10px;
-      height: 10px;
-
-      padding: 0;
-    }
-  }
-
-  // TODO
-  /*
-    &.badge--left {
-      left: 0;
-    }
-    &.badge--bottom {
-      bottom: 0;
-    }
-  */
-
-  &.line-badge--primary {
-    .line-badge__content {
-      background-color: var(--primary);
-    }
-  }
-  &.line-badge--success {
-    .line-badge__content {
-      background-color: var(--success);
-    }
-  }
-  &.line-badge--warning {
-    .line-badge__content {
-      background-color: var(--warning);
-    }
-  }
-  &.line-badge--danger {
-    .line-badge__content {
-      background-color: var(--danger);
-    }
-  }
-  &.line-badge--light {
-    .line-badge__content {
-      background-color: var(--light);
-      color: #1a1a1a;
-    }
-  }
-  &.line-badge--dark {
-    .line-badge__content {
-      background-color: var(--dark);
-      color: #ffffff;
-    }
-  }
+:host(:empty) {
+  display: none;
 }

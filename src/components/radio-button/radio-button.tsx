@@ -1,5 +1,5 @@
 import { createNamespace } from '@/utils/namespace';
-import { useGroupItem } from '@/mixins/use-group-item';
+import { useCheckItem } from '@/mixins/use-check-item';
 import { useRipple } from '@/mixins/use-ripple';
 import RadioIndicator from '@/components/radio-button/radio-indicator';
 import '@/components/radio-button/radio-button.scss';
@@ -9,13 +9,15 @@ const NAMESPACE = 'RadioButtonGroup';
 const [createComponent, bem] = createNamespace('radio-button');
 
 export default createComponent({
-  mixins : [useGroupItem(NAMESPACE, { uncheckable: false }), useRipple()],
+  mixins : [useCheckItem(NAMESPACE), useRipple()],
 
   props : {
     text : String,
   },
 
   render() {
+    const { checked, disabled, text } = this;
+
     return (
       <div
         class={bem()}
@@ -24,12 +26,11 @@ export default createComponent({
         {
           this.slots('indicator') || (
             <RadioIndicator
-              checked={this.checked}
-              disabled={this.disabled}
-            ></RadioIndicator>
-          )
+              checked={checked}
+              disabled={disabled}
+            ></RadioIndicator>)
         }
-        { this.slots() || this.text }
+        { this.slots() || text }
       </div>
     );
   },

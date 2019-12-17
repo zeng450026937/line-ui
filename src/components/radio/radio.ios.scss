@@ -1,0 +1,84 @@
+@import "./radio";
+@import "./radio.ios.vars";
+
+// iOS Radio
+// --------------------------------------------------
+
+.line-radio {
+  --color-checked: #{ion-color(primary, base)};
+
+  // width: $radio-ios-icon-width;
+  width: 100%;
+  height: $radio-ios-icon-height;
+}
+
+.line-radio--checked .line-radio__inner {
+  border-color: current-color(base);
+}
+
+// TODO
+.item-radio.item-ios ion-label {
+  @include margin-horizontal(0, null);
+}
+
+
+// iOS Radio Checkmark: Checked
+// -----------------------------------------
+
+.line-radio__inner {
+  width: 33%;
+  height: 50%;
+}
+
+.line-radio--checked .line-radio__inner {
+  transform: rotate(45deg);
+
+  border-width: $radio-ios-icon-border-width;
+  border-top-width: 0;
+  border-left-width: 0;
+  border-style: $radio-ios-icon-border-style;
+  border-color: var(--color-checked);
+}
+
+
+// iOS Radio: Disabled
+// -----------------------------------------
+.line-radio--disabled {
+  opacity: $radio-ios-disabled-opacity;
+}
+
+
+// TODO
+// iOS Radio: Keyboard Focus
+// -----------------------------------------
+
+.ion-focused .line-radio__icon::after {
+  @include border-radius(50%);
+  @include position(-8px, null, null, -9px);
+
+  display: block;
+  position: absolute;
+
+  width: 36px;
+  height: 36px;
+
+  background: $radio-ios-background-color-focused;
+
+  content: "";
+  opacity: .2;
+}
+
+// TODO
+// iOS Radio Within An Item
+// -----------------------------------------
+
+:host(.in-item) {
+  @include margin($radio-ios-item-end-margin-top, $radio-ios-item-end-margin-end, $radio-ios-item-end-margin-bottom, $radio-ios-item-end-margin-start);
+
+  display: block;
+  position: static;
+}
+
+:host(.in-item[slot="start"]) {
+  @include margin($radio-ios-item-start-margin-top, $radio-ios-item-start-margin-end, $radio-ios-item-start-margin-bottom, $radio-ios-item-start-margin-start);
+}
