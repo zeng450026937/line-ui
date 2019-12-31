@@ -198,7 +198,7 @@ export default createComponent({
   },
 
   render() {
-    const mode = getSkylineMode(this);
+    // const mode = getSkylineMode(this);
     const value = this.getValue();
     const {
       rows, maxlength, placeholderText, readonly, disabled, autocapitalize, autofocus,
@@ -206,10 +206,7 @@ export default createComponent({
 
     return (
       <div
-        class={[
-          bem(),
-          { [mode]: true },
-        ]}
+        class={bem()}
       >
         <textarea
           class="native-textarea"

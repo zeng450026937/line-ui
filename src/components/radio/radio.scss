@@ -42,8 +42,10 @@
   contain: layout size style;
 }
 
-button {
-  @include input-cover();
+.line-radio {
+  button {
+    @include input-cover();
+  }
 }
 
 .line-radio__icon,

@@ -1,9 +1,4 @@
-.tabs__nav-item {
-  &:hover {
-    color: var(--primary);
-  }
-}
-
-.tabs__nav-item--active {
-  color: var(--primary);
+.line-tab.line-tab--hidden {
+  /* stylelint-disable-next-line declaration-no-important */
+  display: none !important;
 }

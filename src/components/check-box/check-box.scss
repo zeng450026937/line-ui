@@ -1,32 +1,3 @@
-// .line-check-box {
-//   display: flex;
-//   position: relative;
-
-//   align-items: center;
-
-//   margin: 4px;
-
-//   cursor: pointer;
-// }
-
-// .line-cell {
-//   .line-check-indicator {
-//     border-width: 0;
-//     border-radius: 0;
-
-//     svg {
-//       path {
-//         stroke: #10c29b;
-//       }
-//     }
-//     &--checked {
-//       border-color: transparent;
-
-//       background-color: transparent;
-//     }
-//   }
-// }
-
 @import "../../themes/skyline.globals";
 
 // Checkbox
@@ -66,15 +37,17 @@
   z-index: $z-index-item-input;
 }
 
-:host(.ion-color) {
+.line-color {
   --background-checked: #{current-color(base)};
   --border-color-checked: #{current-color(base)};
   --checkmark-color: #{current-color(contrast)};
 }
-
-button {
-  @include input-cover();
+.line-check-box {
+  button {
+    @include input-cover();
+  }
 }
+
 
 .line-check-indicator {
   @include border-radius(var(--border-radius));

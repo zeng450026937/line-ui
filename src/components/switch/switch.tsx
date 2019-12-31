@@ -1,5 +1,5 @@
 // import SwitchIndicator from '@/components/switch/switch-indicator';
-import { useColor } from '@/mixins/use-color';
+import { createColorClasses, useColor } from '@/mixins/use-color';
 import { useCheckItem } from '@/mixins/use-check-item';
 import { createNamespace } from '@/utils/namespace';
 import { Gesture, GestureDetail } from '@/utils/gesture';
@@ -14,11 +14,6 @@ let gesture: Gesture | undefined;
 
 export default createComponent({
   mixins : [useCheckItem(NAMESPACE), useColor()],
-
-  props : {
-
-  },
-
 
   data() {
     return {
@@ -75,7 +70,7 @@ export default createComponent({
   },
 
   async mounted() {
-    this.gesture = (await import('../../utils/gesture')).createGesture({
+    this.gesture = (await import('@/utils/gesture')).createGesture({
       el              : this.$el,
       gestureName     : 'toggle',
       gesturePriority : 100,
@@ -102,14 +97,19 @@ export default createComponent({
   },
 
   render() {
-    const { checked, disabled, activated } = this;
+    const {
+      checked, disabled, activated, color,
+    } = this;
     return (
       <div
-        class={bem({
-          disabled,
-          checked,
-          activated,
-        })}
+        class={[
+          bem({
+            disabled,
+            checked,
+            activated,
+          }),
+          { ...createColorClasses(color) },
+        ]}
         onClick={this.onClick}
         role="checkbox"
       >

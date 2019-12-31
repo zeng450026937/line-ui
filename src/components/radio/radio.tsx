@@ -1,6 +1,8 @@
+
 import { createNamespace } from '@/utils/namespace';
 import { useCheckItem } from '@/mixins/use-check-item';
 import { useRipple } from '@/mixins/use-ripple';
+import { createColorClasses, useColor } from '@/mixins/use-color';
 
 import '@/components/radio/radio.md.scss';
 import '@/components/radio/radio.scss';
@@ -10,21 +12,20 @@ const NAMESPACE = 'RadioGroup';
 const [createComponent, bem] = createNamespace('radio');
 
 export default createComponent({
-  mixins : [useCheckItem(NAMESPACE), useRipple()],
-
-  props : {
-    text : String,
-  },
+  mixins : [useCheckItem(NAMESPACE), useRipple(), useColor()],
 
   render() {
-    const { checked, disabled, text } = this;
+    const { checked, disabled, color } = this;
 
     return (
       <div
-        class={bem({
-          checked,
-          disabled,
-        })}
+        class={[
+          bem({
+            checked,
+            disabled,
+          }),
+          { ...createColorClasses(color) },
+        ]}
         role="radio"
         onClick={this.toggle}
         on={this.$listeners}

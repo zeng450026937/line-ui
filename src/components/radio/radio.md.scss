@@ -16,11 +16,11 @@
   height: $radio-md-icon-height;
 }
 
-.ion-color .line-radio__inner {
+.line-color .line-radio__inner {
   background: current-color(base);
 }
 
-.ion-color.line-radio--checked .line-radio__icon {
+.line-color.line-radio--checked .line-radio__icon {
   border-color: current-color(base);
 }
 
@@ -82,7 +82,7 @@
 // Material Design Radio: Keyboard Focus
 // -----------------------------------------
 
-.ion-focused .line-radio__icon::after {
+.line-focused .line-radio__icon::after {
   @include border-radius(50%);
   @include position(-12px, null, null, -12px);
 
@@ -98,17 +98,16 @@
   opacity: .2;
 }
 
-// TODO
 // Material Design Radio Within An Item
 // -----------------------------------------
 
-:host(.in-item) {
+.line-radio.in-item {
   @include margin($radio-md-item-end-margin-top, $radio-md-item-end-margin-end, $radio-md-item-end-margin-bottom, $radio-md-item-end-margin-start);
 
   display: block;
   position: static;
 }
 
-:host(.in-item[slot="start"]) {
+.line-radio.in-item[slot="start"] {
   @include margin($radio-md-item-start-margin-top, $radio-md-item-start-margin-end, $radio-md-item-start-margin-bottom, $radio-md-item-start-margin-start);
 }

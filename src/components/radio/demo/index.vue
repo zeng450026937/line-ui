@@ -1,7 +1,9 @@
 <template>
-   <div class="">
+  <div class="">
     <line-radio>test</line-radio>
-   </div>
+    <line-radio color="success">test</line-radio>
+    <line-radio color="danger">test</line-radio>
+  </div>
 </template>
 
 <script>
@@ -47,5 +49,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 </style>

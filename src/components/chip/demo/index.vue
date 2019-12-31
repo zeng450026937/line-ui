@@ -3,7 +3,7 @@
     <line-chip>
       test
     </line-chip>
-    <line-chip color="warning">
+    <line-chip outline color="warning">
       <line-icon name="alarm"></line-icon>
       test
     </line-chip>
@@ -14,6 +14,7 @@
     <line-chip color="primary" border>
       <line-icon name="alarm"></line-icon>
       test
+      <line-icon name="alarm"></line-icon>
     </line-chip>
     <line-chip color="danger">
       <line-icon name="alarm"></line-icon>

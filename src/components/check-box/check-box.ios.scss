@@ -30,11 +30,11 @@
   opacity: $checkbox-ios-disabled-opacity;
 }
 
-
+// TODO
 // iOS Checkbox Within An Item
 // -----------------------------------------
 
-:host(.in-item) {
+.line-check-box.in-item {
   // end position by default
   @include margin($checkbox-ios-item-end-margin-top, $checkbox-ios-item-end-margin-end, $checkbox-ios-item-end-margin-bottom, $checkbox-ios-item-end-margin-start);
 
@@ -43,6 +43,6 @@
   position: static;
 }
 
-:host(.in-item[slot="start"]) {
+.line-check-box.in-item[slot="start"] {
   @include margin($checkbox-ios-item-start-margin-top, $checkbox-ios-item-start-margin-end, $checkbox-ios-item-start-margin-bottom, $checkbox-ios-item-start-margin-start);
 }

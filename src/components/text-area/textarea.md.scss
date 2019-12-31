@@ -4,7 +4,7 @@
 // Material Design Textarea
 // --------------------------------------------------
 
-:host {
+.line-textarea  {
   --padding-top: #{$textarea-md-padding-top};
   --padding-end: #{$textarea-md-padding-end};
   --padding-bottom: #{$textarea-md-padding-bottom};
@@ -15,8 +15,8 @@
   font-size: $textarea-md-font-size;
 }
 
-:host-context(.item-label-stacked),
-:host-context(.item-label-floating) {
+.item-label-stacked .line-textarea,
+.item-label-floating .line-textarea {
   --padding-top: 8px;
   --padding-bottom: 8px;
   --padding-start: 0;

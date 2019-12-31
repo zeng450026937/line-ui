@@ -13,8 +13,9 @@
   font-size: $textarea-ios-font-size;
 }
 
-:host-context(.item-label-stacked),
-:host-context(.item-label-floating) {
+// TODO ?
+.item-label-stacked .line-textarea,
+.item-label-floating .line-textarea {
   --padding-top: 8px;
   --padding-bottom: 8px;
   --padding-start: 0px;

@@ -1,22 +1,25 @@
 import { createNamespace } from '@/utils/namespace';
-import { useGroupItem } from '@/mixins/use-group-item';
+import { useCheckItemWithModel } from '@/mixins/use-check-item';
 import '@/components/tabs/tab.scss';
 
 const NAMESPACE = 'Tabs';
 const [createComponent, bem] = createNamespace('tab');
 
 export default createComponent({
-  mixins : [useGroupItem(NAMESPACE)],
+  mixins : [useCheckItemWithModel(NAMESPACE)],
 
   props : {
     title : {
       type    : String,
       default : '',
     },
-    disabled : {
-      type    : Boolean,
-      default : false,
-    },
+    tab : String,
+  },
+
+  data() {
+    return {
+
+    };
   },
 
   methods : {
@@ -30,13 +33,24 @@ export default createComponent({
     },
   },
 
+  mounted() {
+
+  },
+
   render() {
-    const { checked } = this;
+    const { checked, tab } = this;
 
     return (
-      <div class={{ 'tabs__nav-item': true, 'tabs__nav-item--active': checked }}
-        onClick={() => { this.onClick(); }}>
-        {this.slots('title') ? this.slots('title') : this.title}
+      <div
+        class={[
+          bem({ hidden: !checked }),
+        // { 'line-page': component === undefined },
+        ]}
+        role="tabpanel"
+        aria-hidden={!checked ? 'true' : null}
+        aria-labelledby={`tab-button-${ tab }`}
+      >
+        {this.slots()}
       </div>
     );
   },

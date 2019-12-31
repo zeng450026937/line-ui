@@ -17,7 +17,7 @@
 }
 
 // TODO
-.item-radio.item-ios ion-label {
+.item-radio.item-ios .line-label {
   @include margin-horizontal(0, null);
 }
 
@@ -52,7 +52,7 @@
 // iOS Radio: Keyboard Focus
 // -----------------------------------------
 
-.ion-focused .line-radio__icon::after {
+.line-focused .line-radio__icon::after {
   @include border-radius(50%);
   @include position(-8px, null, null, -9px);
 
@@ -68,17 +68,16 @@
   opacity: .2;
 }
 
-// TODO
 // iOS Radio Within An Item
 // -----------------------------------------
 
-:host(.in-item) {
+.line-check-box.in-item {
   @include margin($radio-ios-item-end-margin-top, $radio-ios-item-end-margin-end, $radio-ios-item-end-margin-bottom, $radio-ios-item-end-margin-start);
 
   display: block;
   position: static;
 }
 
-:host(.in-item[slot="start"]) {
+.line-check-box.in-item[slot="start"] {
   @include margin($radio-ios-item-start-margin-top, $radio-ios-item-start-margin-end, $radio-ios-item-start-margin-bottom, $radio-ios-item-start-margin-start);
 }

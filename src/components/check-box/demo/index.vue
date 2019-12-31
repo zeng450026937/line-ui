@@ -1,6 +1,7 @@
 <template>
   <div>
-    <line-check-box v-model="checkValue" :indeterminate="false">test</line-check-box>
+    <line-check-box v-model="checkValue" :indeterminate="false" color="danger">test</line-check-box>
+    <line-check-box v-model="checkValue" :indeterminate="false" color="success">test</line-check-box>
     <line-check-box-group>
       <line-check-box v-model="checkValue">test</line-check-box>
     </line-check-box-group>

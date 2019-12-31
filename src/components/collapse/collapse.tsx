@@ -1,12 +1,12 @@
 import { createNamespace } from '@/utils/namespace';
-import { useGroup } from '@/mixins/use-group';
+import { useCheckGroup } from '@/mixins/use-check-group';
 import '@/components/collapse/collapse.scss';
 
 const NAMESPACE = 'Collapse';
 const [createComponent, bem] = createNamespace('collapse');
 
 export default createComponent({
-  mixins : [useGroup(NAMESPACE)],
+  mixins : [useCheckGroup(NAMESPACE)],
 
   props : {
     exclusive : {

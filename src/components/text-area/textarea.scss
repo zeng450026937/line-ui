@@ -51,11 +51,11 @@
   z-index: $z-index-item-input;
 }
 
-.ion-color {
+.line-color {
   background: initial;
 }
 
-.ion-color {
+.line-color {
   color: current-color(base);
 }
 
@@ -63,11 +63,11 @@
 // Textarea Within An Item
 // --------------------------------------------------
 
-:host-context(ion-item) {
+.line-item .line-textarea {
   align-self: baseline;
 }
 
-:host-context(ion-item:not(.item-label)) {
+.line-item:not(.item-label) .line-textarea {
   --padding-start: 0;
 }
 

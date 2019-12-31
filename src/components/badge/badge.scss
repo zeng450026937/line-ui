@@ -44,12 +44,11 @@
   vertical-align: baseline;
 }
 
-// TODO
-:host(.ion-color) {
+.line-badge.line-color {
   background: #{current-color(base)};
   color: #{current-color(contrast)};
 }
 
-:host(:empty) {
+.line-badge:empty {
   display: none;
 }

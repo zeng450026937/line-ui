@@ -20,7 +20,7 @@
   contain: strict;
 }
 
-.ion-color.line-switch--checked .line-switch__icon {
+.line-color.line-switch--checked .line-switch__icon {
   background: current-color(base);
 }
 
@@ -139,11 +139,11 @@
 // iOS switch Within An Item
 // -----------------------------------------
 
-.in-item[slot] {
+.line-switch.in-item[slot] {
   @include margin($switch-ios-media-margin);
   @include padding($switch-ios-item-end-padding-top, $switch-ios-item-end-padding-end, $switch-ios-item-end-padding-bottom, $switch-ios-item-end-padding-start);
 }
 
-.in-item[slot="start"] {
+.line-switch.in-item[slot="start"] {
   @include padding($switch-ios-item-start-padding-top, $switch-ios-item-start-padding-end, $switch-ios-item-start-padding-bottom, $switch-ios-item-start-padding-start);
 }

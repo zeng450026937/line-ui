@@ -11,8 +11,8 @@
 }
 
 // TODO ?
-:host-context(.item-label-stacked),
-:host-context(.item-label-floating) {
+.item-label-stacked .line-input,
+.item-label-floating .line-input {
   --padding-top: 8px;
   --padding-bottom: 8px;
   --padding-start: 0px;

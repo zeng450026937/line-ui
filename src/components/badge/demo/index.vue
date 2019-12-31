@@ -1,8 +1,14 @@
 <template>
   <div>
-    <LineBadge>
+    <line-badge>
       13
-    </LineBadge>
+    </line-badge>
+    <line-badge color="success">
+      10k
+    </line-badge>
+    <line-badge color="danger">
+      10k
+    </line-badge>
   </div>
 </template>
 

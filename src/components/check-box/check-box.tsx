@@ -1,7 +1,7 @@
 import { createNamespace } from '@/utils/namespace';
 import { useCheckItem } from '@/mixins/use-check-item';
 import { useRipple } from '@/mixins/use-ripple';
-import { useColor } from '@/mixins/use-color';
+import { createColorClasses, useColor } from '@/mixins/use-color';
 import CheckIndicator from '@/components/check-box/check-indicator';
 
 import '@/components/check-box/check-box.ios.scss';
@@ -21,15 +21,15 @@ export default createComponent({
 
   render() {
     const {
-      checked, indeterminate, disabled, text,
+      checked, indeterminate, disabled, text, color,
     } = this;
     return (
       <div
-        class={bem({
+        class={[bem({
           disabled,
           indeterminate,
           checked,
-        })}
+        })]}
         role="checkbox"
         on={this.$listeners}
         onClick={this.toggle}

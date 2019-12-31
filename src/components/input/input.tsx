@@ -1,4 +1,4 @@
-import { getSkylineMode } from '@/utils/config';
+// import { getSkylineMode } from '@/utils/config';
 // import { Icon } from '@/components/icon';
 import { createNamespace } from '@/utils/namespace';
 // import { isObject } from '@/utils/helpers';
@@ -80,14 +80,6 @@ export default createComponent({
       didBlurAfterEdit : false,
       // nativeValue      : '',
     };
-  },
-
-  computed : {
-
-  },
-
-  mounted() {
-    // this.$nextTick(this.setInputValue);
   },
 
   methods : {
@@ -174,14 +166,13 @@ export default createComponent({
       value, hasFocus, accept, type, maxlength, readonly, placeholderText, autocomplete, disabled,
       max, min, size, autoFocus, pattern, required,
     } = this;
-    const mode = getSkylineMode(this);
+    // const mode = getSkylineMode(this);
 
     return (
       <div
         class={[
           bem(),
           {
-            [mode]      : true,
             // 'has-value' : this.value.length,
             'has-focus' : hasFocus,
           },

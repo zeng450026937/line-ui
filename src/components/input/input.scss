@@ -50,11 +50,11 @@
 }
 
 // TODO ?
-:host-context(ion-item:not(.item-label)) {
+.line-item:not(.item-label) .line-input {
   --padding-start: 0;
 }
 
-.ion-color {
+.line-color {
   color: current-color(base);
 }
 

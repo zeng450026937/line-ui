@@ -49,11 +49,11 @@
   opacity: $checkbox-md-disabled-opacity;
 }
 
-
+// TODO
 // Material Design Checkbox Within An Item
 // --------------------------------------------------------
 
-:host(.in-item) {
+.line-check-box.in-item {
   // end position by default
   @include margin($checkbox-md-item-end-margin-top, $checkbox-md-item-end-margin-end, $checkbox-md-item-end-margin-bottom, $checkbox-md-item-end-margin-start);
 
@@ -62,7 +62,7 @@
   position: static;
 }
 
-:host(.in-item[slot="start"]) {
+.line-check-box.in-item[slot="start"] {
   @include margin($checkbox-md-item-start-margin-top, $checkbox-md-item-start-margin-end, $checkbox-md-item-start-margin-bottom, $checkbox-md-item-start-margin-start);
 }
 
