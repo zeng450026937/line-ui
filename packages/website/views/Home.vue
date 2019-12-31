@@ -118,15 +118,14 @@ export default {
     z-index: 99;
   }
   &__sidebar {
-    position: fixed;
-    top: 68px;
-
     flex-shrink: 0;
 
     width: 260px;
     height: 100%;
 
     border-right: 1px solid #ebebeb;
+
+    overflow: auto;
   }
   &__content {
     display: flex;
@@ -134,8 +133,6 @@ export default {
     flex-grow: 1;
 
     height: 100%;
-
-    margin-left: 260px;
 
     padding: 0 120px;
 

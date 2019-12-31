@@ -69,6 +69,10 @@ export default {
 
 <style lang="scss" scoped>
 .main-navigation {
+  display: flex;
+
+  flex-direction: column;
+
   padding: 0 60px;
   &__item {
     &.is--link {
