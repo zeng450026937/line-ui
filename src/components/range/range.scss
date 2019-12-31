@@ -36,11 +36,11 @@
 }
 
 // TODO
-::slotted(ion-label) {
+::slotted(.line-label) {
   flex: initial;
 }
 
-::slotted(ion-icon[slot]) {
+::slotted(.line-icon[slot]) {
   font-size: 24px;
 }
 
@@ -168,11 +168,11 @@
 
 
 // TODO
-:host(.in-item) {
+.line-range.in-item {
   width: 100%;
 }
 
 
-:host(.in-item) ::slotted(ion-label) {
+.line-range.in-item ::slotted(.line-label) {
   align-self: center;
 }

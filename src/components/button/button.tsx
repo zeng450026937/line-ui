@@ -1,5 +1,5 @@
 import { createNamespace } from '@/utils/namespace';
-import { useColor } from '@/mixins/use-color';
+import { createColorClasses, useColor } from '@/mixins/use-color';
 import { useGroupItem } from '@/mixins/use-group-item';
 import { isDef } from '@/utils/helpers';
 import ripple from '@/directives/ripple';
@@ -35,7 +35,7 @@ export const ButtonDelegate = createComponent({
     target   : String,
   },
 
-  render(h, { props, slots }) {
+  render(h, { props, data, slots }) {
     const {
       text, strong, disabled, ripple, vertical, expand, fill = 'solid', shape, size,
       type = 'button', download, href, rel, target,
@@ -46,13 +46,14 @@ export const ButtonDelegate = createComponent({
       : {
         download, href, rel, target,
       };
+
     return (
       <div
         disabled={disabled}
         aria-disabled={disabled ? 'true' : null}
         class={[
           'activatable',
-          'ion-focusable',
+          'line-focusable',
           bem({
             [expand] : isDef(expand),
             [size]   : isDef(size),
@@ -62,6 +63,7 @@ export const ButtonDelegate = createComponent({
             disabled,
           }),
         ]}
+        {...data}
       >
         <TagType
           {...{ attrs }}
@@ -96,6 +98,7 @@ export default createComponent({
       <ButtonDelegate
         {...{ attrs: this.$attrs, props: this.$props }}
         scopedSlots={this.$scopedSlots}
+        on={this.$listeners}
       >
         {this.slots()}
       </ButtonDelegate>

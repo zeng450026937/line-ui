@@ -1,7 +1,10 @@
 import { getSkylineMode } from '@/utils/config';
 import { createNamespace } from '@/utils/namespace';
-import { Gesture, GestureDetail } from '@/utils/gesture';
+import { GestureDetail } from '@/utils/gesture';
+import { createColorClasses } from '@/mixins/use-color';
 
+// TODO
+import '@/style/skyline.bundle.scss';
 
 import '@/components/range/range.scss';
 import '@/components/range/range.ios.scss';
@@ -380,10 +383,10 @@ export default createComponent({
 
   render(h) {
     const {
-      min, max, step, el, handleKeyboard, pressedKnob, disabled, pin, ratioLower, ratioUpper,
+      min, max, step, el, handleKeyboard, pressedKnob, disabled, pin, ratioLower, ratioUpper, color,
     } = this;
 
-    const mode = getSkylineMode(this);
+    // const mode = getSkylineMode(this);
     const barStart = `${ ratioLower * 100 }%`;
     const barEnd = `${ 100 - ratioUpper * 100 }%`;
 
@@ -419,7 +422,6 @@ export default createComponent({
       }
     }
     // renderHiddenInput(true, el, this.name, JSON.stringify(this.getValue()), disabled);
-
     return (
       <div
         class={[
@@ -428,7 +430,7 @@ export default createComponent({
             pressed   : pressedKnob !== undefined,
             'has-pin' : pin,
           }),
-          { [mode]: true },
+          { ...createColorClasses(color) },
         ]}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
