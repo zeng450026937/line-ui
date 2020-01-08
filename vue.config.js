@@ -1,9 +1,11 @@
 const isDev = process.env.NODE_ENV !== 'production';
 
 module.exports = {
+
   publicPath : isDev
     ? '/'
     : '/server/client/web_app/skyline/',
+
   chainWebpack : (config) => {
     // hack [vue-cli-service serve] command
     if (isDev) {
@@ -25,19 +27,4 @@ module.exports = {
     addLoader({ loader: '@skyline/markdown-loader' });
   },
 
-  pages : {
-    index  : './packages/playground/main.ts',
-    mobile : {
-      entry    : 'packages/website/mobile/main.ts',
-      template : 'public/index.html',
-      title    : 'Mobile',
-      filename : 'mobile.html',
-    },
-    website : {
-      entry    : 'packages/website/desktop/main.ts',
-      template : 'public/index.html',
-      title    : 'WebSite',
-      filename : 'website.html',
-    },
-  },
 };

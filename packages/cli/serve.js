@@ -7,10 +7,22 @@ module.exports = (api, options) => {
       details     : 'TBD',
     },
     (args, rawArgs) => {
+      options.pages = {
+        mobile : {
+          entry    : 'packages/website/mobile/main.ts',
+          template : 'public/index.html',
+          title    : 'Mobile',
+          filename : 'mobile.html',
+        },
+        website : {
+          entry    : 'packages/website/desktop/main.ts',
+          template : 'public/index.html',
+          title    : 'WebSite',
+          filename : 'website.html',
+        },
+      };
       api.chainWebpack(config => {
-        config.entry('app')
-          .clear()
-          .add(api.resolve('./packages/website/desktop/main.ts'));
+        config.entry('app').clear();
       });
       api.service.run('serve', args);
     },
