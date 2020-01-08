@@ -46,7 +46,7 @@ export function unifySlots(context: RenderContext): RenderContext {
       // use data.scopedSlots in lower Vue version
       const scopedSlots = context.scopedSlots || context.data.scopedSlots || {};
       const scopedSlot = scopedSlots[name];
-      return scopedSlot || context.slots()[name];
+      return !!scopedSlot || context.slots()[name];
     },
     slots(name: string = 'default', ctx?: any, patch?: VNodeData) {
       // use data.scopedSlots in lower Vue version
