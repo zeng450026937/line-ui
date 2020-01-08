@@ -34,7 +34,7 @@
       "git add"
     ]
   },
-  "sideEffects": false,
+  "sideEffects": true,
   "dependencies": {
     "core-js": "^3.3.3",
     "popper.js": "^1.16.0",
