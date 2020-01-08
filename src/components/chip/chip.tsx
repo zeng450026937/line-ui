@@ -1,27 +1,23 @@
-import { Icon } from '../icon';
+// import { Icon } from '../icon';
 import { createNamespace } from '@/utils/namespace';
+import { createColorClasses, useColor } from '@/mixins/use-color';
+import { getSkylineMode } from '@/utils/config';
 import '@/components/chip/chip.scss';
 
 const [createComponent, bem] = createNamespace('chip');
-const colors = ['primary', 'success', 'warning', 'danger', 'light', 'dark'];
+// const colors = ['primary', 'success', 'warning', 'danger', 'light', 'dark'];
 
 export default createComponent({
-  components : {
-    Icon,
-  },
+  mixins : [useColor()],
+
+  // components : {
+  //   Icon,
+  // },
 
   props : {
-    color : {
-      type    : String,
-      default : '',
-    },
-    border : {
+    outline : {
       type    : Boolean,
       default : false,
-    },
-    closeIcon : {
-      type    : String,
-      default : '',
     },
   },
 
@@ -32,20 +28,18 @@ export default createComponent({
   },
 
   render() {
-    const { border, color, closeIcon } = this;
+    const { outline } = this;
+    const mode = getSkylineMode(this);
 
     return (
-      <div class={bem({ border, [color]: colors.includes(color) })}>
-        <span class={bem('content')}>
-          {this.slots()}
-        </span>
-        {closeIcon && (
-        <span class={bem('close')}
-          onClick={() => { this.onClick(); }}>
-          <icon name={closeIcon}
-            height="18"
-            width="18"></icon>
-        </span>)}
+      <div
+        class={[
+          bem({ outline }),
+          { activatable: true },
+        ]}
+      >
+        {this.slots()}
+        {/* {mode === 'md' && <line-ripple-effect></line-ripple-effect>} */}
       </div>
     );
   },

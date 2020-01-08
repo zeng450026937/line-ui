@@ -13,7 +13,7 @@ const routeList = registerRoute({ list: navList, componentMap, isDemo: true });
 
 const docRouteList = registerRoute({ list: navList, componentMap: docComponentMap, isDemo: false });
 
-console.log('docRouteList', docRouteList);
+// console.log('docRouteList', docRouteList);
 
 Vue.use(VueRouter);
 
@@ -23,12 +23,6 @@ const routes = [
     name      : 'website',
     component : () => import('../views/Home.vue'),
     children  : [
-      // {
-      //   path      : '/website/button',
-      //   name      : 'button',
-      //   meta      : { displayDemo: true },
-      //   component : () => import('../views/Button.vue'),
-      // },
       ...docRouteList,
     ],
   },
@@ -52,6 +46,15 @@ const router = new VueRouter({
   mode : 'history',
   base : process.env.BASE_URL,
   routes,
+  scrollBehavior(to, from, savedPosition) {
+    if (to.hash) {
+      // console.log(to.hash);
+      return {
+        selector : to.hash,
+      };
+    }
+    return { x: 0, y: 0 };
+  },
 });
 
 

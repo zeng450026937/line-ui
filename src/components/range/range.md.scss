@@ -1,0 +1,155 @@
+@import "./range";
+@import "./range.md.vars";
+
+// Material Design Range
+// --------------------------------------------------
+
+.line-range {
+  --knob-border-radius: 50%;
+  --knob-background: var(--bar-background-active);
+  --knob-box-shadow: none;
+  --knob-size: 18px;
+  --bar-height: #{$range-md-bar-height};
+  --bar-background: #{ion-color(primary, base, 0.26)};
+  --bar-background-active: #{ion-color(primary, base)};
+  --bar-border-radius: 0;
+  --height: #{$range-md-slider-height};
+  --pin-background: #{ion-color(primary, base)};
+  --pin-color: #{ion-color(primary, contrast)};
+
+  @include padding($range-md-padding-vertical, $range-md-padding-horizontal);
+
+  font-size: $range-md-pin-font-size;
+}
+
+.line-color .line-range__bar {
+  background: current-color(base, 0.26);
+}
+
+.line-color .line-range__bar--active,
+.line-color .line-range__knob,
+.line-color .line-range__pin,
+.line-color .line-range__pin::before,
+.line-color .line-range__tick {
+  background: current-color(base);
+  color: current-color(contrast);
+}
+
+// TODO
+::slotted([slot="start"]) {
+  @include margin(0, 14px, 0, 0);
+}
+
+::slotted([slot="end"]) {
+  @include margin(0, 0, 0, 14px);
+}
+
+.line-range--has-pin {
+  @include padding($range-md-padding-vertical + $range-md-pin-font-size + $range-md-pin-padding-vertical, null, null, null);
+}
+
+.line-range__bar--active {
+  bottom: 0;
+
+  width: auto;
+
+  background: var(--bar-background-active);
+}
+
+.line-range__knob {
+  transform: scale(.67);
+
+  transition-duration: 120ms;
+  transition-property: transform, background-color, border;
+  transition-timing-function: ease;
+
+  z-index: 2;
+}
+
+.line-range__tick {
+  position: absolute;
+  top: calc((var(--height) - var(--bar-height)) / 2);
+
+  width: var(--bar-height);
+  height: var(--bar-height);
+
+  background: var(--bar-background-active);
+
+  z-index: 1;
+  pointer-events: none;
+}
+
+.line-range__tick--active {
+  background: transparent;
+}
+
+.line-range__pin {
+  @include padding($range-md-pin-padding-vertical, $range-md-pin-padding-horizontal);
+  @include border-radius(50%);
+  @include transform(translate3d(0, 0, 0), scale(.01));
+
+  display: inline-block;
+  position: relative;
+
+  min-width: 28px;
+  height: 28px;
+
+  transition: transform 120ms ease, background 120ms ease;
+
+  background: var(--pin-background);
+  color: var(--pin-color);
+
+  text-align: center;
+
+  &::before {
+    @include position(3px, null, null, 50%);
+    @include margin-horizontal(-13px, null);
+
+    @include multi-dir() {
+      /* stylelint-disable-next-line property-blacklist */
+      border-radius: 50% 50% 50% 0;
+    }
+
+    @include rtl() {
+      /* stylelint-disable-next-line property-blacklist */
+      left: unset;
+    }
+
+    position: absolute;
+
+    width: 26px;
+    height: 26px;
+
+    transform: rotate(-45deg);
+
+    transition: background 120ms ease;
+
+    background: var(--pin-background);
+
+    content: "";
+    z-index: -1;
+  }
+}
+
+.line-range__knob--pressed .line-range__pin {
+  @include transform(translate3d(0, -24px, 0), scale(1));
+}
+
+// TODO
+:not(.line-range--has-pin) .line-range__knob--pressed .line-range__knob {
+  transform: scale(1);
+}
+
+.line-range--disabled .line-range__bar--active,
+.line-range--disabled .line-range__bar,
+.line-range--disabled .line-range__tick {
+  background-color: $range-md-bar-background-color;
+}
+
+.line-range--disabled .line-range__knob {
+  transform: scale(.55);
+
+  outline: 5px solid #fff;
+
+  background-color: $range-md-bar-background-color;
+}

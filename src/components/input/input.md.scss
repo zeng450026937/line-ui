@@ -1,0 +1,32 @@
+@import "./input";
+@import "./input.md.vars";
+
+
+// Material Design Input
+// --------------------------------------------------
+
+.line-input {
+  --padding-top: #{$input-md-padding-top};
+  --padding-end: #{$input-md-padding-end};
+  --padding-bottom: #{$input-md-padding-bottom};
+  --padding-start: #{$input-md-padding-start};
+
+  font-size: $input-md-font-size;
+}
+
+// TODO ?
+.item-label-stacked .line-input,
+.item-label-floating .line-input {
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+  --padding-start: 0;
+}
+
+.line-input__clear-icon {
+  @include svg-background-image($input-md-input-clear-icon-svg);
+
+  width: $input-md-input-clear-icon-width;
+  height: $input-md-input-clear-icon-width;
+
+  background-size: $input-md-input-clear-icon-size;
+}

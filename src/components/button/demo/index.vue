@@ -3,34 +3,34 @@
     <div class="demo__item">
       <p class="item__title">基础用法</p>
       <div class="item__content">
-        <line-button>默认按钮</line-button>
-        <line-button type="primary">主要按钮</line-button>
-        <line-button type="success">成功按钮</line-button>
-        <line-button type="warning">
+        <line-button @click="onClick">默认按钮</line-button>
+        <line-button color="primary">主要按钮</line-button>
+        <line-button color="success">成功按钮</line-button>
+        <line-button color="warning">
           警告按钮
         </line-button>
-        <line-button type="danger">错误按钮</line-button>
-        <line-button type="light">
+        <line-button color="danger">错误按钮</line-button>
+        <line-button color="light">
           浅色按钮
         </line-button>
-        <line-button type="dark">深色按钮</line-button>
-        <line-button type="primary"
+        <line-button color="dark">深色按钮</line-button>
+        <line-button color="primary"
                      round>圆角按钮</line-button>
-        <line-button type="danger"
+        <line-button color="danger"
                      round>
           圆角按钮
         </line-button>
       </div>
       <div class="item__content">
-        <line-button type="success"
+        <line-button color="success"
                      circle>
           <line-icon name="backup"></line-icon>
         </line-button>
-        <line-button type="warning"
+        <line-button color="warning"
                      circle>
           <line-icon name="android"></line-icon>
         </line-button>
-        <line-button type="danger"
+        <line-button color="danger"
                      circle>
           <line-icon name="alarm"></line-icon>
         </line-button>
@@ -46,16 +46,16 @@
           <line-icon name="android"></line-icon>
         </line-button>
 
-        <line-button type="primary">
+        <line-button color="primary">
           <line-icon name="backup"></line-icon>
           主要按钮
         </line-button>
-        <line-button type="danger"
+        <line-button color="danger"
                      round>
           <line-icon name="alarm"></line-icon>
           错误按钮
         </line-button>
-        <line-button type="success"
+        <line-button color="success"
                      circle>
           <line-icon name="adb"></line-icon>
         </line-button>
@@ -72,10 +72,10 @@
       </div>
       <div class="item__content">
         <line-button disabled>默认按钮</line-button>
-        <line-button type="success"
+        <line-button color="success"
                      round
                      disabled>成功按钮</line-button>
-        <line-button type="warning"
+        <line-button color="warning"
                      circle
                      disabled>
           <line-icon name="alarm"></line-icon>
@@ -88,23 +88,23 @@
       </div>
       <div class="item__content">
         <line-button-group>
-          <line-button type="primary">主要按钮</line-button>
-          <line-button type="primary">主要按钮</line-button>
+          <line-button color="primary">主要按钮</line-button>
+          <line-button color="primary">主要按钮</line-button>
         </line-button-group>
         <line-button-group>
-          <line-button type="danger"
+          <line-button color="danger"
                        round>错误按钮</line-button>
-          <line-button type="danger"
+          <line-button color="danger"
                        round>错误按钮</line-button>
         </line-button-group>
         <line-button-group>
-          <line-button type="success"
+          <line-button color="success"
                        round>成功按钮</line-button>
-          <line-button type="warning"
+          <line-button color="warning"
                        circle>
             <line-icon name="alarm"></line-icon>
           </line-button>
-          <line-button type="danger"
+          <line-button color="danger"
                        disabled>错误按钮</line-button>
         </line-button-group>
       </div>
@@ -149,7 +149,9 @@ export default {
   },
 
   methods : {
-
+    onClick() {
+      console.log('onClick');
+    },
   },
 
   watch : {

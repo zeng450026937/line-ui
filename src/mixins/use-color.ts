@@ -18,8 +18,8 @@ const COLORS = [
 export function createColorClasses(color: string) {
   if (!isString(color) || !color) return undefined;
   return {
-    'ion-color'              : true,
-    [`ion-color-${ color }`] : true,
+    'line-color'              : true,
+    [`line-color-${ color }`] : true,
   };
 }
 

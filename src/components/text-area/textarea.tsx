@@ -1,15 +1,14 @@
-import { isObject } from '@/utils/helpers';
-import { Icon } from '@/components/icon';
+import { getSkylineMode } from '@/utils/config';
+// import { isObject } from '@/utils/helpers';
+// import { Icon } from '@/components/icon';
 import { createNamespace } from '@/utils/namespace';
+
 import '@/components/text-area/textarea.scss';
+import '@/components/text-area/textarea.ios.scss';
 
 const [createComponent, bem] = createNamespace('textarea');
 
 export default createComponent({
-  components : {
-    Icon,
-  },
-
   props : {
     canPaste : {
       type    : Boolean,
@@ -83,7 +82,8 @@ export default createComponent({
 
   data() {
     return {
-      isFocus : false,
+      isFocus          : false,
+      didBlurAfterEdit : false,
     };
   },
 
@@ -99,50 +99,18 @@ export default createComponent({
     },
   },
 
-
   created() {
-    this.$emit('pressAndHold');
-    this.$emit('pressed');
-    this.$emit('released');
+    // this.$emit('pressAndHold');
+    // this.$emit('pressed');
+    // this.$emit('released');
   },
 
   mounted() {
-    this.$nextTick(this.setInputValue);
-    this.$nextTick(this.adjustSize);
+    // this.$nextTick(this.setInputValue);
+    // this.$nextTick(this.adjustSize);
   },
 
   methods : {
-    onInput(event: InputEvent): void {
-      if (event.isComposing || !event.target) return;
-      this.$emit('input', (event.target as HTMLInputElement).value);
-
-      this.$nextTick(this.setInputValue);
-    },
-
-    adjustSize(): void {
-      const { input } = this.$refs;
-      if (!this.autosize || !input) {
-        return;
-      }
-
-      (input as HTMLElement).style.height = 'auto';
-
-      let height: number = (input as HTMLElement).scrollHeight;
-      if (isObject(this.autosize)) {
-        const { maxHeight, minHeight } = this.autosize;
-        if (maxHeight) {
-          height = Math.min(height, maxHeight);
-        }
-        if (minHeight) {
-          height = Math.max(height, minHeight);
-        }
-      }
-
-      if (height) {
-        (input as HTMLElement).style.height = `${ height }px`;
-      }
-    },
-
     setInputValue(): void {
       const { input } = this.$refs;
       if ((input as HTMLInputElement).value === this.inputValue || !input) {
@@ -151,48 +119,100 @@ export default createComponent({
       (input as HTMLInputElement).value = this.inputValue;
     },
 
-    onFocus() {
-      this.isFocus = true;
-      this.$emit('onFocus');
-    },
-
-    onBlur() {
-      this.isFocus = false;
-      this.$emit('onBlur');
-    },
-
     onClearValue(event: UIEvent) {
       event.preventDefault();
       event.stopPropagation();
 
       this.$emit('input', '');
-      this.$emit('clear', event);
+      this.$emit('clear');
+    },
+
+    hasValue(): boolean {
+      return this.getValue() !== '';
+    },
+
+    getValue(): string {
+      return this.value as string || '';
+    },
+
+    /**
+     * Check if we need to clear the text input if clearOnEdit is enabled
+     */
+    checkClearOnEdit() {
+      if (!this.clearOnEdit) {
+        return;
+      }
+
+      // Did the input value change after it was blurred and edited?
+      if (this.didBlurAfterEdit && this.hasValue()) {
+      // Clear the input
+        this.$emit('input', '');
+      }
+
+      // Reset the flag
+      this.didBlurAfterEdit = false;
+    },
+
+    focusChange() {
+      // If clearOnEdit is enabled and the input blurred but has a value, set a flag
+      if (this.clearOnEdit && !this.hasFocus && this.hasValue()) {
+        this.didBlurAfterEdit = true;
+      }
+      // this.emitStyle(); ?
+    },
+
+    onInput(ev: Event): void {
+      const { textarea } = this.$refs;
+      if (textarea) {
+        this.$emit('input', (textarea as HTMLInputElement).value);
+      }
+      // his.emitStyle(); ?
+    },
+
+    onFocus(): void {
+      this.hasFocus = true;
+      this.focusChange();
+
+      this.$emit('onFocus');
+    },
+
+    onBlur(): void {
+      this.hasFocus = false;
+      this.focusChange();
+
+      this.$emit('onBlur');
+    },
+
+    onKeyDown(): void {
+      this.checkClearOnEdit();
     },
   },
 
   watch : {
-    value() {
-      this.$nextTick(this.adjustSize);
-    },
-
-    inputValue() {
-      this.setInputValue();
-    },
-
-    rows() {
-      this.$nextTick(this.adjustSize);
+    value(value) {
+      const { textarea } = this.$ref;
+      if (textarea && textarea.value !== value) {
+        textarea.value = value;
+      }
     },
   },
 
   render() {
+    // const mode = getSkylineMode(this);
+    const value = this.getValue();
     const {
-      rows, maxlength, placeholderText, readonly, style, disabled, resize,
+      rows, maxlength, placeholderText, readonly, disabled, autocapitalize, autofocus,
     } = this;
 
     return (
-      <div class={bem()}>
-        <textarea class={{ 'is--resize': resize }}
-          ref='input'
+      <div
+        class={bem()}
+      >
+        <textarea
+          class="native-textarea"
+          ref='textarea'
+          autoCapitalize={autocapitalize}
+          autoFocus={autofocus}
           rows={rows}
           maxlength={maxlength}
           placeholder={placeholderText}
@@ -200,16 +220,10 @@ export default createComponent({
           disabled={disabled}
           onInput={this.onInput}
           onFocus={this.onFocus}
-          onBlur={this.onBlur}></textarea>
-          {this.clearable && this.value && this.isFocus && (
-            <span class={bem('clearable')}
-                  onMousedown={this.onClearValue}>
-              <icon {...{
-                props : isObject(this.clearableIcon) ? this.clearableIcon : { name: this.clearableIcon },
-              }}
-              width="20"
-              height="20"></icon>
-          </span>)}
+          onBlur={this.onBlur}
+        >
+          {value}
+        </textarea>
       </div>
     );
   },

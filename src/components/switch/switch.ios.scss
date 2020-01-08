@@ -1,0 +1,149 @@
+@import "./switch";
+@import "./switch.ios.vars";
+
+// iOS switch
+// -----------------------------------------
+
+.line-switch {
+  --background: #{$switch-ios-background-color-off};
+  --background-checked: #{ion-color(primary, base)};
+  --handle-background: #{$switch-ios-handle-background-color};
+  --handle-background-checked: #{$switch-ios-handle-background-color};
+
+  box-sizing: content-box;
+
+  position: relative;
+
+  width: $switch-ios-width;
+  height: $switch-ios-height;
+
+  contain: strict;
+}
+
+.line-color.line-switch--checked .line-switch__icon {
+  background: current-color(base);
+}
+
+
+// iOS switch Background Track: Unchecked
+// -----------------------------------------
+
+.line-switch__icon {
+  @include border-radius($switch-ios-border-radius);
+
+  display: block;
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  // Needed to prevent visual glitch in safari/iOS
+  // See https://github.com/ionic-team/ionic/issues/14626
+  transform: translate3d(0,0,0);
+
+  transition: background-color $switch-ios-transition-duration;
+
+  background: var(--background);
+
+  overflow: hidden;
+  pointer-events: none;
+}
+
+
+// iOS switch Inner Knob: Unchecked
+// -----------------------------------------
+
+.line-switch__inner {
+  @include position($switch-ios-border-width, null, null, $switch-ios-border-width);
+  @include border-radius($switch-ios-handle-border-radius);
+
+  position: absolute;
+
+  width: $switch-ios-handle-width;
+  height: $switch-ios-handle-height;
+
+  transition: transform $switch-ios-transition-duration, width 120ms ease-in-out 80ms, left 110ms ease-in-out 80ms, right 110ms ease-in-out 80ms;
+
+  background: var(--handle-background);
+
+  box-shadow: $switch-ios-handle-box-shadow;
+  will-change: transform;
+  contain: strict;
+}
+
+
+// iOS switch Background Track: Checked
+// -----------------------------------------
+
+.line-switch--checked .line-switch__icon {
+  background: var(--background-checked);
+}
+
+
+// iOS switch Background Oval: Activated or Checked
+// -----------------------------------------
+
+.line-switch--activated .line-switch__icon::before,
+.line-switch--checked .line-switch__icon::before {
+  transform: scale3d(0, 0, 0);
+}
+
+
+// iOS switch Inner Knob: Checked
+// -----------------------------------------
+
+.line-switch--checked .line-switch__inner {
+  @include transform(translate3d($switch-ios-width - $switch-ios-handle-width - ($switch-ios-border-width * 2), 0, 0));
+
+  background: var(--handle-background-checked);
+}
+
+
+// iOS switch Background Oval: Activated and Checked
+// -----------------------------------------
+
+.line-switch--activated.line-switch--checked .line-switch__inner::before {
+  transform: scale3d(0, 0, 0);
+}
+
+
+// iOS switch Inner Knob: Activated and Unchecked
+// -----------------------------------------
+
+.line-switch--activated .line-switch__inner {
+  width: $switch-ios-handle-width + 6;
+}
+
+
+// iOS switch Inner Knob: Activated and Checked
+// -----------------------------------------
+
+.line-switch--activated.line-switch--checked .line-switch__inner {
+  // when pressing down on the switch and IS checked
+  // make the knob wider and move it left a bit
+
+  @include position-horizontal($switch-ios-border-width - 6, null);
+}
+
+
+// iOS switch: Disabled
+// -----------------------------------------
+
+// .item-ios.item-switch-disabled ion-label
+
+.line-switch--disabled {
+  opacity: $switch-ios-disabled-opacity;
+}
+
+// TODO
+// iOS switch Within An Item
+// -----------------------------------------
+
+.line-switch.in-item[slot] {
+  @include margin($switch-ios-media-margin);
+  @include padding($switch-ios-item-end-padding-top, $switch-ios-item-end-padding-end, $switch-ios-item-end-padding-bottom, $switch-ios-item-end-padding-start);
+}
+
+.line-switch.in-item[slot="start"] {
+  @include padding($switch-ios-item-start-padding-top, $switch-ios-item-start-padding-end, $switch-ios-item-start-padding-bottom, $switch-ios-item-start-padding-start);
+}

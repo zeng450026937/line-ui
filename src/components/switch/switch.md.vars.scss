@@ -1,0 +1,95 @@
+@import "../../themes/skyline.globals.md";
+// @import "../item/item.md.vars";
+
+// Material Design Switch
+// --------------------------------------------------
+
+/// @prop - Color of the active switch
+$switch-md-active-color:                          ion-color(primary, base) !default;
+
+/// @prop - Width of the switch track
+$switch-md-track-width:                           36px !default;
+
+/// @prop - Height of the switch track
+$switch-md-track-height:                          14px !default;
+
+/// @prop - Background color of the switch track
+$switch-md-track-background-color-off:            rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.3) !default;
+
+/// @prop - Background color alpha of the checked switch track
+$switch-md-track-background-color-alpha-on:       .5 !default;
+
+/// @prop - Background color of the checked switch track
+$switch-md-track-background-color-on:             ion-color(primary, base, $switch-md-track-background-color-alpha-on) !default;
+
+/// @prop - Width of the switch handle
+$switch-md-handle-width:                          20px !default;
+
+/// @prop - Height of the switch handle
+$switch-md-handle-height:                         20px !default;
+
+/// @prop - Border radius of the switch handle
+$switch-md-handle-border-radius:                  50% !default;
+
+/// @prop - Box shadow of the switch handle
+$switch-md-handle-box-shadow:                     0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12) !default;
+
+/// @prop - Background color of the switch handle
+$switch-md-handle-background-color-off:           #ffffff !default;
+
+/// @prop - Background color of the checked switch handle
+$switch-md-handle-background-color-on:            $switch-md-active-color !default;
+
+/// @prop - Margin top of the switch
+$switch-md-media-margin-top:                      0 !default;
+
+/// @prop - Margin end of the switch
+$switch-md-media-margin-end:                      $switch-md-media-margin-top !default;
+
+/// @prop - Margin bottom of the switch
+$switch-md-media-margin-bottom:                   $switch-md-media-margin-top !default;
+
+/// @prop - Margin start of the switch
+$switch-md-media-margin-start:                    $switch-md-media-margin-end !default;
+
+/// @prop - Transition duration of the switch icon
+$switch-md-transition-duration:                   160ms !default;
+
+/// @prop - Opacity of the disabled switch
+$switch-md-disabled-opacity:                      .3 !default;
+
+/// @prop - Padding top of standalone switch
+$switch-md-padding-top:                           12px !default;
+
+/// @prop - Padding end of standalone switch
+$switch-md-padding-end:                           $switch-md-padding-top !default;
+
+/// @prop - Padding bottom of standalone switch
+$switch-md-padding-bottom:                        $switch-md-padding-top !default;
+
+/// @prop - Padding start of standalone switch
+$switch-md-padding-start:                         $switch-md-padding-end !default;
+
+/// @prop - Padding top of the switch positioned on the start in an item
+$switch-md-item-start-padding-top:                12px !default;
+
+/// @prop - Padding end of the switch positioned on the start in an item
+$switch-md-item-start-padding-end:                18px !default;
+
+/// @prop - Padding bottom of the switch positioned on the start in an item
+$switch-md-item-start-padding-bottom:             12px !default;
+
+/// @prop - Padding start the switch positioned on the start in an item
+$switch-md-item-start-padding-start:              2px !default;
+
+/// @prop - Padding top of the switch positioned on the end in an item
+$switch-md-item-end-padding-top:                  12px !default;
+
+/// @prop - Padding end of the switch positioned on the end in an item
+$switch-md-item-end-padding-end:                  0 !default;
+
+/// @prop - Padding bottom of the switch positioned on the end in an item
+$switch-md-item-end-padding-bottom:               12px !default;
+
+/// @prop - Padding start of the switch positioned on the end in an item
+$switch-md-item-end-padding-start:                $item-md-padding-start !default;

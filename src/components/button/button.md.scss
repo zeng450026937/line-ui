@@ -51,7 +51,7 @@
   --color-activated: #{ion-color(primary, base)};
 }
 
-.line-button--outline.activated.ion-color .button-native {
+.line-button--outline.activated.line-color .button-native {
   background: transparent;
 }
 
@@ -113,7 +113,7 @@
   font-weight: #{$button-md-strong-font-weight};
 }
 
-::slotted(ion-icon[slot="icon-only"]) {
+::slotted(.line-icon[slot="icon-only"]) {
   @include padding(0);
 }
 
@@ -122,12 +122,12 @@
 // --------------------------------------------------
 
 @media (any-hover: hover) {
-  .line-button--solid.ion-color:hover .button-native {
+  .line-button--solid.line-color:hover .button-native {
     background: #{current-color(tint)};
   }
 
-  .line-button--clear.ion-color:hover .button-native,
-  .line-button--outline.ion-color:hover .button-native {
+  .line-button--clear.line-color:hover .button-native,
+  .line-button--outline.line-color:hover .button-native {
     background: #{current-color(base, .04)};
   }
 }

@@ -34,7 +34,7 @@
   --opacity: #{$button-ios-opacity-activated};
 }
 
-.line-button--solid.activated.ion-color .line-button__content {
+.line-button--solid.activated.line-color .line-button__content {
   background: current-color(shade);
 }
 
@@ -50,7 +50,7 @@
   --color-activated: #{ion-color(primary, contrast)};
 }
 
-.line-button--outline.activated.ion-color .line-button__content {
+.line-button--outline.activated.line-color .line-button__content {
   background: current-color(base);
   color: current-color(contrast);
 }
@@ -140,7 +140,7 @@
   // Since iOS changes the opacity on hover,
   // we want to keep the background if focused
   // or activated
-  .line-button.ion-focused:hover {
+  .line-button.line-focused:hover {
     --background-hover: var(--background-focused);
     --color-hover: var(--color-focused);
   }

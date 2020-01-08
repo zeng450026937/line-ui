@@ -1,15 +1,18 @@
 <template>
   <div>
-    TextAreaDemo
+    <!-- TextAreaDemo -->
+    <line-text-area></line-text-area>
   </div>
 </template>
 
 <script>
+import { TextArea as LineTextArea } from '@/components/text-area';
+
 export default {
   name : 'TextAreaDemo',
 
   components : {
-
+    LineTextArea,
   },
 
   props : {

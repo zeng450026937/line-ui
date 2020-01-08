@@ -29,7 +29,7 @@ import { Refresher } from '@/components/refresher';
 // import { SelectOption } from '@/components/select-option';
 import { Switch, SwitchGroup, SwitchIndicator } from '@/components/switch';
 import { TabBar } from '@/components/tab-bar';
-import { Tab, Tabs } from '@/components/tabs';
+// import { Tab, Tabs } from '@/components/tabs';
 import { TextArea } from '@/components/text-area';
 import { ToolTip } from '@/components/tooltip';
 
@@ -80,8 +80,8 @@ const components = [
   Switch,
   SwitchGroup,
   TabBar,
-  Tabs,
-  Tab,
+  // Tabs,
+  // Tab,
   TextArea,
   ToolTip,
 ];
@@ -140,8 +140,8 @@ export default {
   Switch,
   SwitchGroup,
   TabBar,
-  Tabs,
-  Tab,
+  // Tabs,
+  // Tab,
   TextArea,
   ToolTip,
 };

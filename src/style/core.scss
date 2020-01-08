@@ -53,7 +53,7 @@ body.backdrop-no-scroll {
 }
 
 @each $color-name, $value in $colors {
-  .ion-color-#{$color-name} {
+  .line-color-#{$color-name} {
     @include generate-color($color-name);
   }
 }

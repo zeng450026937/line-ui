@@ -1,13 +1,17 @@
 <template>
-  <div id="mobile-app">
+  <line-app id="mobile-app">
     <keep-alive include="MobileHome">
       <router-view>
       </router-view>
     </keep-alive>
-  </div>
+  </line-app>
 </template>
 
 <script>
+import Vue from 'vue';
+import { App } from '@/components/app';
+
+Vue.use(App);
 export default {
   created() {
     this.$router.push({

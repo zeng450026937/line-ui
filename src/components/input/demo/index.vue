@@ -1,15 +1,18 @@
 <template>
   <div>
-    InputDemo
+    <line-input v-model="inputVal">
+    </line-input>
   </div>
 </template>
 
 <script>
+import { Input as LineInput } from '@/components/input';
+
 export default {
   name : 'InputDemo',
 
   components : {
-
+    LineInput,
   },
 
   props : {
@@ -18,7 +21,7 @@ export default {
 
   data() {
     return {
-
+      inputVal : '',
     };
   },
 

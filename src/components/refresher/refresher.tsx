@@ -129,32 +129,51 @@ export default createComponent({
 
   render() {
     const {
-      style, downText, upText, refresherText,
+      style, downText, upText, refresherText, down, up, refresher,
     } = this;
 
     return (
-      <div class={bem()}
-          ref='refresher'
-          on={{
-            '!touchstart'  : this.onTouchstart,
-            '!touchmove'   : this.onTouchmove,
-            '!touchend'    : this.onTouchend,
-            '!touchcancel' : this.onTouchend,
-          }}>
-        <div class={bem('content')} style={style}>
-          <div class={bem('pull-placeholder')}>
-            {this.down && (
-              <span class='placeholder__down-text'>{this.slots('down-text') ? this.slots('down-text') : downText}</span>
-            )}
-            {this.up && (
-              <span class='placeholder__up-text'>{this.slots('up-text') ? this.slots('up-text') : upText}</span>
-            )}
-            {this.refresher && (
-              <span class='placeholder__refresher-text'>
-                {this.slots('refresher-text') ? this.slots('refresher-text') : refresherText}
+      <div
+        class={bem()}
+        ref='refresher'
+        on={{
+          '!touchstart'  : this.onTouchstart,
+          '!touchmove'   : this.onTouchmove,
+          '!touchend'    : this.onTouchend,
+          '!touchcancel' : this.onTouchend,
+        }}
+      >
+        <div
+          class={bem('content')}
+          style={style}
+        >
+          <div
+            class={bem('pull-placeholder')}
+          >
+            {down && (
+              <span
+                class='placeholder__down-text'
+              >
+                {this.slots('down-text') || downText}
               </span>
             )}
-            <span class='placeholder__refresher-text'></span>
+            {up && (
+              <span
+                class='placeholder__up-text'
+              >
+                {this.slots('up-text') || upText}
+              </span>
+            )}
+            {refresher && (
+              <span
+                class='placeholder__refresher-text'
+              >
+                {this.slots('refresher-text') || refresherText}
+              </span>
+            )}
+            <span
+              class='placeholder__refresher-text'
+            ></span>
           </div>
           {this.slots()}
         </div>

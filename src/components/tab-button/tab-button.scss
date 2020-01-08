@@ -1,27 +1,169 @@
-.line {
-  &-tab-button {
-    display: flex;
-    position: relative;
+@import "../../themes/skyline.globals";
 
-    flex: 1;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+.line-tab-button {
+  /**
+   * @prop --background: Background of the tab button
+   * @prop --background-focused: Background of the tab button when focused with the tab key
+   *
+   * @prop --color: Color of the tab button
+   * @prop --color-selected: Color of the selected tab button
+   *
+   * @prop --padding-top: Top padding of the tab button
+   * @prop --padding-end: Right padding if direction is left-to-right, and left padding if direction is right-to-left of the tab button
+   * @prop --padding-bottom: Bottom padding of the tab button
+   * @prop --padding-start: Left padding if direction is left-to-right, and right padding if direction is right-to-left of the tab button
+   *
+   * @prop --ripple-color: Color of the button ripple effect
+   */
+  --ripple-color: var(--color-selected);
 
-    cursor: pointer;
+  flex: 1;
 
-    .content {
-      margin-bottom: 8px;
-    }
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-    &--checked {
-      color: var(--primary);
-    }
+  height: 100%;
 
-    &--disabled {
-      color: #9f9f9f;
+  outline: none;
 
-      cursor: not-allowed;
-    }
+  background: var(--background);
+  color: var(--color);
+}
+
+// Tab Button: Native
+// --------------------------------------------------
+
+a {
+  @include margin(0);
+  @include padding(var(--padding-top), var(--padding-end), var(--padding-bottom), var(--padding-start));
+  @include text-inherit();
+
+  display: flex;
+  position: relative;
+
+  flex-direction: inherit;
+  align-items: inherit;
+  justify-content: inherit;
+
+  width: 100%;
+  height: 100%;
+
+  border: 0;
+
+  outline: none;
+
+  background: transparent;
+
+  text-decoration: none;
+
+  cursor: pointer;
+  overflow: hidden;
+  box-sizing: border-box;
+  -webkit-user-drag: none;
+}
+
+.line-focused {
+  background: var(--background-focused);
+}
+
+@media (any-hover: hover) {
+  a:hover {
+    color: var(--color-selected);
   }
+}
+
+
+// Tab Button: States
+// --------------------------------------------------
+
+.line-tab-button--selected {
+  color: var(--color-selected);
+}
+
+.line-tab-button--hidden {
+  /* stylelint-disable-next-line declaration-no-important */
+  display: none !important;
+}
+
+.line-tab-button--disabled {
+  pointer-events: none;
+
+  opacity: .4;
+}
+
+
+// Tab Button: Label / Icon
+// --------------------------------------------------
+
+.line-tab-button .line-label,
+.line-tab-button .line-icon {
+  display: block;
+
+  align-self: center;
+
+  max-width: 100%;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.line-tab-button .line-label {
+  order: 0;
+}
+
+.line-tab-button .line-icon {
+  order: -1;
+
+  height: 1em;
+}
+
+
+.tab-has-label-only .line-label {
+  white-space: normal;
+}
+
+
+// Tab Button: Badge
+// --------------------------------------------------
+
+.line-tab-button .line-badge {
+  box-sizing: border-box;
+
+  position: absolute;
+
+  z-index: 1;
+}
+
+
+// Tab Button: Layout
+// --------------------------------------------------
+
+.tab-layout-icon-start {
+  flex-direction: row;
+}
+
+.tab-layout-icon-end {
+  flex-direction: row-reverse;
+}
+
+.tab-layout-icon-bottom {
+  flex-direction: column-reverse;
+}
+
+.tab-layout-icon-hide .line-icon {
+  display: none;
+}
+
+.tab-layout-label-hide .line-label {
+  display: none;
+}
+
+// TODO
+.line-ripple-effect {
+  color: var(--ripple-color);
 }

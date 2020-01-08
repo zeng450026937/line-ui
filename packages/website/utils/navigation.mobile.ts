@@ -41,7 +41,12 @@ export const navList = [
       {
         label      : 'Radio',
         'label-cn' : '单选框',
-        value      : 'radio-button',
+        value      : 'radio',
+      },
+      {
+        label      : 'Switch',
+        'label-cn' : '开关',
+        value      : 'switch',
       },
       {
         label      : 'Input',
@@ -57,6 +62,11 @@ export const navList = [
         label      : 'Select',
         'label-cn' : '选择器',
         value      : 'select',
+      },
+      {
+        label      : 'Range',
+        'label-cn' : '选择器',
+        value      : 'range',
       },
     ],
   },
@@ -84,6 +94,17 @@ export const navList = [
         'label-cn' : '展示',
         value      : 'show',
       },
+      {
+        label      : 'Chip',
+        'label-cn' : '标签',
+        value      : 'chip',
+      },
+      {
+        label      : 'Badge',
+        'label-cn' : '标签',
+        value      : 'badge',
+      },
+
     ],
   },
   {
@@ -96,6 +117,11 @@ export const navList = [
         label      : 'Other',
         'label-cn' : '其他',
         value      : 'other',
+      },
+      {
+        label      : 'Tabs',
+        'label-cn' : '其他',
+        value      : 'tabs',
       },
     ],
   },

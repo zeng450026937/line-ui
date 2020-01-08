@@ -1,72 +1,28 @@
+import { getSkylineMode } from '@/utils/config';
+import { createColorClasses, useColor } from '@/mixins/use-color';
 import { createNamespace } from '@/utils/namespace';
 import '@/components/badge/badge.scss';
+import '@/components/badge/badge.ios.scss';
 
 const colors = ['primary', 'success', 'warning', 'danger', 'light', 'dark'];
 const [createComponent, bem] = createNamespace('badge');
 
 export default createComponent({
+  mixins : [useColor()],
+
   props : {
-    color : {
-      type    : String,
-      default : 'danger', // primary, success, warning, danger, light, dark
-    },
-    value : {
-      type    : Number,
-      default : 0,
-    },
-    visible : {
-      type    : Boolean,
-      default : true,
-    },
-    dot : {
-      type    : Boolean,
-      default : false,
-    },
-    left : {
-      type    : Boolean,
-      default : false,
-    },
-    bottom : {
-      type    : Boolean,
-      default : false,
-    },
+
   },
-
-  computed : {
-    badgeValue(): number | null {
-      const value = this.dot ? null : this.value;
-
-      return value;
-    },
-
-    badgeStyle(): { backgroundColor?: string } {
-      const style: { backgroundColor?: string } = {};
-      if (!colors.includes(this.color)) {
-        style.backgroundColor = this.color;
-      }
-
-      return style;
-    },
-  },
-
 
   render() {
-    const { badgeValue, visible } = this;
+    // const mode = getSkylineMode(this);
+    const { color } = this;
 
     return (
-      <div class={bem({
-        left         : this.left,
-        bottom       : this.bottom,
-        dot          : this.dot,
-        [this.color] : colors.includes(this.color),
-      })}>
+      <div
+        class={[bem(), { ...createColorClasses(color) }]}
+      >
         {this.slots()}
-        {visible && (
-          <span class={bem('content')}
-            style="badgeStyle">
-            { badgeValue }
-          </span>
-        )}
       </div>
     );
   },
