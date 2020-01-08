@@ -17,7 +17,7 @@
 <script>
 import Popper, { Placement } from 'popper.js';
 import { Popup } from '@/components/popup';
-import { ClickOutsideMixin } from '@/mixins/click-outside';
+// import { ClickOutsideMixin } from '@/mixins/click-outside';
 import { useGroup } from '@/mixins/use-group';
 import { createNamespace } from '@/utils/namespace';
 
@@ -30,10 +30,10 @@ export default {
 
   mixins : [
     useGroup(NAMESPACE),
-    ClickOutsideMixin({
-      event  : 'click',
-      method : 'onClickOutside',
-    }),
+    // ClickOutsideMixin({
+    //   event  : 'click',
+    //   method : 'onClickOutside',
+    // }),
   ],
 
   props : {
@@ -158,10 +158,14 @@ export default {
   position: relative;
   &__content {
     min-height: 36px;
+
     padding: 0 10px;
+
     border-radius: 4px;
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
+
     background-color: #ffffff;
+
+    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.12), 0 0 6px rgba(0, 0, 0, 0.04);
     z-index: 99;
   }
 }
