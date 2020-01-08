@@ -1,3 +1,4 @@
+import ListItem from '@/components/list-view/list-item';
 import ListView from '@/components/list-view/list-view';
 
-export { ListView };
+export { ListItem, ListView };

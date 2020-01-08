@@ -1,3 +1,3 @@
-import ToolBar from './ToolBar.vue';
+import Toolbar from '@/components/tool-bar/toolbar';
 
-export { ToolBar };
+export { Toolbar };

@@ -1,4 +1,3 @@
-// import Stepper from './Stepper.vue';
-import Stepper from './stepper';
+import Stepper from '@/components/stepper/stepper';
 
 export { Stepper };

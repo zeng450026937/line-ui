@@ -1,5 +1,5 @@
-import SvgIcon from './svg-icon';
-import FontIcon from './font-icon';
-import Icon from './icon';
+import FontIcon from '@/components/icon/font-icon';
+import Icon from '@/components/icon/icon';
+import SvgIcon from '@/components/icon/svg-icon';
 
-export { FontIcon, SvgIcon, Icon };
+export { FontIcon, Icon, SvgIcon };

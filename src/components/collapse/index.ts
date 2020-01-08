@@ -1,4 +1,4 @@
-import Collapse from '@/components/collapse/collapse';
 import CollapseItem from '@/components/collapse/collapse-item';
+import Collapse from '@/components/collapse/collapse';
 
-export { Collapse, CollapseItem };
+export { CollapseItem, Collapse };

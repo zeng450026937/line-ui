@@ -1,4 +1,4 @@
-import Action from '@/components/action/action';
 import ActionGroup from '@/components/action/action-group';
+import Action from '@/components/action/action';
 
-export { Action, ActionGroup };
+export { ActionGroup, Action };

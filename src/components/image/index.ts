@@ -1,3 +1,3 @@
-import Image from '@/components/image/img';
+import Img from '@/components/image/img';
 
-export { Image };
+export { Img };

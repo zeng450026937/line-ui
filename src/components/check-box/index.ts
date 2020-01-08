@@ -1,5 +1,5 @@
-import CheckIndicator from '@/components/check-box/check-indicator';
-import CheckBox from '@/components/check-box/check-box';
 import CheckBoxGroup from '@/components/check-box/check-box-group';
+import CheckBox from '@/components/check-box/check-box';
+import CheckIndicator from '@/components/check-box/check-indicator';
 
-export { CheckIndicator, CheckBox, CheckBoxGroup };
+export { CheckBoxGroup, CheckBox, CheckIndicator };

@@ -1,4 +1,4 @@
-import Tabs from '@/components/tabs/tabs';
 import Tab from '@/components/tabs/tab';
+import Tabs from '@/components/tabs/tabs';
 
-export { Tabs, Tab };
+export { Tab, Tabs };
