@@ -53,6 +53,9 @@ async function componentWalker() {
     `/* eslint-disable sort-imports, object-curly-newline */
 import { VueConstructor } from 'vue';
 
+import '@/style/skyline.bundle.scss';
+import '@/themes/skyline.globals.ios.scss';
+
 ${ Object.entries(components).map(([key, value]) => {
     return `import { ${ value.map(name => camelize(`-${ name }`)).join(', ') } } from '@/components/${ key }';`;
   }).join('\n') }

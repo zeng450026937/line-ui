@@ -1,6 +1,9 @@
 /* eslint-disable sort-imports, object-curly-newline */
 import { VueConstructor } from 'vue';
 
+import '@/style/skyline.bundle.scss';
+import '@/themes/skyline.globals.ios.scss';
+
 import { ActionGroup, Action } from '@/components/action';
 import { ActionSheet } from '@/components/action-sheet';
 import { Alert } from '@/components/alert';

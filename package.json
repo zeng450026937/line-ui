@@ -12,7 +12,7 @@
     "packages/*"
   ],
   "scripts": {
-    "entry": "node scripts/component-entry.js",
+    "entry": "node scripts/library-entry.js",
     "serve": "vue-cli-service serve:playground",
     "build": "vue-cli-service build:skyline",
     "serve:playground": "vue-cli-service serve:playground",
