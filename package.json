@@ -12,8 +12,11 @@
     "packages/*"
   ],
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "entry": "node scripts/component-entry.js",
+    "serve": "vue-cli-service serve:playground",
+    "build": "vue-cli-service build:skyline",
+    "serve:playground": "vue-cli-service serve:playground",
+    "build:playground": "vue-cli-service build:playground",
     "serve:website": "vue-cli-service serve:website",
     "build:website": "vue-cli-service build:website",
     "test:unit": "vue-cli-service test:unit",

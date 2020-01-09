@@ -10,7 +10,7 @@ module.exports = (api, options) => {
       args.name = 'Skyline';
       args.filename = 'skyline';
       args.target = 'lib';
-      args.entry = './src/index.ts';
+      args.entry = './src/main.ts';
       args.dest = './dist/library';
 
       api.service.run('build', args);

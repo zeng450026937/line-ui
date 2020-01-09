@@ -1,5 +1,23 @@
 module.exports = (api, options) => {
   api.registerCommand(
+    'serve:playground',
+    {
+      description : 'serve skyline playground',
+      usage       : 'vue-cli-service serve:playground',
+      details     : 'TBD',
+    },
+    (args, rawArgs) => {
+      api.chainWebpack(config => {
+        // redirect to playground
+        config.entry('app')
+          .clear()
+          .add(api.resolve('./packages/playground/main.ts'));
+      });
+      api.service.run('serve', args);
+    },
+  );
+
+  api.registerCommand(
     'serve:website',
     {
       description : 'serve skyline website(homepage)',
@@ -30,5 +48,6 @@ module.exports = (api, options) => {
 };
 
 module.exports.defaultModes = {
-  'serve:website' : 'development',
+  'serve:playground' : 'development',
+  'serve:website'    : 'development',
 };

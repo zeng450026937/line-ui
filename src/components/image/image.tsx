@@ -1,7 +1,7 @@
 import { createNamespace } from '@/utils/namespace';
-import '@/components/image/img.scss';
+import '@/components/image/image.scss';
 
-const [createComponent, bem] = createNamespace('img');
+const [createComponent, bem] = createNamespace('image');
 
 export default createComponent({
   props : {

@@ -480,6 +480,12 @@
       transform-origin: $x-axis $y-axis;
     }
   }
+
+  @else if $x-axis == center {
+    @include multi-dir() {
+      transform-origin: $x-axis $y-axis;
+    }
+  }
   
   @else {
     @include ltr() {

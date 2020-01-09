@@ -1,6 +1,6 @@
 import { createNamespace } from '@/utils/namespace';
-import '@/components/toolbar/toolbar.scss';
-import '@/components/toolbar/toolbar.ios.scss';
+import '@/components/tool-bar/toolbar.scss';
+import '@/components/tool-bar/toolbar.ios.scss';
 
 const [createComponent, bem] = createNamespace('toolbar');
 
