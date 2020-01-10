@@ -1,15 +1,15 @@
 import { join } from 'path';
 import {
-  PathLike,
-  statSync,
-  mkdirSync,
   existsSync,
+  mkdirSync,
+  PathLike,
   readdirSync,
   readFileSync,
+  statSync,
   writeFileSync,
 } from 'fs';
 import { mdParser } from './md-parser';
-import { codegen, Tag, Attribute } from './codegen';
+import { Attribute, codegen, Tag } from './codegen';
 
 export function parseText(input: string) {
   const ast = mdParser(input);
@@ -42,8 +42,8 @@ export type ParseResult = {
 };
 
 const defaultOptions = {
-  maxDeep: Infinity,
-  tagPrefix: '',
+  maxDeep   : Infinity,
+  tagPrefix : '',
 };
 
 export function parse(options: Options) {
@@ -53,15 +53,15 @@ export function parse(options: Options) {
   };
 
   const result: ParseResult = {
-    tags: {},
-    attributes: {},
+    tags       : {},
+    attributes : {},
   };
 
   function putResult(componentName: string, component: Tag) {
     componentName = options.tagPrefix + componentName;
     const attributes = Object.keys(component.attributes);
     const tag = {
-      description: component.description,
+      description : component.description,
       attributes,
     };
 
@@ -85,7 +85,7 @@ export function parse(options: Options) {
         recursiveParse(
           {
             ...options,
-            path: currentPath,
+            path : currentPath,
           },
           deep,
         );

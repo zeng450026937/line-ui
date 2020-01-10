@@ -49,6 +49,14 @@ async function componentWalker() {
 
   const componentlist = folders.reduce((pre, cur, index) => pre.concat(files[index]), []);
 
+  await fs.writeFile(path.resolve(process.cwd(), 'src/components.ts'),
+    `/* eslint-disable sort-imports, object-curly-newline */
+
+${ Object.keys(components).map(key => {
+    return `import(/* webpackChunkName: "${ key }" */ '@/components/${ key }');`;
+  }).join('\n') }
+`);
+
   await fs.writeFile(path.resolve(process.cwd(), 'src/main.ts'),
     `/* eslint-disable sort-imports, object-curly-newline */
 import { VueConstructor } from 'vue';
