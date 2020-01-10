@@ -39,9 +39,6 @@ module.exports = (api, options) => {
           filename : 'website.html',
         },
       };
-      api.chainWebpack(config => {
-        config.entry('app').clear();
-      });
       api.service.run('serve', args);
     },
   );

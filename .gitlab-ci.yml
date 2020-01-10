@@ -14,7 +14,7 @@ pages:
     - yarn install -f
     - yarn run build:website
     - mv public public-bak # GitLab Pages 的钩子设置在 public 文件夹
-    - mv dist public # 重命名 dist 文件夹 (yarn run build:website 之后的输出位置)
+    - mv dist/website public # 重命名 dist 文件夹 (yarn run build:website 之后的输出位置)
   artifacts:
     paths:
       - public # artifact path 一定要在 /public , 这样 GitLab Pages 才能获取
