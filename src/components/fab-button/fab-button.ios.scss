@@ -69,17 +69,17 @@
 
 @supports (backdrop-filter: blur(0)) {
   @media (any-hover: hover) {
-    .line-fab-button.line-fab-button--translucent.ion-color:hover .line-fab-button__content {
+    .line-fab-button.line-fab-button--translucent.line-color:hover .line-fab-button__content {
       background: #{current-color(base, $fab-ios-translucent-background-alpha-hover)};
     }
   }
 
-  .line-fab-button.ion-color.line-fab-button--translucent .line-fab-button__content {
+  .line-fab-button.line-color.line-fab-button--translucent .line-fab-button__content {
     background: #{current-color(base, $fab-ios-translucent-background-alpha)};
   }
 
-  .line-fab-button.ion-color.ion-focused.line-fab-button--translucent .line-fab-button__content,
-  .line-fab-button.ion-color.activated.line-fab-button--translucent .line-fab-button__content {
+  .line-fab-button.line-color.ion-focused.line-fab-button--translucent .line-fab-button__content,
+  .line-fab-button.line-color.activated.line-fab-button--translucent .line-fab-button__content {
     background: #{current-color(base)};
   }
 }

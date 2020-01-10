@@ -32,7 +32,7 @@
   --transition: none;
 }
 
-:host(.ion-color.activated) .item-native {
+:host(.line-color.activated) .item-native {
   background: current-color(shade);
   color: current-color(contrast);
 }
@@ -43,7 +43,7 @@
     color: var(--color-activated);
   }
 
-  :host(.activated.ion-color.ion-activatable:hover) .item-native {
+  :host(.activated.line-color.ion-activatable:hover) .item-native {
     background: #{current-color(shade)};
     color: #{current-color(contrast)};
   }

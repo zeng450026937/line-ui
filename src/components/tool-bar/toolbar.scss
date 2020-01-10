@@ -45,11 +45,11 @@
   box-sizing: border-box;
 }
 
-:host(.ion-color) {
+:host(.line-color) {
   color: current-color(contrast);
 }
 
-:host(.ion-color) .toolbar-background {
+:host(.line-color) .toolbar-background {
   background: current-color(base);
 }
 

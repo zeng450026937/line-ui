@@ -96,13 +96,13 @@
 // Item: Color
 // --------------------------------------------------
 
-:host(.ion-color) .item-native {
+:host(.line-color) .item-native {
   background: current-color(base);
   color: current-color(contrast);
 }
 
-:host(.ion-color) .item-native,
-:host(.ion-color) .item-inner {
+:host(.line-color) .item-native,
+:host(.line-color) .item-inner {
   border-color: current-color(shade);
 }
 
@@ -115,7 +115,7 @@
   color: var(--color-focused);
 }
 
-:host(.ion-color.ion-focused) .item-native {
+:host(.line-color.ion-focused) .item-native {
   background: current-color(shade);
   color: current-color(contrast);
 }
@@ -130,7 +130,7 @@
     color: var(--color-hover);
   }
 
-  :host(.ion-color.ion-activatable:hover) .item-native {
+  :host(.line-color.ion-activatable:hover) .item-native {
     background: #{current-color(tint)};
     color: #{current-color(contrast)};
   }

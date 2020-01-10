@@ -39,12 +39,12 @@
   color: var(--color-focused);
 }
 
-:host(.ion-color.activated) .item-native {
+:host(.line-color.activated) .item-native {
   background: current-color(base);
   color: current-color(contrast);
 }
 
-:host(.ion-color.ion-focused.activated) .item-native {
+:host(.line-color.ion-focused.activated) .item-native {
   background: current-color(shade);
   color: current-color(contrast);
 }
@@ -124,7 +124,7 @@
   font-size: $item-md-icon-slot-font-size;
 }
 
-:host(.ion-color) ::slotted(ion-icon) {
+:host(.line-color) ::slotted(ion-icon) {
   color: current-color(contrast);
 }
 
@@ -276,7 +276,7 @@
   --padding-start: 0;
 }
 
-:host(.item-has-focus:not(.ion-color)) ::slotted(.label-stacked),
-:host(.item-has-focus:not(.ion-color)) ::slotted(.label-floating) {
+:host(.item-has-focus:not(.line-color)) ::slotted(.label-stacked),
+:host(.item-has-focus:not(.line-color)) ::slotted(.label-floating) {
   color: $label-md-text-color-focused;
 }

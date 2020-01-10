@@ -2,7 +2,7 @@ import { binarySearch, CompareFunc } from './binary-search';
 
 export function exponentialSearch<T>(
   array: Array<T> = [],
-  wanted: T,
+  wanted: any,
   compare: CompareFunc<T>,
   from: number,
   to: number,
