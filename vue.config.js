@@ -1,10 +1,4 @@
-const isDev = process.env.NODE_ENV !== 'production';
-
 module.exports = {
-
-  publicPath : isDev
-    ? '/'
-    : '/server/client/web_app/skyline/',
 
   chainWebpack : (config) => {
     // support markdown file

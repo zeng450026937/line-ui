@@ -25,6 +25,7 @@ module.exports = (api, options) => {
       details     : 'TBD',
     },
     (args, rawArgs) => {
+      options.publicPath = '/skyline/';
       // options.pages = {
       //   mobile : {
       //     entry    : 'packages/website/mobile/main.ts',

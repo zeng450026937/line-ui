@@ -13,9 +13,6 @@ pages:
   script:
     - yarn install -f
     - yarn run build:website
-    - ls
-    - ls dist
-    - ls dist/website
     - mv public public-bak # GitLab Pages 的钩子设置在 public 文件夹
     - mv dist/website public # 重命名 dist 文件夹 (yarn run build:website 之后的输出位置)
   artifacts:
