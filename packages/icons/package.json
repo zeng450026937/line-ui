@@ -5,6 +5,7 @@
   "publishConfig": {
     "access": "public"
   },
+  "private": true,
   "license": "MIT",
   "dependencies": {
   }

@@ -6,6 +6,7 @@
   "publishConfig": {
     "access": "public"
   },
+  "private": true,
   "license": "MIT",
   "dependencies": {
     "front-matter": "^3.0.2",

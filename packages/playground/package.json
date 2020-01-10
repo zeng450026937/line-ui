@@ -1,10 +1,13 @@
 {
-  "name": "@skyline/docs",
+  "name": "@skyline/playground",
   "version": "1.0.0",
-  "description": "skyline docs",
+  "description": "skyline playground",
   "publishConfig": {
     "access": "public"
   },
+  "keywords": [
+    "skyline"
+  ],
   "private": true,
   "license": "MIT",
   "dependencies": {

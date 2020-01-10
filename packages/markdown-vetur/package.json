@@ -6,6 +6,7 @@
   "publishConfig": {
     "access": "public"
   },
+  "private": true,
   "license": "MIT",
   "files": [
     "lib"

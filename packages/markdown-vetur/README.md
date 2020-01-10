@@ -1,4 +1,4 @@
-# Vant Markdown Vetur
+# Skyline Markdown Vetur
 
 将 .md 文件转换成能描述 vue 组件的 .json 文件，供 vscode 插件 *vetur* 读取，从而可以在 vue 模版语法中拥有自动补全的功能。
 
@@ -7,13 +7,13 @@
 #### NPM
 
 ```shell
-npm i @vant/markdown-vetur -D
+npm i @skyline/markdown-vetur -D
 ```
 
 #### YARN
 
 ```shell
-yarn add @vant/markdown-vetur --dev
+yarn add @skyline/markdown-vetur --dev
 ```
 
 ## API

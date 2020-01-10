@@ -8,6 +8,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
+import {} from 'vue-pro'
 import { App } from '@/components/app';
 import { Content } from '@/components/content';
 

@@ -9,6 +9,7 @@
   "publishConfig": {
     "access": "public"
   },
+  "private": true,
   "license": "MIT",
   "dependencies": {
     "commander": "^4.0.0",
