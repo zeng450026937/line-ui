@@ -139,6 +139,7 @@ export const hasChanged = (value: any, oldValue: any): boolean => (
 // copied from vuetify
 
 /* eslint-disable */
+
 export function convertToUnit(str: string | number | null | undefined, unit = 'px'): string | undefined {
   if (str == null || str === '') {
     return undefined;

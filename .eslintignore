@@ -5,6 +5,10 @@ dist
 node_modules
 **/node_modules
 
+packages/global.d.ts
+packages/**/dist
+packages/**/index.js
+
 # temporarily stop lint
 src/components/**/test
 src/utils/model
