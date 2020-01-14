@@ -25,10 +25,13 @@ import {
 import '@/locale';
 import { camelize } from '@/utils/format/string';
 import { patchVNode } from '@/utils/vnode';
+import { isFunction } from '@/utils/helpers';
 import { useRender } from '@/mixins/use-render';
 import { useComponent } from '@/mixins/use-component';
 import { useMode } from '@/mixins/use-mode';
 import { Mods } from '@/utils/namespace/bem';
+
+type PacthFn = (vnode: VNodeData, index: number) => VNodeData;
 
 export function install(this: ComponentOptions<Vue>, Vue: VueConstructor) {
   const { name } = this;
@@ -48,14 +51,15 @@ export function unifySlots(context: RenderContext): RenderContext {
       const scopedSlot = scopedSlots[name];
       return !!scopedSlot || context.slots()[name];
     },
-    slots(name: string = 'default', ctx?: any, patch?: VNodeData) {
+    slots(name: string = 'default', ctx?: any, patch?: VNodeData | PacthFn) {
       // use data.scopedSlots in lower Vue version
       const scopedSlots = context.scopedSlots || context.data.scopedSlots || {};
       const scopedSlot = scopedSlots[name];
       const vnodes = scopedSlot ? scopedSlot(ctx) : context.slots()[name] as ScopedSlotChildren;
       if (vnodes && patch) {
-        vnodes.forEach((vnode) => {
-          patchVNode(vnode, patch);
+        vnodes.forEach((vnode, index) => {
+          patchVNode(vnode, { staticClass: `${ (vnode.data || {}).staticClass || '' } slotted ${ name !== 'default' ? `slot-${ name }` : '' }`.trim() });
+          patch && patchVNode(vnode, isFunction(patch) ? patch(vnode.data || {}, index) : patch);
         });
       }
       return vnodes;

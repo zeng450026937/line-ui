@@ -3,7 +3,7 @@
 // Toolbar
 // --------------------------------------------------
 
-:host {
+.line-toolbar {
   /**
    * @prop --background: Background of the toolbar
    *
@@ -45,15 +45,15 @@
   box-sizing: border-box;
 }
 
-:host(.line-color) {
+.line-toolbar.line-color {
   color: current-color(contrast);
 }
 
-:host(.line-color) .toolbar-background {
+.line-toolbar.line-color .line-toolbar__background {
   background: current-color(base);
 }
 
-.toolbar-container {
+.line-toolbar__container {
   @include padding(var(--padding-top), var(--padding-end), var(--padding-bottom), var(--padding-start));
 
   display: flex;
@@ -77,7 +77,7 @@
 // Toolbar: Transparent
 // --------------------------------------------------
 
-.toolbar-background {
+.line-toolbar__background {
   @include position(0, 0, 0, 0);
 
   position: absolute;

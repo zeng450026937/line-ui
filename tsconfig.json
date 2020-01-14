@@ -10,6 +10,7 @@
     // "declaration": true,
     // "outDir": "./out",
     "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false,
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
@@ -41,6 +42,8 @@
   ],
   "exclude": [
     "node_modules",
-    "**/tests"
+    "src/components/**/test",
+    "src/utils/model",
+    "src/utils/input-shims"
   ]
 }

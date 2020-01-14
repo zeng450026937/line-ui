@@ -4,7 +4,7 @@
 // Material Design Toolbar
 // --------------------------------------------------
 
-:host {
+.line-toolbar {
   --background: #{$toolbar-md-background};
   --color: #{$toolbar-md-color};
   --border-color: #{$toolbar-md-border-color};
@@ -19,7 +19,7 @@
 // Toolbar: Content
 // --------------------------------------------------
 
-.toolbar-content {
+.line-toolbar__content {
   flex: 1;
   order: map-get($toolbar-order-md, content);
 
@@ -57,21 +57,21 @@
 // Material Design Toolbar Slot Placement
 // --------------------------------------------------
 
-::slotted([slot="start"]) {
+.slotted.slot-start {
   order: map-get($toolbar-order-md, slot-start);
 }
 
-::slotted([slot="secondary"]) {
+.slotted.slot-secondary {
   order: map-get($toolbar-order-md, slot-secondary);
 }
 
-::slotted([slot="primary"]) {
+.slotted.slot-primary {
   order: map-get($toolbar-order-md, slot-primary);
 
   text-align: end;
 }
 
-::slotted([slot="end"]) {
+.slotted.slot-end {
   order: map-get($toolbar-order-md, slot-end);
 
   text-align: end;

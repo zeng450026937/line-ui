@@ -21,6 +21,7 @@ import { Dialog } from '@/components/dialog';
 import { Fab } from '@/components/fab';
 import { FabButton } from '@/components/fab-button';
 import { FabGroup } from '@/components/fab-group';
+import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
 import { CheckGroup, CheckItem, Lazy, TreeItem } from '@/components/hoc';
 import { FontIcon, Icon, SvgIcon } from '@/components/icon';
@@ -51,6 +52,7 @@ import { Textarea } from '@/components/text-area';
 import { Thumbnail } from '@/components/thumbnail';
 import { Toast } from '@/components/toast';
 import { Toolbar } from '@/components/tool-bar';
+import { Title } from '@/components/tool-title';
 import { Tooltip } from '@/components/tooltip';
 
 const install = (Vue: VueConstructor) => {
@@ -77,6 +79,7 @@ const install = (Vue: VueConstructor) => {
   Vue.use(Fab);
   Vue.use(FabButton);
   Vue.use(FabGroup);
+  Vue.use(Footer);
   Vue.use(Header);
   Vue.use(CheckGroup);
   Vue.use(CheckItem);
@@ -120,6 +123,7 @@ const install = (Vue: VueConstructor) => {
   Vue.use(Thumbnail);
   Vue.use(Toast);
   Vue.use(Toolbar);
+  Vue.use(Title);
   Vue.use(Tooltip);
 };
 
@@ -162,6 +166,7 @@ export default {
   Fab,
   FabButton,
   FabGroup,
+  Footer,
   Header,
   CheckGroup,
   CheckItem,
@@ -205,5 +210,6 @@ export default {
   Thumbnail,
   Toast,
   Toolbar,
+  Title,
   Tooltip,
 };

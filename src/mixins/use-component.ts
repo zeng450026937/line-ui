@@ -13,7 +13,7 @@ type ScopedSlots = {
   [key: string]: NormalizedScopedSlot | undefined;
 };
 
-type PacthFn = (index: number) => VNodeData;
+type PacthFn = (vnode: VNodeData, index: number) => VNodeData;
 
 export function useComponent(name: string) {
   return createMixins({
@@ -34,9 +34,10 @@ export function useComponent(name: string) {
         const { $slots, $scopedSlots, scopedSlots = {} } = this;
         const scopedSlot = $scopedSlots[name] || (scopedSlots as ScopedSlots)[name];
         const vnodes = scopedSlot ? scopedSlot(ctx) : $slots[name];
-        if (vnodes && patch) {
+        if (vnodes) {
           vnodes.forEach((vnode, index) => {
-            patchVNode(vnode, isFunction(patch) ? patch(index) : patch);
+            patchVNode(vnode, { staticClass: `${ (vnode.data || {}).staticClass || '' } slotted ${ name !== 'default' ? `slot-${ name }` : '' }`.trim() });
+            patch && patchVNode(vnode, isFunction(patch) ? patch(vnode.data || {}, index) : patch);
           });
         }
         return vnodes;

@@ -47,7 +47,7 @@ export type FunctionComponent<Props = DefaultProps, PropDefs = PropsDefinition<P
   inject?: InjectOptions;
 };
 
-type PacthFn = (index: number) => VNodeData;
+type PacthFn = (vnode: VNodeData, index: number) => VNodeData;
 
 // Injected Vue
 export type InjectedKeys = {

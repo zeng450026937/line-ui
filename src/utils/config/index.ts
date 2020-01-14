@@ -34,8 +34,8 @@ export function setupConfig() {
   const win = window;
   const Skyline = (win as any).Skyline = (win as any).Skyline || {};
 
-  // create the Ionic.config from raw config object (if it exists)
-  // and convert Ionic.config into a ConfigApi that has a get() fn
+  // create the Skyline.config from raw config object (if it exists)
+  // and convert Skyline.config into a ConfigApi that has a get() fn
   const configObj = {
     ...configFromSession(win),
     persistConfig : false,
@@ -51,11 +51,11 @@ export function setupConfig() {
 
   // first see if the mode was set as an attribute on <html>
   // which could have been set by the user, or by pre-rendering
-  // otherwise get the mode via config settings, and fallback to md
+  // otherwise get the mode via config settings, and fallback to ios
   Skyline.config = config;
   Skyline.mode = defaultMode = config.get(
     'mode',
-    (doc.documentElement.getAttribute('mode')) || (isPlatform(win, 'ios') ? 'ios' : 'md'),
+    (doc.documentElement.getAttribute('mode')) || (isPlatform(win, 'android') ? 'md' : 'ios'),
   );
   config.set('mode', defaultMode);
   doc.documentElement.setAttribute('mode', defaultMode);

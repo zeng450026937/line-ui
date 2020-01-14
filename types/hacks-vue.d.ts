@@ -20,9 +20,11 @@ declare module 'vue/types/options' {
     install?: (Vue: VueConstructor) => void;
   }
 
+  type PacthFn = (vnode: VNodeData, index: number) => VNodeData;
+
   interface RenderContext<Props=DefaultProps> {
     hasSlot(name?: string): boolean;
-    slots(name?: string, props?: any, patch?: VNodeData): any;
+    slots(name?: string, props?: any, patch?: VNodeData | PacthFn): any;
     [injectedKey: string]: any;
   }
 

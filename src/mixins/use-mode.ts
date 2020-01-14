@@ -14,7 +14,7 @@ export function useMode() {
     inject : {
       providedMode : {
         from    : 'mode',
-        default : config.get('mode', 'md'),
+        default : config.get('mode', 'ios'),
       },
     },
 

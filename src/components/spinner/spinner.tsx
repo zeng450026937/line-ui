@@ -1,5 +1,6 @@
 import { CreateElement } from 'vue';
 import { createNamespace } from '@/utils/namespace';
+import { createColorClasses } from '@/mixins/use-color';
 import { config, getSkylineMode } from '@/utils/config';
 import { SpinnerConfig, SPINNERS, SpinnerTypes } from '@/components/spinner/spinner-configs';
 import '@/components/spinner/spinner.scss';
@@ -70,10 +71,10 @@ export default createComponent({
     }
     return (
       <div
-        class={bem({
+        class={[bem({
           [spinnerName] : true,
           paused        : !!props.paused || config.getBoolean('testing'),
-        })}
+        }), createColorClasses(props.color)]}
         role="progressbar"
         style={spinner.elmDuration && { animationDuration: `${ duration }ms` }}
       >

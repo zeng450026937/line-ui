@@ -25,8 +25,8 @@ export default createComponent({
     // TODO:
     // config must be setup before using
     // child content is rendered before created
-    setupPlatforms();
     setupConfig();
+    setupPlatforms();
     setupTapClick();
     setupFocusVisible();
     setupPopup();
