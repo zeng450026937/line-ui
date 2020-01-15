@@ -23,7 +23,7 @@ import { FabButton } from '@/components/fab-button';
 import { FabGroup } from '@/components/fab-group';
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
-import { CheckGroup, CheckItem, TreeItem, Lazy } from '@/components/hoc';
+import { CheckGroup, CheckItem, Lazy, TreeItem } from '@/components/hoc';
 import { FontIcon, Icon, SvgIcon } from '@/components/icon';
 import { Image } from '@/components/image';
 import { Input } from '@/components/input';
@@ -84,8 +84,8 @@ const install = (Vue: VueConstructor) => {
   Vue.use(Header);
   Vue.use(CheckGroup);
   Vue.use(CheckItem);
-  Vue.use(TreeItem);
   Vue.use(Lazy);
+  Vue.use(TreeItem);
   Vue.use(FontIcon);
   Vue.use(Icon);
   Vue.use(SvgIcon);
@@ -172,8 +172,8 @@ export default {
   Header,
   CheckGroup,
   CheckItem,
-  TreeItem,
   Lazy,
+  TreeItem,
   FontIcon,
   Icon,
   SvgIcon,

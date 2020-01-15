@@ -52,7 +52,7 @@ export const ButtonDelegate = createComponent({
         disabled={disabled}
         aria-disabled={disabled ? 'true' : null}
         class={[
-          'activatable',
+          'line-activatable',
           'line-focusable',
           bem({
             [expand] : isDef(expand),

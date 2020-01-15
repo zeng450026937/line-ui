@@ -15,13 +15,13 @@
   --transition: #{$fab-ios-transition};
 }
 
-.line-fab-button.activated {
+.line-fab-button.line-activated {
   --box-shadow: #{$fab-ios-box-shadow-activated};
   --transform: #{$fab-ios-transform};
-  --transition: #{$fab-ios-transition-activated};
+  --transition: #{$fab-ios-transitline-activated};
 }
 
-::slotted(ion-icon),
+::slotted(line-icon),
 .line-fab-button__indicator {
   font-size: $fab-ios-icon-font-size;
 }
@@ -41,7 +41,7 @@
               opacity 200ms ease 10ms};
 }
 
-.line-fab-button.line-fab-button--in-list ::slotted(ion-icon) {
+.line-fab-button.line-fab-button--in-list ::slotted(line-icon) {
   font-size: $fab-ios-list-button-icon-font-size;
 }
 
@@ -51,16 +51,16 @@
 
 @supports (backdrop-filter: blur(0)) {
   .line-fab-button.line-fab-button--translucent {
-    --background: #{ion-color(primary, base, $fab-ios-translucent-background-alpha)};
-    --background-hover: #{ion-color(primary, base, $fab-ios-translucent-background-alpha-hover)};
-    --background-focused: #{ion-color(primary, base, $fab-ios-translucent-background-alpha-focused)};
+    --background: #{line-color(primary, base, $fab-ios-translucent-background-alpha)};
+    --background-hover: #{line-color(primary, base, $fab-ios-translucent-background-alpha-hover)};
+    --background-focused: #{line-color(primary, base, $fab-ios-translucent-background-alpha-focused)};
     --backdrop-filter: #{$fab-ios-translucent-filter};
   }
 
   .line-fab-button.line-fab-button--translucent-in-list {
-    --background: #{ion-color(light, base, $fab-ios-translucent-background-alpha)};
-    --background-hover: #{ion-color(light, base, $fab-ios-translucent-background-alpha-hover)};
-    --background-focused: #{ion-color(light, base, $fab-ios-translucent-background-alpha-focused)};
+    --background: #{line-color(light, base, $fab-ios-translucent-background-alpha)};
+    --background-hover: #{line-color(light, base, $fab-ios-translucent-background-alpha-hover)};
+    --background-focused: #{line-color(light, base, $fab-ios-translucent-background-alpha-focused)};
   }
 }
 
@@ -78,8 +78,8 @@
     background: #{current-color(base, $fab-ios-translucent-background-alpha)};
   }
 
-  .line-fab-button.line-color.ion-focused.line-fab-button--translucent .line-fab-button__content,
-  .line-fab-button.line-color.activated.line-fab-button--translucent .line-fab-button__content {
+  .line-fab-button.line-color.line-focused.line-fab-button--translucent .line-fab-button__content,
+  .line-fab-button.line-color.line-activated.line-fab-button--translucent .line-fab-button__content {
     background: #{current-color(base)};
   }
 }

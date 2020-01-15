@@ -3,7 +3,7 @@
 // Item
 // --------------------------------------------------
 
-:host {
+.line-item {
   /**
    * @prop --background: Background of the item
    * @prop --background-activated: Background of the item when pressed
@@ -71,7 +71,7 @@
   --color-activated: var(--color);
   --color-focused: var(--color);
   --color-hover: var(--color);
-  --ripple-color: var(--ion-item-background-activated, currentColor);
+  --ripple-color: var(--line-item-background-activated, currentColor);
 
   @include font-smoothing();
 
@@ -96,13 +96,13 @@
 // Item: Color
 // --------------------------------------------------
 
-:host(.line-color) .item-native {
+.line-item.line-color .item-native {
   background: current-color(base);
   color: current-color(contrast);
 }
 
-:host(.line-color) .item-native,
-:host(.line-color) .item-inner {
+.line-item.line-color .item-native,
+.line-item.line-color .item-inner {
   border-color: current-color(shade);
 }
 
@@ -110,12 +110,12 @@
 // Item: Focused
 // --------------------------------------------------
 
-:host(.ion-focused) .item-native {
+.line-item.line-focused .item-native {
   background: var(--background-focused);
   color: var(--color-focused);
 }
 
-:host(.line-color.ion-focused) .item-native {
+.line-item.line-color.line-focused .item-native {
   background: current-color(shade);
   color: current-color(contrast);
 }
@@ -125,12 +125,12 @@
 // --------------------------------------------------
 
 @media (any-hover: hover) {
-  :host(.ion-activatable:hover) .item-native {
+  .line-item.line-activatable:hover .item-native {
     background: var(--background-hover);
     color: var(--color-hover);
   }
 
-  :host(.line-color.ion-activatable:hover) .item-native {
+  .line-item.line-color.line-activatable:hover .item-native {
     background: #{current-color(tint)};
     color: #{current-color(contrast)};
   }
@@ -140,7 +140,7 @@
 // Item: Activated
 // --------------------------------------------------
 
-:host(.activated) .item-native {
+.line-item.line-activated .item-native {
   background: var(--background-activated);
   color: var(--color-activated);
 }
@@ -149,12 +149,12 @@
 // Item: Disabled
 // --------------------------------------------------
 
-:host(.item-interactive-disabled:not(.item-multiple-inputs)) {
+.line-item.item-interactive-disabled:not(.item-multiple-inputs) {
   cursor: default;
   pointer-events: none;
 }
 
-:host(.item-disabled) {
+.line-item.item-disabled {
   cursor: default;
   opacity: .3;
   pointer-events: none;
@@ -171,7 +171,7 @@
     var(--padding-top),
     var(--padding-end),
     var(--padding-bottom),
-    calc(var(--padding-start) + var(--ion-safe-area-left, 0px))
+    calc(var(--padding-start) + var(--line-safe-area-left, 0px))
   );
   @include text-inherit();
 
@@ -218,7 +218,7 @@ button, a {
   @include margin(0);
   @include padding(
     var(--inner-padding-top),
-    calc(var(--ion-safe-area-right, 0px) + var(--inner-padding-end)),
+    calc(var(--line-safe-area-right, 0px) + var(--inner-padding-end)),
     var(--inner-padding-bottom),
     var(--inner-padding-start)
   );
@@ -259,11 +259,11 @@ button, a {
 // Item Slots
 // --------------------------------------------------
 
-::slotted(ion-icon) {
+.line-item .slotted.line-icon {
   font-size: 1.6em;
 }
 
-::slotted(ion-button) {
+.line-item .slotted.line-button {
   --margin-top: 0;
   --margin-bottom: 0;
   --margin-start: 0;
@@ -272,7 +272,7 @@ button, a {
   z-index: 1;
 }
 
-::slotted(ion-label) {
+.line-item .slotted.line-label {
   flex: 1;
 }
 
@@ -280,8 +280,8 @@ button, a {
 // Item Input
 // --------------------------------------------------
 
-:host([vertical-align-top]),
-:host(.item-input) {
+.line-item[vertical-align-top],
+.line-item.item-input {
   align-items: flex-start;
 }
 
@@ -299,13 +299,13 @@ button, a {
   box-sizing: border-box;
 }
 
-:host(.item-label-stacked) .item-native,
-:host(.item-label-floating) .item-native {
+.line-item.item-label-stacked .item-native,
+.line-item.item-label-floating .item-native {
   align-items: start;
 }
 
-:host(.item-label-stacked) .input-wrapper,
-:host(.item-label-floating) .input-wrapper {
+.line-item.item-label-stacked .input-wrapper,
+.line-item.item-label-floating .input-wrapper {
   flex: 1;
   flex-direction: column;
 }
@@ -335,8 +335,8 @@ button, a {
 // Item Input Focused
 // --------------------------------------------------
 
-:host(.item-interactive.item-has-focus),
-:host(.item-interactive.ion-touched.ion-invalid) {
+.line-item.item-interactive.item-has-focus,
+.line-item.item-interactive.line-touched.line-invalid {
   // If the item has a full border and highlight is enabled, show the full item highlight
   --full-highlight-height: #{calc(var(--highlight-height) * var(--show-full-highlight))};
 
@@ -347,21 +347,21 @@ button, a {
 // Item Input Focus
 // --------------------------------------------------
 
-:host(.item-interactive.item-has-focus) {
+.line-item.item-interactive.item-has-focus {
   --highlight-background: var(--highlight-color-focused);
 }
 
 // Item Input Valid
 // --------------------------------------------------
 
-:host(.item-interactive.ion-valid) {
+.line-item.item-interactive.line-valid {
   --highlight-background: var(--highlight-color-valid);
 }
 
 // Item Input Invalid
 // --------------------------------------------------
 
-:host(.item-interactive.ion-invalid) {
+.line-item.item-interactive.line-invalid {
   --highlight-background: var(--highlight-color-invalid);
 }
 
@@ -369,8 +369,8 @@ button, a {
 // Item Select
 // --------------------------------------------------
 
-:host(.item-label-stacked) ::slotted(ion-select),
-:host(.item-label-floating) ::slotted(ion-select) {
+.line-item.item-label-stacked .slotted.line-select,
+.line-item.item-label-floating .slotted.line-select {
   --padding-start: 0;
 
   align-self: stretch;
@@ -384,8 +384,8 @@ button, a {
 // Item Datetime
 // --------------------------------------------------
 
-:host(.item-label-stacked) ::slotted(ion-datetime),
-:host(.item-label-floating) ::slotted(ion-datetime) {
+.line-item.item-label-stacked .slotted.line-datetime,
+.line-item.item-label-floating .slotted.line-datetime {
   --padding-start: 0;
 
   width: 100%;
@@ -397,17 +397,17 @@ button, a {
 // Multiple inputs in an item should have the input
 // cover relative to themselves instead of the item
 
-:host(.item-multiple-inputs) ::slotted(ion-checkbox),
-:host(.item-multiple-inputs) ::slotted(ion-datetime),
-:host(.item-multiple-inputs) ::slotted(ion-radio),
-:host(.item-multiple-inputs) ::slotted(ion-select) {
+.line-item.item-multiple-inputs .slotted.line-checkbox,
+.line-item.item-multiple-inputs .slotted.line-datetime,
+.line-item.item-multiple-inputs .slotted.line-radio,
+.line-item.item-multiple-inputs .slotted.line-select {
   position: relative;
 }
 
 // Item Textarea
 // --------------------------------------------------
 
-:host(.item-textarea) {
+.line-item.item-textarea {
   align-items: stretch;
 }
 
@@ -415,7 +415,7 @@ button, a {
 // Item Reorder
 // --------------------------------------------------
 
-::slotted(ion-reorder[slot]) {
+.line-item .slotted.line-reorder .slotted {
   @include margin(0, null);
 }
 
@@ -423,6 +423,6 @@ button, a {
 // Item Button Ripple effect
 // --------------------------------------------------
 
-ion-ripple-effect {
+.line-ripple-effect {
   color: var(--ripple-color);
 }

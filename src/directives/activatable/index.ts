@@ -8,9 +8,9 @@ function bind(
   vnode: VNode,
 ) {
   const { modifiers } = binding;
-  el.classList.add('activatable');
+  el.classList.add('line-activatable');
   if (modifiers!.instant) {
-    el.classList.add('activatable-instant');
+    el.classList.add('line-activatable-instant');
   }
 }
 
@@ -20,9 +20,9 @@ function unbind(
   vnode: VNode,
 ) {
   const { modifiers } = binding;
-  el.classList.remove('activatable');
+  el.classList.remove('line-activatable');
   if (modifiers!.instant) {
-    el.classList.add('activatable-instant');
+    el.classList.add('line-activatable-instant');
   }
 }
 

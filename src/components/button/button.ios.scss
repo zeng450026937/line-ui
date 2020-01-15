@@ -30,11 +30,11 @@
   --background-activated: #{ion-color(primary, shade)};
 }
 
-.line-button--solid.activated {
+.line-button--solid.line-activated {
   --opacity: #{$button-ios-opacity-activated};
 }
 
-.line-button--solid.activated.line-color .line-button__content {
+.line-button--solid.line-activated.line-color .line-button__content {
   background: current-color(shade);
 }
 
@@ -50,7 +50,7 @@
   --color-activated: #{ion-color(primary, contrast)};
 }
 
-.line-button--outline.activated.line-color .line-button__content {
+.line-button--outline.line-activated.line-color .line-button__content {
   background: current-color(base);
   color: current-color(contrast);
 }
@@ -59,7 +59,7 @@
 // iOS Clear Button
 // --------------------------------------------------
 
-.line-button--clear.activated {
+.line-button--clear.line-activated {
   --opacity: #{$button-ios-clear-opacity-activated};
 }
 
@@ -145,7 +145,7 @@
     --color-hover: var(--color-focused);
   }
 
-  .line-button.activated:hover {
+  .line-button.line-activated:hover {
     --background-hover: var(--background-activated);
     --color-hover: var(--color-activated);
   }

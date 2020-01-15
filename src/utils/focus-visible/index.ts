@@ -1,6 +1,6 @@
 
-const ION_FOCUSED = 'ion-focused';
-const ION_FOCUSABLE = 'ion-focusable';
+const LINE_FOCUSED = 'line-focused';
+const LINE_FOCUSABLE = 'line-focusable';
 const FOCUS_KEYS = ['Tab', 'ArrowDown', 'Space', 'Escape', ' ', 'Shift', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp'];
 
 export const setupFocusVisible = () => {
@@ -9,8 +9,8 @@ export const setupFocusVisible = () => {
 
   const doc = document;
   const setFocus = (elements: Element[]) => {
-    currentFocus.forEach(el => el.classList.remove(ION_FOCUSED));
-    elements.forEach(el => el.classList.add(ION_FOCUSED));
+    currentFocus.forEach(el => el.classList.remove(LINE_FOCUSED));
+    elements.forEach(el => el.classList.add(LINE_FOCUSED));
     currentFocus = elements;
   };
   const pointerDown = () => {
@@ -29,7 +29,7 @@ export const setupFocusVisible = () => {
     if (keyboardMode && ev.composedPath) {
       const toFocus = ev.composedPath().filter((el: any) => {
         if (el.classList) {
-          return el.classList.contains(ION_FOCUSABLE);
+          return el.classList.contains(LINE_FOCUSABLE);
         }
         return false;
       }) as Element[];

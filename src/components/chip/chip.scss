@@ -50,7 +50,7 @@
   background: current-color(base, .12);
 }
 
-.line-chip.line-color.activated {
+.line-chip.line-color.line-activated {
   background: current-color(base, .16);
 }
 
@@ -78,7 +78,7 @@
   background: rgba(0, 0, 0, .04);
 }
 
-.line-chip.line-chip--outline.activated:not(.line-color) {
+.line-chip.line-chip--outline.line-activated:not(.line-color) {
   background: rgba(0, 0, 0, .08);
 }
 
@@ -135,7 +135,7 @@
 // Chip: Activated
 // ---------------------------------------------
 
-.line-chip.activated {
+.line-chip.line-activated {
   --background: #{rgba($text-color-rgb, .20)};
 }
 

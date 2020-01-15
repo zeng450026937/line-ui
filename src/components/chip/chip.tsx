@@ -35,7 +35,7 @@ export default createComponent({
       <div
         class={[
           bem({ outline }),
-          { activatable: true },
+          { 'line-activatable': true },
         ]}
       >
         {this.slots()}

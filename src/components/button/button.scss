@@ -145,7 +145,7 @@
 }
 
 // Activated Clear Button with Color
-.line-button--clear.activated.line-color .line-button__content {
+.line-button--clear.line-activated.line-color .line-button__content {
   background: transparent;
 }
 
@@ -282,7 +282,7 @@
   color: var(--color-focused);
 }
 
-.line-button.activated .line-button__content {
+.line-button.line-activated .line-button__content {
   background: var(--background-activated);
   color: var(--color-activated);
 }

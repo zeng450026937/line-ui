@@ -82,8 +82,8 @@ export default createComponent({
                 tabIndex={0}
                 class={[
                   bem('button'),
-                  'ion-focusable',
-                  'activatable',
+                  'line-focusable',
+                  'line-activatable',
                 ]}
                 onClick={() => this.onButtonClick(button)}
               >

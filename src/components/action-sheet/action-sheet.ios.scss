@@ -69,7 +69,7 @@
     backdrop-filter: $action-sheet-ios-button-translucent-filter;
   }
 
-  .line-action-sheet--translucent .line-action-sheet__button.activated {
+  .line-action-sheet--translucent .line-action-sheet__button.line-activated {
     background-color: $action-sheet-ios-translucent-background-color-activated;
     background-image: none;
   }

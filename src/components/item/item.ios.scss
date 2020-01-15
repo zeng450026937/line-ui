@@ -4,7 +4,7 @@
 // iOS Item
 // --------------------------------------------------
 
-:host {
+.line-item {
   --min-height: #{$item-ios-min-height};
   --transition: background-color 200ms linear;
   --padding-start: #{$item-ios-padding-start};
@@ -28,22 +28,22 @@
 // iOS Activated
 // --------------------------------------------------
 
-:host(.activated) {
+.line-item.line-activated {
   --transition: none;
 }
 
-:host(.line-color.activated) .item-native {
+.line-item.line-color.line-activated .item-native {
   background: current-color(shade);
   color: current-color(contrast);
 }
 
 @media (any-hover: hover) {
-  :host(.activated.ion-activatable:hover) .item-native {
+  .line-item.line-activated.line-activatable:hover .item-native {
     background: var(--background-activated);
     color: var(--color-activated);
   }
 
-  :host(.activated.line-color.ion-activatable:hover) .item-native {
+  .line-item.line-activated.line-color.line-activatable:hover .item-native {
     background: #{current-color(shade)};
     color: #{current-color(contrast)};
   }
@@ -54,20 +54,20 @@
 // --------------------------------------------------
 
 // Default input items have an inset border
-:host(.item-interactive) {
+.line-item.item-interactive {
   --show-full-highlight: 0;
   --show-inset-highlight: 1;
 }
 
 // Full lines - apply the border to the item
 // Inset lines - apply the border to the item inner
-:host(.item-lines-full) {
+.line-item.item-lines-full {
   --border-width: #{0px 0px $item-ios-border-bottom-width 0px};
   --show-full-highlight: 1;
   --show-inset-highlight: 0;
 }
 
-:host(.item-lines-inset) {
+.line-item.item-lines-inset {
   --inner-border-width: #{0px 0px $item-ios-border-bottom-width 0px};
   --show-full-highlight: 0;
   --show-inset-highlight: 1;
@@ -76,14 +76,14 @@
 // Full lines - remove the border from the item inner (inset list items)
 // Inset lines - remove the border on the item (full list items)
 // No lines - remove the border on both (full / inset list items)
-:host(.item-lines-inset),
-:host(.item-lines-none) {
+.line-item.item-lines-inset,
+.line-item.item-lines-none {
   --border-width: 0px;
   --show-full-highlight: 0;
 }
 
-:host(.item-lines-full),
-:host(.item-lines-none) {
+.line-item.item-lines-full,
+.line-item.item-lines-none {
   --inner-border-width: 0px;
   --show-inset-highlight: 0;
 }
@@ -92,11 +92,11 @@
 // iOS Item Slots
 // --------------------------------------------------
 
-::slotted([slot="start"]) {
+.line-item .slotted.slot-start {
   @include margin($item-ios-slot-start-margin-top, $item-ios-slot-start-margin-end, $item-ios-slot-start-margin-bottom, $item-ios-slot-start-margin-start);
 }
 
-::slotted([slot="end"]) {
+.line-item .slotted.slot-end {
   @include margin($item-ios-slot-end-margin-top, $item-ios-slot-end-margin-end, $item-ios-slot-end-margin-bottom, $item-ios-slot-end-margin-start);
 }
 
@@ -104,8 +104,8 @@
 // iOS Slotted Icon
 // --------------------------------------------------
 
-::slotted(ion-icon[slot="start"]),
-::slotted(ion-icon[slot="end"]) {
+.line-item .slotted.line-icon.slot-start,
+.line-item .slotted.line-icon.slot-end {
   @include margin($item-ios-icon-slot-margin-top, $item-ios-icon-slot-margin-end, $item-ios-icon-slot-margin-bottom, $item-ios-icon-slot-margin-start);
 }
 
@@ -113,16 +113,16 @@
 // iOS Slotted Toggle
 // --------------------------------------------------
 
-::slotted(ion-toggle[slot="start"]),
-::slotted(ion-toggle[slot="end"]) {
+.line-item .slotted.line-toggle.slot-start,
+.line-item .slotted.line-toggle.slot-end {
   @include margin(0);
 }
 
 // iOS Stacked / Floating Labels
 // --------------------------------------------------
 
-:host(.item-label-stacked) ::slotted([slot="end"]),
-:host(.item-label-floating) ::slotted([slot="end"]) {
+.line-item.item-label-stacked .slotted.slot-end,
+.line-item.item-label-floating .slotted.slot-end {
   @include margin($item-ios-label-slot-end-margin-top, $item-ios-label-slot-end-margin-end, $item-ios-label-slot-end-margin-bottom, $item-ios-label-slot-end-margin-start);
 }
 
@@ -130,7 +130,7 @@
 // iOS Item Button
 // --------------------------------------------------
 
-::slotted(.button-small) {
+.line-item .slotted.button-small {
   --padding-top: 0px;
   --padding-bottom: 0px;
   --padding-start: .5em;
@@ -145,18 +145,18 @@
 // iOS Item Avatar & Thumbnail
 // --------------------------------------------------
 
-::slotted(ion-avatar) {
+.line-item .slotted.line-avatar {
   width: $item-ios-avatar-width;
   height: $item-ios-avatar-height;
 }
 
-::slotted(ion-thumbnail) {
+.line-item .slotted.line-thumbnail {
   width: $item-ios-thumbnail-width;
   height: $item-ios-thumbnail-height;
 }
 
-::slotted(ion-avatar[slot="end"]),
-::slotted(ion-thumbnail[slot="end"]) {
+.line-item .slotted.line-avatar.slot-end,
+.line-item .slotted.line-thumbnail.slot-end {
   @include margin(($item-ios-padding-end / 2));
 }
 
@@ -164,8 +164,8 @@
 // iOS Radio / Toggle Item Label
 // -----------------------------------------
 
-:host(.item-radio) ::slotted(ion-label),
-:host(.item-toggle) ::slotted(ion-label) {
+.line-item.item-radio .slotted.line-label,
+.line-item.item-toggle .slotted.line-label {
   @include margin-horizontal(0px, null);
 }
 
@@ -174,7 +174,7 @@
 // iOS Radio Item Label: Checked
 // -----------------------------------------
 
-// :host(.item-radio-checked) ::slotted(ion-label) {
+// .line-item.item-radio-checked) .slotted.line-label {
 //   color: $radio-ios-color-on;
 // }
 
@@ -182,7 +182,7 @@
 // iOS Slotted Label
 // --------------------------------------------------
 
-::slotted(ion-label) {
+.line-item .slotted.line-label {
   @include margin(10px, 8px, 10px, 0);
 }
 
@@ -190,14 +190,14 @@
 // iOS Stacked & Floating Inputs
 // --------------------------------------------------
 
-:host(.item-label-floating),
-:host(.item-label-stacked) {
+.line-item.item-label-floating,
+.line-item.item-label-stacked {
   --min-height: 68px;
 }
 
-// TODO: refactor, ion-item and ion-textarea have the same CSS
-:host(.item-label-stacked) ::slotted(ion-select),
-:host(.item-label-floating) ::slotted(ion-select) {
+// TODO: refactor, .line-item and .line-textarea have the same CSS
+.line-item.item-label-stacked .slotted.line-select,
+.line-item.item-label-floating .slotted.line-select {
   --padding-top: 8px;
   --padding-bottom: 8px;
   --padding-start: 0px;

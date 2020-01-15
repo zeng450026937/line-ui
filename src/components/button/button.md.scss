@@ -34,7 +34,7 @@
   --box-shadow: #{$button-md-box-shadow};
 }
 
-.line-button--solid.activated {
+.line-button--solid.line-activated {
   --box-shadow: #{$button-md-box-shadow-activated};
 }
 
@@ -51,7 +51,7 @@
   --color-activated: #{ion-color(primary, base)};
 }
 
-.line-button--outline.activated.line-color .button-native {
+.line-button--outline.line-activated.line-color .button-native {
   background: transparent;
 }
 

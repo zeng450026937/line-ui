@@ -32,8 +32,8 @@ export default createComponent({
     const text = props.name || getDefaultText(slots);
     return (
       <div
-        class ={bem()}
-        style = {{
+        class={bem()}
+        style={{
           width  : convertToUnit(props.width),
           height : convertToUnit(props.height),
         }}

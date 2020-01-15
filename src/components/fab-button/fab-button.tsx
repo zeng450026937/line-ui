@@ -52,7 +52,7 @@ export default createComponent({
         aria-disabled={disabled ? 'true' : null}
         class={[
           'activatable',
-          'ion-focusable',
+          'line-focusable',
           bem({
             [size]                : isDef(size),
             'in-list'             : inList,

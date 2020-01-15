@@ -102,7 +102,7 @@ export default createComponent({
                     type="button"
                     class={[
                       bem('button', { [`${ action.role }`]: !!action.role }),
-                      'activatable',
+                      'line-activatable',
                     ]}
                   >
                     <span class={bem('button-inner')}>
@@ -120,7 +120,7 @@ export default createComponent({
                     type="button"
                     class={[
                       bem('button', { [`${ cancelAction.role }`]: !!cancelAction.role }),
-                      'activatable',
+                      'line-activatable',
                     ]}
                   >
                     <span class={bem('button-inner')}>

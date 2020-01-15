@@ -3,9 +3,9 @@
 /* eslint-disable no-use-before-define */
 import { now, pointerCoord } from '../helpers';
 
-const ACTIVATED = 'activated';
-const ACTIVATABLE = 'activatable';
-const ACTIVATABLE_INSTANT = 'activatable-instant';
+const ACTIVATED = 'line-activated';
+const ACTIVATABLE = 'line-activatable';
+const ACTIVATABLE_INSTANT = 'line-activatable-instant';
 const ADD_ACTIVATED_DEFERS = 200;
 const CLEAR_STATE_DEFERS = 200;
 const MOUSE_WAIT = 2500;
