@@ -93,6 +93,12 @@ export default createComponent({
     },
   },
 
+  mounted() {
+    this.inToolbar = !!this.$el.closest('.line-toolbar');
+    this.inListHeader = !!this.$el.closest('.line-list-header');
+    this.inItem = !!this.$el.closest('.line-item') || !!this.$el.closest('.line-item-divider');
+  },
+
   render() {
     return (
       <ButtonDelegate
@@ -100,7 +106,6 @@ export default createComponent({
         scopedSlots={this.$scopedSlots}
         on={this.$listeners}
       >
-        {this.slots()}
       </ButtonDelegate>
     );
   },

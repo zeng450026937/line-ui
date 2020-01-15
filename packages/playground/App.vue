@@ -2,16 +2,25 @@
   <line-app>
     <line-header>
       <line-toolbar>
-        <line-title>SKYLINE</line-title>
-        <template #primary>
+        <template #start>
+          <line-title>SKYLINE</line-title>
+        </template>
+
+        <template #end>
           <line-button>Get Started</line-button>
         </template>
       </line-toolbar>
     </line-header>
 
     <line-content>
+      <div class="content-nav">
+        <line-list>
+          <div class="line-item">button</div>
+        </line-list>
+      </div>
+
       <div class="content-wrapper">
-        <line-spinner type="dots" color="primary"></line-spinner>
+        <line-spinner type="dots"></line-spinner>
       </div>
     </line-content>
 
@@ -33,6 +42,7 @@ import { Toolbar } from '@/components/tool-bar';
 import { Title } from '@/components/tool-title';
 import { Button } from '@/components/button';
 import { Spinner } from '@/components/spinner';
+import { List } from '@/components/list';
 
 Vue.use(App);
 Vue.use(Content);
@@ -42,6 +52,7 @@ Vue.use(Toolbar);
 Vue.use(Title);
 Vue.use(Button);
 Vue.use(Spinner);
+Vue.use(List);
 
 export default Vue.extend({
   name : 'App',
@@ -54,6 +65,14 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
+
+.content-nav {
+  position: absolute;
+
+  top: 0;
+  bottom: 0;
+  left: 0;
+}
 
 .content-wrapper {
   display: flex;

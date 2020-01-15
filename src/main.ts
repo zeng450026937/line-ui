@@ -23,12 +23,13 @@ import { FabButton } from '@/components/fab-button';
 import { FabGroup } from '@/components/fab-group';
 import { Footer } from '@/components/footer';
 import { Header } from '@/components/header';
-import { CheckGroup, CheckItem, Lazy, TreeItem } from '@/components/hoc';
+import { CheckGroup, CheckItem, TreeItem, Lazy } from '@/components/hoc';
 import { FontIcon, Icon, SvgIcon } from '@/components/icon';
 import { Image } from '@/components/image';
 import { Input } from '@/components/input';
 import { Item } from '@/components/item';
 import { Label } from '@/components/label';
+import { List } from '@/components/list';
 import { ListItem, ListView } from '@/components/list-view';
 import { Loading } from '@/components/loading';
 import { Overlay } from '@/components/overlay';
@@ -83,8 +84,8 @@ const install = (Vue: VueConstructor) => {
   Vue.use(Header);
   Vue.use(CheckGroup);
   Vue.use(CheckItem);
-  Vue.use(Lazy);
   Vue.use(TreeItem);
+  Vue.use(Lazy);
   Vue.use(FontIcon);
   Vue.use(Icon);
   Vue.use(SvgIcon);
@@ -92,6 +93,7 @@ const install = (Vue: VueConstructor) => {
   Vue.use(Input);
   Vue.use(Item);
   Vue.use(Label);
+  Vue.use(List);
   Vue.use(ListItem);
   Vue.use(ListView);
   Vue.use(Loading);
@@ -170,8 +172,8 @@ export default {
   Header,
   CheckGroup,
   CheckItem,
-  Lazy,
   TreeItem,
+  Lazy,
   FontIcon,
   Icon,
   SvgIcon,
@@ -179,6 +181,7 @@ export default {
   Input,
   Item,
   Label,
+  List,
   ListItem,
   ListView,
   Loading,

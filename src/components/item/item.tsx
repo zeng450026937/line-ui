@@ -8,7 +8,6 @@ const [createComponent, bem] = createNamespace('item');
 export default createComponent({
   mixins : [useColor()],
 
-
   render() {
     return (
       <div

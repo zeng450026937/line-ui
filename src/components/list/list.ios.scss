@@ -1,0 +1,89 @@
+@import "./list";
+@import "./list.ios.vars";
+
+// iOS List
+// --------------------------------------------------
+
+.line-list {
+  @include margin(-1px, $list-ios-margin-end, $list-ios-margin-bottom, $list-ios-margin-start);
+
+  background: $item-ios-background;
+}
+
+
+// iOS Inset List
+// --------------------------------------------------
+
+.line-list--inset {
+  @include margin($list-inset-ios-margin-top, $list-inset-ios-margin-end, $list-inset-ios-margin-bottom, $list-inset-ios-margin-start);
+  @include border-radius($list-inset-ios-border-radius);
+}
+
+.line-list--inset .line-item {
+  --border-width: 0 0 1px 0;
+  --inner-border-width: 0;
+}
+
+.line-list--inset .line-item:last-child {
+  --border-width: 0;
+  --inner-border-width: 0;
+}
+
+
+.line-list--inset + .line-list--inset {
+  @include margin(0, null, null, null);
+}
+
+
+// iOS No Lines List
+// --------------------------------------------------
+
+.line-list--lines-none .item {
+  --border-width: 0;
+  --inner-border-width: 0;
+}
+
+// iOS Full Lines List
+// --------------------------------------------------
+
+.line-list--lines-full .item,
+.line-list .item-lines-full {
+  --border-width: #{0 0 $list-ios-item-border-bottom-width 0};
+}
+
+.line-list--lines-full .item {
+  --inner-border-width: 0;
+}
+
+
+// iOS Inset Lines List
+// --------------------------------------------------
+
+.line-list--lines-inset .item,
+.line-list .item-lines-inset {
+  --inner-border-width: #{0 0 $list-ios-item-border-bottom-width 0};
+}
+
+// Remove the border from items in lists
+// if they are explicitly styled by the item
+// to be different than the list
+.line-list .item-lines-inset {
+  --border-width: 0;
+}
+
+.line-list .item-lines-full {
+  --inner-border-width: 0;
+}
+
+.line-list .item-lines-none {
+  --border-width: 0;
+  --inner-border-width: 0;
+}
+
+
+// iOS List Inside A Card
+// --------------------------------------------------
+
+.line-card .line-list {
+  @include margin(0);
+}

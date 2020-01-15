@@ -25,6 +25,7 @@ import(/* webpackChunkName: "image" */ '@/components/image');
 import(/* webpackChunkName: "input" */ '@/components/input');
 import(/* webpackChunkName: "item" */ '@/components/item');
 import(/* webpackChunkName: "label" */ '@/components/label');
+import(/* webpackChunkName: "list" */ '@/components/list');
 import(/* webpackChunkName: "list-view" */ '@/components/list-view');
 import(/* webpackChunkName: "loading" */ '@/components/loading');
 import(/* webpackChunkName: "overlay" */ '@/components/overlay');
