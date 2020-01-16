@@ -12,6 +12,7 @@ import { Avatar } from '@/components/avatar';
 import { Badge } from '@/components/badge';
 import { BusyIndicator } from '@/components/busy-indicator';
 import { ButtonGroup, Button } from '@/components/button';
+import { CardContent, CardHeader, CardSubtitle, CardTitle, Card } from '@/components/card';
 import { CellGroup, Cell } from '@/components/cell';
 import { CheckBoxGroup, CheckBox, CheckIndicator } from '@/components/check-box';
 import { Chip } from '@/components/chip';
@@ -69,6 +70,11 @@ const install = (Vue: VueConstructor) => {
   Vue.use(BusyIndicator);
   Vue.use(ButtonGroup);
   Vue.use(Button);
+  Vue.use(CardContent);
+  Vue.use(CardHeader);
+  Vue.use(CardSubtitle);
+  Vue.use(CardTitle);
+  Vue.use(Card);
   Vue.use(CellGroup);
   Vue.use(Cell);
   Vue.use(CheckBoxGroup);
@@ -159,6 +165,11 @@ export default {
   BusyIndicator,
   ButtonGroup,
   Button,
+  CardContent,
+  CardHeader,
+  CardSubtitle,
+  CardTitle,
+  Card,
   CellGroup,
   Cell,
   CheckBoxGroup,

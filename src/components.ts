@@ -8,6 +8,7 @@ import(/* webpackChunkName: "avatar" */ '@/components/avatar');
 import(/* webpackChunkName: "badge" */ '@/components/badge');
 import(/* webpackChunkName: "busy-indicator" */ '@/components/busy-indicator');
 import(/* webpackChunkName: "button" */ '@/components/button');
+import(/* webpackChunkName: "card" */ '@/components/card');
 import(/* webpackChunkName: "cell" */ '@/components/cell');
 import(/* webpackChunkName: "check-box" */ '@/components/check-box');
 import(/* webpackChunkName: "chip" */ '@/components/chip');

@@ -1,0 +1,20 @@
+@import "../../themes/skyline.globals";
+
+
+// Card Title
+// --------------------------------------------------
+
+.line-card-title {
+  /**
+   * @prop --color: Color of the card title
+   */
+
+  display: block;
+  position: relative;
+
+  color: var(--color);
+}
+
+.line-card-title.line-color {
+  color: #{current-color(base)};
+}

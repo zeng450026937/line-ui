@@ -3,11 +3,11 @@
     <line-header>
       <line-toolbar>
         <template #start>
-          <line-title>SKYLINE</line-title>
+          <div class="logo">SKYLINE</div>
         </template>
 
         <template #end>
-          <line-button>Get Started</line-button>
+          <line-button>GET STARTED</line-button>
         </template>
       </line-toolbar>
     </line-header>
@@ -27,11 +27,33 @@
               <p>Listen, I've had a pretty messed up day...</p>
             </line-label>
           </line-item>
+
+          <line-item>
+            <line-label>line-note</line-label>
+            <template #end>
+              <line-note color="danger">new</line-note>
+            </template>
+          </line-item>
+
         </line-list>
       </div>
 
       <div class="content-wrapper">
         <line-spinner type="dots"></line-spinner>
+
+        <line-card style="width: 300px">
+          <img src="./asserts/madison.jpg" />
+
+          <line-card-header>
+            <line-card-subtitle>Destination</line-card-subtitle>
+            <line-card-title>Madison, WI</line-card-title>
+          </line-card-header>
+
+          <line-card-content>
+            Founded in 1829 on an isthmus between Lake Monona and Lake Mendota,
+            Madison was named the capital of the Wisconsin Territory in 1836.
+          </line-card-content>
+        </line-card>
       </div>
     </line-content>
 
@@ -56,6 +78,14 @@ import { Spinner } from '@/components/spinner';
 import { List } from '@/components/list';
 import { Item } from '@/components/item';
 import { Label } from '@/components/label';
+import { Note } from '@/components/note';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardSubtitle,
+  CardTitle,
+} from '@/components/card';
 
 Vue.use(App);
 Vue.use(Content);
@@ -68,6 +98,12 @@ Vue.use(Spinner);
 Vue.use(List);
 Vue.use(Item);
 Vue.use(Label);
+Vue.use(Note);
+Vue.use(Card);
+Vue.use(CardContent);
+Vue.use(CardHeader);
+Vue.use(CardSubtitle);
+Vue.use(CardTitle);
 
 export default Vue.extend({
   name : 'App',
@@ -80,6 +116,15 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
+
+.logo {
+  padding: 0 20px;
+
+  font-size: 20px;
+  font-weight: 500;
+
+  letter-spacing: .0125em;
+}
 
 .content-nav {
   position: absolute;

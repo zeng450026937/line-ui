@@ -24,7 +24,8 @@ export default createComponent({
 
   props : {
     button   : Boolean,
-    detail   : Boolean,
+    // Boolean property has default false value
+    detail   : { type: Boolean, default: undefined },
     disabled : Boolean,
     ripple   : Boolean,
     download : String,
@@ -108,7 +109,7 @@ export default createComponent({
     } = this;
     const childStyles = {};
 
-    const TagType = clickable ? (href === undefined ? 'button' : 'a') : 'div' as any;
+    const TagType = clickable ? (isDef(href) ? 'a' : 'button') : 'div' as any;
 
     const attrs = (TagType === 'button')
       ? { type: this.type }
@@ -119,7 +120,7 @@ export default createComponent({
         target,
       };
 
-    const showDetail = detail !== undefined ? detail : mode === 'ios' && clickable;
+    const showDetail = isDef(detail) ? detail : mode === 'ios' && clickable;
 
     Object.keys(itemStyles).forEach(key => {
       Object.assign(childStyles, itemStyles[key]);
@@ -157,7 +158,7 @@ export default createComponent({
 
             {this.slots('end')}
 
-            {showDetail && <Icon class="item-detail-icon" name="right"></Icon>}
+            {showDetail && <Icon class="item-detail-icon" name="chevron_right"></Icon>}
 
             <div class="item-inner-highlight"></div>
           </div>
