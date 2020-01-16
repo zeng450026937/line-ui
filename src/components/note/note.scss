@@ -1,0 +1,19 @@
+@import "./note.ios.vars";
+
+// iOS Note
+// --------------------------------------------------
+
+.line-note {
+  /**
+   * @prop --color: Color of the note
+   */
+  color: var(--color);
+
+  font-family: $font-family-base;
+
+  box-sizing: border-box;
+}
+
+.line-note.line-color {
+  color: #{current-color(base)};
+}
