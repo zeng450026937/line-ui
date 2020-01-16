@@ -1,15 +1,26 @@
+import Vue from 'vue';
 import { createNamespace } from '@/utils/namespace';
 import { useColor } from '@/mixins/use-color';
 import { isDef } from '@/utils/helpers';
 import { Icon } from '@/components/icon';
 import ripple from '@/directives/ripple';
-// import '@/components/item/item.scss';
-// import '@/components/item/item.ios.scss';
+import '@/components/item/item.scss';
+import '@/components/item/item.ios.scss';
 
 const [createComponent, bem] = createNamespace('item');
 
+export type CssClassMap = { [className: string]: boolean };
+
 export default createComponent({
   mixins : [useColor()],
+
+  directives : { ripple },
+
+  provide(): any {
+    return {
+      Item : this,
+    };
+  },
 
   props : {
     button   : Boolean,
@@ -24,12 +35,15 @@ export default createComponent({
     lines    : String,
   },
 
-  computed : {
-    hasCover(): boolean {
-      const inputs = this.el.querySelectorAll('.line-checkbox, .line-datetime, .line-select, .line-radio');
-      return inputs.length === 1 && !this.multipleInputs;
-    },
+  data() {
+    return {
+      itemStyles     : {} as { [tagName: string]: CssClassMap },
+      multipleInputs : false,
+      hasCover       : false,
+    };
+  },
 
+  computed : {
     isClickable(): boolean {
       return isDef(this.href) || this.button;
     },
@@ -39,12 +53,60 @@ export default createComponent({
     },
   },
 
+  methods : {
+    itemStyle(tagName: string, cssclass: CssClassMap) {
+      const { itemStyles } = this;
+      const updatedStyles = cssclass;
+      const newStyles = {} as any;
+      const childStyles = itemStyles[tagName] || {};
+
+      let hasStyleChange = false;
+      Object.keys(updatedStyles).forEach(key => {
+        if (updatedStyles[key]) {
+          const itemKey = `item-${ key }`;
+          if (!childStyles[itemKey]) {
+            hasStyleChange = true;
+          }
+          newStyles[itemKey] = true;
+        }
+      });
+      if (!hasStyleChange && Object.keys(newStyles).length !== Object.keys(childStyles).length) {
+        hasStyleChange = true;
+      }
+      if (hasStyleChange) {
+        Vue.set(itemStyles, tagName, newStyles);
+      }
+    },
+  },
+
+  mounted() {
+    // The following elements have a clickable cover that is relative to the entire item
+    const covers = this.$el.querySelectorAll('.line-checkbox, .line-datetime, .line-select, .line-radio');
+
+    // The following elements can accept focus alongside the previous elements
+    // therefore if these elements are also a child of item, we don't want the
+    // input cover on top of those interfering with their clicks
+    const inputs = this.$el.querySelectorAll('.line-input, .line-range, .line-searchbar, .line-segment, .line-textarea, .line-toggle');
+
+    // The following elements should also stay clickable when an input with cover is present
+    const clickables = this.$el.querySelectorAll('.line-anchor, .line-button, a, button');
+
+    // Check for multiple inputs to change the position of the input cover to relative
+    // for all of the covered inputs above
+    this.multipleInputs = (covers.length + inputs.length > 1)
+      || (covers.length + clickables.length > 1)
+      || (covers.length > 0 && this.isClickable);
+
+    this.hasCover = covers.length === 1 && !this.multipleInputs;
+  },
+
   render() {
     const {
-      mode,
-      disabled, detail, href, download, rel, target, lines,
+      mode, itemStyles,
+      disabled, ripple, detail, href, download, rel, target, lines,
       isClickable: clickable, canActivate,
     } = this;
+    const childStyles = {};
 
     const TagType = clickable ? (href === undefined ? 'button' : 'a') : 'div' as any;
 
@@ -59,6 +121,10 @@ export default createComponent({
 
     const showDetail = detail !== undefined ? detail : mode === 'ios' && clickable;
 
+    Object.keys(itemStyles).forEach(key => {
+      Object.assign(childStyles, itemStyles[key]);
+    });
+
     return (
       <div
         aria-disabled={disabled ? 'true' : null}
@@ -67,6 +133,7 @@ export default createComponent({
 
           }),
           {
+            ...childStyles,
             item                      : true,
             [`item-lines-${ lines }`] : isDef(lines),
             'item-disabled'           : disabled,

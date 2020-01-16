@@ -34,7 +34,7 @@ export default createComponent({
 
   render() {
     return (
-      <div id={this.id} skyline-app class={[bem(), 'ion-page']}>
+      <div id={this.id} skyline-app class={[bem(), 'line-page']}>
         {this.slots()}
       </div>
     );

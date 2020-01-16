@@ -203,11 +203,13 @@
   border: 0;
 }
 
-button, a {
-  cursor: pointer;
-  user-select: none;
+.line-item {
+  button, a {
+    cursor: pointer;
+    user-select: none;
 
-  -webkit-user-drag: none;
+    -webkit-user-drag: none;
+  }
 }
 
 

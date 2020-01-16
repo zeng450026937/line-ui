@@ -26,7 +26,7 @@ body.backdrop-no-scroll {
 }
 
 // TODO: Block scrolling in ion-content, breaks inside ion-modal
-// body.backdrop-no-scroll .ion-page > ion-content {
+// body.backdrop-no-scroll .line-page > ion-content {
 //   --overflow: hidden;
 // }
 
@@ -62,7 +62,7 @@ body.backdrop-no-scroll {
 // Page Container Structure
 // --------------------------------------------------
 
-.ion-page {
+.line-page {
   @include position(0, 0, 0, 0);
 
   display: flex;
@@ -76,7 +76,7 @@ body.backdrop-no-scroll {
   z-index: $z-index-page-container;
 }
 
-.split-pane-visible > .ion-page.split-pane-main {
+.split-pane-visible > .line-page.split-pane-main {
   position: relative;
 }
 
@@ -93,13 +93,13 @@ ion-modal-controller,
 ion-picker-controller,
 ion-popover-controller,
 ion-toast-controller,
-.ion-page-hidden,
+.line-page-hidden,
 [hidden] {
   /* stylelint-disable-next-line declaration-no-important */
   display: none !important;
 }
 
-.ion-page-invisible {
+.line-page-invisible {
   opacity: 0;
 }
 

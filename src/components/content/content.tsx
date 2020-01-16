@@ -27,11 +27,11 @@ const getParentElement = (el: any) => {
 };
 
 const getPageElement = (el: HTMLElement) => {
-  const tabs = el.closest('ion-tabs');
+  const tabs = el.closest('.line-tabs');
   if (tabs) {
     return tabs;
   }
-  const page = el.closest('ion-app,ion-page,.ion-page,page-inner');
+  const page = el.closest('.line-app,.line-page,page-inner');
   if (page) {
     return page;
   }

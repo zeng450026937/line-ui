@@ -14,8 +14,19 @@
 
     <line-content>
       <div class="content-nav">
-        <line-list>
-          <div class="line-item">button</div>
+        <line-list lines="inset">
+          <line-item>
+            <line-button>line-button</line-button>
+          </line-item>
+
+          <line-item>
+            <line-label>
+              <h1>line-label</h1>
+              <h2>Finn</h2>
+              <h3>I'm a big deal</h3>
+              <p>Listen, I've had a pretty messed up day...</p>
+            </line-label>
+          </line-item>
         </line-list>
       </div>
 
@@ -43,6 +54,8 @@ import { Title } from '@/components/tool-title';
 import { Button } from '@/components/button';
 import { Spinner } from '@/components/spinner';
 import { List } from '@/components/list';
+import { Item } from '@/components/item';
+import { Label } from '@/components/label';
 
 Vue.use(App);
 Vue.use(Content);
@@ -53,6 +66,8 @@ Vue.use(Title);
 Vue.use(Button);
 Vue.use(Spinner);
 Vue.use(List);
+Vue.use(Item);
+Vue.use(Label);
 
 export default Vue.extend({
   name : 'App',
@@ -72,6 +87,8 @@ export default Vue.extend({
   top: 0;
   bottom: 0;
   left: 0;
+
+  overflow-y: auto;
 }
 
 .content-wrapper {

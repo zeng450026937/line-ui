@@ -1,5 +1,5 @@
 import { createNamespace } from '@/utils/namespace';
-import { createColorClasses, useColor } from '@/mixins/use-color';
+import { useColor } from '@/mixins/use-color';
 import { useGroupItem } from '@/mixins/use-group-item';
 import { isDef } from '@/utils/helpers';
 import ripple from '@/directives/ripple';
@@ -9,37 +9,62 @@ import '@/components/button/button.ios.scss';
 const NAMESPACE = 'ButtonGroup';
 const [createComponent, bem] = createNamespace('button');
 
-export const ButtonDelegate = createComponent({
-  functional : true,
+export default createComponent({
+  mixins : [useColor(), useGroupItem(NAMESPACE)],
+
+  directives : { ripple },
 
   props : {
-    text     : String,
-    strong   : Boolean,
-    disabled : Boolean,
-    ripple   : Boolean,
+    text      : String,
+    strong    : Boolean,
+    disabled  : Boolean,
+    ripple    : Boolean,
     // display in vertical mode, default horizontal
-    vertical : Boolean,
+    vertical  : Boolean,
     // full | block
-    expand   : String,
+    expand    : String,
     // clear | outline | solid
-    fill     : String,
+    fill      : String,
     // round | circle
-    shape    : String,
+    shape     : String,
     // small | large
-    size     : String,
+    size      : String,
     // 'submit' | 'reset' | 'button' = 'button';
-    type     : String,
-    download : String,
-    href     : String,
-    rel      : String,
-    target   : String,
+    type      : String,
+    download  : String,
+    href      : String,
+    rel       : String,
+    target    : String,
+    // override default
+    checkable : {
+      type    : Boolean,
+      default : false,
+    },
   },
 
-  render(h, { props, data, slots }) {
+  data() {
+    return {
+      inToolbar    : false,
+      inListHeader : false,
+      inItem       : false,
+    };
+  },
+
+  mounted() {
+    this.inToolbar = !!this.$el.closest('.line-toolbar');
+    this.inListHeader = !!this.$el.closest('.line-list-header');
+    this.inItem = !!this.$el.closest('.line-item') || !!this.$el.closest('.line-item-divider');
+  },
+
+  render() {
     const {
-      text, strong, disabled, ripple, vertical, expand, fill = 'solid', shape, size,
+      text, strong, disabled, ripple, vertical,
+      expand, fill, shape, size,
       type = 'button', download, href, rel, target,
-    } = props;
+      inItem, inToolbar, inListHeader,
+    } = this;
+    const finalSize = !isDef(size) && inItem ? 'small' : size;
+    const finalFill = !isDef(fill) && (inToolbar || inListHeader) ? 'clear' : 'solid';
     const TagType = isDef(href) ? 'a' : 'button' as any;
     const attrs = (TagType === 'button')
       ? { type }
@@ -55,15 +80,15 @@ export const ButtonDelegate = createComponent({
           'line-activatable',
           'line-focusable',
           bem({
-            [expand] : isDef(expand),
-            [size]   : isDef(size),
-            [shape]  : isDef(shape),
-            [fill]   : true,
+            [expand]    : isDef(expand),
+            [finalSize] : isDef(finalSize),
+            [shape]     : isDef(shape),
+            [finalFill] : true,
             strong,
             disabled,
           }),
         ]}
-        {...data}
+        on={this.$listeners}
       >
         <TagType
           {...{ attrs }}
@@ -71,42 +96,10 @@ export const ButtonDelegate = createComponent({
           disabled={disabled}
           class={bem('content', { vertical })}
         >
-          {slots('indicator')}
-          {slots() || text}
+          {this.slots('indicator')}
+          {this.slots() || text}
         </TagType>
       </div>
-    );
-  },
-});
-
-export default createComponent({
-  mixins : [useColor(), useGroupItem(NAMESPACE)],
-
-  directives : { ripple },
-
-  props : {
-    ...ButtonDelegate.props,
-    // override default
-    checkable : {
-      type    : Boolean,
-      default : false,
-    },
-  },
-
-  mounted() {
-    this.inToolbar = !!this.$el.closest('.line-toolbar');
-    this.inListHeader = !!this.$el.closest('.line-list-header');
-    this.inItem = !!this.$el.closest('.line-item') || !!this.$el.closest('.line-item-divider');
-  },
-
-  render() {
-    return (
-      <ButtonDelegate
-        {...{ attrs: this.$attrs, props: this.$props }}
-        scopedSlots={this.$scopedSlots}
-        on={this.$listeners}
-      >
-      </ButtonDelegate>
     );
   },
 });

@@ -4,7 +4,7 @@
 // Label
 // --------------------------------------------------
 
-:host-context(.item) {
+.line-label {
   /**
    * @prop --color: Color of the label
    */
@@ -25,29 +25,29 @@
   box-sizing: border-box;
 }
 
-:host(.line-color) {
+.line-label.line-color {
   color: current-color(base);
 }
 
-:host(.ion-text-wrap),
-:host([text-wrap]) {
+.line-label.line-text-wrap,
+.line-label[text-wrap] {
   white-space: normal;
 }
 
-:host-context(.item-interactive-disabled:not(.item-multiple-inputs)) {
+.item-interactive-disabled:not(.item-multiple-inputs) .line-label {
   cursor: default;
   opacity: .3;
   pointer-events: none;
 }
 
-:host-context(.item-input) {
+.item-input .line-label {
   flex: initial;
 
   max-width: 200px;
   pointer-events: none;
 }
 
-:host-context(.item-textarea) {
+.item-textarea .line-label {
   align-self: baseline;
 }
 
@@ -55,7 +55,7 @@
 // Fixed Inputs
 // --------------------------------------------------
 
-:host(.label-fixed) {
+.line-label.label-fixed {
   flex: 0 0 100px;
 
   width: 100px;
@@ -66,8 +66,8 @@
 // Stacked & Floating Inputs
 // --------------------------------------------------
 
-:host(.label-stacked),
-:host(.label-floating) {
+.line-label.label-stacked,
+.line-label.label-floating {
   @include margin(null, null, 0, null);
 
   align-self: stretch;
@@ -76,6 +76,6 @@
   max-width: 100%;
 }
 
-:host(.label-no-animate.label-floating) {
+.line-label.label-no-animate.label-floating {
   transition: none;
 }

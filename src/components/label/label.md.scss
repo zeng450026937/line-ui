@@ -4,8 +4,8 @@
 // Material Design Label
 // --------------------------------------------------
 
-:host(.ion-text-wrap),
-:host([text-wrap]) {
+.line-label.line-text-wrap,
+.line-label[text-wrap] {
   line-height: $label-md-text-wrap-line-height;
 }
 
@@ -13,14 +13,14 @@
 // Material Design Stacked & Floating Labels
 // --------------------------------------------------
 
-:host(.label-stacked) {
+.line-label.label-stacked {
   @include transform-origin(start, top);
   @include transform(translate3d(0, 50%, 0), scale(.75));
 
   transition: color 150ms $label-md-transition-timing-function;
 }
 
-:host(.label-floating) {
+.line-label.label-floating {
   @include transform(translate3d(0, 96%, 0));
   @include transform-origin(start, top);
 
@@ -29,23 +29,23 @@
     transform 150ms $label-md-transition-timing-function;
 }
 
-:host(.label-stacked),
-:host(.label-floating) {
+.line-label.label-stacked,
+.line-label.label-floating {
   @include margin(0, 0, 0, 0);
 }
 
-:host-context(.item-select).label-floating {
+.item-select .line-label.label-floating {
   @include transform(translate3d(0, 130%, 0));
 }
 
-:host-context(.item-has-focus).label-floating,
-:host-context(.item-has-placeholder).label-floating,
-:host-context(.item-has-value).label-floating {
+.item-has-focus .line-label.label-floating,
+.item-has-placeholder .line-label.label-floating,
+.item-has-value .line-label.label-floating {
   @include transform(translate3d(0, 50%, 0), scale(.75));
 }
 
-:host-context(.item-has-focus).label-stacked,
-:host-context(.item-has-focus).label-floating {
+.item-has-focus .line-label.label-stacked,
+.item-has-focus .line-label.label-floating {
   color: $label-md-text-color-focused;
 }
 
@@ -53,48 +53,50 @@
 // MD Typography
 // --------------------------------------------------
 
-::slotted(*) h1 {
-  @include margin(0, 0, 2px);
+.line-label {
+  .slotted h1 {
+    @include margin(0, 0, 2px);
 
-  font-size: 24px;
-  font-weight: normal;
-}
+    font-size: 24px;
+    font-weight: normal;
+  }
 
-::slotted(*) h2 {
-  @include margin(2px, 0);
+  .slotted h2 {
+    @include margin(2px, 0);
 
-  font-size: 16px;
-  font-weight: normal;
-}
+    font-size: 16px;
+    font-weight: normal;
+  }
 
-::slotted(*) h3,
-::slotted(*) h4,
-::slotted(*) h5,
-::slotted(*) h6 {
-  @include margin(2px, 0);
+  .slotted h3,
+  .slotted h4,
+  .slotted h5,
+  .slotted h6 {
+    @include margin(2px, 0);
 
-  font-size: 14px;
-  font-weight: normal;
+    font-size: 14px;
+    font-weight: normal;
 
-  line-height: normal;
-}
+    line-height: normal;
+  }
 
-::slotted(*) p {
-  @include margin(0, 0, 2px);
+  .slotted p {
+    @include margin(0, 0, 2px);
 
-  font-size: 14px;
+    font-size: 14px;
 
-  line-height: 20px;
+    line-height: 20px;
 
-  text-overflow: inherit;
+    text-overflow: inherit;
 
-  overflow: inherit;
-}
+    overflow: inherit;
+  }
 
-::slotted(p) {
-  color: $item-md-paragraph-text-color;
-}
+  & > .slotted p  {
+    color: $item-md-paragraph-text-color;
+  }
 
-:host-context(.line-color)::slotted(p) {
-  color: inherit;
+  &.line-color > .slotted p {
+    color: inherit;
+  }
 }

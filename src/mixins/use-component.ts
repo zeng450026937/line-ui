@@ -36,7 +36,15 @@ export function useComponent(name: string) {
         const vnodes = scopedSlot ? scopedSlot(ctx) : $slots[name];
         if (vnodes) {
           vnodes.forEach((vnode, index) => {
-            patchVNode(vnode, { staticClass: `${ (vnode.data || {}).staticClass || '' } slotted ${ name !== 'default' ? `slot-${ name }` : '' }`.trim() });
+            const staticClass = ((vnode.data || {}).staticClass || '')
+              .split(' ');
+            if (!staticClass.some(klass => /slotted/.test(klass))) {
+              staticClass.push('slotted');
+              if (name !== 'default') {
+                staticClass.push(`slot-${ name }`);
+              }
+            }
+            patchVNode(vnode, { staticClass: staticClass.join(' ').trim() });
             patch && patchVNode(vnode, isFunction(patch) ? patch(vnode.data || {}, index) : patch);
           });
         }
