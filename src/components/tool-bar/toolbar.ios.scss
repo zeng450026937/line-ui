@@ -57,28 +57,30 @@
 // iOS Toolbar Slot Placement
 // --------------------------------------------------
 
-.slotted.line-button-group {
-  min-height: 38px;
-}
+.line-toolbar {
+  & .slotted.line-button-group {
+    min-height: 38px;
+  }
 
-.slotted.slot-start {
-  order: map-get($toolbar-order-ios, slot-start);
-}
+  & .slotted.slot-start {
+    order: map-get($toolbar-order-ios, slot-start);
+  }
 
-.slotted.slot-secondary {
-  order: map-get($toolbar-order-ios, slot-secondary);
-}
+  & .slotted.slot-secondary {
+    order: map-get($toolbar-order-ios, slot-secondary);
+  }
 
-.slotted.slot-primary {
-  order: map-get($toolbar-order-ios, slot-primary);
+  & .slotted.slot-primary {
+    order: map-get($toolbar-order-ios, slot-primary);
 
-  text-align: end;
-}
+    text-align: end;
+  }
 
-.slotted.slot-end {
-  order: map-get($toolbar-order-ios, slot-end);
+  & .slotted.slot-end {
+    order: map-get($toolbar-order-ios, slot-end);
 
-  text-align: end;
+    text-align: end;
+  }
 }
 
 

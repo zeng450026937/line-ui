@@ -28,10 +28,12 @@ import { FontIcon, Icon, SvgIcon } from '@/components/icon';
 import { Image } from '@/components/image';
 import { Input } from '@/components/input';
 import { Item } from '@/components/item';
+import { ItemDivider } from '@/components/item-divider';
 import { Label } from '@/components/label';
 import { List } from '@/components/list';
 import { ListItem, ListView } from '@/components/list-view';
 import { Loading } from '@/components/loading';
+import { Note } from '@/components/note';
 import { Overlay } from '@/components/overlay';
 import { PageIndicator } from '@/components/page-indicator';
 import { Popover } from '@/components/popover';
@@ -92,11 +94,13 @@ const install = (Vue: VueConstructor) => {
   Vue.use(Image);
   Vue.use(Input);
   Vue.use(Item);
+  Vue.use(ItemDivider);
   Vue.use(Label);
   Vue.use(List);
   Vue.use(ListItem);
   Vue.use(ListView);
   Vue.use(Loading);
+  Vue.use(Note);
   Vue.use(Overlay);
   Vue.use(PageIndicator);
   Vue.use(Popover);
@@ -180,11 +184,13 @@ export default {
   Image,
   Input,
   Item,
+  ItemDivider,
   Label,
   List,
   ListItem,
   ListView,
   Loading,
+  Note,
   Overlay,
   PageIndicator,
   Popover,

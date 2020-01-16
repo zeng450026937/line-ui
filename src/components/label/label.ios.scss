@@ -45,24 +45,24 @@
 // --------------------------------------------------
 
 .line-label {
-  &.slotted h1 {
+  & h1.slotted {
     @include margin(3px, 0, 2px);
 
     font-size: 22px;
     font-weight: normal;
   }
 
-  &.slotted h2 {
+  & h2.slotted {
     @include margin(0, 0, 2px);
 
     font-size: 17px;
     font-weight: normal;
   }
 
-  &.slotted h3,
-  &.slotted h4,
-  &.slotted h5,
-  &.slotted h6 {
+  & h3.slotted,
+  & h4.slotted,
+  & h5.slotted,
+  & h6.slotted {
     @include margin(0, 0, 3px);
 
     font-size: 14px;
@@ -71,7 +71,7 @@
     line-height: normal;
   }
 
-  &.slotted p {
+  & p.slotted {
     @include margin($item-ios-paragraph-margin-top, $item-ios-paragraph-margin-end, $item-ios-paragraph-margin-bottom, $item-ios-paragraph-margin-start);
 
     font-size: $item-ios-paragraph-font-size;
@@ -83,21 +83,21 @@
     overflow: inherit;
   }
 
-  &.slotted > p {
+  & > p.slotted {
     color: #{$item-ios-paragraph-text-color};
   }
 
-  &.line-color.slotted > p {
+  &.line-color > p.slotted {
     color: inherit;
   }
 
 
-  &.slotted h2:last-child,
-  &.slotted h3:last-child,
-  &.slotted h4:last-child,
-  &.slotted h5:last-child,
-  &.slotted h6:last-child,
-  &.slotted p:last-child {
+  & h2:last-child.slotted,
+  & h3:last-child.slotted,
+  & h4:last-child.slotted,
+  & h5:last-child.slotted,
+  & h6:last-child.slotted,
+  & p:last-child.slotted {
     @include margin(null, null, 0, null);
   }
 }
