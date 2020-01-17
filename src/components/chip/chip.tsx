@@ -1,24 +1,19 @@
-// import { Icon } from '../icon';
 import { createNamespace } from '@/utils/namespace';
-import { createColorClasses, useColor } from '@/mixins/use-color';
-import { getSkylineMode } from '@/utils/config';
+import { useColor } from '@/mixins/use-color';
+import ripple from '@/directives/ripple';
 import '@/components/chip/chip.scss';
+import '@/components/chip/chip.ios.scss';
 
 const [createComponent, bem] = createNamespace('chip');
-// const colors = ['primary', 'success', 'warning', 'danger', 'light', 'dark'];
 
 export default createComponent({
   mixins : [useColor()],
 
-  // components : {
-  //   Icon,
-  // },
+  directives : { ripple },
 
   props : {
-    outline : {
-      type    : Boolean,
-      default : false,
-    },
+    ripple  : Boolean,
+    outline : Boolean,
   },
 
   methods : {
@@ -28,11 +23,10 @@ export default createComponent({
   },
 
   render() {
-    const { outline } = this;
-    const mode = getSkylineMode(this);
-
+    const { ripple, outline } = this;
     return (
       <div
+        vRipple={ripple}
         class={[
           bem({ outline }),
           { 'line-activatable': true },

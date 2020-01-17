@@ -86,19 +86,19 @@
 // Chip Icon
 // ---------------------------------------------
 
-::slotted(.line-icon) {
+.line-chip .slotted.line-icon {
   font-size: 20px;
 }
 
-.line-chip:not(.line-color) ::slotted(.line-icon) {
+.line-chip:not(.line-color) .slotted.line-icon {
   color: rgba(0, 0, 0, .54);
 }
 
-::slotted(.line-icon:first-child) {
+.line-chip .slotted.line-icon:first-child {
   @include margin(-4px, 8px, -4px, -4px);
 }
 
-::slotted(.line-icon:last-child) {
+.line-chip .slotted.line-icon:last-child {
   @include margin(-4px, -4px, -4px, 8px);
 }
 
@@ -106,16 +106,16 @@
 // Chip Avatar
 // ---------------------------------------------
 
-::slotted(.line-avatar) {
+.line-chip .slotted.line-avatar {
   width: 24px;
   height: 24px;
 }
 
-::slotted(.line-avatar:first-child) {
+.line-chip .slotted.line-avatar:first-child {
   @include margin(-4px, 8px, -4px, -8px);
 }
 
-::slotted(.line-avatar:last-child) {
+.line-chip .slotted.line-avatar:last-child {
   @include margin(-4px, -8px, -4px, 8px);
 }
 
