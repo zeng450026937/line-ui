@@ -14,7 +14,9 @@
 
     <line-content>
       <div class="content-nav">
-        <line-list lines="full" style="width: 220px;">
+        <line-list lines="inset" style="width: 220px;">
+          <line-list-header>COMPONENTS</line-list-header>
+
           <template v-for="component in components">
             <line-item button :key="component.name" @click="$router.push(component.path)">
               <line-label>{{ component.name }}</line-label>
@@ -44,7 +46,7 @@
 
     </line-content>
 
-    <line-footer>
+    <line-footer v-if="false">
       <div>
         <div>©2019 Skyline Terms Privacy</div>
       </div>

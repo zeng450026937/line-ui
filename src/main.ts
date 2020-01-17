@@ -2,6 +2,7 @@
 import { VueConstructor } from 'vue';
 
 import '@/style/skyline.bundle.scss';
+import '@/themes/skyline.globals.scss';
 import '@/themes/skyline.globals.ios.scss';
 
 import { ActionGroup, Action } from '@/components/action';
@@ -32,6 +33,7 @@ import { Item } from '@/components/item';
 import { ItemDivider } from '@/components/item-divider';
 import { Label } from '@/components/label';
 import { List } from '@/components/list';
+import { ListHeader } from '@/components/list-header';
 import { ListItem, ListView } from '@/components/list-view';
 import { Loading } from '@/components/loading';
 import { Note } from '@/components/note';
@@ -103,6 +105,7 @@ const install = (Vue: VueConstructor) => {
   Vue.use(ItemDivider);
   Vue.use(Label);
   Vue.use(List);
+  Vue.use(ListHeader);
   Vue.use(ListItem);
   Vue.use(ListView);
   Vue.use(Loading);
@@ -198,6 +201,7 @@ export default {
   ItemDivider,
   Label,
   List,
+  ListHeader,
   ListItem,
   ListView,
   Loading,

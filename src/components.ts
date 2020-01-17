@@ -28,6 +28,7 @@ import(/* webpackChunkName: "item" */ '@/components/item');
 import(/* webpackChunkName: "item-divider" */ '@/components/item-divider');
 import(/* webpackChunkName: "label" */ '@/components/label');
 import(/* webpackChunkName: "list" */ '@/components/list');
+import(/* webpackChunkName: "list-header" */ '@/components/list-header');
 import(/* webpackChunkName: "list-view" */ '@/components/list-view');
 import(/* webpackChunkName: "loading" */ '@/components/loading');
 import(/* webpackChunkName: "note" */ '@/components/note');

@@ -9,7 +9,9 @@ const [createComponent, bem] = createNamespace('label');
 export default createComponent({
   mixins : [useColor()],
 
-  inject : ['Item'],
+  inject : {
+    Item : { default: undefined },
+  },
 
   props : {
     // 'fixed' | 'stacked' | 'floating' | undefined
