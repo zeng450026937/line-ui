@@ -1,5 +1,5 @@
-import { convertToUnit } from '@/utils/helpers';
 import { createNamespace } from '@/utils/namespace';
+import { createColorClasses } from '@/mixins/use-color';
 import '@/iconfont/material-icons.scss';
 import '@/components/icon/font-icon.scss';
 
@@ -17,28 +17,23 @@ export default createComponent({
   props : {
     name   : String,
     source : String,
-    width  : {
-      type    : [Number, String],
-      default : 24,
-    },
-    height : {
-      type    : [Number, String],
-      default : 24,
-    },
-    color : String,
+    size   : String,
+    color  : String,
   },
 
   render(h, { props, data, slots }) {
-    const text = props.name || getDefaultText(slots);
-    const size = props.height || props.width;
+    const { name, size, color } = props;
+    const text = name || getDefaultText(slots);
     return (
       <i
-        class={[bem(), 'material-icons']}
-        style={{
-          'aria-label'     : text,
-          'vertical-align' : 'middle',
-          'font-size'      : convertToUnit(size),
-        }}
+        class={[
+          'line-icon',
+          'material-icons',
+          bem({ [`${ size }`]: !!size }),
+          createColorClasses(color),
+        ]}
+        aria-hidden={!data.attrs!['aria-label']}
+        aria-label={data.attrs!['aria-label'] || text}
         {...data}
       >
         {text}

@@ -1,3 +1,19 @@
+@import "../../themes/skyline.globals";
+
 .line-font-icon {
+  font-size: 24px;
+
   user-select: none;
+  
+  &--small {
+    font-size: 18px;
+  }
+  
+  &--large {
+    font-size: 32px;
+  }
+
+  &.line-color {
+    color: current-color(base);
+  }
 }
