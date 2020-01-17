@@ -8,13 +8,13 @@
 // Creates padding and margin attributes to be used on
 // any element
 
-$padding: var(--ion-padding, 16px);
-$margin: var(--ion-margin, 16px);
+$padding: var(--line-padding, 16px);
+$margin: var(--line-margin, 16px);
 
 // Padding
 // --------------------------------------------------
 
-.ion-no-padding {
+.line-no-padding {
   --padding-start: 0;
   --padding-end: 0;
   --padding-top: 0;
@@ -23,7 +23,7 @@ $margin: var(--ion-margin, 16px);
   @include padding(0);
 }
 
-.ion-padding {
+.line-padding {
   --padding-start: #{$padding};
   --padding-end: #{$padding};
   --padding-top: #{$padding};
@@ -32,38 +32,38 @@ $margin: var(--ion-margin, 16px);
   @include padding($padding);
 }
 
-.ion-padding-top {
+.line-padding-top {
   --padding-top: #{$padding};
 
   @include padding($padding, null, null, null);
 }
 
-.ion-padding-start {
+.line-padding-start {
   --padding-start: #{$padding};
 
   @include padding-horizontal($padding, null);
 }
 
-.ion-padding-end {
+.line-padding-end {
   --padding-end: #{$padding};
 
   @include padding-horizontal(null, $padding);
 }
 
-.ion-padding-bottom {
+.line-padding-bottom {
   --padding-bottom: #{$padding};
 
   @include padding(null, null, $padding, null);
 }
 
-.ion-padding-vertical {
+.line-padding-vertical {
   --padding-top: #{$padding};
   --padding-bottom: #{$padding};
 
   @include padding($padding, null, $padding, null);
 }
 
-.ion-padding-horizontal {
+.line-padding-horizontal {
   --padding-start: #{$padding};
   --padding-end: #{$padding};
 
@@ -74,7 +74,7 @@ $margin: var(--ion-margin, 16px);
 // Margin
 // --------------------------------------------------
 
-.ion-no-margin {
+.line-no-margin {
   --margin-start: 0;
   --margin-end: 0;
   --margin-top: 0;
@@ -83,7 +83,7 @@ $margin: var(--ion-margin, 16px);
   @include margin(0);
 }
 
-.ion-margin {
+.line-margin {
   --margin-start: #{$margin};
   --margin-end: #{$margin};
   --margin-top: #{$margin};
@@ -92,38 +92,38 @@ $margin: var(--ion-margin, 16px);
   @include margin($margin);
 }
 
-.ion-margin-top {
+.line-margin-top {
   --margin-top: #{$margin};
 
   @include margin($margin, null, null, null);
 }
 
-.ion-margin-start {
+.line-margin-start {
   --margin-start: #{$margin};
 
   @include margin-horizontal($margin, null);
 }
 
-.ion-margin-end {
+.line-margin-end {
   --margin-end: #{$margin};
 
   @include margin-horizontal(null, $margin);
 }
 
-.ion-margin-bottom {
+.line-margin-bottom {
   --margin-bottom: #{$margin};
 
   @include margin(null, null, $margin, null);
 }
 
-.ion-margin-vertical {
+.line-margin-vertical {
   --margin-top: #{$margin};
   --margin-bottom: #{$margin};
 
   @include margin($margin, null, $margin, null);
 }
 
-.ion-margin-horizontal {
+.line-margin-horizontal {
   --margin-start: #{$margin};
   --margin-end: #{$margin};
 

@@ -64,11 +64,6 @@ import Vue from 'vue';
 export default Vue.extend({
   name : 'line-home',
 
-  watch : {
-    $route(val) {
-      console.log(val);
-    },
-  },
 });
 </script>
 
@@ -95,6 +90,8 @@ export default Vue.extend({
 
 .demo-wrapper {
   position: relative;
+
+  min-width: 500px;
 
   margin-bottom: 3rem;
   margin-left: auto;

@@ -11,6 +11,7 @@ export default createComponent({
     return (
       <div
         class={bem()}
+        {...ctx.data}
       >
         {ctx.slots()}
       </div>
