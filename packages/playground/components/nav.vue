@@ -1,5 +1,5 @@
 <template>
-  <div class="content-nav">
+  <div class="nav-wrapper">
     <line-list lines="inset">
       <line-item>
         <line-button>line-button</line-button>
@@ -26,26 +26,15 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { Button } from '@/components/button';
-import { List } from '@/components/list';
-import { Item } from '@/components/item';
-import { Label } from '@/components/label';
-import { Note } from '@/components/note';
-
-Vue.use(Button);
-Vue.use(List);
-Vue.use(Item);
-Vue.use(Label);
-Vue.use(Note);
 
 export default Vue.extend({
-  name : 'content-nav',
+  name : 'line-nav',
 });
 </script>
 
 <style lang="scss">
 
-.content-nav {
+.nav-wrapper {
   position: absolute;
 
   top: 0;

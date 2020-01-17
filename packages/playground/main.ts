@@ -1,12 +1,12 @@
-import '@/style/skyline.bundle.scss';
-import '@/themes/skyline.globals.scss';
-import '@/themes/skyline.globals.ios.scss';
-
 import Vue from 'vue';
-import App from './App.vue';
+import Skyline from '@/main';
+import App from './app.vue';
+import router from './router';
 
+Vue.use(Skyline);
 Vue.config.productionTip = false;
 
 new Vue({
+  router,
   render : h => h(App),
 }).$mount('#app');
