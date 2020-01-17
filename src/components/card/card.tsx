@@ -51,8 +51,8 @@ export default createComponent({
         class={[
           bem(),
           {
-            'card-disabled'   : disabled,
-            'ion-activatable' : clickable,
+            'card-disabled'    : disabled,
+            'line-activatable' : clickable,
           },
         ]}
       >

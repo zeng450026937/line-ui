@@ -142,9 +142,10 @@ export default createComponent({
             'line-focusable'          : true,
           },
         ]}
+        on={this.$listeners}
       >
         <TagType
-          {...attrs}
+          {...{ attrs }}
           class="item-native"
           disabled={disabled}
           vRipple={ripple}

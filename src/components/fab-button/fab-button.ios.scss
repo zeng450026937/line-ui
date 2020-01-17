@@ -18,7 +18,7 @@
 .line-fab-button.line-activated {
   --box-shadow: #{$fab-ios-box-shadow-activated};
   --transform: #{$fab-ios-transform};
-  --transition: #{$fab-ios-transitline-activated};
+  --transition: #{$fab-ios-transition-activated};
 }
 
 ::slotted(line-icon),

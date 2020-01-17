@@ -62,6 +62,7 @@ ${ Object.keys(components).map(key => {
 import { VueConstructor } from 'vue';
 
 import '@/style/skyline.bundle.scss';
+import '@/themes/skyline.globals.scss';
 import '@/themes/skyline.globals.ios.scss';
 
 ${ Object.entries(components).map(([key, value]) => {
