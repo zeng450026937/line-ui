@@ -50,7 +50,7 @@ export default createComponent({
   },
 
   render() {
-    const { position } = this;
+    const { position = 'bottom' } = this;
     return (
       <div
         v-show={this.visible}

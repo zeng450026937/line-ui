@@ -247,20 +247,20 @@
 
   // Button Icons
   // --------------------------------------------------
-  .line-font-icon {
+  .line-icon {
     font-size: 1.4em;
     pointer-events: none;
   }
 
-  ::slotted(ion-icon[slot="start"]) {
+  & .slotted.line-icon.slot-start {
     @include margin(0, .3em, 0, -.3em);
   }
 
-  ::slotted(ion-icon[slot="end"]) {
+  & .slotted.line-icon.slot-end {
     @include margin(0, -.2em, 0, .3em);
   }
 
-  ::slotted(ion-icon[slot="icon-only"]) {
+  & .slotted.line-icon.slot-icon-only {
     font-size: 1.8em;
   }
 

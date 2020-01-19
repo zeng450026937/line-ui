@@ -169,6 +169,6 @@
 // Content: Fixed
 // --------------------------------------------------
 
-::slotted([slot="fixed"]) {
+.line-content .slotted.slot-fixed {
   position: absolute;
 }

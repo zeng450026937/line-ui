@@ -96,8 +96,11 @@ export default createComponent({
           disabled={disabled}
           class={bem('content', { vertical })}
         >
+          {this.slots('icon-only')}
+          {this.slots('start')}
           {this.slots('indicator')}
           {this.slots() || text}
+          {this.slots('end')}
         </TagType>
       </div>
     );

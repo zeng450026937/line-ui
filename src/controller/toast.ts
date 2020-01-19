@@ -1,12 +1,12 @@
-import { Tooltip } from '@/components/tooltip';
+import { Toast } from '@/components/toast';
 import { createFactory } from '@/controller/factory';
 import { popupContext, PopupInterface } from '@/utils/popup';
 
-export class TooltipController {
+export class ToastController {
   private factory: ReturnType<typeof createFactory>;
 
   constructor() {
-    this.factory = createFactory(Tooltip);
+    this.factory = createFactory(Toast);
   }
 
   create(props?: any, destroyWhenClose?: boolean): PopupInterface {

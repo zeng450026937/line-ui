@@ -1,18 +1,18 @@
 import { createNamespace } from '@/utils/namespace';
-import '@/components/thumbnail/thumbnail.scss';
+import '@/components/row/row.scss';
 
-const [createComponent, bem] = createNamespace('thumbnail');
+const [createComponent, bem] = createNamespace('row');
 
 export default createComponent({
   functional : true,
 
-  render(h, ctx) {
+  render(h, { props, data, slots }) {
     return (
       <div
         class={bem()}
-        {...ctx.data}
+        {...data}
       >
-        {ctx.slots()}
+        {slots()}
       </div>
     );
   },

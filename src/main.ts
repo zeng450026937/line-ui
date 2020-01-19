@@ -17,6 +17,7 @@ import { CardContent, CardHeader, CardSubtitle, CardTitle, Card } from '@/compon
 import { CellGroup, Cell } from '@/components/cell';
 import { CheckBoxGroup, CheckBox, CheckIndicator } from '@/components/check-box';
 import { Chip } from '@/components/chip';
+import { Col } from '@/components/col';
 import { CollapseItem, Collapse } from '@/components/collapse';
 import { Content } from '@/components/content';
 import { Dialog } from '@/components/dialog';
@@ -24,6 +25,7 @@ import { Fab } from '@/components/fab';
 import { FabButton } from '@/components/fab-button';
 import { FabGroup } from '@/components/fab-group';
 import { Footer } from '@/components/footer';
+import { Grid } from '@/components/grid';
 import { Header } from '@/components/header';
 import { CheckGroup, CheckItem, Lazy, TreeItem } from '@/components/hoc';
 import { FontIcon, Icon, SvgIcon } from '@/components/icon';
@@ -47,6 +49,7 @@ import { RadioButtonGroup, RadioButton, RadioIndicator } from '@/components/radi
 import { Range } from '@/components/range';
 import { RangeSlider } from '@/components/range-slider';
 import { Refresher } from '@/components/refresher';
+import { Row } from '@/components/row';
 import { Slider } from '@/components/slider';
 import { Spinner } from '@/components/spinner';
 import { Stepper } from '@/components/stepper';
@@ -83,6 +86,7 @@ const install = (Vue: VueConstructor) => {
   Vue.use(CheckBox);
   Vue.use(CheckIndicator);
   Vue.use(Chip);
+  Vue.use(Col);
   Vue.use(CollapseItem);
   Vue.use(Collapse);
   Vue.use(Content);
@@ -91,6 +95,7 @@ const install = (Vue: VueConstructor) => {
   Vue.use(FabButton);
   Vue.use(FabGroup);
   Vue.use(Footer);
+  Vue.use(Grid);
   Vue.use(Header);
   Vue.use(CheckGroup);
   Vue.use(CheckItem);
@@ -124,6 +129,7 @@ const install = (Vue: VueConstructor) => {
   Vue.use(Range);
   Vue.use(RangeSlider);
   Vue.use(Refresher);
+  Vue.use(Row);
   Vue.use(Slider);
   Vue.use(Spinner);
   Vue.use(Stepper);
@@ -179,6 +185,7 @@ export default {
   CheckBox,
   CheckIndicator,
   Chip,
+  Col,
   CollapseItem,
   Collapse,
   Content,
@@ -187,6 +194,7 @@ export default {
   FabButton,
   FabGroup,
   Footer,
+  Grid,
   Header,
   CheckGroup,
   CheckItem,
@@ -220,6 +228,7 @@ export default {
   Range,
   RangeSlider,
   Refresher,
+  Row,
   Slider,
   Spinner,
   Stepper,

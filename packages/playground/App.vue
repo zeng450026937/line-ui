@@ -12,10 +12,10 @@
       </line-toolbar>
     </line-header>
 
-    <line-content>
+    <line-content class="line-padding">
       <div class="content-nav">
         <line-list lines="inset" style="width: 220px;">
-          <line-list-header>COMPONENTS</line-list-header>
+          <line-list-header>Components</line-list-header>
 
           <template v-for="component in components">
             <line-item button :key="component.name" @click="$router.push(component.path)">
