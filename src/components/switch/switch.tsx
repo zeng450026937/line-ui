@@ -2,7 +2,7 @@
 import { createColorClasses, useColor } from '@/mixins/use-color';
 import { useCheckItem } from '@/mixins/use-check-item';
 import { createNamespace } from '@/utils/namespace';
-import { Gesture, GestureDetail } from '@/utils/gesture';
+import { createGesture, Gesture, GestureDetail } from '@/utils/gesture';
 
 import '@/components/switch/switch.ios.scss';
 import '@/components/switch/switch.scss';
@@ -70,7 +70,7 @@ export default createComponent({
   },
 
   async mounted() {
-    this.gesture = (await import('@/utils/gesture')).createGesture({
+    this.gesture = createGesture({
       el              : this.$el,
       gestureName     : 'toggle',
       gesturePriority : 100,

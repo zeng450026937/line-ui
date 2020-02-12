@@ -1,21 +1,15 @@
-import { getSkylineMode } from '@/utils/config';
 import { createNamespace } from '@/utils/namespace';
-import { GestureDetail } from '@/utils/gesture';
-import { createColorClasses } from '@/mixins/use-color';
-
-// TODO
-import '@/style/skyline.bundle.scss';
+import { createGesture, GestureDetail } from '@/utils/gesture';
+import { useColor } from '@/mixins/use-color';
 
 import '@/components/range/range.scss';
 import '@/components/range/range.ios.scss';
 
 import { Rect } from '@/utils/layout';
-// import { Color } from '@/types/interface';
 
-interface RangeValue {
-  lower?: number,
-  upper?: number,
-}
+export type KnobName = 'A' | 'B' | undefined;
+
+export type RangeValue = number | {lower: number, upper: number};
 
 interface RangeKnob {
   knob: string;
@@ -31,8 +25,6 @@ interface RangeKnob {
 }
 
 const [createComponent, bem] = createNamespace('range');
-let pressedKnob: 'A' | 'B' | undefined;
-let rect: Rect;
 
 function clamp(value: number, min: number, max: number): number {
   if (value < min) value = min;
@@ -119,6 +111,11 @@ const valueToRatio = (value: number, min: number, max: number): number => {
 };
 
 export default createComponent({
+  mixins : [useColor()],
+
+  inject : {
+    Item : { default: undefined },
+  },
 
   props : {
     text  : String,
@@ -169,14 +166,18 @@ export default createComponent({
   },
 
   data() {
+    let pressedKnob: KnobName;
+    let rangeSlider: HTMLElement | undefined;
+    let rect!: Rect;
+
     return {
-      rangeSlider : null,
-      noUpdate    : false,
-      rect,
-      hasFocus    : false,
-      ratioA      : 0,
-      ratioB      : 0,
+      hasFocus : false,
+      noUpdate : false,
       pressedKnob,
+      rangeSlider,
+      rect,
+      ratioA   : 0,
+      ratioB   : 0,
     };
   },
 
@@ -204,17 +205,21 @@ export default createComponent({
     },
   },
 
+  watch : {
+    disabled() {},
+  },
+
   created() {
     this.updateRatio();
     // this.debounceChanged();
-    // this.disabledChanged();
+    this.disabledChanged();
   },
 
   async mounted() {
     const { rangeSlider } = this.$refs;
 
     if (rangeSlider) {
-      this.gesture = (await import('@/utils/gesture')).createGesture({
+      this.gesture = createGesture({
         el              : rangeSlider as Element,
         gestureName     : 'range',
         gesturePriority : 100,
@@ -228,6 +233,36 @@ export default createComponent({
   },
 
   methods : {
+    disabledChanged() {
+      if (this.gesture) {
+        this.gesture.enable(!this.disabled);
+      }
+      this.emitStyle();
+    },
+    valueChanged(value: RangeValue) {
+      if (!this.noUpdate) {
+        this.updateRatio();
+      }
+
+      value = this.ensureValueInBounds(value);
+
+      this.$emit('change', { value });
+    },
+
+    clampBounds(value: any): number {
+      return clamp(this.min, value, this.max);
+    },
+
+    ensureValueInBounds(value: any) {
+      if (this.dualKnobs) {
+        return {
+          lower : this.clampBounds(value.lower),
+          upper : this.clampBounds(value.upper),
+        };
+      }
+      return this.clampBounds(value);
+    },
+
     handleKeyboard(knob: string, isIncrease: boolean): void {
       let { step } = this;
       step = step > 0 ? step : 1;
@@ -260,12 +295,16 @@ export default createComponent({
       return (value as number);
     },
 
-    // emitStyle() {
-    //   this.ionStyle.emit({
-    //     interactive            : true,
-    //     'interactive-disabled' : this.disabled,
-    //   });
-    // },
+    emitStyle() {
+      if (!this.Item) return;
+      this.Item.itemStyle(
+        'range',
+        {
+          interactive            : true,
+          'interactive-disabled' : this.disabled,
+        },
+      );
+    },
 
     onStart(detail: GestureDetail) {
       const { rangeSlider } = this.$refs;
@@ -283,7 +322,7 @@ export default createComponent({
         ? 'A'
         : 'B';
 
-      // this.setFocus(this.pressedKnob);
+      this.setFocus(this.pressedKnob);
 
       // update the active knob's position
       this.update(currentX);
@@ -302,7 +341,7 @@ export default createComponent({
       // figure out where the pointer is currently at
       // update the knob being interacted with
       const { rect } = this;
-      let ratio = clamp(0, (currentX - rect.left) / rect!.width, 1);
+      let ratio = clamp(0, (currentX - rect!.left) / rect!.width, 1);
       if (document.dir === 'rtl') {
         ratio = 1 - ratio;
       }
@@ -354,20 +393,19 @@ export default createComponent({
       this.noUpdate = false;
     },
 
-    // setFocus(knob: string) {
-    //   if (this.el.shadowRoot) {
-    //     const knobEl = this.el.
-    // shadowRoot.querySelector(knob === 'A' ? '.range-knob-a' : '.range-knob-b') as HTMLElement | undefined;
-    //     if (knobEl) {
-    //       knobEl.focus();
-    //     }
-    //   }
-    // },
+    setFocus(knob: string) {
+      const knobEl = this.el.querySelector(
+        knob === 'A' ? '.range-knob-a' : '.range-knob-b',
+      ) as HTMLElement | undefined;
+      if (knobEl) {
+        knobEl.focus();
+      }
+    },
 
     onBlur() {
       if (this.hasFocus) {
         this.hasFocus = false;
-        this.ionBlur.emit();
+        // this.ionBlur.emit();
         this.emitStyle();
       }
     },
@@ -375,7 +413,7 @@ export default createComponent({
     onFocus() {
       if (!this.hasFocus) {
         this.hasFocus = true;
-        this.ionFocus.emit();
+        // this.ionFocus.emit();
         this.emitStyle();
       }
     },
@@ -406,7 +444,8 @@ export default createComponent({
       [end]   : barEnd,
     };
 
-    const ticks = [];
+    const ticks: {ratio: number; active: boolean;}[] = [];
+
     if (this.snaps && this.ticks) {
       for (let value = min; value <= max; value += step) {
         const ratio = valueToRatio(value, min, max);
@@ -424,14 +463,11 @@ export default createComponent({
     // renderHiddenInput(true, el, this.name, JSON.stringify(this.getValue()), disabled);
     return (
       <div
-        class={[
-          bem({
-            disabled,
-            pressed   : pressedKnob !== undefined,
-            'has-pin' : pin,
-          }),
-          { ...createColorClasses(color) },
-        ]}
+        class={bem({
+          disabled,
+          pressed   : pressedKnob !== undefined,
+          'has-pin' : pin,
+        })}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
       >
