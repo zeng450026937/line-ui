@@ -1,6 +1,8 @@
 import Vue from 'vue';
 import Router, { RouteConfig } from 'vue-router';
 import Home from './home.vue';
+import DeviceHome from './device/home.vue';
+
 import Gallery from './gallery.vue';
 
 Vue.use(Router);
@@ -35,6 +37,7 @@ function useComponentRoute(): RouteConfig[] {
 }
 
 export const components = useComponentRoute();
+export const deviceComponents = useComponentRoute();
 
 export const routes: RouteConfig[] = [
   {
@@ -42,6 +45,16 @@ export const routes: RouteConfig[] = [
     name      : 'home',
     component : Home,
     children  : components,
+  },
+  {
+    path      : '/mobile/home',
+    name      : 'mobile',
+    component : DeviceHome,
+    children  : deviceComponents.map(component => {
+      component.path = `/mobile/home/${ component.name }`;
+      component.name = `device_${ component.name }`;
+      return component;
+    }),
   },
 ];
 
