@@ -18,7 +18,11 @@ const controller = new ToastController();
 export default Vue.extend({
   methods : {
     open() {
-      // controller.create().open();
+      controller.create({
+        color    : 'dark',
+        duration : 2000,
+        message  : 'Paired successfully',
+      }).open();
     },
   },
 });

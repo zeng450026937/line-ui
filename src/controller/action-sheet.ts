@@ -1,12 +1,12 @@
-import { Alert } from '@/components/alert';
+import { ActionSheet } from '@/components/action-sheet';
 import { createFactory } from '@/controller/factory';
 import { popupContext, PopupInterface } from '@/utils/popup';
 
-export class AlertController {
+export class ActionSheetController {
   private factory: ReturnType<typeof createFactory>;
 
   constructor() {
-    this.factory = createFactory(Alert);
+    this.factory = createFactory(ActionSheet);
   }
 
   create(props?: any, destroyWhenClose?: boolean): PopupInterface {

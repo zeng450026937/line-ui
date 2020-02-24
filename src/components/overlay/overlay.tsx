@@ -44,7 +44,7 @@ export default createComponent({
         ev.stopPropagation();
       }
       if (this.tappable) {
-        this.$emit('tap');
+        this.$emit('tap', ev);
       }
     },
   },
