@@ -1,3 +1,5 @@
+import { Side } from '@/types/interface';
+
 export const isDev = process.env.NODE_ENV === 'development';
 export const wait = (duration: number = 0) => new Promise(resolve => setTimeout(resolve, duration));
 
@@ -24,6 +26,20 @@ export function keys<T extends Object>(o: T) {
   return Object.keys(o) as (keyof T)[];
 }
 
+export const clamp = (min: number, n: number, max: number) => {
+  return Math.max(min, Math.min(n, max));
+};
+
+export const assert = (actual: any, reason: string) => {
+  if (!actual) {
+    const message = `ASSERT: ${ reason }`;
+    console.error(message);
+    debugger; // tslint:disable-line
+    throw new Error(message);
+  }
+};
+
+
 export const now = (ev: UIEvent) => ev.timeStamp || Date.now();
 
 export const pointerCoord = (ev: any): { x: number, y: number } => {
@@ -40,6 +56,23 @@ export const pointerCoord = (ev: any): { x: number, y: number } => {
     }
   }
   return { x: 0, y: 0 };
+};
+
+/**
+ * @hidden
+ * Given a side, return if it should be on the end
+ * based on the value of dir
+ * @param side the side
+ * @param isRTL whether the application dir is rtl
+ */
+export const isEndSide = (side: Side): boolean => {
+  const isRTL = document.dir === 'rtl';
+  switch (side) {
+    case 'start': return isRTL;
+    case 'end': return !isRTL;
+    default:
+      throw new Error(`"${ side }" is not a valid value for [side]. Use "start" or "end" instead.`);
+  }
 };
 
 export const debounce = (func: (...args: any[]) => void, wait = 0) => {

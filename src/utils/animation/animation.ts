@@ -20,7 +20,7 @@ interface AnimationInternal extends Animation {
   /**
    * Updates any existing animations.
    */
-  update(deep: boolean): Animation;
+  update(deep: boolean, toggleAnimationName: boolean, step?: number): Animation;
 
   animationFinish(): void;
 }
@@ -621,7 +621,7 @@ export const createAnimation = (): Animation => {
     }
   };
 
-  const updateWebAnimation = () => {
+  const updateWebAnimation = (step?: number) => {
     webAnimations.forEach(animation => {
       animation.effect.updateTiming({
         delay: getDelay(),
@@ -632,15 +632,19 @@ export const createAnimation = (): Animation => {
         direction: getDirection()
       });
     });
+
+    if (step !== undefined) {
+      setAnimationStep(step);
+    }
   };
 
-  const updateCSSAnimation = (toggleAnimationName = true) => {
+  const updateCSSAnimation = (toggleAnimationName = true, step?: number) => {
     raf(() => {
       elements.forEach(element => {
         setStyleProperty(element, 'animation-name', keyframeName || null);
         setStyleProperty(element, 'animation-duration', `${getDuration()}ms`);
         setStyleProperty(element, 'animation-timing-function', getEasing());
-        setStyleProperty(element, 'animation-delay', `${getDelay()}ms`);
+        setStyleProperty(element, 'animation-delay', (step !== undefined) ? `-${step! * getDuration()}ms` : `${getDelay()}ms`);
         setStyleProperty(element, 'animation-fill-mode', getFill() || null);
         setStyleProperty(element, 'animation-direction', getDirection() || null);
 
@@ -661,25 +665,25 @@ export const createAnimation = (): Animation => {
     });
   };
 
-  const update = (deep = false, toggleAnimationName = true) => {
+  const update = (deep = false, toggleAnimationName = true, step?: number) => {
     if (deep) {
       childAnimations.forEach(animation => {
-        animation.update(deep);
+        animation.update(deep, toggleAnimationName, step);
       });
     }
 
     if (supportsWebAnimations) {
-      updateWebAnimation();
+      updateWebAnimation(step);
     } else {
-      updateCSSAnimation(toggleAnimationName);
+      updateCSSAnimation(toggleAnimationName, step);
     }
 
     return ani;
   };
 
-  const progressStart = (forceLinearEasing = false) => {
+  const progressStart = (forceLinearEasing = false, step?: number) => {
     childAnimations.forEach(animation => {
-      animation.progressStart(forceLinearEasing);
+      animation.progressStart(forceLinearEasing, step);
     });
 
     pauseAnimation();
@@ -688,8 +692,7 @@ export const createAnimation = (): Animation => {
     if (!initialized) {
       initializeAnimation();
     } else {
-      update();
-      setAnimationStep(0);
+      update(false, true, step);
     }
 
     return ani;
@@ -870,6 +873,7 @@ export const createAnimation = (): Animation => {
   const resetAnimation = () => {
     if (supportsWebAnimations) {
       setAnimationStep(0);
+      updateWebAnimation();
     } else {
       updateCSSAnimation();
     }

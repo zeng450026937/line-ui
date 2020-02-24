@@ -1,7 +1,7 @@
 @import "../themes/skyline.skip-warns.scss";
 @import "../themes/skyline.globals";
-// @import "../components/menu/menu.ios.vars";
-// @import "../components/menu/menu.md.vars";
+@import "@/components/menu/menu.ios.vars";
+@import "@/components/menu/menu.md.vars";
 
 // Ionic Font Family
 // --------------------------------------------------
@@ -143,7 +143,6 @@ html.plt-ios.plt-hybrid, html.plt-ios.plt-pwa {
 // Menu Styles
 // TODO: Find a better long term solution for this
 // --------------------------------------------------
-/*
 .menu-content {
   @include transform(translate3d(0, 0, 0));
 }
@@ -176,4 +175,3 @@ html.plt-ios.plt-hybrid, html.plt-ios.plt-pwa {
 .md .menu-content-push {
   box-shadow: $menu-md-box-shadow;
 }
-*/
