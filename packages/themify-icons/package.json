@@ -1,0 +1,14 @@
+{
+  "name": "@skyline/themify-icons",
+  "version": "1.0.0-alpha",
+  "description": "@skyline/themify-icons",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "keywords": [
+    "skyline"
+  ],
+  "author": "Yealink Inc",
+  "license": "MIT"
+}
