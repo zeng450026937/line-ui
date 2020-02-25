@@ -1,7 +1,6 @@
-import { Icon } from '../icon';
 import { isObject } from '@/utils/helpers';
 import { createNamespace } from '@/utils/namespace';
-import '@/components/page-indicator/page-indicator.scss';
+import { Icon } from '@/components/icon';
 
 const [createComponent, bem] = createNamespace('page-indicator');
 

@@ -1,0 +1,17 @@
+{
+  "name": "@skyline/parallel",
+  "version": "1.0.0-alpha",
+  "description": "@skyline/parallel",
+  "main": "index.js",
+  "module": "dist/parallel.esm-bundler.js",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "types": "dist/parallel.d.ts",
+  "keywords": [
+    "skyline"
+  ],
+  "author": "Yealink Inc",
+  "license": "MIT"
+}

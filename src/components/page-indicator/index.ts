@@ -1,4 +1,8 @@
-/* eslint-disable sort-imports, object-curly-newline */
+// Auto Generated
+// This file is auto generated, do not modify directly.
+
 import PageIndicator from '@/components/page-indicator/page-indicator';
 
-export { PageIndicator };
+export {
+  PageIndicator,
+};

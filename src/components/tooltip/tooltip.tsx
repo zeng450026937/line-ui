@@ -5,7 +5,6 @@ import { usePopup } from '@/mixins/use-popup';
 import { usePopupDuration } from '@/mixins/use-popup-duration';
 import { usePopupDelay } from '@/mixins/use-popup-delay';
 import { useTrigger } from '@/mixins/use-trigger';
-import '@/components/tooltip/tooltip.scss';
 import { iosEnterAnimation } from '@/components/tooltip/animations/ios.enter';
 import { iosLeaveAnimation } from '@/components/tooltip/animations/ios.leave';
 import { createDirective } from '@/utils/directive';

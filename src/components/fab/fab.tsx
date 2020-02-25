@@ -3,7 +3,6 @@ import { useModel } from '@/mixins/use-model';
 import { useClickOutside } from '@/mixins/use-click-outside';
 import { isDef } from '@/utils/helpers';
 import { FabGroup } from '@/components/fab-group';
-import '@/components/fab/fab.scss';
 
 const [createComponent, bem] = createNamespace('fab');
 const FAB_SIDES = ['start', 'end', 'top', 'bottom'];

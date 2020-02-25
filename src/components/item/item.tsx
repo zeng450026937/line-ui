@@ -4,8 +4,6 @@ import { useColor } from '@/mixins/use-color';
 import { isDef } from '@/utils/helpers';
 import { Icon } from '@/components/icon';
 import ripple from '@/directives/ripple';
-import '@/components/item/item.scss';
-import '@/components/item/item.ios.scss';
 
 const [createComponent, bem] = createNamespace('item');
 

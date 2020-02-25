@@ -1,12 +1,28 @@
 {
   "name": "@skyline/icons",
-  "version": "1.0.0",
-  "description": "skyline icons",
-  "publishConfig": {
-    "access": "public"
-  },
-  "private": true,
+  "version": "1.0.0-alpha",
+  "description": "@skyline/icons",
+  "main": "index.js",
+  "module": "dist/icons.esm-bundler.js",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "types": "dist/icons.d.ts",
+  "keywords": [
+    "skyline"
+  ],
+  "author": "Yealink Inc",
   "license": "MIT",
-  "dependencies": {
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.12.1",
+    "@mdi/font": "^4.9.95",
+    "@mdi/svg": "^4.9.95",
+    "eva-icons": "^1.1.2",
+    "fs-extra": "^8.1.0",
+    "glob": "^7.1.6",
+    "ionicons": "4.6.3",
+    "material-design-icons": "^3.0.1",
+    "themify-icons": "https://github.com/lykmapipo/themify-icons"
   }
 }

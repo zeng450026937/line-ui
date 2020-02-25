@@ -1,35 +1,33 @@
-@import "./skyline.deprecation";
-
 // Gets the active color's css variable from a variation. Alpha is optional.
 // --------------------------------------------------------------------------------------------
 // Example usage:
-// current-color(base) => var(--ion-color-base)
-// current-color(contrast, 0.1) => rgba(var(--ion-color-contrast-rgb), 0.1)
+// current-color(base) => var(--line-color-base)
+// current-color(contrast, 0.1) => rgba(var(--line-color-contrast-rgb), 0.1)
 // --------------------------------------------------------------------------------------------
 @function current-color($variation, $alpha: null) {
   @if $alpha == null {
-    @return var(--ion-color-#{$variation});
+    @return var(--line-color-#{$variation});
   } 
   
   @else {
-    @return rgba(var(--ion-color-#{$variation}-rgb), #{$alpha});
+    @return rgba(var(--line-color-#{$variation}-rgb), #{$alpha});
   }
 }
 
 // Gets the specific color's css variable from the name and variation. Alpha/rgb are optional.
 // --------------------------------------------------------------------------------------------
 // Example usage:
-// ion-color(primary, base) => var(--ion-color-primary, #3880ff)
-// ion-color(secondary, contrast) => var(--ion-color-secondary-contrast)
-// ion-color(primary, base, 0.5) => rgba(var(--ion-color-primary-rgb, 56, 128, 255), 0.5)
+// line-color(primary, base) => var(--line-color-primary, #3880ff)
+// line-color(secondary, contrast) => var(--line-color-secondary-contrast)
+// line-color(primary, base, 0.5) => rgba(var(--line-color-primary-rgb, 56, 128, 255), 0.5)
 // --------------------------------------------------------------------------------------------
-@function ion-color($name, $variation, $alpha: null, $rgb: null) {
+@function line-color($name, $variation, $alpha: null, $rgb: null) {
   $values: map-get($colors, $name);
   $value: map-get($values, $variation);
-  $variable: --ion-color-#{$name}-#{$variation};
+  $variable: --line-color-#{$name}-#{$variation};
 
   @if ($variation == base) {
-    $variable: --ion-color-#{$name};
+    $variable: --line-color-#{$name};
   }
 
   @if ($alpha) {

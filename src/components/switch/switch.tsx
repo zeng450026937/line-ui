@@ -4,9 +4,6 @@ import { useCheckItem } from '@/mixins/use-check-item';
 import { createNamespace } from '@/utils/namespace';
 import { createGesture, Gesture, GestureDetail } from '@/utils/gesture';
 
-import '@/components/switch/switch.ios.scss';
-import '@/components/switch/switch.scss';
-
 const NAMESPACE = 'SwitchGroup';
 const [createComponent, bem] = createNamespace('switch');
 

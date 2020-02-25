@@ -1,4 +1,3 @@
-
 // Global Utility Functions
 @import "./skyline.functions.string";
 
@@ -14,7 +13,7 @@
 
 // Default General
 // --------------------------------------------------
-$font-family-base:                  var(--ion-font-family, inherit) !default;
+$font-family-base:                  var(--line-font-family, inherit) !default;
 
 // Global app direction
 $app-direction: null !default;

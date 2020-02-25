@@ -1,24 +1,24 @@
 import Vue, { VNode } from 'vue';
 
 export type Payload = {
-  from?: string
-  to: string
-  order: number
-  slot: () => VNode
+  from?: string;
+  to: string;
+  order: number;
+  slot?: () => VNode;
 }
 
 export interface Portal {
-  id: string
-  payloads: { [key: string]: Payload }
-  remote: Portal | null
-  addOrUpdatePayload: (remoteId: string, payload: Payload) => void
-  removePayload: (remoteId: string) => void
-  transfer: (payload: Payload) => void
-  close: () => void
+  id: string;
+  payloads: { [key: string]: Payload };
+  remote: Portal | null;
+  addOrUpdatePayload: (remoteId: string, payload: Payload) => void;
+  removePayload: (remoteId: string) => void;
+  transfer: (payload: Payload) => void;
+  close: () => void;
 }
 
 type PortalData = {
-  portals: { [key: string]: Portal }
+  portals: { [key: string]: Portal };
 }
 
 export const PortalContext = Vue.extend({

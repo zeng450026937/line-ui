@@ -1,4 +1,7 @@
-/* eslint-disable global-require, import/no-dynamic-require, no-use-before-define, operator-linebreak */
+/* eslint-disable
+@typescript-eslint/camelcase,
+operator-linebreak
+*/
 import fs from 'fs';
 import path from 'path';
 import ts from 'rollup-plugin-typescript2';
@@ -6,15 +9,21 @@ import replace from '@rollup/plugin-replace';
 import json from '@rollup/plugin-json';
 import noderesolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import babel from 'rollup-plugin-babel';
+// import buble from '@rollup/plugin-buble';
+import alias from '@rollup/plugin-alias';
 
 if (!process.env.TARGET) {
-  throw new Error('TARGET package must be specified via --environment flag.');
+  console.warn('TARGET package must be specified via --environment flag.');
+  // throw new Error('TARGET package must be specified via --environment flag.');
 }
 
 const masterVersion = require('./package.json').version;
 
 const packagesDir = path.resolve(__dirname, 'packages');
-const packageDir = path.resolve(packagesDir, process.env.TARGET);
+const packageDir = process.env.TARGET
+  ? path.resolve(packagesDir, process.env.TARGET)
+  : path.resolve(__dirname, '.');
 const name = path.basename(packageDir);
 const resolve = p => path.resolve(packageDir, p);
 const pkg = require(resolve('package.json'));
@@ -77,11 +86,13 @@ function createConfig(format, output, plugins = []) {
     process.exit(1);
   }
 
+  output.sourcemap = !!process.env.SOURCE_MAP;
   output.externalLiveBindings = false;
 
   const isProductionBuild = process.env.__DEV__ === 'false' || /\.prod\.js$/.test(output.file);
   const isGlobalBuild = format === 'global';
   const isRawESMBuild = format === 'esm';
+  const isNodeBuild = format === 'cjs';
   const isBundlerESMBuild = /esm-bundler/.test(format);
   const isRuntimeCompileBuild = /skyline\./.test(output.file);
 
@@ -99,6 +110,7 @@ function createConfig(format, output, plugins = []) {
     cacheRoot        : path.resolve(__dirname, 'node_modules/.rts2_cache'),
     tsconfigOverride : {
       compilerOptions : {
+        sourceMap      : output.sourcemap,
         declaration    : shouldEmitDeclarations,
         declarationMap : shouldEmitDeclarations,
       },
@@ -112,17 +124,30 @@ function createConfig(format, output, plugins = []) {
 
   const entryFile = format === 'esm-bundler-runtime' ? 'src/runtime.ts' : 'src/index.ts';
 
+  const external = isGlobalBuild || isRawESMBuild
+    ? []
+    : knownExternals.concat(Object.keys(pkg.dependencies || []));
+
+  external.push('vue', 'skyline');
+
+  if (isGlobalBuild) {
+    output.globals = { vue: 'Vue', skyline: 'Skyline' };
+  }
+
   return {
-    input    : resolve(entryFile),
+    input   : resolve(entryFile),
     // Global and Browser ESM builds inlines everything so that they can be
     // used alone.
-    external :
-      isGlobalBuild || isRawESMBuild
-        ? []
-        : knownExternals.concat(Object.keys(pkg.dependencies || [])),
+    external,
     plugins : [
+      alias({
+        entries : {
+          '@' : resolve('src'),
+        },
+      }),
       noderesolve({
-        browser : true,
+        browser    : true,
+        extensions : ['.js', '.jsx', '.ts', '.tsx'],
       }),
       commonjs({}),
       json({
@@ -132,10 +157,22 @@ function createConfig(format, output, plugins = []) {
       createReplacePlugin(
         isProductionBuild,
         isBundlerESMBuild,
+        // isBrowserBuild?
         (isGlobalBuild || isRawESMBuild || isBundlerESMBuild)
           && !packageOptions.enableNonBrowserBranches,
         isRuntimeCompileBuild,
+        isNodeBuild,
       ),
+      babel({
+        extensions     : ['.js', '.jsx', '.ts', '.tsx'],
+        exclude        : 'node_modules/**',
+        babelrc        : false,
+        configFile     : path.resolve(__dirname, 'babel.config.js'),
+        runtimeHelpers : true,
+      }),
+      // buble({
+      //   objectAssign : true,
+      // }),
       ...plugins,
     ],
     output,
@@ -152,6 +189,7 @@ function createReplacePlugin(
   isBundlerESMBuild,
   isBrowserBuild,
   isRuntimeCompileBuild,
+  isNodeBuild,
 ) {
   const replacements = {
     __COMMIT__  : `"${ process.env.COMMIT }"`,
@@ -169,10 +207,20 @@ function createReplacePlugin(
     __BUNDLER__          : isBundlerESMBuild,
     // support compile in browser?
     __RUNTIME_COMPILE__  : isRuntimeCompileBuild,
+    // is targeting Node (SSR)?
+    __NODE_JS__          : isNodeBuild,
     // support options?
     // the lean build drops options related code with buildOptions.lean: true
     __FEATURE_OPTIONS__  : !packageOptions.lean && !process.env.LEAN,
     __FEATURE_SUSPENSE__ : true,
+    ...(isProduction && isBrowserBuild
+      ? {
+        'context.onError('        : '/*#__PURE__*/ context.onError(',
+        'emitError('              : '/*#__PURE__*/ emitError(',
+        'createCompilerError('    : '/*#__PURE__*/ createCompilerError(',
+        'createDOMCompilerError(' : '/*#__PURE__*/ createDOMCompilerError(',
+      }
+      : {}),
   };
   // allow inline overrides like
   // __RUNTIME_COMPILE__=true yarn build runtime-core
@@ -201,7 +249,14 @@ function createMinifiedConfig(format) {
     },
     [
       terser({
-        module : /^esm/.test(format),
+        module   : /^esm/.test(format),
+        compress : {
+          ecma         : 2015,
+          pure_getters : true,
+        },
+        output : {
+          comments : false,
+        },
       }),
     ],
   );

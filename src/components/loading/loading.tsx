@@ -3,8 +3,6 @@ import { usePopup } from '@/mixins/use-popup';
 import { usePopupDuration } from '@/mixins/use-popup-duration';
 import { Overlay } from '@/components/overlay';
 import { Spinner } from '@/components/spinner';
-import '@/components/loading/loading.scss';
-import '@/components/loading/loading.ios.scss';
 import { iosEnterAnimation } from '@/components/loading/animations/ios.enter';
 import { iosLeaveAnimation } from '@/components/loading/animations/ios.leave';
 import { mdEnterAnimation } from '@/components/loading/animations/md.enter';

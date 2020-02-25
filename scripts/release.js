@@ -1,13 +1,3 @@
-/*
-eslint-disable
-global-require,
-import/order,
-import/no-dynamic-require,
-no-use-before-define,
-no-await-in-loop,
-operator-linebreak,
-consistent-return,
-*/
 
 const args = require('minimist')(process.argv.slice(2));
 const fs = require('fs');
@@ -26,7 +16,7 @@ const packages = fs
   .readdirSync(path.resolve(__dirname, '../packages'))
   .filter(p => !p.endsWith('.ts') && !p.startsWith('.'));
 
-const skippedPackages = ['server-renderer'];
+const skippedPackages = ['server-renderer', 'compiler-ssr'];
 
 const versionIncrements = [
   'patch',
@@ -169,8 +159,8 @@ function updateDeps(pkg, depType, version) {
   if (!deps) return;
   Object.keys(deps).forEach(dep => {
     if (
-      dep === 'vue' ||
-      (dep.startsWith('@vue') && packages.includes(dep.replace(/^@vue\//, '')))
+      dep === 'skyline'
+      || (dep.startsWith('@skyline') && packages.includes(dep.replace(/^@skyline\//, '')))
     ) {
       console.log(
         chalk.yellow(`${ pkg.name } -> ${ depType } -> ${ dep }@${ version }`),
@@ -191,15 +181,14 @@ async function publishPackage(pkgName, version, runIfNotDry) {
     return;
   }
 
-  // for now (alpha/beta phase), every package except "vue" can be published as
-  // `latest`, whereas "vue" will be published under the "next" tag.
-  const releaseTag =
-    pkgName === 'vue' ? 'next' : semver.prerelease(version)[0] || 'latest';
+  // for now (alpha/beta phase), every package except "skyline" can be published as
+  // `latest`, whereas "skyline" will be published under the "next" tag.
+  const releaseTag = pkgName === 'skyline' ? 'next' : null;
 
-  // TODO use inferred release channel after offcial 3.0 release
-  // const releaseTag = semver.prerelease(version)[0] || 'latest'
+  // TODO use inferred release channel after official 3.0 release
+  // const releaseTag = semver.prerelease(version)[0] || null
 
-  step(`Publishing ${ pkg }...`);
+  step(`Publishing ${ pkgName }...`);
   try {
     await runIfNotDry(
       'yarn',
@@ -207,8 +196,7 @@ async function publishPackage(pkgName, version, runIfNotDry) {
         'publish',
         '--new-version',
         version,
-        '--tag',
-        releaseTag,
+        ...(releaseTag ? ['--tag', releaseTag] : []),
         '--access',
         'public',
       ],

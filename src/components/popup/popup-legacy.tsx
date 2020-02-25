@@ -1,6 +1,5 @@
 import { createNamespace } from '@/utils/namespace';
 import { usePopup } from '@/mixins/use-popup';
-import '@/components/popup/popup.scss';
 
 const [createComponent, bem] = createNamespace('popup');
 const CONTENT_ELEMENT = 'content';

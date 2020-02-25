@@ -3,7 +3,6 @@ import { createNamespace } from '@/utils/namespace';
 import { createColorClasses } from '@/mixins/use-color';
 import { config, getSkylineMode } from '@/utils/config';
 import { SpinnerConfig, SPINNERS, SpinnerTypes } from '@/components/spinner/spinner-configs';
-import '@/components/spinner/spinner.scss';
 
 const [createComponent, bem] = createNamespace('spinner');
 

@@ -1,7 +1,7 @@
-// import { Config } from '../interface';
+import { Config } from '@/utils/config';
+import { now, pointerCoord } from '@/utils/dom';
 
-/* eslint-disable no-use-before-define */
-import { now, pointerCoord } from '../helpers';
+/* eslint-disable @typescript-eslint/no-use-before-define */
 
 const ACTIVATED = 'line-activated';
 const ACTIVATABLE = 'line-activatable';
@@ -10,7 +10,7 @@ const ADD_ACTIVATED_DEFERS = 200;
 const CLEAR_STATE_DEFERS = 200;
 const MOUSE_WAIT = 2500;
 
-export const setupTapClick = (config?: any) => {
+export const setupTapClick = (config?: Config) => {
   let lastTouch = -MOUSE_WAIT * 10;
   let lastActivated = 0;
   let scrollingEl: HTMLElement | undefined;

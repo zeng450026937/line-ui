@@ -1,8 +1,8 @@
-import { VNodeDirective } from 'vue';
+import { DirectiveOptions, VNodeDirective } from 'vue';
 import { createGesture, GestureConfig } from '@/utils/gesture/index';
 
 interface GestureVNodeDirective extends VNodeDirective {
-  value?: GestureConfig
+  value?: GestureConfig;
 }
 
 function inserted(el: HTMLElement, binding: GestureVNodeDirective) {
@@ -17,13 +17,16 @@ function inserted(el: HTMLElement, binding: GestureVNodeDirective) {
 }
 
 function unbind(el: HTMLElement) {
-  if (!(el as any).vGesture) return;
-  (el as any).vGesture.destroy();
+  const { vGesture } = el as any;
+  if (!vGesture) return;
+  vGesture.destroy();
   delete (el as any).vGesture;
 }
 
 function update(el: HTMLElement, binding: GestureVNodeDirective) {
-  if (binding.value === binding.oldValue) return;
+  if (binding.value === binding.oldValue) {
+    return;
+  }
   if (binding.oldValue) {
     unbind(el);
   }
@@ -34,6 +37,6 @@ export const Gesture = {
   inserted,
   unbind,
   update,
-};
+} as DirectiveOptions;
 
 export default Gesture;

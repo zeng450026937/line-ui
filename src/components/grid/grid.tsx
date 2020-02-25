@@ -1,5 +1,4 @@
 import { createNamespace } from '@/utils/namespace';
-import '@/components/grid/grid.scss';
 
 const [createComponent, bem] = createNamespace('grid');
 

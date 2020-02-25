@@ -1,5 +1,4 @@
 import { createNamespace } from '@/utils/namespace';
-import '@/components/radio-button/radio-indicator.scss';
 
 const [createComponent, bem] = createNamespace('radio-indicator');
 

@@ -1,5 +1,4 @@
 import { createNamespace } from '@/utils/namespace';
-import './progress-bar.scss';
 
 const [createComponent, bem] = createNamespace('progress');
 

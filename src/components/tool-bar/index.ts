@@ -1,4 +1,8 @@
-/* eslint-disable sort-imports, object-curly-newline */
+// Auto Generated
+// This file is auto generated, do not modify directly.
+
 import Toolbar from '@/components/tool-bar/toolbar';
 
-export { Toolbar };
+export {
+  Toolbar,
+};

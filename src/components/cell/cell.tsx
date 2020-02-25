@@ -1,6 +1,5 @@
 import { Icon } from '@/components/icon';
 import { createNamespace } from '@/utils/namespace';
-import '@/components/cell/cell.scss';
 
 const [createComponent, bem] = createNamespace('cell');
 

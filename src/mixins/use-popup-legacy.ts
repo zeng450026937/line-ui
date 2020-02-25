@@ -23,7 +23,7 @@ function getZIndex() {
 
 type OverlayInterface = Vue & {
   value: boolean;
-  zIndex: Number | String;
+  zIndex: number | string;
   dim: boolean;
   translucent: boolean;
 }

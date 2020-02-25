@@ -1,12 +1,6 @@
 import { createNamespace } from '@/utils/namespace';
 import { usePopup } from '@/mixins/use-popup';
 import { Overlay } from '@/components/overlay';
-import '@/components/action-sheet/action-sheet.ios.scss';
-import '@/components/action-sheet/action-sheet.scss';
-// import {
-//   BACKDROP, dismiss, eventMethod, isCancel, prepareOverlay, present, safeCall,
-// } from '@/utils/overlays';
-
 import { iosEnterAnimation } from '@/components/action-sheet/animations/ios.enter';
 import { iosLeaveAnimation } from '@/components/action-sheet/animations/ios.leave';
 import { mdEnterAnimation } from '@/components/action-sheet/animations/md.enter';
@@ -29,7 +23,7 @@ export default createComponent({
 
   computed : {
     normalizedActions(): ActionSheetButton[] {
-      const { actions } = this as { actions: (ActionSheetButton | string)[]; };
+      const { actions } = this as { actions: (ActionSheetButton | string)[] };
       return actions.map(action => {
         return (typeof action === 'string')
           ? { text: action }
@@ -59,35 +53,6 @@ export default createComponent({
     onTap() {
       this.$emit('overlay-tap');
     },
-
-    isCancel(role) {
-      return role === 'cancel';
-    },
-
-    async buttonClick(button: ActionSheetButton) {
-      const { role } = button;
-      if (this.isCancel(role)) {
-        return this.dismiss(undefined, role);
-      }
-      // const shouldDismiss = await this.callButtonHandler(button);
-      // if (shouldDismiss) {
-      //   return this.dismiss(undefined, button.role);
-      // }
-      return Promise.resolve();
-    },
-
-    // async callButtonHandler(button: ActionSheetButton | undefined) {
-    //   if (button) {
-    //     // a handler has been provided, execute it
-    //     // pass the handler the values from the inputs
-    //     const rtn = await safeCall(button.handler);
-    //     if (rtn === false) {
-    //       // if the return value of the handler is false then do not dismiss
-    //       return false;
-    //     }
-    //   }
-    //   return true;
-    // },
   },
 
   render() {

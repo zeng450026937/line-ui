@@ -1,7 +1,8 @@
-import { VNodeDirective } from 'vue';
+import { DirectiveOptions, VNodeDirective } from 'vue';
+import { on } from '@/utils/dom';
 
 interface HoverVNodeDirective extends VNodeDirective {
-  value?: (hover: boolean) => void
+  value?: (hover: boolean, ev: Event) => void;
 }
 
 function inserted(el: HTMLElement, binding: HoverVNodeDirective) {
@@ -12,31 +13,35 @@ function inserted(el: HTMLElement, binding: HoverVNodeDirective) {
     modifiers: options = { passive: true },
   } = binding;
 
-  const enter = () => callback(true);
-  const leave = () => callback(false);
+  const enter = (ev: Event) => callback(true, ev);
+  const leave = (ev: Event) => callback(false, ev);
 
-  el.addEventListener('mouseenter', enter, options);
-  el.addEventListener('mouseleave', leave, options);
-  el.addEventListener('focus', enter, options);
-  el.addEventListener('blur', leave, options);
+  const mouseenterOff = on(el, 'mouseenter', enter, options);
+  const mouseleaveOff = on(el, 'mouseleave', leave, options);
+  const focusOff = on(el, 'focus', enter, options);
+  const blurOff = on(el, 'blur', leave, options);
 
   function destroy() {
-    el.removeEventListener('mouseenter', enter, options);
-    el.removeEventListener('mouseleave', leave, options);
-    el.removeEventListener('focus', enter, options);
-    el.removeEventListener('blur', leave, options);
+    mouseenterOff();
+    mouseleaveOff();
+    focusOff();
+    blurOff();
   }
 
   (el as any).vHover = {
     callback,
     options,
+
+    enter,
+    leave,
     destroy,
   };
 }
 
 function unbind(el: HTMLElement) {
-  if (!(el as any).vHover) return;
-  (el as any).vHover.destroy();
+  const { vHover } = el as any;
+  if (!vHover) return;
+  vHover.destroy();
   delete (el as any).vHover;
 }
 
@@ -54,6 +59,6 @@ export const Hover = {
   inserted,
   unbind,
   update,
-};
+} as DirectiveOptions;
 
 export default Hover;

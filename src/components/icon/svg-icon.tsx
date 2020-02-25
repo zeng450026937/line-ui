@@ -1,6 +1,5 @@
 import { createNamespace } from '@/utils/namespace';
 import { createColorClasses } from '@/mixins/use-color';
-import '@/components/icon/svg-icon.scss';
 
 const [createComponent, bem] = createNamespace('svg-icon');
 

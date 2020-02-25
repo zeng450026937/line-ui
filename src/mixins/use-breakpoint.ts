@@ -1,25 +1,12 @@
 import { createMixins } from '@/utils/mixins';
+import {
+  getClientHeight,
+  getClientWidth,
+  hasWindow,
+  off,
+  on,
+} from '@/utils/dom';
 import { debounce } from '@/utils/helpers';
-
-// Cross-browser support as described in:
-// https://stackoverflow.com/questions/1248081
-function getClientWidth() {
-  if (typeof document === 'undefined') return 0; // SSR
-
-  return Math.max(
-    document.documentElement.clientWidth,
-    window.innerWidth || 0,
-  );
-}
-
-function getClientHeight() {
-  if (typeof document === 'undefined') return 0; // SSR
-
-  return Math.max(
-    document.documentElement.clientHeight,
-    window.innerHeight || 0,
-  );
-}
 
 export function useBreakPoint() {
   return createMixins({
@@ -122,15 +109,15 @@ export function useBreakPoint() {
     },
 
     created() {
-      if (!window) return;
+      if (!hasWindow) return;
 
-      window.addEventListener('resize', this.onResize, { passive: true });
+      on(window, 'resize', this.onResize, { passive: true });
     },
 
     beforeDestroy() {
-      if (!window) return;
+      if (!hasWindow) return;
 
-      window.removeEventListener('resize', this.onResize);
+      off(window, 'resize', this.onResize);
     },
   });
 }

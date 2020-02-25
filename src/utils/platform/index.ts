@@ -2,11 +2,11 @@ export const testUserAgent = (win: Window, expr: RegExp) => expr.test(win.naviga
 
 const matchMedia = (win: Window, query: string): boolean => win.matchMedia(query).matches;
 
-const isMobile = (win: Window) => matchMedia(win, '(any-pointer:coarse)');
+export const isMobile = (win: Window) => matchMedia(win, '(any-pointer:coarse)');
 
-const isDesktop = (win: Window) => !isMobile(win);
+export const isDesktop = (win: Window) => !isMobile(win);
 
-const isIpad = (win: Window) => {
+export const isIpad = (win: Window) => {
 // iOS 12 and below
   if (testUserAgent(win, /iPad/i)) {
     return true;
@@ -20,17 +20,17 @@ const isIpad = (win: Window) => {
   return false;
 };
 
-const isIphone = (win: Window) => testUserAgent(win, /iPhone/i);
+export const isIphone = (win: Window) => testUserAgent(win, /iPhone/i);
 
-const isIOS = (win: Window) => testUserAgent(win, /iPhone|iPod/i) || isIpad(win);
+export const isIOS = (win: Window) => testUserAgent(win, /iPhone|iPod/i) || isIpad(win);
 
-const isAndroid = (win: Window) => testUserAgent(win, /android|sink/i);
+export const isAndroid = (win: Window) => testUserAgent(win, /android|sink/i);
 
-const isAndroidTablet = (win: Window) => {
+export const isAndroidTablet = (win: Window) => {
   return isAndroid(win) && !testUserAgent(win, /mobile/i);
 };
 
-const isPhablet = (win: Window) => {
+export const isPhablet = (win: Window) => {
   const width = win.innerWidth;
   const height = win.innerHeight;
   const smallest = Math.min(width, height);
@@ -40,7 +40,7 @@ const isPhablet = (win: Window) => {
   && (largest > 620 && largest < 800);
 };
 
-const isTablet = (win: Window) => {
+export const isTablet = (win: Window) => {
   const width = win.innerWidth;
   const height = win.innerHeight;
   const smallest = Math.min(width, height);
@@ -56,20 +56,20 @@ const isTablet = (win: Window) => {
   );
 };
 
-const isCordova = (win: any): boolean => !!(win.cordova || win.phonegap || win.PhoneGap);
+export const isCordova = (win: any): boolean => !!(win.cordova || win.phonegap || win.PhoneGap);
 
-const isCapacitorNative = (win: any): boolean => {
+export const isCapacitorNative = (win: any): boolean => {
   const capacitor = win.Capacitor;
   return !!(capacitor && capacitor.isNative);
 };
 
-const isHybrid = (win: Window) => isCordova(win) || isCapacitorNative(win);
+export const isHybrid = (win: Window) => isCordova(win) || isCapacitorNative(win);
 
-const isMobileWeb = (win: Window): boolean => isMobile(win) && !isHybrid(win);
+export const isMobileWeb = (win: Window): boolean => isMobile(win) && !isHybrid(win);
 
-const isElectron = (win: Window): boolean => testUserAgent(win, /electron/i);
+export const isElectron = (win: Window): boolean => testUserAgent(win, /electron/i);
 
-const isPWA = (win: Window): boolean => !!(win.matchMedia('(display-mode: standalone)').matches || (win.navigator as any).standalone);
+export const isPWA = (win: Window): boolean => !!(win.matchMedia('(display-mode: standalone)').matches || (win.navigator as any).standalone);
 
 const PLATFORMS_MAP = {
   ipad      : isIpad,

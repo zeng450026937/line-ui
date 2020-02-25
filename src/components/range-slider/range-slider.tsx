@@ -1,5 +1,4 @@
 import { createNamespace } from '@/utils/namespace';
-import '@/components/range-slider/range-slider.scss';
 
 export const Orientation = {
   Horizontal : 0,
@@ -17,9 +16,9 @@ export const SnapMode = {
 
 interface Style {
   height?: any;
-  width?: any,
-  left?: string,
-  top?: string,
+  width?: any;
+  left?: string;
+  top?: string;
 }
 
 const [createComponent, bem] = createNamespace('range-slider');

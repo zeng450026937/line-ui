@@ -1,7 +1,5 @@
 import { createNamespace } from '@/utils/namespace';
 import { useColor } from '@/mixins/use-color';
-import '@/components/card/card.scss';
-import '@/components/card/card.ios.scss';
 import { isDef } from '@/utils/helpers';
 import ripple from '@/directives/ripple';
 

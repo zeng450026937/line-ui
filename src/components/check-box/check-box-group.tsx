@@ -1,8 +1,5 @@
 import { createNamespace } from '@/utils/namespace';
 import { useCheckGroup } from '@/mixins/use-check-group';
-import '@/components/check-box/check-box-group.scss';
-
-// export { CheckState };
 
 const NAMESPACE = 'CheckBoxGroup';
 const [createComponent, bem] = createNamespace('check-box-group');

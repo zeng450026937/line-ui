@@ -34,7 +34,7 @@ export function useMode() {
     },
 
     afterRender(vnode) {
-      if (!vnode || !vnode.data) return;
+      if (!vnode.data) return;
       vnode.data.staticClass = `${ this.mode } ${ vnode.data.staticClass || '' }`.trim();
     },
   });

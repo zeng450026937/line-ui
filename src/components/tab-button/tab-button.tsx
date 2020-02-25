@@ -3,9 +3,6 @@ import { createNamespace } from '@/utils/namespace';
 import { useCheckItemWithModel } from '@/mixins/use-check-item';
 import { useRipple } from '@/mixins/use-ripple';
 
-import '@/components/tab-button/tab-button.ios.scss';
-import '@/components/tab-button/tab-button.scss';
-
 const NAMESPACE = 'TabBar';
 const [createComponent, bem] = createNamespace('tab-button');
 
@@ -26,10 +23,10 @@ export default createComponent({
   },
 
   computed : {
-    hasLabel():boolean {
+    hasLabel(): boolean {
       return this.$el && !!this.$el.querySelector('.line-label');
     },
-    hasIcon():boolean {
+    hasIcon(): boolean {
       return this.$el && !!this.$el.querySelector('.line-icon');
     },
   },

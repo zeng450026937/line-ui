@@ -23,7 +23,7 @@ export function usePopup(options?: PopupOptions) {
   async function animate(
     baseEl: HTMLElement,
     popup: PopupInterface,
-    builder: { build: AnimationBuilder, options?: any },
+    builder: { build: AnimationBuilder; options?: any },
   ): Promise<boolean> {
     const {
       build: animationBuilder,

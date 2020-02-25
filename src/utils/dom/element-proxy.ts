@@ -1,11 +1,20 @@
 import { isFunction } from '@/utils/helpers';
 
-export function createElementProxy(element: HTMLElement) {
+export function createElementProxy(element: HTMLElement | object) {
   return new Proxy({}, {
-    get(obj, prop) {
-      const target = (element && prop in element) ? element : obj as any;
-      const value = target[prop];
-      return isFunction(value) ? value.bind(target) : value;
+    get(target: object, key: string | symbol, receiver: object) {
+      if (key in target) {
+        return Reflect.get(target, key, receiver);
+      }
+      if (key in element) {
+        const value = Reflect.get(element, key);
+        Reflect.set(
+          target,
+          key,
+          isFunction(value) ? value.bind(element) : value,
+        );
+      }
+      return Reflect.get(target, key, receiver);
     },
   }) as HTMLElement;
 }

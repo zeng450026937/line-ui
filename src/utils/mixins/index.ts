@@ -2,36 +2,33 @@
 
 // use createMixins() to create ExtendedVue is only for better working on
 // typescript lint(Grammar Check)
-
-import Vue, {
+import Vue from 'vue';
+import { ExtendedVue } from 'vue/types/vue';
+import {
   ComponentOptions,
   FunctionalComponentOptions,
-} from 'vue';
-import {
   RecordPropsDefinition,
   ThisTypedComponentOptionsWithArrayProps,
   ThisTypedComponentOptionsWithRecordProps,
 } from 'vue/types/options';
-import { ExtendedVue } from 'vue/types/vue';
-import { InjectedKeys, InjectOptions } from '@/utils/types';
 
 export function createMixins<Events, Slots, Data, Computed, Methods, PropNames extends string = never>(
-  options?: ThisTypedComponentOptionsWithArrayProps<Vue & InjectedKeys, Data, Methods, Computed, PropNames> & InjectOptions<Events, Slots>
-  ): ExtendedVue<Vue & InjectedKeys, Data, Methods, Computed, Record<PropNames, any>>;
+    options?: ThisTypedComponentOptionsWithArrayProps<Vue, Data, Methods, Computed, PropNames>
+  ): ExtendedVue<Vue, Data, Methods, Computed, Record<PropNames, any>>;
 
 export function createMixins<Events, Slots, Data, Methods, Computed, Props>(
-  options?: ThisTypedComponentOptionsWithRecordProps<Vue & InjectedKeys, Data, Methods, Computed, Props> & InjectOptions<Events, Slots>
-  ): ExtendedVue<Vue & InjectedKeys, Data, Methods, Computed, Props>;
+    options?: ThisTypedComponentOptionsWithRecordProps<Vue, Data, Methods, Computed, Props>
+  ): ExtendedVue<Vue, Data, Methods, Computed, Props>;
 
 export function createMixins<Events, Slots, PropNames extends string = never>(
-  definition: FunctionalComponentOptions<Record<PropNames, any>, PropNames[]> & InjectOptions<Events, Slots>
-  ): ExtendedVue<Vue & InjectedKeys, {}, {}, {}, Record<PropNames, any>>;
+    definition: FunctionalComponentOptions<Record<PropNames, any>, PropNames[]>
+  ): ExtendedVue<Vue, {}, {}, {}, Record<PropNames, any>>;
 
 export function createMixins<Events, Slots, Props>(
-  definition: FunctionalComponentOptions<Props, RecordPropsDefinition<Props>> & InjectOptions<Events, Slots>
-  ): ExtendedVue<Vue & InjectedKeys, {}, {}, {}, Props>;
+    definition: FunctionalComponentOptions<Props, RecordPropsDefinition<Props>>
+  ): ExtendedVue<Vue, {}, {}, {}, Props>;
 
-export function createMixins(options?: ComponentOptions<Vue & InjectedKeys>): ExtendedVue<Vue & InjectedKeys, {}, {}, {}, {}>;
+export function createMixins(options?: ComponentOptions<Vue>): ExtendedVue<Vue, {}, {}, {}, {}>;
 
 export function createMixins(options: any) {
   return Vue.extend(options);

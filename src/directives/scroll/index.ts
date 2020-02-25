@@ -1,38 +1,54 @@
 import { DirectiveOptions, VNodeDirective } from 'vue';
+import { on } from '@/utils/dom';
 
 interface ScrollVNodeDirective extends VNodeDirective {
-  arg: string
-  value: EventListenerOrEventListenerObject
-  options?: boolean | AddEventListenerOptions
+  arg: string;
+  value: EventListener;
+  options?: AddEventListenerOptions;
 }
 
 function inserted(el: HTMLElement, binding: ScrollVNodeDirective) {
   const callback = binding.value;
   const options = binding.options || { passive: true };
   const target = binding.arg ? document.querySelector(binding.arg) : window;
+
   if (!target) return;
 
-  target.addEventListener('scroll', callback, options);
+  const scrollOff = on(target, 'scroll', callback, options);
+
+  function destroy() {
+    scrollOff();
+  }
 
   (el as any).vScroll = {
     callback,
     options,
     target,
+    destroy,
   };
 }
 
 function unbind(el: HTMLElement) {
-  if (!(el as any).vScroll) return;
-
-  const { callback, options, target } = (el as any).vScroll;
-
-  target.removeEventListener('scroll', callback, options);
+  const { vScroll } = el as any;
+  if (!vScroll) return;
+  vScroll.destroy();
   delete (el as any).vScroll;
+}
+
+function update(el: HTMLElement, binding: ScrollVNodeDirective) {
+  if (binding.value === binding.oldValue) {
+    return;
+  }
+  if (binding.oldValue) {
+    unbind(el);
+  }
+  inserted(el, binding);
 }
 
 export const Scroll = {
   inserted,
   unbind,
+  update,
 } as DirectiveOptions;
 
 export default Scroll;

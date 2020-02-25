@@ -1,5 +1,4 @@
 import { createNamespace } from '@/utils/namespace';
-import '@/components/image/image.scss';
 
 const [createComponent, bem] = createNamespace('img');
 

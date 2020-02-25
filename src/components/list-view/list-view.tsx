@@ -3,7 +3,6 @@ import { BoxLayout, LayoutItem, Orientation } from '@/utils/layout';
 import { binarySearch } from '@/utils/algorithm/binary-search';
 import { exponentialSearch } from '@/utils/algorithm/exponential-search';
 import ListItem from '@/components/list-view/list-item';
-import '@/components/list-view/list-view.scss';
 
 const NAMESPACE = 'ListView';
 const [createComponent, bem] = createNamespace('list-view');

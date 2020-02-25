@@ -32,9 +32,9 @@
 
 <script lang="js">
 import Vue from 'vue';
-import { FontIcon } from '../icon';
 import { Popup } from '@/components/popup';
 import { useGroup } from '@/components/group';
+import { FontIcon } from '@/components/icon';
 
 const NAMESPACE = 'Select';
 

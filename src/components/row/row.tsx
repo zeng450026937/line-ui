@@ -1,5 +1,4 @@
 import { createNamespace } from '@/utils/namespace';
-import '@/components/row/row.scss';
 
 const [createComponent, bem] = createNamespace('row');
 

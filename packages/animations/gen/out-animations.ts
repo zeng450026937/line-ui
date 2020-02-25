@@ -1,0 +1,34 @@
+// out animations
+
+import '../css/bounceOut.css';
+import '../css/bounceOutDown.css';
+import '../css/bounceOutLeft.css';
+import '../css/bounceOutRight.css';
+import '../css/bounceOutUp.css';
+import '../css/fadeOut.css';
+import '../css/fadeOutDown.css';
+import '../css/fadeOutDownBig.css';
+import '../css/fadeOutLeft.css';
+import '../css/fadeOutLeftBig.css';
+import '../css/fadeOutRight.css';
+import '../css/fadeOutRightBig.css';
+import '../css/fadeOutUp.css';
+import '../css/fadeOutUpBig.css';
+import '../css/flipOutX.css';
+import '../css/flipOutY.css';
+import '../css/lightSpeedOut.css';
+import '../css/rollOut.css';
+import '../css/rotateOut.css';
+import '../css/rotateOutDownLeft.css';
+import '../css/rotateOutDownRight.css';
+import '../css/rotateOutUpLeft.css';
+import '../css/rotateOutUpRight.css';
+import '../css/slideOutDown.css';
+import '../css/slideOutLeft.css';
+import '../css/slideOutRight.css';
+import '../css/slideOutUp.css';
+import '../css/zoomOut.css';
+import '../css/zoomOutDown.css';
+import '../css/zoomOutLeft.css';
+import '../css/zoomOutRight.css';
+import '../css/zoomOutUp.css';

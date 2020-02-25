@@ -1,5 +1,5 @@
 import { DirectiveOptions, VNodeDirective } from 'vue';
-import { createElementProxy } from '../dom/element-proxy';
+import { createElementProxy } from '@/utils/dom/element-proxy';
 
 export function createDirective(
   directive: DirectiveOptions,

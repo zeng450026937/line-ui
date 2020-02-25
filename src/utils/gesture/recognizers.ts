@@ -1,3 +1,4 @@
+/* eslint-disable */
 
 export interface PanRecognizer {
   start(x: number, y: number): void;
@@ -6,9 +7,7 @@ export interface PanRecognizer {
   getDirection(): number;
 }
 
-export const createPanRecognizer = (
-  direction: string, thresh: number, maxAngle: number,
-): PanRecognizer => {
+export const createPanRecognizer = (direction: string, thresh: number, maxAngle: number): PanRecognizer => {
   const radians = maxAngle * (Math.PI / 180);
   const isDirX = direction === 'x';
   const maxCosine = Math.cos(radians);
@@ -45,8 +44,10 @@ export const createPanRecognizer = (
 
       if (cosine > maxCosine) {
         isPan = 1;
+
       } else if (cosine < -maxCosine) {
         isPan = -1;
+
       } else {
         isPan = 0;
       }
@@ -61,6 +62,6 @@ export const createPanRecognizer = (
 
     getDirection(): number {
       return isPan;
-    },
+    }
   };
 };

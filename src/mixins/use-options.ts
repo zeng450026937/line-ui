@@ -1,6 +1,6 @@
 import { createMixins } from '@/utils/mixins';
 
-export function useOptions(options: Array<string>, namsespace: string = 'options') {
+export function useOptions(options: Array<string>, namsespace = 'options') {
   return createMixins({
     props : options.reduce((prev, val) => {
       prev[val] = Boolean;
@@ -12,8 +12,8 @@ export function useOptions(options: Array<string>, namsespace: string = 'options
       },
     } as Record<string, any>),
 
-    beforeRender(ctx) {
-      const { props } = ctx;
+    beforeRender() {
+      const { $props: props } = this;
       let hit = props[namsespace];
       if (!hit) {
         for (const option of options) {
@@ -21,7 +21,7 @@ export function useOptions(options: Array<string>, namsespace: string = 'options
           if (hit) break;
         }
       }
-      ctx[namsespace] = hit || options[0];
+      this[namsespace] = hit || options[0];
     },
   });
 }

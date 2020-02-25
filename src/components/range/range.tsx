@@ -2,14 +2,11 @@ import { createNamespace } from '@/utils/namespace';
 import { createGesture, GestureDetail } from '@/utils/gesture';
 import { useColor } from '@/mixins/use-color';
 
-import '@/components/range/range.scss';
-import '@/components/range/range.ios.scss';
-
 import { Rect } from '@/utils/layout';
 
 export type KnobName = 'A' | 'B' | undefined;
 
-export type RangeValue = number | {lower: number, upper: number};
+export type RangeValue = number | {lower: number; upper: number};
 
 interface RangeKnob {
   knob: string;
@@ -444,7 +441,7 @@ export default createComponent({
       [end]   : barEnd,
     };
 
-    const ticks: {ratio: number; active: boolean;}[] = [];
+    const ticks: {ratio: number; active: boolean}[] = [];
 
     if (this.snaps && this.ticks) {
       for (let value = min; value <= max; value += step) {

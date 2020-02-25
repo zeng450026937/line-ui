@@ -1,7 +1,6 @@
 import FontIcon from '@/components/icon/font-icon';
 import SvgIcon from '@/components/icon/svg-icon';
 import { createNamespace } from '@/utils/namespace';
-import './icon.scss';
 
 const [createComponent] = createNamespace('icon');
 

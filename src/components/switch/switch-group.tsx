@@ -1,6 +1,5 @@
 import { useGroup } from '@/mixins/use-group';
 import { createNamespace } from '@/utils/namespace';
-import '@/components/switch/switch-group.scss';
 
 const NAMESPACE = 'SwitchGroup';
 const [createComponent, bem] = createNamespace('switch-group');

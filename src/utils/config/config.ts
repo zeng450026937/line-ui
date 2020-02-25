@@ -20,6 +20,14 @@ export interface SkylinConfig {
 
   spinner?: string;
 
+  // PRIVATE configs
+  keyboardHeight?: number;
+  inputShims?: boolean;
+  scrollPadding?: boolean;
+  inputBlurring?: boolean;
+  scrollAssist?: boolean;
+  hideCaretOnScroll?: boolean;
+
   persistConfig?: boolean;
   testing?: boolean;
 }

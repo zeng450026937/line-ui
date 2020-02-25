@@ -21,9 +21,9 @@ export function binarySearch<T = any>(
   array: Array<T> = [],
   wanted: any,
   compare: CompareFunc<T> = DefaultCompare,
-  from: number = 0,
+  from = 0,
   to: number = array.length - 1,
-  bound: number = 0,
+  bound = 0,
 ): number {
   if (from >= to) return to;
   const initFrom = from;

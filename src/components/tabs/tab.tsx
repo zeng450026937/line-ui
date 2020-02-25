@@ -1,6 +1,5 @@
 import { createNamespace } from '@/utils/namespace';
 import { useCheckItemWithModel } from '@/mixins/use-check-item';
-import '@/components/tabs/tab.scss';
 
 const NAMESPACE = 'Tabs';
 const [createComponent, bem] = createNamespace('tab');

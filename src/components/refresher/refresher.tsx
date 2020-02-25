@@ -1,5 +1,4 @@
 import { createNamespace } from '@/utils/namespace';
-import '@/components/refresher/refresher.scss';
 
 const [createComponent, bem] = createNamespace('refresher');
 

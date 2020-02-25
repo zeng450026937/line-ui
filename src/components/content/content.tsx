@@ -10,7 +10,6 @@ import {
 } from '@/utils/scroll-to';
 import { isString } from '@/utils/helpers';
 import { updateScrollDetail } from '@/components/content/update-scroll-detail';
-import '@/components/content/content.scss';
 
 const [createComponent, bem] = createNamespace('content');
 

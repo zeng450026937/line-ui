@@ -1,20 +1,17 @@
-import { addEventListener } from './listener';
+/* eslint-disable */
+
+import { on } from '@/utils/dom/event-listener';
 
 const MOUSE_WAIT = 2000;
 
-const getDocument = (node: Node) => {
-  return node instanceof Document ? node : node.ownerDocument;
-};
-
-/* eslint-disable no-use-before-define */
-/* eslint-disable no-shadow */
 export const createPointerEvents = (
   el: Node,
   pointerDown: any,
   pointerMove: any,
   pointerUp: any,
-  options: EventListenerOptions,
+  options: EventListenerOptions
 ) => {
+
   let rmTouchStart: (() => void) | undefined;
   let rmTouchMove: (() => void) | undefined;
   let rmTouchEnd: (() => void) | undefined;
@@ -30,13 +27,13 @@ export const createPointerEvents = (
       return;
     }
     if (!rmTouchMove && pointerMove) {
-      rmTouchMove = addEventListener(el, 'touchmove', pointerMove, options);
+      rmTouchMove = on(el, 'touchmove', pointerMove, options);
     }
     if (!rmTouchEnd) {
-      rmTouchEnd = addEventListener(el, 'touchend', handleTouchEnd, options);
+      rmTouchEnd = on(el, 'touchend', handleTouchEnd, options);
     }
     if (!rmTouchCancel) {
-      rmTouchCancel = addEventListener(el, 'touchcancel', handleTouchEnd, options);
+      rmTouchCancel = on(el, 'touchcancel', handleTouchEnd, options);
     }
   };
 
@@ -48,10 +45,10 @@ export const createPointerEvents = (
       return;
     }
     if (!rmMouseMove && pointerMove) {
-      rmMouseMove = addEventListener(getDocument(el), 'mousemove', pointerMove, options);
+      rmMouseMove = on(getDocument(el), 'mousemove', pointerMove, options);
     }
     if (!rmMouseUp) {
-      rmMouseUp = addEventListener(getDocument(el), 'mouseup', handleMouseUp, options);
+      rmMouseUp = on(getDocument(el), 'mouseup', handleMouseUp, options);
     }
   };
 
@@ -97,8 +94,8 @@ export const createPointerEvents = (
     stopMouse();
   };
 
-  const enable = (enable = true) => {
-    if (!enable) {
+  const enable = (isEnabled = true) => {
+    if (!isEnabled) {
       if (rmTouchStart) {
         rmTouchStart();
       }
@@ -107,12 +104,13 @@ export const createPointerEvents = (
       }
       rmTouchStart = rmMouseStart = undefined;
       stop();
+
     } else {
       if (!rmTouchStart) {
-        rmTouchStart = addEventListener(el, 'touchstart', handleTouchStart, options);
+        rmTouchStart = on(el, 'touchstart', handleTouchStart, options);
       }
       if (!rmMouseStart) {
-        rmMouseStart = addEventListener(el, 'mousedown', handleMouseDown, options);
+        rmMouseStart = on(el, 'mousedown', handleMouseDown, options);
       }
     }
   };
@@ -125,8 +123,12 @@ export const createPointerEvents = (
   return {
     enable,
     stop,
-    destroy,
+    destroy
   };
+};
+
+const getDocument = (node: Node) => {
+  return node instanceof Document ? node : node.ownerDocument!;
 };
 
 export interface PointerEventsConfig {

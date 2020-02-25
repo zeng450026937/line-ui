@@ -1,7 +1,6 @@
 import { VNode } from 'vue';
 import { SvgIcon } from '@/components/icon';
 import { createNamespace } from '@/utils/namespace';
-import '@/components/check-box/check-indicator.scss';
 
 const [createComponent, bem] = createNamespace('check-indicator');
 let path: VNode;

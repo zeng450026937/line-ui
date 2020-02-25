@@ -1,6 +1,5 @@
 import { createNamespace } from '@/utils/namespace';
 import { useCheckGroup } from '@/mixins/use-check-group';
-import '@/components/radio-button/radio-button-group.scss';
 
 const NAMESPACE = 'RadioButtonGroup';
 const [createComponent, bem] = createNamespace('radio-button-group');

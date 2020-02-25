@@ -6,21 +6,29 @@
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
+    "allowJs": true,
+    "noUnusedLocals": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
     "esModuleInterop": true,
-    // "declaration": true,
-    // "outDir": "./out",
+    "removeComments": false,
     "allowSyntheticDefaultImports": true,
-    "noImplicitAny": false,
     "sourceMap": true,
+    // "declaration": true,
     "baseUrl": ".",
+    // "outDir": "./out",
     "types": [
       "webpack-env",
       "jest"
     ],
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["src/*"],
+      "@skyline/*": ["packages/*/src"],
+      "skyline": ["src"],
+      "skyline/*": ["src/*"],
     },
     "lib": [
       "esnext",
@@ -30,15 +38,14 @@
     ]
   },
   "include": [
-    "types/**/*.ts",
-    "packages/**/*.ts",
-    "packages/**/*.tsx",
-    "packages/**/*.vue",
+    "packages/*/src",
+    "packages/*/__tests__",
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",
-    "tests/**/*.tsx"
+    "tests/**/*.tsx",
+    "types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

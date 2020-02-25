@@ -1,0 +1,17 @@
+{
+  "name": "@skyline/animations",
+  "version": "1.0.0-alpha",
+  "description": "@skyline/animations",
+  "main": "index.js",
+  "module": "dist/animations.esm-bundler.js",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "types": "dist/animations.d.ts",
+  "keywords": [
+    "skyline"
+  ],
+  "author": "Yealink Inc",
+  "license": "MIT"
+}

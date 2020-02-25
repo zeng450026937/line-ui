@@ -1,15 +1,15 @@
 import { DirectiveOptions, VNodeDirective } from 'vue';
 
 interface RemoteVNodeDirective extends VNodeDirective {
-  value?: boolean
-  arg: string
+  value?: boolean;
+  arg: string;
 }
 
 const CONTAINER = '[skyline-app]';
 
 type VRemote = {
-  parentElement: HTMLElement,
-  nextElementSibling: HTMLElement,
+  parentElement: HTMLElement;
+  nextElementSibling: HTMLElement;
 }
 
 function inserted(el: HTMLElement, binding: RemoteVNodeDirective) {
@@ -30,15 +30,21 @@ function unbind(el: HTMLElement, binding: RemoteVNodeDirective) {
     el.remove();
     return;
   }
+
   const { vRemote } = (el as any);
-  if (vRemote) {
-    const { parentElement, nextElementSibling } = vRemote;
-    if (!parentElement.contains(el)) {
-      el.remove();
-      return;
-    }
-    parentElement.insertBefore(el, nextElementSibling);
+
+  if (!vRemote) return;
+
+  const { parentElement, nextElementSibling } = vRemote as VRemote;
+
+  if (!parentElement.contains(el)) {
+    el.remove();
+    return;
   }
+
+  parentElement.insertBefore(el, nextElementSibling);
+
+  delete (el as any).vRemote;
 }
 
 function update(el: HTMLElement, binding: RemoteVNodeDirective) {

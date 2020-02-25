@@ -1,4 +1,3 @@
-@import "../themes/skyline.skip-warns.scss";
 @import "../themes/skyline.globals";
 @import "../themes/skyline.mixins";
 
@@ -6,7 +5,7 @@
 // --------------------------------------------------
 // Modifies display of a particular element based on the given classes
 
-.ion-hide {
+.line-hide {
   display: none !important;
 }
 
@@ -15,17 +14,17 @@
   $infix: breakpoint-infix($breakpoint, $screen-breakpoints);
 
   @include media-breakpoint-up($breakpoint, $screen-breakpoints) {
-    // Provide `ion-hide-{bp}-up` classes for hiding the element based
+    // Provide `line-hide-{bp}-up` classes for hiding the element based
     // on the breakpoint
-    .ion-hide#{$infix}-up {
+    .line-hide#{$infix}-up {
       display: none !important;
     }
   }
 
   @include media-breakpoint-down($breakpoint, $screen-breakpoints) {
-    // Provide `ion-hide-{bp}-down` classes for hiding the element based
+    // Provide `line-hide-{bp}-down` classes for hiding the element based
     // on the breakpoint
-    .ion-hide#{$infix}-down {
+    .line-hide#{$infix}-down {
       display: none !important;
     }
   }

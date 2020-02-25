@@ -1,9 +1,13 @@
 import { VNodeDirective } from 'vue';
 import { TooltipController } from '@/controller/tooltip';
 
+interface TooltipVNodeDirective extends VNodeDirective {
+  value?: string | boolean;
+}
+
 const ctrl = new TooltipController();
 
-function inserted(el: HTMLElement, binding: VNodeDirective) {
+function inserted(el: HTMLElement, binding: TooltipVNodeDirective) {
   if (binding.value === false) return;
 
   const tooltip = ctrl.create({
@@ -23,13 +27,14 @@ function inserted(el: HTMLElement, binding: VNodeDirective) {
   };
 }
 
-function unbind(el: HTMLElement, binding: VNodeDirective) {
-  if (!(el as any).vTooltip) return;
-  (el as any).vTooltip.destroy();
+function unbind(el: HTMLElement, binding: TooltipVNodeDirective) {
+  const { vTooltip } = el as any;
+  if (!vTooltip) return;
+  vTooltip.destroy();
   delete (el as any).vTooltip;
 }
 
-function update(el: HTMLElement, binding: VNodeDirective) {
+function update(el: HTMLElement, binding: TooltipVNodeDirective) {
   if (binding.value === binding.oldValue) {
     return;
   }

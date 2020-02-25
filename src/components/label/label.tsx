@@ -1,7 +1,5 @@
 import { createNamespace } from '@/utils/namespace';
 import { useColor } from '@/mixins/use-color';
-import '@/components/label/label.scss';
-import '@/components/label/label.ios.scss';
 import { isDef } from '@/utils/helpers';
 
 const [createComponent, bem] = createNamespace('label');

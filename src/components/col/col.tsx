@@ -1,6 +1,5 @@
 import { createNamespace } from '@/utils/namespace';
 import { matchBreakpoint } from '@/utils/media';
-import '@/components/col/col.scss';
 
 const win = window as any;
 const SUPPORTS_VARS = !!(win.CSS && win.CSS.supports && win.CSS.supports('--a: 0'));

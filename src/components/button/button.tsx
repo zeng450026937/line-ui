@@ -3,8 +3,6 @@ import { useColor } from '@/mixins/use-color';
 import { useGroupItem } from '@/mixins/use-group-item';
 import { isDef } from '@/utils/helpers';
 import ripple from '@/directives/ripple';
-import '@/components/button/button.scss';
-import '@/components/button/button.ios.scss';
 
 const NAMESPACE = 'ButtonGroup';
 const [createComponent, bem] = createNamespace('button');

@@ -1,11 +1,6 @@
-import { createColorClasses, useColor } from '@/mixins/use-color';
-// import { getSkylineMode } from '@/utils/config';
+import { useColor } from '@/mixins/use-color';
 import { createNamespace } from '@/utils/namespace';
 import { useCheckGroupWithModel } from '@/mixins/use-check-group';
-// import { useOptions } from '@/mixins/use-options';
-
-import '@/components/tab-bar/tab-bar.ios.scss';
-import '@/components/tab-bar/tab-bar.scss';
 
 const NAMESPACE = 'TabBar';
 const [createComponent, bem] = createNamespace('tab-bar');
@@ -37,13 +32,10 @@ export default createComponent({
 
     return (
       <div
-        class={[
-          bem({
+        class={bem({
             translucent,
             hidden : keyboardVisible,
-          }),
-          { ...createColorClasses(color) },
-        ]}
+        })}
       >
         {this.slots()}
       </div>

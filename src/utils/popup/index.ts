@@ -21,7 +21,7 @@ export type Transition = {
 };
 
 export type PopupInterface = Vue & {
-  transition: string | Transition,
+  transition: string | Transition;
   dim: boolean;
   translucent: boolean;
   modal: boolean;
@@ -40,8 +40,8 @@ export const popupStack = [] as Array<PopupInterface>;
 
 export class PopupContext {
   private stack: Array<PopupInterface>;
-  private base: number = 2000;
-  private index: number = 0;
+  private base = 2000;
+  private index = 0;
 
   constructor(stack: Array<PopupInterface>) {
     this.stack = stack;

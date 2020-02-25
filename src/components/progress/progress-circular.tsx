@@ -1,6 +1,5 @@
 import { convertToUnit } from '@/utils/helpers';
 import { createNamespace } from '@/utils/namespace';
-import './progress-circular.scss';
 
 const [createComponent, bem] = createNamespace('progress-circular');
 

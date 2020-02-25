@@ -2,8 +2,6 @@ import { createNamespace } from '@/utils/namespace';
 import { usePopup } from '@/mixins/use-popup';
 import { usePopupDuration } from '@/mixins/use-popup-duration';
 import { useColor } from '@/mixins/use-color';
-import '@/components/toast/toast.scss';
-import '@/components/toast/toast.ios.scss';
 import { iosEnterAnimation } from '@/components/toast/animations/ios.enter';
 import { iosLeaveAnimation } from '@/components/toast/animations/ios.leave';
 import { mdEnterAnimation } from '@/components/toast/animations/md.enter';

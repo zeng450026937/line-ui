@@ -1,8 +1,10 @@
-import {
-  DirectiveOptions, VNode, VNodeDirective,
-} from 'vue';
+import { DirectiveOptions, VNodeDirective } from 'vue';
 
 import './ripple.scss';
+
+interface RippleVNodeDirective extends VNodeDirective {
+  value?: boolean;
+}
 
 const PADDING = 10;
 const INITIAL_ORIGIN_SCALE = 0.5;
@@ -16,8 +18,8 @@ const removeRipple = (ripple: HTMLElement, effect?: HTMLElement) => {
 };
 
 type RippleOption = {
-  unbounded: boolean,
-  delay: boolean | number,
+  unbounded: boolean;
+  delay: boolean | number;
 }
 
 function createRippleEffect(el: HTMLElement, options: RippleOption) {
@@ -76,29 +78,19 @@ function createRippleEffect(el: HTMLElement, options: RippleOption) {
   };
 }
 
-function bind(
-  el: HTMLElement,
-  binding: VNodeDirective,
-  vnode?: VNode,
-) {
+function bind(el: HTMLElement, binding: RippleVNodeDirective) {
   const { modifiers, value } = binding;
   if (value === false) return;
   (el as any).vRipple = createRippleEffect(el, modifiers as RippleOption);
 }
 
-function unbind(
-  el: HTMLElement,
-  binding: VNodeDirective,
-  vnode?: VNode,
-) {
+function unbind(el: HTMLElement, binding: RippleVNodeDirective) {
+  const { vRipple } = el as any;
+  if (!vRipple) return;
   delete (el as any).vRipple;
 }
 
-function update(
-  el: HTMLElement,
-  binding: VNodeDirective,
-  vnode: VNode,
-) {
+function update(el: HTMLElement, binding: RippleVNodeDirective) {
   if (binding.value === binding.oldValue) {
     return;
   }

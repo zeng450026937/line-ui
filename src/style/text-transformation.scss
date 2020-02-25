@@ -1,4 +1,3 @@
-@import "../themes/skyline.skip-warns.scss";
 @import "../themes/skyline.globals";
 @import "../themes/skyline.mixins";
 
@@ -12,18 +11,18 @@
   @include media-breakpoint-up($breakpoint, $screen-breakpoints) {
     // Provide `[text-{bp}]` attributes for transforming the text based
     // on the breakpoint
-    .ion-text#{$infix}-uppercase {
-      /* stylelint-disable-next-line declaration-no-important */
+    .line-text#{$infix}-uppercase {
+      /* stylelint-disable-next-line declaratline-no-important */
       text-transform: uppercase !important;
     }
 
-    .ion-text#{$infix}-lowercase {
-      /* stylelint-disable-next-line declaration-no-important */
+    .line-text#{$infix}-lowercase {
+      /* stylelint-disable-next-line declaratline-no-important */
       text-transform: lowercase !important;
     }
 
-    .ion-text#{$infix}-capitalize {
-      /* stylelint-disable-next-line declaration-no-important */
+    .line-text#{$infix}-capitalize {
+      /* stylelint-disable-next-line declaratline-no-important */
       text-transform: capitalize !important;
     }
   }

@@ -1,5 +1,4 @@
 import { createNamespace } from '@/utils/namespace';
-import '@/components/switch/switch-indicator.scss';
 
 const [createComponent, bem] = createNamespace('switch-indicator');
 

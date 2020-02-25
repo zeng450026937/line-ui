@@ -1,1 +1,1 @@
-# @skyline/icon
+# @skyline/icons

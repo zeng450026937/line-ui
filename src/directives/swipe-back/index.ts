@@ -1,14 +1,14 @@
-import { VNodeDirective } from 'vue';
+import { DirectiveOptions, VNodeDirective } from 'vue';
 import { createSwipeBackGesture } from '@/utils/gesture/swipe-back';
 import { NO, NOOP } from '@/utils/helpers';
 
 interface SwipeBackVNodeDirective extends VNodeDirective {
   value?: {
-    canStartHandler: () => boolean,
-    onStartHandler: () => void,
-    onMoveHandler: (step: number) => void,
-    onEndHandler: (shouldComplete: boolean, step: number, dur: number) => void,
-  }
+    canStartHandler: () => boolean;
+    onStartHandler: () => void;
+    onMoveHandler: (step: number) => void;
+    onEndHandler: (shouldComplete: boolean, step: number, dur: number) => void;
+  };
 }
 
 function inserted(el: HTMLElement, binding: SwipeBackVNodeDirective) {
@@ -31,13 +31,16 @@ function inserted(el: HTMLElement, binding: SwipeBackVNodeDirective) {
 }
 
 function unbind(el: HTMLElement) {
-  if (!(el as any).vSwipeBack) return;
-  (el as any).vSwipeBack.destroy();
+  const { vSwipeBack } = el as any;
+  if (!vSwipeBack) return;
+  vSwipeBack.destroy();
   delete (el as any).vSwipeBack;
 }
 
 function update(el: HTMLElement, binding: SwipeBackVNodeDirective) {
-  if (binding.value === binding.oldValue) return;
+  if (binding.value === binding.oldValue) {
+    return;
+  }
   if (binding.oldValue) {
     unbind(el);
   }
@@ -48,6 +51,6 @@ export const SwipeBack = {
   inserted,
   unbind,
   update,
-};
+} as DirectiveOptions;
 
 export default SwipeBack;

@@ -1,11 +1,7 @@
-
 import { createNamespace } from '@/utils/namespace';
 import { useCheckItem } from '@/mixins/use-check-item';
 import { useRipple } from '@/mixins/use-ripple';
 import { createColorClasses, useColor } from '@/mixins/use-color';
-
-import '@/components/radio/radio.md.scss';
-import '@/components/radio/radio.scss';
 
 const NAMESPACE = 'RadioGroup';
 

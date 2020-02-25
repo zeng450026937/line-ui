@@ -1,0 +1,17 @@
+{
+  "name": "@skyline/ie-compat",
+  "version": "1.0.0-alpha",
+  "description": "@skyline/ie-compat",
+  "main": "index.js",
+  "module": "dist/ie-compat.esm-bundler.js",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "types": "dist/ie-compat.d.ts",
+  "keywords": [
+    "skyline"
+  ],
+  "author": "Yealink Inc",
+  "license": "MIT"
+}

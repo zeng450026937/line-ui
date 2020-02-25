@@ -1,8 +1,6 @@
 import { createNamespace } from '@/utils/namespace';
 import { usePopup } from '@/mixins/use-popup';
 import { Overlay } from '@/components/overlay';
-import '@/components/popover/popover.scss';
-import '@/components/popover/popover.md.scss';
 import { iosEnterAnimation } from '@/components/popover/animations/ios.enter';
 import { iosLeaveAnimation } from '@/components/popover/animations/ios.leave';
 import { mdEnterAnimation } from '@/components/popover/animations/md.enter';

@@ -1,5 +1,4 @@
-/* eslint-disable-next-line import/extensions */
-import { VNode } from 'vue/types/vnode';
+import { VNode } from 'vue';
 import { createMixins } from '@/utils/mixins';
 import ripple from '@/directives/ripple';
 

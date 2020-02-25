@@ -1,5 +1,5 @@
 import { createMixins } from '@/utils/mixins';
-import { off, on } from '@/utils/dom/event';
+import { off, on } from '@/utils/dom';
 import { isArray, isFunction } from '@/utils/helpers';
 /* eslint-disable-next-line */
 import { Vue } from 'vue/types/vue';
@@ -40,7 +40,7 @@ export function useEvent<T extends EventOptions = EventOptions>(options: T) {
     const handler = useEvent.handler = eventHandler.bind(this);
     const { event, passive = false, capture = false } = options;
     const events = isArray(event) ? event : [event];
-    events.forEach(event => on(global ? app : this.$el, event, handler, passive, capture));
+    events.forEach(event => on(global ? app : this.$el, event, handler, { passive, capture }));
     useEvent.binded = true;
   }
 

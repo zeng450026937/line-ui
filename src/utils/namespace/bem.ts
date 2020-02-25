@@ -23,7 +23,7 @@ function prefix(name: string, mods: Mods): Mods {
   }
 
   if (Array.isArray(mods)) {
-    return mods.map(item => <Mod>prefix(name, item));
+    return mods.map(item => prefix(name, item) as Mod);
   }
 
   const ret: Mods = {};

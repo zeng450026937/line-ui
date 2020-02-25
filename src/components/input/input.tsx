@@ -3,8 +3,6 @@
 import { createNamespace } from '@/utils/namespace';
 // import { isObject } from '@/utils/helpers';
 
-import '@/components/input/input.md.scss';
-import '@/components/input/input.scss';
 
 const [createComponent, bem] = createNamespace('input');
 

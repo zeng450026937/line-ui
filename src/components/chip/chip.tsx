@@ -1,8 +1,6 @@
 import { createNamespace } from '@/utils/namespace';
 import { useColor } from '@/mixins/use-color';
 import ripple from '@/directives/ripple';
-import '@/components/chip/chip.scss';
-import '@/components/chip/chip.ios.scss';
 
 const [createComponent, bem] = createNamespace('chip');
 

@@ -1,7 +1,5 @@
 import { createNamespace } from '@/utils/namespace';
 import { useColor } from '@/mixins/use-color';
-import '@/components/card/card-title.scss';
-import '@/components/card/card-title.ios.scss';
 
 const [createComponent, bem] = createNamespace('card-title');
 

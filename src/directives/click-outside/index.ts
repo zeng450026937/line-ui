@@ -1,14 +1,15 @@
 import { DirectiveOptions, VNodeDirective } from 'vue';
+import { on } from '@/utils/dom';
 
 interface ClickOutsideOption {
-  enabled?: (ev?: UIEvent) => boolean
-  include?: () => HTMLElement[]
-  callback: (ev: UIEvent) => void
+  enabled?: (ev?: Event) => boolean;
+  include?: () => HTMLElement[];
+  callback: (ev: Event) => void;
 }
 
 interface ClickOutsideDirective extends VNodeDirective {
-  value?: (ev: UIEvent) => void
-  args?: ClickOutsideOption
+  value?: (ev: Event) => void;
+  args?: ClickOutsideOption;
 }
 
 function createClickOutside(el: HTMLElement, options: ClickOutsideOption) {
@@ -18,7 +19,7 @@ function createClickOutside(el: HTMLElement, options: ClickOutsideOption) {
     callback,
   } = options;
 
-  function maybe(ev: UIEvent) {
+  function maybe(ev: Event) {
     if (!ev) return;
     if (enabled(ev) === false) return;
 
@@ -30,40 +31,61 @@ function createClickOutside(el: HTMLElement, options: ClickOutsideOption) {
     elements.push(el);
 
     !elements.some(element => element.contains(ev.target as Node)) && setTimeout(
-      () => { enabled!(ev) && callback!(ev); },
+      () => { enabled(ev) && callback(ev); },
       0,
     );
   }
 
+  const doc = document;
+  const opts = { passive: true };
+
+  const mouseupOff = on(doc, 'mouseup', maybe, opts);
+  const touchendOff = on(doc, 'touchend', maybe, opts);
+
+  function destroy() {
+    mouseupOff();
+    touchendOff();
+  }
+
   return {
     maybe,
+    destroy,
   };
 }
 
 function bind(el: HTMLElement, binding: ClickOutsideDirective) {
   if (!binding.value) return;
-  const vClickOutside = createClickOutside(el, {
-    ...binding.args,
-    callback : binding.value,
-  } as ClickOutsideOption);
-  const doc = document;
-  doc.addEventListener('mouseup', vClickOutside.maybe, true);
-  doc.addEventListener('touchend', vClickOutside.maybe, true);
+  const vClickOutside = createClickOutside(
+    el,
+    {
+      ...binding.args,
+      callback : binding.value,
+    } as ClickOutsideOption,
+  );
   (el as any).vClickOutside = vClickOutside;
 }
 
-function unbind(el: HTMLElement, binding: ClickOutsideDirective) {
-  if (!binding.value) return;
+function unbind(el: HTMLElement, binding?: ClickOutsideDirective) {
   const { vClickOutside } = el as any;
-  const doc = document;
-  doc.removeEventListener('mouseup', vClickOutside.maybe, true);
-  doc.removeEventListener('touchend', vClickOutside.maybe, true);
+  if (!vClickOutside) return;
+  vClickOutside.destroy();
   delete (el as any).vClickOutside;
+}
+
+function update(el: HTMLElement, binding: ClickOutsideDirective) {
+  if (binding.value === binding.oldValue) {
+    return;
+  }
+  if (binding.oldValue) {
+    unbind(el);
+  }
+  bind(el, binding);
 }
 
 export const ClickOutside = {
   bind,
   unbind,
+  update,
 } as DirectiveOptions;
 
 export default ClickOutside;

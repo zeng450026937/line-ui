@@ -1,6 +1,4 @@
 import { createNamespace } from '@/utils/namespace';
-import '@/components/footer/footer.scss';
-import '@/components/footer/footer.ios.scss';
 
 const [createComponent, bem] = createNamespace('footer');
 

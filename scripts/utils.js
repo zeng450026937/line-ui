@@ -1,12 +1,3 @@
-/*
-eslint-disable
-global-require,
-import/no-dynamic-require,
-no-use-before-define,
-no-await-in-loop,
-operator-linebreak,
-consistent-return,
-*/
 
 const fs = require('fs');
 const chalk = require('chalk');

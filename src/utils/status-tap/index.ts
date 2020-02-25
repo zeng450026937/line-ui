@@ -7,7 +7,7 @@ export const setupStatusTap = () => {
     if (!el) {
       return;
     }
-    const contentEl = el.closest('ion-content');
+    const contentEl = el.closest('.line-content');
     if (contentEl) {
       (contentEl as any).scrollToTop(300);
     }

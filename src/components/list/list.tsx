@@ -1,7 +1,5 @@
 import { createNamespace } from '@/utils/namespace';
 import { isDef } from '@/utils/helpers';
-import '@/components/list/list.scss';
-import '@/components/list/list.ios.scss';
 
 const [createComponent, bem] = createNamespace('list');
 

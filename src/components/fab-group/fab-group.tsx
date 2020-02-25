@@ -3,7 +3,6 @@ import { useGroup } from '@/mixins/use-group';
 import { useLazy } from '@/mixins/use-lazy';
 import { useModel } from '@/mixins/use-model';
 import { isDef, isObject } from '@/utils/helpers';
-import '@/components/fab-group/fab-group.scss';
 
 const NAMESPACE = 'FabGroup';
 const [createComponent, bem] = createNamespace('fab-group');

@@ -1,12 +1,6 @@
-import {
-  DirectiveOptions, VNode, VNodeDirective,
-} from 'vue';
+import { DirectiveOptions, VNodeDirective } from 'vue';
 
-function bind(
-  el: HTMLElement,
-  binding: VNodeDirective,
-  vnode: VNode,
-) {
+function bind(el: HTMLElement, binding: VNodeDirective) {
   const { modifiers } = binding;
   el.classList.add('line-activatable');
   if (modifiers!.instant) {
@@ -14,11 +8,7 @@ function bind(
   }
 }
 
-function unbind(
-  el: HTMLElement,
-  binding: VNodeDirective,
-  vnode: VNode,
-) {
+function unbind(el: HTMLElement, binding: VNodeDirective) {
   const { modifiers } = binding;
   el.classList.remove('line-activatable');
   if (modifiers!.instant) {

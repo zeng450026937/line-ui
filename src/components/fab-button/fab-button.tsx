@@ -3,8 +3,6 @@ import { useColor } from '@/mixins/use-color';
 import { useGroupItem } from '@/mixins/use-group-item';
 import { isDef } from '@/utils/helpers';
 import ripple from '@/directives/ripple';
-import '@/components/fab-button/fab-button.scss';
-import '@/components/fab-button/fab-button.ios.scss';
 
 const NAMESPACE = 'FabGroup';
 const [createComponent, bem] = createNamespace('fab-button');

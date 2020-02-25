@@ -1,6 +1,4 @@
 import { createNamespace } from '@/utils/namespace';
-import '@/components/header/header.scss';
-import '@/components/header/header.ios.scss';
 
 const [createComponent, bem] = createNamespace('header');
 

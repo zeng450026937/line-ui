@@ -1,25 +1,38 @@
-import { VNodeDirective } from 'vue';
+import { DirectiveOptions, VNodeDirective } from 'vue';
+import { isObject } from '@/utils/helpers';
 
 interface ObserveVNodeDirective extends VNodeDirective {
-  arg: string
-  options?: IntersectionObserverInit
+  arg: string;
+  value: ObserveDirectiveValue | ObserveDirectiveHandler;
 }
 
+type ObserveDirectiveValue = {
+  handler: ObserveDirectiveHandler;
+  options?: IntersectionObserverInit;
+};
+
+type ObserveDirectiveHandler = (
+  entries: IntersectionObserverEntry[],
+  observer: IntersectionObserver,
+  isIntersecting: boolean,
+) => void;
+
 function inserted(el: HTMLElement, binding: ObserveVNodeDirective) {
-  const modifiers = binding.modifiers || /* istanbul ignore next */ {};
+  if (!binding.value) return;
+
+  const modifiers = binding.modifiers || {};
   const { value } = binding;
-  const isObject = value !== null && typeof value === 'object';
-  const callback = isObject ? value.handler : value;
+  const callback = isObject(value)
+    ? (value as ObserveDirectiveValue).handler
+    : (value as ObserveDirectiveHandler);
   const options = {
     root : document.querySelector(binding.arg),
-    ...Object(value),
+    ...(value as ObserveDirectiveValue).options,
   };
   const observer = new IntersectionObserver((
     entries: IntersectionObserverEntry[] = [],
-    /* eslint-disable-next-line */
     observer: IntersectionObserver,
   ) => {
-    /* istanbul ignore if */
     if (!(el as any).vIntersect) return; // Just in case, should never fire
 
     // If is not quiet or has already been
@@ -43,22 +56,40 @@ function inserted(el: HTMLElement, binding: ObserveVNodeDirective) {
     else ((el as any).vIntersect.init = true);
   }, options);
 
-  (el as any).vIntersect = { init: false, observer };
+
+  function destroy() {
+    observer.unobserve(el);
+  }
+
+  (el as any).vIntersect = {
+    init : false,
+    observer,
+    destroy,
+  };
 
   observer.observe(el);
 }
 
 function unbind(el: HTMLElement) {
-  /* istanbul ignore if */
-  if (!(el as any).vIntersect) return;
-
-  (el as any).vIntersect.observer.unobserve(el);
+  const { vIntersect } = el as any;
+  if (!vIntersect) return;
+  vIntersect.destroy();
   delete (el as any).vIntersect;
+}
+
+function update(el: HTMLElement, binding: ObserveVNodeDirective) {
+  if (binding.value === binding.oldValue) {
+    return;
+  }
+  if (binding.oldValue) {
+    unbind(el);
+  }
+  inserted(el, binding);
 }
 
 export const Intersect = {
   inserted,
   unbind,
-};
+} as DirectiveOptions;
 
 export default Intersect;

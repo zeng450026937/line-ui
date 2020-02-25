@@ -1,4 +1,3 @@
-@import "../themes/skyline.skip-warns.scss";
 @import "../themes/skyline.globals";
 @import "../themes/skyline.mixins";
 
@@ -8,8 +7,8 @@
 // Creates padding and margin attributes to be used on
 // any element
 
-$padding: var(--line-padding, 16px);
-$margin: var(--line-margin, 16px);
+$padding: var(--line-padding, 16px) !default;
+$margin: var(--line-margin, 16px) !default;
 
 // Padding
 // --------------------------------------------------

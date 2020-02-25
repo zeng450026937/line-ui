@@ -1,20 +1,35 @@
-import { VNodeDirective } from 'vue';
+import { DirectiveOptions, VNodeDirective } from 'vue';
+import { isObject } from '@/utils/helpers';
 
 interface MutateVNodeDirective extends VNodeDirective {
-  options?: MutationObserverInit
+  options?: MutationObserverInit;
+  value: MutateDirectiveValue | MutateDirectiveHandler;
 }
 
+type MutateDirectiveValue = {
+  handler: MutateDirectiveHandler;
+  options?: MutationObserverInit;
+};
+
+type MutateDirectiveHandler = (
+  mutationsList: MutationRecord[],
+  observer: MutationObserver,
+) => void;
+
 function inserted(el: HTMLElement, binding: MutateVNodeDirective) {
-  const modifiers = binding.modifiers || /* istanbul ignore next */ {};
+  if (!binding.value) return;
+
+  const modifiers = binding.modifiers || {};
   const { value } = binding;
-  const isObject = value !== null && typeof value === 'object';
-  const callback = isObject ? value.handler : value;
+  const callback = isObject(value)
+    ? (value as MutateDirectiveValue).handler
+    : (value as MutateDirectiveHandler);
   const { once, ...modifierKeys } = modifiers;
   const hasModifiers = Object.keys(modifierKeys).length > 0;
-  const hasOptions = isObject && value.options;
+  const hasOptions = !!(value as any).options;
 
   // Options take top priority
-  const options = hasOptions ? value.options : hasModifiers
+  const options = hasOptions ? (value as MutateDirectiveValue).options : hasModifiers
     // If we have modifiers, use only those provided
     ? {
       attributes    : modifierKeys.attr,
@@ -32,10 +47,8 @@ function inserted(el: HTMLElement, binding: MutateVNodeDirective) {
 
   const observer = new MutationObserver((
     mutationsList: MutationRecord[],
-    /* eslint-disable-next-line */
     observer: MutationObserver,
   ) => {
-    /* istanbul ignore if */
     if (!(el as any).vMutate) return; // Just in case, should never fire
 
     callback(mutationsList, observer);
@@ -45,21 +58,39 @@ function inserted(el: HTMLElement, binding: MutateVNodeDirective) {
     once && unbind(el);
   });
 
+  function destroy() {
+    observer.disconnect();
+  }
+
+  (el as any).vMutate = {
+    observer,
+    destroy,
+  };
+
   observer.observe(el, options);
-  (el as any).vMutate = { observer };
 }
 
 function unbind(el: HTMLElement) {
-  /* istanbul ignore if */
-  if (!(el as any).vMutate) return;
-
-  (el as any).vMutate.observer.disconnect();
+  const { vMutate } = el as any;
+  if (!vMutate) return;
+  vMutate.destroy();
   delete (el as any).vMutate;
+}
+
+function update(el: HTMLElement, binding: MutateVNodeDirective) {
+  if (binding.value === binding.oldValue) {
+    return;
+  }
+  if (binding.oldValue) {
+    unbind(el);
+  }
+  inserted(el, binding);
 }
 
 export const Mutate = {
   inserted,
   unbind,
-};
+  update,
+} as DirectiveOptions;
 
 export default Mutate;

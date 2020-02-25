@@ -2,8 +2,8 @@
 import { Vue } from 'vue/types/vue';
 import { createMixins } from '@/utils/mixins';
 import { useGroupItem } from '@/mixins/use-group-item';
+import { ModelOptions, useModel } from '@/mixins/use-model';
 import { isDef } from '@/utils/helpers';
-import { ModelOptions, useModel } from './use-model';
 
 export type CheckItemProps = {
   checkable: boolean;

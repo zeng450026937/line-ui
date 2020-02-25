@@ -1,8 +1,6 @@
-import { Icon } from '../icon';
 import { createNamespace } from '@/utils/namespace';
 import { convertToUnit } from '@/utils/helpers';
-
-import './stepper.scss';
+import { Icon } from '@/components/icon';
 
 const [createComponent, bem] = createNamespace('stepper');
 

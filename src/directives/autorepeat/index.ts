@@ -1,13 +1,14 @@
 import { DirectiveOptions, VNodeDirective } from 'vue';
-
-interface AutoRepeatOption {
-  enable?: boolean
-  delay?: number
-  interval?: number
-}
+import { on } from '@/utils/dom';
 
 interface AutoRepeatDirective extends VNodeDirective {
-  value?: AutoRepeatOption
+  value?: AutoRepeatOption;
+}
+
+interface AutoRepeatOption {
+  enable?: boolean;
+  delay?: number;
+  interval?: number;
 }
 
 const REPEAT_DELAY = 300;
@@ -22,7 +23,7 @@ function createAutoRepeat(el: HTMLElement, options: AutoRepeatOption) {
     delay: repeatDelay = REPEAT_DELAY,
   } = options;
 
-  function start(ev: UIEvent) {
+  function start(ev: Event) {
     if (enableRepeat) {
       repeatDelayTimer = setTimeout(() => {
         repeatTimer = setInterval(() => {
@@ -46,7 +47,7 @@ function createAutoRepeat(el: HTMLElement, options: AutoRepeatOption) {
     }
   }
 
-  function pointerDown(ev: UIEvent) {
+  function pointerDown(ev: Event) {
     if (!enableRepeat) return;
     if (('isTrusted' in ev && !ev.isTrusted)
     || ('pointerType' in ev && !(ev as PointerEvent).pointerType)
@@ -68,6 +69,27 @@ function createAutoRepeat(el: HTMLElement, options: AutoRepeatOption) {
     repeatDelay = val.delay || REPEAT_DELAY;
   }
 
+
+  const doc = document;
+  const opts = { passive: true };
+
+  const mousedownOff = on(doc, 'mousedown', pointerDown, opts);
+  const mouseupOff = on(doc, 'mouseup', stop, opts);
+  const touchstartOff = on(doc, 'touchstart', pointerDown, opts);
+  const touchendOff = on(doc, 'touchend', stop, opts);
+  const touchcancelOff = on(doc, 'touchcancel', stop, opts);
+  const dragstartOff = on(doc, 'dragstart', stop, opts);
+
+  function destroy() {
+    stop();
+    mousedownOff();
+    mouseupOff();
+    touchstartOff();
+    touchendOff();
+    touchcancelOff();
+    dragstartOff();
+  }
+
   return {
     enable,
     update    : setOptions,
@@ -75,23 +97,20 @@ function createAutoRepeat(el: HTMLElement, options: AutoRepeatOption) {
     stop,
     pointerDown,
     pointerUp : stop,
+    destroy,
   };
 }
 
 function bind(el: HTMLElement, binding: AutoRepeatDirective) {
   if (binding.value === false) return;
   const vAutoRepeat = createAutoRepeat(el, binding.value as AutoRepeatOption);
-  const doc = document;
-  doc.addEventListener('mousedown', vAutoRepeat.pointerDown, true);
-  doc.addEventListener('mouseup', vAutoRepeat.pointerUp, true);
-  doc.addEventListener('touchstart', vAutoRepeat.pointerDown, true);
-  doc.addEventListener('touchend', vAutoRepeat.pointerUp, true);
-  doc.addEventListener('touchcancel', vAutoRepeat.pointerUp, true);
-  doc.addEventListener('dragstart', vAutoRepeat.pointerUp, true);
   (el as any).vAutoRepeat = vAutoRepeat;
 }
 
 function update(el: HTMLElement, binding: AutoRepeatDirective) {
+  if (binding.value === binding.oldValue) {
+    return;
+  }
   const { vAutoRepeat } = (el as any);
   if (!vAutoRepeat) {
     bind(el, binding);
@@ -104,13 +123,7 @@ function update(el: HTMLElement, binding: AutoRepeatDirective) {
 function unbind(el: HTMLElement, binding: AutoRepeatDirective) {
   const { vAutoRepeat } = el as any;
   if (!vAutoRepeat) return;
-  const doc = document;
-  doc.removeEventListener('mousedown', vAutoRepeat.pointerDown, true);
-  doc.removeEventListener('mouseup', vAutoRepeat.pointerUp, true);
-  doc.removeEventListener('touchstart', vAutoRepeat.pointerDown, true);
-  doc.removeEventListener('touchend', vAutoRepeat.pointerUp, true);
-  doc.removeEventListener('touchcancel', vAutoRepeat.pointerUp, true);
-  doc.removeEventListener('dragstart', vAutoRepeat.pointerUp, true);
+  vAutoRepeat.destroy();
   delete (el as any).vAutoRepeat;
 }
 

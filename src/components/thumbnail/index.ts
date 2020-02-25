@@ -1,4 +1,8 @@
-/* eslint-disable sort-imports, object-curly-newline */
+// Auto Generated
+// This file is auto generated, do not modify directly.
+
 import Thumbnail from '@/components/thumbnail/thumbnail';
 
-export { Thumbnail };
+export {
+  Thumbnail,
+};

@@ -1,5 +1,4 @@
 import { createNamespace } from '@/utils/namespace';
-import '@/components/cell/cell-group.scss';
 
 const [createComponent, bem] = createNamespace('cell-group');
 

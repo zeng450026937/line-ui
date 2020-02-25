@@ -1,5 +1,3 @@
-/* eslint-disable global-require */
-/* eslint-disable import/no-extraneous-dependencies */
 function commitLint() {
   const fs = require('fs');
   const chalk = require('chalk');

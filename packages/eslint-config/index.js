@@ -1,9 +1,6 @@
 module.exports = {
   env : {
-    es6     : true,
-    node    : true,
-    jest    : true,
-    browser : true,
+    node : true,
   },
 
   globals : {
@@ -15,10 +12,42 @@ module.exports = {
   extends : [
     'plugin:vue/essential',
     '@vue/airbnb',
-    '@vue/typescript',
+    '@vue/typescript/recommended',
+  ],
+
+  parserOptions : {
+    ecmaVersion : 2020,
+  },
+
+  overrides : [
+    {
+      files : [
+        '**/__tests__/*.{j,t}s?(x)',
+        '**/tests/unit/**/*.spec.{j,t}s?(x)',
+      ],
+      env : {
+        jest : true,
+      },
+    },
+    {
+      files : ['*.js'],
+      rules : {
+        // The core 'no-unused-vars' rules (in the eslint:recommeded ruleset)
+        // does not work with type definitions
+        'no-unused-vars'                          : 'off',
+        // js file is considered to be script file
+        // and only run in node environment
+        'global-require'                          : 'off',
+        'import/no-dynamic-require'               : 'off',
+        'import/order'                            : 'off',
+        '@typescript-eslint/no-var-requires'      : 'off',
+        '@typescript-eslint/no-use-before-define' : 'off',
+      },
+    },
   ],
 
   rules : {
+    'no-await-in-loop'      : 0,
     'no-shadow'             : 0,
     'no-plusplus'           : 0,
     'no-nested-ternary'     : 0,
@@ -30,7 +59,7 @@ module.exports = {
     'no-iterator'           : 0,
     'no-restricted-syntax'  : 0,
     'no-continue'           : 0,
-    // 'no-unused-vars': 1,
+    'consistent-return'     : 1,
     'max-len'               : [2, 120,
       {
         tabWidth               : 2,
@@ -71,24 +100,6 @@ module.exports = {
       ignoreMemberSort      : false,
       memberSyntaxSortOrder : ['none', 'all', 'multiple', 'single'],
     }],
+    'max-classes-per-file' : 0,
   },
-
-  parserOptions : {
-    parser              : '@typescript-eslint/parser',
-    ecmaVersion         : 2018,
-    sourceType          : 'module',
-    extraFileExtensions : ['.vue'],
-  },
-
-  overrides : [
-    {
-      files : [
-        '**/__tests__/*.{j,t}s?(x)',
-        '**/tests/unit/**/*.spec.{j,t}s?(x)',
-      ],
-      env : {
-        jest : true,
-      },
-    },
-  ],
 };

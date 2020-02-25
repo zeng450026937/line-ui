@@ -1,7 +1,5 @@
 import { createNamespace } from '@/utils/namespace';
 import { now } from '@/utils/helpers';
-import '@/components/overlay/overlay.scss';
-import '@/components/overlay/overlay.ios.scss';
 
 const [createComponent, bem] = createNamespace('overlay');
 

@@ -1,4 +1,8 @@
-import { createGesture, Gesture, GestureDetail } from './index';
+/* eslint-disable */
+
+import { clamp } from '@/utils/number';
+
+import { Gesture, GestureDetail, createGesture } from './index';
 
 export const createSwipeBackGesture = (
   el: HTMLElement,
@@ -26,7 +30,8 @@ export const createSwipeBackGesture = (
     const stepValue = delta / width;
     const velocity = detail.velocityX;
     const z = width / 2.0;
-    const shouldComplete = velocity >= 0 && (velocity > 0.2 || detail.deltaX > z);
+    const shouldComplete =
+      velocity >= 0 && (velocity > 0.2 || detail.deltaX > z);
 
     const missing = shouldComplete ? 1 - stepValue : stepValue;
     const missingDistance = missing * width;
@@ -37,22 +42,21 @@ export const createSwipeBackGesture = (
     }
 
     /**
-     * TODO: stepValue can sometimes return a negative
-     * value, but you can't have a negative time value
-     * for the cubic bezier curve (at least with web animations)
-     * Not sure if the negative step value is an error or not
+     * TODO: stepValue can sometimes return negative values
+     * or values greater than 1 which should not be possible.
+     * Need to investigate more to find where the issue is.
      */
-    onEndHandler(shouldComplete, (stepValue <= 0) ? 0.01 : stepValue, realDur);
+    onEndHandler(shouldComplete, (stepValue <= 0) ? 0.01 : clamp(0, stepValue, 0.9999), realDur);
   };
 
   return createGesture({
     el,
-    gestureName     : 'goback-swipe',
-    gesturePriority : 40,
-    threshold       : 10,
+    gestureName: 'goback-swipe',
+    gesturePriority: 40,
+    threshold: 10,
     canStart,
-    onStart         : onStartHandler,
+    onStart: onStartHandler,
     onMove,
-    onEnd,
+    onEnd
   });
 };

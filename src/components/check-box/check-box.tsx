@@ -4,9 +4,6 @@ import { useRipple } from '@/mixins/use-ripple';
 import { createColorClasses, useColor } from '@/mixins/use-color';
 import CheckIndicator from '@/components/check-box/check-indicator';
 
-import '@/components/check-box/check-box.ios.scss';
-import '@/components/check-box/check-box.scss';
-
 const NAMESPACE = 'CheckBoxGroup';
 const [createComponent, bem] = createNamespace('check-box');
 

@@ -2,7 +2,6 @@ import { createNamespace } from '@/utils/namespace';
 import { useCheckItem } from '@/mixins/use-check-item';
 import { useRipple } from '@/mixins/use-ripple';
 import RadioIndicator from '@/components/radio-button/radio-indicator';
-import '@/components/radio-button/radio-button.scss';
 
 const NAMESPACE = 'RadioButtonGroup';
 

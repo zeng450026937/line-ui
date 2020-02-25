@@ -21,7 +21,7 @@ export const APPEAR_EVENTS = [
   'appear-cancelled',
 ];
 
-export function createTransitionHooks(delegate: Vue, appear: boolean = false, css: boolean = false) {
+export function createTransitionHooks(delegate: Vue, appear = false, css = false) {
   const events = [
     ...ENTER_EVENTS,
     ...LEAVE_EVENTS,

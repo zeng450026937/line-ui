@@ -1,5 +1,4 @@
 import { createNamespace } from '@/utils/namespace';
-import '@/components/busy-indicator/busy-indicator.scss';
 
 const [createComponent, bem] = createNamespace('busy-indicator');
 

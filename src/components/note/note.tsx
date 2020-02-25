@@ -1,7 +1,5 @@
 import { createNamespace } from '@/utils/namespace';
 import { createColorClasses } from '@/mixins/use-color';
-import '@/components/note/note.scss';
-import '@/components/note/note.ios.scss';
 
 const [createComponent, bem] = createNamespace('note');
 

@@ -3,9 +3,6 @@ import { getSkylineMode } from '@/utils/config';
 // import { Icon } from '@/components/icon';
 import { createNamespace } from '@/utils/namespace';
 
-import '@/components/text-area/textarea.scss';
-import '@/components/text-area/textarea.ios.scss';
-
 const [createComponent, bem] = createNamespace('textarea');
 
 export default createComponent({

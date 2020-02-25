@@ -1,15 +1,12 @@
 {
   "name": "@skyline/playground",
-  "version": "1.0.0",
-  "description": "skyline playground",
-  "publishConfig": {
-    "access": "public"
-  },
+  "version": "1.0.0-alpha",
+  "description": "@skyline/playground",
   "keywords": [
-    "skyline"
+    "skyline",
+    "playgroun"
   ],
-  "private": true,
+  "author": "Yealink Inc",
   "license": "MIT",
-  "dependencies": {
-  }
+  "private": true
 }

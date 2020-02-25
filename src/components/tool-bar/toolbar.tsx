@@ -1,7 +1,5 @@
 import { createNamespace } from '@/utils/namespace';
 import { useColor } from '@/mixins/use-color';
-import '@/components/tool-bar/toolbar.scss';
-import '@/components/tool-bar/toolbar.ios.scss';
 
 const [createComponent, bem] = createNamespace('toolbar');
 

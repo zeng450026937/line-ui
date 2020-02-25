@@ -1,4 +1,3 @@
-@import "../themes/skyline.skip-warns.scss";
 @import "../themes/skyline.globals";
 @import "../themes/skyline.mixins";
 
@@ -10,21 +9,21 @@
   $infix: breakpoint-infix($breakpoint, $screen-breakpoints);
 
   @include media-breakpoint-up($breakpoint, $screen-breakpoints) {
-    // Provide `.ion-float-{bp}-{side}` classes for floating the element based
+    // Provide `.line-float-{bp}-{side}` classes for floating the element based
     // on the breakpoint and side
-    .ion-float#{$infix}-left {
+    .line-float#{$infix}-left {
       @include float(left, !important);
     }
 
-    .ion-float#{$infix}-right {
+    .line-float#{$infix}-right {
       @include float(right, !important);
     }
 
-    .ion-float#{$infix}-start {
+    .line-float#{$infix}-start {
       @include float(start, !important);
     }
 
-    .ion-float#{$infix}-end {
+    .line-float#{$infix}-end {
       @include float(end, !important);
     }
   }

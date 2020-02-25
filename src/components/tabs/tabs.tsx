@@ -1,8 +1,6 @@
 import { createNamespace } from '@/utils/namespace';
 import { useCheckGroup, useCheckGroupWithModel } from '@/mixins/use-check-group';
 
-import '@/components/tabs/tabs.scss';
-
 const NAMESPACE = 'Tabs';
 const [createComponent, bem] = createNamespace('tabs');
 

@@ -1,5 +1,4 @@
 import { createNamespace } from '@/utils/namespace';
-import '@/components/list-view/list-item.scss';
 
 const NAMESPACE = 'ListView';
 const [createComponent, bem] = createNamespace('list-item');
