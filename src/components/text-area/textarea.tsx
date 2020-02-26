@@ -1,6 +1,3 @@
-import { getSkylineMode } from '@/utils/config';
-// import { isObject } from '@/utils/helpers';
-// import { Icon } from '@/components/icon';
 import { createNamespace } from '@/utils/namespace';
 
 const [createComponent, bem] = createNamespace('textarea');
@@ -158,7 +155,7 @@ export default createComponent({
       // this.emitStyle(); ?
     },
 
-    onInput(ev: Event): void {
+    onInput(): void {
       const { textarea } = this.$refs;
       if (textarea) {
         this.$emit('input', (textarea as HTMLInputElement).value);

@@ -10,8 +10,20 @@ const [createComponent, bem] = createNamespace('radio');
 export default createComponent({
   mixins : [useCheckItem(NAMESPACE), useRipple(), useColor()],
 
+  data() {
+    return {
+      inItem : false,
+    };
+  },
+
+  mounted() {
+    this.inItem = this.$el.closest('.line-item') !== null;
+  },
+
   render() {
-    const { checked, disabled, color } = this;
+    const {
+      checked, disabled, color, inItem,
+    } = this;
 
     return (
       <div
@@ -20,7 +32,7 @@ export default createComponent({
             checked,
             disabled,
           }),
-          { ...createColorClasses(color) },
+          { ...createColorClasses(color), 'in-item': inItem },
         ]}
         role="radio"
         onClick={this.toggle}

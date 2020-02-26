@@ -203,7 +203,9 @@ export default createComponent({
   },
 
   watch : {
-    disabled() {},
+    disabled() {
+      //
+    },
   },
 
   created() {
@@ -305,7 +307,7 @@ export default createComponent({
 
     onStart(detail: GestureDetail) {
       const { rangeSlider } = this.$refs;
-      const rect = this.rect = (rangeSlider as HTMLElement)!.getBoundingClientRect() as any;
+      const rect = this.rect = (rangeSlider as HTMLElement).getBoundingClientRect() as any;
       const { currentX } = detail;
 
       // figure out which knob they started closer to
@@ -338,7 +340,7 @@ export default createComponent({
       // figure out where the pointer is currently at
       // update the knob being interacted with
       const { rect } = this;
-      let ratio = clamp(0, (currentX - rect!.left) / rect!.width, 1);
+      let ratio = clamp(0, (currentX - rect.left) / rect.width, 1);
       if (document.dir === 'rtl') {
         ratio = 1 - ratio;
       }
@@ -391,7 +393,7 @@ export default createComponent({
     },
 
     setFocus(knob: string) {
-      const knobEl = this.el.querySelector(
+      const knobEl = this.$el.querySelector(
         knob === 'A' ? '.range-knob-a' : '.range-knob-b',
       ) as HTMLElement | undefined;
       if (knobEl) {
@@ -418,7 +420,7 @@ export default createComponent({
 
   render(h) {
     const {
-      min, max, step, el, handleKeyboard, pressedKnob, disabled, pin, ratioLower, ratioUpper, color,
+      min, max, step, handleKeyboard, pressedKnob, disabled, pin, ratioLower, ratioUpper,
     } = this;
 
     // const mode = getSkylineMode(this);

@@ -105,6 +105,10 @@ export default createComponent({
       return this.$refs.scrollEl as HTMLElement;
     },
 
+    getBackgroundContent() {
+      return this.$refs.backgroundContentEl as HTMLElement;
+    },
+
     async scrollByPoint(x: number, y: number, duration?: number) {
       const { scrollEl } = this.$refs;
       if (!scrollEl) return;
@@ -209,6 +213,10 @@ export default createComponent({
           '!click' : this.onClick,
         }}
       >
+        <div
+          ref="backgroundContentEl"
+          id="background-content"
+        ></div>
         <main
           class={{
             'inner-scroll' : true,
@@ -221,6 +229,8 @@ export default createComponent({
         >
           {this.slots()}
         </main>
+        {this.slots('fixed')}
+
       </div>
     );
   },

@@ -26,12 +26,13 @@ export default createComponent({
   },
 
   created() {
+    const { mode } = this;
     this.$on('animation-enter', (builder: any) => {
-      builder.build = iosEnterAnimation;
+      builder.build = mode === 'md' ? mdEnterAnimation : iosEnterAnimation;
       builder.options = this.position;
     });
     this.$on('animation-leave', (builder: any) => {
-      builder.build = iosLeaveAnimation;
+      builder.build = mode === 'md' ? mdLeaveAnimation : iosLeaveAnimation;
       builder.options = this.position;
     });
 
