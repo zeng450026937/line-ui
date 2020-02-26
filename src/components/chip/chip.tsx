@@ -29,6 +29,7 @@ export default createComponent({
           bem({ outline }),
           { 'line-activatable': true },
         ]}
+        on={this.$listeners}
       >
         {this.slots()}
         {/* {mode === 'md' && <line-ripple-effect></line-ripple-effect>} */}

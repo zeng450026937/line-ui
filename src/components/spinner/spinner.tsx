@@ -53,7 +53,7 @@ export default createComponent({
     paused   : Boolean,
   },
 
-  render(h, { props }) {
+  render(h, { props, data }) {
     const spinnerName = getSpinnerName(props.type);
     const spinner = SPINNERS[spinnerName] || SPINNERS.lines;
     const duration = (props.duration > 10 ? props.duration : spinner.dur);
@@ -70,12 +70,16 @@ export default createComponent({
     }
     return (
       <div
-        class={[bem({
-          [spinnerName] : true,
-          paused        : !!props.paused || config.getBoolean('testing'),
-        }), createColorClasses(props.color)]}
+        class={[
+          bem({
+            [spinnerName] : true,
+            paused        : !!props.paused || config.getBoolean('testing'),
+          }),
+          createColorClasses(props.color),
+        ]}
         role="progressbar"
         style={spinner.elmDuration && { animationDuration: `${ duration }ms` }}
+        {...data}
       >
         {svgs}
       </div>

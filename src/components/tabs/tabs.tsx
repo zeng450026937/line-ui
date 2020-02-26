@@ -18,13 +18,14 @@ export default createComponent({
     return (
       <div
         class={bem()}
+        on={this.$listeners}
       >
         {this.slots('top')}
-        <div
-          class={bem('inner')}
-        >
+
+        <div class={bem('inner')}>
           {this.slots()}
         </div>
+
         {this.slots('bottom')}
       </div>
     );

@@ -1,7 +1,6 @@
 import { createNamespace } from '@/utils/namespace';
 import { useCheckItem } from '@/mixins/use-check-item';
 import { Icon } from '@/components/icon';
-import { mergeListener } from '@/utils/vnode';
 
 const NAMESPACE = 'Collapse';
 const [createComponent, bem] = createNamespace('collapse-item');

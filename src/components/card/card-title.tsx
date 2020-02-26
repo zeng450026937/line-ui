@@ -12,6 +12,7 @@ export default createComponent({
         role="heading"
         aria-level="2"
         class={[bem(), 'line-inherit-color']}
+        on={this.$listeners}
       >
         {this.slots()}
       </div>

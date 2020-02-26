@@ -85,6 +85,7 @@ export default createComponent({
     return (
       <div
         class={bem()}
+        on={this.$listeners}
       >
         <img
           decoding="async"

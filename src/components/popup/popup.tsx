@@ -34,6 +34,7 @@ export default createComponent({
         aria-modal="true"
         role="dialog"
         class={bem()}
+        on={this.$listeners}
       >
         <Overlay
           onTap={this.onTap}

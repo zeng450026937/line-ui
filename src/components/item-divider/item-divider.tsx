@@ -20,6 +20,7 @@ export default createComponent({
           }),
           'item',
         ]}
+        on={this.$listeners}
       >
         {this.slots('start')}
 

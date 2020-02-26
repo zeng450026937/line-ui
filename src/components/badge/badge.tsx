@@ -6,14 +6,11 @@ const [createComponent, bem] = createNamespace('badge');
 export default createComponent({
   mixins : [useColor()],
 
-  props : {
-
-  },
-
   render() {
     return (
       <div
         class={bem()}
+        on={this.$listeners}
       >
         {this.slots()}
       </div>

@@ -26,7 +26,6 @@ export default createComponent({
   render(h, { props, data }) {
     return (
       <SvgIcon
-        {...data}
         class={bem({
           checked       : props.checked,
           indeterminate : props.indeterminate,
@@ -35,6 +34,7 @@ export default createComponent({
         scopedSlots={{
           content : () => path || (path = h('path', { attrs: { d: 'M1.73,12.91 8.1,19.28 22.79,4.59' } })),
         }}
+        {...data}
       ></SvgIcon>
     );
   },

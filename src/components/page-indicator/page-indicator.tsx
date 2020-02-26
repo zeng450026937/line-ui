@@ -5,10 +5,6 @@ import { Icon } from '@/components/icon';
 const [createComponent, bem] = createNamespace('page-indicator');
 
 export default createComponent({
-  components : {
-    Icon,
-  },
-
   props : {
     count : {
       type      : Number,
@@ -148,7 +144,7 @@ export default createComponent({
           ref="indicator">
         <li class={bem('item')}
             onClick={() => this.previous()}>
-          <icon {...{ props: isObject(this.prevIcon) ? this.prevIcon : { name: this.prevIcon } }}></icon>
+          <Icon {...{ props: isObject(this.prevIcon) ? this.prevIcon : { name: this.prevIcon } }}></Icon>
         </li>
         {list.map((item, index) => {
           return (
@@ -160,7 +156,7 @@ export default createComponent({
         })}
         <li class={bem('item')}
             onClick={() => this.next()}>
-          <icon {...{ props: isObject(this.nextIcon) ? this.nextIcon : { name: this.nextIcon } }}></icon>
+          <Icon {...{ props: isObject(this.nextIcon) ? this.nextIcon : { name: this.nextIcon } }}></Icon>
         </li>
       </ul>);
   },

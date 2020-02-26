@@ -3,7 +3,7 @@ import { useGroup } from '@/mixins/use-group';
 import { useLazy } from '@/mixins/use-lazy';
 import { useModel } from '@/mixins/use-model';
 import { isDef, isObject } from '@/utils/helpers';
-import { VNodeData } from 'vue/types/umd';
+import { VNodeData } from 'vue';
 
 const NAMESPACE = 'FabGroup';
 const [createComponent, bem] = createNamespace('fab-group');

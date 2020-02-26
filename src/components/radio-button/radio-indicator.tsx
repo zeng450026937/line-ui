@@ -19,7 +19,6 @@ export default createComponent({
   render(h, { props, data }) {
     return (
       <div
-        {...data}
         class={[
           bem({
             checked  : props.checked,
@@ -27,6 +26,7 @@ export default createComponent({
           }),
           data.class,
         ]}
+        {...data}
       ></div>
     );
   },

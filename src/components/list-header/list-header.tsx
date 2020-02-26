@@ -17,6 +17,7 @@ export default createComponent({
     return (
       <div
         class={bem({ [`lines-${ lines }`]: isDef(lines) })}
+        on={this.$listeners}
       >
         <div class="list-header-innerd">
           {this.slots()}

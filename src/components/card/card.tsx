@@ -53,6 +53,7 @@ export default createComponent({
             'line-activatable' : clickable,
           },
         ]}
+        on={this.$listeners}
       >
         {
           !clickable ? this.slots() : (

@@ -55,6 +55,7 @@ export default createComponent({
             'label-no-animate'      : (this.noAnimate),
           },
         ]}
+        on={this.$listeners}
       >
         {this.slots()}
       </div>

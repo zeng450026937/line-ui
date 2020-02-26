@@ -18,6 +18,7 @@ export default createComponent({
           [`lines-${ lines }`] : isDef(lines),
           inset,
         })}
+        on={this.$listeners}
       >
         {this.slots()}
       </div>

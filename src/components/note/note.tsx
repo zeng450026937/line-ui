@@ -10,9 +10,12 @@ export default createComponent({
     color : String,
   },
 
-  render(h, { props, slots }) {
+  render(h, { props, data, slots }) {
     return (
-      <div class={[bem(), createColorClasses(props.color)]}>
+      <div
+        class={[bem(), createColorClasses(props.color)]}
+        {...data}
+      >
         {slots()}
       </div>
     );

@@ -33,6 +33,7 @@ export default createComponent({
         v-show={this.visible}
         aria-modal="true"
         class={bem({ translucent: this.translucent })}
+        on={this.$listeners}
       >
         <Overlay
           visible={this.dim}

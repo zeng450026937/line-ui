@@ -205,9 +205,9 @@ export default createComponent({
   },
 
   methods : {
-    decrementCurrentIndex() {},
-    forceLayout() {},
-    incrementCurrentIndex() {},
+    decrementCurrentIndex() { /* TBD */ },
+    forceLayout() { /* TBD */ },
+    incrementCurrentIndex() { /* TBD */ },
     indexAt(x: number, y: number) {
       const index = binarySearch(
         this.layout.items,
@@ -236,9 +236,11 @@ export default createComponent({
       }
       return index;
     },
-    positionViewAtBeginning() {},
-    positionViewAtEnd() {},
-    positionViewAtIndex(index: number, mode: number) {},
+    positionViewAtBeginning() { /* TBD */ },
+    positionViewAtEnd() { /* TBD */ },
+    positionViewAtIndex(index: number, mode: number) {
+      index; mode;
+    },
 
     itemLayoutAt(x: number, y: number) {
       const index = this.indexAt(x, y);
@@ -292,8 +294,8 @@ export default createComponent({
       if (Math.abs(this.scrollLeft - scrollLeft) >= threshold
       || Math.abs(this.scrollTop - scrollTop) >= threshold
       ) {
-        const dx = scrollLeft - this.scrollLeft;
-        const dy = scrollTop - this.scrollTop;
+        // const dx = scrollLeft - this.scrollLeft;
+        // const dy = scrollTop - this.scrollTop;
         this.incremental = this.horizontal
           ? scrollLeft > this.scrollLeft
           : scrollTop > this.scrollTop;
@@ -375,7 +377,7 @@ export default createComponent({
         newTo = exponentialSearch(
           this.layout.items,
           rightBoundary,
-          (item, wanted) => {
+          (item: any, wanted: any) => {
             const {
               left, right, top, bottom,
             } = item.geometry;

@@ -1,5 +1,4 @@
 import { createNamespace } from '@/utils/namespace';
-import { convertToUnit } from '@/utils/helpers';
 import { Icon } from '@/components/icon';
 
 const [createComponent, bem] = createNamespace('stepper');
@@ -53,7 +52,7 @@ export default createComponent({
 
   computed : {
     inputValue(): number {
-      const { min, max } = this;
+      const { min } = this;
       let { value } = this;
       if (value === null || value === undefined || Number.isNaN(value)) {
         value = min !== -Infinity ? min : 1;
@@ -67,9 +66,9 @@ export default createComponent({
   },
 
   methods : {
-    onChange(type: String) {
+    onChange(type: string) {
       const {
-        step, max, min, precision,
+        step, max, min,
       } = this;
       let { value } = this;
 
@@ -88,7 +87,7 @@ export default createComponent({
 
     setInputValue() {
       const { input } = this.$refs;
-      if ((input as HTMLInputElement).value === convertToUnit(this.inputValue, '') || !input) {
+      if ((input as HTMLInputElement).value === String(this.inputValue) || !input) {
         return;
       }
 
@@ -105,7 +104,7 @@ export default createComponent({
       let { value }: {value: number | string} = (event.target! as HTMLInputElement);
       value = Number.parseFloat(value);
       const {
-        step, max, min, precision,
+        max, min,
       } = this;
       value = Math.max(value, min);
       value = Math.min(value, max);

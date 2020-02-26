@@ -6,15 +6,15 @@ export default createComponent({
   functional : true,
 
   props : {
-    running : {
-      type    : Boolean,
-      default : false,
-    },
+    running : Boolean,
   },
 
-  render(h, { props, slots }) {
+  render(h, { props, data, slots }) {
     return (
-      <div class={bem({ running: props.running })}>
+      <div
+        class={bem({ running: props.running })}
+        {...data}
+      >
         { slots() }
       </div>
     );

@@ -18,6 +18,7 @@ export default createComponent({
           bem({ translucent }),
           'line-inherit-color',
         ]}
+        on={this.$listeners}
       >
         {this.slots()}
       </div>

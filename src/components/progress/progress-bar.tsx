@@ -151,7 +151,7 @@ export default createComponent({
       children.push(streamBar);
     }
     return (
-      <div class='line-progress' style={style}>
+      <div class={bem()} style={style}>
         {children}
       </div>
     );

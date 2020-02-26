@@ -61,6 +61,7 @@ export default createComponent({
             disabled,
           }),
         ]}
+        on={this.$listeners}
       >
         <TagType
           {...{ attrs }}

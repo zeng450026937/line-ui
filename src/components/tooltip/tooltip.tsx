@@ -107,6 +107,7 @@ export default createComponent({
         vShow={delayedVisible}
         role="tooltip"
         class={bem({ translucent: this.translucent })}
+        on={this.$listeners}
       >
         <div class={bem('arrow')} x-arrow></div>
         <div class={bem('content')}>

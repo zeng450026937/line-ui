@@ -5,13 +5,13 @@ const [createComponent, bem] = createNamespace('thumbnail');
 export default createComponent({
   functional : true,
 
-  render(h, ctx) {
+  render(h, { data, slots }) {
     return (
       <div
         class={bem()}
-        {...ctx.data}
+        {...data}
       >
-        {ctx.slots()}
+        {slots()}
       </div>
     );
   },

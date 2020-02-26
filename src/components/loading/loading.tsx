@@ -47,6 +47,7 @@ export default createComponent({
         class={bem({
           translucent : this.translucent,
         })}
+        on={this.$listeners}
       >
         <Overlay
           visible={this.dim}

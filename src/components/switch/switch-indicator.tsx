@@ -16,20 +16,22 @@ export default createComponent({
     },
   },
 
-  render(h, { props, data }) {
-    const tag = 'div';
-    const children = [
-      h('div', { staticClass: 'switch-indicator__thumb' }),
-    ];
-    return h(tag, {
-      ...data,
-      staticClass : `switch-indicator ${ data.staticClass || '' }`.trim(),
-      class       : {
-        'is-checked'  : props.checked,
-        'is-disabled' : props.disabled,
-        ...data.class,
-      },
-    }, children);
+  render(h, { props, data, slots }) {
+    const Tag = 'div';
+
+    return (
+      <Tag
+        class={bem({
+          'is-checked'  : props.checked,
+          'is-disabled' : props.disabled,
+        })}
+        {...data}
+      >
+        <div class={bem('thumb')}>
+          {slots()}
+        </div>
+      </Tag>
+    );
   },
 
 });

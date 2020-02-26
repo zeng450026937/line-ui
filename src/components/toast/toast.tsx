@@ -54,6 +54,7 @@ export default createComponent({
       <div
         v-show={this.visible}
         class={[bem()]}
+        on={this.$listeners}
       >
         <div
           class={bem('wrapper', { [position]: true })}

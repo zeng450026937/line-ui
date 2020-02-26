@@ -21,6 +21,7 @@ export default createComponent({
         class={bem({
           [size] : isDef(size),
         })}
+        on={this.$listeners}
       >
         <div class={bem('inner')}>
           {this.slots()}

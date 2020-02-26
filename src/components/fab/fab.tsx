@@ -61,6 +61,7 @@ export default createComponent({
           [`vertical-${ vertical }`]     : isDef(vertical),
           edge,
         })}
+        on={this.$listeners}
       >
         {
           this.slots(

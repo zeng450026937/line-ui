@@ -63,6 +63,7 @@ export default createComponent({
           },
         ]}
         onClick={ this.onClick }
+        on={this.$listeners}
       >
         <a tabIndex={-1}>
           { this.slots() || this.text }

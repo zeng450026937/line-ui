@@ -48,6 +48,7 @@ export default createComponent({
         role="tabpanel"
         aria-hidden={!checked ? 'true' : null}
         aria-labelledby={`tab-button-${ tab }`}
+        on={this.$listeners}
       >
         {this.slots()}
       </div>

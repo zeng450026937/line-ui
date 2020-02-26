@@ -1,4 +1,3 @@
-import { convertToUnit } from '@/utils/helpers';
 import { createNamespace } from '@/utils/namespace';
 
 const [createComponent, bem] = createNamespace('progress-circular');
@@ -70,8 +69,8 @@ export default createComponent({
 
     styles(): object {
       return {
-        height        : convertToUnit(this.size),
-        width         : convertToUnit(this.size),
+        height        : `${ this.size }px`,
+        width         : `${ this.size }px`,
         color         : this.color,
         'caret-color' : this.color,
       };
@@ -101,9 +100,9 @@ export default createComponent({
 
     return (
       <div
-        class={{ 'progress-circular': true, ...classes }}
+        class={[bem(), classes]}
         style={styles}
-        on={this.listeners}>
+        on={this.$listeners}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox={`${ viewBoxSize } ${ viewBoxSize } ${ 2 * viewBoxSize } ${ 2 * viewBoxSize }`}>

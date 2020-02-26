@@ -36,6 +36,7 @@ export default createComponent({
           translucent,
           hidden : keyboardVisible,
         })}
+        on={this.$listeners}
       >
         {this.slots()}
       </div>

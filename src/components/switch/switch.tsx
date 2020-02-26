@@ -99,6 +99,7 @@ export default createComponent({
     } = this;
     return (
       <div
+        role="checkbox"
         class={[
           bem({
             disabled,
@@ -108,7 +109,7 @@ export default createComponent({
           { ...createColorClasses(color) },
         ]}
         onClick={this.onClick}
-        role="checkbox"
+        on={this.$listeners}
       >
         <div class={bem('icon')}>
           <div class={bem('inner')}/>

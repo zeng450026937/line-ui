@@ -24,7 +24,7 @@ export default createComponent({
   beforeCreate() {
     // TODO:
     // config must be setup before using
-    // child content is rendered before created
+    // while child content is rendered before created
     setupConfig();
     setupPlatforms();
     setupTapClick();

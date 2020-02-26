@@ -175,6 +175,7 @@ export default createComponent({
             'has-focus' : hasFocus,
           },
         ]}
+        on={this.$listeners}
       >
         <input
           class="native-input"

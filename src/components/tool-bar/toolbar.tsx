@@ -13,8 +13,12 @@ export default createComponent({
 
   render() {
     return (
-      <div class={bem()}>
+      <div
+        class={bem()}
+        on={this.$listeners}
+      >
         <div class={bem('background')}></div>
+
         <div class={bem('container')}>
           {this.slots('start')}
           {this.slots('secondary')}

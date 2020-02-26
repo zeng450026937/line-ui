@@ -25,6 +25,7 @@ export default createComponent({
       <div
         role="contentinfo"
         class={bem({ translucent })}
+        on={this.$listeners}
       >
         {this.slots()}
       </div>
