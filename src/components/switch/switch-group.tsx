@@ -9,7 +9,7 @@ export default createComponent({
 
   render() {
     return (
-      <div class="switch-group">
+      <div class={bem()}>
         {this.slots()}
       </div>
     );

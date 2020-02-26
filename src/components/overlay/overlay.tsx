@@ -1,7 +1,8 @@
 import { createNamespace } from '@/utils/namespace';
-import { now } from '@/utils/helpers';
 
 const [createComponent, bem] = createNamespace('overlay');
+
+const now = (ev: any) => ev.timeStamp || Date.now();
 
 export default createComponent({
   props : {

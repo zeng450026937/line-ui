@@ -1,5 +1,5 @@
 import { createNamespace } from '@/utils/namespace';
-import { useCheckGroup, useCheckGroupWithModel } from '@/mixins/use-check-group';
+import { useCheckGroupWithModel } from '@/mixins/use-check-group';
 
 const NAMESPACE = 'Tabs';
 const [createComponent, bem] = createNamespace('tabs');
@@ -12,17 +12,6 @@ export default createComponent({
       type    : Boolean,
       default : true,
     },
-
-  },
-
-  data() {
-    return {
-
-    };
-  },
-
-  methods : {
-
   },
 
   render() {

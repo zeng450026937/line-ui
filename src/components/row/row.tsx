@@ -5,7 +5,7 @@ const [createComponent, bem] = createNamespace('row');
 export default createComponent({
   functional : true,
 
-  render(h, { props, data, slots }) {
+  render(h, { data, slots }) {
     return (
       <div
         class={bem()}

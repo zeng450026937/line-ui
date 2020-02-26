@@ -28,13 +28,13 @@ export default createComponent({
   },
 
   render() {
-    const { color, translucent, keyboardVisible } = this;
+    const { translucent, keyboardVisible } = this;
 
     return (
       <div
         class={bem({
-            translucent,
-            hidden : keyboardVisible,
+          translucent,
+          hidden : keyboardVisible,
         })}
       >
         {this.slots()}

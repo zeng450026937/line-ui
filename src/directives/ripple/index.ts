@@ -1,7 +1,5 @@
 import { DirectiveOptions, VNodeDirective } from 'vue';
 
-import './ripple.scss';
-
 interface RippleVNodeDirective extends VNodeDirective {
   value?: boolean;
 }
@@ -23,7 +21,7 @@ type RippleOption = {
 }
 
 function createRippleEffect(el: HTMLElement, options: RippleOption) {
-  const { unbounded = false, delay = true } = options;
+  const { unbounded = false } = options;
 
   function addRipple(x: number, y: number) {
     return new Promise<() => void>((resolve) => {

@@ -3,6 +3,7 @@ import { useGroup } from '@/mixins/use-group';
 import { useLazy } from '@/mixins/use-lazy';
 import { useModel } from '@/mixins/use-model';
 import { isDef, isObject } from '@/utils/helpers';
+import { VNodeData } from 'vue/types/umd';
 
 const NAMESPACE = 'FabGroup';
 const [createComponent, bem] = createNamespace('fab-group');
@@ -56,9 +57,9 @@ export default createComponent({
             (index) => ({
               key   : index,
               style : {
-                animationDelay : `${ index * 0.03 }s`,
+                animationDelay : `${ (index as number) * 0.03 }s`,
               },
-            }),
+            } as VNodeData),
           )
         }
       </TransitionGroup>
