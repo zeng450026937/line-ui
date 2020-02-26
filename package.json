@@ -40,7 +40,7 @@
       "git add"
     ]
   },
-  "sideEffects": true,
+  "sideEffects": false,
   "dependencies": {
     "core-js": "^3.6.4"
   },

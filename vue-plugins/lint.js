@@ -8,8 +8,8 @@ module.exports = (api, options) => {
       usage       : 'vue-cli-service lint:style',
       details     : 'TBD',
     },
-    (args, rawArgs) => {
-      execa('stylelint', ['src/**/*.scss', ...rawArgs], { stdio: 'inherit' });
+    async (args, rawArgs) => {
+      await execa('stylelint', ['src/**/*.scss', ...rawArgs], { stdio: 'inherit' });
     },
   );
 };

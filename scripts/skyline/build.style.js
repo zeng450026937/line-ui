@@ -35,16 +35,6 @@ run();
 async function run() {
   let files;
 
-  // build bundles
-  files = [
-    resolve('src/style/skyline.bundle.scss'),
-    resolve('src/themes/skyline.components.scss'),
-    resolve('src/themes/skyline.components.ios.scss'),
-    resolve('src/themes/skyline.components.md.scss'),
-  ];
-
-  await build(files, distDir);
-
   // build components
   const components = fs.readdirSync(srcDir)
     .filter(p => fs.statSync(`${ srcDir }/${ p }`).isDirectory());
@@ -54,15 +44,27 @@ async function run() {
     files = await globby(['**/*.scss', '!**/*.vars.scss', '!**/*.mixins.scss'], { cwd });
     files = files.map(f => `${ cwd }/${ f }`);
 
-    await build(files, `${ distDir }/${ name }`, true);
+    await build(files, `${ distDir }/${ name }`, false);
   }
+
+  // build bundles
+  files = [
+    resolve('src/style/skyline.bundle.scss'),
+    resolve('src/themes/skyline.components.scss'),
+    resolve('src/themes/skyline.components.ios.scss'),
+    resolve('src/themes/skyline.components.md.scss'),
+  ];
+
+  await build(files, distDir);
 }
 
 async function build(files, distDir, check = true) {
   const targets = [];
 
   for (const file of files) {
-    console.log('rendering...', file);
+    process.stdout.cursorTo(0);
+    process.stdout.clearLine();
+    process.stdout.write(`rendering...  ${ path.normalize(file) }`);
 
     const rendered = await renderScss(file);
 
@@ -84,6 +86,11 @@ async function build(files, distDir, check = true) {
     );
 
     targets.push(filename);
+  }
+
+  if (targets.length) {
+    process.stdout.cursorTo(0);
+    process.stdout.clearLine();
   }
 
   if (check && targets.length) {
@@ -128,12 +135,11 @@ function renderScss(file) {
 }
 
 function checkAllSizes(targets, distDir) {
-  console.log();
   for (const target of targets) {
     try {
       checkSize(target, distDir);
     } catch (error) {
-      console.log(target, distDir);
+      console.error(target, distDir);
       throw error;
     }
   }
