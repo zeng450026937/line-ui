@@ -14,8 +14,8 @@
   "scripts": {
     "bootstrap": "node scripts/bootstrap.js",
     "rollup": "node scripts/rollup.js",
-    "serve": "vue-cli-service serve:playground",
-    "build": "vue-cli-service build:skyline",
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
     "playground": "yarn serve:playground",
     "serve:playground": "vue-cli-service serve:playground",
     "build:playground": "vue-cli-service build:playground",

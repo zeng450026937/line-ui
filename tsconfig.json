@@ -27,8 +27,8 @@
     "paths": {
       "@/*": ["src/*"],
       "@skyline/*": ["packages/*/src"],
-      "skyline": ["src"],
-      "skyline/*": ["src/*"],
+      "skyline": ["packages/skyline/src"],
+      "skyline/*": ["packages/skyline/src/*"],
     },
     "lib": [
       "esnext",
@@ -38,8 +38,11 @@
     ]
   },
   "include": [
-    "packages/*/src",
-    "packages/*/__tests__",
+    "packages/*/src/**/*.ts",
+    "packages/*/src/**/*.tsx",
+    "packages/*/src/**/*.vue",
+    "packages/*/__tests__/**/*.ts",
+    "packages/*/__tests__/**/*.tsx",
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",

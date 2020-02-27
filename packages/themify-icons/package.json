@@ -9,6 +9,7 @@
   "keywords": [
     "skyline"
   ],
+  "private": true,
   "author": "Yealink Inc",
   "license": "MIT"
 }

@@ -12,6 +12,17 @@
   "keywords": [
     "skyline"
   ],
+  "sideEffects": false,
+  "buildOptions": {
+    "name": "IECompat",
+    "formats": [
+      "cjs",
+      "global",
+      "esm"
+    ],
+    "typescript": false,
+    "buble": true
+  },
   "author": "Yealink Inc",
   "license": "MIT"
 }

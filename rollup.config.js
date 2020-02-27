@@ -10,27 +10,24 @@ import json from '@rollup/plugin-json';
 import noderesolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import babel from 'rollup-plugin-babel';
-// import buble from '@rollup/plugin-buble';
+import buble from '@rollup/plugin-buble';
 import alias from '@rollup/plugin-alias';
 
 if (!process.env.TARGET) {
-  console.warn('TARGET package must be specified via --environment flag.');
-  // throw new Error('TARGET package must be specified via --environment flag.');
+  throw new Error('TARGET package must be specified via --environment flag.');
 }
 
 const masterVersion = require('./package.json').version;
 
 const packagesDir = path.resolve(__dirname, 'packages');
-const packageDir = process.env.TARGET
-  ? path.resolve(packagesDir, process.env.TARGET)
-  : path.resolve(__dirname, '.');
+const packageDir = path.resolve(packagesDir, process.env.TARGET);
 const name = path.basename(packageDir);
 const resolve = p => path.resolve(packageDir, p);
 const pkg = require(resolve('package.json'));
 const packageOptions = pkg.buildOptions || {};
 
 const knownExternals = fs.readdirSync(packagesDir).filter(p => {
-  return p !== '@skyline/shared';
+  return p !== '@skyline/utils';
 });
 
 // ensure TS checks only once for each build
@@ -86,7 +83,7 @@ function createConfig(format, output, plugins = []) {
     process.exit(1);
   }
 
-  output.sourcemap = !!process.env.SOURCE_MAP;
+  output.sourcemap = !!process.env.SOURCE_MAP || packageOptions.sourcemap;
   output.externalLiveBindings = false;
 
   const isProductionBuild = process.env.__DEV__ === 'false' || /\.prod\.js$/.test(output.file);
@@ -94,44 +91,124 @@ function createConfig(format, output, plugins = []) {
   const isRawESMBuild = format === 'esm';
   const isNodeBuild = format === 'cjs';
   const isBundlerESMBuild = /esm-bundler/.test(format);
-  const isRuntimeCompileBuild = /skyline\./.test(output.file);
 
   if (isGlobalBuild) {
-    output.name = packageOptions.name;
+    output.name = packageOptions.name || name;
   }
 
   const shouldEmitDeclarations = process.env.TYPES != null
     && process.env.NODE_ENV === 'production'
     && !hasTSChecked;
 
-  const tsPlugin = ts({
-    check            : process.env.NODE_ENV === 'production' && !hasTSChecked,
-    tsconfig         : path.resolve(__dirname, 'tsconfig.json'),
-    cacheRoot        : path.resolve(__dirname, 'node_modules/.rts2_cache'),
-    tsconfigOverride : {
-      compilerOptions : {
-        sourceMap      : output.sourcemap,
-        declaration    : shouldEmitDeclarations,
-        declarationMap : shouldEmitDeclarations,
-      },
-      exclude : ['**/__tests__', 'test-dts'],
-    },
-  });
-  // we only need to check TS and generate declarations once for each build.
-  // it also seems to run into weird issues when checking multiple times
-  // during a single build.
-  hasTSChecked = true;
+  const resolvedPlugins = [];
 
-  const entryFile = format === 'esm-bundler-runtime' ? 'src/runtime.ts' : 'src/index.ts';
+  const {
+    alias: enableAlias = true,
+    nodemodule: enableNodeModule = true,
+    json: enableJson = true,
+    typescript: enableTypescript = true,
+    replace: enableReplace = true,
+    babel: enableBabel = false,
+    buble: enableBuble = false,
+  } = packageOptions;
+
+  if (enableAlias) {
+    resolvedPlugins.push(
+      alias({
+        entries : {
+          [name] : resolve('src'),
+        },
+      }),
+    );
+  }
+
+  if (enableNodeModule) {
+    resolvedPlugins.push(
+      noderesolve({
+        browser    : !isNodeBuild,
+        extensions : ['.js', '.jsx', '.ts', '.tsx'],
+      }),
+      commonjs({}),
+    );
+  }
+
+  if (enableJson) {
+    resolvedPlugins.push(
+      json({
+        namedExports : false,
+      }),
+    );
+  }
+
+  if (enableTypescript) {
+    resolvedPlugins.push(
+      ts({
+        check            : process.env.NODE_ENV === 'production' && !hasTSChecked,
+        tsconfig         : path.resolve(__dirname, 'tsconfig.json'),
+        cacheRoot        : path.resolve(__dirname, 'node_modules/.rts2_cache'),
+        tsconfigOverride : {
+          compilerOptions : {
+            sourceMap      : output.sourcemap,
+            declaration    : shouldEmitDeclarations,
+            declarationMap : shouldEmitDeclarations,
+          },
+          exclude : ['**/__tests__', 'test-dts'],
+        },
+      }),
+    );
+    // we only need to check TS and generate declarations once for each build.
+    // it also seems to run into weird issues when checking multiple times
+    // during a single build.
+    hasTSChecked = true;
+  }
+
+  if (enableReplace) {
+    resolvedPlugins.push(
+      createReplacePlugin(
+        isProductionBuild,
+        isBundlerESMBuild,
+        // isBrowserBuild?
+        (isGlobalBuild || isRawESMBuild || isBundlerESMBuild)
+          && !packageOptions.enableNonBrowserBranches,
+        isNodeBuild,
+      ),
+    );
+  }
+
+  if (enableBabel) {
+    resolvedPlugins.push(
+      babel({
+        extensions     : ['.jsx', '.tsx'],
+        exclude        : 'node_modules/**',
+        babelrc        : false,
+        configFile     : path.resolve(__dirname, 'babel.config.js'),
+        runtimeHelpers : true,
+      }),
+    );
+  }
+
+  if (enableBuble) {
+    resolvedPlugins.push(
+      buble({
+        objectAssign : true,
+      }),
+    );
+  }
+
+  const fileExt = enableTypescript ? 'ts' : 'js';
+  const entryFile = format === 'esm-bundler-runtime'
+    ? `src/runtime.${ fileExt }`
+    : `src/index.${ fileExt }`;
 
   const external = isGlobalBuild || isRawESMBuild
     ? []
     : knownExternals.concat(Object.keys(pkg.dependencies || []));
 
-  external.push('vue', 'skyline');
+  // always external vue
+  external.push('vue');
 
   if (isGlobalBuild) {
-    output.globals = { vue: 'Vue', skyline: 'Skyline' };
+    output.globals = { vue: 'Vue' };
   }
 
   return {
@@ -140,39 +217,7 @@ function createConfig(format, output, plugins = []) {
     // used alone.
     external,
     plugins : [
-      alias({
-        entries : {
-          '@' : resolve('src'),
-        },
-      }),
-      noderesolve({
-        browser    : true,
-        extensions : ['.js', '.jsx', '.ts', '.tsx'],
-      }),
-      commonjs({}),
-      json({
-        namedExports : false,
-      }),
-      tsPlugin,
-      createReplacePlugin(
-        isProductionBuild,
-        isBundlerESMBuild,
-        // isBrowserBuild?
-        (isGlobalBuild || isRawESMBuild || isBundlerESMBuild)
-          && !packageOptions.enableNonBrowserBranches,
-        isRuntimeCompileBuild,
-        isNodeBuild,
-      ),
-      babel({
-        extensions     : ['.js', '.jsx', '.ts', '.tsx'],
-        exclude        : 'node_modules/**',
-        babelrc        : false,
-        configFile     : path.resolve(__dirname, 'babel.config.js'),
-        runtimeHelpers : true,
-      }),
-      // buble({
-      //   objectAssign : true,
-      // }),
+      ...resolvedPlugins,
       ...plugins,
     ],
     output,
@@ -188,7 +233,6 @@ function createReplacePlugin(
   isProduction,
   isBundlerESMBuild,
   isBrowserBuild,
-  isRuntimeCompileBuild,
   isNodeBuild,
 ) {
   const replacements = {
@@ -205,8 +249,6 @@ function createReplacePlugin(
     __BROWSER__          : isBrowserBuild,
     // is targeting bundlers?
     __BUNDLER__          : isBundlerESMBuild,
-    // support compile in browser?
-    __RUNTIME_COMPILE__  : isRuntimeCompileBuild,
     // is targeting Node (SSR)?
     __NODE_JS__          : isNodeBuild,
     // support options?

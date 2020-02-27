@@ -1,0 +1,28 @@
+{
+  "name": "skyline",
+  "version": "1.0.0-alpha",
+  "description": "skyline",
+  "main": "index.js",
+  "module": "dist/skyline.esm-bundler.js",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "types": "dist/skyline.d.ts",
+  "keywords": [
+    "skyline"
+  ],
+  "sideEffects": false,
+  "buildOptions": {
+    "name": "Skyline",
+    "formats": [
+      "esm-bundler",
+      "cjs",
+      "global",
+      "esm"
+    ],
+    "babel": true
+  },
+  "author": "Yealink Inc",
+  "license": "MIT"
+}

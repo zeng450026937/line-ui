@@ -30,18 +30,28 @@ module.exports = {
       },
     },
     {
+      files : ['*.ts'],
+      rules : {
+        '@typescript-eslint/no-explicit-any'      : 0,
+        '@typescript-eslint/no-inferrable-types'  : 0,
+        '@typescript-eslint/no-empty-function'    : 1,
+        '@typescript-eslint/no-this-alias'        : 1,
+        '@typescript-eslint/no-use-before-define' : 1,
+      },
+    },
+    {
       files : ['*.js'],
       rules : {
         // The core 'no-unused-vars' rules (in the eslint:recommeded ruleset)
         // does not work with type definitions
-        'no-unused-vars'                          : 'off',
+        'no-unused-vars'                          : 0,
         // js file is considered to be script file
         // and only run in node environment
-        'global-require'                          : 'off',
-        'import/no-dynamic-require'               : 'off',
-        'import/order'                            : 'off',
-        '@typescript-eslint/no-var-requires'      : 'off',
-        '@typescript-eslint/no-use-before-define' : 'off',
+        'global-require'                          : 0,
+        'import/no-dynamic-require'               : 0,
+        'import/order'                            : 0,
+        '@typescript-eslint/no-var-requires'      : 0,
+        '@typescript-eslint/no-use-before-define' : 0,
       },
     },
   ],

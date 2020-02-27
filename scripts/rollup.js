@@ -67,12 +67,16 @@ async function build(target) {
     await fs.remove(`${ pkgDir }/dist`);
   }
 
+  const configFile = `${ pkgDir }/rollup.config.js`;
+  const hasConfig = await fs.exists(configFile);
+
   const env = (pkg.buildOptions && pkg.buildOptions.env)
     || (devOnly ? 'development' : 'production');
   await execa(
     'rollup',
     [
       '-c',
+      ...(hasConfig ? [configFile] : []),
       '--environment',
       [
         `COMMIT:${ commit }`,

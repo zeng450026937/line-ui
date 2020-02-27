@@ -15,6 +15,10 @@ module.exports = {
         return opts;
       });
   },
+
+  transpileDependencies : [
+    'skyline',
+  ],
   /*
   chainWebpack : (config) => {
     // support markdown file
