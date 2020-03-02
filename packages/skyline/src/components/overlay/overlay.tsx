@@ -4,7 +4,7 @@ const [createComponent, bem] = createNamespace('overlay');
 
 const now = (ev: any) => ev.timeStamp || Date.now();
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   props : {
     visible : {
       type    : Boolean,

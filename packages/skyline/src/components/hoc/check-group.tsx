@@ -3,7 +3,7 @@ import { useCheckGroupWithModel } from 'skyline/mixins/use-check-group';
 
 const [createComponent, bem] = createNamespace('check-group');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [
     useCheckGroupWithModel('Group'),
   ],

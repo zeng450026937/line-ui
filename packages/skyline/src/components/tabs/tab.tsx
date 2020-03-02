@@ -4,7 +4,7 @@ import { useCheckItemWithModel } from 'skyline/mixins/use-check-item';
 const NAMESPACE = 'Tabs';
 const [createComponent, bem] = createNamespace('tab');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [useCheckItemWithModel(NAMESPACE)],
 
   props : {

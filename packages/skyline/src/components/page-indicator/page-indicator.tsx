@@ -4,7 +4,7 @@ import { Icon } from 'skyline/components/icon';
 
 const [createComponent, bem] = createNamespace('page-indicator');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   props : {
     count : {
       type      : Number,

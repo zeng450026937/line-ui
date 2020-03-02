@@ -13,7 +13,7 @@ export const isCancel = (role: string | undefined): boolean => {
   return role === 'cancel' || role === 'overlay';
 };
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [usePopup()],
 
   props : {

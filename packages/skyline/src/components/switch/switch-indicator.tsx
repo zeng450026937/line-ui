@@ -2,7 +2,7 @@ import { createNamespace } from 'skyline/utils/namespace';
 
 const [createComponent, bem] = createNamespace('switch-indicator');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   functional : true,
 
   props : {

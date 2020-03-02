@@ -26,7 +26,9 @@ import { useMode } from 'skyline/mixins/use-mode';
 
 export function install(this: ComponentOptions<Vue>, Vue: VueConstructor) {
   const { name } = this;
+  // kebab case(hyphenate)
   Vue.component(name as string, this);
+  // pascal case
   Vue.component(camelize(`-${ name }`), this);
 }
 

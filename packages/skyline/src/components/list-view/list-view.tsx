@@ -7,7 +7,7 @@ import ListItem from 'skyline/components/list-view/list-item';
 const NAMESPACE = 'ListView';
 const [createComponent, bem] = createNamespace('list-view');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   provide() {
     return {
       [NAMESPACE] : this,

@@ -23,7 +23,7 @@ interface Style {
 
 const [createComponent, bem] = createNamespace('range-slider');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   props : {
     first : {
       type    : Object,

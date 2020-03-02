@@ -2,7 +2,7 @@ import { createNamespace } from 'skyline/utils/namespace';
 
 const [createComponent, bem] = createNamespace('textarea');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   props : {
     canPaste : {
       type    : Boolean,

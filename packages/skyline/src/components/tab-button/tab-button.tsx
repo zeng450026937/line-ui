@@ -6,7 +6,7 @@ import { useRipple } from 'skyline/mixins/use-ripple';
 const NAMESPACE = 'TabBar';
 const [createComponent, bem] = createNamespace('tab-button');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [useCheckItemWithModel(NAMESPACE), useRipple()],
 
   props : {

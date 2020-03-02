@@ -7,7 +7,7 @@ import { FabGroup } from 'skyline/components/fab-group';
 const [createComponent, bem] = createNamespace('fab');
 const FAB_SIDES = ['start', 'end', 'top', 'bottom'];
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [
     useModel('activated'),
     useClickOutside(),

@@ -14,4 +14,15 @@ export const hasNavigator = typeof navigator !== 'undefined';
 export const isDocument = (el: unknown): el is Document => el === document;
 export const isWindow = (el: unknown): el is Window => el === window;
 
+let supportsVars: boolean | undefined;
+
+export const isSupportsVars = () => {
+  if (supportsVars === undefined) {
+    supportsVars = !!(
+      window.CSS && window.CSS.supports && window.CSS.supports('--a: 0')
+    );
+  }
+  return supportsVars;
+};
+
 export const now = (ev: UIEvent) => ev.timeStamp || Date.now();

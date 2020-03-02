@@ -4,7 +4,7 @@ import { createNamespace } from 'skyline/utils/namespace';
 const NAMESPACE = 'SwitchGroup';
 const [createComponent, bem] = createNamespace('switch-group');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   extends : useGroup(NAMESPACE),
 
   render() {

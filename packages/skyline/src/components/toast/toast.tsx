@@ -9,7 +9,7 @@ import { mdLeaveAnimation } from 'skyline/components/toast/animations/md.leave';
 
 const [createComponent, bem] = createNamespace('toast');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [
     usePopup(),
     usePopupDuration(),

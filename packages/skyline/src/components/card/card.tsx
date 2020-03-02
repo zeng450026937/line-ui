@@ -5,7 +5,7 @@ import ripple from 'skyline/directives/ripple';
 
 const [createComponent, bem] = createNamespace('card');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [useColor()],
 
   directives : { ripple },

@@ -5,7 +5,7 @@ import { createNamespace } from 'skyline/utils/namespace';
 const [createComponent, bem] = createNamespace('check-indicator');
 let path: VNode;
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   functional : true,
 
   props : {

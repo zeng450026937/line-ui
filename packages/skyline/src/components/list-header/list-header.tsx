@@ -4,7 +4,7 @@ import { isDef } from 'skyline/utils/helpers';
 
 const [createComponent, bem] = createNamespace('list-header');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [useColor()],
 
   props : {

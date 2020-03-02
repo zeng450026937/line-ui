@@ -4,7 +4,7 @@ import { useCheckGroup } from 'skyline/mixins/use-check-group';
 const NAMESPACE = 'Collapse';
 const [createComponent, bem] = createNamespace('collapse');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [useCheckGroup(NAMESPACE)],
 
   props : {

@@ -3,7 +3,7 @@ import { useColor } from 'skyline/mixins/use-color';
 
 const [createComponent, bem] = createNamespace('item-divider');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [useColor()],
 
   props : {

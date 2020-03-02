@@ -8,7 +8,7 @@ import { mdLeaveAnimation } from 'skyline/components/popup/animations/md.leave';
 
 const [createComponent, bem] = createNamespace('popup');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [usePopup()],
 
   created() {

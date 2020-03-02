@@ -4,7 +4,7 @@ import { createNamespace } from 'skyline/utils/namespace';
 
 const [createComponent] = createNamespace('icon');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   functional : true,
 
   render(h, { data, children }) {

@@ -1,13 +1,13 @@
 import { createNamespace } from 'skyline/utils/namespace';
 import { matchBreakpoint } from 'skyline/utils/media';
+import { isSupportsVars } from 'skyline/utils/dom';
 
-const win = window as any;
-const SUPPORTS_VARS = !!(win.CSS && win.CSS.supports && win.CSS.supports('--a: 0'));
+const SUPPORTS_VARS = /*#__PURE__*/ isSupportsVars();
 const BREAKPOINTS = ['', 'xs', 'sm', 'md', 'lg', 'xl'];
 
 const [createComponent, bem] = createNamespace('col');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   props : {
     offset   : String,
     offsetXs : String,

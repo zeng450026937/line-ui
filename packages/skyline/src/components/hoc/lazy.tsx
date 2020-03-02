@@ -3,7 +3,7 @@ import { useLazy } from 'skyline/mixins/use-lazy';
 
 const [createComponent, bem] = createNamespace('lazy');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [
     useLazy(),
   ],

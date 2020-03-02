@@ -45,7 +45,7 @@ const SHOW_BACKDROP = 'show-overlay';
 const MENU_CONTENT_OPEN = 'menu-content-open';
 
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [
     useModel('actived'),
   ],

@@ -43,7 +43,7 @@ function buildLine(h: CreateElement, spinner: SpinnerConfig, duration: number, i
   );
 }
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   functional : true,
 
   props : {

@@ -107,7 +107,7 @@ const valueToRatio = (value: number, min: number, max: number): number => {
   return clamp(0, (value - min) / (max - min), 1);
 };
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [useColor()],
 
   inject : {

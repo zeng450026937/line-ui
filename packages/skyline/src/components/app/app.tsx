@@ -7,7 +7,7 @@ import { setupPopup } from 'skyline/utils/popup';
 
 const [createComponent, bem] = createNamespace('app');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   props : {
     id : {
       type    : String,

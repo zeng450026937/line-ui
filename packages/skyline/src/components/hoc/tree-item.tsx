@@ -3,7 +3,7 @@ import { useTreeItem } from 'skyline/mixins/use-tree';
 
 const [createComponent, bem] = createNamespace('tree-item');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [
     useTreeItem('Tree'),
   ],

@@ -2,7 +2,7 @@ import { createNamespace } from 'skyline/utils/namespace';
 
 const [createComponent, bem] = createNamespace('refresher');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   props : {
     downText : {
       type    : String,

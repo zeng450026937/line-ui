@@ -9,7 +9,7 @@ function getDefaultText(slots: Function) {
   return text.trim();
 }
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   functional : true,
 
   props : {

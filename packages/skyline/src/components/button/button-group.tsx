@@ -4,7 +4,7 @@ import { useGroup } from 'skyline/mixins/use-group';
 const NAMESPACE = 'ButtonGroup';
 const [createComponent, bem] = createNamespace('button-group');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [useGroup(NAMESPACE)],
 
   render() {

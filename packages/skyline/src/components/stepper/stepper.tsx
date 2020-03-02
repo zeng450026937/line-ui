@@ -3,7 +3,7 @@ import { Icon } from 'skyline/components/icon';
 
 const [createComponent, bem] = createNamespace('stepper');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   components : {
     Icon,
   },

@@ -9,7 +9,7 @@ const [createComponent, bem] = createNamespace('switch');
 
 let gesture: Gesture | undefined;
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [useCheckItem(NAMESPACE), useColor()],
 
   data() {

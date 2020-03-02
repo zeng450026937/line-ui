@@ -8,7 +8,7 @@ import { VNodeData } from 'vue';
 const NAMESPACE = 'FabGroup';
 const [createComponent, bem] = createNamespace('fab-group');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [
     useGroup(NAMESPACE),
     useLazy('visible'),

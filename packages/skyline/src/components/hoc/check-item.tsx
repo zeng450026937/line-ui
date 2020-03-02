@@ -3,7 +3,7 @@ import { useCheckItemWithModel } from 'skyline/mixins/use-check-item';
 
 const [createComponent, bem] = createNamespace('check-item');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [
     useCheckItemWithModel('Group'),
   ],

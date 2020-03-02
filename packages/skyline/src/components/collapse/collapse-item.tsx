@@ -5,7 +5,7 @@ import { Icon } from 'skyline/components/icon';
 const NAMESPACE = 'Collapse';
 const [createComponent, bem] = createNamespace('collapse-item');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [useCheckItem(NAMESPACE)],
 
   components : {

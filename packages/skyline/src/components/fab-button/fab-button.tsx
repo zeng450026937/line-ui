@@ -7,7 +7,7 @@ import ripple from 'skyline/directives/ripple';
 const NAMESPACE = 'FabGroup';
 const [createComponent, bem] = createNamespace('fab-button');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [useColor(), useGroupItem(NAMESPACE)],
 
   directives : { ripple },

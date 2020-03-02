@@ -112,5 +112,8 @@ module.exports = {
       memberSyntaxSortOrder : ['none', 'all', 'multiple', 'single'],
     }],
     'max-classes-per-file' : 0,
+    'spaced-comment' : ['warn', 'always', { 
+      block: { exceptions: ['#__PURE__'] } 
+    }],
   },
 };

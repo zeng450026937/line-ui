@@ -9,7 +9,7 @@ import { ActionSheetButton } from 'skyline/components/action-sheet/action-sheet-
 
 const [createComponent, bem] = createNamespace('action-sheet');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [usePopup()],
 
   props : {

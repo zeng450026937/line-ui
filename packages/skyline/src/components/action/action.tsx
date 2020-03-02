@@ -5,7 +5,7 @@ import { useRipple } from 'skyline/mixins/use-ripple';
 const NAMESPACE = 'ActionGroup';
 const [createComponent, bem] = createNamespace('action');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [useGroupItem(NAMESPACE), useRipple()],
 
   props : {

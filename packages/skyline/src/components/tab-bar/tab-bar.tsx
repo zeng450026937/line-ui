@@ -5,7 +5,7 @@ import { useCheckGroupWithModel } from 'skyline/mixins/use-check-group';
 const NAMESPACE = 'TabBar';
 const [createComponent, bem] = createNamespace('tab-bar');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [useCheckGroupWithModel(NAMESPACE), useColor()],
 
   props : {

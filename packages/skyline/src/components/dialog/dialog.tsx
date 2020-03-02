@@ -4,7 +4,7 @@ import { usePopup } from 'skyline/mixins/use-popup';
 const [createComponent, bem] = createNamespace('dialog');
 const CONTENT_ELEMENT = 'content';
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [usePopup()],
 
   render() {

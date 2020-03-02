@@ -4,7 +4,7 @@ import { useCheckGroupWithModel } from 'skyline/mixins/use-check-group';
 const NAMESPACE = 'Tabs';
 const [createComponent, bem] = createNamespace('tabs');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [useCheckGroupWithModel(NAMESPACE)],
 
   props : {

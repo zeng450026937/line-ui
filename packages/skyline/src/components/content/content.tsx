@@ -37,7 +37,7 @@ const getPageElement = (el: HTMLElement) => {
   return getParentElement(el);
 };
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [useColor()],
 
   props : {

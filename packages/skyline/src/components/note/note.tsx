@@ -3,7 +3,7 @@ import { createColorClasses } from 'skyline/mixins/use-color';
 
 const [createComponent, bem] = createNamespace('note');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   functional : true,
 
   props : {

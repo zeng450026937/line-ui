@@ -9,7 +9,7 @@ const [createComponent, bem] = createNamespace('item');
 
 export type CssClassMap = { [className: string]: boolean };
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [useColor()],
 
   directives : { ripple },

@@ -2,7 +2,7 @@ import { createNamespace } from 'skyline/utils/namespace';
 
 const [createComponent, bem] = createNamespace('avatar');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   functional : true,
 
   render(h, ctx) {

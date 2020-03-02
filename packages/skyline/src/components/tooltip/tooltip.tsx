@@ -12,7 +12,7 @@ import vHover from 'skyline/directives/hover';
 
 const [createComponent, bem] = createNamespace('tooltip');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   mixins : [
     useColor(),
     usePopup({ disableScroll: false }),

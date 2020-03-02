@@ -3,7 +3,7 @@ import { isDef } from 'skyline/utils/helpers';
 
 const [createComponent, bem] = createNamespace('list');
 
-export default createComponent({
+export default /*#__PURE__*/ createComponent({
   props : {
     // 'full' | 'inset' | 'none' | undefined
     lines : String,
