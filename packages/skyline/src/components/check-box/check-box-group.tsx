@@ -5,7 +5,9 @@ const NAMESPACE = 'CheckBoxGroup';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('check-box-group');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [useCheckGroup(NAMESPACE)],
+  mixins : [
+    /*#__PURE__*/ useCheckGroup(NAMESPACE),
+  ],
 
   props : {
     // nextCheckState : {

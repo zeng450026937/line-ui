@@ -5,7 +5,9 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('dialog');
 const CONTENT_ELEMENT = 'content';
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [usePopup()],
+  mixins : [
+    /*#__PURE__*/ usePopup(),
+  ],
 
   render() {
     return (

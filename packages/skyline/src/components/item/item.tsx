@@ -10,7 +10,9 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('item');
 export type CssClassMap = { [className: string]: boolean };
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [useColor()],
+  mixins : [
+    /*#__PURE__*/ useColor(),
+  ],
 
   directives : { ripple },
 

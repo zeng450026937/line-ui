@@ -5,7 +5,7 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('tree-item');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [
-    useTreeItem('Tree'),
+    /*#__PURE__*/ useTreeItem('Tree'),
   ],
 
   methods : {

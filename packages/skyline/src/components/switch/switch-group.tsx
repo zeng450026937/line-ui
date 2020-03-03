@@ -5,7 +5,9 @@ const NAMESPACE = 'SwitchGroup';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('switch-group');
 
 export default /*#__PURE__*/ createComponent({
-  extends : useGroup(NAMESPACE),
+  mixins : [
+    /*#__PURE__*/ useGroup(NAMESPACE),
+  ],
 
   render() {
     return (

@@ -5,7 +5,7 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('lazy');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [
-    useLazy(),
+    /*#__PURE__*/ useLazy(),
   ],
 
   render() {

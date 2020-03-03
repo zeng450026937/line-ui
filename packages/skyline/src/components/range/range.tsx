@@ -108,7 +108,9 @@ const valueToRatio = (value: number, min: number, max: number): number => {
 };
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [useColor()],
+  mixins : [
+    /*#__PURE__*/ useColor(),
+  ],
 
   inject : {
     Item : { default: undefined },

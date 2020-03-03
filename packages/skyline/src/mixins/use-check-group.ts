@@ -10,7 +10,7 @@ export type CheckGroupProps = {
   checkedItem: any;
   items: Array<any>;
 };
-export type CheckGroup = Vue & CheckGroupProps;
+export type CheckGroupMixin = Vue & CheckGroupProps;
 
 export function useCheckGroup(name: string) {
   return createMixins({

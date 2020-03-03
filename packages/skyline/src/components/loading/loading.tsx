@@ -12,8 +12,8 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('loading');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [
-    usePopup(),
-    usePopupDuration(),
+    /*#__PURE__*/ usePopup(),
+    /*#__PURE__*/ usePopupDuration(),
   ],
 
   props : {

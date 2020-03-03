@@ -42,7 +42,7 @@ export default /*#__PURE__*/ createComponent({
   computed : {
     style(): object {
       const style = { height: '4px' };
-      style.height = `${ this.height.toString().replace(/px/, '') }px`;
+      style.height = `${ this.height }px`;
       return style;
     },
 

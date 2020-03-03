@@ -47,7 +47,7 @@ const MENU_CONTENT_OPEN = 'menu-content-open';
 
 export default /*#__PURE__*/ createComponent({
   mixins : [
-    useModel('actived'),
+    /*#__PURE__*/ useModel('actived'),
   ],
 
   props : {

@@ -8,7 +8,10 @@ const NAMESPACE = 'ButtonGroup';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('button');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [useColor(), useGroupItem(NAMESPACE)],
+  mixins : [
+    /*#__PURE__*/ useColor(),
+    /*#__PURE__*/ useGroupItem(NAMESPACE),
+  ],
 
   directives : { ripple },
 

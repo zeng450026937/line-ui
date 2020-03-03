@@ -6,7 +6,10 @@ const NAMESPACE = 'ActionGroup';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('action');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [useGroupItem(NAMESPACE), useRipple()],
+  mixins : [
+    /*#__PURE__*/ useGroupItem(NAMESPACE),
+    /*#__PURE__*/ useRipple(),
+  ],
 
   props : {
     // This property holds a textual description of the action.

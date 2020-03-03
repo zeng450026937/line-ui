@@ -9,6 +9,18 @@ export const debounce = <T extends (...args: any[]) => any>(
   }) as any;
 };
 
+export const once = <T extends () => any>(
+  fn: T,
+): T => {
+  let invoked = false;
+  return (() => {
+    if (!invoked) {
+      fn();
+      invoked = true;
+    }
+  }) as any;
+};
+
 export const EMPTY_OBJ: { readonly [key: string]: any } = __DEV__
   ? Object.freeze({})
   : {};

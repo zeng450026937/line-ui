@@ -4,7 +4,9 @@ import { createNamespace } from 'skyline/utils/namespace';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('badge');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [useColor()],
+  mixins : [
+    /*#__PURE__*/ useColor(),
+  ],
 
   render() {
     return (

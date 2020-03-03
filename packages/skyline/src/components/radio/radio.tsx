@@ -8,7 +8,11 @@ const NAMESPACE = 'RadioGroup';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('radio');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [useCheckItem(NAMESPACE), useRipple(), useColor()],
+  mixins : [
+    /*#__PURE__*/ useCheckItem(NAMESPACE),
+    /*#__PURE__*/ useRipple(),
+    /*#__PURE__*/ useColor(),
+  ],
 
   data() {
     return {

@@ -5,8 +5,8 @@ import * as directives from 'skyline/directives';
 import * as mixins from 'skyline/mixins';
 
 export * from 'skyline/components';
-// export * from 'skyline/directives';
-// export * from 'skyline/mixins';
+export * from 'skyline/directives';
+export * from 'skyline/mixins';
 
 
 export const Skyline = {
@@ -40,5 +40,4 @@ function defaulExport() {
   };
 }
 
-/* eslint-disable-next-line */
 export default /*#__PURE__*/ defaulExport();

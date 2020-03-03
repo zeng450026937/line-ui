@@ -8,7 +8,11 @@ const NAMESPACE = 'CheckBoxGroup';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('check-box');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [useCheckItem(NAMESPACE), useRipple(), useColor()],
+  mixins : [
+    /*#__PURE__*/ useCheckItem(NAMESPACE),
+    /*#__PURE__*/ useRipple(),
+    /*#__PURE__*/ useColor(),
+  ],
 
   props : {
     indeterminate : Boolean,

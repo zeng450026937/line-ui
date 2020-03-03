@@ -93,13 +93,10 @@ export function defineComponent<V extends Vue = Vue>(name: string): {
   bem: any;
 }
 
-export function defineComponent(name: string, prefix: string = 'line') {
+export function defineComponent(name: string) {
   return function (
     sfc: any,
   ) {
-    // add prefix for component name
-    name = `${ prefix }-${ name }`;
-
     sfc.name = name;
     sfc.install = install;
 

@@ -10,7 +10,7 @@ export type CheckItemProps = {
   checked: boolean;
   disabled: boolean;
 };
-export type CheckItem = Vue & CheckItemProps;
+export type CheckItemMixin = Vue & CheckItemProps;
 
 export function useCheckItem(name: string) {
   return createMixins({

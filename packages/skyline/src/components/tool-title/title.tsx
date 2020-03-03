@@ -6,7 +6,7 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('title');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [
-    useColor(),
+    /*#__PURE__*/ useColor(),
   ],
 
   props : {

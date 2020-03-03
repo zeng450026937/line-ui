@@ -5,7 +5,9 @@ const NAMESPACE = 'Tabs';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('tabs');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [useCheckGroupWithModel(NAMESPACE)],
+  mixins : [
+    /*#__PURE__*/ useCheckGroupWithModel(NAMESPACE),
+  ],
 
   props : {
     exclusive : {

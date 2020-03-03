@@ -6,7 +6,9 @@ const NAMESPACE = 'Collapse';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('collapse-item');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [useCheckItem(NAMESPACE)],
+  mixins : [
+    /*#__PURE__*/ useCheckItem(NAMESPACE),
+  ],
 
   components : {
     Icon,

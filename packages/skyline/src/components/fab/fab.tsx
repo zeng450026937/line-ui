@@ -9,8 +9,8 @@ const FAB_SIDES = ['start', 'end', 'top', 'bottom'];
 
 export default /*#__PURE__*/ createComponent({
   mixins : [
-    useModel('activated'),
-    useClickOutside(),
+    /*#__PURE__*/ useModel('activated'),
+    /*#__PURE__*/ useClickOutside(),
   ],
 
   provide() {

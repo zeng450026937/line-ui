@@ -1,15 +1,22 @@
 import Vue, { VNode } from 'vue';
 import { createMixins } from 'skyline/utils/mixins';
 
-const strategies = Vue.config.optionMergeStrategies;
-strategies.shouldRender; // default strategy
-strategies.beforeRender = strategies.created;
-strategies.afterRender = strategies.created;
-
 type BeforeRenderHook = () => void;
 type AfterRenderHook = (vnode: VNode) => VNode | void;
 
+function setupStrategies() {
+  const strategies = Vue.config.optionMergeStrategies;
+  strategies.shouldRender; // default strategy
+  strategies.beforeRender = strategies.created;
+  strategies.afterRender = strategies.created;
+}
+
 export function useRender(keep = true) {
+  // TODO
+  // setupStrategies() should only called once
+  // find some way to prevent calling multiple times
+  setupStrategies();
+
   return createMixins({
     beforeCreate() {
       const {

@@ -38,7 +38,9 @@ const getPageElement = (el: HTMLElement) => {
 };
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [useColor()],
+  mixins : [
+    /*#__PURE__*/ useColor(),
+  ],
 
   props : {
     forceOverscroll : Boolean,

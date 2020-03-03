@@ -7,7 +7,10 @@ const NAMESPACE = 'TabBar';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('tab-button');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [useCheckItemWithModel(NAMESPACE), useRipple()],
+  mixins : [
+    /*#__PURE__*/ useCheckItemWithModel(NAMESPACE),
+    /*#__PURE__*/ useRipple(),
+  ],
 
   props : {
     // This property holds a textual description of the button.

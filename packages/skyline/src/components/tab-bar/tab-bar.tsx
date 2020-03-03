@@ -6,7 +6,10 @@ const NAMESPACE = 'TabBar';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('tab-bar');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [useCheckGroupWithModel(NAMESPACE), useColor()],
+  mixins : [
+    /*#__PURE__*/ useCheckGroupWithModel(NAMESPACE),
+    /*#__PURE__*/ useColor(),
+  ],
 
   props : {
     exclusive : {

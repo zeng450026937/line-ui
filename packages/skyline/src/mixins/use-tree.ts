@@ -3,7 +3,7 @@ import { useGroup } from 'skyline/mixins/use-group';
 import { useGroupItem } from 'skyline/mixins/use-group-item';
 import { isDef } from 'skyline/utils/helpers';
 
-export enum CheckState {
+export const enum CheckState {
   // The checkbox is unchecked.
   Unchecked = -1,
   // The checkbox is partially checked. This state is only used when tristate is enabled.

@@ -5,7 +5,7 @@ interface TooltipVNodeDirective extends VNodeDirective {
   value?: string | boolean;
 }
 
-const ctrl = new TooltipController();
+const ctrl = /*#__PURE__*/ new TooltipController();
 
 function inserted(el: HTMLElement, binding: TooltipVNodeDirective) {
   if (binding.value === false) return;

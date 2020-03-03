@@ -5,7 +5,7 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('toolbar');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [
-    useColor(),
+    /*#__PURE__*/ useColor(),
   ],
 
   props : {

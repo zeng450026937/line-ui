@@ -11,9 +11,9 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('toast');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [
-    usePopup(),
-    usePopupDuration(),
-    useColor(),
+    /*#__PURE__*/ usePopup(),
+    /*#__PURE__*/ usePopupDuration(),
+    /*#__PURE__*/ useColor(),
   ],
 
   props : {

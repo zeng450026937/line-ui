@@ -5,7 +5,9 @@ import { isDef } from 'skyline/utils/helpers';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('label');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [useColor()],
+  mixins : [
+    /*#__PURE__*/ useColor(),
+  ],
 
   inject : {
     Item : { default: undefined },

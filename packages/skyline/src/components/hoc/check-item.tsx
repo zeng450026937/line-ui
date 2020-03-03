@@ -5,7 +5,7 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('check-item');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [
-    useCheckItemWithModel('Group'),
+    /*#__PURE__*/ useCheckItemWithModel('Group'),
   ],
 
   render() {

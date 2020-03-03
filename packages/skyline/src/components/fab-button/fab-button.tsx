@@ -8,7 +8,10 @@ const NAMESPACE = 'FabGroup';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('fab-button');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [useColor(), useGroupItem(NAMESPACE)],
+  mixins : [
+    /*#__PURE__*/ useColor(),
+    /*#__PURE__*/ useGroupItem(NAMESPACE),
+  ],
 
   directives : { ripple },
 

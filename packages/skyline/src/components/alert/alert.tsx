@@ -14,7 +14,9 @@ export const isCancel = (role: string | undefined): boolean => {
 };
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [usePopup()],
+  mixins : [
+    /*#__PURE__*/ usePopup(),
+  ],
 
   props : {
     header    : String,

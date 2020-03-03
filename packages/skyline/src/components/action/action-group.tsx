@@ -6,7 +6,9 @@ const NAMESPACE = 'ActionGroup';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('action-group');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [useGroup(NAMESPACE)],
+  mixins : [
+    /*#__PURE__*/ useGroup(NAMESPACE),
+  ],
 
   render() {
     return (

@@ -38,11 +38,6 @@ const outputConfigs = {
     file   : resolve(`dist/${ name }.esm-bundler.js`),
     format : 'es',
   },
-  // main "skyline" package only
-  'esm-bundler-runtime' : {
-    file   : resolve(`dist/${ name }.runtime.esm-bundler.js`),
-    format : 'es',
-  },
   cjs : {
     file   : resolve(`dist/${ name }.cjs.js`),
     format : 'cjs',
@@ -196,9 +191,7 @@ function createConfig(format, output, plugins = []) {
   }
 
   const fileExt = enableTypescript ? 'ts' : 'js';
-  const entryFile = format === 'esm-bundler-runtime'
-    ? `src/runtime.${ fileExt }`
-    : `src/index.${ fileExt }`;
+  const entryFile = `src/index.${ fileExt }`;
 
   const external = isGlobalBuild || isRawESMBuild
     ? []

@@ -5,7 +5,9 @@ const NAMESPACE = 'ButtonGroup';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('button-group');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [useGroup(NAMESPACE)],
+  mixins : [
+    /*#__PURE__*/ useGroup(NAMESPACE),
+  ],
 
   render() {
     return (

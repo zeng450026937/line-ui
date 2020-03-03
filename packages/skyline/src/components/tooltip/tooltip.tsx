@@ -1,4 +1,3 @@
-import Popper from 'popper.js';
 import { createNamespace } from 'skyline/utils/namespace';
 import { useColor } from 'skyline/mixins/use-color';
 import { usePopup } from 'skyline/mixins/use-popup';
@@ -8,17 +7,18 @@ import { useTrigger } from 'skyline/mixins/use-trigger';
 import { iosEnterAnimation } from 'skyline/components/tooltip/animations/ios.enter';
 import { iosLeaveAnimation } from 'skyline/components/tooltip/animations/ios.leave';
 import { createDirective } from 'skyline/utils/directive';
+import { createPopper } from 'skyline/utils/popper';
 import vHover from 'skyline/directives/hover';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('tooltip');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [
-    useColor(),
-    usePopup({ disableScroll: false }),
-    usePopupDuration(),
-    usePopupDelay(),
-    useTrigger(),
+    /*#__PURE__*/ useColor(),
+    /*#__PURE__*/ usePopup({ disableScroll: false }),
+    /*#__PURE__*/ usePopupDuration(),
+    /*#__PURE__*/ usePopupDelay(),
+    /*#__PURE__*/ useTrigger(),
   ],
 
   props : {
@@ -50,13 +50,12 @@ export default /*#__PURE__*/ createComponent({
           placement,
         } = this;
 
-        this.popper = new Popper(
+        this.popper = createPopper(
           $triggerEl,
-          $el,
+          $el as HTMLElement,
           {
-            placement     : placement as any,
-            positionFixed : true,
-            eventsEnabled : false,
+            placement : placement as any,
+            strategy  : 'fixed',
           },
         );
         return iosEnterAnimation(baseEl);
