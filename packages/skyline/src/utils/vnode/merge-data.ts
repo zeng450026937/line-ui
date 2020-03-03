@@ -1,7 +1,7 @@
 import { VNodeData } from 'vue';
 import { mergeClass, mergeStaticClass } from 'skyline/utils/vnode/merge-class';
 import { mergeListener } from 'skyline/utils/vnode/merge-listener';
-import { isObject } from 'skyline/utils/helpers';
+import { isArray, isObject } from 'skyline/utils/helpers';
 
 export function mergeData(exist: VNodeData, value?: VNodeData) {
   if (!value) return exist;
@@ -26,9 +26,11 @@ export function mergeData(exist: VNodeData, value?: VNodeData) {
         data[key as keyof VNodeData] = mergeListener(old, val);
         break;
       default:
-        data[key as keyof VNodeData] = isObject(val)
-          ? { ...old, ...val }
-          : val;
+        data[key as keyof VNodeData] = isArray(old)
+          ? old.concat(val)
+          : isObject(val)
+            ? { ...old, ...val }
+            : val;
     }
   }
   return data;

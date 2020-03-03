@@ -1,31 +1,12 @@
 import { createMixins } from 'skyline/utils/mixins';
-import { isString } from 'skyline/utils/helpers';
-
-// TODO:
-// remove color validator
-const COLORS = [
-  'primary',
-  'secondary',
-  'tertiary',
-  'success',
-  'warning',
-  'danger',
-  'light',
-  'medium',
-  'dark',
-];
+import { renderClass } from 'skyline/utils/vnode';
 
 export function createColorClasses(color: string) {
-  if (!isString(color) || !color) return undefined;
+  if (!color) return undefined;
   return {
     'line-color'              : true,
     [`line-color-${ color }`] : true,
   };
-}
-
-export function getClassList(color?: Record<string, any>) {
-  if (!color) return [];
-  return Object.keys(color).filter(c => !!color[c]);
 }
 
 export function useColor() {
@@ -37,19 +18,16 @@ export function useColor() {
        * `"primary"`, `"secondary"`, `"tertiary"`, `"success"`, `"warning"`, `"danger"`,
        * `"light"`, `"medium"`, and `"dark"`.
       */
-      color : {
-        type : String,
-        validator(val) {
-          return COLORS.includes(val);
-        },
-      },
+      color : String,
     },
 
     afterRender(vnode) {
       if (!vnode || !vnode.data) return;
-      if (!isString(this.color) || !this.color) return;
-      const colorClasses = getClassList(createColorClasses(this.color));
-      vnode.data.staticClass = `${ vnode.data.staticClass || '' } ${ colorClasses.join(' ') } `.trim();
+      if (!this.color) return;
+      vnode.data.staticClass = renderClass(
+        vnode.data.staticClass,
+        createColorClasses(this.color),
+      );
     },
   });
 }
