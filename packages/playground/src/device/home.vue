@@ -1,11 +1,19 @@
 <template>
   <line-app>
-    <svg class="device-system-bar" viewBox="0 0 1384.3 40.3">
+    <svg
+      class="device-system-bar"
+      viewBox="0 0 1384.3 40.3"
+    >
       <path
         class="st0"
         d="M1343 5l18.8 32.3c.8 1.3 2.7 1.3 3.5 0L1384 5c.8-1.3-.2-3-1.7-3h-37.6c-1.5 0-2.5 1.7-1.7 3z"
       ></path>
-      <circle class="st0" cx="1299" cy="20.2" r="20"></circle>
+      <circle
+        class="st0"
+        cx="1299"
+        cy="20.2"
+        r="20"
+      ></circle>
       <path
         class="st0"
         d="M1213 1.2h30c2.2 0 4 1.8 4 4v30c0 2.2-1.8 4-4 4h-30c-2.2 0-4-1.8-4-4v-30c0-2.3
@@ -13,7 +21,10 @@
       >
       </path>
     </svg>
-    <svg class="device-notch" viewBox="0 0 219 31">
+    <svg
+      class="device-notch"
+      viewBox="0 0 219 31"
+    >
       <path
         d="M0 1V0h219v1a5 5 0 0 0-5 5v3c0 12.15-9.85 22-22 22H27C14.85 31 5 21.15 5 9V6a5 5 0 0 0-5-5z"
         fill-rule="evenodd"
@@ -39,7 +50,7 @@
 
 <script>
 export default {
-  name : '',
+  name : 'DeviceHome',
 
   components : {
 
@@ -60,11 +71,13 @@ export default {
   },
 
   created() {
-
+    // window.router.push({ path: '/mobile/home/button' });
   },
 
   mounted() {
-
+    // setTimeout(() => {
+    //   window.router.push({ path: '/mobile/home/button' });
+    // }, 1000);
   },
 
   methods : {
@@ -72,47 +85,49 @@ export default {
   },
 
   watch : {
-
+    $route() {
+      console.log('???', this.$route);
+    },
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .device-system-bar {
-    display: block;
-    position: relative;
+  display: block;
+  position: relative;
 
-    width: 100%;
+  width: 100%;
 
-    padding: .5rem 1rem;
+  padding: 0.5rem 1rem;
 
-    opacity: .1;
+  opacity: 0.1;
 
-    z-index: 2;
+  z-index: 2;
 
-    fill: #090a0d;
-  }
+  fill: #090a0d;
+}
 
-  .device-notch {
-    display: block;
-    position: absolute;
+.device-notch {
+  display: block;
+  position: absolute;
 
-    top: -1px;
-    left: 50%;
+  top: -1px;
+  left: 50%;
 
-    width: 165px;
+  width: 165px;
 
-    transform: translateX(-50%);
+  transform: translateX(-50%);
 
-    fill: #090a0d;
+  fill: #090a0d;
 
-    z-index: 2;
-  }
+  z-index: 2;
+}
 
-  .device-screen {
-    --ion-safe-area-top: 20px;
-    --ion-safe-area-bottom: 22px;
+.device-screen {
+  --ion-safe-area-top: 20px;
+  --ion-safe-area-bottom: 22px;
 
-    line-height: initial;
-  }
+  line-height: initial;
+}
 </style>

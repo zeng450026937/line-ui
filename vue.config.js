@@ -30,4 +30,14 @@ module.exports = {
     addLoader({ loader: '@skyline/markdown-loader' });
   },
   */
+
+  pages : {
+    index  : './packages/playground/app.ts',
+    mobile : {
+      entry    : './packages/playground/src/device/index.ts',
+      template : 'public/index.html',
+      title    : 'Mobile',
+      filename : 'mobile.html',
+    },
+  },
 };

@@ -28,12 +28,12 @@
 
       <div class="gallery-device">
         <figure>
-          <!-- <router-view name="usage"></router-view> -->
           <iframe
             ref="device"
-            src="/mobile/home"
+            :src="src"
             frameborder="0"
-            style="width: 320px; height: 680px">
+            style="width: 320px; height: 680px"
+          >
           </iframe>
         </figure>
       </div>
@@ -44,17 +44,24 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import VueRouter from 'vue-router/types/index.d';
+// import VueRouter from 'vue-router/types/index.d';
 
-interface contentWindow extends Window {
-  router?: VueRouter,
-}
+// interface contentWindow extends Window {
+//   router?: VueRouter;
+// }
 
 export default Vue.extend({
   name : 'line-home',
 
+  data() {
+    return {
+      src : '/mobile/home',
+    };
+  },
+
   mounted() {
     const { device } = this.$refs;
+    if (!device) return;
     (device as HTMLFrameElement).onload = () => {
       this.changePath(this.$route);
     };
@@ -67,22 +74,25 @@ export default Vue.extend({
   },
 
   methods : {
-    changePath(route) {
+    changePath(route: any) {
       const { path } = route;
       const { device } = this.$refs;
 
       if (device) {
-        const { contentWindow } = device as HTMLFrameElement;
-        (contentWindow as contentWindow).router!.push({ path: `/mobile/home${ path }` });
+        console.log('changePath()');
+        // const { contentWindow } = device as HTMLFrameElement;
+
+        setTimeout(() => {
+          // (contentWindow as any).router.push({ path: `/mobile/home${ path }` });
+          this.src = `/mobile/home${ path }`;
+        }, 0);
       }
     },
   },
-
 });
 </script>
 
 <style lang="scss">
-
 .page-wrapper {
   display: flex;
   position: relative;
@@ -93,7 +103,7 @@ export default Vue.extend({
 
   margin-left: 240px;
 
-  transition: transform .2s cubic-bezier(.2,1,.2,1),-webkit-transform .2s cubic-bezier(.2,1,.2,1);
+  transition: transform 0.2s cubic-bezier(0.2, 1, 0.2, 1), -webkit-transform 0.2s cubic-bezier(0.2, 1, 0.2, 1);
 
   font-size: 15px;
 
@@ -154,7 +164,9 @@ export default Vue.extend({
 
     border-radius: 32px;
 
-    box-shadow: 0 0 0 14px #090a0d, 0 0 0 17px #9fa3a8, 0 0 34px 17px rgba(0,0,0,.2);
+    background-color: rgba(0, 0, 0, 0.02);
+
+    box-shadow: 0 0 0 14px #090a0d, 0 0 0 17px #9fa3a8, 0 0 34px 17px rgba(0, 0, 0, 0.2);
 
     overflow: hidden;
 
@@ -175,11 +187,10 @@ export default Vue.extend({
 
     border-radius: 2px;
 
-    background-color: rgba(0,0,0,.5);
+    background-color: rgba(0, 0, 0, 0.5);
 
-    content: "";
+    content: '';
     z-index: 1;
   }
 }
-
 </style>
