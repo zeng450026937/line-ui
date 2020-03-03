@@ -1,0 +1,24 @@
+{
+  "name": "@skyline/component-explorer",
+  "version": "1.0.0-alpha",
+  "description": "@skyline/component-explorer",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "keywords": [
+    "skyline"
+  ],
+  "author": "Yealink Inc",
+  "license": "MIT",
+  "private": false,
+  "buildOptions": {
+    "formats": [
+      "global"
+    ],
+    "env": "development"
+  },
+  "dependencies": {
+    "monaco-editor": "^0.20.0"
+  }
+}

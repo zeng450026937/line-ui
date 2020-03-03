@@ -88,7 +88,7 @@ function createConfig(format, output, plugins = []) {
   const isBundlerESMBuild = /esm-bundler/.test(format);
 
   if (isGlobalBuild) {
-    output.name = packageOptions.name || name;
+    output.name = packageOptions.name;
   }
 
   const shouldEmitDeclarations = process.env.TYPES != null
