@@ -21,7 +21,7 @@ interface RangeKnob {
   handleKeyboard: (name: string, isIncrease: boolean) => void;
 }
 
-const [createComponent, bem] = createNamespace('range');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('range');
 
 function clamp(value: number, min: number, max: number): number {
   if (value < min) value = min;

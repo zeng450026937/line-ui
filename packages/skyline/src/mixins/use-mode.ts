@@ -1,41 +1,35 @@
 import { createMixins } from 'skyline/utils/mixins';
-import { config } from 'skyline/utils/config';
-import { isString } from 'skyline/utils/helpers';
+import { mergeStaticClass } from 'skyline/utils/vnode';
 
-export function createModeClasses(mode: string) {
-  if (!isString(mode) || !mode) return undefined;
+export function createModeClasses(mode?: string) {
+  if (!mode) return undefined;
   return {
     [mode] : true,
   };
 }
 
-export function useMode() {
+// root component provide 'mode' as default 'mode' for all components
+export function useMode(fallback: 'md' | 'ios' = 'ios') {
   return createMixins({
     inject : {
       providedMode : {
         from    : 'mode',
-        default : config.get('mode', 'ios'),
+        default : fallback,
       },
     },
 
     props : {
       mode : {
         type : String,
-        default() {
+        default(): string {
           return this.providedMode as string;
         },
       },
     },
 
-    provide() {
-      return {
-        mode : this.mode,
-      };
-    },
-
     afterRender(vnode) {
       if (!vnode.data) return;
-      vnode.data.staticClass = `${ this.mode } ${ vnode.data.staticClass || '' }`.trim();
+      vnode.data.staticClass = mergeStaticClass(vnode.data.staticClass, this.mode);
     },
   });
 }

@@ -5,7 +5,7 @@ import { useColor } from 'skyline/mixins/use-color';
 import CheckIndicator from 'skyline/components/check-box/check-indicator';
 
 const NAMESPACE = 'CheckBoxGroup';
-const [createComponent, bem] = createNamespace('check-box');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('check-box');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [useCheckItem(NAMESPACE), useRipple(), useColor()],

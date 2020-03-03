@@ -1,6 +1,6 @@
 import { createNamespace } from 'skyline/utils/namespace';
 
-const [createComponent, bem] = createNamespace('progress-circular');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('progress-circular');
 
 export default /*#__PURE__*/ createComponent({
   props : {

@@ -10,7 +10,7 @@ import { iosLeaveAnimation } from 'skyline/components/tooltip/animations/ios.lea
 import { createDirective } from 'skyline/utils/directive';
 import vHover from 'skyline/directives/hover';
 
-const [createComponent, bem] = createNamespace('tooltip');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('tooltip');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [

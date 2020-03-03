@@ -1,6 +1,6 @@
 import { createNamespace } from 'skyline/utils/namespace';
 
-const [createComponent, bem] = createNamespace('cell-group');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('cell-group');
 
 export default /*#__PURE__*/ createComponent({
   render() {

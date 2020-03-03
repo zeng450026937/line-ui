@@ -2,7 +2,7 @@ import { createNamespace } from 'skyline/utils/namespace';
 import { useGroup } from 'skyline/mixins/use-group';
 
 const NAMESPACE = 'ButtonGroup';
-const [createComponent, bem] = createNamespace('button-group');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('button-group');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [useGroup(NAMESPACE)],

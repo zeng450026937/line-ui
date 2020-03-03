@@ -1,6 +1,6 @@
 import { createNamespace } from 'skyline/utils/namespace';
 
-const [createComponent, bem] = createNamespace('thumbnail');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('thumbnail');
 
 export default /*#__PURE__*/ createComponent({
   functional : true,

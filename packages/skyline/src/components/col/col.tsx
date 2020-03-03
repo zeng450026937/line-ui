@@ -5,7 +5,7 @@ import { isSupportsVars } from 'skyline/utils/dom';
 const SUPPORTS_VARS = /*#__PURE__*/ isSupportsVars();
 const BREAKPOINTS = ['', 'xs', 'sm', 'md', 'lg', 'xl'];
 
-const [createComponent, bem] = createNamespace('col');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('col');
 
 export default /*#__PURE__*/ createComponent({
   props : {

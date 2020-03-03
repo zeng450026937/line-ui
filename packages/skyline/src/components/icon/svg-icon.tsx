@@ -1,7 +1,7 @@
 import { createNamespace } from 'skyline/utils/namespace';
 import { createColorClasses } from 'skyline/mixins/use-color';
 
-const [createComponent, bem] = createNamespace('svg-icon');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('svg-icon');
 
 function getDefaultText(slots: Function) {
   const nodes = slots();

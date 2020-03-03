@@ -16,12 +16,12 @@ import {
   VNode,
 } from 'vue/types/vnode';
 
-import { Mods } from 'skyline/utils/namespace/bem';
-import { camelize } from 'skyline/utils/string-transform';
+import { createBEM, Mods } from 'skyline/utils/bem';
 import { unifySlots } from 'skyline/utils/vnode';
+import { camelize } from 'skyline/utils/string-transform';
 
-import { useComponent } from 'skyline/mixins/use-component';
 import { useRender } from 'skyline/mixins/use-render';
+import { useSlots } from 'skyline/mixins/use-slots';
 import { useMode } from 'skyline/mixins/use-mode';
 
 export function install(this: ComponentOptions<Vue>, Vue: VueConstructor) {
@@ -70,7 +70,7 @@ export type LineComponent<
   TsxComponent<Props, Slots>;
 
 
-export function createComponent<V extends Vue = Vue>(name: string): {
+export function defineComponent<V extends Vue = Vue>(name: string): {
   <Slots, Data, Computed, Methods, PropNames extends string = never>(
     sfc: ThisTypedComponentOptionsWithArrayProps<V, Data, Methods, Computed, PropNames>
   ): LineComponent<Slots, Data, Methods, Computed, Record<PropNames, any>>;
@@ -88,14 +88,22 @@ export function createComponent<V extends Vue = Vue>(name: string): {
   ): LineComponent<Slots, {}, {}, {}, Props>;
 
   (sfc: ComponentOptions<V >): LineComponent<{}, {}, {}, {}>;
+
+  createComponent: any;
+  bem: any;
 }
 
-export function createComponent(name: string) {
+export function defineComponent(name: string, prefix: string = 'line') {
   return function (
     sfc: any,
   ) {
+    // add prefix for component name
+    name = `${ prefix }-${ name }`;
+
     sfc.name = name;
     sfc.install = install;
+
+    sfc.bem = createBEM(name);
 
     if (sfc.functional) {
       const { render } = sfc;
@@ -103,8 +111,13 @@ export function createComponent(name: string) {
     } else {
       sfc.mixins = sfc.mixins || [];
       sfc.mixins.push(
-        useComponent(),
+        // enhance render function
+        // provide shouldRender/beforeRender/afterRender lifecycle hooks
         useRender(),
+        // unify slots function, scoped first,
+        // inject special slot class for slots
+        useSlots(),
+        // inherit mode property from root component
         useMode(),
       );
     }
@@ -112,3 +125,5 @@ export function createComponent(name: string) {
     return sfc;
   };
 }
+
+export type CreateComponent = ReturnType<typeof defineComponent>;

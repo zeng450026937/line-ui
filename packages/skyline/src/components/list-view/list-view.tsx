@@ -5,7 +5,7 @@ import { exponentialSearch } from 'skyline/utils/algorithm/exponential-search';
 import ListItem from 'skyline/components/list-view/list-item';
 
 const NAMESPACE = 'ListView';
-const [createComponent, bem] = createNamespace('list-view');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('list-view');
 
 export default /*#__PURE__*/ createComponent({
   provide() {

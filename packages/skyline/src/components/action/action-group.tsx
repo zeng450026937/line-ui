@@ -3,7 +3,7 @@ import { createNamespace } from 'skyline/utils/namespace';
 import { useGroup } from 'skyline/mixins/use-group';
 
 const NAMESPACE = 'ActionGroup';
-const [createComponent, bem] = createNamespace('action-group');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('action-group');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [useGroup(NAMESPACE)],

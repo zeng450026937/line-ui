@@ -5,7 +5,7 @@ import { isDef } from 'skyline/utils/helpers';
 import ripple from 'skyline/directives/ripple';
 
 const NAMESPACE = 'ButtonGroup';
-const [createComponent, bem] = createNamespace('button');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('button');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [useColor(), useGroupItem(NAMESPACE)],

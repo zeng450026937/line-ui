@@ -1,6 +1,6 @@
 import { createNamespace } from 'skyline/utils/namespace';
 
-const [createComponent, bem] = createNamespace('textarea');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('textarea');
 
 export default /*#__PURE__*/ createComponent({
   props : {

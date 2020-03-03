@@ -5,7 +5,7 @@ import { isDef } from 'skyline/utils/helpers';
 import { Icon } from 'skyline/components/icon';
 import ripple from 'skyline/directives/ripple';
 
-const [createComponent, bem] = createNamespace('item');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('item');
 
 export type CssClassMap = { [className: string]: boolean };
 

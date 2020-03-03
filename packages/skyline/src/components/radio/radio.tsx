@@ -5,7 +5,7 @@ import { createColorClasses, useColor } from 'skyline/mixins/use-color';
 
 const NAMESPACE = 'RadioGroup';
 
-const [createComponent, bem] = createNamespace('radio');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('radio');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [useCheckItem(NAMESPACE), useRipple(), useColor()],

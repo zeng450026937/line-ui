@@ -7,7 +7,7 @@ import { mdEnterAnimation } from 'skyline/components/alert/animations/md.enter';
 import { mdLeaveAnimation } from 'skyline/components/alert/animations/md.leave';
 import { AlertButton, AlertInput } from 'skyline/components/alert/alert-interface';
 
-const [createComponent, bem] = createNamespace('alert');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('alert');
 
 export const isCancel = (role: string | undefined): boolean => {
   return role === 'cancel' || role === 'overlay';

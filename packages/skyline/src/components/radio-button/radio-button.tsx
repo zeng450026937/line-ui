@@ -5,7 +5,7 @@ import RadioIndicator from 'skyline/components/radio-button/radio-indicator';
 
 const NAMESPACE = 'RadioButtonGroup';
 
-const [createComponent, bem] = createNamespace('radio-button');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('radio-button');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [useCheckItem(NAMESPACE), useRipple()],

@@ -3,7 +3,7 @@ import { useCheckItem } from 'skyline/mixins/use-check-item';
 import { Icon } from 'skyline/components/icon';
 
 const NAMESPACE = 'Collapse';
-const [createComponent, bem] = createNamespace('collapse-item');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('collapse-item');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [useCheckItem(NAMESPACE)],

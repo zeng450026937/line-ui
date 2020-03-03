@@ -5,7 +5,7 @@ import { setupTapClick } from 'skyline/utils/tap-click';
 import { setupFocusVisible } from 'skyline/utils/focus-visible';
 import { setupPopup } from 'skyline/utils/popup';
 
-const [createComponent, bem] = createNamespace('app');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('app');
 
 export default /*#__PURE__*/ createComponent({
   props : {

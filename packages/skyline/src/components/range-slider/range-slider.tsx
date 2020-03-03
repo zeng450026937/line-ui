@@ -21,7 +21,7 @@ interface Style {
   top?: string;
 }
 
-const [createComponent, bem] = createNamespace('range-slider');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('range-slider');
 
 export default /*#__PURE__*/ createComponent({
   props : {

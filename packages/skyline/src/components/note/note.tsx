@@ -1,7 +1,7 @@
 import { createNamespace } from 'skyline/utils/namespace';
 import { createColorClasses } from 'skyline/mixins/use-color';
 
-const [createComponent, bem] = createNamespace('note');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('note');
 
 export default /*#__PURE__*/ createComponent({
   functional : true,

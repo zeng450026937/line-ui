@@ -1,7 +1,7 @@
 import { createNamespace } from 'skyline/utils/namespace';
 import { useColor } from 'skyline/mixins/use-color';
 
-const [createComponent, bem] = createNamespace('item-divider');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('item-divider');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [useColor()],

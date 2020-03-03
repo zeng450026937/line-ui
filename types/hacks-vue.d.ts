@@ -1,7 +1,6 @@
 import Vue, {
   VNode,
   VNodeData,
-  VueConstructor,
 } from 'vue';
 
 type PacthFn = (vnode: VNodeData, index: number) => VNodeData;

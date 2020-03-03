@@ -7,7 +7,7 @@ import { mdEnterAnimation } from 'skyline/components/action-sheet/animations/md.
 import { mdLeaveAnimation } from 'skyline/components/action-sheet/animations/md.leave';
 import { ActionSheetButton } from 'skyline/components/action-sheet/action-sheet-interface';
 
-const [createComponent, bem] = createNamespace('action-sheet');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('action-sheet');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [usePopup()],

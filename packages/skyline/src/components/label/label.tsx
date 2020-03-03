@@ -2,7 +2,7 @@ import { createNamespace } from 'skyline/utils/namespace';
 import { useColor } from 'skyline/mixins/use-color';
 import { isDef } from 'skyline/utils/helpers';
 
-const [createComponent, bem] = createNamespace('label');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('label');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [useColor()],

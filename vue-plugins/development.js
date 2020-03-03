@@ -6,7 +6,9 @@ module.exports = (api, options) => {
     //   .add(api.resolve('src/app.ts'));
 
     // for development, set "skyline" alias to source code
-    // config.resolve.alias
-    //   .set('skyline', api.resolve('packages/skyline/src'));
+    if (process.env.NODE_ENV !== 'production') {
+      config.resolve.alias
+        .set('skyline', api.resolve('packages/skyline/src'));
+    }
   });
 };

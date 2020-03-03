@@ -1,7 +1,7 @@
 import { createNamespace } from 'skyline/utils/namespace';
 import { Icon } from 'skyline/components/icon';
 
-const [createComponent, bem] = createNamespace('stepper');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('stepper');
 
 export default /*#__PURE__*/ createComponent({
   components : {

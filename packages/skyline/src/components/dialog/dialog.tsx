@@ -1,7 +1,7 @@
 import { createNamespace } from 'skyline/utils/namespace';
 import { usePopup } from 'skyline/mixins/use-popup';
 
-const [createComponent, bem] = createNamespace('dialog');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('dialog');
 const CONTENT_ELEMENT = 'content';
 
 export default /*#__PURE__*/ createComponent({

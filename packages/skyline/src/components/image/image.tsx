@@ -1,6 +1,6 @@
 import { createNamespace } from 'skyline/utils/namespace';
 
-const [createComponent, bem] = createNamespace('img');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('img');
 
 export default /*#__PURE__*/ createComponent({
   props : {

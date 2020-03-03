@@ -1,7 +1,7 @@
 import { createNamespace } from 'skyline/utils/namespace';
 import { useCheckGroupWithModel } from 'skyline/mixins/use-check-group';
 
-const [createComponent, bem] = createNamespace('check-group');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('check-group');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [

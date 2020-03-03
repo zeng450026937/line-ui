@@ -1,6 +1,6 @@
 import { createNamespace } from 'skyline/utils/namespace';
 
-const [createComponent, bem] = createNamespace('grid');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('grid');
 
 export default /*#__PURE__*/ createComponent({
   functional : true,

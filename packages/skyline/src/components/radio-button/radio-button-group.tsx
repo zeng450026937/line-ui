@@ -2,7 +2,7 @@ import { createNamespace } from 'skyline/utils/namespace';
 import { useCheckGroup } from 'skyline/mixins/use-check-group';
 
 const NAMESPACE = 'RadioButtonGroup';
-const [createComponent, bem] = createNamespace('radio-button-group');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('radio-button-group');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [useCheckGroup(NAMESPACE)],

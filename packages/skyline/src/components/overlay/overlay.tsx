@@ -1,6 +1,6 @@
 import { createNamespace } from 'skyline/utils/namespace';
 
-const [createComponent, bem] = createNamespace('overlay');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('overlay');
 
 const now = (ev: any) => ev.timeStamp || Date.now();
 

@@ -2,7 +2,7 @@ import { createNamespace } from 'skyline/utils/namespace';
 import { useCheckGroup } from 'skyline/mixins/use-check-group';
 
 const NAMESPACE = 'CheckBoxGroup';
-const [createComponent, bem] = createNamespace('check-box-group');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('check-box-group');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [useCheckGroup(NAMESPACE)],

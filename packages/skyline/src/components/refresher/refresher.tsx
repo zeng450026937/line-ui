@@ -1,6 +1,6 @@
 import { createNamespace } from 'skyline/utils/namespace';
 
-const [createComponent, bem] = createNamespace('refresher');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('refresher');
 
 export default /*#__PURE__*/ createComponent({
   props : {

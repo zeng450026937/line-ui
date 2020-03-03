@@ -3,7 +3,7 @@ import { useColor } from 'skyline/mixins/use-color';
 import { isDef } from 'skyline/utils/helpers';
 import ripple from 'skyline/directives/ripple';
 
-const [createComponent, bem] = createNamespace('card');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('card');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [useColor()],

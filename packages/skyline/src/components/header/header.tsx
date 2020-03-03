@@ -1,6 +1,6 @@
 import { createNamespace } from 'skyline/utils/namespace';
 
-const [createComponent, bem] = createNamespace('header');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('header');
 
 export default /*#__PURE__*/ createComponent({
   inject : ['App'],

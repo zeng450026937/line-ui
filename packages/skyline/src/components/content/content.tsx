@@ -11,7 +11,7 @@ import {
 import { isString } from 'skyline/utils/helpers';
 import { updateScrollDetail } from 'skyline/components/content/update-scroll-detail';
 
-const [createComponent, bem] = createNamespace('content');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('content');
 
 const getParentElement = (el: any) => {
   if (el.parentElement) {

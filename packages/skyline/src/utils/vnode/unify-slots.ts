@@ -39,17 +39,23 @@ export function createSlots<T extends UnifyContext>(context: T, functional = tru
         vnodes.forEach((vnode, index) => {
           if (!vnode.data) return;
 
-          vnode.data = mergeData(
-            vnode.data,
-            { class: slotclass },
-          );
+          if (!(vnode.data as any).__slotted) {
+            vnode.data = mergeData(
+              vnode.data,
+              { class: slotclass },
+            );
+            (vnode.data as any).__slotted = true;
+          }
 
           if (!patch) return;
 
-          vnode.data = mergeData(
-            vnode.data,
-            isFunction(patch) ? patch(vnode.data, index) : patch,
-          );
+          if (!(vnode.data as any).__patched) {
+            vnode.data = mergeData(
+              vnode.data,
+              isFunction(patch) ? patch(vnode.data, index) : patch,
+            );
+            (vnode.data as any).__patched = true;
+          }
         });
       }
 

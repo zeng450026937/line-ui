@@ -1,6 +1,6 @@
 import { createNamespace } from 'skyline/utils/namespace';
 
-const [createComponent, bem] = createNamespace('progress');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('progress');
 
 export default /*#__PURE__*/ createComponent({
   props : {

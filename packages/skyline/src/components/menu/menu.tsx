@@ -13,7 +13,7 @@ import 'skyline/components/menu/menu.ios.scss';
 
 import { Overlay } from 'skyline/components/overlay';
 
-const [createComponent, bem] = createNamespace('menu');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('menu');
 
 const iosEasing = 'cubic-bezier(0.32,0.72,0,1)';
 const mdEasing = 'cubic-bezier(0.0,0.0,0.2,1)';

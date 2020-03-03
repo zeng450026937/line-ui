@@ -1,7 +1,7 @@
 import { Icon } from 'skyline/components/icon';
 import { createNamespace } from 'skyline/utils/namespace';
 
-const [createComponent, bem] = createNamespace('cell');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('cell');
 
 export default /*#__PURE__*/ createComponent({
   components : {

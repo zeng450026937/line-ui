@@ -4,7 +4,7 @@ import { createNamespace } from 'skyline/utils/namespace';
 // import { isObject } from 'skyline/utils/helpers';
 
 
-const [createComponent, bem] = createNamespace('input');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('input');
 
 export default /*#__PURE__*/ createComponent({
   props : {

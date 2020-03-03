@@ -6,7 +6,7 @@ import { isDef, isObject } from 'skyline/utils/helpers';
 import { VNodeData } from 'vue';
 
 const NAMESPACE = 'FabGroup';
-const [createComponent, bem] = createNamespace('fab-group');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('fab-group');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [

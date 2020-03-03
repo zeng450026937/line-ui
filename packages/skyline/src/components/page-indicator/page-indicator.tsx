@@ -2,7 +2,7 @@ import { isObject } from 'skyline/utils/helpers';
 import { createNamespace } from 'skyline/utils/namespace';
 import { Icon } from 'skyline/components/icon';
 
-const [createComponent, bem] = createNamespace('page-indicator');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('page-indicator');
 
 export default /*#__PURE__*/ createComponent({
   props : {

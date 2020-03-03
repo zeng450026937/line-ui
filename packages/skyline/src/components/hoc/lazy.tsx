@@ -1,7 +1,7 @@
 import { createNamespace } from 'skyline/utils/namespace';
 import { useLazy } from 'skyline/mixins/use-lazy';
 
-const [createComponent, bem] = createNamespace('lazy');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('lazy');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [

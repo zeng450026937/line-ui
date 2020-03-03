@@ -8,7 +8,7 @@ import { iosLeaveAnimation } from 'skyline/components/loading/animations/ios.lea
 import { mdEnterAnimation } from 'skyline/components/loading/animations/md.enter';
 import { mdLeaveAnimation } from 'skyline/components/loading/animations/md.leave';
 
-const [createComponent, bem] = createNamespace('loading');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('loading');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [

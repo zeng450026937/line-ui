@@ -6,7 +6,7 @@ import { iosLeaveAnimation } from 'skyline/components/popup/animations/ios.leave
 import { mdEnterAnimation } from 'skyline/components/popup/animations/md.enter';
 import { mdLeaveAnimation } from 'skyline/components/popup/animations/md.leave';
 
-const [createComponent, bem] = createNamespace('popup');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('popup');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [usePopup()],

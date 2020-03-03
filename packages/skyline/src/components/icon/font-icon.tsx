@@ -1,7 +1,7 @@
 import { createNamespace } from 'skyline/utils/namespace';
 import { createColorClasses } from 'skyline/mixins/use-color';
 
-const [createComponent, bem] = createNamespace('font-icon');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('font-icon');
 
 function getDefaultText(slots: Function) {
   const nodes = slots();

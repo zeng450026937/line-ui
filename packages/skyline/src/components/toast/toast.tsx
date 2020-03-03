@@ -7,7 +7,7 @@ import { iosLeaveAnimation } from 'skyline/components/toast/animations/ios.leave
 import { mdEnterAnimation } from 'skyline/components/toast/animations/md.enter';
 import { mdLeaveAnimation } from 'skyline/components/toast/animations/md.leave';
 
-const [createComponent, bem] = createNamespace('toast');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('toast');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [

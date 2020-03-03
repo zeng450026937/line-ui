@@ -2,7 +2,7 @@ import { createNamespace } from 'skyline/utils/namespace';
 import { useColor } from 'skyline/mixins/use-color';
 import ripple from 'skyline/directives/ripple';
 
-const [createComponent, bem] = createNamespace('chip');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('chip');
 
 export default /*#__PURE__*/ createComponent({
   mixins : [useColor()],

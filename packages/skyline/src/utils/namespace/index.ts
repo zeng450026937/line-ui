@@ -1,12 +1,15 @@
-import { BEM, createBEM } from './bem';
-import { createComponent } from './component';
+import { BEM, createBEM } from 'skyline/utils/bem';
+import { CreateComponent, defineComponent } from 'skyline/utils/component';
 
-type CreateNamespaceReturn = [
-  ReturnType<typeof createComponent>,
-  BEM,
-];
+type CreateNamespaceReturn = {
+  createComponent: CreateComponent;
+  bem: BEM;
+};
 
 export function createNamespace(name: string, prefix = 'line'): CreateNamespaceReturn {
   name = `${ prefix }-${ name }`;
-  return [createComponent(name), createBEM(name)];
+  return {
+    createComponent : defineComponent(name),
+    bem             : createBEM(name),
+  };
 }

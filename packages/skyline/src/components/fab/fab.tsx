@@ -4,7 +4,7 @@ import { useClickOutside } from 'skyline/mixins/use-click-outside';
 import { isDef } from 'skyline/utils/helpers';
 import { FabGroup } from 'skyline/components/fab-group';
 
-const [createComponent, bem] = createNamespace('fab');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('fab');
 const FAB_SIDES = ['start', 'end', 'top', 'bottom'];
 
 export default /*#__PURE__*/ createComponent({

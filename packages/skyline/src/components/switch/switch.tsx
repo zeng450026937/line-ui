@@ -5,7 +5,7 @@ import { createNamespace } from 'skyline/utils/namespace';
 import { createGesture, Gesture, GestureDetail } from 'skyline/utils/gesture';
 
 const NAMESPACE = 'SwitchGroup';
-const [createComponent, bem] = createNamespace('switch');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('switch');
 
 let gesture: Gesture | undefined;
 

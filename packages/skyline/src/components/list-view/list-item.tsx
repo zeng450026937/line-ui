@@ -1,7 +1,7 @@
 import { createNamespace } from 'skyline/utils/namespace';
 
 const NAMESPACE = 'ListView';
-const [createComponent, bem] = createNamespace('list-item');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('list-item');
 
 export default /*#__PURE__*/ createComponent({
   inject : [NAMESPACE],

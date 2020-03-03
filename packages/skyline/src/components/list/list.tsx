@@ -1,7 +1,7 @@
 import { createNamespace } from 'skyline/utils/namespace';
 import { isDef } from 'skyline/utils/helpers';
 
-const [createComponent, bem] = createNamespace('list');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('list');
 
 export default /*#__PURE__*/ createComponent({
   props : {

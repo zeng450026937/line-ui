@@ -1,6 +1,6 @@
 import { createNamespace } from 'skyline/utils/namespace';
 
-const [createComponent, bem] = createNamespace('radio-indicator');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('radio-indicator');
 
 export default /*#__PURE__*/ createComponent({
   functional : true,
