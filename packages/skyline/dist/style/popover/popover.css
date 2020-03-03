@@ -1,0 +1,59 @@
+.line-popover {
+  /**
+   * @prop --background: Background of the popover
+   * @prop --box-shadow: Box shadow of the popover
+   *
+   * @prop --min-width: Minimum width of the popover
+   * @prop --width: Width of the popover
+   * @prop --max-width: Maximum width of the popover
+   *
+   * @prop --min-height: Minimum height of the popover
+   * @prop --height: Height of the popover
+   * @prop --max-height: Maximum height of the popover
+   *
+   * @prop --backdrop-opacity: Opacity of the backdrop
+   */
+  --background: var(--line-background-color, #fff);
+  --min-width: 0;
+  --min-height: 0;
+  --max-width: auto;
+  --height: auto;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  position: fixed;
+  align-items: center;
+  justify-content: center;
+  color: var(--line-text-color, #000);
+  z-index: 1001;
+}
+
+.line-popover__wrapper {
+  opacity: 0;
+  z-index: 10;
+}
+
+.line-popover__content {
+  display: flex;
+  position: absolute;
+  flex-direction: column;
+  width: var(--width);
+  min-width: var(--min-width);
+  max-width: var(--max-width);
+  height: var(--height);
+  min-height: var(--min-height);
+  max-height: var(--max-height);
+  background: var(--background);
+  box-shadow: var(--box-shadow);
+  overflow: auto;
+  z-index: 10;
+}
+
+.line-popover__viewport {
+  --ion-safe-area-top: 0px;
+  --ion-safe-area-right: 0px;
+  --ion-safe-area-bottom: 0px;
+  --ion-safe-area-left: 0px;
+}

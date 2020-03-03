@@ -1,0 +1,208 @@
+.line-action-sheet {
+  /**
+   * @prop --background: Background of the action sheet group
+   * @prop --background-activated: Background of the action sheet button when pressed
+   * @prop --background-selected: Background of the selected action sheet button
+   *
+   * @prop --color: Color of the action sheet text
+   *
+   * @prop --min-width: Minimum width of the action sheet
+   * @prop --width: Width of the action sheet
+   * @prop --max-width: Maximum width of the action sheet
+   *
+   * @prop --min-height: Minimum height of the action sheet
+   * @prop --height: height of the action sheet
+   * @prop --max-height: Maximum height of the action sheet
+   *
+   * @prop --backdrop-opacity: Opacity of the backdrop
+   */
+  --color: initial;
+  --min-width: auto;
+  --width: 100%;
+  --max-width: 500px;
+  --min-height: auto;
+  --height: 100%;
+  --max-height: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  display: block;
+  position: fixed;
+  font-family: var(--line-font-family, inherit);
+  touch-action: none;
+  user-select: none;
+  z-index: 1001;
+}
+
+.line-action-sheet__wrapper {
+  right: 0;
+  left: 0;
+  bottom: 0;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  transform: translate3d(0,  100%,  0);
+  display: block;
+  position: absolute;
+  width: var(--width);
+  min-width: var(--min-width);
+  max-width: var(--max-width);
+  height: var(--height);
+  min-height: var(--min-height);
+  max-height: var(--max-height);
+  z-index: 10;
+  pointer-events: none;
+}
+@supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+  .line-action-sheet__wrapper {
+    margin-left: unset;
+    margin-right: unset;
+    margin-inline-start: auto;
+    margin-inline-end: auto;
+  }
+}
+
+.line-action-sheet__button {
+  display: block;
+  width: 100%;
+  border: 0;
+  outline: none;
+  font-family: inherit;
+}
+
+.line-action-sheet__button.line-activated {
+  background: var(--background-activated);
+}
+
+.line-action-sheet__button-inner {
+  display: flex;
+  flex-flow: row nowrap;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.line-action-sheet__container {
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-end;
+  height: 100%;
+  max-height: 100%;
+}
+
+.line-action-sheet__group {
+  flex-shrink: 2;
+  overscroll-behavior-y: contain;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  pointer-events: all;
+  background: var(--background);
+}
+
+.line-action-sheet__group::-webkit-scrollbar {
+  display: none;
+}
+
+.line-action-sheet__group--cancel {
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.line-action-sheet__button--selected {
+  background: var(--background-selected);
+}
+
+.line-action-sheet {
+  --background: var(--line-overlay-background-color, var(--line-background-color, #fff));
+  --background-selected: var(--background, );
+  --background-activated: var(--background);
+  --backdrop-opacity: var(--ion-backdrop-opacity, 0.32);
+}
+
+.line-action-sheet__title {
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 20px;
+  padding-bottom: 17px;
+  height: 60px;
+  color: var(--color, rgba(var(--line-text-color-rgb, 0, 0, 0), 0.54));
+  font-size: 16px;
+  text-align: start;
+}
+@supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+  .line-action-sheet__title {
+    padding-left: unset;
+    padding-right: unset;
+    padding-inline-start: 16px;
+    padding-inline-end: 16px;
+  }
+}
+
+.line-action-sheet__sub-title {
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 16px;
+  padding-bottom: 0;
+  font-size: 14px;
+}
+
+.line-action-sheet__group:first-child {
+  padding-top: 0;
+}
+.line-action-sheet__group:last-child {
+  padding-bottom: 0;
+}
+.line-action-sheet__button {
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 0;
+  padding-bottom: 0;
+  position: relative;
+  height: 52px;
+  background: transparent;
+  color: var(--color, var(--line-color-step-850, #262626));
+  font-size: 16px;
+  text-align: start;
+  contain: strict;
+  overflow: hidden;
+}
+@supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+  .line-action-sheet__button {
+    padding-left: unset;
+    padding-right: unset;
+    padding-inline-start: 16px;
+    padding-inline-end: 16px;
+  }
+}
+
+.line-action-sheet__icon {
+  padding-bottom: 4px;
+  margin-left: 0;
+  margin-right: 32px;
+  margin-top: 0;
+  margin-bottom: 0;
+  color: var(--color, rgba(var(--line-text-color-rgb, 0, 0, 0), 0.54));
+  font-size: 24px;
+}
+@supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+  .line-action-sheet__icon {
+    margin-left: unset;
+    margin-right: unset;
+    margin-inline-start: 0;
+    margin-inline-end: 32px;
+  }
+}
+
+.line-action-sheet__button-inner {
+  justify-content: flex-start;
+}
+
+.line-action-sheet__button--selected {
+  font-weight: bold;
+}

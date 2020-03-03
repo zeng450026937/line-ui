@@ -1,0 +1,39 @@
+.switch-indicator {
+  display: inline-flex;
+  position: relative;
+  align-items: center;
+  width: 42px;
+  height: 20px;
+  transition: all 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.12);
+  border-radius: 10px;
+  background-color: rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12) inset, 0 0 6px rgba(0, 0, 0, 0.04) inset;
+  cursor: pointer;
+}
+.switch-indicator__thumb {
+  display: block;
+  position: absolute;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  transition: inherit;
+  border-radius: 50%;
+  background-color: #fff;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1) inset;
+}
+.switch-indicator.is-checked {
+  background-color: rgba(16, 194, 155, 0.2);
+  box-shadow: 0 2px 4px rgba(16, 194, 155, 0.22) inset, 0 0 6px rgba(16, 194, 155, 0.14) inset;
+}
+.switch-indicator.is-checked .switch-indicator__thumb {
+  left: calc(100% - 18px);
+  background-color: #10c29b;
+}
+.switch-indicator.is-disabled {
+  background-color: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.22) inset, 0 0 6px rgba(0, 0, 0, 0.14) inset;
+  cursor: not-allowed;
+}
+.switch-indicator.is-disabled .switch-indicator__thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+}

@@ -11,7 +11,7 @@
   ],
   "author": "Yealink Inc",
   "license": "MIT",
-  "private": false,
+  "private": true,
   "buildOptions": {
     "formats": [
       "global"

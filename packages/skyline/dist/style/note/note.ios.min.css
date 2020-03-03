@@ -1,0 +1,1 @@
+.line-note{color:var(--color);font-family:var(--line-font-family,inherit);box-sizing:border-box}.line-note.line-color{color:var(--line-color-base)}.line-note{--color:var(--line-color-step-350,#a6a6a6)}

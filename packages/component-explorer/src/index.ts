@@ -11,8 +11,18 @@ declare global {
 window.init = () => {
   const { monaco } = window;
 
+  const template = `
+<line-app>
+  <line-content>
+    <line-button>
+      Click Me
+    </line-button>
+  </line-content>
+</line-app>
+`.trim();
+
   const editor = monaco.editor.create(document.getElementById('source')!, {
-    value                : '<div>Hello World!</div>',
+    value                : template,
     language             : 'html',
     theme                : 'vs-dark',
     fontSize             : 14,
