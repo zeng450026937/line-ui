@@ -18,15 +18,30 @@ export function createSlots<T extends UnifyContext>(context: T, functional = tru
   const slotsKey = `${ prefix }slots`;
   const scopedSlotsKey = `${ prefix }scopedSlots`;
 
-  const $slots = context[slotsKey] as Slots;
-  const $scopedSlots = (context[scopedSlotsKey] || context[attrsKey] || {}) as ScopedSlots;
+  function extrieve() {
+    return {
+      $slots       : context[slotsKey] as Slots,
+      $scopedSlots : (context[scopedSlotsKey] || context[attrsKey] || {}) as ScopedSlots,
+    };
+  }
 
   return {
     hasSlot : (name = 'default'): boolean => {
+      const { $slots, $scopedSlots } = extrieve();
       return !!$scopedSlots[name] || !!$slots[name];
     },
 
     slots : (name = 'default', ctx?: any, patch?: VNodeData | PacthFn): ScopedSlotChildren => {
+      // IMPORTANT
+      //
+      // if children is not SCOPED slot
+      // $slots is updated when Vue needs update child component
+      //
+      // $scopedSlots is also updated before render
+      //
+      // we have to extrieve $slots/$scopedSlots everytime we wanna use it
+      const { $slots, $scopedSlots } = extrieve();
+
       const scopedSlot = $scopedSlots[name];
       const vnodes = scopedSlot ? scopedSlot(ctx) : $slots[name];
 
