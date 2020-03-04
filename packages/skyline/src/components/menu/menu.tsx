@@ -1,17 +1,13 @@
-import {
-  Animation, Gesture, GestureDetail, Side,
-} from 'skyline/types/interface.d';
-import { assert, clamp, isEndSide as isEnd } from 'skyline/utils/helpers';
+import { Animation, GestureDetail, Side } from 'skyline/types/interface.d';
 import { createGesture, GESTURE_CONTROLLER } from 'skyline/utils/gesture';
 import { menuController } from 'skyline/utils/menu-controller/index';
 import { getTimeGivenProgression } from 'skyline/utils/animation/cubic-bezier';
 
 import { useModel } from 'skyline/mixins/use-model';
 import { createNamespace } from 'skyline/utils/namespace';
-import 'skyline/components/menu/menu.scss';
-import 'skyline/components/menu/menu.ios.scss';
 
 import { Overlay } from 'skyline/components/overlay';
+
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('menu');
 
@@ -38,6 +34,29 @@ const checkEdgeSide = (
     return posX >= win.innerWidth - maxEdgeStart;
   }
   return posX <= maxEdgeStart;
+};
+
+const clamp = (min: number, n: number, max: number) => {
+  return Math.max(min, Math.min(n, max));
+};
+
+const assert = (actual: any, reason: string) => {
+  if (!actual) {
+    const message = `ASSERT: ${ reason }`;
+    console.error(message);
+    debugger; // tslint:disable-line
+    throw new Error(message);
+  }
+};
+
+const isEnd = (side: Side): boolean => {
+  const isRTL = document.dir === 'rtl';
+  switch (side) {
+    case 'start': return isRTL;
+    case 'end': return !isRTL;
+    default:
+      throw new Error(`"${ side }" is not a valid value for [side]. Use "start" or "end" instead.`);
+  }
 };
 
 const SHOW_MENU = 'show-menu';
@@ -81,12 +100,6 @@ export default /*#__PURE__*/ createComponent({
     // TODO  mode ios/md
     const easing: string = iosEasing;
     const easingReverse: string = iosEasingReverse;
-
-    // let animation: any;
-    // let gesture: Gesture;
-    // let backdropEl: HTMLElement;
-    // let menuInnerEl: HTMLElement;
-    // let contentEl: HTMLElement;
 
     return {
       lastOnEnd : 0,
@@ -525,7 +538,7 @@ export default /*#__PURE__*/ createComponent({
     // add menu's content classes
     (content as HTMLElement).classList.add('menu-content');
 
-    this.typeChanged(this.type!, undefined);
+    this.typeChanged(this.type, undefined);
     this.sideChanged();
 
     // TODO
@@ -547,6 +560,10 @@ export default /*#__PURE__*/ createComponent({
 
     // on Backdrop Click
     document.addEventListener('click', this.onBackdropClick);
+
+    if (this.actived) {
+      this.open();
+    }
   },
 
   beforeDestroy() {

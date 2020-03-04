@@ -14,6 +14,10 @@ export default /*#__PURE__*/ createComponent({
     /*#__PURE__*/ useColor(),
   ],
 
+  inject : {
+    Item : { default: undefined },
+  },
+
   data() {
     return {
       inItem : false,
@@ -22,6 +26,35 @@ export default /*#__PURE__*/ createComponent({
 
   mounted() {
     this.inItem = this.$el.closest('.line-item') !== null;
+    this.emitStyle();
+  },
+
+  methods : {
+    emitStyle() {
+      if (!this.Item) return;
+
+      this.Item.itemStyle(
+        'line-radio',
+        {
+          'radio-checked'        : this.checked,
+          'interactive-disabled' : this.disabled,
+        },
+      );
+    },
+  },
+
+  watch : {
+    color() {
+      this.emitStyle();
+    },
+
+    checked() {
+      this.emitStyle();
+    },
+
+    disabled() {
+      this.emitStyle();
+    },
   },
 
   render() {

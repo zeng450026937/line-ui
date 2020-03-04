@@ -14,6 +14,10 @@ export default /*#__PURE__*/ createComponent({
     /*#__PURE__*/ useColor(),
   ],
 
+  inject : {
+    Item : { default: undefined },
+  },
+
   props : {
     indeterminate : Boolean,
     text          : String,
@@ -28,6 +32,31 @@ export default /*#__PURE__*/ createComponent({
 
   mounted() {
     this.inItem = this.$el.closest('.line-item') !== null;
+    this.emitStyle();
+  },
+
+  methods : {
+    emitStyle() {
+      if (!this.Item) return;
+
+      this.Item.itemStyle(
+        'line-check-box',
+        {
+          'checkbox-checked'     : this.checked,
+          'interactive-disabled' : this.disabled,
+        },
+      );
+    },
+  },
+
+  watch : {
+    checked() {
+      this.emitStyle();
+    },
+
+    disabled() {
+      this.emitStyle();
+    },
   },
 
   render() {
@@ -46,7 +75,6 @@ export default /*#__PURE__*/ createComponent({
           { 'in-item': inItem },
         ]}
         role="checkbox"
-        on={this.$listeners}
         onClick={this.toggle}
         >
         {/* on={this.$listeners} */}

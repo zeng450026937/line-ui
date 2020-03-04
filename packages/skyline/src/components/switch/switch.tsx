@@ -61,8 +61,16 @@ export default /*#__PURE__*/ createComponent({
           || (isRTL && (margin > deltaX));
     },
 
+    emitStyle() {
+      if (!this.Item) return;
+
+      this.Item.itemStyle(
+        'line-switch',
+        { 'interactive-disabled': this.disabled },
+      );
+    },
+
     disabledChanged() {
-      // this.emitStyle();
       if (this.gesture) {
         this.gesture.enable(!this.disabled);
       }
@@ -81,6 +89,7 @@ export default /*#__PURE__*/ createComponent({
       onEnd           : ev => this.onEnd(ev),
     });
     this.disabledChanged();
+    this.emitStyle();
   },
 
   destroyed() {
@@ -92,7 +101,12 @@ export default /*#__PURE__*/ createComponent({
 
   watch : {
     disabled() {
+      this.emitStyle();
       this.disabledChanged();
+    },
+
+    checked() {
+      this.emitStyle();
     },
   },
 
