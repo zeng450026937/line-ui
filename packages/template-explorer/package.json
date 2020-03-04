@@ -1,7 +1,7 @@
 {
-  "name": "@skyline/component-explorer",
+  "name": "@skyline/template-explorer",
   "version": "1.0.0-alpha",
-  "description": "@skyline/component-explorer",
+  "description": "@skyline/template-explorer",
   "files": [
     "index.js",
     "dist"
