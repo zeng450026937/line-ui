@@ -11,7 +11,7 @@
   height: $radio-ios-icon-height;
 }
 
-.line-radio--checked .line-radio__inner {
+.line-radio--checked.line-color .line-radio__inner {
   border-color: current-color(base);
 }
 

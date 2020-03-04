@@ -53,7 +53,7 @@
 // Material Design Radio Outer Circle: Checked
 // -----------------------------------------
 
-.line-radio--checked .line-radio__icon {
+.line-radio--checked.line-color .line-radio__icon {
   border-color: var(--color-checked);
 }
 

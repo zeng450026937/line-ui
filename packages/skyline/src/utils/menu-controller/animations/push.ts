@@ -35,7 +35,5 @@ export const menuPushAnimation = (menu: MenuI): Animation => {
     .addElement(menu.backdropEl!)
     .fromTo('opacity', 0.01, 0.32);
 
-  console.log('backdropAnimation', backdropAnimation);
-
   return baseAnimation(menu.mode === 'ios').addAnimation([menuAnimation, contentAnimation, backdropAnimation]);
 };

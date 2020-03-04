@@ -43,34 +43,14 @@
 </template>
 
 <script>
-import { Menu } from 'skyline/components/menu';
-import { Button } from 'skyline/components/button';
-import { menuController } from 'skyline/utils/menu-controller/index';
+import Vue from 'vue';
 
-export default {
-  name : '',
-
-  props : {
-
-  },
-
+export default Vue.extend({
   data() {
     return {
       type  : 'overlay',
       value : false,
     };
-  },
-
-  computed : {
-
-  },
-
-  created() {
-
-  },
-
-  mounted() {
-
   },
 
   methods : {
@@ -85,7 +65,7 @@ export default {
       console.log('watch: value', val);
     },
   },
-};
+});
 </script>
 
 <style lang="scss" scoped>
