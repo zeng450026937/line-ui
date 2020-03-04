@@ -46,9 +46,9 @@
   --border-style: solid;
   --box-shadow: none;
   --background-activated: transparent;
-  --background-focused: #{ion-color(primary, base, .1)};
-  --background-hover: #{ion-color(primary, base, .04)};
-  --color-activated: #{ion-color(primary, base)};
+  --background-focused: #{line-color(primary, base, .1)};
+  --background-hover: #{line-color(primary, base, .04)};
+  --color-activated: #{line-color(primary, base)};
 }
 
 .line-button--outline.line-activated.line-color .button-native {
@@ -61,10 +61,10 @@
 
 .line-button--clear {
   --background-activated: transparent;
-  --background-focused: #{ion-color(primary, base, .1)};
-  --background-hover: #{ion-color(primary, base, .04)};
-  --color-activated: #{ion-color(primary, base)};
-  --color-focused: #{ion-color(primary, base)};
+  --background-focused: #{line-color(primary, base, .1)};
+  --background-hover: #{line-color(primary, base, .04)};
+  --color-activated: #{line-color(primary, base)};
+  --color-focused: #{line-color(primary, base)};
 }
 
 

@@ -5,7 +5,7 @@
 // --------------------------------------------------
 
 /// @prop - Color of the active switch
-$switch-md-active-color:                          ion-color(primary, base) !default;
+$switch-md-active-color:                          line-color(primary, base) !default;
 
 /// @prop - Width of the switch track
 $switch-md-track-width:                           36px !default;
@@ -20,7 +20,7 @@ $switch-md-track-background-color-off:            rgba(var(--ion-text-color-rgb,
 $switch-md-track-background-color-alpha-on:       .5 !default;
 
 /// @prop - Background color of the checked switch track
-$switch-md-track-background-color-on:             ion-color(primary, base, $switch-md-track-background-color-alpha-on) !default;
+$switch-md-track-background-color-on:             line-color(primary, base, $switch-md-track-background-color-alpha-on) !default;
 
 /// @prop - Width of the switch handle
 $switch-md-handle-width:                          20px !default;

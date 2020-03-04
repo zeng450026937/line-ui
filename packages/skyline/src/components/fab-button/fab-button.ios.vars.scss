@@ -19,28 +19,28 @@ $fab-ios-transition:                                          .2s transform cubi
 $fab-ios-transition-activated:                                .2s transform ease-out !default;
 
 /// @prop - Background color of the button
-$fab-ios-background-color:                                    ion-color(primary, base) !default;
+$fab-ios-background-color:                                    line-color(primary, base) !default;
 
 /// @prop - Background color of the activated button
-$fab-ios-background-color-activated:                          ion-color(primary, shade) !default;
+$fab-ios-background-color-activated:                          line-color(primary, shade) !default;
 
 /// @prop - Text color of the button
-$fab-ios-text-color:                                          ion-color(primary, contrast) !default;
+$fab-ios-text-color:                                          line-color(primary, contrast) !default;
 
 /// @prop - Font size of the button icon
 $fab-ios-icon-font-size:                                      28px !default;
 
 /// @prop - Background color of the button in a list
-$fab-ios-list-button-background-color:                        ion-color(light, base) !default;
+$fab-ios-list-button-background-color:                        line-color(light, base) !default;
 
 /// @prop - Background color of the activated button in a list
-$fab-ios-list-button-background-color-activated:              ion-color(light, shade) !default;
+$fab-ios-list-button-background-color-activated:              line-color(light, shade) !default;
 
 /// @prop - Background color of the hovered button in a list
-$fab-ios-list-button-background-color-hover:                  ion-color(light, tint) !default;
+$fab-ios-list-button-background-color-hover:                  line-color(light, tint) !default;
 
 /// @prop - Text color of the button in a list
-$fab-ios-list-button-text-color:                              ion-color(light, contrast) !default;
+$fab-ios-list-button-text-color:                              line-color(light, contrast) !default;
 
 /// @prop - Font size of the button icon in a list
 $fab-ios-list-button-icon-font-size:                          18px !default;

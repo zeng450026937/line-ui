@@ -1,11 +1,11 @@
 @import "./tooltip.vars";
 
 .line-tooltip {
-  --background: #{ion-color(light, base)};
-  --color: #{ion-color(light, contrast)};
+  --background: #{line-color(light, base)};
+  --color: #{line-color(light, contrast)};
 
   position: fixed;
-  
+
   z-index: 10;
 }
 
@@ -13,7 +13,7 @@
   position: absolute;
 
   margin: 5px;
-  
+
   border-style: solid;
 
   background: var(--color);
@@ -74,7 +74,7 @@
 
   margin-right: 0;
   margin-left: 0;
-  
+
   border-width: 5px 0 5px 5px;
   border-top-color: transparent;
   border-right-color: transparent;

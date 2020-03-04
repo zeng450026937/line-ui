@@ -1,7 +1,5 @@
 @import "../../themes/skyline.globals.ios";
-
-
-$item-ios-padding-end:                      0;
+@import "../item/item.ios.vars";
 
 // iOS Checkbox
 // --------------------------------------------------
@@ -80,4 +78,3 @@ $checkbox-ios-item-end-margin-bottom:     9px !default;
 
 /// @prop - Margin start of the right checkbox item
 $checkbox-ios-item-end-margin-start:      0 !default;
-

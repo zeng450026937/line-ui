@@ -23,7 +23,7 @@ $switch-ios-border-radius:             $switch-ios-height / 2 !default;
 $switch-ios-background-color-off:      rgba($text-color-rgb, .088) !default;
 
 /// @prop - Background color of the checked switch
-$switch-ios-background-color-on:       ion-color(primary, base) !default;
+$switch-ios-background-color-on:       line-color(primary, base) !default;
 
 /// @prop - Width of the switch handle
 $switch-ios-handle-width:              $switch-ios-height - ($switch-ios-border-width * 2) !default;

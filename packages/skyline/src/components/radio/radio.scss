@@ -8,18 +8,16 @@
    * @prop --color: Color of the radio
    * @prop --color-checked: Color of the checked radio
    */
+   --inner-border-radius: 50%;
 
-  // display: inline-block;
-  display: flex;
-  position: relative;
-  box-sizing: border-box;
+   display: inline-block;
+   position: relative;
 
-  align-items: center;
-  justify-content: flex-start;
+   box-sizing: border-box;
 
-  user-select: none;
+   user-select: none;
 
-  z-index: $z-index-item-input;
+   z-index: $z-index-item-input;
 }
 
 .line-radio--disabled {
@@ -33,11 +31,8 @@
   align-items: center;
   justify-content: center;
 
-  // width: 100%;
-  width: 20px;
+  width: 100%;
   height: 100%;
-
-  margin-right: 4px;
 
   contain: layout size style;
 }

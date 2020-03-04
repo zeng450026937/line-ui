@@ -6,9 +6,9 @@
 
 .line-switch {
   --background: #{$switch-md-track-background-color-off};
-  --background-checked: #{ion-color(primary, base, $switch-md-track-background-color-alpha-on)};
+  --background-checked: #{line-color(primary, base, $switch-md-track-background-color-alpha-on)};
   --handle-background: #{$switch-md-handle-background-color-off};
-  --handle-background-checked: #{ion-color(primary, base)};
+  --handle-background-checked: #{line-color(primary, base)};
 
   @include padding($switch-md-padding-top, $switch-md-padding-end, $switch-md-padding-bottom, $switch-md-padding-start);
 
@@ -113,13 +113,13 @@
 // Material Design switch Within An Item
 // -----------------------------------------
 
-.line-switch.in-item[slot] {
+.line-switch.in-item.slotted {
   @include margin($switch-md-media-margin-top, $switch-md-media-margin-end, $switch-md-media-margin-bottom, $switch-md-media-margin-start);
   @include padding($switch-md-item-end-padding-top, $switch-md-item-end-padding-end, $switch-md-item-end-padding-bottom, $switch-md-item-end-padding-start);
 
   cursor: pointer;
 }
 
-.line-switch.in-item[slot="start"] {
+.line-switch.in-item .slot-start {
   @include padding($switch-md-item-start-padding-top, $switch-md-item-start-padding-end, $switch-md-item-start-padding-bottom, $switch-md-item-start-padding-start);
 }

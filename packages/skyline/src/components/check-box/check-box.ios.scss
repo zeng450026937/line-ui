@@ -25,12 +25,11 @@
 // iOS Checkbox: Disabled
 // -----------------------------------------
 
-// TODO: .item-ios.item-checkbox-disabled ion-label
+// TODO: .item-ios.item-checkbox-disabled .line-label
 .line-check-box--disabled {
   opacity: $checkbox-ios-disabled-opacity;
 }
 
-// TODO
 // iOS Checkbox Within An Item
 // -----------------------------------------
 
@@ -43,6 +42,6 @@
   position: static;
 }
 
-.line-check-box.in-item[slot="start"] {
+.line-check-box.in-item.slot-start {
   @include margin($checkbox-ios-item-start-margin-top, $checkbox-ios-item-start-margin-end, $checkbox-ios-item-start-margin-bottom, $checkbox-ios-item-start-margin-start);
 }

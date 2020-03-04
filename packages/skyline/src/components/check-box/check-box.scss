@@ -20,24 +20,19 @@
    *
    * @prop --checkmark-color: Color of the checkbox checkmark when checked
    */
-  --background-checked: #{ion-color(primary, base)};
-  --border-color-checked: #{ion-color(primary, base)};
-  --checkmark-color: #{ion-color(primary, contrast)};
+  --background-checked: #{line-color(primary, base)};
+  --border-color-checked: #{line-color(primary, base)};
+  --checkmark-color: #{line-color(primary, contrast)};
   --transition: none;
 
-  display: flex;
+  display: inline-block;
   position: relative;
-
-  align-items: center;
-
-  width: 100%;
-  height: 100%;
 
   user-select: none;
   z-index: $z-index-item-input;
 }
 
-.line-color {
+.line-check-box.line-color {
   --background-checked: #{current-color(base)};
   --border-color-checked: #{current-color(base)};
   --checkmark-color: #{current-color(contrast)};

@@ -96,7 +96,7 @@
 
 // TODO this works if manually adding the class / should it work with prop?
 // Multi-line items should align the slotted content at the top
-.line-item.item-multi-line .slotted.slot-start,
+.line-item.item-multi-line .item-native > .slotted.slot-start,
 .line-item.item-multi-line .slotted.slot-end {
   @include margin($item-md-multi-line-slot-margin-top, $item-md-multi-line-slot-margin-end, $item-md-multi-line-slot-margin-bottom, $item-md-multi-line-slot-margin-start);
 
@@ -106,7 +106,7 @@
 // Material Design Item Slots
 // --------------------------------------------------
 
-.line-item .slotted.slot-start {
+.line-item .item-native > .slotted.slot-start {
   @include margin-horizontal($item-md-start-slot-margin-start, $item-md-start-slot-margin-end);
 }
 
@@ -132,11 +132,11 @@
   @include margin($item-md-icon-slot-margin-top, $item-md-icon-slot-margin-end, $item-md-icon-slot-margin-bottom, $item-md-icon-slot-margin-start);
 }
 
-.slotted.line-icon.slot-start {
+.line-item .item-native > .slotted.line-icon.slot-start {
   @include margin-horizontal($item-md-icon-start-slot-margin-start, $item-md-icon-start-slot-margin-end);
 }
 
-.slotted.line-icon.slot-end {
+.line-item .slotted.line-icon.slot-end {
   @include margin-horizontal($item-md-icon-end-slot-margin-start, $item-md-icon-end-slot-margin-end);
 }
 
@@ -144,8 +144,8 @@
 // Material Design Slotted Toggle
 // --------------------------------------------------
 
-.slotted.line-toggle.slot-start,
-.slotted.line-toggle.slot-end {
+.line-item .item-native > .slotted.line-toggle.slot-start,
+.line-item .slotted.line-toggle.slot-end {
   @include margin(0);
 }
 
@@ -153,7 +153,7 @@
 // Material Design Slotted Note
 // --------------------------------------------------
 
-.slotted.line-note {
+.line-item .slotted.line-note {
   @include margin(0);
 
   align-self: flex-start;
@@ -161,15 +161,15 @@
   font-size: $item-md-note-slot-font-size;
 }
 
-.slotted.line-note {
+.line-item .slotted.line-note {
   @include padding($item-md-note-slot-padding-top, $item-md-note-slot-padding-end, $item-md-note-slot-padding-bottom, $item-md-note-slot-padding-start);
 }
 
-.slotted.line-note.slot-start {
+.line-item .item-native > .slotted.line-note.slot-start {
   @include padding-horizontal($item-md-note-start-slot-padding-start, $item-md-note-start-slot-padding-end);
 }
 
-.slotted.line-note.slot-end {
+.line-item .slotted.line-note.slot-end {
   @include padding-horizontal($item-md-note-end-slot-padding-start, $item-md-note-end-slot-padding-end);
 }
 
@@ -177,7 +177,7 @@
 // Material Design Item Avatar
 // --------------------------------------------------
 
-.slotted.line-avatar {
+.line-item .slotted.line-avatar {
   width: $item-md-avatar-width;
   height: $item-md-avatar-height;
 }

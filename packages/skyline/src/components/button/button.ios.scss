@@ -27,7 +27,7 @@
 // --------------------------------------------------
 
 .line-button--solid {
-  --background-activated: #{ion-color(primary, shade)};
+  --background-activated: #{line-color(primary, shade)};
 }
 
 .line-button--solid.line-activated {
@@ -45,9 +45,9 @@
   --border-radius: #{$button-ios-outline-border-radius};
   --border-width: #{$button-ios-outline-border-width};
   --border-style: #{$button-ios-outline-border-style};
-  --background-activated: #{ion-color(primary, base)};
-  --background-focused: #{ion-color(primary, base, .1)};
-  --color-activated: #{ion-color(primary, contrast)};
+  --background-activated: #{line-color(primary, base)};
+  --background-focused: #{line-color(primary, base, .1)};
+  --color-activated: #{line-color(primary, contrast)};
 }
 
 .line-button--outline.line-activated.line-color .line-button__content {
@@ -65,9 +65,9 @@
 
 .line-button--clear {
   --background-activated: transparent;
-  --background-focused: #{ion-color(primary, base, .1)};
-  --color-activated: #{ion-color(primary, base)};
-  --color-focused: #{ion-color(primary, base)};
+  --background-focused: #{line-color(primary, base, .1)};
+  --color-activated: #{line-color(primary, base)};
+  --color-focused: #{line-color(primary, base)};
 
   font-size: #{$button-ios-clear-font-size};
   font-weight: #{$button-ios-clear-font-weight};

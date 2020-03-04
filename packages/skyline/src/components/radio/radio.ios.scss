@@ -5,10 +5,9 @@
 // --------------------------------------------------
 
 .line-radio {
-  --color-checked: #{ion-color(primary, base)};
+  --color-checked: #{line-color(primary, base)};
 
-  // width: $radio-ios-icon-width;
-  width: 100%;
+  width: $radio-ios-icon-width;
   height: $radio-ios-icon-height;
 }
 
@@ -16,7 +15,6 @@
   border-color: current-color(base);
 }
 
-// TODO
 .item-radio.item-ios .line-label {
   @include margin-horizontal(0, null);
 }
@@ -48,7 +46,6 @@
 }
 
 
-// TODO
 // iOS Radio: Keyboard Focus
 // -----------------------------------------
 
@@ -71,13 +68,13 @@
 // iOS Radio Within An Item
 // -----------------------------------------
 
-.line-check-box.in-item {
+.line-radio.in-item {
   @include margin($radio-ios-item-end-margin-top, $radio-ios-item-end-margin-end, $radio-ios-item-end-margin-bottom, $radio-ios-item-end-margin-start);
 
   display: block;
   position: static;
 }
 
-.line-check-box.in-item[slot="start"] {
+.line-radio.in-item.slot-start {
   @include margin($radio-ios-item-start-margin-top, $radio-ios-item-start-margin-end, $radio-ios-item-start-margin-bottom, $radio-ios-item-start-margin-start);
 }

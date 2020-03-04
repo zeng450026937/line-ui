@@ -7,7 +7,7 @@
 $radio-md-color-on:                  current-color(base) !default;
 
 /// @prop - Background color of focus indicator for radio when focused
-$radio-md-background-color-focused:  ion-color(primary, tint) !default;
+$radio-md-background-color-focused:  line-color(primary, tint) !default;
 
 /// @prop - Color of the unchecked radio
 $radio-md-color-off:                 $text-color-step-600 !default;

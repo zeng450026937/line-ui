@@ -11,7 +11,7 @@
   --knob-size: 28px;
   --bar-height: #{$range-ios-bar-height};
   --bar-background: #{$range-ios-bar-background-color};
-  --bar-background-active: #{ion-color(primary, base)};
+  --bar-background-active: #{line-color(primary, base)};
   --bar-border-radius: 0;
   --height: #{$range-ios-slider-height};
 
@@ -23,16 +23,15 @@
   background: current-color(base);
 }
 
-// TODO
-::slotted([slot="start"]) {
+.line-range .slotted.slot-start {
   @include margin(0, 16px, 0, 0);
 }
 
-::slotted([slot="end"]) {
+.line-range .slotted.slot-end {
   @include margin(0, 0, 0, 16px);
 }
 
-.line-range--has-pin {
+.line-range.line-range--has-pin {
   @include padding($range-ios-padding-vertical + $range-ios-pin-font-size, null, null, null);
 }
 

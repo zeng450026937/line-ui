@@ -10,12 +10,12 @@
   --knob-box-shadow: none;
   --knob-size: 18px;
   --bar-height: #{$range-md-bar-height};
-  --bar-background: #{ion-color(primary, base, 0.26)};
-  --bar-background-active: #{ion-color(primary, base)};
+  --bar-background: #{line-color(primary, base, 0.26)};
+  --bar-background-active: #{line-color(primary, base)};
   --bar-border-radius: 0;
   --height: #{$range-md-slider-height};
-  --pin-background: #{ion-color(primary, base)};
-  --pin-color: #{ion-color(primary, contrast)};
+  --pin-background: #{line-color(primary, base)};
+  --pin-color: #{line-color(primary, contrast)};
 
   @include padding($range-md-padding-vertical, $range-md-padding-horizontal);
 
@@ -35,12 +35,11 @@
   color: current-color(contrast);
 }
 
-// TODO
-::slotted([slot="start"]) {
+.line-range > .slotted.slot-start {
   @include margin(0, 14px, 0, 0);
 }
 
-::slotted([slot="end"]) {
+.line-range > .slotted.slot-end {
   @include margin(0, 0, 0, 14px);
 }
 

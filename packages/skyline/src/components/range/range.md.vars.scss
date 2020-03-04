@@ -40,7 +40,7 @@ $range-md-knob-background-color:             $range-md-bar-active-background-col
 $range-md-pin-background-color:              $range-md-bar-active-background-color !default;
 
 /// @prop - Color of the range pin
-$range-md-pin-color:                         ion-color(primary, contrast) !default;
+$range-md-pin-color:                         line-color(primary, contrast) !default;
 
 /// @prop - Font size of the range pin
 $range-md-pin-font-size:                     12px !default;

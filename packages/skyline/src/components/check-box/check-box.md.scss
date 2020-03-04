@@ -49,7 +49,6 @@
   opacity: $checkbox-md-disabled-opacity;
 }
 
-// TODO
 // Material Design Checkbox Within An Item
 // --------------------------------------------------------
 
@@ -62,7 +61,7 @@
   position: static;
 }
 
-.line-check-box.in-item[slot="start"] {
+.line-check-box.in-item.slot-start {
   @include margin($checkbox-md-item-start-margin-top, $checkbox-md-item-start-margin-end, $checkbox-md-item-start-margin-bottom, $checkbox-md-item-start-margin-start);
 }
 

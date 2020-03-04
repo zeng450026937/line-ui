@@ -76,14 +76,16 @@
 // --------------------------------------------------
 
 // Default Solid Color
+
 .line-button--solid {
-  --background: #{ion-color(primary, base)};
-  --background-focused: #{ion-color(primary, shade)};
-  --background-hover: #{ion-color(primary, tint)};
-  --color: #{ion-color(primary, contrast)};
-  --color-activated: #{ion-color(primary, contrast)};
-  --color-focused: #{ion-color(primary, contrast)};
+  --background: #{line-color(primary, base)};
+  --background-focused: #{line-color(primary, shade)};
+  --background-hover: #{line-color(primary, tint)};
+  --color: #{line-color(primary, contrast)};
+  --color-activated: #{line-color(primary, contrast)};
+  --color-focused: #{line-color(primary, contrast)};
 }
+
 
 // Solid Button with Color
 .line-button--solid.line-color > button.line-button__content {
@@ -102,10 +104,10 @@
 
 // Default Outline Color
 .line-button--outline {
-  --border-color: #{ion-color(primary, base)};
+  --border-color: #{line-color(primary, base)};
   --background: transparent;
-  --color: #{ion-color(primary, base)};
-  --color-focused: #{ion-color(primary, base)};
+  --color: #{line-color(primary, base)};
+  --color-focused: #{line-color(primary, base)};
 }
 
 // Outline Button with Color
@@ -129,7 +131,7 @@
 .line-button--clear {
   --border-width: 0;
   --background: transparent;
-  --color: #{ion-color(primary, base)};
+  --color: #{line-color(primary, base)};
 }
 
 // Clear Button with Color

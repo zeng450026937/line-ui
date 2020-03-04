@@ -6,7 +6,7 @@
 
 .line-switch {
   --background: #{$switch-ios-background-color-off};
-  --background-checked: #{ion-color(primary, base)};
+  --background-checked: #{line-color(primary, base)};
   --handle-background: #{$switch-ios-handle-background-color};
   --handle-background-checked: #{$switch-ios-handle-background-color};
 
@@ -139,11 +139,11 @@
 // iOS switch Within An Item
 // -----------------------------------------
 
-.line-switch.in-item[slot] {
+.line-switch.in-item.slotted {
   @include margin($switch-ios-media-margin);
   @include padding($switch-ios-item-end-padding-top, $switch-ios-item-end-padding-end, $switch-ios-item-end-padding-bottom, $switch-ios-item-end-padding-start);
 }
 
-.line-switch.in-item[slot="start"] {
+.line-switch.in-item .slot-start {
   @include padding($switch-ios-item-start-padding-top, $switch-ios-item-start-padding-end, $switch-ios-item-start-padding-bottom, $switch-ios-item-start-padding-start);
 }

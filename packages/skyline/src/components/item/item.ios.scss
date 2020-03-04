@@ -92,11 +92,11 @@
 // iOS Item Slots
 // --------------------------------------------------
 
-.line-item .slotted.slot-start {
+.line-item .item-native > .slotted.slot-start {
   @include margin($item-ios-slot-start-margin-top, $item-ios-slot-start-margin-end, $item-ios-slot-start-margin-bottom, $item-ios-slot-start-margin-start);
 }
 
-.line-item .slotted.slot-end {
+.line-item .item-native .item-inner > .slotted.slot-end {
   @include margin($item-ios-slot-end-margin-top, $item-ios-slot-end-margin-end, $item-ios-slot-end-margin-bottom, $item-ios-slot-end-margin-start);
 }
 
@@ -104,8 +104,8 @@
 // iOS Slotted Icon
 // --------------------------------------------------
 
-.line-item .slotted.line-icon.slot-start,
-.line-item .slotted.line-icon.slot-end {
+.line-item .item-native > .slotted.line-icon.slot-start,
+.line-item .item-native .item-inner > .slotted.line-icon.slot-end {
   @include margin($item-ios-icon-slot-margin-top, $item-ios-icon-slot-margin-end, $item-ios-icon-slot-margin-bottom, $item-ios-icon-slot-margin-start);
 }
 
@@ -113,16 +113,16 @@
 // iOS Slotted Toggle
 // --------------------------------------------------
 
-.line-item .slotted.line-toggle.slot-start,
-.line-item .slotted.line-toggle.slot-end {
+.line-item .item-native > .slotted.line-toggle.slot-start,
+.line-item .item-native .item-inner > .slotted.line-toggle.slot-end {
   @include margin(0);
 }
 
 // iOS Stacked / Floating Labels
 // --------------------------------------------------
 
-.line-item.item-label-stacked .slotted.slot-end,
-.line-item.item-label-floating .slotted.slot-end {
+.line-item.item-label-stacked .item-native .item-inner > .slotted.slot-end,
+.line-item.item-label-floating .item-native .item-inner > .slotted.slot-end {
   @include margin($item-ios-label-slot-end-margin-top, $item-ios-label-slot-end-margin-end, $item-ios-label-slot-end-margin-bottom, $item-ios-label-slot-end-margin-start);
 }
 
@@ -155,8 +155,8 @@
   height: $item-ios-thumbnail-height;
 }
 
-.line-item .slotted.line-avatar.slot-end,
-.line-item .slotted.line-thumbnail.slot-end {
+.line-item .item-native .item-inner > .slotted.line-avatar.slot-end,
+.line-item .item-native .item-inner > .slotted.line-thumbnail.slot-end {
   @include margin(($item-ios-padding-end / 2));
 }
 
