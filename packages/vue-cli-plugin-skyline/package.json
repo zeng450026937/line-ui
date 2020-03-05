@@ -1,7 +1,7 @@
 {
-  "name": "@skyline/webpack-loader-auto-import",
+  "name": "@skyline/vue-cli-plugin-skyline",
   "version": "1.0.0-alpha",
-  "description": "@skyline/webpack-loader-auto-import",
+  "description": "@skyline/vue-cli-plugin-skyline",
   "main": "index.js",
   "files": [
     "index.js"

@@ -50,6 +50,10 @@ const outputConfigs = {
     file   : resolve(`dist/${ name }.esm.js`),
     format : 'es',
   },
+  umd : {
+    file   : resolve(`dist/${ name }.umd.js`),
+    format : 'umd',
+  },
 };
 
 const defaultFormats = ['esm-bundler', 'cjs'];
@@ -64,7 +68,7 @@ if (process.env.NODE_ENV === 'production') {
     if (format === 'cjs' && packageOptions.prod !== false) {
       packageConfigs.push(createProductionConfig(format));
     }
-    if (format === 'global' || format === 'esm') {
+    if (format === 'global' || format === 'esm' || format === 'umd') {
       packageConfigs.push(createMinifiedConfig(format));
     }
   });
@@ -237,23 +241,20 @@ function createReplacePlugin(
       : // hard coded dev/prod builds
       !isProduction,
     // this is only used during tests
-    __TEST__             : isBundlerESMBuild ? '(process.env.NODE_ENV === \'test\')' : false,
+    __TEST__            : isBundlerESMBuild ? '(process.env.NODE_ENV === \'test\')' : false,
     // If the build is expected to run directly in the browser (global / esm builds)
-    __BROWSER__          : isBrowserBuild,
+    __BROWSER__         : isBrowserBuild,
     // is targeting bundlers?
-    __BUNDLER__          : isBundlerESMBuild,
+    __BUNDLER__         : isBundlerESMBuild,
     // is targeting Node (SSR)?
-    __NODE_JS__          : isNodeBuild,
+    __NODE_JS__         : isNodeBuild,
     // support options?
     // the lean build drops options related code with buildOptions.lean: true
-    __FEATURE_OPTIONS__  : !packageOptions.lean && !process.env.LEAN,
-    __FEATURE_SUSPENSE__ : true,
+    __FEATURE_OPTIONS__ : !packageOptions.lean && !process.env.LEAN,
     ...(isProduction && isBrowserBuild
       ? {
-        'context.onError('        : '/*#__PURE__*/ context.onError(',
-        'emitError('              : '/*#__PURE__*/ emitError(',
-        'createCompilerError('    : '/*#__PURE__*/ createCompilerError(',
-        'createDOMCompilerError(' : '/*#__PURE__*/ createDOMCompilerError(',
+        // 'createNamespace(' : '/*#__PURE__*/ createNamespace(',
+        // 'createComponent(' : '/*#__PURE__*/ createComponent(',
       }
       : {}),
   };

@@ -53,6 +53,7 @@ module.exports = {
         '@typescript-eslint/no-var-requires'      : 0,
         '@typescript-eslint/no-use-before-define' : 0,
         '@typescript-eslint/no-this-alias'        : 0,
+        '@typescript-eslint/no-empty-function'    : 0,
       },
     },
   ],
