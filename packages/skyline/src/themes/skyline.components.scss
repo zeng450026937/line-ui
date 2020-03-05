@@ -7,7 +7,6 @@
 @import "../components/avatar/avatar";
 @import "../components/badge/badge";
 @import "../components/busy-indicator/busy-indicator";
-@import "../components/button/button-back";
 @import "../components/button/button-group";
 @import "../components/button/button";
 @import "../components/card/card-content";
@@ -45,6 +44,7 @@
 @import "../components/list-view/list-view";
 @import "../components/list/list";
 @import "../components/loading/loading";
+@import "../components/menu/menu";
 @import "../components/note/note";
 @import "../components/overlay/overlay";
 @import "../components/page-indicator/page-indicator";
@@ -60,7 +60,10 @@
 @import "../components/range/range";
 @import "../components/refresher/refresher";
 @import "../components/row/row";
+@import "../components/slide/slide";
 @import "../components/slider/slider";
+@import "../components/slides/slides-vendor";
+@import "../components/slides/slides";
 @import "../components/spinner/spinner";
 @import "../components/stepper/stepper";
 @import "../components/swiper/swiper";

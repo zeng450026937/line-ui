@@ -1,0 +1,11 @@
+.line-footer {
+  display: block;
+  position: relative;
+  order: 1;
+  width: 100%;
+  z-index: 10;
+}
+
+.line-footer .line-toolbar:last-child {
+  padding-bottom: var(--ion-safe-area-bottom, 0);
+}

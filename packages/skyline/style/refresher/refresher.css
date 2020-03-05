@@ -1,0 +1,83 @@
+.line-refresher {
+  left: 0;
+  top: 0;
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: 60px;
+  pointer-events: none;
+  z-index: -1;
+}
+[dir=rtl] .line-refresher {
+  right: unset;
+  right: 0;
+  left: unset;
+}
+
+.line-refresher.refresher-active {
+  display: block;
+}
+
+.line-refresher-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.refresher-pulling,
+.refresher-refreshing {
+  display: none;
+  width: 100%;
+}
+
+.refresher-pulling-icon,
+.refresher-refreshing-icon {
+  transform-origin: center;
+  transition: 200ms;
+  font-size: 30px;
+  text-align: center;
+}
+
+.refresher-pulling-text,
+.refresher-refreshing-text {
+  font-size: 16px;
+  text-align: center;
+}
+
+.line-refresher-content .arrow-container {
+  display: none;
+}
+
+.refresher-pulling .line-refresher-content .refresher-pulling {
+  display: block;
+}
+
+.refresher-ready .line-refresher-content .refresher-pulling {
+  display: block;
+}
+.refresher-ready .line-refresher-content .refresher-pulling-icon {
+  transform: rotate(180deg);
+}
+
+.refresher-refreshing .line-refresher-content .refresher-refreshing {
+  display: block;
+}
+
+.refresher-cancelling .line-refresher-content .refresher-pulling {
+  display: block;
+}
+.refresher-cancelling .line-refresher-content .refresher-pulling-icon {
+  transform: scale(0);
+}
+
+.refresher-completing .line-refresher-content .refresher-refreshing {
+  display: block;
+}
+.refresher-completing .line-refresher-content .refresher-refreshing-icon {
+  transform: scale(0);
+}
+
+.refresher-native .refresher-pulling-text, .refresher-native .refresher-refreshing-text {
+  display: none;
+}

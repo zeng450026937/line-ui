@@ -66,7 +66,7 @@ const MENU_CONTENT_OPEN = 'menu-content-open';
 
 export default /*#__PURE__*/ createComponent({
   mixins : [
-    /*#__PURE__*/ useModel('actived'),
+    /*#__PURE__*/ useModel<boolean>('actived'),
   ],
 
   props : {
@@ -98,8 +98,8 @@ export default /*#__PURE__*/ createComponent({
 
   data() {
     // TODO  mode ios/md
-    const easing: string = iosEasing;
-    const easingReverse: string = iosEasingReverse;
+    const easing: string = iosEasing || mdEasing;
+    const easingReverse: string = iosEasingReverse || mdEasingReverse;
 
     return {
       lastOnEnd : 0,
@@ -108,7 +108,7 @@ export default /*#__PURE__*/ createComponent({
       isPaneVisible : false,
       isEndSide     : false,
       isAnimating   : false,
-      _isOpen       : false,
+      isOpen        : false,
 
       visible : false,
 
@@ -119,7 +119,7 @@ export default /*#__PURE__*/ createComponent({
 
   methods : {
     onBackdropClick(ev: any) {
-      if (this._isOpen) {
+      if (this.isOpen) {
         // TODO
         // && this.lastOnEnd < ev.timeStamp - 100
         const shouldClose = (ev.composedPath)
@@ -132,20 +132,6 @@ export default /*#__PURE__*/ createComponent({
           this.close();
         }
       }
-    },
-
-    /**
-   * Returns `true` is the menu is open.
-   */
-    isOpen(): Promise<boolean> {
-      return Promise.resolve(this._isOpen);
-    },
-
-    /**
-   * Returns `true` is the menu is active.
-   */
-    isActive(): Promise<boolean> {
-      return Promise.resolve(this._isActive());
     },
 
     /**
@@ -165,7 +151,7 @@ export default /*#__PURE__*/ createComponent({
     },
 
     toggle(animated = true): Promise<boolean> {
-      return this.setOpen(!this._isOpen, animated);
+      return this.setOpen(!this.isOpen, animated);
     },
 
     async setOpen(shouldOpen: boolean, animated = true): Promise<boolean> {
@@ -174,7 +160,7 @@ export default /*#__PURE__*/ createComponent({
 
       // async _setOpen(shouldOpen: boolean, animated = true): Promise<boolean> {
       // If the menu is disabled or it is currently being animated, let's do nothing
-      if (!this._isActive() || this.isAnimating || shouldOpen === this._isOpen) {
+      if (!this.isActive() || this.isAnimating || shouldOpen === this.isOpen) {
         return false;
       }
 
@@ -232,12 +218,12 @@ export default /*#__PURE__*/ createComponent({
       }
     },
 
-    _isActive() {
+    isActive() {
       return !this.disabled && !this.isPaneVisible;
     },
 
     canSwipe(): boolean {
-      return this.swipeGesture && !this.isAnimating && this._isActive();
+      return this.swipeGesture && !this.isAnimating && this.isActive();
     },
 
     canStart(detail: GestureDetail): boolean {
@@ -248,7 +234,7 @@ export default /*#__PURE__*/ createComponent({
       if (!this.canSwipe()) {
         return false;
       }
-      if (this._isOpen) {
+      if (this.isOpen) {
         return true;
       // TODO error
       }
@@ -265,7 +251,7 @@ export default /*#__PURE__*/ createComponent({
     },
 
     onWillStart(): Promise<void> {
-      this.beforeAnimation(!this._isOpen);
+      this.beforeAnimation(!this.isOpen);
       return this.loadAnimation();
     },
 
@@ -276,7 +262,7 @@ export default /*#__PURE__*/ createComponent({
       }
 
       // the cloned animation should not use an easing curve during seek
-      (this.animation as Animation).progressStart(true, (this._isOpen ? 1 : 0));
+      (this.animation as Animation).progressStart(true, (this.isOpen ? 1 : 0));
     },
 
     onMove(detail: GestureDetail) {
@@ -285,10 +271,10 @@ export default /*#__PURE__*/ createComponent({
         return;
       }
 
-      const delta = computeDelta(detail.deltaX, this._isOpen, this.isEndSide);
+      const delta = computeDelta(detail.deltaX, this.isOpen, this.isEndSide);
       const stepValue = delta / this.width;
 
-      this.animation.progressStep((this._isOpen) ? 1 - stepValue : stepValue);
+      this.animation.progressStep((this.isOpen) ? 1 - stepValue : stepValue);
     },
 
     onEnd(detail: GestureDetail) {
@@ -296,7 +282,7 @@ export default /*#__PURE__*/ createComponent({
         assert(false, 'isAnimating has to be true');
         return;
       }
-      const isOpen = this._isOpen;
+      const { isOpen } = this;
       const { isEndSide } = this;
       const delta = computeDelta(detail.deltaX, isOpen, isEndSide);
       const { width } = this;
@@ -341,7 +327,7 @@ export default /*#__PURE__*/ createComponent({
         [0, 0], [0.4, 0], [0.6, 1], [1, 1], clamp(0, adjustedStepValue, 0.9999),
       )[0] || 0;
 
-      const playTo = (this._isOpen) ? !shouldComplete : shouldComplete;
+      const playTo = (this.isOpen) ? !shouldComplete : shouldComplete;
 
       this.animation
         .easing('cubic-bezier(0.4, 0.0, 0.6, 1)')
@@ -349,7 +335,7 @@ export default /*#__PURE__*/ createComponent({
           () => this.afterAnimation(shouldOpen),
           { oneTimeCallback: true },
         )
-        .progressEnd((playTo) ? 1 : 0, (this._isOpen) ? 1 - newStepValue : newStepValue, 300);
+        .progressEnd((playTo) ? 1 : 0, (this.isOpen) ? 1 - newStepValue : newStepValue, 300);
     },
 
     beforeAnimation(shouldOpen: boolean) {
@@ -358,6 +344,9 @@ export default /*#__PURE__*/ createComponent({
       // this places the menu into the correct location before it animates in
       // this css class doesn't actually kick off any animations
       this.$el.classList.add(SHOW_MENU);
+      if (this.backdropEl) {
+        this.backdropEl.classList.add(SHOW_BACKDROP);
+      }
       this.visible = true;
 
       this.blocker.block();
@@ -365,11 +354,11 @@ export default /*#__PURE__*/ createComponent({
       if (shouldOpen) {
         // TODO
         // this.ionWillOpen.emit();
-        this.$emit('lineWillOpen');
+        this.$emit('willOpen');
       } else {
         // TODO
         // this.ionWillClose.emit();
-        this.$emit('lineWillClose');
+        this.$emit('willClose');
       }
     },
 
@@ -380,11 +369,11 @@ export default /*#__PURE__*/ createComponent({
       // only add listeners/css if it's enabled and isOpen
       // and only remove listeners/css if it's not open
       // emit opened/closed events
-      this._isOpen = isOpen;
+      this.isOpen = isOpen;
       this.actived = isOpen;
 
       this.isAnimating = false;
-      if (!this._isOpen) {
+      if (!this.isOpen) {
         this.blocker.unblock();
       }
 
@@ -404,6 +393,9 @@ export default /*#__PURE__*/ createComponent({
         if (this.contentEl) {
           this.contentEl.classList.remove(MENU_CONTENT_OPEN);
         }
+        if (this.backdropEl) {
+          this.backdropEl.classList.remove(SHOW_BACKDROP);
+        }
 
         this.visible = false;
 
@@ -419,13 +411,13 @@ export default /*#__PURE__*/ createComponent({
     },
 
     updateState() {
-      const isActive = this._isActive();
+      const isActive = this.isActive();
       if (this.gesture) {
         this.gesture.enable(isActive && this.swipeGesture);
       }
 
       // Close menu immediately
-      if (!isActive && this._isOpen) {
+      if (!isActive && this.isOpen) {
         // close if this menu is open, and should not be enabled
         this.forceClosing();
       }
@@ -437,7 +429,7 @@ export default /*#__PURE__*/ createComponent({
     },
 
     forceClosing() {
-      assert(this._isOpen, 'menu cannot be closed');
+      assert(this.isOpen, 'menu cannot be closed');
 
       this.isAnimating = true;
 
@@ -447,7 +439,7 @@ export default /*#__PURE__*/ createComponent({
       this.afterAnimation(false);
     },
 
-    typeChanged(value, oldValue) {
+    typeChanged(value: string, oldValue?: string) {
       const { contentEl } = this;
       this.animation = undefined;
       if (contentEl) {
@@ -469,7 +461,7 @@ export default /*#__PURE__*/ createComponent({
   },
 
   watch : {
-    type(value, oldValue) {
+    type(value: string, oldValue?: string) {
       this.typeChanged(value, oldValue);
     },
 
@@ -481,7 +473,7 @@ export default /*#__PURE__*/ createComponent({
       this.sideChanged();
     },
 
-    actived(val, old) {
+    actived(val: boolean) {
       if (val) {
         this.open();
       }
@@ -611,10 +603,7 @@ export default /*#__PURE__*/ createComponent({
 
         <Overlay
           ref="backdropEl"
-          class={{
-            'menu-backdrop' : true,
-            'show-overlay'  : visible,
-          }}
+          class="menu-backdrop"
           visible={visible}
           tappable={false}
           stopPropagation={false}

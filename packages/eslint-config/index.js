@@ -30,7 +30,7 @@ module.exports = {
       },
     },
     {
-      files : ['*.ts'],
+      files : ['*.ts', '*.tsx'],
       rules : {
         '@typescript-eslint/no-explicit-any'      : 0,
         '@typescript-eslint/no-inferrable-types'  : 0,
@@ -59,6 +59,7 @@ module.exports = {
   ],
 
   rules : {
+    'no-bitwise'            : 0,
     'no-await-in-loop'      : 0,
     'no-shadow'             : 0,
     'no-plusplus'           : 0,

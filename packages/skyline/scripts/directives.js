@@ -5,12 +5,14 @@ const packageDir = path.resolve(__dirname, '../');
 const resolve = p => path.resolve(packageDir, p);
 
 const warning = require('./warning');
+const logger = require('./logger');
 
 run();
 
 async function run() {
   const root = resolve('src/directives');
   const folders = fs.readdirSync(root)
+    .sort()
     .filter(f => {
       if (!fs.statSync(`${ root }/${ f }`).isDirectory()) {
         return false;
@@ -24,11 +26,11 @@ async function run() {
   let code = `${ warning }\n`;
 
   for (const folder of folders) {
-    code += `export * from './directives/${ folder }';\n`;
+    code += `export * from 'skyline/directives/${ folder }';\n`;
   }
 
-  console.log();
-  console.log(`total :  ${ folders.length } directives`);
+  logger.log();
+  logger.done(`total :  ${ folders.length } directives`);
 
   // const dist = resolve(`${ root }/index.ts`);
   // const dist = resolve('gen/directives/index.ts');

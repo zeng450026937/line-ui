@@ -1,5 +1,5 @@
 import { createNamespace } from 'skyline/utils/namespace';
-import { Animation, GestureDetail, Side } from 'skyline/types/interface.d';
+import { Animation, GestureDetail } from 'skyline/types/interface.d';
 import { createGesture } from 'skyline/utils/gesture';
 import { getTimeGivenProgression } from 'skyline/utils/animation/cubic-bezier';
 
@@ -16,17 +16,6 @@ const clamp = (min: number, n: number, max: number) => {
   return Math.max(min, Math.min(n, max));
 };
 
-const isEnd = (side: Side): boolean => {
-  const isRTL = document.dir === 'rtl';
-  switch (side) {
-    case 'start': return isRTL;
-    case 'end': return !isRTL;
-    default:
-      throw new Error(`"${ side }" is not a valid value for [side]. Use "start" or "end" instead.`);
-  }
-};
-
-/* eslint-disable */
 const enum RefresherState {
   Inactive = 1 << 0,
   Pulling = 1 << 1,
@@ -37,7 +26,6 @@ const enum RefresherState {
 
   _BUSY_ = Refreshing | Cancelling | Completing,
 }
-/* eslint-enable */
 
 
 export default /*#__PURE__*/ createComponent({
@@ -149,7 +137,7 @@ export default /*#__PURE__*/ createComponent({
       this.didRefresh = false;
       this.needsCompletion = false;
       this.pointerDown = false;
-      this.animations.forEach(ani => (ani as any).destroy());
+      this.animations.forEach((ani: any) => (ani as any).destroy());
       this.animations = [];
       this.progress = 0;
 
@@ -333,7 +321,7 @@ export default /*#__PURE__*/ createComponent({
             ev.data.animation
               .progressEnd(0, this.progress, 500)
               .onFinish(() => {
-                this.animations.forEach(ani => (ani as Animation).destroy());
+                this.animations.forEach((ani: any) => (ani as Animation).destroy());
                 this.animations = [];
                 this.gesture.enable(true);
                 this.state = RefresherState.Inactive;

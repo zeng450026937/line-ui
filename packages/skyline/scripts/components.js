@@ -6,6 +6,7 @@ const packageDir = path.resolve(__dirname, '../');
 const resolve = p => path.resolve(packageDir, p);
 
 const warning = require('./warning');
+const logger = require('./logger');
 
 let count = 0;
 
@@ -24,12 +25,12 @@ async function run() {
     );
 
     if (components.length) {
-      code += `export * from './components/${ folder }';\n`;
+      code += `export * from 'skyline/components/${ folder }';\n`;
     }
   }
 
-  console.log();
-  console.log(`total :  ${ count } components`);
+  logger.log();
+  logger.done(`total :  ${ count } components`);
 
   // const dist = resolve(`${ root }/index.ts`);
   const dist = resolve('src/components.ts');
@@ -46,7 +47,7 @@ async function generate(patterns, folder, dist) {
     const name = camelize(`-${ filename }`);
 
     function toImport() {
-      return `import ${ name } from './${ filename }';`;
+      return `import ${ name } from 'skyline/components/${ dir }/${ filename }';`;
     }
 
     return {
@@ -71,7 +72,7 @@ export {
 `.trimLeft());
   }
 
-  console.log(`${ dir.padEnd(25, ' ') } \t ${ components.length } components`);
+  logger.log(`${ dir.padEnd(25, ' ') } \t: ${ components.length } components`);
 
   count += components.length;
 

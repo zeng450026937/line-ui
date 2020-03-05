@@ -1,0 +1,292 @@
+.line-tab-button {
+  /**
+   * @prop --background: Background of the tab button
+   * @prop --background-focused: Background of the tab button when focused with the tab key
+   *
+   * @prop --color: Color of the tab button
+   * @prop --color-selected: Color of the selected tab button
+   *
+   * @prop --padding-top: Top padding of the tab button
+   * @prop --padding-end: Right padding if direction is left-to-right, and left padding if direction is right-to-left of the tab button
+   * @prop --padding-bottom: Bottom padding of the tab button
+   * @prop --padding-start: Left padding if direction is left-to-right, and right padding if direction is right-to-left of the tab button
+   *
+   * @prop --ripple-color: Color of the button ripple effect
+   */
+  --ripple-color: var(--color-selected);
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  outline: none;
+  background: var(--background);
+  color: var(--color);
+}
+
+a {
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: var(--padding-start);
+  padding-right: var(--padding-end);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-style: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  text-decoration: inherit;
+  text-overflow: inherit;
+  text-transform: inherit;
+  white-space: inherit;
+  display: flex;
+  position: relative;
+  flex-direction: inherit;
+  align-items: inherit;
+  justify-content: inherit;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  text-decoration: none;
+  cursor: pointer;
+  overflow: hidden;
+  box-sizing: border-box;
+  -webkit-user-drag: none;
+}
+@supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+  a {
+    padding-left: unset;
+    padding-right: unset;
+    padding-inline-start: var(--padding-start);
+    padding-inline-end: var(--padding-end);
+  }
+}
+
+.line-focused {
+  background: var(--background-focused);
+}
+
+@media (any-hover: hover) {
+  a:hover {
+    color: var(--color-selected);
+  }
+}
+.line-tab-button--selected {
+  color: var(--color-selected);
+}
+
+.line-tab-button--hidden {
+  /* stylelint-disable-next-line declaration-no-important */
+  display: none !important;
+}
+
+.line-tab-button--disabled {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.line-tab-button .line-label,
+.line-tab-button .line-icon {
+  display: block;
+  align-self: center;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.line-tab-button .line-label {
+  order: 0;
+}
+
+.line-tab-button .line-icon {
+  order: -1;
+  height: 1em;
+}
+
+.tab-has-label-only .line-label {
+  white-space: normal;
+}
+
+.line-tab-button .line-badge {
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 1;
+}
+
+.tab-layout-icon-start {
+  flex-direction: row;
+}
+
+.tab-layout-icon-end {
+  flex-direction: row-reverse;
+}
+
+.tab-layout-icon-bottom {
+  flex-direction: column-reverse;
+}
+
+.tab-layout-icon-hide .line-icon {
+  display: none;
+}
+
+.tab-layout-label-hide .line-label {
+  display: none;
+}
+
+.line-ripple-effect {
+  color: var(--ripple-color);
+}
+
+.line-tab-button {
+  --padding-top: 0;
+  --padding-end: 12px;
+  --padding-bottom: 0;
+  --padding-start: 12px;
+  max-width: 168px;
+  font-size: 12px;
+  font-weight: normal;
+  letter-spacing: 0.03em;
+}
+
+::slotted(.line-label) {
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  text-transform: none;
+}
+
+::slotted(.line-icon) {
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  transform-origin: center center;
+  font-size: 22px;
+}
+
+::slotted(.line-badge) {
+  border-radius: 8px;
+  padding-left: 2px;
+  padding-right: 2px;
+  padding-top: 3px;
+  padding-bottom: 2px;
+  left: calc(50% + 6px);
+  top: 8px;
+  min-width: 12px;
+  font-size: 8px;
+  font-weight: normal;
+}
+@supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+  ::slotted(.line-badge) {
+    padding-left: unset;
+    padding-right: unset;
+    padding-inline-start: 2px;
+    padding-inline-end: 2px;
+  }
+}
+[dir=rtl] ::slotted(.line-badge) {
+  right: unset;
+  right: calc(50% + 6px);
+  left: unset;
+}
+
+::slotted(.line-badge:empty) {
+  display: block;
+  min-width: 8px;
+  height: 8px;
+}
+
+.tab-layout-icon-top ::slotted(.line-icon) {
+  margin-top: 6px;
+  margin-bottom: 2px;
+}
+.tab-layout-icon-top ::slotted(.line-label) {
+  margin-top: 0;
+  margin-bottom: 6px;
+}
+.tab-layout-icon-bottom ::slotted(.line-badge) {
+  left: 70%;
+  top: 8px;
+}
+[dir=rtl] .tab-layout-icon-bottom ::slotted(.line-badge) {
+  right: unset;
+  right: 70%;
+  left: unset;
+}
+
+.tab-layout-icon-bottom ::slotted(.line-icon) {
+  margin-top: 0;
+  margin-bottom: 6px;
+}
+.tab-layout-icon-bottom ::slotted(.line-label) {
+  margin-top: 6px;
+  margin-bottom: 0;
+}
+.tab-layout-icon-start ::slotted(.line-badge),
+.tab-layout-icon-end ::slotted(.line-badge) {
+  left: 80%;
+  top: 16px;
+}
+[dir=rtl] .tab-layout-icon-start ::slotted(.line-badge), [dir=rtl] .tab-layout-icon-end ::slotted(.line-badge) {
+  right: unset;
+  right: 80%;
+  left: unset;
+}
+
+.tab-layout-icon-start ::slotted(.line-icon) {
+  margin-right: 6px;
+}
+@supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+  .tab-layout-icon-start ::slotted(.line-icon) {
+    margin-right: unset;
+    margin-inline-end: 6px;
+  }
+}
+
+.tab-layout-icon-end ::slotted(.line-icon) {
+  margin-left: 6px;
+}
+@supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+  .tab-layout-icon-end ::slotted(.line-icon) {
+    margin-left: unset;
+    margin-inline-start: 6px;
+  }
+}
+
+.tab-layout-icon-hide ::slotted(.line-badge),
+.tab-has-label-only ::slotted(.line-badge) {
+  left: 70%;
+  top: 16px;
+}
+[dir=rtl] .tab-layout-icon-hide ::slotted(.line-badge), [dir=rtl] .tab-has-label-only ::slotted(.line-badge) {
+  right: unset;
+  right: 70%;
+  left: unset;
+}
+
+.tab-layout-icon-hide ::slotted(.line-label),
+.tab-has-label-only ::slotted(.line-label) {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.tab-layout-label-hide ::slotted(.line-badge),
+.tab-has-icon-only ::slotted(.line-badge) {
+  top: 16px;
+}
+
+.tab-layout-label-hide ::slotted(.line-icon),
+.tab-has-icon-only ::slotted(.line-icon) {
+  margin-top: 0;
+  margin-bottom: 0;
+  font-size: 24px;
+}

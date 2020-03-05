@@ -1,0 +1,172 @@
+.line-refresher {
+  left: 0;
+  top: 0;
+  display: none;
+  position: absolute;
+  width: 100%;
+  height: 60px;
+  pointer-events: none;
+  z-index: -1;
+}
+[dir=rtl] .line-refresher {
+  right: unset;
+  right: 0;
+  left: unset;
+}
+
+.line-refresher.refresher-active {
+  display: block;
+}
+
+.line-refresher-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.refresher-pulling,
+.refresher-refreshing {
+  display: none;
+  width: 100%;
+}
+
+.refresher-pulling-icon,
+.refresher-refreshing-icon {
+  transform-origin: center;
+  transition: 200ms;
+  font-size: 30px;
+  text-align: center;
+}
+
+.refresher-pulling-text,
+.refresher-refreshing-text {
+  font-size: 16px;
+  text-align: center;
+}
+
+.line-refresher-content .arrow-container {
+  display: none;
+}
+
+.refresher-pulling .line-refresher-content .refresher-pulling {
+  display: block;
+}
+
+.refresher-ready .line-refresher-content .refresher-pulling {
+  display: block;
+}
+.refresher-ready .line-refresher-content .refresher-pulling-icon {
+  transform: rotate(180deg);
+}
+
+.refresher-refreshing .line-refresher-content .refresher-refreshing {
+  display: block;
+}
+
+.refresher-cancelling .line-refresher-content .refresher-pulling {
+  display: block;
+}
+.refresher-cancelling .line-refresher-content .refresher-pulling-icon {
+  transform: scale(0);
+}
+
+.refresher-completing .line-refresher-content .refresher-refreshing {
+  display: block;
+}
+.refresher-completing .line-refresher-content .refresher-refreshing-icon {
+  transform: scale(0);
+}
+
+.refresher-native .refresher-pulling-text, .refresher-native .refresher-refreshing-text {
+  display: none;
+}
+
+.refresher-ios .refresher-pulling-icon,
+.refresher-ios .refresher-refreshing-icon {
+  color: var(--line-text-color, #000);
+}
+
+.refresher-ios .refresher-pulling-text,
+.refresher-ios .refresher-refreshing-text {
+  color: var(--line-text-color, #000);
+}
+
+.refresher-ios .refresher-refreshing .spinner-lines-ios line,
+.refresher-ios .refresher-refreshing .spinner-lines-small-ios line,
+.refresher-ios .refresher-refreshing .spinner-crescent circle {
+  stroke: var(--line-text-color, #000);
+}
+
+.refresher-ios .refresher-refreshing .spinner-bubbles circle,
+.refresher-ios .refresher-refreshing .spinner-circles circle,
+.refresher-ios .refresher-refreshing .spinner-dots circle {
+  fill: var(--line-text-color, #000);
+}
+
+.line-refresher.refresher-native {
+  display: block;
+  z-index: 1;
+}
+.line-refresher.refresher-native .line-spinner {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+@supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+  .line-refresher.refresher-native .line-spinner {
+    margin-left: unset;
+    margin-right: unset;
+    margin-inline-start: auto;
+    margin-inline-end: auto;
+  }
+}
+
+.refresher-native .refresher-refreshing .line-spinner {
+  --refreshing-rotation-duration: 2s;
+  display: none;
+  animation: var(--refreshing-rotation-duration) ease-out refresher-rotate forwards;
+}
+.refresher-native .refresher-refreshing {
+  display: none;
+  animation: 250ms linear refresher-pop forwards;
+}
+
+.refresher-native.refresher-refreshing .refresher-pulling .line-spinner,
+.refresher-native.refresher-completing .refresher-pulling .line-spinner {
+  display: none;
+}
+.refresher-native.refresher-refreshing .refresher-refreshing .line-spinner,
+.refresher-native.refresher-completing .refresher-refreshing .line-spinner {
+  display: block;
+}
+
+.refresher-native.refresher-pulling .refresher-pulling .line-spinner {
+  display: block;
+}
+.refresher-native.refresher-pulling .refresher-refreshing .line-spinner {
+  display: none;
+}
+
+@keyframes refresher-pop {
+  0% {
+    transform: scale(1);
+    animation-timing-function: ease-in;
+  }
+  50% {
+    transform: scale(1.2);
+    animation-timing-function: ease-out;
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+@keyframes refresher-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
+}

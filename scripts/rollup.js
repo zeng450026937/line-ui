@@ -55,7 +55,8 @@ async function buildAll(targets) {
 
 async function build(target) {
   const pkgDir = path.resolve(`packages/${ target }`);
-  const pkg = require(`${ pkgDir }/package.json`);
+  const resolve = p => path.resolve(pkgDir, p);
+  const pkg = require(resolve('package.json'));
 
   // only build published packages for release
   if (isRelease && pkg.private) {
@@ -64,10 +65,10 @@ async function build(target) {
 
   // if building a specific format, do not remove dist.
   if (!formats) {
-    await fs.remove(`${ pkgDir }/dist`);
+    await fs.remove(resolve('dist'));
   }
 
-  const configFile = `${ pkgDir }/rollup.config.js`;
+  const configFile = resolve('rollup.config.js');
   const hasConfig = await fs.exists(configFile);
 
   const env = (pkg.buildOptions && pkg.buildOptions.env)
@@ -103,7 +104,7 @@ async function build(target) {
     // build types
     const { Extractor, ExtractorConfig } = require('@microsoft/api-extractor');
 
-    const extractorConfigPath = path.resolve(pkgDir, 'api-extractor.json');
+    const extractorConfigPath = resolve('api-extractor.json');
     const extractorConfig = ExtractorConfig.loadFileAndPrepare(
       extractorConfigPath,
     );
@@ -115,11 +116,11 @@ async function build(target) {
     if (result.succeeded) {
       // concat additional d.ts to rolled-up dts (mostly for JSX)
       if (pkg.buildOptions && pkg.buildOptions.dts) {
-        const dtsPath = path.resolve(pkgDir, pkg.types);
+        const dtsPath = resolve(pkg.types);
         const existing = await fs.readFile(dtsPath, 'utf-8');
         const toAdd = await Promise.all(
           pkg.buildOptions.dts.map(file => {
-            return fs.readFile(path.resolve(pkgDir, file), 'utf-8');
+            return fs.readFile(resolve(file), 'utf-8');
           }),
         );
         await fs.writeFile(dtsPath, `${ existing }\n${ toAdd.join('\n') }`);
@@ -135,7 +136,24 @@ async function build(target) {
       process.exitCode = 1;
     }
 
-    await fs.remove(`${ pkgDir }/dist/packages`);
+    await fs.remove(resolve('dist/packages'));
+  }
+
+  if (pkg.buildOptions && pkg.buildOptions.scripts) {
+    const scripts = [].concat(pkg.buildOptions.scripts);
+    for (const script of scripts) {
+      await execa(
+        'node',
+        [resolve(script)],
+        {
+          stdio : 'inherit',
+          env   : {
+            COMMIT   : `${ commit }`,
+            NODE_ENV : `${ env }`,
+          },
+        },
+      );
+    }
   }
 }
 
