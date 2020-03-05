@@ -16,7 +16,7 @@ import {
   VNode,
 } from 'vue/types/vnode';
 
-import { createBEM, Mods } from 'skyline/utils/bem';
+import { Mods } from 'skyline/utils/bem';
 import { unifySlots } from 'skyline/utils/vnode';
 import { camelize } from 'skyline/utils/string-transform';
 
@@ -99,8 +99,6 @@ export function defineComponent(name: string) {
   ) {
     sfc.name = name;
     sfc.install = install;
-
-    sfc.bem = createBEM(name);
 
     if (sfc.functional) {
       const { render } = sfc;

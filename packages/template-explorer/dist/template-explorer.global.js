@@ -2,11 +2,14 @@
   'use strict';
 
   window.init = () => {
-      const { monaco, Vue, Skyline } = window;
-      const template = `
+      const { monaco, Vue } = window;
+      const config = configFromURL(window);
+      const template = config.template || `
 <line-app>
   <line-header>
-    <line-title>Template Explorer</line-title>
+    <line-toolbar>
+      <line-title>Template Explorer</line-title>
+    </line-toolbar>
   </line-header>
 
   <line-content>
@@ -77,10 +80,10 @@
                   h('h1', 'Skyline Template Explorer'),
                   h('a', {
                       domProps: {
-                          href: `http://gitcode.yealink.com/server/client/web_app/skyline/tree/${"8b9b62b"}`,
+                          href: `http://gitcode.yealink.com/server/client/web_app/skyline/tree/${"2c78e28"}`,
                           target: '_blank',
                       },
-                  }, `@${"8b9b62b"}`),
+                  }, `@${"2c78e28"}`),
                   h('div', {
                       domProps: {
                           id: 'options-wrapper',
@@ -104,5 +107,16 @@
           }, delay);
       });
   }
+  const configFromURL = (win) => {
+      const configObj = {};
+      win.location.search.slice(1)
+          .split('&')
+          .map(entry => entry.split('='))
+          .map(([key, value]) => [decodeURIComponent(key), decodeURIComponent(value)])
+          .forEach(([key, value]) => {
+          configObj[key] = value;
+      });
+      return configObj;
+  };
 
 }());

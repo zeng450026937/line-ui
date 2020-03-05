@@ -10,12 +10,15 @@ declare global {
 }
 
 window.init = () => {
-  const { monaco, Vue, Skyline } = window;
+  const { monaco, Vue } = window;
+  const config = configFromURL(window);
 
-  const template = `
+  const template = config.template || `
 <line-app>
   <line-header>
-    <line-title>Template Explorer</line-title>
+    <line-toolbar>
+      <line-title>Template Explorer</line-title>
+    </line-toolbar>
   </line-header>
 
   <line-content>
@@ -137,3 +140,16 @@ function debounce<T extends(...args: any[]) => any>(
     }, delay);
   }) as any;
 }
+
+const configFromURL = (win: Window) => {
+  const configObj: any = {};
+  win.location.search.slice(1)
+    .split('&')
+    .map(entry => entry.split('='))
+    .map(([key, value]) => [decodeURIComponent(key), decodeURIComponent(value)])
+    .forEach(([key, value]) => {
+      configObj[key] = value;
+    });
+
+  return configObj;
+};
