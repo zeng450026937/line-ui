@@ -1,0 +1,17 @@
+{
+  "name": "@skyline/webpack-loader-auto-import",
+  "version": "1.0.0-alpha",
+  "description": "@skyline/webpack-loader-auto-import",
+  "main": "index.js",
+  "module": "dist/webpack-loader-auto-import.esm-bundler.js",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "types": "dist/webpack-loader-auto-import.d.ts",
+  "keywords": [
+    "skyline"
+  ],
+  "author": "Yealink Inc",
+  "license": "MIT"
+}
