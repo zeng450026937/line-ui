@@ -49,10 +49,10 @@ exports.clearConsole = title => {
 
 exports.clear = title => {
   if (process.stdout.isTTY) {
-    readline.cursorTo(process.stdout, 0, 0);
-    readline.clearScreenDown(process.stdout);
+    readline.cursorTo(process.stdout, 0);
+    readline.clearLine(process.stdout);
     if (title) {
-      console.log(title);
+      process.stdout.write(title);
     }
   }
 };
