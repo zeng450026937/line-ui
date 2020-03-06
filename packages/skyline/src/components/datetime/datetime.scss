@@ -1,0 +1,69 @@
+@import "./datetime.vars";
+
+// Datetime
+// --------------------------------------------------
+
+.line-datetime {
+  /**
+   * @prop --padding-top: Top padding of the datetime
+   * @prop --padding-end: Right padding if direction is left-to-right, and left padding if direction is right-to-left of the datetime
+   * @prop --padding-bottom: Bottom padding of the datetime
+   * @prop --padding-start: Left padding if direction is left-to-right, and right padding if direction is right-to-left of the datetime
+   *
+   * @prop --placeholder-color: Color of the datetime placeholder
+   */
+  @include padding(var(--padding-top), var(--padding-end), var(--padding-bottom), var(--padding-start));
+
+  display: flex;
+  position: relative;
+
+  min-width: $datetime-min-width;
+  min-height: $datetime-min-height;
+
+  font-family: $font-family-base;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+  z-index: $z-index-item-input;
+}
+
+.line-datetime.in-item {
+  position: static;
+}
+
+.line-datetime.datetime-placeholder {
+  color: var(--placeholder-color);
+}
+
+.line-datetime.datetime-disabled {
+  opacity: .3;
+  pointer-events: none;
+}
+
+.line-datetime.datetime-readonly {
+  pointer-events: none;
+}
+
+.line-datetime {
+  button {
+    @include input-cover();
+  }
+}
+
+.line-datetime .datetime-text {
+  @include text-inherit();
+
+  @include rtl() {
+    direction: rtl;
+  }
+
+  flex: 1;
+
+  min-height: inherit;
+
+  direction: ltr;
+  overflow: inherit;
+}
