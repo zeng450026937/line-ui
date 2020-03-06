@@ -23,11 +23,12 @@ const buildComp = args.comp || buildAll;
 const clearDist = args.clear || buildAll;
 const distFolder = args.dist || args.d;
 
+const pkgName = require(resolve('package.json')).name;
 const srcDir = resolve('src/components');
 const distDir = resolve(distFolder || 'style');
 
 const styleDir = resolve('src/components');
-const bundleDir = resolve('src/themes');
+const bundleDir = resolve('src/style');
 
 const autoprefix = postcss([autoprefixer()]);
 const nano = postcss([
@@ -56,35 +57,80 @@ async function run() {
     await fs.remove(distDir);
   }
 
-  // generate bundles
-  const defaultBundle = 'skyline.bundle.scss';
-  const baseBundle = 'skyline.components.scss';
-  const iosBundle = 'skyline.components.ios.scss';
-  const mdBundler = 'skyline.components.md.scss';
+  const themes = {
+    base : '.scss',
+    ios  : '.ios.scss',
+    md   : '.md.scss',
+  };
+  const styles = {};
+  const sideEffects = {};
+  const components = await globby(['**/*.tsx'], { cwd: srcDir, deep: 2 });
 
+  let baseStyles = [];
+  let iosStyles = [];
+  let mdStyles = [];
+
+  for (const component of components) {
+    const dirname = path.dirname(component);
+    const filename = path.basename(component, '.tsx');
+    const name = camelize(`-${ filename }`);
+
+    styles[name] = {};
+    sideEffects[name] = {};
+
+    Object.keys(themes).forEach(async (theme) => {
+      const ext = themes[theme];
+      const stylename = `${ filename }${ ext }`;
+      const stylefile = `${ srcDir }/${ dirname }/${ stylename }`;
+      const exsit = fs.existsSync(stylefile);
+      const distdir = `${ distDir }/${ dirname }`;
+
+      if (!exsit) return;
+
+      styles[name][theme] = stylefile;
+
+      if (buildComp) {
+        await build(stylefile, distdir, false);
+      }
+
+      sideEffects[name][theme] = effectPath(distdir, stylename);
+    });
+
+    const {
+      base: baseStyle,
+      ios: iosStyle,
+      md: mdStyle,
+    } = styles[name];
+
+    baseStyles.push(baseStyle);
+    iosStyles.push(iosStyle || baseStyle);
+    mdStyles.push(mdStyle || baseStyle);
+  }
+
+  baseStyles = baseStyles.filter(Boolean);
+  iosStyles = iosStyles.filter(Boolean);
+  mdStyles = mdStyles.filter(Boolean);
+
+  // bundles
+  const defaultBundle = `${ pkgName }.bundle.scss`;
+  const baseBundle = `${ pkgName }.scss`;
+  const iosBundle = `${ pkgName }.ios.scss`;
+  const mdBundler = `${ pkgName }.md.scss`;
+
+  // gen bundles
   if (genBundle) {
     await generate(
-      ['**/*.scss', '!**/*.vars.scss', '!**/*.mixins.scss', '!**/*.ios.scss', '!**/*.md.scss'],
-      srcDir,
+      baseStyles,
       `${ bundleDir }/${ baseBundle }`,
     );
-    logger.clear(`GEN ${ baseBundle }`);
-
     await generate(
-      ['**/*.ios.scss', '!**/*.vars.scss', '!**/*.mixins.scss'],
-      srcDir,
+      iosStyles,
       `${ bundleDir }/${ iosBundle }`,
-      [baseBundle],
     );
-    logger.clear(`GEN ${ iosBundle }`);
-
     await generate(
-      ['**/*.md.scss', '!**/*.vars.scss', '!**/*.mixins.scss'],
-      srcDir,
+      mdStyles,
       `${ bundleDir }/${ mdBundler }`,
-      [baseBundle],
     );
-    logger.clear(`GEN ${ mdBundler }`);
   }
 
   const bundles = [
@@ -93,72 +139,25 @@ async function run() {
     `${ bundleDir }/${ mdBundler }`,
   ];
 
-  const themes = {
-    default : '.scss',
-    ios     : '.ios.scss',
-    md      : '.md.scss',
-  };
-  const sideEffects = {};
-
-  // build components
-  const componentDirs = fs.readdirSync(srcDir)
-    .filter(p => fs.statSync(`${ srcDir }/${ p }`).isDirectory());
-
-  for (const dir of componentDirs) {
-    const cwd = `${ srcDir }/${ dir }`;
-    let styles = [];
-    let components = [];
-
-    components = await globby(['**/*.tsx'], { cwd });
-    components = components.map(f => path.basename(f, '.tsx'));
-
-    styles = await globby(['**/*.scss', '!**/*.vars.scss', '!**/*.mixins.scss'], { cwd });
-    styles = styles.map(f => `${ cwd }/${ f }`);
-
-    if (buildComp) {
-      await build(styles, `${ distDir }/${ dir }`, false/* no check size */);
-    }
-
-    components.forEach(name => {
-      sideEffects[camelize(`-${ name }`)] = Object.keys(themes)
-        .reduce((prev, theme) => {
-          const ext = themes[theme];
-          const file = styles.find(style => style.match(`${ name }${ ext }`));
-          const dist = relative(packageDir, distDir);
-          prev[theme] = file
-            ? `skyline/${ dist }/${ relative(srcDir, file) }`
-              .replace('scss', 'css')
-            : '';
-          return prev;
-        }, {});
+  // build bundles
+  if (buildBundle) {
+    [
+      `${ bundleDir }/${ defaultBundle }`,
+      ...bundles,
+    ].forEach(async (bundle) => {
+      await build(bundle, distDir);
     });
   }
 
-  // build bundles
-  const defaultBundleDir = resolve('src/style');
-  const defaultBundleFile = `${ defaultBundleDir }/${ defaultBundle }`;
+  // DEFAULT EFFECTS
+  sideEffects[camelize(`-${ pkgName }`)] = {
+    base : effectPath(distDir, baseBundle),
+    ios  : effectPath(distDir, iosBundle),
+    md   : effectPath(distDir, mdBundler),
+  };
 
-  if (buildBundle) {
-    await build([defaultBundleFile, ...bundles], distDir);
-  }
-
-  sideEffects.default = Object.keys(themes)
-    .reduce((prev, theme) => {
-      const name = 'skyline.components';
-      const ext = themes[theme];
-      const file = bundles.find(style => style.match(`${ name }${ ext }`));
-      const dist = relative(packageDir, distDir);
-      prev[theme] = file
-        ? `skyline/${ dist }/${ relative(bundleDir, file) }`
-          .replace('scss', 'css')
-        : '';
-      return prev;
-    }, {});
-
-  const file = defaultBundleFile;
-  const dist = relative(packageDir, distDir);
-  sideEffects.bundle = `skyline/${ dist }/${ relative(defaultBundleDir, file) }`
-    .replace('scss', 'css');
+  // BUNDLE EFFECTS
+  sideEffects.bundle = effectPath(distDir, defaultBundle);
 
   await fs.writeJSON(
     `${ distDir }/sideEffect.json`,
@@ -167,18 +166,23 @@ async function run() {
   );
 }
 
-async function generate(patterns, folder, dist, deps = []) {
-  const files = await globby(patterns, { cwd: folder });
+function effectPath(distDir, filename) {
+  return `${ pkgName }/${ relative(packageDir, distDir) }/${ path.basename(filename, '.scss') }.css`;
+}
+
+async function generate(files, dist, deps = []) {
   const imports = files.sort().map(file => {
     // relative path
-    const relative = path.relative(path.dirname(dist), folder);
-    const from = path.join(relative, file.replace('.scss', ''))
-      .replace(/\\+/g, '/');
+    const dir = relative(path.dirname(dist), path.dirname(file));
+    const from = `${ dir || '.' }/${ path.basename(file, '.scss') }`;
     return `@import "${ from }";`;
   });
 
+  deps = Array.isArray(deps) ? deps : [deps];
   deps = deps.sort().map(file => {
-    return `@import "./${ file.replace('.scss', '') }";`;
+    const dir = relative(path.dirname(dist), path.dirname(file));
+    const from = `${ dir || '.' }/${ path.basename(file, '.scss') }`;
+    return `@import "${ from }";`;
   });
 
   let code = `${ warning }\n`;
@@ -191,49 +195,38 @@ async function generate(patterns, folder, dist, deps = []) {
   if (imports.length) {
     code += imports.join('\n');
     code += '\n';
-
-    await fs.ensureFile(dist);
-    await fs.writeFile(dist, code);
   }
 
-  return files;
+  await fs.ensureFile(dist);
+  await fs.writeFile(dist, code);
 }
 
-async function build(files, distDir, check = true) {
-  const targets = [];
+async function build(file, distDir, check = true) {
+  logger.clear(`RENDER  ${ path.relative(packageDir, path.normalize(file)) }`);
 
-  for (const file of files) {
-    logger.clear(`RENDER  ${ path.relative(packageDir, path.normalize(file)) }`);
+  const rendered = await renderScss(file);
 
-    const rendered = await renderScss(file);
+  const autoprefixed = await autoprefix.process(rendered.css, { from: undefined });
 
-    const autoprefixed = await autoprefix.process(rendered.css, { from: undefined });
+  const filename = path.basename(file, '.scss');
 
-    const filename = path.basename(file, '.scss');
+  await fs.ensureDir(distDir);
+  await fs.writeFile(
+    `${ distDir }/${ filename }.css`,
+    autoprefixed.css,
+  );
 
-    await fs.ensureDir(distDir);
-    await fs.writeFile(
-      `${ distDir }/${ filename }.css`,
-      autoprefixed.css,
-    );
+  const minimized = await nano.process(autoprefixed.css, { from: undefined });
 
-    const minimized = await nano.process(autoprefixed.css, { from: undefined });
+  await fs.writeFile(
+    `${ distDir }/${ filename }.min.css`,
+    minimized.css,
+  );
 
-    await fs.writeFile(
-      `${ distDir }/${ filename }.min.css`,
-      minimized.css,
-    );
+  logger.clear();
 
-    targets.push(filename);
-  }
-
-  if (targets.length) {
-    logger.clear();
-  }
-
-  if (check && targets.length) {
-    logger.log();
-    checkAllSizes(targets, distDir);
+  if (check) {
+    checkSize(filename, distDir);
   }
 }
 
@@ -271,17 +264,6 @@ function renderScss(file) {
       },
     );
   });
-}
-
-function checkAllSizes(targets, distDir) {
-  for (const target of targets) {
-    try {
-      checkSize(target, distDir);
-    } catch (error) {
-      logger.error(target, distDir);
-      throw error;
-    }
-  }
 }
 
 function checkSize(target, distDir) {
