@@ -42,13 +42,9 @@ const nano = postcss([
   }),
 ]);
 
+const { camelize } = require('./utils');
 const warning = require('./warning');
 const logger = require('./logger');
-
-const camelizeRE = /-(\w)/g;
-const camelize = (str) => {
-  return str.replace(camelizeRE, (_, c) => (c ? c.toUpperCase() : ''));
-};
 
 run();
 

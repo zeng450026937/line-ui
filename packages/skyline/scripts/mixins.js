@@ -8,6 +8,11 @@ const resolve = p => path.resolve(packageDir, p);
 const warning = require('./warning');
 const logger = require('./logger');
 
+const { matchWIP } = require('./utils');
+
+let count = 0;
+const skipped = [];
+
 run();
 
 async function run() {
@@ -17,12 +22,18 @@ async function run() {
   let code = `${ warning }\n`;
 
   for (const file of files) {
+    if (matchWIP(`${ root }/${ file }`)) {
+      skipped.push(file);
+      logger.log(`${ file } (skipped)`, 'WIP');
+      continue;
+    }
     const filename = path.basename(file, '.ts');
     code += `export * from 'skyline/mixins/${ filename }';\n`;
+    count++;
   }
 
   logger.log();
-  logger.done(`total :  ${ files.length } mixins`);
+  logger.done(`total :  ${ count } mixins`);
 
   // const dist = resolve(`${ root }/index.ts`);
   // const dist = resolve('gen/mixins/index.ts');

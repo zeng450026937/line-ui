@@ -23,10 +23,12 @@
       "global",
       "esm"
     ],
-    "scripts": [
+    "prepare": [
       "scripts/components.js",
       "scripts/directives.js",
-      "scripts/mixins.js",
+      "scripts/mixins.js"
+    ],
+    "scripts": [
       "scripts/style.js"
     ],
     "babel": true

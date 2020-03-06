@@ -8,7 +8,10 @@ const resolve = p => path.resolve(packageDir, p);
 const warning = require('./warning');
 const logger = require('./logger');
 
+const { camelize, matchWIP } = require('./utils');
+
 let count = 0;
+const skipped = [];
 
 run();
 
@@ -20,8 +23,16 @@ async function run() {
   let code = `${ warning }\n`;
 
   for (const folder of folders) {
+    if (matchWIP(`${ root }/${ folder }`)) {
+      skipped.push(folder);
+      logger.log(`${ folder } (skipped)`, 'WIP');
+      continue;
+    }
+
     const components = await generate(
-      ['*.tsx'], resolve(`${ root }/${ folder }`), resolve(`${ root }/${ folder }/index.ts`),
+      ['*.tsx'],
+      resolve(`${ root }/${ folder }`),
+      resolve(`${ root }/${ folder }/index.ts`),
     );
 
     if (components.length) {
@@ -72,14 +83,9 @@ export {
 `.trimLeft());
   }
 
-  logger.log(`${ dir.padEnd(25, ' ') } \t: ${ components.length } components`);
+  // logger.log(`${ dir.padEnd(25) } \t: ${ components.length } components`);
 
   count += components.length;
 
   return components;
 }
-
-const camelizeRE = /-(\w)/g;
-const camelize = (str) => {
-  return str.replace(camelizeRE, (_, c) => (c ? c.toUpperCase() : ''));
-};

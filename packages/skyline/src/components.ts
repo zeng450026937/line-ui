@@ -44,7 +44,6 @@ export * from 'skyline/components/progress';
 export * from 'skyline/components/radio';
 export * from 'skyline/components/radio-button';
 export * from 'skyline/components/range';
-// export * from 'skyline/components/range-slider';
 export * from 'skyline/components/refresher';
 export * from 'skyline/components/refresher-content';
 export * from 'skyline/components/row';

@@ -7,6 +7,11 @@ const resolve = p => path.resolve(packageDir, p);
 const warning = require('./warning');
 const logger = require('./logger');
 
+const { matchWIP } = require('./utils');
+
+let count = 0;
+const skipped = [];
+
 run();
 
 async function run() {
@@ -26,11 +31,17 @@ async function run() {
   let code = `${ warning }\n`;
 
   for (const folder of folders) {
+    if (matchWIP(`${ root }/${ folder }`)) {
+      skipped.push(folder);
+      logger.log(`${ folder } (skipped)`, 'WIP');
+      continue;
+    }
     code += `export * from 'skyline/directives/${ folder }';\n`;
+    count++;
   }
 
   logger.log();
-  logger.done(`total :  ${ folders.length } directives`);
+  logger.done(`total :  ${ count } directives`);
 
   // const dist = resolve(`${ root }/index.ts`);
   // const dist = resolve('gen/directives/index.ts');

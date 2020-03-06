@@ -4,7 +4,9 @@ const globby = require('globby');
 
 const packageDir = path.resolve(__dirname, '../');
 const resolve = p => path.resolve(packageDir, p);
+const relative = (from, to) => path.relative(from, to).split('\\').join('/');
 
+const { camelize } = require('./utils');
 const logger = require('./logger');
 
 const componentsDir = resolve('src/components');
@@ -125,10 +127,3 @@ async function inspectStyles() {
     },
   };
 }
-
-const camelizeRE = /-(\w)/g;
-const camelize = (str) => {
-  return str.replace(camelizeRE, (_, c) => (c ? c.toUpperCase() : ''));
-};
-
-const relative = (from, to) => path.relative(from, to).split('\\').join('/');

@@ -68,6 +68,24 @@ async function build(target) {
     await fs.remove(resolve('dist'));
   }
 
+
+  if (pkg.buildOptions && pkg.buildOptions.prepare) {
+    const scripts = [].concat(pkg.buildOptions.prepare);
+    for (const script of scripts) {
+      await execa(
+        'node',
+        [resolve(script)],
+        {
+          stdio : 'inherit',
+          env   : {
+            COMMIT   : `${ commit }`,
+            NODE_ENV : `${ env }`,
+          },
+        },
+      );
+    }
+  }
+
   const configFile = resolve('rollup.config.js');
   const hasConfig = await fs.exists(configFile);
 
