@@ -24,7 +24,7 @@ async function run() {
   const styles = await inspectStyles();
 
   await fs.writeJSON(
-    resolve('inspect.json'),
+    resolve('dist/inspect.json'),
     {
       components,
       directives,

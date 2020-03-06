@@ -27,8 +27,7 @@
       "scripts/components.js",
       "scripts/directives.js",
       "scripts/mixins.js",
-      "scripts/style.js",
-      "scripts/inspect.js"
+      "scripts/style.js"
     ],
     "babel": true
   },

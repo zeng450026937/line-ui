@@ -77,7 +77,8 @@ files.forEach(shortName => {
 
   const srcDir = path.join(packagesDir, shortName, 'src');
   const indexPath = path.join(packagesDir, shortName, 'src/index.ts');
-  if (args.force || !fs.existsSync(indexPath)) {
+  const indexPathJS = path.join(packagesDir, shortName, 'src/index.js');
+  if (args.force || (!fs.existsSync(indexPath) && !fs.existsSync(indexPathJS))) {
     if (!fs.existsSync(srcDir)) {
       fs.mkdirSync(srcDir);
     }

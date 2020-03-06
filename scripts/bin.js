@@ -1,6 +1,5 @@
 #!/usr/bin/env node
 
-/* eslint-disable import/no-extraneous-dependencies */
 const commander = require('commander');
 const changelog = require('./changelog');
 const commitLint = require('./commit-lint');
