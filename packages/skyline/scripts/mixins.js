@@ -16,6 +16,8 @@ const skipped = [];
 run();
 
 async function run() {
+  logger.log('mixins', 'STAGE');
+
   const root = resolve('src/mixins');
   const files = await globby(['*.ts', '!*-legacy.ts'], { cwd: root });
 
@@ -32,7 +34,6 @@ async function run() {
     count++;
   }
 
-  logger.log();
   logger.done(`total :  ${ count } mixins`);
 
   // const dist = resolve(`${ root }/index.ts`);

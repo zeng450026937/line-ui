@@ -1,21 +1,17 @@
 #!/usr/bin/env node
 
 const commander = require('commander');
-// const changelog = require('./changelog');
-// const commitLint = require('./commit-lint');
+const changelog = require('./changelog');
+const commitLint = require('./commit-lint');
 
 commander
   .command('changelog <dir>')
   .option('--tag [tag]', 'Since tag')
-  .action((...args) => {
-    console.log(args);
-  });
+  .action(changelog);
 
 commander
   .command('commit-lint')
-  .action((...args) => {
-    console.log(args);
-  });
+  .action(commitLint);
 
 commander.arguments('<action>');
 commander.parse(process.argv);

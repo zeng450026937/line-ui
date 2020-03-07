@@ -15,6 +15,8 @@ const skipped = [];
 run();
 
 async function run() {
+  logger.log('directives', 'STAGE');
+
   const root = resolve('src/directives');
   const folders = fs.readdirSync(root)
     .sort()
@@ -40,7 +42,6 @@ async function run() {
     count++;
   }
 
-  logger.log();
   logger.done(`total :  ${ count } directives`);
 
   // const dist = resolve(`${ root }/index.ts`);

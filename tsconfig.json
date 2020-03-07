@@ -19,7 +19,8 @@
     "sourceMap": true,
     // "declaration": true,
     "baseUrl": ".",
-    // "outDir": "./out",
+    "rootDir": ".",
+    "outDir": "./out",
     "types": [
       "webpack-env",
       "jest"
@@ -38,22 +39,13 @@
     ]
   },
   "include": [
-    "packages/*/src/**/*.ts",
-    "packages/*/src/**/*.tsx",
-    "packages/*/src/**/*.vue",
-    "packages/*/__tests__/**/*.ts",
-    "packages/*/__tests__/**/*.tsx",
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue",
-    "tests/**/*.ts",
-    "tests/**/*.tsx",
-    "types/**/*.ts"
+    "packages/*/src",
+    "packages/*/__tests__",
+    "src",
+    "tests",
+    "types"
   ],
   "exclude": [
-    "node_modules",
-    "src/components/**/test",
-    "src/utils/model",
-    "src/utils/input-shims"
+    "node_modules"
   ]
 }

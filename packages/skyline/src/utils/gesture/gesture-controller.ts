@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-class GestureController {
+export class GestureController {
 
   private gestureId = 0;
   private requestedStart = new Map<number, number>();
@@ -199,7 +199,7 @@ class GestureDelegate {
   }
 }
 
-class BlockerDelegate {
+export class BlockerDelegate {
 
   private ctrl?: GestureController;
 

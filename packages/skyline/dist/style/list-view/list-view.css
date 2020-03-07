@@ -1,7 +1,0 @@
-.line-list-view {
-  position: relative;
-  width: 400px;
-  height: 500px;
-  border: dotted palevioletred;
-  overflow: auto;
-}

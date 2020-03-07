@@ -24,6 +24,7 @@
 @import "../components/collapse/collapse-item";
 @import "../components/collapse/collapse";
 @import "../components/content/content";
+@import "../components/datetime/datetime.ios";
 @import "../components/dialog/dialog";
 @import "../components/fab-button/fab-button.ios";
 @import "../components/fab-group/fab-group";
@@ -48,6 +49,8 @@
 @import "../components/note/note.ios";
 @import "../components/overlay/overlay.ios";
 @import "../components/page-indicator/page-indicator";
+@import "../components/picker-column/picker-column.ios";
+@import "../components/picker/picker.ios";
 @import "../components/popover/popover.ios";
 @import "../components/popup/popup.ios";
 @import "../components/progress/progress-bar";
@@ -56,7 +59,6 @@
 @import "../components/radio-button/radio-button";
 @import "../components/radio-button/radio-indicator";
 @import "../components/radio/radio.ios";
-@import "../components/range-slider/range-slider";
 @import "../components/range/range.ios";
 @import "../components/refresher/refresher.ios";
 @import "../components/row/row";

@@ -151,7 +151,13 @@ function createConfig(format, output, plugins = []) {
             declaration    : shouldEmitDeclarations,
             declarationMap : shouldEmitDeclarations,
           },
-          exclude : ['**/__tests__', 'test-dts'],
+          exclude : [
+            '**/__tests__',
+            'test-dts',
+            '**/test',
+            'src',
+            'tests',
+          ],
         },
       }),
     );

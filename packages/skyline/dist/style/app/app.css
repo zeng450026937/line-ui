@@ -1,7 +1,0 @@
-html.plt-mobile .line-app {
-  user-select: none;
-}
-
-.line-app.force-statusbar-padding {
-  --line-safe-area-top: 20px;
-}

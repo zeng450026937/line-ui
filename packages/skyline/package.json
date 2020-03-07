@@ -4,6 +4,7 @@
   "description": "skyline",
   "main": "index.js",
   "module": "dist/skyline.esm-bundler.js",
+  "unpkg": "dist/skyline.global.js",
   "files": [
     "index.js",
     "dist",

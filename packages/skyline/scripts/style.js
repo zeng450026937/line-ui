@@ -42,13 +42,18 @@ const nano = postcss([
   }),
 ]);
 
-const { camelize } = require('./utils');
+const { camelize, matchWIP } = require('./utils');
 const warning = require('./warning');
 const logger = require('./logger');
+
+let count = 0;
+const skipped = [];
 
 run();
 
 async function run() {
+  logger.log('styles', 'STAGE');
+
   if (clearDist) {
     await fs.remove(distDir);
   }
@@ -67,6 +72,12 @@ async function run() {
   let mdStyles = [];
 
   for (const component of components) {
+    if (matchWIP(`${ srcDir }/${ component }`)) {
+      skipped.push(component);
+      logger.log(`${ component } (skipped)`, 'WIP');
+      continue;
+    }
+
     const dirname = path.dirname(component);
     const filename = path.basename(component, '.tsx');
     const name = camelize(`-${ filename }`);
@@ -74,23 +85,25 @@ async function run() {
     styles[name] = {};
     sideEffects[name] = {};
 
-    Object.keys(themes).forEach(async (theme) => {
-      const ext = themes[theme];
-      const stylename = `${ filename }${ ext }`;
-      const stylefile = `${ srcDir }/${ dirname }/${ stylename }`;
-      const exsit = fs.existsSync(stylefile);
-      const distdir = `${ distDir }/${ dirname }`;
+    await Promise.all(
+      Object.keys(themes).map(async (theme) => {
+        const ext = themes[theme];
+        const stylename = `${ filename }${ ext }`;
+        const stylefile = `${ srcDir }/${ dirname }/${ stylename }`;
+        const exsit = fs.existsSync(stylefile);
+        const distdir = `${ distDir }/${ dirname }`;
 
-      if (!exsit) return;
+        if (!exsit) return;
 
-      styles[name][theme] = stylefile;
+        styles[name][theme] = stylefile;
 
-      if (buildComp) {
-        await build(stylefile, distdir, false);
-      }
+        if (buildComp) {
+          await build(stylefile, distdir);
+        }
 
-      sideEffects[name][theme] = effectPath(distdir, stylename);
-    });
+        sideEffects[name][theme] = effectPath(distdir, stylename);
+      }),
+    );
 
     const {
       base: baseStyle,
@@ -115,14 +128,17 @@ async function run() {
 
   // gen bundles
   if (genBundle) {
+    logger.log(`${ baseBundle }`, 'GEN');
     await generate(
       baseStyles,
       `${ bundleDir }/${ baseBundle }`,
     );
+    logger.log(`${ iosBundle }`, 'GEN');
     await generate(
       iosStyles,
       `${ bundleDir }/${ iosBundle }`,
     );
+    logger.log(`${ mdBundler }`, 'GEN');
     await generate(
       mdStyles,
       `${ bundleDir }/${ mdBundler }`,
@@ -137,13 +153,21 @@ async function run() {
 
   // build bundles
   if (buildBundle) {
-    [
-      `${ bundleDir }/${ defaultBundle }`,
-      ...bundles,
-    ].forEach(async (bundle) => {
+    await build(`${ bundleDir }/${ defaultBundle }`, distDir);
+    for (const bundle of bundles) {
       await build(bundle, distDir);
-    });
+    }
   }
+
+  checkAllSizes(
+    [
+      path.basename(defaultBundle, '.scss'),
+      path.basename(baseBundle, '.scss'),
+      path.basename(iosBundle, '.scss'),
+      path.basename(mdBundler, '.scss'),
+    ],
+    distDir,
+  );
 
   // DEFAULT EFFECTS
   sideEffects[camelize(`-${ pkgName }`)] = {
@@ -160,6 +184,8 @@ async function run() {
     sideEffects,
     { spaces: 2 },
   );
+
+  logger.done(`total :  ${ count } styles`);
 }
 
 function effectPath(distDir, filename) {
@@ -197,8 +223,9 @@ async function generate(files, dist, deps = []) {
   await fs.writeFile(dist, code);
 }
 
-async function build(file, distDir, check = true) {
-  logger.clear(`RENDER  ${ path.relative(packageDir, path.normalize(file)) }`);
+async function build(file, distDir, check = false) {
+  count++;
+  logger.clear(` RENDER  ${ path.relative(packageDir, path.normalize(file)) }`);
 
   const rendered = await renderScss(file);
 
@@ -262,6 +289,19 @@ function renderScss(file) {
   });
 }
 
+function checkAllSizes(targets, distDir) {
+  logger.log();
+  for (const target of targets) {
+    try {
+      checkSize(target, distDir);
+    } catch (error) {
+      logger.error(target, distDir);
+      throw error;
+    }
+  }
+  logger.log();
+}
+
 function checkSize(target, distDir) {
   const dist = `${ distDir }/${ target }.min.css`;
   if (fs.existsSync(dist)) {
@@ -275,6 +315,7 @@ function checkSize(target, distDir) {
       `${ chalk.gray(
         chalk.bold(target),
       ).padEnd(25) } min:${ minSize } / gzip:${ gzippedSize } / brotli:${ compressedSize }`,
+      'CSS',
     );
   }
 }

@@ -1,2 +1,3 @@
+components/progress-bar
 components/range-slider
 directives/tooltip

@@ -33,6 +33,8 @@ const isRelease = args.release;
 const buildTypes = args.t || args.types || isRelease;
 const buildAllMatching = args.all || args.a;
 const lean = args.lean || args.l;
+const prepare = args.prepare || isRelease;
+const scripts = args.scripts || isRelease;
 const commit = execa.sync('git', ['rev-parse', 'HEAD']).stdout.slice(0, 7);
 
 run();
@@ -68,8 +70,14 @@ async function build(target) {
     await fs.remove(resolve('dist'));
   }
 
+  const configFile = resolve('rollup.config.js');
+  const hasConfig = await fs.exists(configFile);
 
-  if (pkg.buildOptions && pkg.buildOptions.prepare) {
+  const env = (pkg.buildOptions && pkg.buildOptions.env)
+    || (devOnly ? 'development' : 'production');
+
+  // STAGE: prepare
+  if (prepare && pkg.buildOptions && pkg.buildOptions.prepare) {
     const scripts = [].concat(pkg.buildOptions.prepare);
     for (const script of scripts) {
       await execa(
@@ -86,11 +94,7 @@ async function build(target) {
     }
   }
 
-  const configFile = resolve('rollup.config.js');
-  const hasConfig = await fs.exists(configFile);
-
-  const env = (pkg.buildOptions && pkg.buildOptions.env)
-    || (devOnly ? 'development' : 'production');
+  // STAGE: build
   await execa(
     'rollup',
     [
@@ -113,6 +117,7 @@ async function build(target) {
     { stdio: 'inherit' },
   );
 
+  // STAGE: types
   if (buildTypes && pkg.types) {
     console.log();
     console.log(
@@ -157,7 +162,8 @@ async function build(target) {
     await fs.remove(resolve('dist/packages'));
   }
 
-  if (pkg.buildOptions && pkg.buildOptions.scripts) {
+  // STAGE: scripts
+  if (scripts && pkg.buildOptions && pkg.buildOptions.scripts) {
     const scripts = [].concat(pkg.buildOptions.scripts);
     for (const script of scripts) {
       await execa(

@@ -16,6 +16,8 @@ const skipped = [];
 run();
 
 async function run() {
+  logger.log('components', 'STAGE');
+
   const root = resolve('src/components');
   const folders = fs.readdirSync(root)
     .filter(f => fs.statSync(`${ root }/${ f }`).isDirectory());
@@ -40,7 +42,6 @@ async function run() {
     }
   }
 
-  logger.log();
   logger.done(`total :  ${ count } components`);
 
   // const dist = resolve(`${ root }/index.ts`);
