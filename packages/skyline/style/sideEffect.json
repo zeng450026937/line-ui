@@ -252,11 +252,6 @@
   "Row": {
     "base": "skyline/style/row/row.css"
   },
-  "Skyline": {
-    "base": "skyline/style/skyline.css",
-    "ios": "skyline/style/skyline.ios.css",
-    "md": "skyline/style/skyline.md.css"
-  },
   "Slide": {
     "base": "skyline/style/slide/slide.css"
   },
@@ -331,5 +326,10 @@
     "base": "skyline/style/tooltip/tooltip.css"
   },
   "TreeItem": {},
-  "bundle": "skyline/style/skyline.bundle.css"
+  "bundle": "skyline/style/skyline.bundle.css",
+  "default": {
+    "base": "skyline/style/skyline.css",
+    "ios": "skyline/style/skyline.ios.css",
+    "md": "skyline/style/skyline.md.css"
+  }
 }

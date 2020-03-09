@@ -1,7 +1,7 @@
 {
-  "name": "@skyline/babel-plugin-component",
+  "name": "@skyline/babel-preset-skyline",
   "version": "1.0.0-alpha",
-  "description": "@skyline/babel-plugin-component",
+  "description": "@skyline/babel-preset-skyline",
   "main": "index.js",
   "files": [
     "index.js"
@@ -13,6 +13,6 @@
   "author": "Yealink Inc",
   "license": "MIT",
   "dependencies": {
-    "@babel/helper-module-imports": "^7.8.3"
+    "@skyline/babel-plugin-effect": "^1.0.0-alpha"
   }
 }

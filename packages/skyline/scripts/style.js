@@ -179,7 +179,7 @@ async function run() {
   );
 
   // DEFAULT EFFECTS
-  sideEffects[camelize(`-${ pkgName }`)] = new SideEffect(
+  sideEffects.default = new SideEffect(
     effectPath(distDir, baseBundle),
     effectPath(distDir, iosBundle),
     effectPath(distDir, mdBundler),
@@ -192,11 +192,6 @@ async function run() {
     `${ distDir }/sideEffect.json`,
     stringifyJSON(sideEffects, null, 2),
   );
-  // await fs.writeJSON(
-  //   `${ distDir }/sideEffect.json`,
-  //   sideEffects,
-  //   { spaces: 2 },
-  // );
 
   logger.done(`total :  ${ count } styles`);
 }
@@ -205,6 +200,7 @@ function effectPath(distDir, filename) {
   return `${ pkgName }/${ relative(packageDir, distDir) }/${ path.basename(filename, '.scss') }.css`;
 }
 
+// stable stringify with alphabetically
 function stringifyJSON(obj, ...args) {
   const keys = [];
   /* eslint-disable guard-for-in */

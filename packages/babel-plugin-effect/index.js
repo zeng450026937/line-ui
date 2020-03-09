@@ -1,10 +1,6 @@
-const {
-  addSideEffect,
-} = require('@babel/helper-module-imports');
+const { addSideEffect } = require('@babel/helper-module-imports');
 
-const NOOP = () => {};
-
-module.exports = function componentStyle() {
+module.exports = () => {
   return {
     visitor : {
       ImportDeclaration(path, state) {
@@ -21,29 +17,41 @@ module.exports = function componentStyle() {
           let effects = [];
 
           const {
-            effect = NOOP,
-            fullImportEffect = NOOP,
-            memberImportEffect = NOOP,
-            preventFullImport,
+            effect,
+            fullImportEffect,
+            memberImportEffect,
+            fullImport = true,
+            memberImport = true,
           } = options;
 
           path.node.specifiers.forEach(specifier => {
+            // Examples of "full" imports:
+            //   import * as name from 'module'; (ImportNamespaceSpecifier)
+            //   import name from 'module'; (ImportDefaultSpecifier)
             const isFullImport = specifier.type !== 'ImportSpecifier';
+            // Examples of member imports:
+            //   import { member } from 'module'; (ImportSpecifier)
+            //   import { member as alias } from 'module' (ImportSpecifier)
             const isMemberImport = specifier.type === 'ImportSpecifier';
             const importName = specifier.local.name;
 
-            if (isFullImport && preventFullImport) {
-              throw new Error(`Import of entire module ${ source } not allowed due to preventFullImport setting`);
+            if (isFullImport && !fullImport) {
+              throw new Error(`Import of entire module ${ source } not allowed due to fullImport setting`);
+            }
+            if (isMemberImport && !memberImport) {
+              throw new Error(`Member Import of module ${ source } not allowed due to memberImport setting`);
             }
 
-            if (isFullImport) {
+            if (isFullImport && fullImportEffect) {
               effects = effects.concat(fullImportEffect(importName));
             }
-            if (isMemberImport) {
+            if (isMemberImport && memberImportEffect) {
               effects = effects.concat(memberImportEffect(importName));
             }
 
-            effects = effects.concat(effect(importName, isFullImport /* full import */));
+            if (effect) {
+              effects = effects.concat(effect(importName, isFullImport /* full import */));
+            }
           });
 
           effects.forEach(effect => effect && addSideEffect(path, effect));
