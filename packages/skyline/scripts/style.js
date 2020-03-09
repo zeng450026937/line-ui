@@ -71,6 +71,15 @@ async function run() {
   let iosStyles = [];
   let mdStyles = [];
 
+  // use class instead of plain object for stable stringify()
+  class SideEffect {
+    constructor(base, ios, md) {
+      this.base = base;
+      this.ios = ios;
+      this.md = md;
+    }
+  }
+
   for (const component of components) {
     if (matchWIP(`${ srcDir }/${ component }`)) {
       skipped.push(component);
@@ -83,7 +92,7 @@ async function run() {
     const name = camelize(`-${ filename }`);
 
     styles[name] = {};
-    sideEffects[name] = {};
+    sideEffects[name] = new SideEffect();
 
     await Promise.all(
       Object.keys(themes).map(async (theme) => {
@@ -170,26 +179,45 @@ async function run() {
   );
 
   // DEFAULT EFFECTS
-  sideEffects[camelize(`-${ pkgName }`)] = {
-    base : effectPath(distDir, baseBundle),
-    ios  : effectPath(distDir, iosBundle),
-    md   : effectPath(distDir, mdBundler),
-  };
+  sideEffects[camelize(`-${ pkgName }`)] = new SideEffect(
+    effectPath(distDir, baseBundle),
+    effectPath(distDir, iosBundle),
+    effectPath(distDir, mdBundler),
+  );
 
   // BUNDLE EFFECTS
   sideEffects.bundle = effectPath(distDir, defaultBundle);
 
-  await fs.writeJSON(
+  await fs.writeFile(
     `${ distDir }/sideEffect.json`,
-    sideEffects,
-    { spaces: 2 },
+    stringifyJSON(sideEffects, null, 2),
   );
+  // await fs.writeJSON(
+  //   `${ distDir }/sideEffect.json`,
+  //   sideEffects,
+  //   { spaces: 2 },
+  // );
 
   logger.done(`total :  ${ count } styles`);
 }
 
 function effectPath(distDir, filename) {
   return `${ pkgName }/${ relative(packageDir, distDir) }/${ path.basename(filename, '.scss') }.css`;
+}
+
+function stringifyJSON(obj, ...args) {
+  const keys = [];
+  /* eslint-disable guard-for-in */
+  for (const key in obj) {
+    keys.push(key);
+  }
+  /* eslint-enable guard-for-in */
+  keys.sort();
+  const newObj = {};
+  for (const key of keys) {
+    newObj[key] = obj[key];
+  }
+  return JSON.stringify(newObj, ...args);
 }
 
 async function generate(files, dist, deps = []) {

@@ -186,7 +186,8 @@ function createConfig(format, output, plugins = []) {
         extensions     : ['.jsx', '.tsx'],
         exclude        : 'node_modules/**',
         babelrc        : false,
-        configFile     : path.resolve(__dirname, 'babel.config.js'),
+        root           : packageDir,
+        rootMode       : 'upward',
         runtimeHelpers : true,
       }),
     );

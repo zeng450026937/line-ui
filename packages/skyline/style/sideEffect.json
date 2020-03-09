@@ -1,10 +1,10 @@
 {
-  "ActionGroup": {},
   "Action": {},
+  "ActionGroup": {},
   "ActionSheet": {
-    "md": "skyline/style/action-sheet/action-sheet.md.css",
+    "base": "skyline/style/action-sheet/action-sheet.css",
     "ios": "skyline/style/action-sheet/action-sheet.ios.css",
-    "base": "skyline/style/action-sheet/action-sheet.css"
+    "md": "skyline/style/action-sheet/action-sheet.md.css"
   },
   "Alert": {
     "base": "skyline/style/alert/alert.css",
@@ -15,35 +15,40 @@
     "base": "skyline/style/app/app.css"
   },
   "Avatar": {
-    "md": "skyline/style/avatar/avatar.md.css",
     "base": "skyline/style/avatar/avatar.css",
-    "ios": "skyline/style/avatar/avatar.ios.css"
+    "ios": "skyline/style/avatar/avatar.ios.css",
+    "md": "skyline/style/avatar/avatar.md.css"
   },
   "Badge": {
     "base": "skyline/style/badge/badge.css",
-    "md": "skyline/style/badge/badge.md.css",
-    "ios": "skyline/style/badge/badge.ios.css"
+    "ios": "skyline/style/badge/badge.ios.css",
+    "md": "skyline/style/badge/badge.md.css"
   },
   "BusyIndicator": {
     "base": "skyline/style/busy-indicator/busy-indicator.css"
   },
+  "Button": {
+    "base": "skyline/style/button/button.css",
+    "ios": "skyline/style/button/button.ios.css",
+    "md": "skyline/style/button/button.md.css"
+  },
   "ButtonGroup": {
     "base": "skyline/style/button/button-group.css"
   },
-  "Button": {
-    "ios": "skyline/style/button/button.ios.css",
-    "base": "skyline/style/button/button.css",
-    "md": "skyline/style/button/button.md.css"
+  "Card": {
+    "base": "skyline/style/card/card.css",
+    "ios": "skyline/style/card/card.ios.css",
+    "md": "skyline/style/card/card.md.css"
   },
   "CardContent": {
-    "md": "skyline/style/card/card-content.md.css",
     "base": "skyline/style/card/card-content.css",
-    "ios": "skyline/style/card/card-content.ios.css"
+    "ios": "skyline/style/card/card-content.ios.css",
+    "md": "skyline/style/card/card-content.md.css"
   },
   "CardHeader": {
-    "md": "skyline/style/card/card-header.md.css",
+    "base": "skyline/style/card/card-header.css",
     "ios": "skyline/style/card/card-header.ios.css",
-    "base": "skyline/style/card/card-header.css"
+    "md": "skyline/style/card/card-header.md.css"
   },
   "CardSubtitle": {
     "base": "skyline/style/card/card-subtitle.css",
@@ -51,53 +56,50 @@
     "md": "skyline/style/card/card-subtitle.md.css"
   },
   "CardTitle": {
-    "md": "skyline/style/card/card-title.md.css",
+    "base": "skyline/style/card/card-title.css",
     "ios": "skyline/style/card/card-title.ios.css",
-    "base": "skyline/style/card/card-title.css"
-  },
-  "Card": {
-    "base": "skyline/style/card/card.css",
-    "md": "skyline/style/card/card.md.css",
-    "ios": "skyline/style/card/card.ios.css"
-  },
-  "CellGroup": {
-    "base": "skyline/style/cell/cell-group.css"
+    "md": "skyline/style/card/card-title.md.css"
   },
   "Cell": {
     "base": "skyline/style/cell/cell.css"
   },
-  "CheckBoxGroup": {
-    "base": "skyline/style/check-box/check-box-group.css"
+  "CellGroup": {
+    "base": "skyline/style/cell/cell-group.css"
   },
   "CheckBox": {
     "base": "skyline/style/check-box/check-box.css",
     "ios": "skyline/style/check-box/check-box.ios.css",
     "md": "skyline/style/check-box/check-box.md.css"
   },
+  "CheckBoxGroup": {
+    "base": "skyline/style/check-box/check-box-group.css"
+  },
+  "CheckGroup": {},
   "CheckIndicator": {
     "base": "skyline/style/check-box/check-indicator.css"
   },
+  "CheckItem": {},
   "Chip": {
     "base": "skyline/style/chip/chip.css",
-    "md": "skyline/style/chip/chip.md.css",
-    "ios": "skyline/style/chip/chip.ios.css"
+    "ios": "skyline/style/chip/chip.ios.css",
+    "md": "skyline/style/chip/chip.md.css"
   },
   "Col": {
     "base": "skyline/style/col/col.css"
   },
-  "CollapseItem": {
-    "base": "skyline/style/collapse/collapse-item.css"
-  },
   "Collapse": {
     "base": "skyline/style/collapse/collapse.css"
+  },
+  "CollapseItem": {
+    "base": "skyline/style/collapse/collapse-item.css"
   },
   "Content": {
     "base": "skyline/style/content/content.css"
   },
   "Datetime": {
-    "md": "skyline/style/datetime/datetime.md.css",
+    "base": "skyline/style/datetime/datetime.css",
     "ios": "skyline/style/datetime/datetime.ios.css",
-    "base": "skyline/style/datetime/datetime.css"
+    "md": "skyline/style/datetime/datetime.md.css"
   },
   "Dialog": {
     "base": "skyline/style/dialog/dialog.css"
@@ -107,37 +109,30 @@
   },
   "FabButton": {
     "base": "skyline/style/fab-button/fab-button.css",
-    "md": "skyline/style/fab-button/fab-button.md.css",
-    "ios": "skyline/style/fab-button/fab-button.ios.css"
+    "ios": "skyline/style/fab-button/fab-button.ios.css",
+    "md": "skyline/style/fab-button/fab-button.md.css"
   },
   "FabGroup": {
     "base": "skyline/style/fab-group/fab-group.css"
   },
+  "FontIcon": {
+    "base": "skyline/style/icon/font-icon.css"
+  },
   "Footer": {
     "base": "skyline/style/footer/footer.css",
-    "md": "skyline/style/footer/footer.md.css",
-    "ios": "skyline/style/footer/footer.ios.css"
+    "ios": "skyline/style/footer/footer.ios.css",
+    "md": "skyline/style/footer/footer.md.css"
   },
   "Grid": {
     "base": "skyline/style/grid/grid.css"
   },
   "Header": {
-    "md": "skyline/style/header/header.md.css",
     "base": "skyline/style/header/header.css",
-    "ios": "skyline/style/header/header.ios.css"
-  },
-  "CheckGroup": {},
-  "CheckItem": {},
-  "Lazy": {},
-  "TreeItem": {},
-  "FontIcon": {
-    "base": "skyline/style/icon/font-icon.css"
+    "ios": "skyline/style/header/header.ios.css",
+    "md": "skyline/style/header/header.md.css"
   },
   "Icon": {
     "base": "skyline/style/icon/icon.css"
-  },
-  "SvgIcon": {
-    "base": "skyline/style/icon/svg-icon.css"
   },
   "Image": {
     "base": "skyline/style/image/image.css"
@@ -149,8 +144,8 @@
   },
   "Item": {
     "base": "skyline/style/item/item.css",
-    "md": "skyline/style/item/item.md.css",
-    "ios": "skyline/style/item/item.ios.css"
+    "ios": "skyline/style/item/item.ios.css",
+    "md": "skyline/style/item/item.md.css"
   },
   "ItemDivider": {
     "base": "skyline/style/item-divider/item-divider.css",
@@ -159,9 +154,10 @@
   },
   "Label": {
     "base": "skyline/style/label/label.css",
-    "md": "skyline/style/label/label.md.css",
-    "ios": "skyline/style/label/label.ios.css"
+    "ios": "skyline/style/label/label.ios.css",
+    "md": "skyline/style/label/label.md.css"
   },
+  "Lazy": {},
   "List": {
     "base": "skyline/style/list/list.css",
     "ios": "skyline/style/list/list.ios.css",
@@ -169,8 +165,8 @@
   },
   "ListHeader": {
     "base": "skyline/style/list-header/list-header.css",
-    "md": "skyline/style/list-header/list-header.md.css",
-    "ios": "skyline/style/list-header/list-header.ios.css"
+    "ios": "skyline/style/list-header/list-header.ios.css",
+    "md": "skyline/style/list-header/list-header.md.css"
   },
   "ListItem": {
     "base": "skyline/style/list-view/list-item.css"
@@ -180,13 +176,13 @@
   },
   "Loading": {
     "base": "skyline/style/loading/loading.css",
-    "md": "skyline/style/loading/loading.md.css",
-    "ios": "skyline/style/loading/loading.ios.css"
+    "ios": "skyline/style/loading/loading.ios.css",
+    "md": "skyline/style/loading/loading.md.css"
   },
   "Menu": {
-    "md": "skyline/style/menu/menu.md.css",
     "base": "skyline/style/menu/menu.css",
-    "ios": "skyline/style/menu/menu.ios.css"
+    "ios": "skyline/style/menu/menu.ios.css",
+    "md": "skyline/style/menu/menu.md.css"
   },
   "Note": {
     "base": "skyline/style/note/note.css",
@@ -194,34 +190,34 @@
     "md": "skyline/style/note/note.md.css"
   },
   "Overlay": {
-    "md": "skyline/style/overlay/overlay.md.css",
     "base": "skyline/style/overlay/overlay.css",
-    "ios": "skyline/style/overlay/overlay.ios.css"
+    "ios": "skyline/style/overlay/overlay.ios.css",
+    "md": "skyline/style/overlay/overlay.md.css"
   },
   "PageIndicator": {
     "base": "skyline/style/page-indicator/page-indicator.css"
   },
   "Picker": {
     "base": "skyline/style/picker/picker.css",
-    "md": "skyline/style/picker/picker.md.css",
-    "ios": "skyline/style/picker/picker.ios.css"
+    "ios": "skyline/style/picker/picker.ios.css",
+    "md": "skyline/style/picker/picker.md.css"
   },
   "PickerColumn": {
+    "base": "skyline/style/picker-column/picker-column.css",
     "ios": "skyline/style/picker-column/picker-column.ios.css",
-    "md": "skyline/style/picker-column/picker-column.md.css",
-    "base": "skyline/style/picker-column/picker-column.css"
+    "md": "skyline/style/picker-column/picker-column.md.css"
   },
   "Popover": {
-    "md": "skyline/style/popover/popover.md.css",
     "base": "skyline/style/popover/popover.css",
-    "ios": "skyline/style/popover/popover.ios.css"
+    "ios": "skyline/style/popover/popover.ios.css",
+    "md": "skyline/style/popover/popover.md.css"
+  },
+  "Popup": {
+    "base": "skyline/style/popup/popup.css",
+    "ios": "skyline/style/popup/popup.ios.css",
+    "md": "skyline/style/popup/popup.md.css"
   },
   "PopupLegacy": {},
-  "Popup": {
-    "md": "skyline/style/popup/popup.md.css",
-    "base": "skyline/style/popup/popup.css",
-    "ios": "skyline/style/popup/popup.ios.css"
-  },
   "ProgressBar": {
     "base": "skyline/style/progress/progress-bar.css"
   },
@@ -229,32 +225,37 @@
     "base": "skyline/style/progress/progress-circular.css"
   },
   "Radio": {
-    "ios": "skyline/style/radio/radio.ios.css",
     "base": "skyline/style/radio/radio.css",
+    "ios": "skyline/style/radio/radio.ios.css",
     "md": "skyline/style/radio/radio.md.css"
-  },
-  "RadioButtonGroup": {
-    "base": "skyline/style/radio-button/radio-button-group.css"
   },
   "RadioButton": {
     "base": "skyline/style/radio-button/radio-button.css"
+  },
+  "RadioButtonGroup": {
+    "base": "skyline/style/radio-button/radio-button-group.css"
   },
   "RadioIndicator": {
     "base": "skyline/style/radio-button/radio-indicator.css"
   },
   "Range": {
-    "md": "skyline/style/range/range.md.css",
+    "base": "skyline/style/range/range.css",
     "ios": "skyline/style/range/range.ios.css",
-    "base": "skyline/style/range/range.css"
+    "md": "skyline/style/range/range.md.css"
   },
   "Refresher": {
+    "base": "skyline/style/refresher/refresher.css",
     "ios": "skyline/style/refresher/refresher.ios.css",
-    "md": "skyline/style/refresher/refresher.md.css",
-    "base": "skyline/style/refresher/refresher.css"
+    "md": "skyline/style/refresher/refresher.md.css"
   },
   "RefresherContent": {},
   "Row": {
     "base": "skyline/style/row/row.css"
+  },
+  "Skyline": {
+    "base": "skyline/style/skyline.css",
+    "ios": "skyline/style/skyline.ios.css",
+    "md": "skyline/style/skyline.md.css"
   },
   "Slide": {
     "base": "skyline/style/slide/slide.css"
@@ -263,9 +264,9 @@
     "base": "skyline/style/slider/slider.css"
   },
   "Slides": {
-    "md": "skyline/style/slides/slides.md.css",
+    "base": "skyline/style/slides/slides.css",
     "ios": "skyline/style/slides/slides.ios.css",
-    "base": "skyline/style/slides/slides.css"
+    "md": "skyline/style/slides/slides.md.css"
   },
   "Spinner": {
     "base": "skyline/style/spinner/spinner.css"
@@ -273,29 +274,32 @@
   "Stepper": {
     "base": "skyline/style/stepper/stepper.css"
   },
+  "SvgIcon": {
+    "base": "skyline/style/icon/svg-icon.css"
+  },
+  "Switch": {
+    "base": "skyline/style/switch/switch.css",
+    "ios": "skyline/style/switch/switch.ios.css",
+    "md": "skyline/style/switch/switch.md.css"
+  },
   "SwitchGroup": {
     "base": "skyline/style/switch/switch-group.css"
   },
   "SwitchIndicator": {
     "base": "skyline/style/switch/switch-indicator.css"
   },
-  "Switch": {
-    "ios": "skyline/style/switch/switch.ios.css",
-    "md": "skyline/style/switch/switch.md.css",
-    "base": "skyline/style/switch/switch.css"
+  "Tab": {
+    "base": "skyline/style/tabs/tab.css"
   },
   "TabBar": {
     "base": "skyline/style/tab-bar/tab-bar.css",
-    "md": "skyline/style/tab-bar/tab-bar.md.css",
-    "ios": "skyline/style/tab-bar/tab-bar.ios.css"
+    "ios": "skyline/style/tab-bar/tab-bar.ios.css",
+    "md": "skyline/style/tab-bar/tab-bar.md.css"
   },
   "TabButton": {
+    "base": "skyline/style/tab-button/tab-button.css",
     "ios": "skyline/style/tab-button/tab-button.ios.css",
-    "md": "skyline/style/tab-button/tab-button.md.css",
-    "base": "skyline/style/tab-button/tab-button.css"
-  },
-  "Tab": {
-    "base": "skyline/style/tabs/tab.css"
+    "md": "skyline/style/tab-button/tab-button.md.css"
   },
   "Tabs": {
     "base": "skyline/style/tabs/tabs.css"
@@ -308,28 +312,24 @@
   "Thumbnail": {
     "base": "skyline/style/thumbnail/thumbnail.css"
   },
+  "Title": {
+    "base": "skyline/style/tool-title/title.css",
+    "ios": "skyline/style/tool-title/title.ios.css",
+    "md": "skyline/style/tool-title/title.md.css"
+  },
   "Toast": {
-    "md": "skyline/style/toast/toast.md.css",
     "base": "skyline/style/toast/toast.css",
-    "ios": "skyline/style/toast/toast.ios.css"
+    "ios": "skyline/style/toast/toast.ios.css",
+    "md": "skyline/style/toast/toast.md.css"
   },
   "Toolbar": {
     "base": "skyline/style/tool-bar/toolbar.css",
     "ios": "skyline/style/tool-bar/toolbar.ios.css",
     "md": "skyline/style/tool-bar/toolbar.md.css"
   },
-  "Title": {
-    "base": "skyline/style/tool-title/title.css",
-    "md": "skyline/style/tool-title/title.md.css",
-    "ios": "skyline/style/tool-title/title.ios.css"
-  },
   "Tooltip": {
     "base": "skyline/style/tooltip/tooltip.css"
   },
-  "Skyline": {
-    "base": "skyline/style/skyline.css",
-    "ios": "skyline/style/skyline.ios.css",
-    "md": "skyline/style/skyline.md.css"
-  },
+  "TreeItem": {},
   "bundle": "skyline/style/skyline.bundle.css"
 }
