@@ -1,8 +1,16 @@
 // TODO
-// support & test for ssr build
+// support & test for SSR build
 module.exports = (api, options) => {
   api.registerCommand(
     'ssr',
+    {
+      description : 'start SSR development server',
+      usage       : 'vue-cli-service SSR [options]',
+      options     : {
+        '--dev' : 'compile skyline from source',
+        // any other options supported in 'server' command
+      },
+    },
     async (args, rawArgs) => {
       if (options.pages) {
         warn('SSR for multi-pages is not supported.');
@@ -14,6 +22,7 @@ module.exports = (api, options) => {
       const { log, warn, error } = require('@vue/cli-shared-utils');
       const chalk = require('chalk');
       const { outputDir } = options;
+      const { dev = false } = args;
 
       log(
         'Preparing SSR',
@@ -63,12 +72,12 @@ module.exports = (api, options) => {
         config.externals(require('webpack-node-externals')({
           whitelist : [
             /\.css$/,
-            /^skyline/,
-            /^swiper/,
-            /^dom7/,
-            /^ssr-window/,
-            /^@popperjs/,
-          ],
+            dev ? /^skyline/ : '',
+            dev ? /^swiper/ : '',
+            dev ? /^dom7/ : '',
+            dev ? /^ssr-window/ : '',
+            dev ? /^@popperjs/ : '',
+          ].filter(Boolean),
         }));
 
         // remove html plugins
@@ -250,10 +259,12 @@ module.exports = (api, options) => {
         });
       };
 
-      api.chainWebpack(config => {
-        config.resolve.alias
-          .set('skyline', api.resolve('packages/skyline/src'));
-      });
+      if (dev) {
+        api.chainWebpack(config => {
+          config.resolve.alias
+            .set('skyline', api.resolve('packages/skyline/src'));
+        });
+      }
 
       await Promise.all([
         // ssrServer must be call before ssrClient,
@@ -263,7 +274,7 @@ module.exports = (api, options) => {
       ]);
 
       log(
-        'Running SSR',
+        `Running SSR with SKYLINE ${ require('skyline/package.json').version }`,
         `${ chalk.green('🍺') }`,
       );
     },
