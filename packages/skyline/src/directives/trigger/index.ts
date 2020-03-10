@@ -4,7 +4,7 @@ function createTrigger() {
   return {};
 }
 
-function bind(el: HTMLElement, binding: VNodeDirective) {
+function inserted(el: HTMLElement, binding: VNodeDirective) {
   (el as any).vTrigger = createTrigger();
 }
 
@@ -15,7 +15,7 @@ function unbind(el: HTMLElement) {
 }
 
 export const Trigger = {
-  bind,
+  inserted,
   unbind,
 };
 

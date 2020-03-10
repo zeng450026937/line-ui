@@ -9,7 +9,7 @@ export function useGroupItem(name: string) {
       },
     },
 
-    created() {
+    beforeMount() {
       this.itemIndex = 0;
       this.itemInGroup = false;
 

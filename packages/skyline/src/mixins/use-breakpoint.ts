@@ -108,7 +108,7 @@ export function useBreakPoint() {
       },
     },
 
-    created() {
+    beforeMount() {
       if (!hasWindow) return;
 
       on(window, 'resize', this.onResize, { passive: true });

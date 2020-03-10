@@ -76,7 +76,7 @@ function createRippleEffect(el: HTMLElement, options: RippleOption) {
   };
 }
 
-function bind(el: HTMLElement, binding: RippleVNodeDirective) {
+function inserted(el: HTMLElement, binding: RippleVNodeDirective) {
   const { modifiers, value } = binding;
   if (value === false) return;
   (el as any).vRipple = createRippleEffect(el, modifiers as RippleOption);
@@ -95,11 +95,11 @@ function update(el: HTMLElement, binding: RippleVNodeDirective) {
   if (binding.oldValue !== false) {
     unbind(el, binding);
   }
-  bind(el, binding);
+  inserted(el, binding);
 }
 
 export const Ripple = {
-  bind,
+  inserted,
   update,
   unbind,
 } as DirectiveOptions;

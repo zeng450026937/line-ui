@@ -53,7 +53,7 @@ function createClickOutside(el: HTMLElement, options: ClickOutsideOption) {
   };
 }
 
-function bind(el: HTMLElement, binding: ClickOutsideDirective) {
+function inserted(el: HTMLElement, binding: ClickOutsideDirective) {
   if (!binding.value) return;
   const vClickOutside = createClickOutside(
     el,
@@ -79,11 +79,11 @@ function update(el: HTMLElement, binding: ClickOutsideDirective) {
   if (binding.oldValue) {
     unbind(el);
   }
-  bind(el, binding);
+  inserted(el, binding);
 }
 
 export const ClickOutside = {
-  bind,
+  inserted,
   unbind,
   update,
 } as DirectiveOptions;

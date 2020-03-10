@@ -111,7 +111,7 @@ function createWaterfall(el: HTMLElement, binding: WaterfallVNodeDirective) {
   };
 }
 
-function bind(el: HTMLElement, binding: WaterfallVNodeDirective) {
+function inserted(el: HTMLElement, binding: WaterfallVNodeDirective) {
   if (!binding.value) return;
   const vWaterfall = createWaterfall(el, binding);
   (el as any).vWaterfall = vWaterfall;
@@ -132,11 +132,11 @@ function update(el: HTMLElement, binding: WaterfallVNodeDirective) {
   if (binding.oldValue) {
     unbind(el);
   }
-  bind(el, binding);
+  inserted(el, binding);
 }
 
 export const Waterfall = {
-  bind,
+  inserted,
   unbind,
   update,
 } as DirectiveOptions;

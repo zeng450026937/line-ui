@@ -13,7 +13,7 @@ export default /*#__PURE__*/ createComponent({
     /*#__PURE__*/ usePopup(),
   ],
 
-  created() {
+  beforeMount() {
     const { mode } = this;
     this.$on('animation-enter', (builder: any) => {
       builder.build = mode === 'md' ? mdEnterAnimation : iosEnterAnimation;

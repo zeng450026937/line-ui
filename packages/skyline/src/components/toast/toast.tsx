@@ -25,7 +25,7 @@ export default /*#__PURE__*/ createComponent({
     message  : String,
   },
 
-  created() {
+  beforeMount() {
     const { mode } = this;
     this.$on('animation-enter', (builder: any) => {
       builder.build = mode === 'md' ? mdEnterAnimation : iosEnterAnimation;

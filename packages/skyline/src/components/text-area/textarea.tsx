@@ -93,7 +93,7 @@ export default /*#__PURE__*/ createComponent({
     },
   },
 
-  created() {
+  beforeMount() {
     // this.$emit('pressAndHold');
     // this.$emit('pressed');
     // this.$emit('released');

@@ -210,7 +210,7 @@ export default /*#__PURE__*/ createComponent({
     },
   },
 
-  created() {
+  beforeMount() {
     this.updateRatio();
     // this.debounceChanged();
     this.disabledChanged();

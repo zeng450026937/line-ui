@@ -1,6 +1,6 @@
 import { DirectiveOptions, VNodeDirective } from 'vue';
 
-function bind(el: HTMLElement, binding: VNodeDirective) {
+function inserted(el: HTMLElement, binding: VNodeDirective) {
   const { modifiers } = binding;
   el.classList.add('line-activatable');
   if (modifiers!.instant) {
@@ -17,7 +17,7 @@ function unbind(el: HTMLElement, binding: VNodeDirective) {
 }
 
 export const Activatable = {
-  bind,
+  inserted,
   unbind,
 } as DirectiveOptions;
 

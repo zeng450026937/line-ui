@@ -108,7 +108,7 @@ export function usePopup(options?: PopupOptions) {
       },
     },
 
-    created() {
+    beforeMount() {
       // This property holds whether the popup is fully open.
       // The popup is considered opened when it's visible
       // and neither the enter nor exit transitions are running.

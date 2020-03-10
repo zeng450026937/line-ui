@@ -75,7 +75,7 @@ export default /*#__PURE__*/ createComponent({
     };
   },
 
-  created() {
+  beforeMount() {
     this.$on('animation-enter', (builder: any) => {
       builder.build = iosEnterAnimation;
     });

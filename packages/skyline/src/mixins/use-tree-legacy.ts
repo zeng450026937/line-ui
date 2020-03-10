@@ -70,7 +70,7 @@ export function useTreeItem(name: string, options?: ModelOptions) {
       },
     },
 
-    created() {
+    beforeMount() {
       const onItemCheckState = (item: Vue, state: any) => {
         const index = this.checkedItem.indexOf(item);
         if (state === CheckState.Checked && index === -1) {
@@ -129,8 +129,8 @@ export function useTreeItemWithModel(name: string, options?: ModelOptions) {
       },
     },
 
-    created() {
-      this;
+    beforeMount() {
+      //
     },
   });
 }

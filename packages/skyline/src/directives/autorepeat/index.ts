@@ -101,7 +101,7 @@ function createAutoRepeat(el: HTMLElement, options: AutoRepeatOption) {
   };
 }
 
-function bind(el: HTMLElement, binding: AutoRepeatDirective) {
+function inserted(el: HTMLElement, binding: AutoRepeatDirective) {
   if (binding.value === false) return;
   const vAutoRepeat = createAutoRepeat(el, binding.value as AutoRepeatOption);
   (el as any).vAutoRepeat = vAutoRepeat;
@@ -113,7 +113,7 @@ function update(el: HTMLElement, binding: AutoRepeatDirective) {
   }
   const { vAutoRepeat } = (el as any);
   if (!vAutoRepeat) {
-    bind(el, binding);
+    inserted(el, binding);
     return;
   }
   vAutoRepeat.stop();
@@ -128,7 +128,7 @@ function unbind(el: HTMLElement, binding: AutoRepeatDirective) {
 }
 
 export const AutoRepeat = {
-  bind,
+  inserted,
   update,
   unbind,
 } as DirectiveOptions;

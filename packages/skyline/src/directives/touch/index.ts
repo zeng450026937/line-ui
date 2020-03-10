@@ -111,7 +111,7 @@ function createHandlers(value: TouchHandlers): TouchStoredHandlers {
   };
 }
 
-function bind(el: HTMLElement, binding: TouchVNodeDirective) {
+function inserted(el: HTMLElement, binding: TouchVNodeDirective) {
   const value = binding.value!;
   const target = value.parent ? el.parentElement : el;
   const options = value.options || { passive: true };
@@ -150,11 +150,11 @@ function update(el: HTMLElement, binding: TouchVNodeDirective) {
   if (binding.oldValue) {
     unbind(el);
   }
-  bind(el, binding);
+  inserted(el, binding);
 }
 
 export const Touch = {
-  bind,
+  inserted,
   unbind,
   update,
 } as DirectiveOptions;

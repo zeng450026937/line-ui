@@ -97,7 +97,7 @@ export function useTreeItem(name: string) {
       },
     },
 
-    created() {
+    beforeMount() {
       let deep = 0;
       let group = this[name];
       while (group) {

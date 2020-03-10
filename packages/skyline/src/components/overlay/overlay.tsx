@@ -20,7 +20,7 @@ export default /*#__PURE__*/ createComponent({
     },
   },
 
-  created() {
+  beforeMount() {
     this.lastClick = -10000;
   },
 

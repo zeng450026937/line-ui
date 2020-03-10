@@ -22,7 +22,7 @@ export default /*#__PURE__*/ createComponent({
     };
   },
 
-  created() {
+  beforeMount() {
     this.icon = this.pullingIcon;
     this.spinner = this.refreshingSpinner;
   },

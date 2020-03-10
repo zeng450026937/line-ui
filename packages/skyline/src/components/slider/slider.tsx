@@ -265,7 +265,7 @@ export default /*#__PURE__*/ createComponent({
     },
   },
 
-  created() {
+  beforeMount() {
     this.setPosition(this.value);
     this.$emit('moved');
   },

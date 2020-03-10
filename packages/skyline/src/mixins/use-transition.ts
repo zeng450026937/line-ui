@@ -21,7 +21,7 @@ export function useTransition(options?: TransitionOptions) {
       transition : null as any,
     },
 
-    created() {
+    beforeMount() {
       this.useTransition = {
         transition : {
           appear,

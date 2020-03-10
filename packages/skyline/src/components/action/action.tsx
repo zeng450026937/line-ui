@@ -23,7 +23,7 @@ export default /*#__PURE__*/ createComponent({
     },
   },
 
-  created() {
+  beforeMount() {
     this.$on('clicked', (...args: any[]) => {
       this.$emit('triggered', ...args);
     });

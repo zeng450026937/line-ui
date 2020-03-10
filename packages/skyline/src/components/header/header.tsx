@@ -16,7 +16,7 @@ export default /*#__PURE__*/ createComponent({
     };
   },
 
-  created() {
+  beforeMount() {
     this.isAppHeader = this.App === this.$parent;
   },
 

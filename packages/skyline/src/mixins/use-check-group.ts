@@ -41,7 +41,7 @@ export function useCheckGroup(name: string) {
       },
     },
 
-    created() {
+    beforeMount() {
       const onItemChecked = (item: Vue, checked: boolean) => {
         this.$emit('item:checked', item, !!checked);
         if (this.exclusive) {

@@ -440,7 +440,7 @@ export default /*#__PURE__*/ createComponent({
     },
   },
 
-  created() {
+  beforeMount() {
     const ITEM_INITIAL_SIZE = 50;
     const LIST_VIEW_INITIAL_SIZE = 500;
     const count = LIST_VIEW_INITIAL_SIZE / ITEM_INITIAL_SIZE;

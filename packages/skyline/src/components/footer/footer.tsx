@@ -15,7 +15,7 @@ export default /*#__PURE__*/ createComponent({
     };
   },
 
-  created() {
+  beforeMount() {
     this.isAppFooter = this.App === this.$parent;
   },
 

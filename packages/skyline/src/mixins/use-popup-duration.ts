@@ -9,7 +9,7 @@ export function usePopupDuration() {
       duration : Number,
     },
 
-    created() {
+    beforeMount() {
       this.$on('opened', () => {
         if (this.duration > 0) {
           this.durationTimeout = setTimeout(() => this.close('timeout'), this.duration);

@@ -217,7 +217,7 @@ export default /*#__PURE__*/ createComponent({
     },
   },
 
-  created() {
+  beforeMount() {
     this.$emit('first.moved');
     this.$emit('second.moved');
   },
