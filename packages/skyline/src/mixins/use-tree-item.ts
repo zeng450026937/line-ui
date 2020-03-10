@@ -105,9 +105,7 @@ export function useTreeItem(name: string) {
         group = group[name];
       }
       this.itemDeep = deep;
-    },
 
-    beforeMount() {
       this.checked = this.checked || (
         isDef(this.$attrs.checked)
           && (this.$attrs.checked as string | boolean) !== false

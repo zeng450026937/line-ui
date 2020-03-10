@@ -220,9 +220,7 @@ export function usePopup(options?: PopupOptions) {
       };
       this.$on('overlay-tap', onClickOutside);
       this.$on('clickoutside', onClickOutside);
-    },
 
-    beforeMount() {
       this.visible = this.inited = this.visible || (
         isDef(this.$attrs.visible)
           && (this.$attrs.visible as string | boolean) !== false

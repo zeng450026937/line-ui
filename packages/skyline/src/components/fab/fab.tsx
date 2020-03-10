@@ -32,9 +32,7 @@ export default /*#__PURE__*/ createComponent({
       console.log('clickoutside');
       this.activated = false;
     });
-  },
 
-  beforeMount() {
     this.activated = this.activated || (
       isDef(this.$attrs.activated)
         && (this.$attrs.activated as string | boolean) !== false
