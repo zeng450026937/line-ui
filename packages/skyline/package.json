@@ -35,5 +35,10 @@
     "babel": true
   },
   "author": "Yealink Inc",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@popperjs/core": "^2.0.6",
+    "@types/swiper": "^5.2.1",
+    "swiper": "^5.3.1"
+  }
 }

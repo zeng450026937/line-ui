@@ -1,1 +1,1 @@
-# @skyline/demo
+# @skyline/quick-start

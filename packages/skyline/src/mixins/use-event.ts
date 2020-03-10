@@ -24,7 +24,7 @@ export function invoke(vm: any, name: string | Function, ...args: any[]) {
 }
 
 export function useEvent<T extends EventOptions = EventOptions>(options: T) {
-  let app = document.body;
+  let app: HTMLElement;
   const { global = false } = options;
 
   function eventHandler(this: VueInstance, ev: Event) {
@@ -36,7 +36,7 @@ export function useEvent<T extends EventOptions = EventOptions>(options: T) {
   function bind(this: VueInstance) {
     const { useEvent = {} } = this;
     if (useEvent.binded) return;
-    app = document.querySelector('[skyline-app]') || app;
+    app = document.querySelector('[skyline-app]') || document.body;
     const handler = useEvent.handler = eventHandler.bind(this);
     const { event, passive = false, capture = false } = options;
     const events = isArray(event) ? event : [event];

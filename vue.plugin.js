@@ -1,4 +1,4 @@
-const { log, info, warn } = require('@vue/cli-shared-utils');
+const { log, warn } = require('@vue/cli-shared-utils');
 const path = require('path');
 const glob = require('globby');
 

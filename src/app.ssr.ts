@@ -1,4 +1,4 @@
-import { createApp } from './src';
+import { createApp } from './src/create-app';
 
 /* eslint-disable prefer-promise-reject-errors */
 export default (ssrContext: any) => {
@@ -23,11 +23,12 @@ export default (ssrContext: any) => {
       const matchedComponents = router.getMatchedComponents();
       // no matched routes, reject with 404
       if (!matchedComponents.length) {
-        return reject({ code: 404 });
+        reject({ code: 404 });
+        return;
       }
 
       // the Promise should resolve to the app instance so it can be rendered
-      ssrContext.$getMetaHTML = app.$getMetaHTML(app);
+      // ssrContext.$getMetaHTML = app.$getMetaHTML(app);
       resolve(app);
     }, reject);
   });

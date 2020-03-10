@@ -1,4 +1,1 @@
-import { App } from 'skyline';
-
-const { name } = App;
-console.log(name);
+// skyline quick start

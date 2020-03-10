@@ -21,7 +21,7 @@ export default /*#__PURE__*/ createComponent({
     };
   },
 
-  beforeCreate() {
+  beforeMount() {
     // TODO:
     // config must be setup before using
     // while child content is rendered before created
