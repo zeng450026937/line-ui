@@ -8,7 +8,10 @@ module.exports = (api, options) => {
     },
     (args, rawArgs) => {
       const target = 'quick-start';
-      const packageDir = api.resolve(`packages/${ target }`);
+      const packagesDir = api.resolve('packages');
+      const packageDir = `${ packagesDir }/${ target }`;
+
+      process.env.TARGET = target;
 
       api.chainWebpack(config => {
         config.entry('app')
@@ -22,17 +25,6 @@ module.exports = (api, options) => {
           // check kebab case components
           .options('kebab')
           .after('vue-loader');
-
-        // config.module.rule('js')
-        //   .use('babel-loader')
-        //   .tap(options => {
-        //     return {
-        //       ...options,
-        //       babelrc  : false,
-        //       root     : packageDir,
-        //       rootMode : 'upward',
-        //     };
-        //   });
       });
 
       api.service.run('serve', args, rawArgs);
