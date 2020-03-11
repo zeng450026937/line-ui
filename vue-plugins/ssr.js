@@ -12,10 +12,6 @@ module.exports = (api, options) => {
       },
     },
     async (args, rawArgs) => {
-      if (options.pages) {
-        warn('SSR for multi-pages is not supported.');
-      }
-
       const fs = require('fs-extra');
       const LRU = require('lru-cache');
       const { createBundleRenderer } = require('vue-server-renderer');
@@ -24,8 +20,12 @@ module.exports = (api, options) => {
       const { outputDir } = options;
       const { dev = false } = args;
 
+      if (options.pages) {
+        warn('SSR for multi-pages is not supported.');
+      }
+
       log(
-        'Preparing SSR',
+        'Preparing SSR...',
         `${ chalk.green('☕️') }`,
       );
 
@@ -111,7 +111,7 @@ module.exports = (api, options) => {
 
         await new Promise((resolve, reject) => {
           log(
-            'Starting SSR server...',
+            'Starting SSR...',
             `${ chalk.green('🚀') }`,
           );
 

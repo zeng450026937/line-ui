@@ -16,16 +16,17 @@ const relative = (from, to) => path.relative(from, to).split('\\').join('/');
 
 const args = require('minimist')(process.argv.slice(2));
 
-const buildAll = args.all || args.a || args._.length === 0;
+const isRelease = args.release;
+const buildAll = args.all || args.a || isRelease || args._.length === 0;
 const genBundle = args.gen || buildAll;
 const buildBundle = args.bundle || buildAll;
 const buildComp = args.comp || buildAll;
-const clearDist = args.clear || buildAll;
+const clearDist = args.clear || isRelease;
 const distFolder = args.dist || args.d;
 
 const pkgName = require(resolve('package.json')).name;
 const srcDir = resolve('src/components');
-const distDir = resolve(distFolder || 'style');
+const distDir = resolve(distFolder || 'dist/style');
 
 const styleDir = resolve('src/components');
 const bundleDir = resolve('src/style');
@@ -189,15 +190,16 @@ async function run() {
   sideEffects.bundle = effectPath(distDir, defaultBundle);
 
   await fs.writeFile(
-    `${ distDir }/sideEffect.json`,
+    `${ distDir }/effects.json`,
     stringifyJSON(sideEffects, null, 2),
   );
 
   logger.done(`total :  ${ count } styles`);
 }
 
-function effectPath(distDir, filename) {
-  return `${ pkgName }/${ relative(packageDir, distDir) }/${ path.basename(filename, '.scss') }.css`;
+function effectPath(dir, filename, css = true) {
+  return `${ pkgName }/${ relative(packageDir, dir) }/`
+   + `${ path.basename(filename, '.scss') }.${ css ? 'css' : 'scss' }`;
 }
 
 // stable stringify with alphabetically

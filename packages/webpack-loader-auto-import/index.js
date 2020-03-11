@@ -29,9 +29,10 @@ import { ${ components.join(',') } } from 'skyline';
 
 export default function (component) {
   const { options } = component;
-  const components = { 
-    ${ components.map(component => `[${ component.name }]: ${ component }`).join(',\n') }
-  },
+  const components = {
+    ${ components.map(component => `[${ component }.name]: ${ component }`).join(',\n    ') }
+  };
+
   options.components = Object.assign(
     components,
     options.components,

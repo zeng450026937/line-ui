@@ -1,17 +1,16 @@
-
 module.exports = (api, options) => {
   api.registerCommand(
-    'serve:playground',
+    'serve:website',
     {
       description : 'serve payground',
-      usage       : 'vue-cli-service serve:playground',
+      usage       : 'vue-cli-service serve:website',
       details     : 'TBD',
     },
     (args, rawArgs) => {
       api.chainWebpack(config => {
         config.entry('app')
           .clear()
-          .add(api.resolve('packages/playground/app.ts'));
+          .add(api.resolve('packages/website/app.ts'));
 
         // for development, set 'skyline' alias to source code
         config.resolve.alias
@@ -23,7 +22,7 @@ module.exports = (api, options) => {
   );
 
   api.registerCommand(
-    'build:playground',
+    'build:website',
     {
       description : 'build payground',
       usage       : 'vue-cli-service build:payground',
@@ -33,7 +32,7 @@ module.exports = (api, options) => {
       api.chainWebpack(config => {
         config.entry('app')
           .clear()
-          .add(api.resolve('packages/playground/app.ts'));
+          .add(api.resolve('packages/website/app.ts'));
 
         // for production, 'skyline' is external
         config.externals({
@@ -51,6 +50,6 @@ module.exports = (api, options) => {
 };
 
 module.exports.defaultModes = {
-  'serve:playground' : 'development',
-  'build:playground' : 'production',
+  'serve:website' : 'development',
+  'build:website' : 'production',
 };

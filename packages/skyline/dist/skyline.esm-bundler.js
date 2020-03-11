@@ -439,7 +439,7 @@ function useGroupItem(name) {
                 default: undefined,
             },
         },
-        created() {
+        beforeMount() {
             this.itemIndex = 0;
             this.itemInGroup = false;
             const group = this[name];
@@ -520,7 +520,7 @@ function createRippleEffect(el, options) {
         options,
     };
 }
-function bind(el, binding) {
+function inserted(el, binding) {
     const { modifiers, value } = binding;
     if (value === false)
         return;
@@ -539,10 +539,10 @@ function update(el, binding) {
     if (binding.oldValue !== false) {
         unbind(el);
     }
-    bind(el, binding);
+    inserted(el, binding);
 }
 const Ripple = {
-    bind,
+    inserted,
     update,
     unbind,
 };
@@ -595,7 +595,7 @@ createComponent$1({
     }
   },
 
-  created() {
+  beforeMount() {
     this.$on('clicked', (...args) => {
       this.$emit('triggered', ...args);
     });
@@ -681,7 +681,7 @@ function useModel(proxy, options = {}, defined = false) {
 }
 
 const CONTAINER = '[skyline-app]';
-function inserted(el, binding) {
+function inserted$1(el, binding) {
     if (binding.value === false)
         return;
     const container = binding.arg || CONTAINER;
@@ -717,10 +717,10 @@ function update$1(el, binding) {
     if (binding.oldValue !== false) {
         unbind$1(el);
     }
-    inserted(el, binding);
+    inserted$1(el, binding);
 }
 const Remote = {
-    inserted,
+    inserted: inserted$1,
     update: update$1,
     unbind: unbind$1,
 };
@@ -789,7 +789,7 @@ function useTransition(options) {
             // string | object | false
             transition: null,
         },
-        created() {
+        beforeMount() {
             this.useTransition = {
                 transition: {
                     appear,
@@ -2821,7 +2821,7 @@ function usePopup(options) {
                 default: true,
             },
         },
-        created() {
+        beforeMount() {
             // This property holds whether the popup is fully open.
             // The popup is considered opened when it's visible
             // and neither the enter nor exit transitions are running.
@@ -2917,8 +2917,6 @@ function usePopup(options) {
             };
             this.$on('overlay-tap', onClickOutside);
             this.$on('clickoutside', onClickOutside);
-        },
-        beforeMount() {
             this.visible = this.inited = this.visible || (isDef(this.$attrs.visible)
                 && this.$attrs.visible !== false);
         },
@@ -3017,7 +3015,7 @@ createComponent$2({
     }
   },
 
-  created() {
+  beforeMount() {
     this.lastClick = -10000;
   },
 
@@ -3189,7 +3187,7 @@ createComponent$3({
 
   },
 
-  created() {
+  beforeMount() {
     const {
       mode
     } = this;
@@ -3387,7 +3385,7 @@ createComponent$4({
     }
   },
 
-  created() {
+  beforeMount() {
     const {
       mode
     } = this;
@@ -3578,6 +3576,13 @@ const pointerCoord = (ev) => {
 };
 
 const hasWindow = typeof window !== 'undefined';
+let supportsVars;
+const isSupportsVars = () => {
+    if (supportsVars === undefined) {
+        supportsVars = !!(window.CSS && window.CSS.supports && window.CSS.supports('--a: 0'));
+    }
+    return supportsVars;
+};
 const now$2 = (ev) => ev.timeStamp || Date.now();
 
 /* eslint-disable @typescript-eslint/no-use-before-define */
@@ -3807,7 +3812,7 @@ createComponent$5({
     };
   },
 
-  beforeCreate() {
+  beforeMount() {
     // TODO:
     // config must be setup before using
     // while child content is rendered before created
@@ -4488,7 +4493,7 @@ function useCheckGroup(name) {
                 }
             },
         },
-        created() {
+        beforeMount() {
             const onItemChecked = (item, checked) => {
                 this.$emit('item:checked', item, !!checked);
                 if (this.exclusive) {
@@ -4955,7 +4960,9 @@ createComponent$p({
 
 
       const colSize = columns === 'auto' ? 'auto' // If CSS supports variables we should use the grid columns var
-      :  `${columns / 12 * 100}%`;
+      : isSupportsVars() ? `calc(calc(${columns} / var(--ion-grid-columns, 12)) * 100%)` // Convert the columns to a percentage by dividing by the total number
+      // of columns (12) and then multiplying by 100
+      : `${columns / 12 * 100}%`;
       /* eslint-disable-next-line consistent-return */
 
       return {
@@ -4975,7 +4982,10 @@ createComponent$p({
       // 12 we can position the column, else default to auto
 
 
-      const amount =  columns > 0 && columns < 12 ? `${columns / 12 * 100}%` : 'auto';
+      const amount = isSupportsVars() // If CSS supports variables we should use the grid columns var
+      ? `calc(calc(${columns} / var(--ion-grid-columns, 12)) * 100%)` // Convert the columns to a percentage by dividing by the total number
+      // of columns (12) and then multiplying by 100
+      : columns > 0 && columns < 12 ? `${columns / 12 * 100}%` : 'auto';
       /* eslint-disable-next-line consistent-return */
 
       return {
@@ -5982,7 +5992,7 @@ createComponent$u({
     };
   },
 
-  created() {
+  beforeMount() {
     this.$on('animation-enter', builder => {
       builder.build = iosEnterAnimation$2;
     });
@@ -7286,7 +7296,7 @@ function invoke(vm, name, ...args) {
     return isFunction(name) ? name.call(vm, ...args) : vm[name] && vm[name](...args);
 }
 function useEvent(options) {
-    let app = document.body;
+    let app;
     const { global = false } = options;
     function eventHandler(ev) {
         const { condition, handler } = options;
@@ -7298,7 +7308,7 @@ function useEvent(options) {
         const { useEvent = {} } = this;
         if (useEvent.binded)
             return;
-        app = document.querySelector('[skyline-app]') || app;
+        app = document.querySelector('[skyline-app]') || document.body;
         const handler = useEvent.handler = eventHandler.bind(this);
         const { event, passive = false, capture = false } = options;
         const events = isArray(event) ? event : [event];
@@ -7440,14 +7450,11 @@ createComponent$y({
     edge: Boolean
   },
 
-  created() {
+  beforeMount() {
     this.$on('clickoutside', () => {
       console.log('clickoutside');
       this.activated = false;
     });
-  },
-
-  beforeMount() {
     this.activated = this.activated || isDef(this.$attrs.activated) && this.$attrs.activated !== false;
   },
 
@@ -7612,7 +7619,7 @@ createComponent$A({
     };
   },
 
-  created() {
+  beforeMount() {
     this.isAppFooter = this.App === this.$parent;
   },
 
@@ -7682,7 +7689,7 @@ createComponent$C({
     };
   },
 
-  created() {
+  beforeMount() {
     this.isAppHeader = this.App === this.$parent;
   },
 
@@ -7846,7 +7853,7 @@ function useTreeItem(name) {
                 this.checkState = nextCheckState;
             },
         },
-        created() {
+        beforeMount() {
             let deep = 0;
             let group = this[name];
             while (group) {
@@ -7854,8 +7861,6 @@ function useTreeItem(name) {
                 group = group[name];
             }
             this.itemDeep = deep;
-        },
-        beforeMount() {
             this.checked = this.checked || (isDef(this.$attrs.checked)
                 && this.$attrs.checked !== false);
         },
@@ -9695,7 +9700,7 @@ createComponent$P({
 
   },
 
-  created() {
+  beforeMount() {
     const ITEM_INITIAL_SIZE = 50;
     const LIST_VIEW_INITIAL_SIZE = 500;
     const count = LIST_VIEW_INITIAL_SIZE / ITEM_INITIAL_SIZE;
@@ -9780,7 +9785,7 @@ function usePopupDuration() {
             // The default value is -1.
             duration: Number,
         },
-        created() {
+        beforeMount() {
             this.$on('opened', () => {
                 if (this.duration > 0) {
                     this.durationTimeout = setTimeout(() => this.close('timeout'), this.duration);
@@ -10115,7 +10120,7 @@ createComponent$R({
     spinner: String
   },
 
-  created() {
+  beforeMount() {
     const {
       mode
     } = this;
@@ -11499,12 +11504,13 @@ createComponent$V({
   /*#__PURE__*/
   usePopup()],
 
-  created() {
+  beforeMount() {
     const {
       mode
     } = this;
     this.$on('animation-enter', builder => {
       builder.build = mode === 'md' ? mdEnterAnimation$3 : iosEnterAnimation$4;
+      builder.options = this.event;
     });
     this.$on('animation-leave', builder => {
       builder.build = mode === 'md' ? mdLeaveAnimation$3 : iosLeaveAnimation$4;
@@ -11690,7 +11696,7 @@ createComponent$X({
   /*#__PURE__*/
   usePopup()],
 
-  created() {
+  beforeMount() {
     const {
       mode
     } = this;
@@ -12487,7 +12493,7 @@ createComponent$12({
 
   },
 
-  created() {
+  beforeMount() {
     this.updateRatio(); // this.debounceChanged();
 
     this.disabledChanged();
@@ -13833,7 +13839,7 @@ createComponent$14({
     };
   },
 
-  created() {
+  beforeMount() {
     this.icon = this.pullingIcon;
     this.spinner = this.refreshingSpinner;
   },
@@ -14219,7 +14225,7 @@ createComponent$17({
 
   },
 
-  created() {
+  beforeMount() {
     this.setPosition(this.value);
     this.$emit('moved');
   },
@@ -20260,7 +20266,7 @@ createComponent$1h({
 
   },
 
-  created() {// this.$emit('pressAndHold');
+  beforeMount() {// this.$emit('pressAndHold');
     // this.$emit('pressed');
     // this.$emit('released');
   },
@@ -20557,7 +20563,7 @@ createComponent$1j({
     message: String
   },
 
-  created() {
+  beforeMount() {
     const {
       mode
     } = this;
@@ -21466,7 +21472,7 @@ var createPopper =
 /*#__PURE__*/
 popperGenerator();
 
-function inserted$1(el, binding) {
+function inserted$2(el, binding) {
     if (!binding.value)
         return;
     const { value: callback, modifiers: options = { passive: true }, } = binding;
@@ -21504,10 +21510,10 @@ function update$3(el, binding) {
     if (binding.oldValue) {
         unbind$2(el);
     }
-    inserted$1(el, binding);
+    inserted$2(el, binding);
 }
 const Hover = {
-    inserted: inserted$1,
+    inserted: inserted$2,
     unbind: unbind$2,
     update: update$3,
 };
@@ -21553,7 +21559,7 @@ createComponent$1m({
 
   },
 
-  created() {
+  beforeMount() {
     this.$on('animation-enter', builder => {
       builder.build = baseEl => {
         const {
@@ -21734,7 +21740,7 @@ var components$1 = /*#__PURE__*/Object.freeze({
   Tooltip: tooltip
 });
 
-function bind$1(el, binding) {
+function inserted$3(el, binding) {
     const { modifiers } = binding;
     el.classList.add('line-activatable');
     if (modifiers.instant) {
@@ -21749,7 +21755,7 @@ function unbind$3(el, binding) {
     }
 }
 const Activatable = {
-    bind: bind$1,
+    inserted: inserted$3,
     unbind: unbind$3,
 };
 
@@ -21829,7 +21835,7 @@ function createAutoRepeat(el, options) {
         destroy,
     };
 }
-function bind$2(el, binding) {
+function inserted$4(el, binding) {
     if (binding.value === false)
         return;
     const vAutoRepeat = createAutoRepeat(el, binding.value);
@@ -21841,7 +21847,7 @@ function update$4(el, binding) {
     }
     const { vAutoRepeat } = el;
     if (!vAutoRepeat) {
-        bind$2(el, binding);
+        inserted$4(el, binding);
         return;
     }
     vAutoRepeat.stop();
@@ -21855,7 +21861,7 @@ function unbind$4(el, binding) {
     delete el.vAutoRepeat;
 }
 const AutoRepeat = {
-    bind: bind$2,
+    inserted: inserted$4,
     update: update$4,
     unbind: unbind$4,
 };
@@ -21887,7 +21893,7 @@ function createClickOutside(el, options) {
         destroy,
     };
 }
-function bind$3(el, binding) {
+function inserted$5(el, binding) {
     if (!binding.value)
         return;
     const vClickOutside = createClickOutside(el, {
@@ -21910,15 +21916,15 @@ function update$5(el, binding) {
     if (binding.oldValue) {
         unbind$5(el);
     }
-    bind$3(el, binding);
+    inserted$5(el, binding);
 }
 const ClickOutside = {
-    bind: bind$3,
+    inserted: inserted$5,
     unbind: unbind$5,
     update: update$5,
 };
 
-function inserted$2(el, binding) {
+function inserted$6(el, binding) {
     if (!binding.value)
         return;
     const config = {
@@ -21941,15 +21947,15 @@ function update$6(el, binding) {
     if (binding.oldValue) {
         unbind$6(el);
     }
-    inserted$2(el, binding);
+    inserted$6(el, binding);
 }
 const Gesture = {
-    inserted: inserted$2,
+    inserted: inserted$6,
     unbind: unbind$6,
     update: update$6,
 };
 
-function inserted$3(el, binding) {
+function inserted$7(el, binding) {
     if (!binding.value)
         return;
     const modifiers = binding.modifiers || {};
@@ -22004,15 +22010,15 @@ function update$7(el, binding) {
     if (binding.oldValue) {
         unbind$7(el);
     }
-    inserted$3(el, binding);
+    inserted$7(el, binding);
 }
 const Intersect = {
-    inserted: inserted$3,
+    inserted: inserted$7,
     update: update$7,
     unbind: unbind$7,
 };
 
-function inserted$4(el, binding) {
+function inserted$8(el, binding) {
     if (!binding.value)
         return;
     const modifiers = binding.modifiers || {};
@@ -22070,15 +22076,15 @@ function update$8(el, binding) {
     if (binding.oldValue) {
         unbind$8(el);
     }
-    inserted$4(el, binding);
+    inserted$8(el, binding);
 }
 const Mutate = {
-    inserted: inserted$4,
+    inserted: inserted$8,
     unbind: unbind$8,
     update: update$8,
 };
 
-function inserted$5(el, binding) {
+function inserted$9(el, binding) {
     if (!binding.value)
         return;
     const { value: callback, modifiers: options = { passive: true }, } = binding;
@@ -22109,15 +22115,15 @@ function update$9(el, binding) {
     if (binding.oldValue) {
         unbind$9(el);
     }
-    inserted$5(el, binding);
+    inserted$9(el, binding);
 }
 const Resize$1 = {
-    inserted: inserted$5,
+    inserted: inserted$9,
     unbind: unbind$9,
     update: update$9,
 };
 
-function inserted$6(el, binding) {
+function inserted$a(el, binding) {
     const callback = binding.value;
     const options = binding.options || { passive: true };
     const target = binding.arg ? document.querySelector(binding.arg) : window;
@@ -22148,10 +22154,10 @@ function update$a(el, binding) {
     if (binding.oldValue) {
         unbind$a(el);
     }
-    inserted$6(el, binding);
+    inserted$a(el, binding);
 }
 const Scroll = {
-    inserted: inserted$6,
+    inserted: inserted$a,
     unbind: unbind$a,
     update: update$a,
 };
@@ -22206,7 +22212,7 @@ const createSwipeBackGesture = (el, canStartHandler, onStartHandler, onMoveHandl
     });
 };
 
-function inserted$7(el, binding) {
+function inserted$b(el, binding) {
     if (!binding.value)
         return;
     const { canStartHandler = NO, onStartHandler = NOOP, onMoveHandler = NOOP, onEndHandler = NOOP, } = binding.value;
@@ -22226,10 +22232,10 @@ function update$b(el, binding) {
     if (binding.oldValue) {
         unbind$b(el);
     }
-    inserted$7(el, binding);
+    inserted$b(el, binding);
 }
 const SwipeBack = {
-    inserted: inserted$7,
+    inserted: inserted$b,
     unbind: unbind$b,
     update: update$b,
 };
@@ -22294,7 +22300,7 @@ function createHandlers(value) {
         touchmove: (e) => touchmove(e, wrapper),
     };
 }
-function bind$4(el, binding) {
+function inserted$c(el, binding) {
     const value = binding.value;
     const target = value.parent ? el.parentElement : el;
     const options = value.options || { passive: true };
@@ -22328,10 +22334,10 @@ function update$c(el, binding) {
     if (binding.oldValue) {
         unbind$c(el);
     }
-    bind$4(el, binding);
+    inserted$c(el, binding);
 }
 const Touch = {
-    bind: bind$4,
+    inserted: inserted$c,
     unbind: unbind$c,
     update: update$c,
 };
@@ -22339,7 +22345,7 @@ const Touch = {
 function createTrigger() {
     return {};
 }
-function bind$5(el, binding) {
+function inserted$d(el, binding) {
     el.vTrigger = createTrigger();
 }
 function unbind$d(el) {
@@ -22348,7 +22354,7 @@ function unbind$d(el) {
     delete el.vTrigger;
 }
 const Trigger = {
-    bind: bind$5,
+    inserted: inserted$d,
     unbind: unbind$d,
 };
 
@@ -22488,7 +22494,7 @@ function useBreakPoint() {
                 this.clientWidth = getClientWidth();
             },
         },
-        created() {
+        beforeMount() {
             if (!hasWindow)
                 return;
             on(window, 'resize', this.onResize, { passive: true });

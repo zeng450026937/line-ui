@@ -1,12 +1,24 @@
 module.exports = (_, options) => {
   const sideEffectPlugin = require('@skyline/babel-plugin-effect');
-  const sideEffect = require('skyline/style/sideEffect.json');
+  const sideEffect = require('skyline/dist/style/effects.json');
 
   const {
     theme = 'ios',
-    fullImport = process.env.NODE_ENV === 'development',
+    fullImport = true,
     memberImport = true,
   } = options;
+
+  const effect = (importName, isFullImport) => {
+    importName = isFullImport ? 'default' : importName;
+
+    const effect = sideEffect[importName];
+    const effects = [
+      effect[theme] || effect.base,
+      sideEffect.bundle,
+    ];
+
+    return effects;
+  };
 
   return {
     plugins : [
@@ -14,14 +26,7 @@ module.exports = (_, options) => {
         sideEffectPlugin,
         {
           skyline : {
-            effect(importName, isFullImport) {
-              const effect = sideEffect[isFullImport ? 'default' : importName];
-              const effects = [
-                sideEffect.bundle,
-                effect[theme] || effect.base,
-              ];
-              return effects;
-            },
+            effect,
             fullImport,
             memberImport,
           },

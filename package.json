@@ -18,6 +18,7 @@
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "spa": "vue-cli-service spa",
     "ssr": "vue-cli-service ssr",
+    "quickstart": "vue-cli-service quickstart",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "playground": "yarn serve:playground",

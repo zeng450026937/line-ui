@@ -1,4 +1,4 @@
-import { createApp } from './src/create-app';
+import { createApp } from './create-app';
 
 const { app, router } = createApp();
 

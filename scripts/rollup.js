@@ -168,7 +168,10 @@ async function build(target) {
     for (const script of scripts) {
       await execa(
         'node',
-        [resolve(script)],
+        [
+          resolve(script),
+          `${ isRelease ? '--release' : '' }`,
+        ].filter(Boolean),
         {
           stdio : 'inherit',
           env   : {

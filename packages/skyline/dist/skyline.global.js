@@ -441,7 +441,7 @@ var Skyline = (function (exports, Vue) {
                   default: undefined,
               },
           },
-          created() {
+          beforeMount() {
               this.itemIndex = 0;
               this.itemInGroup = false;
               const group = this[name];
@@ -522,7 +522,7 @@ var Skyline = (function (exports, Vue) {
           options,
       };
   }
-  function bind(el, binding) {
+  function inserted(el, binding) {
       const { modifiers, value } = binding;
       if (value === false)
           return;
@@ -541,10 +541,10 @@ var Skyline = (function (exports, Vue) {
       if (binding.oldValue !== false) {
           unbind(el);
       }
-      bind(el, binding);
+      inserted(el, binding);
   }
   const Ripple = {
-      bind,
+      inserted,
       update,
       unbind,
   };
@@ -597,7 +597,7 @@ var Skyline = (function (exports, Vue) {
       }
     },
 
-    created() {
+    beforeMount() {
       this.$on('clicked', (...args) => {
         this.$emit('triggered', ...args);
       });
@@ -683,7 +683,7 @@ var Skyline = (function (exports, Vue) {
   }
 
   const CONTAINER = '[skyline-app]';
-  function inserted(el, binding) {
+  function inserted$1(el, binding) {
       if (binding.value === false)
           return;
       const container = binding.arg || CONTAINER;
@@ -719,10 +719,10 @@ var Skyline = (function (exports, Vue) {
       if (binding.oldValue !== false) {
           unbind$1(el);
       }
-      inserted(el, binding);
+      inserted$1(el, binding);
   }
   const Remote = {
-      inserted,
+      inserted: inserted$1,
       update: update$1,
       unbind: unbind$1,
   };
@@ -791,7 +791,7 @@ var Skyline = (function (exports, Vue) {
               // string | object | false
               transition: null,
           },
-          created() {
+          beforeMount() {
               this.useTransition = {
                   transition: {
                       appear,
@@ -2823,7 +2823,7 @@ var Skyline = (function (exports, Vue) {
                   default: true,
               },
           },
-          created() {
+          beforeMount() {
               // This property holds whether the popup is fully open.
               // The popup is considered opened when it's visible
               // and neither the enter nor exit transitions are running.
@@ -2919,8 +2919,6 @@ var Skyline = (function (exports, Vue) {
               };
               this.$on('overlay-tap', onClickOutside);
               this.$on('clickoutside', onClickOutside);
-          },
-          beforeMount() {
               this.visible = this.inited = this.visible || (isDef(this.$attrs.visible)
                   && this.$attrs.visible !== false);
           },
@@ -3019,7 +3017,7 @@ var Skyline = (function (exports, Vue) {
       }
     },
 
-    created() {
+    beforeMount() {
       this.lastClick = -10000;
     },
 
@@ -3191,7 +3189,7 @@ var Skyline = (function (exports, Vue) {
 
     },
 
-    created() {
+    beforeMount() {
       const {
         mode
       } = this;
@@ -3389,7 +3387,7 @@ var Skyline = (function (exports, Vue) {
       }
     },
 
-    created() {
+    beforeMount() {
       const {
         mode
       } = this;
@@ -3580,6 +3578,13 @@ var Skyline = (function (exports, Vue) {
   };
 
   const hasWindow = typeof window !== 'undefined';
+  let supportsVars;
+  const isSupportsVars = () => {
+      if (supportsVars === undefined) {
+          supportsVars = !!(window.CSS && window.CSS.supports && window.CSS.supports('--a: 0'));
+      }
+      return supportsVars;
+  };
   const now$2 = (ev) => ev.timeStamp || Date.now();
 
   /* eslint-disable @typescript-eslint/no-use-before-define */
@@ -3809,7 +3814,7 @@ var Skyline = (function (exports, Vue) {
       };
     },
 
-    beforeCreate() {
+    beforeMount() {
       // TODO:
       // config must be setup before using
       // while child content is rendered before created
@@ -4490,7 +4495,7 @@ var Skyline = (function (exports, Vue) {
                   }
               },
           },
-          created() {
+          beforeMount() {
               const onItemChecked = (item, checked) => {
                   this.$emit('item:checked', item, !!checked);
                   if (this.exclusive) {
@@ -4957,7 +4962,9 @@ var Skyline = (function (exports, Vue) {
 
 
         const colSize = columns === 'auto' ? 'auto' // If CSS supports variables we should use the grid columns var
-        :  `${columns / 12 * 100}%`;
+        : isSupportsVars() ? `calc(calc(${columns} / var(--ion-grid-columns, 12)) * 100%)` // Convert the columns to a percentage by dividing by the total number
+        // of columns (12) and then multiplying by 100
+        : `${columns / 12 * 100}%`;
         /* eslint-disable-next-line consistent-return */
 
         return {
@@ -4977,7 +4984,10 @@ var Skyline = (function (exports, Vue) {
         // 12 we can position the column, else default to auto
 
 
-        const amount =  columns > 0 && columns < 12 ? `${columns / 12 * 100}%` : 'auto';
+        const amount = isSupportsVars() // If CSS supports variables we should use the grid columns var
+        ? `calc(calc(${columns} / var(--ion-grid-columns, 12)) * 100%)` // Convert the columns to a percentage by dividing by the total number
+        // of columns (12) and then multiplying by 100
+        : columns > 0 && columns < 12 ? `${columns / 12 * 100}%` : 'auto';
         /* eslint-disable-next-line consistent-return */
 
         return {
@@ -5984,7 +5994,7 @@ var Skyline = (function (exports, Vue) {
       };
     },
 
-    created() {
+    beforeMount() {
       this.$on('animation-enter', builder => {
         builder.build = iosEnterAnimation$2;
       });
@@ -7288,7 +7298,7 @@ var Skyline = (function (exports, Vue) {
       return isFunction(name) ? name.call(vm, ...args) : vm[name] && vm[name](...args);
   }
   function useEvent(options) {
-      let app = document.body;
+      let app;
       const { global = false } = options;
       function eventHandler(ev) {
           const { condition, handler } = options;
@@ -7300,7 +7310,7 @@ var Skyline = (function (exports, Vue) {
           const { useEvent = {} } = this;
           if (useEvent.binded)
               return;
-          app = document.querySelector('[skyline-app]') || app;
+          app = document.querySelector('[skyline-app]') || document.body;
           const handler = useEvent.handler = eventHandler.bind(this);
           const { event, passive = false, capture = false } = options;
           const events = isArray(event) ? event : [event];
@@ -7442,14 +7452,11 @@ var Skyline = (function (exports, Vue) {
       edge: Boolean
     },
 
-    created() {
+    beforeMount() {
       this.$on('clickoutside', () => {
         console.log('clickoutside');
         this.activated = false;
       });
-    },
-
-    beforeMount() {
       this.activated = this.activated || isDef(this.$attrs.activated) && this.$attrs.activated !== false;
     },
 
@@ -7614,7 +7621,7 @@ var Skyline = (function (exports, Vue) {
       };
     },
 
-    created() {
+    beforeMount() {
       this.isAppFooter = this.App === this.$parent;
     },
 
@@ -7684,7 +7691,7 @@ var Skyline = (function (exports, Vue) {
       };
     },
 
-    created() {
+    beforeMount() {
       this.isAppHeader = this.App === this.$parent;
     },
 
@@ -7848,7 +7855,7 @@ var Skyline = (function (exports, Vue) {
                   this.checkState = nextCheckState;
               },
           },
-          created() {
+          beforeMount() {
               let deep = 0;
               let group = this[name];
               while (group) {
@@ -7856,8 +7863,6 @@ var Skyline = (function (exports, Vue) {
                   group = group[name];
               }
               this.itemDeep = deep;
-          },
-          beforeMount() {
               this.checked = this.checked || (isDef(this.$attrs.checked)
                   && this.$attrs.checked !== false);
           },
@@ -9697,7 +9702,7 @@ var Skyline = (function (exports, Vue) {
 
     },
 
-    created() {
+    beforeMount() {
       const ITEM_INITIAL_SIZE = 50;
       const LIST_VIEW_INITIAL_SIZE = 500;
       const count = LIST_VIEW_INITIAL_SIZE / ITEM_INITIAL_SIZE;
@@ -9782,7 +9787,7 @@ var Skyline = (function (exports, Vue) {
               // The default value is -1.
               duration: Number,
           },
-          created() {
+          beforeMount() {
               this.$on('opened', () => {
                   if (this.duration > 0) {
                       this.durationTimeout = setTimeout(() => this.close('timeout'), this.duration);
@@ -10117,7 +10122,7 @@ var Skyline = (function (exports, Vue) {
       spinner: String
     },
 
-    created() {
+    beforeMount() {
       const {
         mode
       } = this;
@@ -11501,12 +11506,13 @@ var Skyline = (function (exports, Vue) {
     /*#__PURE__*/
     usePopup()],
 
-    created() {
+    beforeMount() {
       const {
         mode
       } = this;
       this.$on('animation-enter', builder => {
         builder.build = mode === 'md' ? mdEnterAnimation$3 : iosEnterAnimation$4;
+        builder.options = this.event;
       });
       this.$on('animation-leave', builder => {
         builder.build = mode === 'md' ? mdLeaveAnimation$3 : iosLeaveAnimation$4;
@@ -11692,7 +11698,7 @@ var Skyline = (function (exports, Vue) {
     /*#__PURE__*/
     usePopup()],
 
-    created() {
+    beforeMount() {
       const {
         mode
       } = this;
@@ -12489,7 +12495,7 @@ var Skyline = (function (exports, Vue) {
 
     },
 
-    created() {
+    beforeMount() {
       this.updateRatio(); // this.debounceChanged();
 
       this.disabledChanged();
@@ -13835,7 +13841,7 @@ var Skyline = (function (exports, Vue) {
       };
     },
 
-    created() {
+    beforeMount() {
       this.icon = this.pullingIcon;
       this.spinner = this.refreshingSpinner;
     },
@@ -14221,7 +14227,7 @@ var Skyline = (function (exports, Vue) {
 
     },
 
-    created() {
+    beforeMount() {
       this.setPosition(this.value);
       this.$emit('moved');
     },
@@ -20262,7 +20268,7 @@ var Skyline = (function (exports, Vue) {
 
     },
 
-    created() {// this.$emit('pressAndHold');
+    beforeMount() {// this.$emit('pressAndHold');
       // this.$emit('pressed');
       // this.$emit('released');
     },
@@ -20559,7 +20565,7 @@ var Skyline = (function (exports, Vue) {
       message: String
     },
 
-    created() {
+    beforeMount() {
       const {
         mode
       } = this;
@@ -21468,7 +21474,7 @@ var Skyline = (function (exports, Vue) {
   /*#__PURE__*/
   popperGenerator();
 
-  function inserted$1(el, binding) {
+  function inserted$2(el, binding) {
       if (!binding.value)
           return;
       const { value: callback, modifiers: options = { passive: true }, } = binding;
@@ -21506,10 +21512,10 @@ var Skyline = (function (exports, Vue) {
       if (binding.oldValue) {
           unbind$2(el);
       }
-      inserted$1(el, binding);
+      inserted$2(el, binding);
   }
   const Hover = {
-      inserted: inserted$1,
+      inserted: inserted$2,
       unbind: unbind$2,
       update: update$3,
   };
@@ -21555,7 +21561,7 @@ var Skyline = (function (exports, Vue) {
 
     },
 
-    created() {
+    beforeMount() {
       this.$on('animation-enter', builder => {
         builder.build = baseEl => {
           const {
@@ -21736,7 +21742,7 @@ var Skyline = (function (exports, Vue) {
     Tooltip: tooltip
   });
 
-  function bind$1(el, binding) {
+  function inserted$3(el, binding) {
       const { modifiers } = binding;
       el.classList.add('line-activatable');
       if (modifiers.instant) {
@@ -21751,7 +21757,7 @@ var Skyline = (function (exports, Vue) {
       }
   }
   const Activatable = {
-      bind: bind$1,
+      inserted: inserted$3,
       unbind: unbind$3,
   };
 
@@ -21831,7 +21837,7 @@ var Skyline = (function (exports, Vue) {
           destroy,
       };
   }
-  function bind$2(el, binding) {
+  function inserted$4(el, binding) {
       if (binding.value === false)
           return;
       const vAutoRepeat = createAutoRepeat(el, binding.value);
@@ -21843,7 +21849,7 @@ var Skyline = (function (exports, Vue) {
       }
       const { vAutoRepeat } = el;
       if (!vAutoRepeat) {
-          bind$2(el, binding);
+          inserted$4(el, binding);
           return;
       }
       vAutoRepeat.stop();
@@ -21857,7 +21863,7 @@ var Skyline = (function (exports, Vue) {
       delete el.vAutoRepeat;
   }
   const AutoRepeat = {
-      bind: bind$2,
+      inserted: inserted$4,
       update: update$4,
       unbind: unbind$4,
   };
@@ -21889,7 +21895,7 @@ var Skyline = (function (exports, Vue) {
           destroy,
       };
   }
-  function bind$3(el, binding) {
+  function inserted$5(el, binding) {
       if (!binding.value)
           return;
       const vClickOutside = createClickOutside(el, {
@@ -21912,15 +21918,15 @@ var Skyline = (function (exports, Vue) {
       if (binding.oldValue) {
           unbind$5(el);
       }
-      bind$3(el, binding);
+      inserted$5(el, binding);
   }
   const ClickOutside = {
-      bind: bind$3,
+      inserted: inserted$5,
       unbind: unbind$5,
       update: update$5,
   };
 
-  function inserted$2(el, binding) {
+  function inserted$6(el, binding) {
       if (!binding.value)
           return;
       const config = {
@@ -21943,15 +21949,15 @@ var Skyline = (function (exports, Vue) {
       if (binding.oldValue) {
           unbind$6(el);
       }
-      inserted$2(el, binding);
+      inserted$6(el, binding);
   }
   const Gesture = {
-      inserted: inserted$2,
+      inserted: inserted$6,
       unbind: unbind$6,
       update: update$6,
   };
 
-  function inserted$3(el, binding) {
+  function inserted$7(el, binding) {
       if (!binding.value)
           return;
       const modifiers = binding.modifiers || {};
@@ -22006,15 +22012,15 @@ var Skyline = (function (exports, Vue) {
       if (binding.oldValue) {
           unbind$7(el);
       }
-      inserted$3(el, binding);
+      inserted$7(el, binding);
   }
   const Intersect = {
-      inserted: inserted$3,
+      inserted: inserted$7,
       update: update$7,
       unbind: unbind$7,
   };
 
-  function inserted$4(el, binding) {
+  function inserted$8(el, binding) {
       if (!binding.value)
           return;
       const modifiers = binding.modifiers || {};
@@ -22072,15 +22078,15 @@ var Skyline = (function (exports, Vue) {
       if (binding.oldValue) {
           unbind$8(el);
       }
-      inserted$4(el, binding);
+      inserted$8(el, binding);
   }
   const Mutate = {
-      inserted: inserted$4,
+      inserted: inserted$8,
       unbind: unbind$8,
       update: update$8,
   };
 
-  function inserted$5(el, binding) {
+  function inserted$9(el, binding) {
       if (!binding.value)
           return;
       const { value: callback, modifiers: options = { passive: true }, } = binding;
@@ -22111,15 +22117,15 @@ var Skyline = (function (exports, Vue) {
       if (binding.oldValue) {
           unbind$9(el);
       }
-      inserted$5(el, binding);
+      inserted$9(el, binding);
   }
   const Resize$1 = {
-      inserted: inserted$5,
+      inserted: inserted$9,
       unbind: unbind$9,
       update: update$9,
   };
 
-  function inserted$6(el, binding) {
+  function inserted$a(el, binding) {
       const callback = binding.value;
       const options = binding.options || { passive: true };
       const target = binding.arg ? document.querySelector(binding.arg) : window;
@@ -22150,10 +22156,10 @@ var Skyline = (function (exports, Vue) {
       if (binding.oldValue) {
           unbind$a(el);
       }
-      inserted$6(el, binding);
+      inserted$a(el, binding);
   }
   const Scroll = {
-      inserted: inserted$6,
+      inserted: inserted$a,
       unbind: unbind$a,
       update: update$a,
   };
@@ -22208,7 +22214,7 @@ var Skyline = (function (exports, Vue) {
       });
   };
 
-  function inserted$7(el, binding) {
+  function inserted$b(el, binding) {
       if (!binding.value)
           return;
       const { canStartHandler = NO, onStartHandler = NOOP, onMoveHandler = NOOP, onEndHandler = NOOP, } = binding.value;
@@ -22228,10 +22234,10 @@ var Skyline = (function (exports, Vue) {
       if (binding.oldValue) {
           unbind$b(el);
       }
-      inserted$7(el, binding);
+      inserted$b(el, binding);
   }
   const SwipeBack = {
-      inserted: inserted$7,
+      inserted: inserted$b,
       unbind: unbind$b,
       update: update$b,
   };
@@ -22296,7 +22302,7 @@ var Skyline = (function (exports, Vue) {
           touchmove: (e) => touchmove(e, wrapper),
       };
   }
-  function bind$4(el, binding) {
+  function inserted$c(el, binding) {
       const value = binding.value;
       const target = value.parent ? el.parentElement : el;
       const options = value.options || { passive: true };
@@ -22330,10 +22336,10 @@ var Skyline = (function (exports, Vue) {
       if (binding.oldValue) {
           unbind$c(el);
       }
-      bind$4(el, binding);
+      inserted$c(el, binding);
   }
   const Touch = {
-      bind: bind$4,
+      inserted: inserted$c,
       unbind: unbind$c,
       update: update$c,
   };
@@ -22341,7 +22347,7 @@ var Skyline = (function (exports, Vue) {
   function createTrigger() {
       return {};
   }
-  function bind$5(el, binding) {
+  function inserted$d(el, binding) {
       el.vTrigger = createTrigger();
   }
   function unbind$d(el) {
@@ -22350,7 +22356,7 @@ var Skyline = (function (exports, Vue) {
       delete el.vTrigger;
   }
   const Trigger = {
-      bind: bind$5,
+      inserted: inserted$d,
       unbind: unbind$d,
   };
 
@@ -22490,7 +22496,7 @@ var Skyline = (function (exports, Vue) {
                   this.clientWidth = getClientWidth();
               },
           },
-          created() {
+          beforeMount() {
               if (!hasWindow)
                   return;
               on(window, 'resize', this.onResize, { passive: true });
