@@ -87,10 +87,10 @@ function update(el: HTMLElement, binding: MutateVNodeDirective) {
   inserted(el, binding);
 }
 
-export const Mutate = {
+export const VMutate = {
   inserted,
   unbind,
   update,
 } as DirectiveOptions;
 
-export default Mutate;
+export default VMutate;

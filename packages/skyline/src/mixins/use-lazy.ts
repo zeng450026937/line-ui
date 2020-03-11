@@ -1,6 +1,6 @@
 import { createMixins } from 'skyline/utils/mixins';
 
-export const DEFAULT_VALUE = 'value';
+const DEFAULT_VALUE = 'value';
 
 export function useLazy(value: string = DEFAULT_VALUE) {
   return createMixins({

@@ -7,8 +7,8 @@ export interface ModelOptions {
   default?: any;
 }
 
-export const DEFAULT_PROP = 'value';
-export const DEFAULT_EVENT = 'change';
+const DEFAULT_PROP = 'value';
+const DEFAULT_EVENT = 'change';
 
 export function useModel<
   T extends unknown = any,

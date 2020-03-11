@@ -47,10 +47,10 @@ function update(el: HTMLElement, binding: SwipeBackVNodeDirective) {
   inserted(el, binding);
 }
 
-export const SwipeBack = {
+export const VSwipeBack = {
   inserted,
   unbind,
   update,
 } as DirectiveOptions;
 
-export default SwipeBack;
+export default VSwipeBack;

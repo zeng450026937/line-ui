@@ -57,10 +57,10 @@ function update(el: HTMLElement, binding: RemoteVNodeDirective) {
   inserted(el, binding);
 }
 
-export const Remote = {
+export const VRemote = {
   inserted,
   update,
   unbind,
 } as DirectiveOptions;
 
-export default Remote;
+export default VRemote;

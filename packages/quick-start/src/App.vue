@@ -30,6 +30,8 @@ export default Vue.extend({
   font-family: "Montserrat";
   font-size: 50px;
 
+  line-height: 40px;
+
   text-transform: uppercase;
 }
 </style>

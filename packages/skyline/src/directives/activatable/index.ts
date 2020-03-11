@@ -16,9 +16,9 @@ function unbind(el: HTMLElement, binding: VNodeDirective) {
   }
 }
 
-export const Activatable = {
+export const VActivatable = {
   inserted,
   unbind,
 } as DirectiveOptions;
 
-export default Activatable;
+export default VActivatable;

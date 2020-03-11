@@ -45,10 +45,10 @@ function update(el: HTMLElement, binding: ScrollVNodeDirective) {
   inserted(el, binding);
 }
 
-export const Scroll = {
+export const VScroll = {
   inserted,
   unbind,
   update,
 } as DirectiveOptions;
 
-export default Scroll;
+export default VScroll;

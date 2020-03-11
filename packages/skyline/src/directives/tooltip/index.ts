@@ -46,10 +46,10 @@ function update(el: HTMLElement, binding: TooltipVNodeDirective) {
   vTooltip.tooltip.text = binding.value;
 }
 
-export const Tooltip = {
+export const VTooltip = {
   inserted,
   unbind,
   update,
 };
 
-export default Tooltip;
+export default VTooltip;

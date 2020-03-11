@@ -87,10 +87,10 @@ function update(el: HTMLElement, binding: ObserveVNodeDirective) {
   inserted(el, binding);
 }
 
-export const Intersect = {
+export const VIntersect = {
   inserted,
   update,
   unbind,
 } as DirectiveOptions;
 
-export default Intersect;
+export default VIntersect;

@@ -14,9 +14,9 @@ function unbind(el: HTMLElement) {
   delete (el as any).vTrigger;
 }
 
-export const Trigger = {
+export const VTrigger = {
   inserted,
   unbind,
 };
 
-export default Trigger;
+export default VTrigger;

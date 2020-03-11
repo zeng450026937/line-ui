@@ -127,10 +127,10 @@ function unbind(el: HTMLElement, binding: AutoRepeatDirective) {
   delete (el as any).vAutoRepeat;
 }
 
-export const AutoRepeat = {
+export const VAutoRepeat = {
   inserted,
   update,
   unbind,
 } as DirectiveOptions;
 
-export default AutoRepeat;
+export default VAutoRepeat;

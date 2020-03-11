@@ -55,10 +55,10 @@ function update(el: HTMLElement, binding: HoverVNodeDirective) {
   inserted(el, binding);
 }
 
-export const Hover = {
+export const VHover = {
   inserted,
   unbind,
   update,
 } as DirectiveOptions;
 
-export default Hover;
+export default VHover;

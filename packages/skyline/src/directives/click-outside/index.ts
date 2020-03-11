@@ -82,10 +82,10 @@ function update(el: HTMLElement, binding: ClickOutsideDirective) {
   inserted(el, binding);
 }
 
-export const ClickOutside = {
+export const VClickOutside = {
   inserted,
   unbind,
   update,
 } as DirectiveOptions;
 
-export default ClickOutside;
+export default VClickOutside;

@@ -153,10 +153,10 @@ function update(el: HTMLElement, binding: TouchVNodeDirective) {
   inserted(el, binding);
 }
 
-export const Touch = {
+export const VTouch = {
   inserted,
   unbind,
   update,
 } as DirectiveOptions;
 
-export default Touch;
+export default VTouch;

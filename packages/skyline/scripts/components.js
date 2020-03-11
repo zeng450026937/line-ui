@@ -20,7 +20,8 @@ async function run() {
 
   const root = resolve('src/components');
   const folders = fs.readdirSync(root)
-    .filter(f => fs.statSync(`${ root }/${ f }`).isDirectory());
+    .filter(f => fs.statSync(`${ root }/${ f }`).isDirectory())
+    .sort();
 
   let code = `${ warning }\n`;
 

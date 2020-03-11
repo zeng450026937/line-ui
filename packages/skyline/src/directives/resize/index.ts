@@ -48,10 +48,10 @@ function update(el: HTMLElement, binding: ResizeVNodeDirective) {
   inserted(el, binding);
 }
 
-export const Resize = {
+export const VResize = {
   inserted,
   unbind,
   update,
 } as DirectiveOptions;
 
-export default Resize;
+export default VResize;

@@ -33,10 +33,10 @@ function update(el: HTMLElement, binding: GestureVNodeDirective) {
   inserted(el, binding);
 }
 
-export const Gesture = {
+export const VGesture = {
   inserted,
   unbind,
   update,
 } as DirectiveOptions;
 
-export default Gesture;
+export default VGesture;
