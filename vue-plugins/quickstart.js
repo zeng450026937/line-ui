@@ -22,6 +22,17 @@ module.exports = (api, options) => {
           // check kebab case components
           .options('kebab')
           .after('vue-loader');
+
+        // config.module.rule('js')
+        //   .use('babel-loader')
+        //   .tap(options => {
+        //     return {
+        //       ...options,
+        //       babelrc  : false,
+        //       root     : packageDir,
+        //       rootMode : 'upward',
+        //     };
+        //   });
       });
 
       api.service.run('serve', args, rawArgs);

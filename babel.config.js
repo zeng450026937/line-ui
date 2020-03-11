@@ -1,6 +1,8 @@
 module.exports = {
   presets : [
     '@vue/cli-plugin-babel/preset',
-    '@skyline/babel-preset-skyline',
-  ],
+    process.env.NODE_ENV !== 'development'
+      ? '@skyline/babel-preset-skyline'
+      : '',
+  ].filter(Boolean),
 };
