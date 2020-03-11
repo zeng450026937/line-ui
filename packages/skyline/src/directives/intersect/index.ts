@@ -57,9 +57,9 @@ function inserted(el: HTMLElement, binding: ObserveVNodeDirective) {
   }, options);
 
 
-  function destroy() {
+  const destroy = () => {
     observer.unobserve(el);
-  }
+  };
 
   (el as any).vIntersect = {
     init : false,

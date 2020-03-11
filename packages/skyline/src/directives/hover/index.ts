@@ -21,12 +21,12 @@ function inserted(el: HTMLElement, binding: HoverVNodeDirective) {
   const focusOff = on(el, 'focus', enter, options);
   const blurOff = on(el, 'blur', leave, options);
 
-  function destroy() {
+  const destroy = () => {
     mouseenterOff();
     mouseleaveOff();
     focusOff();
     blurOff();
-  }
+  };
 
   (el as any).vHover = {
     callback,

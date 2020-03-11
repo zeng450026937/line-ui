@@ -42,10 +42,10 @@ function createClickOutside(el: HTMLElement, options: ClickOutsideOption) {
   const mouseupOff = on(doc, 'mouseup', maybe, opts);
   const touchendOff = on(doc, 'touchend', maybe, opts);
 
-  function destroy() {
+  const destroy = () => {
     mouseupOff();
     touchendOff();
-  }
+  };
 
   return {
     maybe,

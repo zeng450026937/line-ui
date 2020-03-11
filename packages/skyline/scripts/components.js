@@ -16,7 +16,8 @@ const skipped = [];
 run();
 
 async function run() {
-  logger.log('components', 'STAGE');
+  logger.log();
+  logger.log('components', 'GEN');
 
   const root = resolve('src/components');
   const folders = fs.readdirSync(root)

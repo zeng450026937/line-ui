@@ -125,11 +125,11 @@ function inserted(el: HTMLElement, binding: TouchVNodeDirective) {
     on(target, eventName, handlers[eventName] as EventListener, options);
   });
 
-  function destroy() {
+  const destroy = () => {
     keys(handlers).forEach((eventName) => {
       off(target!, eventName, handlers[eventName] as EventListener);
     });
-  }
+  };
 
   (target as any).vTouch = {
     destroy,

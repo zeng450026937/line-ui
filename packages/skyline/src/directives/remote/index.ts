@@ -7,22 +7,30 @@ interface RemoteVNodeDirective extends VNodeDirective {
 
 const CONTAINER = '[skyline-app]';
 
-type VRemote = {
-  parentElement: HTMLElement;
-  nextElementSibling: HTMLElement;
-}
-
 function inserted(el: HTMLElement, binding: RemoteVNodeDirective) {
   if (binding.value === false) return;
+
   const container = binding.arg || CONTAINER;
   const containerEl = el.closest(container) || document.querySelector(container) || document.body;
-  if (containerEl) {
-    (el as any).vRemote = {
-      parentElement      : el.parentElement,
-      nextElementSibling : el.nextElementSibling,
-    } as VRemote;
-    containerEl.appendChild(el);
-  }
+
+  if (!containerEl) return;
+
+  const { parentElement, nextElementSibling } = el;
+
+  const destroy = () => {
+    if (!parentElement!.contains(el)) {
+      el.remove();
+      return;
+    }
+    parentElement!.insertBefore(el, nextElementSibling);
+  };
+
+  (el as any).vRemote = {
+    container,
+    destroy,
+  };
+
+  containerEl.appendChild(el);
 }
 
 function unbind(el: HTMLElement, binding: RemoteVNodeDirective) {
@@ -35,14 +43,7 @@ function unbind(el: HTMLElement, binding: RemoteVNodeDirective) {
 
   if (!vRemote) return;
 
-  const { parentElement, nextElementSibling } = vRemote as VRemote;
-
-  if (!parentElement.contains(el)) {
-    el.remove();
-    return;
-  }
-
-  parentElement.insertBefore(el, nextElementSibling);
+  vRemote.destroy();
 
   delete (el as any).vRemote;
 }

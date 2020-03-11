@@ -80,7 +80,7 @@ function createAutoRepeat(el: HTMLElement, options: AutoRepeatOption) {
   const touchcancelOff = on(doc, 'touchcancel', stop, opts);
   const dragstartOff = on(doc, 'dragstart', stop, opts);
 
-  function destroy() {
+  const destroy = () => {
     stop();
     mousedownOff();
     mouseupOff();
@@ -88,7 +88,7 @@ function createAutoRepeat(el: HTMLElement, options: AutoRepeatOption) {
     touchendOff();
     touchcancelOff();
     dragstartOff();
-  }
+  };
 
   return {
     enable,

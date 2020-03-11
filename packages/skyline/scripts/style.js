@@ -53,7 +53,8 @@ const skipped = [];
 run();
 
 async function run() {
-  logger.log('styles', 'STAGE');
+  logger.log();
+  logger.log('styles', 'BUILD');
 
   if (clearDist) {
     await fs.remove(distDir);

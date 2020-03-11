@@ -101,9 +101,9 @@ function createWaterfall(el: HTMLElement, binding: WaterfallVNodeDirective) {
 
   const scrollOff = on(target, 'scroll', scroll, options);
 
-  function destroy() {
+  const destroy = () => {
     scrollOff();
-  }
+  };
 
   return {
     scroll,

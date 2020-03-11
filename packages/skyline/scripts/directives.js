@@ -15,7 +15,8 @@ const skipped = [];
 run();
 
 async function run() {
-  logger.log('directives', 'STAGE');
+  logger.log();
+  logger.log('directives', 'GEN');
 
   const root = resolve('src/directives');
   const folders = fs.readdirSync(root)

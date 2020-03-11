@@ -16,9 +16,9 @@ function inserted(el: HTMLElement, binding: ResizeVNodeDirective) {
 
   const resizeOff = on(window, 'resize', callback, options);
 
-  function destroy() {
+  const destroy = () => {
     resizeOff();
-  }
+  };
 
   (el as any).vResize = {
     callback,

@@ -18,12 +18,14 @@ function inserted(el: HTMLElement, binding: TooltipVNodeDirective) {
   });
   tooltip.destroyWhenClose = false;
 
+  const destroy = () => {
+    tooltip.destroyWhenClose = true;
+    tooltip.close() || tooltip.$destroy();
+  };
+
   (el as any).vTooltip = {
     tooltip,
-    destroy : () => {
-      tooltip.destroyWhenClose = true;
-      tooltip.close() || tooltip.$destroy();
-    },
+    destroy,
   };
 }
 

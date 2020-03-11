@@ -16,7 +16,8 @@ const skipped = [];
 run();
 
 async function run() {
-  logger.log('mixins', 'STAGE');
+  logger.log();
+  logger.log('mixins', 'GEN');
 
   const root = resolve('src/mixins');
   const files = await globby(['*.ts', '!*-legacy.ts'], { cwd: root });

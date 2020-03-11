@@ -16,9 +16,9 @@ function inserted(el: HTMLElement, binding: ScrollVNodeDirective) {
 
   const scrollOff = on(target, 'scroll', callback, options);
 
-  function destroy() {
+  const destroy = () => {
     scrollOff();
-  }
+  };
 
   (el as any).vScroll = {
     callback,

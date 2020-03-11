@@ -58,9 +58,9 @@ function inserted(el: HTMLElement, binding: MutateVNodeDirective) {
     once && unbind(el);
   });
 
-  function destroy() {
+  const destroy = () => {
     observer.disconnect();
-  }
+  };
 
   (el as any).vMutate = {
     observer,

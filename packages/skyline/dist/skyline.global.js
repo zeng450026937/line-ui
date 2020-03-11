@@ -543,7 +543,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted(el, binding);
   }
-  const Ripple = {
+  const VRipple = {
       inserted,
       update,
       unbind,
@@ -552,7 +552,7 @@ var Skyline = (function (exports, Vue) {
   function useRipple() {
       return createMixins({
           directives: {
-              ripple: Ripple,
+              ripple: VRipple,
           },
           props: {
               ripple: {
@@ -688,13 +688,21 @@ var Skyline = (function (exports, Vue) {
           return;
       const container = binding.arg || CONTAINER;
       const containerEl = el.closest(container) || document.querySelector(container) || document.body;
-      if (containerEl) {
-          el.vRemote = {
-              parentElement: el.parentElement,
-              nextElementSibling: el.nextElementSibling,
-          };
-          containerEl.appendChild(el);
-      }
+      if (!containerEl)
+          return;
+      const { parentElement, nextElementSibling } = el;
+      const destroy = () => {
+          if (!parentElement.contains(el)) {
+              el.remove();
+              return;
+          }
+          parentElement.insertBefore(el, nextElementSibling);
+      };
+      el.vRemote = {
+          container,
+          destroy,
+      };
+      containerEl.appendChild(el);
   }
   function unbind$1(el, binding) {
       if (!el.parentElement) {
@@ -704,12 +712,7 @@ var Skyline = (function (exports, Vue) {
       const { vRemote } = el;
       if (!vRemote)
           return;
-      const { parentElement, nextElementSibling } = vRemote;
-      if (!parentElement.contains(el)) {
-          el.remove();
-          return;
-      }
-      parentElement.insertBefore(el, nextElementSibling);
+      vRemote.destroy();
       delete el.vRemote;
   }
   function update$1(el, binding) {
@@ -721,7 +724,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$1(el, binding);
   }
-  const Remote = {
+  const VRemote = {
       inserted: inserted$1,
       update: update$1,
       unbind: unbind$1,
@@ -730,7 +733,7 @@ var Skyline = (function (exports, Vue) {
   function useRemote() {
       return createMixins({
           directives: {
-              remote: Remote,
+              remote: VRemote,
           },
           props: {
               container: [String, Function],
@@ -3972,7 +3975,7 @@ var Skyline = (function (exports, Vue) {
     /*#__PURE__*/
     useGroupItem(NAMESPACE$3)],
     directives: {
-      ripple: Ripple
+      ripple: VRipple
     },
     props: {
       text: String,
@@ -4199,7 +4202,7 @@ var Skyline = (function (exports, Vue) {
     /*#__PURE__*/
     useColor()],
     directives: {
-      ripple: Ripple
+      ripple: VRipple
     },
     props: {
       button: Boolean,
@@ -4253,7 +4256,7 @@ var Skyline = (function (exports, Vue) {
         },
         "directives": [{
           name: "ripple",
-          value: clickable && (Ripple || mode === 'md')
+          value: clickable && (VRipple || mode === 'md')
         }],
         "class": "card-native"
       }, [this.slots()])]);
@@ -4821,7 +4824,7 @@ var Skyline = (function (exports, Vue) {
     /*#__PURE__*/
     useColor()],
     directives: {
-      ripple: Ripple
+      ripple: VRipple
     },
     props: {
       ripple: Boolean,
@@ -7522,7 +7525,7 @@ var Skyline = (function (exports, Vue) {
     /*#__PURE__*/
     useGroupItem(NAMESPACE$9)],
     directives: {
-      ripple: Ripple
+      ripple: VRipple
     },
     props: {
       ripple: Boolean,
@@ -8248,7 +8251,7 @@ var Skyline = (function (exports, Vue) {
     /*#__PURE__*/
     useColor()],
     directives: {
-      ripple: Ripple
+      ripple: VRipple
     },
 
     provide() {
@@ -21484,12 +21487,12 @@ var Skyline = (function (exports, Vue) {
       const mouseleaveOff = on(el, 'mouseleave', leave, options);
       const focusOff = on(el, 'focus', enter, options);
       const blurOff = on(el, 'blur', leave, options);
-      function destroy() {
+      const destroy = () => {
           mouseenterOff();
           mouseleaveOff();
           focusOff();
           blurOff();
-      }
+      };
       el.vHover = {
           callback,
           options,
@@ -21514,7 +21517,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$2(el, binding);
   }
-  const Hover = {
+  const VHover = {
       inserted: inserted$2,
       unbind: unbind$2,
       update: update$3,
@@ -21584,7 +21587,7 @@ var Skyline = (function (exports, Vue) {
     async mounted() {
       await this.$nextTick();
       if (!this.$triggerEl) return;
-      this.vHover = createDirective(Hover, this.$triggerEl, {
+      this.vHover = createDirective(VHover, this.$triggerEl, {
         name: 'hover'
       });
       this.vHover.inserted();
@@ -21756,7 +21759,7 @@ var Skyline = (function (exports, Vue) {
           el.classList.add('line-activatable-instant');
       }
   }
-  const Activatable = {
+  const VActivatable = {
       inserted: inserted$3,
       unbind: unbind$3,
   };
@@ -21818,7 +21821,7 @@ var Skyline = (function (exports, Vue) {
       const touchendOff = on(doc, 'touchend', stop, opts);
       const touchcancelOff = on(doc, 'touchcancel', stop, opts);
       const dragstartOff = on(doc, 'dragstart', stop, opts);
-      function destroy() {
+      const destroy = () => {
           stop();
           mousedownOff();
           mouseupOff();
@@ -21826,7 +21829,7 @@ var Skyline = (function (exports, Vue) {
           touchendOff();
           touchcancelOff();
           dragstartOff();
-      }
+      };
       return {
           enable,
           update: setOptions,
@@ -21862,7 +21865,7 @@ var Skyline = (function (exports, Vue) {
       vAutoRepeat.destroy();
       delete el.vAutoRepeat;
   }
-  const AutoRepeat = {
+  const VAutoRepeat = {
       inserted: inserted$4,
       update: update$4,
       unbind: unbind$4,
@@ -21886,10 +21889,10 @@ var Skyline = (function (exports, Vue) {
       const opts = { passive: true };
       const mouseupOff = on(doc, 'mouseup', maybe, opts);
       const touchendOff = on(doc, 'touchend', maybe, opts);
-      function destroy() {
+      const destroy = () => {
           mouseupOff();
           touchendOff();
-      }
+      };
       return {
           maybe,
           destroy,
@@ -21920,7 +21923,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$5(el, binding);
   }
-  const ClickOutside = {
+  const VClickOutside = {
       inserted: inserted$5,
       unbind: unbind$5,
       update: update$5,
@@ -21951,7 +21954,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$6(el, binding);
   }
-  const Gesture = {
+  const VGesture = {
       inserted: inserted$6,
       unbind: unbind$6,
       update: update$6,
@@ -21988,9 +21991,9 @@ var Skyline = (function (exports, Vue) {
           else
               (el.vIntersect.init = true);
       }, options);
-      function destroy() {
+      const destroy = () => {
           observer.unobserve(el);
-      }
+      };
       el.vIntersect = {
           init: false,
           observer,
@@ -22014,7 +22017,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$7(el, binding);
   }
-  const Intersect = {
+  const VIntersect = {
       inserted: inserted$7,
       update: update$7,
       unbind: unbind$7,
@@ -22055,9 +22058,9 @@ var Skyline = (function (exports, Vue) {
           /* eslint-disable-next-line */
           once && unbind$8(el);
       });
-      function destroy() {
+      const destroy = () => {
           observer.disconnect();
-      }
+      };
       el.vMutate = {
           observer,
           destroy,
@@ -22080,7 +22083,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$8(el, binding);
   }
-  const Mutate = {
+  const VMutate = {
       inserted: inserted$8,
       unbind: unbind$8,
       update: update$8,
@@ -22091,9 +22094,9 @@ var Skyline = (function (exports, Vue) {
           return;
       const { value: callback, modifiers: options = { passive: true }, } = binding;
       const resizeOff = on(window, 'resize', callback, options);
-      function destroy() {
+      const destroy = () => {
           resizeOff();
-      }
+      };
       el.vResize = {
           callback,
           options,
@@ -22119,7 +22122,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$9(el, binding);
   }
-  const Resize$1 = {
+  const VResize = {
       inserted: inserted$9,
       unbind: unbind$9,
       update: update$9,
@@ -22132,9 +22135,9 @@ var Skyline = (function (exports, Vue) {
       if (!target)
           return;
       const scrollOff = on(target, 'scroll', callback, options);
-      function destroy() {
+      const destroy = () => {
           scrollOff();
-      }
+      };
       el.vScroll = {
           callback,
           options,
@@ -22158,7 +22161,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$a(el, binding);
   }
-  const Scroll = {
+  const VScroll = {
       inserted: inserted$a,
       unbind: unbind$a,
       update: update$a,
@@ -22236,7 +22239,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$b(el, binding);
   }
-  const SwipeBack = {
+  const VSwipeBack = {
       inserted: inserted$b,
       unbind: unbind$b,
       update: update$b,
@@ -22313,11 +22316,11 @@ var Skyline = (function (exports, Vue) {
       keys(handlers).forEach((eventName) => {
           on(target, eventName, handlers[eventName], options);
       });
-      function destroy() {
+      const destroy = () => {
           keys(handlers).forEach((eventName) => {
               off(target, eventName, handlers[eventName]);
           });
-      }
+      };
       target.vTouch = {
           destroy,
       };
@@ -22338,7 +22341,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$c(el, binding);
   }
-  const Touch = {
+  const VTouch = {
       inserted: inserted$c,
       unbind: unbind$c,
       update: update$c,
@@ -22355,7 +22358,7 @@ var Skyline = (function (exports, Vue) {
           return;
       delete el.vTrigger;
   }
-  const Trigger = {
+  const VTrigger = {
       inserted: inserted$d,
       unbind: unbind$d,
   };
@@ -22364,20 +22367,20 @@ var Skyline = (function (exports, Vue) {
 
   var directives = /*#__PURE__*/Object.freeze({
     __proto__: null,
-    Activatable: Activatable,
-    AutoRepeat: AutoRepeat,
-    ClickOutside: ClickOutside,
-    Gesture: Gesture,
-    Hover: Hover,
-    Intersect: Intersect,
-    Mutate: Mutate,
-    Remote: Remote,
-    Resize: Resize$1,
-    Ripple: Ripple,
-    Scroll: Scroll,
-    SwipeBack: SwipeBack,
-    Touch: Touch,
-    Trigger: Trigger
+    VActivatable: VActivatable,
+    VAutoRepeat: VAutoRepeat,
+    VClickOutside: VClickOutside,
+    VGesture: VGesture,
+    VHover: VHover,
+    VIntersect: VIntersect,
+    VMutate: VMutate,
+    VRemote: VRemote,
+    VResize: VResize,
+    VRipple: VRipple,
+    VScroll: VScroll,
+    VSwipeBack: VSwipeBack,
+    VTouch: VTouch,
+    VTrigger: VTrigger
   });
 
   function useAsyncRender() {
@@ -22562,12 +22565,9 @@ var Skyline = (function (exports, Vue) {
     useEvent: useEvent,
     useGroupItem: useGroupItem,
     useGroup: useGroup,
-    DEFAULT_VALUE: DEFAULT_VALUE,
     useLazy: useLazy,
     createModeClasses: createModeClasses,
     useMode: useMode,
-    DEFAULT_PROP: DEFAULT_PROP,
-    DEFAULT_EVENT: DEFAULT_EVENT,
     useModel: useModel,
     useOptions: useOptions,
     usePopstateClose: usePopstateClose,
@@ -22615,10 +22615,8 @@ var Skyline = (function (exports, Vue) {
   exports.Action = action;
   exports.ActionGroup = actionGroup;
   exports.ActionSheet = actionSheet;
-  exports.Activatable = Activatable;
   exports.Alert = alert;
   exports.App = app;
-  exports.AutoRepeat = AutoRepeat;
   exports.Avatar = avatar;
   exports.Badge = badge;
   exports.BusyIndicator = busyIndicator;
@@ -22637,14 +22635,10 @@ var Skyline = (function (exports, Vue) {
   exports.CheckIndicator = CheckIndicator;
   exports.CheckItem = checkItem;
   exports.Chip = chip;
-  exports.ClickOutside = ClickOutside;
   exports.Col = col;
   exports.Collapse = collapse;
   exports.CollapseItem = collapseItem;
   exports.Content = content;
-  exports.DEFAULT_EVENT = DEFAULT_EVENT;
-  exports.DEFAULT_PROP = DEFAULT_PROP;
-  exports.DEFAULT_VALUE = DEFAULT_VALUE;
   exports.Datetime = datetime;
   exports.Dialog = dialog;
   exports.Fab = fab;
@@ -22652,14 +22646,11 @@ var Skyline = (function (exports, Vue) {
   exports.FabGroup = FabGroup;
   exports.FontIcon = FontIcon;
   exports.Footer = footer;
-  exports.Gesture = Gesture;
   exports.Grid = grid;
   exports.Header = header;
-  exports.Hover = Hover;
   exports.Icon = Icon;
   exports.Image = image;
   exports.Input = input;
-  exports.Intersect = Intersect;
   exports.Item = item;
   exports.ItemDivider = itemDivider;
   exports.Label = label;
@@ -22670,7 +22661,6 @@ var Skyline = (function (exports, Vue) {
   exports.ListView = listView;
   exports.Loading = loading;
   exports.Menu = menu;
-  exports.Mutate = Mutate;
   exports.Note = note;
   exports.Overlay = Overlay;
   exports.PageIndicator = pageIndicator;
@@ -22688,11 +22678,7 @@ var Skyline = (function (exports, Vue) {
   exports.Range = range;
   exports.Refresher = refresher;
   exports.RefresherContent = refresherContent;
-  exports.Remote = Remote;
-  exports.Resize = Resize$1;
-  exports.Ripple = Ripple;
   exports.Row = row;
-  exports.Scroll = Scroll;
   exports.Skyline = Skyline;
   exports.Slide = slide;
   exports.Slider = slider;
@@ -22700,7 +22686,6 @@ var Skyline = (function (exports, Vue) {
   exports.Spinner = Spinner;
   exports.Stepper = stepper;
   exports.SvgIcon = SvgIcon;
-  exports.SwipeBack = SwipeBack;
   exports.Switch = _switch;
   exports.SwitchGroup = switchGroup;
   exports.SwitchIndicator = switchIndicator;
@@ -22714,9 +22699,21 @@ var Skyline = (function (exports, Vue) {
   exports.Toast = toast;
   exports.Toolbar = toolbar;
   exports.Tooltip = tooltip;
-  exports.Touch = Touch;
   exports.TreeItem = treeItem;
-  exports.Trigger = Trigger;
+  exports.VActivatable = VActivatable;
+  exports.VAutoRepeat = VAutoRepeat;
+  exports.VClickOutside = VClickOutside;
+  exports.VGesture = VGesture;
+  exports.VHover = VHover;
+  exports.VIntersect = VIntersect;
+  exports.VMutate = VMutate;
+  exports.VRemote = VRemote;
+  exports.VResize = VResize;
+  exports.VRipple = VRipple;
+  exports.VScroll = VScroll;
+  exports.VSwipeBack = VSwipeBack;
+  exports.VTouch = VTouch;
+  exports.VTrigger = VTrigger;
   exports.createColorClasses = createColorClasses;
   exports.createModeClasses = createModeClasses;
   exports.default = index$1;

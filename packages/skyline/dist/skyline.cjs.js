@@ -546,7 +546,7 @@ function update(el, binding) {
     }
     inserted(el, binding);
 }
-const Ripple = {
+const VRipple = {
     inserted,
     update,
     unbind,
@@ -555,7 +555,7 @@ const Ripple = {
 function useRipple() {
     return createMixins({
         directives: {
-            ripple: Ripple,
+            ripple: VRipple,
         },
         props: {
             ripple: {
@@ -691,13 +691,21 @@ function inserted$1(el, binding) {
         return;
     const container = binding.arg || CONTAINER;
     const containerEl = el.closest(container) || document.querySelector(container) || document.body;
-    if (containerEl) {
-        el.vRemote = {
-            parentElement: el.parentElement,
-            nextElementSibling: el.nextElementSibling,
-        };
-        containerEl.appendChild(el);
-    }
+    if (!containerEl)
+        return;
+    const { parentElement, nextElementSibling } = el;
+    const destroy = () => {
+        if (!parentElement.contains(el)) {
+            el.remove();
+            return;
+        }
+        parentElement.insertBefore(el, nextElementSibling);
+    };
+    el.vRemote = {
+        container,
+        destroy,
+    };
+    containerEl.appendChild(el);
 }
 function unbind$1(el, binding) {
     if (!el.parentElement) {
@@ -707,12 +715,7 @@ function unbind$1(el, binding) {
     const { vRemote } = el;
     if (!vRemote)
         return;
-    const { parentElement, nextElementSibling } = vRemote;
-    if (!parentElement.contains(el)) {
-        el.remove();
-        return;
-    }
-    parentElement.insertBefore(el, nextElementSibling);
+    vRemote.destroy();
     delete el.vRemote;
 }
 function update$1(el, binding) {
@@ -724,7 +727,7 @@ function update$1(el, binding) {
     }
     inserted$1(el, binding);
 }
-const Remote = {
+const VRemote = {
     inserted: inserted$1,
     update: update$1,
     unbind: unbind$1,
@@ -733,7 +736,7 @@ const Remote = {
 function useRemote() {
     return createMixins({
         directives: {
-            remote: Remote,
+            remote: VRemote,
         },
         props: {
             container: [String, Function],
@@ -3975,7 +3978,7 @@ createComponent$a({
   /*#__PURE__*/
   useGroupItem(NAMESPACE$3)],
   directives: {
-    ripple: Ripple
+    ripple: VRipple
   },
   props: {
     text: String,
@@ -4202,7 +4205,7 @@ createComponent$f({
   /*#__PURE__*/
   useColor()],
   directives: {
-    ripple: Ripple
+    ripple: VRipple
   },
   props: {
     button: Boolean,
@@ -4256,7 +4259,7 @@ createComponent$f({
       },
       "directives": [{
         name: "ripple",
-        value: clickable && (Ripple || mode === 'md')
+        value: clickable && (VRipple || mode === 'md')
       }],
       "class": "card-native"
     }, [this.slots()])]);
@@ -4824,7 +4827,7 @@ createComponent$o({
   /*#__PURE__*/
   useColor()],
   directives: {
-    ripple: Ripple
+    ripple: VRipple
   },
   props: {
     ripple: Boolean,
@@ -7525,7 +7528,7 @@ createComponent$z({
   /*#__PURE__*/
   useGroupItem(NAMESPACE$9)],
   directives: {
-    ripple: Ripple
+    ripple: VRipple
   },
   props: {
     ripple: Boolean,
@@ -8251,7 +8254,7 @@ createComponent$J({
   /*#__PURE__*/
   useColor()],
   directives: {
-    ripple: Ripple
+    ripple: VRipple
   },
 
   provide() {
@@ -21487,12 +21490,12 @@ function inserted$2(el, binding) {
     const mouseleaveOff = on(el, 'mouseleave', leave, options);
     const focusOff = on(el, 'focus', enter, options);
     const blurOff = on(el, 'blur', leave, options);
-    function destroy() {
+    const destroy = () => {
         mouseenterOff();
         mouseleaveOff();
         focusOff();
         blurOff();
-    }
+    };
     el.vHover = {
         callback,
         options,
@@ -21517,7 +21520,7 @@ function update$3(el, binding) {
     }
     inserted$2(el, binding);
 }
-const Hover = {
+const VHover = {
     inserted: inserted$2,
     unbind: unbind$2,
     update: update$3,
@@ -21587,7 +21590,7 @@ createComponent$1m({
   async mounted() {
     await this.$nextTick();
     if (!this.$triggerEl) return;
-    this.vHover = createDirective(Hover, this.$triggerEl, {
+    this.vHover = createDirective(VHover, this.$triggerEl, {
       name: 'hover'
     });
     this.vHover.inserted();
@@ -21759,7 +21762,7 @@ function unbind$3(el, binding) {
         el.classList.add('line-activatable-instant');
     }
 }
-const Activatable = {
+const VActivatable = {
     inserted: inserted$3,
     unbind: unbind$3,
 };
@@ -21821,7 +21824,7 @@ function createAutoRepeat(el, options) {
     const touchendOff = on(doc, 'touchend', stop, opts);
     const touchcancelOff = on(doc, 'touchcancel', stop, opts);
     const dragstartOff = on(doc, 'dragstart', stop, opts);
-    function destroy() {
+    const destroy = () => {
         stop();
         mousedownOff();
         mouseupOff();
@@ -21829,7 +21832,7 @@ function createAutoRepeat(el, options) {
         touchendOff();
         touchcancelOff();
         dragstartOff();
-    }
+    };
     return {
         enable,
         update: setOptions,
@@ -21865,7 +21868,7 @@ function unbind$4(el, binding) {
     vAutoRepeat.destroy();
     delete el.vAutoRepeat;
 }
-const AutoRepeat = {
+const VAutoRepeat = {
     inserted: inserted$4,
     update: update$4,
     unbind: unbind$4,
@@ -21889,10 +21892,10 @@ function createClickOutside(el, options) {
     const opts = { passive: true };
     const mouseupOff = on(doc, 'mouseup', maybe, opts);
     const touchendOff = on(doc, 'touchend', maybe, opts);
-    function destroy() {
+    const destroy = () => {
         mouseupOff();
         touchendOff();
-    }
+    };
     return {
         maybe,
         destroy,
@@ -21923,7 +21926,7 @@ function update$5(el, binding) {
     }
     inserted$5(el, binding);
 }
-const ClickOutside = {
+const VClickOutside = {
     inserted: inserted$5,
     unbind: unbind$5,
     update: update$5,
@@ -21954,7 +21957,7 @@ function update$6(el, binding) {
     }
     inserted$6(el, binding);
 }
-const Gesture = {
+const VGesture = {
     inserted: inserted$6,
     unbind: unbind$6,
     update: update$6,
@@ -21991,9 +21994,9 @@ function inserted$7(el, binding) {
         else
             (el.vIntersect.init = true);
     }, options);
-    function destroy() {
+    const destroy = () => {
         observer.unobserve(el);
-    }
+    };
     el.vIntersect = {
         init: false,
         observer,
@@ -22017,7 +22020,7 @@ function update$7(el, binding) {
     }
     inserted$7(el, binding);
 }
-const Intersect = {
+const VIntersect = {
     inserted: inserted$7,
     update: update$7,
     unbind: unbind$7,
@@ -22058,9 +22061,9 @@ function inserted$8(el, binding) {
         /* eslint-disable-next-line */
         once && unbind$8(el);
     });
-    function destroy() {
+    const destroy = () => {
         observer.disconnect();
-    }
+    };
     el.vMutate = {
         observer,
         destroy,
@@ -22083,7 +22086,7 @@ function update$8(el, binding) {
     }
     inserted$8(el, binding);
 }
-const Mutate = {
+const VMutate = {
     inserted: inserted$8,
     unbind: unbind$8,
     update: update$8,
@@ -22094,9 +22097,9 @@ function inserted$9(el, binding) {
         return;
     const { value: callback, modifiers: options = { passive: true }, } = binding;
     const resizeOff = on(window, 'resize', callback, options);
-    function destroy() {
+    const destroy = () => {
         resizeOff();
-    }
+    };
     el.vResize = {
         callback,
         options,
@@ -22122,7 +22125,7 @@ function update$9(el, binding) {
     }
     inserted$9(el, binding);
 }
-const Resize$1 = {
+const VResize = {
     inserted: inserted$9,
     unbind: unbind$9,
     update: update$9,
@@ -22135,9 +22138,9 @@ function inserted$a(el, binding) {
     if (!target)
         return;
     const scrollOff = on(target, 'scroll', callback, options);
-    function destroy() {
+    const destroy = () => {
         scrollOff();
-    }
+    };
     el.vScroll = {
         callback,
         options,
@@ -22161,7 +22164,7 @@ function update$a(el, binding) {
     }
     inserted$a(el, binding);
 }
-const Scroll = {
+const VScroll = {
     inserted: inserted$a,
     unbind: unbind$a,
     update: update$a,
@@ -22239,7 +22242,7 @@ function update$b(el, binding) {
     }
     inserted$b(el, binding);
 }
-const SwipeBack = {
+const VSwipeBack = {
     inserted: inserted$b,
     unbind: unbind$b,
     update: update$b,
@@ -22316,11 +22319,11 @@ function inserted$c(el, binding) {
     keys(handlers).forEach((eventName) => {
         on(target, eventName, handlers[eventName], options);
     });
-    function destroy() {
+    const destroy = () => {
         keys(handlers).forEach((eventName) => {
             off(target, eventName, handlers[eventName]);
         });
-    }
+    };
     target.vTouch = {
         destroy,
     };
@@ -22341,7 +22344,7 @@ function update$c(el, binding) {
     }
     inserted$c(el, binding);
 }
-const Touch = {
+const VTouch = {
     inserted: inserted$c,
     unbind: unbind$c,
     update: update$c,
@@ -22358,7 +22361,7 @@ function unbind$d(el) {
         return;
     delete el.vTrigger;
 }
-const Trigger = {
+const VTrigger = {
     inserted: inserted$d,
     unbind: unbind$d,
 };
@@ -22367,20 +22370,20 @@ const Trigger = {
 
 var directives = /*#__PURE__*/Object.freeze({
   __proto__: null,
-  Activatable: Activatable,
-  AutoRepeat: AutoRepeat,
-  ClickOutside: ClickOutside,
-  Gesture: Gesture,
-  Hover: Hover,
-  Intersect: Intersect,
-  Mutate: Mutate,
-  Remote: Remote,
-  Resize: Resize$1,
-  Ripple: Ripple,
-  Scroll: Scroll,
-  SwipeBack: SwipeBack,
-  Touch: Touch,
-  Trigger: Trigger
+  VActivatable: VActivatable,
+  VAutoRepeat: VAutoRepeat,
+  VClickOutside: VClickOutside,
+  VGesture: VGesture,
+  VHover: VHover,
+  VIntersect: VIntersect,
+  VMutate: VMutate,
+  VRemote: VRemote,
+  VResize: VResize,
+  VRipple: VRipple,
+  VScroll: VScroll,
+  VSwipeBack: VSwipeBack,
+  VTouch: VTouch,
+  VTrigger: VTrigger
 });
 
 function useAsyncRender() {
@@ -22565,12 +22568,9 @@ var mixins = /*#__PURE__*/Object.freeze({
   useEvent: useEvent,
   useGroupItem: useGroupItem,
   useGroup: useGroup,
-  DEFAULT_VALUE: DEFAULT_VALUE,
   useLazy: useLazy,
   createModeClasses: createModeClasses,
   useMode: useMode,
-  DEFAULT_PROP: DEFAULT_PROP,
-  DEFAULT_EVENT: DEFAULT_EVENT,
   useModel: useModel,
   useOptions: useOptions,
   usePopstateClose: usePopstateClose,
@@ -22618,10 +22618,8 @@ var index$1 = /*#__PURE__*/ defaulExport();
 exports.Action = action;
 exports.ActionGroup = actionGroup;
 exports.ActionSheet = actionSheet;
-exports.Activatable = Activatable;
 exports.Alert = alert;
 exports.App = app;
-exports.AutoRepeat = AutoRepeat;
 exports.Avatar = avatar;
 exports.Badge = badge;
 exports.BusyIndicator = busyIndicator;
@@ -22640,14 +22638,10 @@ exports.CheckGroup = checkGroup;
 exports.CheckIndicator = CheckIndicator;
 exports.CheckItem = checkItem;
 exports.Chip = chip;
-exports.ClickOutside = ClickOutside;
 exports.Col = col;
 exports.Collapse = collapse;
 exports.CollapseItem = collapseItem;
 exports.Content = content;
-exports.DEFAULT_EVENT = DEFAULT_EVENT;
-exports.DEFAULT_PROP = DEFAULT_PROP;
-exports.DEFAULT_VALUE = DEFAULT_VALUE;
 exports.Datetime = datetime;
 exports.Dialog = dialog;
 exports.Fab = fab;
@@ -22655,14 +22649,11 @@ exports.FabButton = fabButton;
 exports.FabGroup = FabGroup;
 exports.FontIcon = FontIcon;
 exports.Footer = footer;
-exports.Gesture = Gesture;
 exports.Grid = grid;
 exports.Header = header;
-exports.Hover = Hover;
 exports.Icon = Icon;
 exports.Image = image;
 exports.Input = input;
-exports.Intersect = Intersect;
 exports.Item = item;
 exports.ItemDivider = itemDivider;
 exports.Label = label;
@@ -22673,7 +22664,6 @@ exports.ListItem = ListItem;
 exports.ListView = listView;
 exports.Loading = loading;
 exports.Menu = menu;
-exports.Mutate = Mutate;
 exports.Note = note;
 exports.Overlay = Overlay;
 exports.PageIndicator = pageIndicator;
@@ -22691,11 +22681,7 @@ exports.RadioIndicator = RadioIndicator;
 exports.Range = range;
 exports.Refresher = refresher;
 exports.RefresherContent = refresherContent;
-exports.Remote = Remote;
-exports.Resize = Resize$1;
-exports.Ripple = Ripple;
 exports.Row = row;
-exports.Scroll = Scroll;
 exports.Skyline = Skyline;
 exports.Slide = slide;
 exports.Slider = slider;
@@ -22703,7 +22689,6 @@ exports.Slides = slides;
 exports.Spinner = Spinner;
 exports.Stepper = stepper;
 exports.SvgIcon = SvgIcon;
-exports.SwipeBack = SwipeBack;
 exports.Switch = _switch;
 exports.SwitchGroup = switchGroup;
 exports.SwitchIndicator = switchIndicator;
@@ -22717,9 +22702,21 @@ exports.Title = title;
 exports.Toast = toast;
 exports.Toolbar = toolbar;
 exports.Tooltip = tooltip;
-exports.Touch = Touch;
 exports.TreeItem = treeItem;
-exports.Trigger = Trigger;
+exports.VActivatable = VActivatable;
+exports.VAutoRepeat = VAutoRepeat;
+exports.VClickOutside = VClickOutside;
+exports.VGesture = VGesture;
+exports.VHover = VHover;
+exports.VIntersect = VIntersect;
+exports.VMutate = VMutate;
+exports.VRemote = VRemote;
+exports.VResize = VResize;
+exports.VRipple = VRipple;
+exports.VScroll = VScroll;
+exports.VSwipeBack = VSwipeBack;
+exports.VTouch = VTouch;
+exports.VTrigger = VTrigger;
 exports.createColorClasses = createColorClasses;
 exports.createModeClasses = createModeClasses;
 exports.default = index$1;

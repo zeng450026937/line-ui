@@ -78,6 +78,10 @@ async function build(target) {
 
   // STAGE: prepare
   if (prepare && pkg.buildOptions && pkg.buildOptions.prepare) {
+    console.log();
+    console.log(
+      `${ chalk.bold(chalk.bgBlue(' STAGE ')) }${ chalk.bgGray(' PREPARE ') }`,
+    );
     const scripts = [].concat(pkg.buildOptions.prepare);
     for (const script of scripts) {
       await execa(
@@ -95,6 +99,10 @@ async function build(target) {
   }
 
   // STAGE: build
+  console.log();
+  console.log(
+    `${ chalk.bold(chalk.bgBlue(' STAGE ')) }${ chalk.bgGray(' BUILD ') }`,
+  );
   await execa(
     'rollup',
     [
@@ -119,6 +127,10 @@ async function build(target) {
 
   // STAGE: types
   if (buildTypes && pkg.types) {
+    console.log();
+    console.log(
+      `${ chalk.bold(chalk.bgBlue(' STAGE ')) }${ chalk.bgGray(' TYPES ') }`,
+    );
     console.log();
     console.log(
       chalk.bold(chalk.yellow(`Rolling up type definitions for ${ target }...`)),
@@ -164,6 +176,10 @@ async function build(target) {
 
   // STAGE: scripts
   if (scripts && pkg.buildOptions && pkg.buildOptions.scripts) {
+    console.log();
+    console.log(
+      `${ chalk.bold(chalk.bgBlue(' STAGE ')) }${ chalk.bgGray(' SCRIPTS ') }`,
+    );
     const scripts = [].concat(pkg.buildOptions.scripts);
     for (const script of scripts) {
       await execa(
