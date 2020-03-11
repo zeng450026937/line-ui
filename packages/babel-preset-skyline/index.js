@@ -8,6 +8,8 @@ module.exports = (_, options) => {
     memberImport = true,
   } = options;
 
+  const isDev = process.env.SKYLINE_ENV === 'development';
+
   const effect = (importName, isFullImport) => {
     importName = isFullImport ? 'default' : importName;
 
@@ -26,7 +28,7 @@ module.exports = (_, options) => {
         sideEffectPlugin,
         {
           skyline : {
-            effect,
+            effect : !isDev && effect,
             fullImport,
             memberImport,
           },
