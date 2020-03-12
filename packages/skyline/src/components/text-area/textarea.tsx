@@ -1,132 +1,150 @@
 import { createNamespace } from 'skyline/utils/namespace';
+import { useModel } from 'skyline/mixins/use-model';
+import { stop } from 'skyline/utils/dom/event-modifier';
+import { createColorClasses, useColor } from 'skyline/mixins/use-color';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('textarea');
 
-export default /*#__PURE__*/ createComponent({
-  props : {
-    canPaste : {
-      type    : Boolean,
-      default : true,
-    },
-    canRedo : {
-      type    : Boolean,
-      default : true,
-    },
-    canUndo : {
-      type    : Boolean,
-      default : true,
-    },
-    persistentSelection : {
-      type    : Boolean,
-      default : false,
-    },
-    readonly : {
-      type    : Boolean,
-      default : false,
-    },
-    resize : {
-      type    : Boolean,
-      default : false,
-    },
-    text : {
-      type    : String,
-      default : '',
-    },
-    hoverEnabled : {
-      type    : Boolean,
-      default : true,
-    },
+const findItemLabel = (componentEl: HTMLElement) => {
+  const itemEl = componentEl && componentEl.closest('.line-item');
+  if (itemEl) {
+    return itemEl.querySelector('.line-label');
+  }
+  return null;
+};
 
-    value : {
-      type    : [String, Number],
-      default : '',
-    },
-    placeholderText : {
+let textareaIds = 0;
+
+export default /*#__PURE__*/ createComponent({
+  mixins : [
+    /*#__PURE__*/ useModel('nativeValue', { event: 'textareaChange' }),
+    /*#__PURE__*/ useColor(),
+  ],
+
+  inject : {
+    Item : { default: undefined },
+  },
+
+  props : {
+    autocapitalize : {
       type    : String,
-      default : '',
+      default : 'none',
     },
-    placeholderTextColor : {
-      type    : String,
-      default : '',
+    autofocus : {
+      type    : Boolean,
+      default : false,
     },
-    rows : {
-      type    : Number,
-      default : 2,
-    },
-    maxlength : {
-      type : Number,
-    },
-    autosize : {
-      type    : [Boolean, Object],
+    clearOnEdit : {
+      type    : Boolean,
       default : false,
     },
     disabled : {
       type    : Boolean,
       default : false,
     },
-    clearable : {
+    maxlength : {
+      type : Number,
+    },
+    minlength : {
+      type : Number,
+    },
+    placeholder : {
+      type : String,
+    },
+    readonly : {
       type    : Boolean,
       default : false,
     },
-    clearableIcon : {
-      type    : String,
-      default : 'cancel',
+    required : {
+      type    : Boolean,
+      default : false,
+    },
+    spellcheck : {
+      type    : Boolean,
+      default : false,
+    },
+    cols : {
+      type : Number,
+    },
+    rows : {
+      type : Number,
+    },
+    wrap : {
+      type : String,
+    },
+    autoGrow : {
+      type    : Boolean,
+      default : false,
     },
   },
 
   data() {
     return {
-      isFocus          : false,
+      hasFocus         : false,
       didBlurAfterEdit : false,
     };
   },
 
-  computed : {
-    selectedText() {
-      return '';
-    },
-
-    inputValue() {
-      let { value } = this;
-      value = value === null || value === undefined ? '' : String(value);
-      return value;
-    },
-  },
-
   beforeMount() {
-    // this.$emit('pressAndHold');
-    // this.$emit('pressed');
-    // this.$emit('released');
+    this.inputId = `ion-input-${ textareaIds++ }`;
   },
 
   mounted() {
-    // this.$nextTick(this.setInputValue);
-    // this.$nextTick(this.adjustSize);
+    const { nativeInput } = this.$refs;
+    this.nativeInput = nativeInput;
+
+    this.runAutoGrow();
+    this.emitStyle();
   },
 
   methods : {
-    setInputValue(): void {
-      const { input } = this.$refs;
-      if ((input as HTMLInputElement).value === this.inputValue || !input) {
-        return;
+    disabledChanged() {
+      this.emitStyle();
+    },
+
+    // TODO: performance hit, this cause layout thrashing
+    runAutoGrow() {
+      const { nativeInput } = this;
+      if (nativeInput && this.autoGrow) {
+        this.$nextTick(() => {
+          nativeInput.style.height = 'inherit';
+          nativeInput.style.height = `${ nativeInput.scrollHeight }px`;
+        });
       }
-      (input as HTMLInputElement).value = this.inputValue;
     },
 
-    onClearValue(event: UIEvent) {
-      event.preventDefault();
-      event.stopPropagation();
-
-      this.$emit('input', '');
-      this.$emit('clear');
+    /**
+     * Sets focus on the specified `ion-textarea`. Use this method instead of the global
+     * `input.focus()`.
+     */
+    async setFocus() {
+      if (this.nativeInput) {
+        this.nativeInput.focus();
+      }
     },
 
-    hasValue(): boolean {
-      return this.getValue() !== '';
+    /**
+     * Returns the native `<textarea>` element used under the hood.
+     */
+    getInputElement(): Promise<HTMLTextAreaElement> {
+      return Promise.resolve(this.nativeInput!);
     },
 
-    getValue(): string {
-      return this.value as string || '';
+    emitStyle() {
+      if (!this.Item) return;
+
+      this.Item.itemStyle(
+        'textarea',
+        {
+          interactive            : true,
+          textarea               : true,
+          input                  : true,
+          'interactive-disabled' : this.disabled,
+          'has-placeholder'      : this.placeholder != null,
+          'has-value'            : this.hasValue(),
+          'has-focus'            : this.hasFocus,
+        },
+      );
     },
 
     /**
@@ -139,8 +157,8 @@ export default /*#__PURE__*/ createComponent({
 
       // Did the input value change after it was blurred and edited?
       if (this.didBlurAfterEdit && this.hasValue()) {
-      // Clear the input
-        this.$emit('input', '');
+        // Clear the input
+        this.nativeValue = '';
       }
 
       // Reset the flag
@@ -152,72 +170,94 @@ export default /*#__PURE__*/ createComponent({
       if (this.clearOnEdit && !this.hasFocus && this.hasValue()) {
         this.didBlurAfterEdit = true;
       }
-      // this.emitStyle(); ?
+      this.emitStyle();
     },
 
-    onInput(): void {
-      const { textarea } = this.$refs;
-      if (textarea) {
-        this.$emit('input', (textarea as HTMLInputElement).value);
+    hasValue(): boolean {
+      return this.getValue() !== '';
+    },
+
+    getValue(): string {
+      return this.value || '';
+    },
+
+    onInput() {
+      if (this.nativeInput) {
+        this.nativeValue = this.nativeInput.value;
       }
-      // his.emitStyle(); ?
+      this.emitStyle();
     },
 
-    onFocus(): void {
+    onFocus() {
       this.hasFocus = true;
       this.focusChange();
 
-      this.$emit('onFocus');
+      this.$emit('focus');
     },
 
-    onBlur(): void {
+    onBlur() {
       this.hasFocus = false;
       this.focusChange();
 
-      this.$emit('onBlur');
+      this.$emit('blur');
     },
 
-    onKeyDown(): void {
+    onChange() {
+      //
+    },
+
+    onKeyDown() {
       this.checkClearOnEdit();
     },
   },
 
   watch : {
-    value(value) {
-      const { textarea } = this.$ref;
-      if (textarea && textarea.value !== value) {
-        textarea.value = value;
-      }
+    value() {
+      this.runAutoGrow();
+      this.emitStyle();
+    },
+
+    disabled() {
+      this.disabledChanged();
     },
   },
 
   render() {
-    // const mode = getSkylineMode(this);
-    const value = this.getValue();
     const {
-      rows, maxlength, placeholderText, readonly, disabled, autocapitalize, autofocus,
+      nativeValue, rows, maxlength, placeholder, readonly, disabled,
+      autocapitalize, autofocus, color, cols, spellcheck, wrap, minlength,
     } = this;
+    const labelId = `${ this.inputId }-lbl`;
+    const label = findItemLabel(this.$el as HTMLElement);
+    if (label) {
+      label.id = labelId;
+    }
 
     return (
       <div
-        class={bem()}
+        class={[bem(), { ...createColorClasses(color) }]}
         on={this.$listeners}
       >
         <textarea
           class="native-textarea"
-          ref='textarea'
+          ref='nativeInput'
           autoCapitalize={autocapitalize}
           autoFocus={autofocus}
+          cols={cols}
           rows={rows}
+          wrap={wrap}
           maxlength={maxlength}
-          placeholder={placeholderText}
+          minlength ={minlength}
+          placeholder={placeholder || ''}
+          spellCheck={spellcheck}
           readonly={readonly}
           disabled={disabled}
           onInput={this.onInput}
           onFocus={this.onFocus}
           onBlur={this.onBlur}
+          onChange={stop(this.onChange)}
         >
-          {value}
+          {nativeValue}
         </textarea>
       </div>
     );

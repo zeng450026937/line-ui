@@ -34,6 +34,7 @@
   position: relative;
 
   flex: 1;
+  flex-shrink: 0;
   align-items: center;
 
   width: 100%;
@@ -49,19 +50,18 @@
   z-index: $z-index-item-input;
 }
 
-// TODO ?
 .line-item:not(.item-label) .line-input {
   --padding-start: 0;
 }
 
-.line-color {
+.line-input.line-color {
   color: current-color(base);
 }
 
 // Native Text Input
 // --------------------------------------------------
 
-.native-input {
+.line-input > .native-input {
   @include border-radius(var(--border-radius));
   @include padding(var(--padding-top), var(--padding-end), var(--padding-bottom), var(--padding-start));
   @include text-inherit();
@@ -120,7 +120,7 @@
 // This will only show when the scroll assist is configured
 // otherwise the .input-cover will not be rendered at all
 // The input cover is not clickable when the input is disabled
-.cloned-input {
+.line-input > .cloned-input {
   @include position(0, null, null, 0);
 
   position: absolute;
@@ -132,7 +132,7 @@
 // Clear Input Icon
 // --------------------------------------------------
 
-.line-input__clear-icon {
+.line-input .input-clear-icon {
   @include margin(0);
   @include padding(0);
   @include background-position(center);
@@ -148,7 +148,9 @@
   appearance: none;
 }
 
-.has-focus.has-value .line-input__clear-icon {
+// TODO
+// .has-focus.has-value .input-clear-icon
+.line-input.has-value .input-clear-icon {
   visibility: visible;
 }
 
@@ -157,12 +159,12 @@
 // --------------------------------------------------
 // When the input has focus, then the input cover should be hidden
 
-.has-focus {
+.line-input.has-focus {
   pointer-events: none;
 }
 
-.has-focus input,
-.has-focus a,
-.has-focus button {
+.line-input.has-focus input,
+.line-input.has-focus a,
+.line-input.has-focus button {
   pointer-events: auto;
 }
