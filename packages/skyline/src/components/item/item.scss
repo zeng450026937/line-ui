@@ -261,11 +261,11 @@
 // Item Slots
 // --------------------------------------------------
 
-.line-item .slotted.line-icon {
+.line-item .line-icon {
   font-size: 1.6em;
 }
 
-.line-item .slotted.line-button {
+.line-item .line-button {
   --margin-top: 0;
   --margin-bottom: 0;
   --margin-start: 0;
@@ -274,7 +274,7 @@
   z-index: 1;
 }
 
-.line-item .slotted.line-label {
+.line-item .line-label {
   flex: 1;
 }
 

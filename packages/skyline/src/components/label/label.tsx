@@ -47,7 +47,7 @@ export default /*#__PURE__*/ createComponent({
 
   render() {
     const { position } = this;
-    this.noAnimate = (position === 'floating');
+    // this.noAnimate = (position === 'floating');
     return (
       <div
         class={[

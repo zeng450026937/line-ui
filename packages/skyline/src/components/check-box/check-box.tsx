@@ -40,7 +40,7 @@ export default /*#__PURE__*/ createComponent({
       if (!this.Item) return;
 
       this.Item.itemStyle(
-        'line-check-box',
+        'check-box',
         {
           'checkbox-checked'     : this.checked,
           'interactive-disabled' : this.disabled,
@@ -76,8 +76,7 @@ export default /*#__PURE__*/ createComponent({
         ]}
         role="checkbox"
         onClick={this.toggle}
-        >
-        {/* on={this.$listeners} */}
+      >
         {
           this.slots(
             'indicator',

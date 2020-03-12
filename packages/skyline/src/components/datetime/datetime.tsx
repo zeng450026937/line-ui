@@ -159,7 +159,7 @@ export default /*#__PURE__*/ createComponent({
     this.updateDatetimeValue(this.dateValue);
 
     // TODO
-    // this.emitStyle();
+    this.emitStyle();
   },
 
   mounted() {
@@ -210,7 +210,7 @@ export default /*#__PURE__*/ createComponent({
 
     emitStyle(): void {
       this.Item && this.Item.itemStyle(
-        'line-datatime',
+        'datatime',
         {
           interactive            : true,
           datetime               : true,
