@@ -1,4 +1,3 @@
-// import { getSkylineMode } from 'skyline/utils/config';
 import { createNamespace } from 'skyline/utils/namespace';
 import { useCheckItemWithModel } from 'skyline/mixins/use-check-item';
 import { useRipple } from 'skyline/mixins/use-ripple';
@@ -23,6 +22,10 @@ export default /*#__PURE__*/ createComponent({
       type    : String,
       default : '',
     },
+    disabled : {
+      type    : Boolean,
+      default : false,
+    },
   },
 
   computed : {
@@ -46,16 +49,16 @@ export default /*#__PURE__*/ createComponent({
   },
 
   render() {
-    const { hasLabel, hasIcon } = this;
+    const { hasLabel, hasIcon, mode } = this;
 
     return (
       <div
         class={[
           bem({
-            selected : this.checked,
-            disabled : this.disabled,
           }),
           {
+            'tab-selected'       : this.checked,
+            'tab-disabled'       : this.disabled,
             'line-activatable'   : true,
             'line-selectable'    : true,
             'line-focusable'     : true,
@@ -68,9 +71,12 @@ export default /*#__PURE__*/ createComponent({
         onClick={ this.onClick }
         on={this.$listeners}
       >
-        <a tabIndex={-1}>
-          { this.slots() || this.text }
-        </a>
+        <div class="button-native" tabIndex={-1}>
+          <span class="button-inner">
+            { this.slots() || this.text }
+          </span>
+          {mode === 'md' && <line-ripple-effect type="unbounded"></line-ripple-effect>}
+        </div>
       </div>
     );
   },

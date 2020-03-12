@@ -34,10 +34,6 @@ export default /*#__PURE__*/ createComponent({
     },
   },
 
-  mounted() {
-
-  },
-
   render() {
     const { checked, tab } = this;
 

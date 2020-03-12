@@ -22,7 +22,7 @@
 // Material Design Tab Button: Label
 // --------------------------------------------------------------
 
-::slotted(.line-label) {
+.slotted.line-label {
   @include margin($tab-button-md-text-margin-top, $tab-button-md-text-margin-end, $tab-button-md-text-margin-bottom, $tab-button-md-text-margin-start);
 
   text-transform: $tab-button-md-text-capitalization;
@@ -32,7 +32,7 @@
 // Material Design Tab Button: Icon
 // --------------------------------------------------------------
 
-::slotted(.line-icon) {
+.slotted.line-icon {
   @include margin($tab-button-md-icon-margin-top, $tab-button-md-icon-margin-end, $tab-button-md-icon-margin-bottom, $tab-button-md-icon-margin-start);
   @include transform-origin(center, center);
 
@@ -42,7 +42,7 @@
 // Material Design Tab Button: Badge
 // --------------------------------------------------------------
 
-::slotted(.line-badge) {
+.slotted.line-badge {
   @include border-radius($tab-button-md-badge-border-radius);
   @include padding($tab-button-md-badge-padding-top, $tab-button-md-badge-padding-end, $tab-button-md-badge-padding-bottom, $tab-button-md-badge-padding-start);
   @include position(8px, null, null, calc(50% + 6px));
@@ -54,7 +54,7 @@
   font-weight: normal;
 }
 
-::slotted(.line-badge:empty) {
+.slotted.line-badge:empty {
   display: block;
 
   min-width: $tab-button-md-badge-size-empty;
@@ -67,12 +67,12 @@
 // --------------------------------------------------------------
 
 // Icon
-.tab-layout-icon-top ::slotted(.line-icon) {
+.line-tab-button.tab-layout-icon-top .slotted.line-icon {
   @include margin(6px, null, 2px, null);
 }
 
 // Label
-.tab-layout-icon-top ::slotted(.line-label) {
+.line-tab-button.tab-layout-icon-top .slotted.line-label {
   @include margin(0, null, 6px, null);
 }
 
@@ -81,17 +81,17 @@
 // --------------------------------------------------------------
 
 // Badge
-.tab-layout-icon-bottom ::slotted(.line-badge) {
+.line-tab-button.tab-layout-icon-bottom .slotted.line-badge {
   @include position(8px, null, null, 70%);
 }
 
 // Icon
-.tab-layout-icon-bottom ::slotted(.line-icon) {
+.line-tab-button.tab-layout-icon-bottom .slotted.line-icon {
   @include margin(0, null, 6px, null);
 }
 
 // Label
-.tab-layout-icon-bottom ::slotted(.line-label) {
+.line-tab-button.tab-layout-icon-bottom .slotted.line-label {
   @include margin(6px, null, 0, null);
 }
 
@@ -100,18 +100,18 @@
 // --------------------------------------------------------------
 
 // Badge
-.tab-layout-icon-start ::slotted(.line-badge),
-.tab-layout-icon-end ::slotted(.line-badge) {
+.line-tab-button.tab-layout-icon-start .slotted.line-badge,
+.line-tab-button.tab-layout-icon-end .slotted.line-badge {
   @include position(16px, null, null, 80%);
 }
 
 // Icon
-.tab-layout-icon-start ::slotted(.line-icon) {
+.line-tab-button.tab-layout-icon-start .slotted.line-icon {
   @include margin(null, 6px, null, null);
 }
 
 // Icon
-.tab-layout-icon-end ::slotted(.line-icon) {
+.line-tab-button.tab-layout-icon-end .slotted.line-icon {
   @include margin(null, null, null, 6px);
 }
 
@@ -120,14 +120,14 @@
 // --------------------------------------------------------------
 
 // Badge
-.tab-layout-icon-hide ::slotted(.line-badge),
-.tab-has-label-only ::slotted(.line-badge) {
+.line-tab-button.tab-layout-icon-hide .slotted.line-badge,
+.line-tab-button.tab-has-label-only .slotted.line-badge {
   @include position(16px, null, null, 70%);
 }
 
 // Label
-.tab-layout-icon-hide ::slotted(.line-label),
-.tab-has-label-only ::slotted(.line-label) {
+.line-tab-button.tab-layout-icon-hide .slotted.line-label,
+.line-tab-button.tab-has-label-only .slotted.line-label {
   @include margin(0, null, 0, null);
 }
 
@@ -136,14 +136,14 @@
 // --------------------------------------------------------------
 
 // Badge
-.tab-layout-label-hide ::slotted(.line-badge),
-.tab-has-icon-only ::slotted(.line-badge) {
+.line-tab-button.tab-layout-label-hide .slotted.line-badge,
+.line-tab-button.tab-has-icon-only .slotted.line-badge {
   @include position(16px, null, null, null);
 }
 
 // Icon
-.tab-layout-label-hide ::slotted(.line-icon),
-.tab-has-icon-only ::slotted(.line-icon) {
+.line-tab-button.tab-layout-label-hide .slotted.line-icon,
+.line-tab-button.tab-has-icon-only .slotted.line-icon {
   @include margin(0, null, 0, null);
 
   font-size: 24px;
