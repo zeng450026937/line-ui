@@ -1,35 +1,33 @@
-@import "../../themes/skyline.globals";
+@import '../../themes/skyline.globals';
 
-.line {
-  &-svg-icon {
-    display: inline-block;
-  
-    width: 1em;
-    height: 1em;
+.line-icon.line-svg-icon {
+  display: inline-block;
 
-    font-size: 24px;
-  
-    contain: strict;
-    
-    svg {
-      display: block;
-    
-      width: 100%;
-      height: 100%;
+  width: 1em;
+  height: 1em;
 
-      transition: all 0.6s ease-in-out;
-    }
+  font-size: 24px;
 
-    &--small {
-      font-size: 18px;
-    }
-    
-    &--large {
-      font-size: 32px;
-    }
+  contain: strict;
 
-    &.line-color {
-      color: current-color(base);
-    }
+  svg {
+    display: block;
+
+    width: 100%;
+    height: 100%;
+
+    transition: all 0.6s ease-in-out;
+  }
+
+  &.line-color {
+    color: current-color(base);
+  }
+
+  &.line-svg-icon--small {
+    font-size: 18px !important;
+  }
+
+  &.line-svg-icon--large {
+    font-size: 32px !important;
   }
 }

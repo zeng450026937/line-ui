@@ -17,7 +17,7 @@ $tabbar-md-background:                      var(--line-tab-bar-background, $back
 $tabbar-md-background-focused:              var(--line-tab-bar-background-focused, get-color-shade(#fff)) !default;
 $tabbar-md-border-color:                    var(--line-tab-bar-border-color, var(--line-border-color, var(--line-color-step-150, rgba(0, 0, 0, .07)))) !default;
 $tabbar-md-color:                           var(--line-tab-bar-color, $text-color-step-400) !default;
-$tabbar-md-color-activated:                 var(--line-tab-bar-color-activated, ion-color(primary, base)) !default;
+$tabbar-md-color-activated:                 var(--line-tab-bar-color-activated, line-color(primary, base)) !default;
 
 // Material Design Toolbar
 // --------------------------------------------------

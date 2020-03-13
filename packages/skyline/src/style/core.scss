@@ -1,7 +1,7 @@
 @import "../themes/skyline.skip-warns.scss";
 @import "../themes/skyline.globals";
-// @import "../components/menu/menu.ios.vars";
-// @import "../components/menu/menu.md.vars";
+@import "../components/menu/menu.ios.vars";
+@import "../components/menu/menu.md.vars";
 
 // Ionic Font Family
 // --------------------------------------------------
@@ -80,19 +80,19 @@ body.backdrop-no-scroll {
   position: relative;
 }
 
-ion-route,
-ion-route-redirect,
-ion-router,
-ion-select-option,
-ion-nav-controller,
-ion-menu-controller,
-ion-action-sheet-controller,
-ion-alert-controller,
-ion-loading-controller,
-ion-modal-controller,
-ion-picker-controller,
-ion-popover-controller,
-ion-toast-controller,
+.line-route,
+.line-route-redirect,
+.line-router,
+.line-select-option,
+.line-nav-controller,
+.line-menu-controller,
+.line-action-sheet-controller,
+.line-alert-controller,
+.line-loading-controller,
+.line-modal-controller,
+.line-picker-controller,
+.line-popover-controller,
+.line-toast-controller,
 .line-page-hidden,
 [hidden] {
   /* stylelint-disable-next-line declaration-no-important */
@@ -103,7 +103,7 @@ ion-toast-controller,
   opacity: 0;
 }
 
-.can-go-back > ion-header ion-back-button {
+.can-go-back > .line-header .line-back-button {
   display: block;
 }
 
@@ -143,7 +143,7 @@ html.plt-ios.plt-hybrid, html.plt-ios.plt-pwa {
 // Menu Styles
 // TODO: Find a better long term solution for this
 // --------------------------------------------------
-/*
+
 .menu-content {
   @include transform(translate3d(0, 0, 0));
 }
@@ -176,4 +176,3 @@ html.plt-ios.plt-hybrid, html.plt-ios.plt-pwa {
 .md .menu-content-push {
   box-shadow: $menu-md-box-shadow;
 }
-*/

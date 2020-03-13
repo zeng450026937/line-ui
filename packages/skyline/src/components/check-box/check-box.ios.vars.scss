@@ -8,10 +8,10 @@
 $checkbox-ios-background-color-off:       $item-ios-background !default;
 
 /// @prop - Background color of the checkbox when on
-$checkbox-ios-background-color-on:        ion-color(primary, base) !default;
+$checkbox-ios-background-color-on:        line-color(primary, base) !default;
 
 /// @prop - Background color of focus indicator for checkbox when focused
-$checkbox-ios-background-color-focused:   ion-color(primary, tint) !default;
+$checkbox-ios-background-color-focused:   line-color(primary, tint) !default;
 
 /// @prop - Size of the checkbox icon
 $checkbox-ios-icon-size:                  26px !default;
@@ -38,7 +38,7 @@ $checkbox-ios-checkmark-border-width:     1px !default;
 $checkbox-ios-checkmark-border-style:     solid !default;
 
 /// @prop - Color of the checkmark border in the checkbox
-$checkbox-ios-checkmark-border-color:     ion-color(primary, contrast) !default;
+$checkbox-ios-checkmark-border-color:     line-color(primary, contrast) !default;
 
 /// @prop - Top of the checkmark in the checkbox
 $checkbox-ios-checkmark-top:              $checkbox-ios-icon-size / 6 !default;

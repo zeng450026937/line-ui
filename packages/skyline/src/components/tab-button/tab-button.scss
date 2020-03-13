@@ -123,8 +123,8 @@
 // Tab Button: Label / Icon
 // --------------------------------------------------
 
-.slotted.line-label,
-.slotted.line-icon {
+.line-tab-button .slotted.line-label,
+.line-tab-button .slotted.line-icon {
   display: block;
 
   align-self: center;
@@ -139,11 +139,11 @@
   box-sizing: border-box;
 }
 
-.slotted.line-label {
+.line-tab-button .slotted.line-label {
   order: 0;
 }
 
-.slotted.line-icon {
+.line-tab-button .slotted.line-icon {
   order: -1;
 
   height: 1em;
@@ -158,7 +158,7 @@
 // Tab Button: Badge
 // --------------------------------------------------
 
-.slotted.line-badge {
+.line-tab-button .slotted.line-badge {
   box-sizing: border-box;
 
   position: absolute;
@@ -190,6 +190,6 @@
   display: none;
 }
 
-.line-ripple-effect {
+.line-tab-button .line-ripple-effect {
   color: var(--ripple-color);
 }
