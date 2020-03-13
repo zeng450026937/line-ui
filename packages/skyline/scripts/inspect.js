@@ -35,7 +35,8 @@ async function run() {
     },
     { spaces: 2 },
   );
-  logger.done(resolve('inspect.json'));
+
+  logger.done(resolve('dist/inspect.json'));
 }
 
 async function inspectComponents() {
@@ -53,19 +54,39 @@ async function inspectComponents() {
     const hasMD = fs.existsSync(`${ componentsDir }/${ style.md }`);
     return {
       name,
-      tag : {
-        kebab  : `${ prefix }-${ filename }`,
-        pascal : `${ camelize(`-${ prefix }-${ filename }`) }`,
-      },
+      tags : [
+        `${ prefix }-${ filename }`,
+        `${ camelize(`-${ prefix }-${ filename }`) }`,
+      ],
       style : {
-        default : hasDefault ? relative(packageDir, style.default) : '',
-        ios     : hasIOS ? relative(packageDir, style.ios) : hasDefault ? relative(packageDir, style.default) : '',
-        md      : hasMD ? relative(packageDir, style.md) : hasDefault ? relative(packageDir, style.default) : '',
+        default : hasDefault
+          ? relative(packageDir, `${ componentsDir }/${ style.default }`)
+          : '',
+        ios : hasIOS
+          ? relative(packageDir, `${ componentsDir }/${ style.ios }`)
+          : hasDefault
+            ? relative(packageDir, `${ componentsDir }/${ style.default }`)
+            : '',
+        md : hasMD
+          ? relative(packageDir, `${ componentsDir }/${ style.md }`)
+          : hasDefault
+            ? relative(packageDir, `${ componentsDir }/${ style.default }`)
+            : '',
       },
       scss : {
-        default : hasDefault ? relative(packageDir, style.default) : '',
-        ios     : hasIOS ? relative(packageDir, style.ios) : hasDefault ? relative(packageDir, style.default) : '',
-        md      : hasMD ? relative(packageDir, style.md) : hasDefault ? relative(packageDir, style.default) : '',
+        default : hasDefault
+          ? relative(packageDir, `${ componentsDir }/${ style.default }`)
+          : '',
+        ios : hasIOS
+          ? relative(packageDir, `${ componentsDir }/${ style.ios }`)
+          : hasDefault
+            ? relative(packageDir, `${ componentsDir }/${ style.default }`)
+            : '',
+        md : hasMD
+          ? relative(packageDir, `${ componentsDir }/${ style.md }`)
+          : hasDefault
+            ? relative(packageDir, `${ componentsDir }/${ style.default }`)
+            : '',
       },
       theme : {
         default : hasDefault,
@@ -111,19 +132,19 @@ async function inspectStyles() {
   return {
     bundle     : 'style/skyline.bundle.scss',
     components : {
-      default : 'themes/skyline.components.scss',
-      ios     : 'themes/skyline.components.ios.scss',
-      md      : 'themes/skyline.components.md.scss',
+      base : 'style/skyline.scss',
+      ios  : 'style/skyline.ios.scss',
+      md   : 'style/skyline.md.scss',
     },
-    globals : {
-      default : 'themes/skyline.globals.scss',
-      ios     : 'themes/skyline.globals.ios.scss',
-      md      : 'themes/skyline.globals.md.scss',
+    default : {
+      base : 'themes/skyline.globals.scss',
+      ios  : 'themes/skyline.globals.ios.scss',
+      md   : 'themes/skyline.globals.md.scss',
     },
     theme : {
-      default : 'themes/skyline.theme.default.scss',
-      ios     : 'themes/skyline.theme.default.ios.scss',
-      md      : 'themes/skyline.theme.default.md.scss',
+      base : 'themes/skyline.theme.default.scss',
+      ios  : 'themes/skyline.theme.default.ios.scss',
+      md   : 'themes/skyline.theme.default.md.scss',
     },
   };
 }

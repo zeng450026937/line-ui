@@ -1,16 +1,5 @@
 import Vue from 'vue';
 
-const camelizeRE = /-(\w)/g;
-// hyphenate => camel
-const camelize = (str) => {
-    return str.replace(camelizeRE, (_, c) => (c ? c.toUpperCase() : ''));
-};
-const hyphenateRE = /\B([A-Z])/g;
-// camel => hyphenate
-const hyphenate = (str) => {
-    return str.replace(hyphenateRE, '-$1').toLowerCase();
-};
-
 const debounce = (fn, delay = 300) => {
     let timer;
     return ((...args) => {
@@ -46,8 +35,7 @@ function install(Vue, opts = {}) {
     }
     if (directives) {
         keys(directives).forEach(key => {
-            Vue.directive(hyphenate(key), directives[key]);
-            Vue.directive(key, directives[key]);
+            Vue.use(directives[key]);
         });
     }
 }
@@ -259,6 +247,23 @@ function unifySlots(context) {
     });
 }
 
+/* eslint-disable import/extensions */
+function createInstall(key) {
+    const propKey = `${key}s`;
+    return function install(target = Vue) {
+        const { name } = this;
+        // constructor
+        if (isFunction(target)) {
+            target[key](name, this);
+            return;
+        }
+        const { [propKey]: asserts } = target;
+        target[propKey] = { [name]: this, ...asserts };
+    };
+}
+const componentInstall = /*#__PURE__*/ createInstall('component');
+const directiveInstall = /*#__PURE__*/ createInstall('directive');
+
 /* eslint-disable import/extensions, max-len */
 function createMixins(options) {
     return Vue.extend(options);
@@ -344,17 +349,10 @@ function useMode(fallback = 'ios') {
     });
 }
 
-function install$1(Vue) {
-    const { name } = this;
-    // kebab case(hyphenate)
-    Vue.component(name, this);
-    // pascal case
-    Vue.component(camelize(`-${name}`), this);
-}
 function defineComponent(name) {
     return function (sfc) {
         sfc.name = name;
-        sfc.install = install$1;
+        sfc.install = componentInstall;
         if (sfc.functional) {
             const { render } = sfc;
             sfc.render = (h, ctx) => render.call(undefined, h, unifySlots(ctx));
@@ -461,6 +459,59 @@ function useGroupItem(name) {
     });
 }
 
+function createElementProxy(element) {
+    return new Proxy({}, {
+        get(target, key, receiver) {
+            if (key in target) {
+                return Reflect.get(target, key, receiver);
+            }
+            if (key in element) {
+                const value = Reflect.get(element, key);
+                Reflect.set(target, key, isFunction(value) ? value.bind(element) : value);
+            }
+            return Reflect.get(target, key, receiver);
+        },
+    });
+}
+
+function createDirective(directive, element, binding) {
+    const el = createElementProxy(element);
+    let vnode;
+    return {
+        bind(val = binding.value) {
+            if (!directive.bind)
+                return;
+            binding.value = val;
+            directive.bind(el, binding, vnode, vnode);
+        },
+        unbind() {
+            if (!directive.unbind)
+                return;
+            directive.unbind(el, binding, vnode, vnode);
+        },
+        inserted(val = binding.value) {
+            if (!directive.inserted)
+                return;
+            binding.value = val;
+            directive.inserted(el, binding, vnode, vnode);
+        },
+        update(val, arg) {
+            if (!directive.update)
+                return;
+            binding.oldValue = binding.value;
+            binding.value = val;
+            binding.oldArg = binding.arg;
+            binding.arg = arg || binding.arg;
+            directive.update(el, binding, vnode, vnode);
+        },
+    };
+}
+
+function defineDirective(options) {
+    options.install = directiveInstall;
+    return options;
+}
+
 const PADDING = 10;
 const INITIAL_ORIGIN_SCALE = 0.5;
 const removeRipple = (ripple, effect) => {
@@ -472,8 +523,8 @@ const removeRipple = (ripple, effect) => {
 };
 function createRippleEffect(el, options) {
     const { unbounded = false } = options;
-    function addRipple(x, y) {
-        return new Promise((resolve) => {
+    const addRipple = (x, y) => {
+        return new Promise(resolve => {
             const rect = el.getBoundingClientRect();
             const { width } = rect;
             const { height } = rect;
@@ -514,14 +565,14 @@ function createRippleEffect(el, options) {
                 });
             }, 225 + 100);
         });
-    }
+    };
     return {
         addRipple,
         options,
     };
 }
 function inserted(el, binding) {
-    const { modifiers, value } = binding;
+    const { value, modifiers } = binding;
     if (value === false)
         return;
     el.vRipple = createRippleEffect(el, modifiers);
@@ -533,19 +584,21 @@ function unbind(el, binding) {
     delete el.vRipple;
 }
 function update(el, binding) {
-    if (binding.value === binding.oldValue) {
+    const { value, oldValue } = binding;
+    if (value === oldValue) {
         return;
     }
-    if (binding.oldValue !== false) {
+    if (oldValue !== false) {
         unbind(el);
     }
     inserted(el, binding);
 }
-const VRipple = {
+const VRipple = defineDirective({
+    name: 'ripple',
     inserted,
     update,
     unbind,
-};
+});
 
 function useRipple() {
     return createMixins({
@@ -681,32 +734,33 @@ function useModel(proxy, options = {}, defined = false) {
 }
 
 const CONTAINER = '[skyline-app]';
-function inserted$1(el, binding) {
-    if (binding.value === false)
-        return;
-    const container = binding.arg || CONTAINER;
-    const containerEl = el.closest(container) || document.querySelector(container) || document.body;
-    if (!containerEl)
-        return;
-    const { parentElement, nextElementSibling } = el;
+function createRemote(el, options) {
+    const { container = CONTAINER } = options;
+    const containerEl = isString(container)
+        ? el.closest(container) || document.querySelector(container) || document.body
+        : container;
+    const { parentElement: originParent, nextElementSibling: originSibling, } = el;
     const destroy = () => {
-        if (!parentElement.contains(el)) {
+        const { parentElement } = el;
+        if (!parentElement || !originParent) {
             el.remove();
             return;
         }
-        parentElement.insertBefore(el, nextElementSibling);
+        originParent.insertBefore(el, originSibling);
     };
-    el.vRemote = {
+    containerEl.appendChild(el);
+    return {
         container,
         destroy,
     };
-    containerEl.appendChild(el);
 }
-function unbind$1(el, binding) {
-    if (!el.parentElement) {
-        el.remove();
+function inserted$1(el, binding) {
+    const { value, arg } = binding;
+    if (value === false)
         return;
-    }
+    el.vRemote = createRemote(el, { container: arg });
+}
+function unbind$1(el) {
     const { vRemote } = el;
     if (!vRemote)
         return;
@@ -714,19 +768,21 @@ function unbind$1(el, binding) {
     delete el.vRemote;
 }
 function update$1(el, binding) {
-    if (binding.value === binding.oldValue) {
+    const { value, oldValue } = binding;
+    if (value === oldValue) {
         return;
     }
-    if (binding.oldValue !== false) {
+    if (oldValue !== false) {
         unbind$1(el);
     }
     inserted$1(el, binding);
 }
-const VRemote = {
+const VRemote = defineDirective({
+    name: 'remote',
     inserted: inserted$1,
     update: update$1,
     unbind: unbind$1,
-};
+});
 
 function useRemote() {
     return createMixins({
@@ -3546,21 +3602,6 @@ const getClientHeight = () => {
         return 0; // SSR
     return Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 };
-
-function createElementProxy(element) {
-    return new Proxy({}, {
-        get(target, key, receiver) {
-            if (key in target) {
-                return Reflect.get(target, key, receiver);
-            }
-            if (key in element) {
-                const value = Reflect.get(element, key);
-                Reflect.set(target, key, isFunction(value) ? value.bind(element) : value);
-            }
-            return Reflect.get(target, key, receiver);
-        },
-    });
-}
 
 const pointerCoord = (ev) => {
     // get X coordinates for either a mouse click
@@ -11751,365 +11792,103 @@ const {
   bem: bem$X
 } =
 /*#__PURE__*/
-createNamespace('progress');
+createNamespace('progress-bar');
+
+const clamp$3 = (min, n, max) => {
+  return Math.max(min, Math.min(n, max));
+};
+
+const renderIndeterminate = h => {
+  return [h("div", {
+    "class": "indeterminate-bar-primary"
+  }, [h("span", {
+    "class": "progress-indeterminate"
+  })]), h("div", {
+    "class": "indeterminate-bar-secondary"
+  }, [h("span", {
+    "class": "progress-indeterminate"
+  })])];
+};
+
+const renderProgress = (h, value, buffer) => {
+  const finalValue = clamp$3(0, value, 1);
+  const finalBuffer = clamp$3(0, buffer, 1);
+  return [h("div", {
+    "class": "progress",
+    "style": {
+      transform: `scaleX(${finalValue})`
+    }
+  }), finalBuffer !== 1 && h("div", {
+    "class": "buffer-circles"
+  }), h("div", {
+    "class": "progress-buffer-bar",
+    "style": {
+      transform: `scaleX(${finalBuffer})`
+    }
+  })];
+};
+
 var progressBar = /*#__PURE__*/
 createComponent$Y({
+  mixins: [
+  /*#__PURE__*/
+  useColor()],
   props: {
-    from: {
-      type: Number,
-      default: 0
+    type: {
+      type: String,
+      default: 'determinate'
     },
-    to: {
-      type: Number,
-      default: 100
+    reversed: {
+      type: Boolean,
+      default: false
     },
     value: {
       type: Number,
       default: 0
     },
-    bufferValue: {
+    buffer: {
       type: Number,
-      default: 0
-    },
-    stream: {
-      type: Boolean,
-      default: false
-    },
-    indeterminate: {
-      type: Boolean,
-      default: false
-    },
-    height: {
-      type: [Number, String],
-      default: 4
-    },
-    color: {
-      type: String,
-      default: '#10c29b'
+      default: 1
     }
   },
-  computed: {
-    style() {
-      const style = {
-        height: '4px'
-      };
-      style.height = `${this.height}px`;
-      return style;
-    },
 
-    bufferBarStyle() {
-      const {
-        color,
-        bufferPosition
-      } = this;
-      const style = {
-        backgroundColor: `${color}20`,
-        transform: `scaleX(${bufferPosition})`
-      };
-
-      if (this.bufferValue) {
-        style.backgroundColor = `${color}60`;
-      }
-
-      return style;
-    },
-
-    streamBarStyle() {
-      if (!this.stream) {
-        return {};
-      }
-
-      const {
-        color,
-        position,
-        bufferPosition
-      } = this;
-      const style = {
-        borderColor: `${color}80`,
-        width: `${(1 - position) * 100}%`
-      };
-
-      if (this.bufferValue) {
-        style.width = `${(1 - bufferPosition) * 100}%`;
-      }
-
-      return style;
-    },
-
-    bufferPosition() {
-      let {
-        bufferValue
-      } = this;
-
-      if (!bufferValue) {
-        return 1;
-      }
-
-      const {
-        to,
-        from
-      } = this;
-
-      if (bufferValue > to) {
-        bufferValue = to;
-        console.warn('bufferValue', this.bufferValue);
-      } else if (bufferValue < from) {
-        bufferValue = from;
-        console.warn('bufferValue', this.bufferValue);
-      }
-
-      const position = (bufferValue - from) / (to - from);
-      return position;
-    },
-
-    position() {
-      if (this.indeterminate) {
-        return 0;
-      }
-
-      const {
-        to,
-        from
-      } = this;
-      let {
-        value
-      } = this;
-
-      if (value > to) {
-        value = to;
-        console.warn('value', this.value);
-      } else if (value < from) {
-        value = from;
-        console.warn('value', this.value);
-      }
-
-      const position = (value - from) / (to - from);
-      return position;
-    }
-
-  },
-
-  render() {
-    const h = arguments[0];
-    let children = [];
+  render(h) {
     const {
-      color,
-      indeterminate,
-      stream,
-      bufferBarStyle,
-      position,
-      streamBarStyle,
-      style
-    } = this;
-    const bufferBar = h("div", {
-      "class": "line-progress__buffer-bar",
-      "style": bufferBarStyle
-    });
-
-    if (indeterminate) {
-      [1, 2].forEach(() => {
-        const indeterminateBar = h("div", {
-          "class": "line-progress__bar-wrap"
-        }, [h("div", {
-          "class": "line-progress__indeterminate-bar",
-          "style": {
-            'background-color': color
-          }
-        })]);
-        children.push(indeterminateBar);
-      });
-    } else {
-      const progressBar = h("div", {
-        "class": "line-progress__bar",
-        "style": {
-          backgroundColor: color,
-          transform: `scaleX(${position})`
-        }
-      });
-      children = [progressBar];
-    }
-
-    children.push(bufferBar);
-
-    if (!indeterminate && stream) {
-      const streamBar = h("div", {
-        "class": "line-progress__stream-bar",
-        "style": streamBarStyle
-      });
-      children.push(streamBar);
-    }
-
-    return h("div", {
-      "class": bem$X(),
-      "style": style
-    }, [children]);
-  }
-
-});
-
-const {
-  createComponent: createComponent$Z,
-  bem: bem$Y
-} =
-/*#__PURE__*/
-createNamespace('progress-circular');
-var progressCircular = /*#__PURE__*/
-createComponent$Z({
-  props: {
-    from: {
-      type: Number,
-      default: 0
-    },
-    to: {
-      type: Number,
-      default: 100
-    },
-    value: {
-      type: Number,
-      default: 0
-    },
-    indeterminate: {
-      type: Boolean,
-      default: false
-    },
-    size: {
-      type: Number,
-      default: 32
-    },
-    width: {
-      type: [Number, String],
-      default: 4
-    },
-    rotate: {
-      type: [Number, String],
-      default: 0
-    },
-    color: {
-      type: String,
-      default: '#10c29b'
-    }
-  },
-  computed: {
-    position() {
-      let normalizedValue = this.value;
-      const {
-        from,
-        to
-      } = this;
-
-      if (normalizedValue < from) {
-        normalizedValue = from;
-      }
-
-      if (normalizedValue > to) {
-        normalizedValue = to;
-      }
-
-      if (normalizedValue !== this.value) {
-        this.$emit('change', normalizedValue);
-      }
-
-      return (normalizedValue - from) / (to - from);
-    },
-
-    strokeDashOffset() {
-      return `${(1 - this.position) * this.circumference}px`;
-    },
-
-    strokeWidth() {
-      return Number(this.width) / +this.size * this.viewBoxSize * 2;
-    },
-
-    classes() {
-      return {
-        'is-indeterminate': this.indeterminate
-      };
-    },
-
-    styles() {
-      return {
-        height: `${this.size}px`,
-        width: `${this.size}px`,
-        color: this.color,
-        'caret-color': this.color
-      };
-    },
-
-    svgStyles() {
-      return {
-        transform: `rotate(${Number(this.rotate)}deg)`
-      };
-    },
-
-    viewBoxSize() {
-      return this.radius / (1 - Number(this.width) / +this.size);
-    }
-
-  },
-
-  created() {
-    this.radius = 20;
-    this.circumference = 2 * Math.PI * this.radius;
-    this.strokeDashArray = Math.round(this.circumference * 1000) / 1000;
-  },
-
-  render() {
-    const h = arguments[0];
-    const {
-      classes,
-      styles,
+      mode,
+      type,
       value,
-      viewBoxSize,
-      indeterminate,
-      radius,
-      strokeWidth,
-      strokeDashArray,
-      strokeDashOffset
+      paused,
+      reversed,
+      buffer,
+      color
     } = this;
-    return h("div", helper([{
-      "class": [bem$Y(), classes],
-      "style": styles
-    }, {
-      "on": this.$listeners
-    }]), [h("svg", {
+    return h("div", {
       "attrs": {
-        "xmlns": "http://www.w3.org/2000/svg",
-        "viewBox": `${viewBoxSize} ${viewBoxSize} ${2 * viewBoxSize} ${2 * viewBoxSize}`
-      }
-    }, [[0, 1].map((item, index) => {
-      if (!indeterminate || index === 2) {
-        return h("circle", {
-          "class": index === 1 ? 'underlay' : 'overlay',
-          "key": index,
-          "attrs": {
-            "fill": 'transparent',
-            "cx": 2 * viewBoxSize,
-            "cy": 2 * viewBoxSize,
-            "r": radius,
-            "stroke-width": strokeWidth,
-            "stroke-dasharray": strokeDashArray,
-            "stroke-dashoffset": index === 1 ? 0 : strokeDashOffset
-          }
-        });
-      }
-
-      return null;
-    })]), h("div", {
-      "class": "info"
-    }, [this.slots() ? this.slots : value])]);
+        "role": "progressbar",
+        "aria-valuenow": type === 'determinate' ? value : null,
+        "aria-valuemin": "0",
+        "aria-valuemax": "1"
+      },
+      "class": [bem$X(), { ...createColorClasses(color),
+        [mode]: true,
+        [`progress-bar-${type}`]: true,
+        'progress-paused': paused,
+        'progress-bar-reversed': document.dir === 'rtl' ? !reversed : reversed
+      }]
+    }, [type === 'indeterminate' ? renderIndeterminate(h) : renderProgress(h, value, buffer)]);
   }
 
 });
 
 const NAMESPACE$c = 'RadioGroup';
 const {
-  createComponent: createComponent$_,
-  bem: bem$Z
+  createComponent: createComponent$Z,
+  bem: bem$Y
 } =
 /*#__PURE__*/
 createNamespace('radio');
 var radio = /*#__PURE__*/
-createComponent$_({
+createComponent$Z({
   mixins: [
   /*#__PURE__*/
   useCheckItem(NAMESPACE$c),
@@ -12168,7 +11947,7 @@ createComponent$_({
       inItem
     } = this;
     return h("div", helper([{
-      "class": [bem$Z({
+      "class": [bem$Y({
         checked,
         disabled
       }), { ...createColorClasses(color),
@@ -12183,9 +11962,9 @@ createComponent$_({
     }, {
       "on": this.$listeners
     }]), [h("div", {
-      "class": bem$Z('icon')
+      "class": bem$Y('icon')
     }, [h("div", {
-      "class": bem$Z('inner')
+      "class": bem$Y('inner')
     })]), this.slots(), h("button", {
       "attrs": {
         "type": "button",
@@ -12198,13 +11977,13 @@ createComponent$_({
 
 const NAMESPACE$d = 'RadioButtonGroup';
 const {
-  createComponent: createComponent$$,
-  bem: bem$_
+  createComponent: createComponent$_,
+  bem: bem$Z
 } =
 /*#__PURE__*/
 createNamespace('radio-button-group');
 var radioButtonGroup = /*#__PURE__*/
-createComponent$$({
+createComponent$_({
   mixins: [
   /*#__PURE__*/
   useCheckGroup(NAMESPACE$d)],
@@ -12218,20 +11997,20 @@ createComponent$$({
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$_()
+      "class": bem$Z()
     }, [this.slots()]);
   }
 
 });
 
 const {
-  createComponent: createComponent$10,
-  bem: bem$$
+  createComponent: createComponent$$,
+  bem: bem$_
 } =
 /*#__PURE__*/
 createNamespace('radio-indicator');
 var RadioIndicator = /*#__PURE__*/
-createComponent$10({
+createComponent$$({
   functional: true,
   props: {
     checked: {
@@ -12249,7 +12028,7 @@ createComponent$10({
     data
   }) {
     return h("div", helper([{
-      "class": [bem$$({
+      "class": [bem$_({
         checked: props.checked,
         disabled: props.disabled
       }), data.class]
@@ -12260,13 +12039,13 @@ createComponent$10({
 
 const NAMESPACE$e = 'RadioButtonGroup';
 const {
-  createComponent: createComponent$11,
-  bem: bem$10
+  createComponent: createComponent$10,
+  bem: bem$$
 } =
 /*#__PURE__*/
 createNamespace('radio-button');
 var radioButton = /*#__PURE__*/
-createComponent$11({
+createComponent$10({
   mixins: [
   /*#__PURE__*/
   useCheckItem(NAMESPACE$e),
@@ -12284,7 +12063,7 @@ createComponent$11({
       text
     } = this;
     return h("div", helper([{
-      "class": bem$10()
+      "class": bem$$()
     }, {
       "on": this.$listeners
     }]), [this.slots('indicator') || h(RadioIndicator, {
@@ -12298,13 +12077,13 @@ createComponent$11({
 });
 
 const {
-  createComponent: createComponent$12,
-  bem: bem$11
+  createComponent: createComponent$11,
+  bem: bem$10
 } =
 /*#__PURE__*/
 createNamespace('range');
 
-function clamp$3(value, min, max) {
+function clamp$4(value, min, max) {
   if (value < min) value = min;
   if (value > max) value = max;
   return value;
@@ -12330,7 +12109,7 @@ const renderKnob = (h, isRTL, {
   };
 
   return h("div", {
-    "class": [bem$11('knob-handle', {
+    "class": [bem$10('knob-handle', {
       min: value === min,
       max: value === max
     }), {
@@ -12365,12 +12144,12 @@ const renderKnob = (h, isRTL, {
       "aria-valuenow": value
     }
   }, [pin && h("div", {
-    "class": bem$11('pin'),
+    "class": bem$10('pin'),
     "attrs": {
       "role": "presentation"
     }
   }, [Math.round(value)]), h("div", {
-    "class": bem$11('knob'),
+    "class": bem$10('knob'),
     "attrs": {
       "role": "presentation"
     }
@@ -12384,15 +12163,15 @@ const ratioToValue = (ratio, min, max, step) => {
     value = Math.round(value / step) * step + min;
   }
 
-  return clamp$3(min, value, max);
+  return clamp$4(min, value, max);
 };
 
 const valueToRatio = (value, min, max) => {
-  return clamp$3(0, (value - min) / (max - min), 1);
+  return clamp$4(0, (value - min) / (max - min), 1);
 };
 
 var range = /*#__PURE__*/
-createComponent$12({
+createComponent$11({
   mixins: [
   /*#__PURE__*/
   useColor()],
@@ -12542,7 +12321,7 @@ createComponent$12({
     },
 
     clampBounds(value) {
-      return clamp$3(this.min, value, this.max);
+      return clamp$4(this.min, value, this.max);
     },
 
     ensureValueInBounds(value) {
@@ -12568,9 +12347,9 @@ createComponent$12({
       }
 
       if (knob === 'A') {
-        this.ratioA = clamp$3(0, this.ratioA + step, 1);
+        this.ratioA = clamp$4(0, this.ratioA + step, 1);
       } else {
-        this.ratioB = clamp$3(0, this.ratioB + step, 1);
+        this.ratioB = clamp$4(0, this.ratioB + step, 1);
       }
 
       this.updateValue();
@@ -12614,7 +12393,7 @@ createComponent$12({
         currentX
       } = detail; // figure out which knob they started closer to
 
-      let ratio = clamp$3(0, (currentX - rect.left) / rect.width, 1);
+      let ratio = clamp$4(0, (currentX - rect.left) / rect.width, 1);
 
       if (document.dir === 'rtl') {
         ratio = 1 - ratio;
@@ -12641,7 +12420,7 @@ createComponent$12({
       const {
         rect
       } = this;
-      let ratio = clamp$3(0, (currentX - rect.left) / rect.width, 1);
+      let ratio = clamp$4(0, (currentX - rect.left) / rect.width, 1);
 
       if (document.dir === 'rtl') {
         ratio = 1 - ratio;
@@ -12764,7 +12543,7 @@ createComponent$12({
 
 
     return h("div", {
-      "class": bem$11({
+      "class": bem$10({
         disabled,
         pressed: pressedKnob !== undefined,
         'has-pin': pin
@@ -12774,23 +12553,23 @@ createComponent$12({
         "blur": this.onBlur
       }
     }, [this.slots('start'), h("div", {
-      "class": bem$11('slider'),
+      "class": bem$10('slider'),
       "ref": "rangeSlider"
     }, [ticks.map(tick => h("div", {
       "style": tickStyle(tick),
       "attrs": {
         "role": "presentation"
       },
-      "class": bem$11('tick', {
+      "class": bem$10('tick', {
         active: tick.active
       })
     })), h("div", {
-      "class": bem$11('bar'),
+      "class": bem$10('bar'),
       "attrs": {
         "role": "presentation"
       }
     }), h("div", {
-      "class": bem$11('bar', {
+      "class": bem$10('bar', {
         active: true
       }),
       "attrs": {
@@ -12988,18 +12767,18 @@ const translateElement = (el, value) => {
 };
 
 const {
-  createComponent: createComponent$13,
-  bem: bem$12
+  createComponent: createComponent$12,
+  bem: bem$11
 } =
 /*#__PURE__*/
 createNamespace('refresher');
 
-const clamp$4 = (min, n, max) => {
+const clamp$5 = (min, n, max) => {
   return Math.max(min, Math.min(n, max));
 };
 
 var refresher = /*#__PURE__*/
-createComponent$13({
+createComponent$12({
   props: {
     pullMin: {
       type: Number,
@@ -13153,7 +12932,7 @@ createComponent$13({
             if (this.state === 8
             /* Refreshing */
             ) {
-                const ratio = clamp$4(0, scrollTop / (refresherHeight * 0.5), 1);
+                const ratio = clamp$5(0, scrollTop / (refresherHeight * 0.5), 1);
                 this.$nextTick(() => setSpinnerOpacity(refreshingSpinner, 1 - ratio));
                 return;
               }
@@ -13175,9 +12954,9 @@ createComponent$13({
           } // delay showing the next tick marks until user has pulled 30px
 
 
-          const opacity = clamp$4(0, Math.abs(scrollTop) / refresherHeight, 0.99);
-          const pullAmount = this.progress = clamp$4(0, (Math.abs(scrollTop) - 30) / MAX_PULL, 1);
-          const currentTickToShow = clamp$4(0, Math.floor(pullAmount * NUM_TICKS), NUM_TICKS - 1);
+          const opacity = clamp$5(0, Math.abs(scrollTop) / refresherHeight, 0.99);
+          const pullAmount = this.progress = clamp$5(0, (Math.abs(scrollTop) - 30) / MAX_PULL, 1);
+          const currentTickToShow = clamp$5(0, Math.floor(pullAmount * NUM_TICKS), NUM_TICKS - 1);
           const shouldShowRefreshingSpinner = this.state === 8
           /* Refreshing */
           || currentTickToShow === NUM_TICKS - 1;
@@ -13299,7 +13078,7 @@ createComponent$13({
           } // Since we are using an easing curve, slow the gesture tracking down a bit
 
 
-          this.progress = clamp$4(0, ev.deltaY / 180 * 0.5, 1);
+          this.progress = clamp$5(0, ev.deltaY / 180 * 0.5, 1);
           ev.data.animation.progressStep(this.progress);
           this.$emit('pull');
         },
@@ -13680,7 +13459,7 @@ createComponent$13({
       mode
     } = this;
     return h("div", {
-      "class": [bem$12(), {
+      "class": [bem$11(), {
         // Used internally for styling
         [`refresher-${mode}`]: true,
         'refresher-native': this.nativeRefresher,
@@ -13821,13 +13600,13 @@ const allowedAttributes = ['class', 'id', 'href', 'src', 'name', 'slot'];
 const blockedTags = ['script', 'style', 'iframe', 'meta', 'link', 'object', 'embed'];
 
 const {
-  createComponent: createComponent$14,
-  bem: bem$13
+  createComponent: createComponent$13,
+  bem: bem$12
 } =
 /*#__PURE__*/
 createNamespace('refresher-content');
 var refresherContent = /*#__PURE__*/
-createComponent$14({
+createComponent$13({
   props: {
     pullingIcon: String,
     pullingText: String,
@@ -13877,7 +13656,7 @@ createComponent$14({
       mode
     } = this;
     return h("div", {
-      "class": bem$13()
+      "class": bem$12()
     }, [h("div", {
       "class": "refresher-pulling"
     }, [pullingIcon && hasSpinner && h("div", {
@@ -13926,13 +13705,13 @@ createComponent$14({
 });
 
 const {
-  createComponent: createComponent$15,
-  bem: bem$14
+  createComponent: createComponent$14,
+  bem: bem$13
 } =
 /*#__PURE__*/
 createNamespace('row');
 var row = /*#__PURE__*/
-createComponent$15({
+createComponent$14({
   functional: true,
 
   render(h, {
@@ -13940,24 +13719,24 @@ createComponent$15({
     slots
   }) {
     return h("div", helper([{
-      "class": bem$14()
+      "class": bem$13()
     }, data]), [slots()]);
   }
 
 });
 
 const {
-  createComponent: createComponent$16,
-  bem: bem$15
+  createComponent: createComponent$15,
+  bem: bem$14
 } =
 /*#__PURE__*/
 createNamespace('slide');
 var slide = /*#__PURE__*/
-createComponent$16({
+createComponent$15({
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": [bem$15(), {
+      "class": [bem$14(), {
         'swiper-slide': true,
         'swiper-zoom-container': true
       }]
@@ -13967,13 +13746,13 @@ createComponent$16({
 });
 
 const {
-  createComponent: createComponent$17,
-  bem: bem$16
+  createComponent: createComponent$16,
+  bem: bem$15
 } =
 /*#__PURE__*/
 createNamespace('slider');
 var slider = /*#__PURE__*/
-createComponent$17({
+createComponent$16({
   props: {
     from: {
       type: Number,
@@ -14248,13 +14027,13 @@ createComponent$17({
       barStyle
     } = this;
     return h("div", {
-      "class": bem$16({
+      "class": bem$15({
         vertical
       }),
       "style": containerStyle,
       "ref": "slider"
     }, [h("div", {
-      "class": bem$16('container'),
+      "class": bem$15('container'),
       "on": {
         "click": this.onSliderClick
       }
@@ -14268,13 +14047,13 @@ createComponent$17({
         "style": this.getStepStyle(item.position)
       });
     })]), h("div", {
-      "class": bem$16('bar'),
+      "class": bem$15('bar'),
       "style": barStyle,
       "on": {
         "click": this.onSliderClick
       }
     }), h("div", {
-      "class": bem$16('button', {
+      "class": bem$15('button', {
         dragging
       }),
       "style": buttonStyle,
@@ -19099,13 +18878,13 @@ if (typeof Swiper.use === 'undefined') {
 Swiper.use(components);
 
 const {
-  createComponent: createComponent$18,
-  bem: bem$17
+  createComponent: createComponent$17,
+  bem: bem$16
 } =
 /*#__PURE__*/
 createNamespace('slides');
 var slides = /*#__PURE__*/
-createComponent$18({
+createComponent$17({
   props: {
     options: {
       type: Object
@@ -19506,7 +19285,7 @@ createComponent$18({
       mode
     } = this;
     return h("div", {
-      "class": [bem$17(), {
+      "class": [bem$16(), {
         // Used internally for styling
         [`slides-${mode}`]: true,
         'swiper-container': true
@@ -19525,13 +19304,13 @@ createComponent$18({
 });
 
 const {
-  createComponent: createComponent$19,
-  bem: bem$18
+  createComponent: createComponent$18,
+  bem: bem$17
 } =
 /*#__PURE__*/
 createNamespace('stepper');
 var stepper = /*#__PURE__*/
-createComponent$19({
+createComponent$18({
   components: {
     Icon
   },
@@ -19690,9 +19469,9 @@ createComponent$19({
       value
     } = this;
     return h("div", {
-      "class": bem$18()
+      "class": bem$17()
     }, [h("span", {
-      "class": bem$18('button', {
+      "class": bem$17('button', {
         disabled: value <= min
       }),
       "on": {
@@ -19721,7 +19500,7 @@ createComponent$19({
         '!focus': this.onFocus
       }
     }])), h("span", {
-      "class": bem$18('button', {
+      "class": bem$17('button', {
         disabled: value >= max
       }),
       "on": {
@@ -19740,13 +19519,13 @@ createComponent$19({
 
 const NAMESPACE$f = 'SwitchGroup';
 const {
-  createComponent: createComponent$1a,
-  bem: bem$19
+  createComponent: createComponent$19,
+  bem: bem$18
 } =
 /*#__PURE__*/
 createNamespace('switch-group');
 var switchGroup = /*#__PURE__*/
-createComponent$1a({
+createComponent$19({
   mixins: [
   /*#__PURE__*/
   useGroup(NAMESPACE$f)],
@@ -19754,20 +19533,20 @@ createComponent$1a({
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$19()
+      "class": bem$18()
     }, [this.slots()]);
   }
 
 });
 
 const {
-  createComponent: createComponent$1b,
-  bem: bem$1a
+  createComponent: createComponent$1a,
+  bem: bem$19
 } =
 /*#__PURE__*/
 createNamespace('switch-indicator');
 var switchIndicator = /*#__PURE__*/
-createComponent$1b({
+createComponent$1a({
   functional: true,
   props: {
     checked: {
@@ -19787,12 +19566,12 @@ createComponent$1b({
   }) {
     const Tag = 'div';
     return h(Tag, helper([{
-      "class": bem$1a({
+      "class": bem$19({
         'is-checked': props.checked,
         'is-disabled': props.disabled
       })
     }, data]), [h("div", {
-      "class": bem$1a('thumb')
+      "class": bem$19('thumb')
     }, [slots()])]);
   }
 
@@ -19800,14 +19579,14 @@ createComponent$1b({
 
 const NAMESPACE$g = 'SwitchGroup';
 const {
-  createComponent: createComponent$1c,
-  bem: bem$1b
+  createComponent: createComponent$1b,
+  bem: bem$1a
 } =
 /*#__PURE__*/
 createNamespace('switch');
 let gesture;
 var _switch = /*#__PURE__*/
-createComponent$1c({
+createComponent$1b({
   mixins: [
   /*#__PURE__*/
   useCheckItem(NAMESPACE$g),
@@ -19918,7 +19697,7 @@ createComponent$1c({
       "attrs": {
         "role": "checkbox"
       },
-      "class": [bem$1b({
+      "class": [bem$1a({
         disabled,
         checked,
         activated
@@ -19930,9 +19709,9 @@ createComponent$1c({
     }, {
       "on": this.$listeners
     }]), [h("div", {
-      "class": bem$1b('icon')
+      "class": bem$1a('icon')
     }, [h("div", {
-      "class": bem$1b('inner')
+      "class": bem$1a('inner')
     })]), h("button", {
       "attrs": {
         "type": "button",
@@ -19945,13 +19724,13 @@ createComponent$1c({
 
 const NAMESPACE$h = 'TabBar';
 const {
-  createComponent: createComponent$1d,
-  bem: bem$1c
+  createComponent: createComponent$1c,
+  bem: bem$1b
 } =
 /*#__PURE__*/
 createNamespace('tab-bar');
 var tabBar = /*#__PURE__*/
-createComponent$1d({
+createComponent$1c({
   mixins: [
   /*#__PURE__*/
   useCheckGroupWithModel(NAMESPACE$h),
@@ -19983,7 +19762,7 @@ createComponent$1d({
       keyboardVisible
     } = this;
     return h("div", helper([{
-      "class": bem$1c({
+      "class": bem$1b({
         translucent,
         hidden: keyboardVisible
       })
@@ -19996,13 +19775,13 @@ createComponent$1d({
 
 const NAMESPACE$i = 'TabBar';
 const {
-  createComponent: createComponent$1e,
-  bem: bem$1d
+  createComponent: createComponent$1d,
+  bem: bem$1c
 } =
 /*#__PURE__*/
 createNamespace('tab-button');
 var tabButton = /*#__PURE__*/
-createComponent$1e({
+createComponent$1d({
   mixins: [
   /*#__PURE__*/
   useCheckItemWithModel(NAMESPACE$i),
@@ -20050,7 +19829,7 @@ createComponent$1e({
       hasIcon
     } = this;
     return h("div", helper([{
-      "class": [bem$1d({
+      "class": [bem$1c({
         selected: this.checked,
         disabled: this.disabled
       }), {
@@ -20078,13 +19857,13 @@ createComponent$1e({
 
 const NAMESPACE$j = 'Tabs';
 const {
-  createComponent: createComponent$1f,
-  bem: bem$1e
+  createComponent: createComponent$1e,
+  bem: bem$1d
 } =
 /*#__PURE__*/
 createNamespace('tab');
 var tab = /*#__PURE__*/
-createComponent$1f({
+createComponent$1e({
   mixins: [
   /*#__PURE__*/
   useCheckItemWithModel(NAMESPACE$j)],
@@ -20122,7 +19901,7 @@ createComponent$1f({
       tab
     } = this;
     return h("div", helper([{
-      "class": [bem$1e({
+      "class": [bem$1d({
         hidden: !checked
       })],
       "attrs": {
@@ -20139,13 +19918,13 @@ createComponent$1f({
 
 const NAMESPACE$k = 'Tabs';
 const {
-  createComponent: createComponent$1g,
-  bem: bem$1f
+  createComponent: createComponent$1f,
+  bem: bem$1e
 } =
 /*#__PURE__*/
 createNamespace('tabs');
 var tabs = /*#__PURE__*/
-createComponent$1g({
+createComponent$1f({
   mixins: [
   /*#__PURE__*/
   useCheckGroupWithModel(NAMESPACE$k)],
@@ -20159,24 +19938,24 @@ createComponent$1g({
   render() {
     const h = arguments[0];
     return h("div", helper([{
-      "class": bem$1f()
+      "class": bem$1e()
     }, {
       "on": this.$listeners
     }]), [this.slots('top'), h("div", {
-      "class": bem$1f('inner')
+      "class": bem$1e('inner')
     }, [this.slots()]), this.slots('bottom')]);
   }
 
 });
 
 const {
-  createComponent: createComponent$1h,
-  bem: bem$1g
+  createComponent: createComponent$1g,
+  bem: bem$1f
 } =
 /*#__PURE__*/
 createNamespace('textarea');
 var textarea = /*#__PURE__*/
-createComponent$1h({
+createComponent$1g({
   props: {
     canPaste: {
       type: Boolean,
@@ -20387,7 +20166,7 @@ createComponent$1h({
       autofocus
     } = this;
     return h("div", helper([{
-      "class": bem$1g()
+      "class": bem$1f()
     }, {
       "on": this.$listeners
     }]), [h("textarea", {
@@ -20413,13 +20192,13 @@ createComponent$1h({
 });
 
 const {
-  createComponent: createComponent$1i,
-  bem: bem$1h
+  createComponent: createComponent$1h,
+  bem: bem$1g
 } =
 /*#__PURE__*/
 createNamespace('thumbnail');
 var thumbnail = /*#__PURE__*/
-createComponent$1i({
+createComponent$1h({
   functional: true,
 
   render(h, {
@@ -20427,7 +20206,7 @@ createComponent$1i({
     slots
   }) {
     return h("div", helper([{
-      "class": bem$1h()
+      "class": bem$1g()
     }, data]), [slots()]);
   }
 
@@ -20543,13 +20322,13 @@ const mdLeaveAnimation$5 = (baseEl) => {
 };
 
 const {
-  createComponent: createComponent$1j,
-  bem: bem$1i
+  createComponent: createComponent$1i,
+  bem: bem$1h
 } =
 /*#__PURE__*/
 createNamespace('toast');
 var toast = /*#__PURE__*/
-createComponent$1j({
+createComponent$1i({
   mixins: [
   /*#__PURE__*/
   usePopup(),
@@ -20600,20 +20379,50 @@ createComponent$1j({
         name: "show",
         value: this.visible
       }],
-      "class": [bem$1i()]
+      "class": [bem$1h()]
     }, {
       "on": this.$listeners
     }]), [h("div", {
-      "class": bem$1i('wrapper', {
+      "class": bem$1h('wrapper', {
         [position]: true
       })
     }, [h("div", {
-      "class": bem$1i('container')
+      "class": bem$1h('container')
     }, [h("div", {
-      "class": bem$1i('content')
+      "class": bem$1h('content')
     }, [h("div", {
-      "class": bem$1i('message')
+      "class": bem$1h('message')
     }, [this.message]), h("div")])])])]);
+  }
+
+});
+
+const {
+  createComponent: createComponent$1j,
+  bem: bem$1i
+} =
+/*#__PURE__*/
+createNamespace('toolbar');
+var toolbar = /*#__PURE__*/
+createComponent$1j({
+  mixins: [
+  /*#__PURE__*/
+  useColor()],
+  props: {},
+
+  render() {
+    const h = arguments[0];
+    return h("div", helper([{
+      "class": bem$1i()
+    }, {
+      "on": this.$listeners
+    }]), [h("div", {
+      "class": bem$1i('background')
+    }), h("div", {
+      "class": bem$1i('container')
+    }, [this.slots('start'), this.slots('secondary'), h("div", {
+      "class": bem$1i('content')
+    }, [this.slots()]), this.slots('primary'), this.slots('end')])]);
   }
 
 });
@@ -20623,39 +20432,9 @@ const {
   bem: bem$1j
 } =
 /*#__PURE__*/
-createNamespace('toolbar');
-var toolbar = /*#__PURE__*/
-createComponent$1k({
-  mixins: [
-  /*#__PURE__*/
-  useColor()],
-  props: {},
-
-  render() {
-    const h = arguments[0];
-    return h("div", helper([{
-      "class": bem$1j()
-    }, {
-      "on": this.$listeners
-    }]), [h("div", {
-      "class": bem$1j('background')
-    }), h("div", {
-      "class": bem$1j('container')
-    }, [this.slots('start'), this.slots('secondary'), h("div", {
-      "class": bem$1j('content')
-    }, [this.slots()]), this.slots('primary'), this.slots('end')])]);
-  }
-
-});
-
-const {
-  createComponent: createComponent$1l,
-  bem: bem$1k
-} =
-/*#__PURE__*/
 createNamespace('title');
 var title = /*#__PURE__*/
-createComponent$1l({
+createComponent$1k({
   mixins: [
   /*#__PURE__*/
   useColor()],
@@ -20670,13 +20449,13 @@ createComponent$1l({
       size
     } = this;
     return h("div", helper([{
-      "class": bem$1k({
+      "class": bem$1j({
         [size]: isDef(size)
       })
     }, {
       "on": this.$listeners
     }]), [h("div", {
-      "class": bem$1k('inner')
+      "class": bem$1j('inner')
     }, [this.slots()])]);
   }
 
@@ -20783,39 +20562,6 @@ const iosLeaveAnimation$7 = (baseEl) => {
         .duration(500)
         .fromTo('opacity', 0.99, 0);
 };
-
-function createDirective(directive, element, binding) {
-    const el = createElementProxy(element);
-    let vnode;
-    return {
-        bind(val = binding.value) {
-            if (!directive.bind)
-                return;
-            binding.value = val;
-            directive.bind(el, binding, vnode, vnode);
-        },
-        unbind() {
-            if (!directive.unbind)
-                return;
-            directive.unbind(el, binding, vnode, vnode);
-        },
-        inserted(val = binding.value) {
-            if (!directive.inserted)
-                return;
-            binding.value = val;
-            directive.inserted(el, binding, vnode, vnode);
-        },
-        update(val, arg) {
-            if (!directive.update)
-                return;
-            binding.oldValue = binding.value;
-            binding.value = val;
-            binding.oldArg = binding.arg;
-            binding.arg = arg || binding.arg;
-            directive.update(el, binding, vnode, vnode);
-        },
-    };
-}
 
 function getBoundingClientRect(element) {
   var rect = element.getBoundingClientRect();
@@ -21040,7 +20786,13 @@ function getOffsetParent(element) {
   return offsetParent || window;
 }
 
+var top = 'top';
+var bottom = 'bottom';
+var right = 'right';
+var left = 'left';
 var auto = 'auto';
+var start = 'start';
+var end = 'end';
 
 var beforeRead = 'beforeRead';
 var read = 'read';
@@ -21471,14 +21223,373 @@ function popperGenerator(generatorOptions) {
     return instance;
   };
 }
+
+var passive = {
+  passive: true
+};
+
+function effect(_ref) {
+  var state = _ref.state,
+      instance = _ref.instance,
+      options = _ref.options;
+  var _options$scroll = options.scroll,
+      scroll = _options$scroll === void 0 ? true : _options$scroll,
+      _options$resize = options.resize,
+      resize = _options$resize === void 0 ? true : _options$resize;
+  var window = getWindow(state.elements.popper);
+  var scrollParents = [].concat(state.scrollParents.reference, state.scrollParents.popper);
+
+  if (scroll) {
+    scrollParents.forEach(function (scrollParent) {
+      scrollParent.addEventListener('scroll', instance.update, passive);
+    });
+  }
+
+  if (resize) {
+    window.addEventListener('resize', instance.update, passive);
+  }
+
+  return function () {
+    if (scroll) {
+      scrollParents.forEach(function (scrollParent) {
+        scrollParent.removeEventListener('scroll', instance.update, passive);
+      });
+    }
+
+    if (resize) {
+      window.removeEventListener('resize', instance.update, passive);
+    }
+  };
+}
+
+var eventListeners = {
+  name: 'eventListeners',
+  enabled: true,
+  phase: 'write',
+  fn: function fn() {},
+  effect: effect,
+  data: {}
+};
+
+function getVariation(placement) {
+  return placement.split('-')[1];
+}
+
+function getMainAxisFromPlacement(placement) {
+  return ['top', 'bottom'].indexOf(placement) >= 0 ? 'x' : 'y';
+}
+
+function computeOffsets(_ref) {
+  var reference = _ref.reference,
+      element = _ref.element,
+      placement = _ref.placement;
+  var basePlacement = placement ? getBasePlacement(placement) : null;
+  var variation = placement ? getVariation(placement) : null;
+  var commonX = reference.x + reference.width / 2 - element.width / 2;
+  var commonY = reference.y + reference.height / 2 - element.height / 2;
+  var offsets;
+
+  switch (basePlacement) {
+    case top:
+      offsets = {
+        x: commonX,
+        y: reference.y - element.height
+      };
+      break;
+
+    case bottom:
+      offsets = {
+        x: commonX,
+        y: reference.y + reference.height
+      };
+      break;
+
+    case right:
+      offsets = {
+        x: reference.x + reference.width,
+        y: commonY
+      };
+      break;
+
+    case left:
+      offsets = {
+        x: reference.x - element.width,
+        y: commonY
+      };
+      break;
+
+    default:
+      offsets = {
+        x: reference.x,
+        y: reference.y
+      };
+  }
+
+  var mainAxis = basePlacement ? getMainAxisFromPlacement(basePlacement) : null;
+
+  if (mainAxis != null) {
+    var len = mainAxis === 'y' ? 'height' : 'width';
+
+    switch (variation) {
+      case start:
+        offsets[mainAxis] = Math.floor(offsets[mainAxis]) - Math.floor(reference[len] / 2 - element[len] / 2);
+        break;
+
+      case end:
+        offsets[mainAxis] = Math.floor(offsets[mainAxis]) + Math.ceil(reference[len] / 2 - element[len] / 2);
+        break;
+    }
+  }
+
+  return offsets;
+}
+
+function popperOffsets(_ref) {
+  var state = _ref.state,
+      name = _ref.name;
+  // Offsets are the actual position the popper needs to have to be
+  // properly positioned near its reference element
+  // This is the most basic placement, and will be adjusted by
+  // the modifiers in the next step
+  state.modifiersData[name] = computeOffsets({
+    reference: state.rects.reference,
+    element: state.rects.popper,
+    strategy: 'absolute',
+    placement: state.placement
+  });
+}
+
+var popperOffsets$1 = {
+  name: 'popperOffsets',
+  enabled: true,
+  phase: 'read',
+  fn: popperOffsets,
+  data: {}
+};
+
+var unsetSides = {
+  top: 'auto',
+  right: 'auto',
+  bottom: 'auto',
+  left: 'auto'
+}; // Round the offsets to the nearest suitable subpixel based on the DPR.
+// Zooming can change the DPR, but it seems to report a value that will
+// cleanly divide the values into the appropriate subpixels.
+
+function roundOffsets(_ref) {
+  var x = _ref.x,
+      y = _ref.y;
+  var win = window;
+  var dpr = win.devicePixelRatio || 1;
+  return {
+    x: Math.round(x * dpr) / dpr || 0,
+    y: Math.round(y * dpr) / dpr || 0
+  };
+}
+
+function mapToStyles(_ref2) {
+  var _Object$assign2;
+
+  var popper = _ref2.popper,
+      popperRect = _ref2.popperRect,
+      placement = _ref2.placement,
+      offsets = _ref2.offsets,
+      position = _ref2.position,
+      gpuAcceleration = _ref2.gpuAcceleration,
+      adaptive = _ref2.adaptive;
+
+  var _roundOffsets = roundOffsets(offsets),
+      x = _roundOffsets.x,
+      y = _roundOffsets.y;
+
+  var hasX = offsets.hasOwnProperty('x');
+  var hasY = offsets.hasOwnProperty('y');
+  var sideX = left;
+  var sideY = top;
+  var win = window;
+
+  if (adaptive) {
+    var offsetParent = getOffsetParent(popper);
+
+    if (offsetParent === getWindow(popper)) {
+      offsetParent = getDocumentElement(popper);
+    } // $FlowFixMe: force type refinement, we compare offsetParent with window above, but Flow doesn't detect it
+
+    /*:: offsetParent = (offsetParent: Element); */
+
+
+    if (placement === top) {
+      sideY = bottom;
+      y -= offsetParent.clientHeight - popperRect.height;
+      y *= gpuAcceleration ? 1 : -1;
+    }
+
+    if (placement === left) {
+      sideX = right;
+      x -= offsetParent.clientWidth - popperRect.width;
+      x *= gpuAcceleration ? 1 : -1;
+    }
+  }
+
+  var commonStyles = Object.assign({
+    position: position
+  }, adaptive && unsetSides);
+
+  if (gpuAcceleration) {
+    var _Object$assign;
+
+    return Object.assign({}, commonStyles, (_Object$assign = {}, _Object$assign[sideY] = hasY ? '0' : '', _Object$assign[sideX] = hasX ? '0' : '', _Object$assign.transform = (win.devicePixelRatio || 1) < 2 ? "translate(" + x + "px, " + y + "px)" : "translate3d(" + x + "px, " + y + "px, 0)", _Object$assign));
+  }
+
+  return Object.assign({}, commonStyles, (_Object$assign2 = {}, _Object$assign2[sideY] = hasY ? y + "px" : '', _Object$assign2[sideX] = hasX ? x + "px" : '', _Object$assign2.transform = '', _Object$assign2));
+}
+
+function computeStyles(_ref3) {
+  var state = _ref3.state,
+      options = _ref3.options;
+  var _options$gpuAccelerat = options.gpuAcceleration,
+      gpuAcceleration = _options$gpuAccelerat === void 0 ? true : _options$gpuAccelerat,
+      _options$adaptive = options.adaptive,
+      adaptive = _options$adaptive === void 0 ? true : _options$adaptive;
+
+  if (process.env.NODE_ENV !== "production") {
+    var _getComputedStyle = getComputedStyle(state.elements.popper),
+        transitionProperty = _getComputedStyle.transitionProperty;
+
+    if (adaptive && ['transform', 'top', 'right', 'bottom', 'left'].some(function (property) {
+      return transitionProperty.indexOf(property) >= 0;
+    })) {
+      console.warn(['Popper: Detected CSS transitions on at least one of the following', 'CSS properties: "transform", "top", "right", "bottom", "left".', '\n\n', 'Disable the "computeStyles" modifier\'s `adaptive` option to allow', 'for smooth transitions, or remove these properties from the CSS', 'transition declaration on the popper element if only transitioning', 'opacity or background-color for example.', '\n\n', 'We recommend using the popper element as a wrapper around an inner', 'element that can have any CSS property transitioned for animations.'].join(' '));
+    }
+  }
+
+  var commonStyles = {
+    placement: getBasePlacement(state.placement),
+    popper: state.elements.popper,
+    popperRect: state.rects.popper,
+    gpuAcceleration: gpuAcceleration
+  }; // popper offsets are always available
+
+  state.styles.popper = Object.assign({}, state.styles.popper, {}, mapToStyles(Object.assign({}, commonStyles, {
+    offsets: state.modifiersData.popperOffsets,
+    position: state.options.strategy,
+    adaptive: adaptive
+  }))); // arrow offsets may not be available
+
+  if (state.modifiersData.arrow != null) {
+    state.styles.arrow = Object.assign({}, state.styles.arrow, {}, mapToStyles(Object.assign({}, commonStyles, {
+      offsets: state.modifiersData.arrow,
+      position: 'absolute',
+      adaptive: false
+    })));
+  }
+
+  state.attributes.popper = Object.assign({}, state.attributes.popper, {
+    'data-popper-placement': state.placement
+  });
+}
+
+var computeStyles$1 = {
+  name: 'computeStyles',
+  enabled: true,
+  phase: 'beforeWrite',
+  fn: computeStyles,
+  data: {}
+};
+
+// and applies them to the HTMLElements such as popper and arrow
+
+function applyStyles(_ref) {
+  var state = _ref.state;
+  Object.keys(state.elements).forEach(function (name) {
+    var style = state.styles[name] || {};
+    var attributes = state.attributes[name] || {};
+    var element = state.elements[name]; // arrow is optional + virtual elements
+
+    if (!isHTMLElement(element) || !getNodeName(element)) {
+      return;
+    } // Flow doesn't support to extend this property, but it's the most
+    // effective way to apply styles to an HTMLElement
+    // $FlowFixMe
+
+
+    Object.assign(element.style, style);
+    Object.keys(attributes).forEach(function (name) {
+      var value = attributes[name];
+
+      if (value === false) {
+        element.removeAttribute(name);
+      } else {
+        element.setAttribute(name, value === true ? '' : value);
+      }
+    });
+  });
+}
+
+function effect$1(_ref2) {
+  var state = _ref2.state;
+  var initialStyles = {
+    popper: {
+      position: 'absolute',
+      left: '0',
+      top: '0',
+      margin: '0'
+    },
+    arrow: {
+      position: 'absolute'
+    },
+    reference: {}
+  };
+  Object.assign(state.elements.popper.style, initialStyles.popper);
+
+  if (state.elements.arrow) {
+    Object.assign(state.elements.arrow.style, initialStyles.arrow);
+  }
+
+  return function () {
+    Object.keys(state.elements).forEach(function (name) {
+      var element = state.elements[name];
+      var attributes = state.attributes[name] || {};
+      var styleProperties = Object.keys(state.styles.hasOwnProperty(name) ? state.styles[name] : initialStyles[name]); // Set all values to an empty string to unset them
+
+      var style = styleProperties.reduce(function (style, property) {
+        style[property] = '';
+        return style;
+      }, {}); // arrow is optional + virtual elements
+
+      if (!isHTMLElement(element) || !getNodeName(element)) {
+        return;
+      } // Flow doesn't support to extend this property, but it's the most
+      // effective way to apply styles to an HTMLElement
+      // $FlowFixMe
+
+
+      Object.assign(element.style, style);
+      Object.keys(attributes).forEach(function (attribute) {
+        element.removeAttribute(attribute);
+      });
+    });
+  };
+}
+
+var applyStyles$1 = {
+  name: 'applyStyles',
+  enabled: true,
+  phase: 'write',
+  fn: applyStyles,
+  effect: effect$1,
+  requires: ['computeStyles']
+};
+
+var defaultModifiers = [eventListeners, popperOffsets$1, computeStyles$1, applyStyles$1];
 var createPopper =
 /*#__PURE__*/
-popperGenerator();
+popperGenerator({
+  defaultModifiers: defaultModifiers
+}); // eslint-disable-next-line import/no-unused-modules
 
-function inserted$2(el, binding) {
-    if (!binding.value)
-        return;
-    const { value: callback, modifiers: options = { passive: true }, } = binding;
+function createHover(el, options) {
+    const { callback } = options;
     const enter = (ev) => callback(true, ev);
     const leave = (ev) => callback(false, ev);
     const mouseenterOff = on(el, 'mouseenter', enter, options);
@@ -21491,13 +21602,22 @@ function inserted$2(el, binding) {
         focusOff();
         blurOff();
     };
-    el.vHover = {
-        callback,
+    return {
         options,
         enter,
         leave,
         destroy,
     };
+}
+function inserted$2(el, binding) {
+    const { value: callback, modifiers: options, } = binding;
+    if (!callback)
+        return;
+    el.vHover = createHover(el, {
+        callback,
+        passive: true,
+        ...options,
+    });
 }
 function unbind$2(el) {
     const { vHover } = el;
@@ -21507,28 +21627,30 @@ function unbind$2(el) {
     delete el.vHover;
 }
 function update$3(el, binding) {
-    if (binding.value === binding.oldValue) {
+    const { value, oldValue } = binding;
+    if (value === oldValue) {
         return;
     }
-    if (binding.oldValue) {
+    if (oldValue) {
         unbind$2(el);
     }
     inserted$2(el, binding);
 }
-const VHover = {
+const VHover = defineDirective({
+    name: 'hover',
     inserted: inserted$2,
     unbind: unbind$2,
     update: update$3,
-};
+});
 
 const {
-  createComponent: createComponent$1m,
-  bem: bem$1l
+  createComponent: createComponent$1l,
+  bem: bem$1k
 } =
 /*#__PURE__*/
 createNamespace('tooltip');
 var tooltip = /*#__PURE__*/
-createComponent$1m({
+createComponent$1l({
   mixins: [
   /*#__PURE__*/
   useColor(),
@@ -21549,11 +21671,9 @@ createComponent$1m({
       type: String,
       default: 'top'
     },
-    activeFocus: {
-      type: Boolean,
-      default: false
-    },
-    openOnHover: Boolean
+    activeFocus: Boolean,
+    openOnHover: Boolean,
+    openOnClick: Boolean
   },
   watch: {
     openOnHover(val) {
@@ -21633,18 +21753,18 @@ createComponent$1m({
       "attrs": {
         "role": "tooltip"
       },
-      "class": bem$1l({
+      "class": bem$1k({
         translucent: this.translucent
       })
     }, {
       "on": this.$listeners
     }]), [h("div", {
-      "class": bem$1l('arrow'),
+      "class": bem$1k('arrow'),
       "attrs": {
         "x-arrow": true
       }
     }), h("div", {
-      "class": bem$1l('content')
+      "class": bem$1k('content')
     }, [this.slots() || text])]);
   }
 
@@ -21714,7 +21834,6 @@ var components$1 = /*#__PURE__*/Object.freeze({
   PopupLegacy: popupLegacy,
   Popup: popup,
   ProgressBar: progressBar,
-  ProgressCircular: progressCircular,
   Radio: radio,
   RadioButtonGroup: radioButtonGroup,
   RadioButton: radioButton,
@@ -21743,24 +21862,51 @@ var components$1 = /*#__PURE__*/Object.freeze({
   Tooltip: tooltip
 });
 
-function inserted$3(el, binding) {
-    const { modifiers } = binding;
+function createActivatable(el, options) {
+    const { instant } = options;
     el.classList.add('line-activatable');
-    if (modifiers.instant) {
+    if (instant) {
         el.classList.add('line-activatable-instant');
     }
+    const destroy = () => {
+        el.classList.remove('line-activatable');
+        if (instant) {
+            el.classList.add('line-activatable-instant');
+        }
+    };
+    return {
+        destroy,
+    };
 }
-function unbind$3(el, binding) {
-    const { modifiers } = binding;
-    el.classList.remove('line-activatable');
-    if (modifiers.instant) {
-        el.classList.add('line-activatable-instant');
+function inserted$3(el, binding) {
+    const { modifiers, value } = binding;
+    if (value === false)
+        return;
+    el.vActivatable = createActivatable(el, modifiers);
+}
+function unbind$3(el) {
+    const { vActivatable } = el;
+    if (!vActivatable)
+        return;
+    vActivatable.destroy();
+    delete el.vActivatable;
+}
+function update$4(el, binding) {
+    const { value, oldValue } = binding;
+    if (value === oldValue) {
+        return;
     }
+    if (oldValue !== false) {
+        unbind$3(el);
+    }
+    inserted$3(el, binding);
 }
-const VActivatable = {
+const VActivatable = /*#__PURE__*/ defineDirective({
+    name: 'activatable',
     inserted: inserted$3,
     unbind: unbind$3,
-};
+    update: update$4,
+});
 
 const REPEAT_DELAY = 300;
 const REPEAT_INTERVAL = 300;
@@ -21768,7 +21914,7 @@ function createAutoRepeat(el, options) {
     let repeatTimer;
     let repeatDelayTimer;
     let { enable: enableRepeat = true, interval: repeatInterval = REPEAT_INTERVAL, delay: repeatDelay = REPEAT_DELAY, } = options;
-    function start(ev) {
+    const start = (ev) => {
         if (enableRepeat) {
             repeatDelayTimer = setTimeout(() => {
                 repeatTimer = setInterval(() => {
@@ -21779,8 +21925,8 @@ function createAutoRepeat(el, options) {
                 }, repeatInterval);
             }, repeatDelay);
         }
-    }
-    function stop() {
+    };
+    const stop = () => {
         if (repeatDelayTimer) {
             clearTimeout(repeatDelayTimer);
             repeatDelayTimer = null;
@@ -21789,8 +21935,8 @@ function createAutoRepeat(el, options) {
             clearInterval(repeatTimer);
             repeatTimer = null;
         }
-    }
-    function pointerDown(ev) {
+    };
+    const pointerDown = (ev) => {
         if (!enableRepeat)
             return;
         if (('isTrusted' in ev && !ev.isTrusted)
@@ -21799,18 +21945,18 @@ function createAutoRepeat(el, options) {
         if (!ev.composedPath().some(path => path === el))
             return;
         start(ev);
-    }
-    function enable(val) {
+    };
+    const enable = (val) => {
         enableRepeat = val;
         if (!enableRepeat) {
             stop();
         }
-    }
-    function setOptions(val) {
+    };
+    const setOptions = (val) => {
         enableRepeat = !!val.enable;
         repeatInterval = val.interval || REPEAT_INTERVAL;
         repeatDelay = val.delay || REPEAT_DELAY;
-    }
+    };
     const doc = document;
     const opts = { passive: true };
     const mousedownOff = on(doc, 'mousedown', pointerDown, opts);
@@ -21844,8 +21990,16 @@ function inserted$4(el, binding) {
     const vAutoRepeat = createAutoRepeat(el, binding.value);
     el.vAutoRepeat = vAutoRepeat;
 }
-function update$4(el, binding) {
-    if (binding.value === binding.oldValue) {
+function unbind$4(el) {
+    const { vAutoRepeat } = el;
+    if (!vAutoRepeat)
+        return;
+    vAutoRepeat.destroy();
+    delete el.vAutoRepeat;
+}
+function update$5(el, binding) {
+    const { value, oldValue } = binding;
+    if (value === oldValue) {
         return;
     }
     const { vAutoRepeat } = el;
@@ -21856,22 +22010,16 @@ function update$4(el, binding) {
     vAutoRepeat.stop();
     vAutoRepeat.update(binding.value);
 }
-function unbind$4(el, binding) {
-    const { vAutoRepeat } = el;
-    if (!vAutoRepeat)
-        return;
-    vAutoRepeat.destroy();
-    delete el.vAutoRepeat;
-}
-const VAutoRepeat = {
+const VAutoRepeat = /*#__PURE__*/ defineDirective({
+    name: 'autorepeat',
     inserted: inserted$4,
-    update: update$4,
+    update: update$5,
     unbind: unbind$4,
-};
+});
 
 function createClickOutside(el, options) {
     const { enabled = () => true, include = () => [], callback, } = options;
-    function maybe(ev) {
+    const maybe = (ev) => {
         if (!ev)
             return;
         if (enabled(ev) === false)
@@ -21882,7 +22030,7 @@ function createClickOutside(el, options) {
         const elements = include();
         elements.push(el);
         !elements.some(element => element.contains(ev.target)) && setTimeout(() => { enabled(ev) && callback(ev); }, 0);
-    }
+    };
     const doc = document;
     const opts = { passive: true };
     const mouseupOff = on(doc, 'mouseup', maybe, opts);
@@ -21905,36 +22053,34 @@ function inserted$5(el, binding) {
     });
     el.vClickOutside = vClickOutside;
 }
-function unbind$5(el, binding) {
+function unbind$5(el) {
     const { vClickOutside } = el;
     if (!vClickOutside)
         return;
     vClickOutside.destroy();
     delete el.vClickOutside;
 }
-function update$5(el, binding) {
-    if (binding.value === binding.oldValue) {
+function update$6(el, binding) {
+    const { value, oldValue } = binding;
+    if (value === oldValue) {
         return;
     }
-    if (binding.oldValue) {
+    if (oldValue) {
         unbind$5(el);
     }
     inserted$5(el, binding);
 }
-const VClickOutside = {
+const VClickOutside = /*#__PURE__*/ defineDirective({
+    name: 'click-outside',
     inserted: inserted$5,
     unbind: unbind$5,
-    update: update$5,
-};
+    update: update$6,
+});
 
 function inserted$6(el, binding) {
     if (!binding.value)
         return;
-    const config = {
-        ...binding.value,
-        el,
-    };
-    el.vGesture = createGesture(config);
+    el.vGesture = createGesture({ ...binding.value, el });
 }
 function unbind$6(el) {
     const { vGesture } = el;
@@ -21943,61 +22089,69 @@ function unbind$6(el) {
     vGesture.destroy();
     delete el.vGesture;
 }
-function update$6(el, binding) {
-    if (binding.value === binding.oldValue) {
+function update$7(el, binding) {
+    const { value, oldValue } = binding;
+    if (value === oldValue) {
         return;
     }
-    if (binding.oldValue) {
+    if (oldValue) {
         unbind$6(el);
     }
     inserted$6(el, binding);
 }
-const VGesture = {
+const VGesture = defineDirective({
+    name: 'gesture',
     inserted: inserted$6,
     unbind: unbind$6,
-    update: update$6,
-};
+    update: update$7,
+});
 
-function inserted$7(el, binding) {
-    if (!binding.value)
-        return;
-    const modifiers = binding.modifiers || {};
-    const { value } = binding;
-    const callback = isObject(value)
-        ? value.handler
-        : value;
-    const options = {
-        root: document.querySelector(binding.arg),
-        ...value.options,
-    };
+function createIntersect(el, options) {
+    const { handler, root, rootMargin, threshold, quiet, once, } = options;
+    let inited = false;
     const observer = new IntersectionObserver((entries = [], observer) => {
-        if (!el.vIntersect)
-            return; // Just in case, should never fire
         // If is not quiet or has already been
-        // initted, invoke the user callback
-        if (callback && (!modifiers.quiet
-            || el.vIntersect.init)) {
-            const isIntersecting = Boolean(entries.find(entry => entry.isIntersecting));
-            callback(entries, observer, isIntersecting);
+        // initted, invoke the user handler
+        if (handler && (!quiet || inited)) {
+            const isIntersecting = entries.some(entry => entry.isIntersecting);
+            handler(entries, observer, isIntersecting);
         }
         // If has already been initted and
         // has the once modifier, unbind
-        /* eslint-disable-next-line */
-        if (el.vIntersect.init && modifiers.once)
-            unbind$7(el);
-        // Otherwise, mark the observer as initted
-        else
-            (el.vIntersect.init = true);
-    }, options);
+        if (inited && once) {
+            /* eslint-disable-next-line @typescript-eslint/no-use-before-define */
+            destroy();
+        }
+        else {
+            // Otherwise, mark the observer as initted
+            inited = true;
+        }
+    }, {
+        root: isString(root) ? document.querySelector(root) : root,
+        rootMargin,
+        threshold,
+    });
     const destroy = () => {
         observer.unobserve(el);
     };
-    el.vIntersect = {
-        init: false,
+    observer.observe(el);
+    return {
         observer,
         destroy,
     };
-    observer.observe(el);
+}
+function inserted$7(el, binding) {
+    const { value, arg, modifiers } = binding;
+    if (!value || !arg)
+        return;
+    const options = isObject(value)
+        ? value
+        : { handler: value };
+    el.vIntersect = createIntersect(el, {
+        ...modifiers,
+        ...options,
+        root: arg || options.root,
+    });
 }
 function unbind$7(el) {
     const { vIntersect } = el;
@@ -22006,64 +22160,66 @@ function unbind$7(el) {
     vIntersect.destroy();
     delete el.vIntersect;
 }
-function update$7(el, binding) {
-    if (binding.value === binding.oldValue) {
+function update$8(el, binding) {
+    const { value, oldValue } = binding;
+    if (value === oldValue) {
         return;
     }
-    if (binding.oldValue) {
+    if (oldValue) {
         unbind$7(el);
     }
     inserted$7(el, binding);
 }
-const VIntersect = {
+const VIntersect = defineDirective({
+    name: 'intersect',
     inserted: inserted$7,
-    update: update$7,
+    update: update$8,
     unbind: unbind$7,
-};
+});
 
-function inserted$8(el, binding) {
-    if (!binding.value)
-        return;
-    const modifiers = binding.modifiers || {};
-    const { value } = binding;
-    const callback = isObject(value)
-        ? value.handler
-        : value;
-    const { once, ...modifierKeys } = modifiers;
-    const hasModifiers = Object.keys(modifierKeys).length > 0;
-    const hasOptions = !!value.options;
-    // Options take top priority
-    const options = hasOptions ? value.options : hasModifiers
-        // If we have modifiers, use only those provided
-        ? {
-            attributes: modifierKeys.attr,
-            childList: modifierKeys.child,
-            subtree: modifierKeys.sub,
-            characterData: modifierKeys.char,
-        }
-        // Defaults to everything on
-        : {
-            attributes: true,
-            childList: true,
-            subtree: true,
-            characterData: true,
-        };
+function createMutate(el, options) {
+    const { handler, once, 
+    // Defaults to everything on
+    attributes = true, childList = true, subtree = true, characterData = true, } = options;
     const observer = new MutationObserver((mutationsList, observer) => {
-        if (!el.vMutate)
-            return; // Just in case, should never fire
-        callback(mutationsList, observer);
+        handler(mutationsList, observer);
         // If has the once modifier, unbind
-        /* eslint-disable-next-line */
-        once && unbind$8(el);
+        if (once) {
+            /* eslint-disable-next-line @typescript-eslint/no-use-before-define */
+            destroy();
+        }
     });
     const destroy = () => {
         observer.disconnect();
     };
-    el.vMutate = {
+    observer.observe(el, {
+        attributes,
+        childList,
+        subtree,
+        characterData,
+    });
+    return {
         observer,
         destroy,
     };
-    observer.observe(el, options);
+}
+function inserted$8(el, binding) {
+    const { value, modifiers } = binding;
+    if (!value)
+        return;
+    const options = isObject(value)
+        ? value
+        : { handler: value };
+    // alias for MutationObserverInit
+    const { attr: attributes = true, child: childList = true, sub: subtree = true, char: characterData = true, once, } = modifiers;
+    el.vMutate = createMutate(el, {
+        attributes,
+        childList,
+        subtree,
+        characterData,
+        once,
+        ...options,
+    });
 }
 function unbind$8(el) {
     const { vMutate } = el;
@@ -22072,37 +22228,46 @@ function unbind$8(el) {
     vMutate.destroy();
     delete el.vMutate;
 }
-function update$8(el, binding) {
-    if (binding.value === binding.oldValue) {
+function update$9(el, binding) {
+    const { value, oldValue } = binding;
+    if (value === oldValue) {
         return;
     }
-    if (binding.oldValue) {
+    if (oldValue) {
         unbind$8(el);
     }
     inserted$8(el, binding);
 }
-const VMutate = {
+const VMutate = defineDirective({
+    name: 'mutate',
     inserted: inserted$8,
     unbind: unbind$8,
-    update: update$8,
-};
+    update: update$9,
+});
 
-function inserted$9(el, binding) {
-    if (!binding.value)
-        return;
-    const { value: callback, modifiers: options = { passive: true }, } = binding;
+function createResize(options) {
+    const { callback, immediate } = options;
     const resizeOff = on(window, 'resize', callback, options);
     const destroy = () => {
         resizeOff();
     };
-    el.vResize = {
+    if (immediate) {
+        callback();
+    }
+    return {
         callback,
         options,
         destroy,
     };
-    if (!binding.modifiers || !binding.modifiers.quiet) {
-        callback();
-    }
+}
+function inserted$9(el, binding) {
+    const { value, modifiers } = binding;
+    if (!value)
+        return;
+    el.vResize = createResize({
+        ...modifiers,
+        callback: value,
+    });
 }
 function unbind$9(el) {
     const { vResize } = el;
@@ -22111,37 +22276,49 @@ function unbind$9(el) {
     vResize.destroy();
     delete el.vResize;
 }
-function update$9(el, binding) {
-    if (binding.value === binding.oldValue) {
+function update$a(el, binding) {
+    const { value, oldValue } = binding;
+    if (value === oldValue) {
         return;
     }
-    if (binding.oldValue) {
+    if (oldValue) {
         unbind$9(el);
     }
     inserted$9(el, binding);
 }
-const VResize = {
+const VResize = defineDirective({
+    name: 'resize',
     inserted: inserted$9,
     unbind: unbind$9,
-    update: update$9,
-};
+    update: update$a,
+});
 
-function inserted$a(el, binding) {
-    const callback = binding.value;
-    const options = binding.options || { passive: true };
-    const target = binding.arg ? document.querySelector(binding.arg) : window;
-    if (!target)
-        return;
-    const scrollOff = on(target, 'scroll', callback, options);
+function createScroll(options) {
+    const win = window;
+    const { target = win, callback } = options;
+    const targetEl = isString(target)
+        ? document.querySelector(target) || win
+        : target;
+    const scrollOff = on(targetEl, 'scroll', callback, options);
     const destroy = () => {
         scrollOff();
     };
-    el.vScroll = {
-        callback,
+    return {
         options,
         target,
         destroy,
     };
+}
+function inserted$a(el, binding) {
+    const { value, arg, modifiers } = binding;
+    if (!value)
+        return;
+    el.vScroll = createScroll({
+        passive: true,
+        ...modifiers,
+        target: arg,
+        callback: value,
+    });
 }
 function unbind$a(el) {
     const { vScroll } = el;
@@ -22150,22 +22327,24 @@ function unbind$a(el) {
     vScroll.destroy();
     delete el.vScroll;
 }
-function update$a(el, binding) {
-    if (binding.value === binding.oldValue) {
+function update$b(el, binding) {
+    const { value, oldValue } = binding;
+    if (value === oldValue) {
         return;
     }
-    if (binding.oldValue) {
+    if (oldValue) {
         unbind$a(el);
     }
     inserted$a(el, binding);
 }
-const VScroll = {
+const VScroll = defineDirective({
+    name: 'scroll',
     inserted: inserted$a,
     unbind: unbind$a,
-    update: update$a,
-};
+    update: update$b,
+});
 
-const clamp$5 = (num, min, max) => {
+const clamp$6 = (num, min, max) => {
     return Math.max(min, Math.min(num, max));
 };
 
@@ -22201,7 +22380,7 @@ const createSwipeBackGesture = (el, canStartHandler, onStartHandler, onMoveHandl
          * or values greater than 1 which should not be possible.
          * Need to investigate more to find where the issue is.
          */
-        onEndHandler(shouldComplete, (stepValue <= 0) ? 0.01 : clamp$5(0, stepValue, 0.9999), realDur);
+        onEndHandler(shouldComplete, (stepValue <= 0) ? 0.01 : clamp$6(0, stepValue, 0.9999), realDur);
     };
     return createGesture({
         el,
@@ -22216,9 +22395,10 @@ const createSwipeBackGesture = (el, canStartHandler, onStartHandler, onMoveHandl
 };
 
 function inserted$b(el, binding) {
-    if (!binding.value)
+    const { value } = binding;
+    if (!value)
         return;
-    const { canStartHandler = NO, onStartHandler = NOOP, onMoveHandler = NOOP, onEndHandler = NOOP, } = binding.value;
+    const { canStartHandler = NO, onStartHandler = NOOP, onMoveHandler = NOOP, onEndHandler = NOOP, } = value;
     el.vSwipeBack = createSwipeBackGesture(el, canStartHandler, onStartHandler, onMoveHandler, onEndHandler);
 }
 function unbind$b(el) {
@@ -22228,20 +22408,22 @@ function unbind$b(el) {
     vSwipeBack.destroy();
     delete el.vSwipeBack;
 }
-function update$b(el, binding) {
-    if (binding.value === binding.oldValue) {
+function update$c(el, binding) {
+    const { value, oldValue } = binding;
+    if (value === oldValue) {
         return;
     }
-    if (binding.oldValue) {
+    if (oldValue) {
         unbind$b(el);
     }
     inserted$b(el, binding);
 }
-const VSwipeBack = {
+const VSwipeBack = defineDirective({
+    name: 'swipe-back',
     inserted: inserted$b,
     unbind: unbind$b,
-    update: update$b,
-};
+    update: update$c,
+});
 
 const DIR_RATIO = 0.5;
 const MIN_DISTANCE = 16;
@@ -22303,14 +22485,10 @@ function createHandlers(value) {
         touchmove: (e) => touchmove(e, wrapper),
     };
 }
-function inserted$c(el, binding) {
-    const value = binding.value;
-    const target = value.parent ? el.parentElement : el;
-    const options = value.options || { passive: true };
-    // Needed to pass unit tests
-    if (!target)
-        return;
-    const handlers = createHandlers(binding.value);
+function createTouch(el, options) {
+    const { parent } = options;
+    const target = parent ? el.parentElement || document.body : el;
+    const handlers = createHandlers(options);
     keys(handlers).forEach((eventName) => {
         on(target, eventName, handlers[eventName], options);
     });
@@ -22319,9 +22497,15 @@ function inserted$c(el, binding) {
             off(target, eventName, handlers[eventName]);
         });
     };
-    target.vTouch = {
+    return {
         destroy,
     };
+}
+function inserted$c(el, binding) {
+    const { value } = binding;
+    if (!value)
+        return;
+    el.vTouch = createTouch(el, value);
 }
 function unbind$c(el) {
     const { vTouch } = el;
@@ -22330,55 +22514,51 @@ function unbind$c(el) {
     vTouch.destroy();
     delete el.vTouch;
 }
-function update$c(el, binding) {
-    if (binding.value === binding.oldValue) {
+function update$d(el, binding) {
+    const { value, oldValue } = binding;
+    if (value === oldValue) {
         return;
     }
-    if (binding.oldValue) {
+    if (oldValue) {
         unbind$c(el);
     }
     inserted$c(el, binding);
 }
-const VTouch = {
+const VTouch = defineDirective({
+    name: 'touch',
     inserted: inserted$c,
     unbind: unbind$c,
-    update: update$c,
-};
-
-function createTrigger() {
-    return {};
-}
-function inserted$d(el, binding) {
-    el.vTrigger = createTrigger();
-}
-function unbind$d(el) {
-    if (!el.vTrigger)
-        return;
-    delete el.vTrigger;
-}
-const VTrigger = {
-    inserted: inserted$d,
-    unbind: unbind$d,
-};
+    update: update$d,
+});
 
 // Auto Generated
 
 var directives = /*#__PURE__*/Object.freeze({
   __proto__: null,
+  createActivatable: createActivatable,
   VActivatable: VActivatable,
+  createAutoRepeat: createAutoRepeat,
   VAutoRepeat: VAutoRepeat,
+  createClickOutside: createClickOutside,
   VClickOutside: VClickOutside,
   VGesture: VGesture,
+  createHover: createHover,
   VHover: VHover,
+  createIntersect: createIntersect,
   VIntersect: VIntersect,
+  createMutate: createMutate,
   VMutate: VMutate,
+  createRemote: createRemote,
   VRemote: VRemote,
+  createResize: createResize,
   VResize: VResize,
+  createRippleEffect: createRippleEffect,
   VRipple: VRipple,
+  createScroll: createScroll,
   VScroll: VScroll,
   VSwipeBack: VSwipeBack,
-  VTouch: VTouch,
-  VTrigger: VTrigger
+  createTouch: createTouch,
+  VTouch: VTouch
 });
 
 function useAsyncRender() {
@@ -22611,4 +22791,4 @@ function defaulExport() {
 var index$1 = /*#__PURE__*/ defaulExport();
 
 export default index$1;
-export { action as Action, actionGroup as ActionGroup, actionSheet as ActionSheet, alert as Alert, app as App, avatar as Avatar, badge as Badge, busyIndicator as BusyIndicator, button as Button, buttonGroup as ButtonGroup, card as Card, cardContent as CardContent, cardHeader as CardHeader, cardSubtitle as CardSubtitle, cardTitle as CardTitle, cell as Cell, cellGroup as CellGroup, checkBox as CheckBox, checkBoxGroup as CheckBoxGroup, checkGroup as CheckGroup, CheckIndicator, checkItem as CheckItem, chip as Chip, col as Col, collapse as Collapse, collapseItem as CollapseItem, content as Content, datetime as Datetime, dialog as Dialog, fab as Fab, fabButton as FabButton, FabGroup, FontIcon, footer as Footer, grid as Grid, header as Header, Icon, image as Image, input as Input, item as Item, itemDivider as ItemDivider, label as Label, lazy as Lazy, list as List, listHeader as ListHeader, ListItem, listView as ListView, loading as Loading, menu as Menu, note as Note, Overlay, pageIndicator as PageIndicator, Picker, LinePickerColumn as PickerColumn, popover as Popover, popup as Popup, popupLegacy as PopupLegacy, progressBar as ProgressBar, progressCircular as ProgressCircular, radio as Radio, radioButton as RadioButton, radioButtonGroup as RadioButtonGroup, RadioIndicator, range as Range, refresher as Refresher, refresherContent as RefresherContent, row as Row, Skyline, slide as Slide, slider as Slider, slides as Slides, Spinner, stepper as Stepper, SvgIcon, _switch as Switch, switchGroup as SwitchGroup, switchIndicator as SwitchIndicator, tab as Tab, tabBar as TabBar, tabButton as TabButton, tabs as Tabs, textarea as Textarea, thumbnail as Thumbnail, title as Title, toast as Toast, toolbar as Toolbar, tooltip as Tooltip, treeItem as TreeItem, VActivatable, VAutoRepeat, VClickOutside, VGesture, VHover, VIntersect, VMutate, VRemote, VResize, VRipple, VScroll, VSwipeBack, VTouch, VTrigger, createColorClasses, createModeClasses, getItemValue, invoke, isVue, useAsyncRender, useBreakPoint, useCheckGroup, useCheckGroupWithModel, useCheckItem, useCheckItemWithModel, useClickOutside, useColor, useEvent, useGroup, useGroupItem, useLazy, useMode, useModel, useOptions, usePopstateClose, usePopup, usePopupDelay, usePopupDuration, useRemote, useRender, useRipple, useSlots, useTransition, useTreeItem, useTrigger };
+export { action as Action, actionGroup as ActionGroup, actionSheet as ActionSheet, alert as Alert, app as App, avatar as Avatar, badge as Badge, busyIndicator as BusyIndicator, button as Button, buttonGroup as ButtonGroup, card as Card, cardContent as CardContent, cardHeader as CardHeader, cardSubtitle as CardSubtitle, cardTitle as CardTitle, cell as Cell, cellGroup as CellGroup, checkBox as CheckBox, checkBoxGroup as CheckBoxGroup, checkGroup as CheckGroup, CheckIndicator, checkItem as CheckItem, chip as Chip, col as Col, collapse as Collapse, collapseItem as CollapseItem, content as Content, datetime as Datetime, dialog as Dialog, fab as Fab, fabButton as FabButton, FabGroup, FontIcon, footer as Footer, grid as Grid, header as Header, Icon, image as Image, input as Input, item as Item, itemDivider as ItemDivider, label as Label, lazy as Lazy, list as List, listHeader as ListHeader, ListItem, listView as ListView, loading as Loading, menu as Menu, note as Note, Overlay, pageIndicator as PageIndicator, Picker, LinePickerColumn as PickerColumn, popover as Popover, popup as Popup, popupLegacy as PopupLegacy, progressBar as ProgressBar, radio as Radio, radioButton as RadioButton, radioButtonGroup as RadioButtonGroup, RadioIndicator, range as Range, refresher as Refresher, refresherContent as RefresherContent, row as Row, Skyline, slide as Slide, slider as Slider, slides as Slides, Spinner, stepper as Stepper, SvgIcon, _switch as Switch, switchGroup as SwitchGroup, switchIndicator as SwitchIndicator, tab as Tab, tabBar as TabBar, tabButton as TabButton, tabs as Tabs, textarea as Textarea, thumbnail as Thumbnail, title as Title, toast as Toast, toolbar as Toolbar, tooltip as Tooltip, treeItem as TreeItem, VActivatable, VAutoRepeat, VClickOutside, VGesture, VHover, VIntersect, VMutate, VRemote, VResize, VRipple, VScroll, VSwipeBack, VTouch, createActivatable, createAutoRepeat, createClickOutside, createColorClasses, createHover, createIntersect, createModeClasses, createMutate, createRemote, createResize, createRippleEffect, createScroll, createTouch, getItemValue, invoke, isVue, useAsyncRender, useBreakPoint, useCheckGroup, useCheckGroupWithModel, useCheckItem, useCheckItemWithModel, useClickOutside, useColor, useEvent, useGroup, useGroupItem, useLazy, useMode, useModel, useOptions, usePopstateClose, usePopup, usePopupDelay, usePopupDuration, useRemote, useRender, useRipple, useSlots, useTransition, useTreeItem, useTrigger };

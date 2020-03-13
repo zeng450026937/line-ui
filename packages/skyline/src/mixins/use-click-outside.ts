@@ -9,11 +9,11 @@ import {
 
 export type IncludeHandler<T = RestAny> = (this: VueInstance<T>) => Array<Element>;
 
-export type ClickOutsideOptions = Partial<EventOptions & {
+export type ClickOutsideOption = Partial<EventOptions & {
   includes?: string | IncludeHandler;
 }>;
 
-export function useClickOutside(options: ClickOutsideOptions = {}) {
+export function useClickOutside(options: ClickOutsideOption = {}) {
   const {
     global = true,
     event = ['mouseup', 'touchend'],
@@ -30,8 +30,8 @@ export function useClickOutside(options: ClickOutsideOptions = {}) {
        || ('pointerType' in ev && !(ev as PointerEvent).pointerType)
       ) return false;
 
-      const elements = options!.includes
-        ? invoke(this, options!.includes) as Array<Element>
+      const elements = options.includes
+        ? invoke(this, options.includes) as Array<Element>
         : [this.$el];
 
       return !elements.some(element => element.contains(ev.target as Node));

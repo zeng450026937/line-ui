@@ -35,7 +35,7 @@ async function run() {
     count++;
   }
 
-  logger.done(`total :  ${ count } mixins`);
+  logger.log(`total :  ${ count } mixins`, 'DONE');
 
   // const dist = resolve(`${ root }/index.ts`);
   // const dist = resolve('gen/mixins/index.ts');

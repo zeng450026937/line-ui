@@ -14,5 +14,4 @@ export * from 'skyline/directives/ripple';
 export * from 'skyline/directives/scroll';
 export * from 'skyline/directives/swipe-back';
 export * from 'skyline/directives/touch';
-export * from 'skyline/directives/trigger';
 export * from 'skyline/directives/waterfall';

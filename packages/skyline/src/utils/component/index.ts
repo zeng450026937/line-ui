@@ -2,7 +2,6 @@
 import {
   CombinedVueInstance,
   Vue,
-  VueConstructor,
 } from 'vue/types/vue';
 import {
   ComponentOptions,
@@ -18,19 +17,11 @@ import {
 
 import { Mods } from 'skyline/utils/bem';
 import { unifySlots } from 'skyline/utils/vnode';
-import { camelize } from 'skyline/utils/string-transform';
+import { componentInstall as install } from 'skyline/utils/install';
 
 import { useRender } from 'skyline/mixins/use-render';
 import { useSlots } from 'skyline/mixins/use-slots';
 import { useMode } from 'skyline/mixins/use-mode';
-
-export function install(this: ComponentOptions<Vue>, Vue: VueConstructor) {
-  const { name } = this;
-  // kebab case(hyphenate)
-  Vue.component(name as string, this);
-  // pascal case
-  Vue.component(camelize(`-${ name }`), this);
-}
 
 export type TsxComponentProps<Props, Slots> = Props & {
   // hack for jsx prop spread

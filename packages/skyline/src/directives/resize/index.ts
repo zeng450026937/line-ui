@@ -1,18 +1,14 @@
-import { DirectiveOptions, VNodeDirective } from 'vue';
+import { VNodeDirective } from 'vue';
+import { defineDirective } from 'skyline/utils/directive';
 import { on } from 'skyline/utils/dom';
 
-interface ResizeVNodeDirective extends VNodeDirective {
-  value?: () => void;
-  options?: AddEventListenerOptions;
+export interface ResizeOptions extends AddEventListenerOptions {
+  callback: () => void;
+  immediate?: boolean;
 }
 
-function inserted(el: HTMLElement, binding: ResizeVNodeDirective) {
-  if (!binding.value) return;
-
-  const {
-    value: callback,
-    modifiers: options = { passive: true },
-  } = binding;
+export function createResize(options: ResizeOptions) {
+  const { callback, immediate } = options;
 
   const resizeOff = on(window, 'resize', callback, options);
 
@@ -20,38 +16,60 @@ function inserted(el: HTMLElement, binding: ResizeVNodeDirective) {
     resizeOff();
   };
 
-  (el as any).vResize = {
+  if (immediate) {
+    callback();
+  }
+
+  return {
     callback,
     options,
     destroy,
   };
+}
 
-  if (!binding.modifiers || !binding.modifiers.quiet) {
-    callback();
-  }
+export interface ResizeVNodeDirective extends VNodeDirective {
+  value?: () => void;
+}
+
+function inserted(el: HTMLElement, binding: ResizeVNodeDirective) {
+  const { value, modifiers } = binding;
+
+  if (!value) return;
+
+  (el as any).vResize = createResize({
+    ...modifiers as any,
+    callback : value,
+  });
 }
 
 function unbind(el: HTMLElement) {
   const { vResize } = el as any;
+
   if (!vResize) return;
+
   vResize.destroy();
+
   delete (el as any).vResize;
 }
 
 function update(el: HTMLElement, binding: ResizeVNodeDirective) {
-  if (binding.value === binding.oldValue) {
+  const { value, oldValue } = binding;
+
+  if (value === oldValue) {
     return;
   }
-  if (binding.oldValue) {
+  if (oldValue) {
     unbind(el);
   }
+
   inserted(el, binding);
 }
 
-export const VResize = {
+export const VResize = defineDirective({
+  name : 'resize',
   inserted,
   unbind,
   update,
-} as DirectiveOptions;
+});
 
 export default VResize;

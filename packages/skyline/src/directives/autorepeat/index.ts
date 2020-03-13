@@ -1,11 +1,8 @@
-import { DirectiveOptions, VNodeDirective } from 'vue';
+import { VNodeDirective } from 'vue';
+import { defineDirective } from 'skyline/utils/directive';
 import { on } from 'skyline/utils/dom';
 
-interface AutoRepeatDirective extends VNodeDirective {
-  value?: AutoRepeatOption;
-}
-
-interface AutoRepeatOption {
+export interface AutoRepeatOptions {
   enable?: boolean;
   delay?: number;
   interval?: number;
@@ -14,7 +11,7 @@ interface AutoRepeatOption {
 const REPEAT_DELAY = 300;
 const REPEAT_INTERVAL = 300;
 
-function createAutoRepeat(el: HTMLElement, options: AutoRepeatOption) {
+export function createAutoRepeat(el: HTMLElement, options: AutoRepeatOptions) {
   let repeatTimer: number | null;
   let repeatDelayTimer: number | null;
   let {
@@ -23,7 +20,7 @@ function createAutoRepeat(el: HTMLElement, options: AutoRepeatOption) {
     delay: repeatDelay = REPEAT_DELAY,
   } = options;
 
-  function start(ev: Event) {
+  const start = (ev: Event) => {
     if (enableRepeat) {
       repeatDelayTimer = setTimeout(() => {
         repeatTimer = setInterval(() => {
@@ -34,9 +31,9 @@ function createAutoRepeat(el: HTMLElement, options: AutoRepeatOption) {
         }, repeatInterval);
       }, repeatDelay);
     }
-  }
+  };
 
-  function stop() {
+  const stop = () => {
     if (repeatDelayTimer) {
       clearTimeout(repeatDelayTimer);
       repeatDelayTimer = null;
@@ -45,29 +42,29 @@ function createAutoRepeat(el: HTMLElement, options: AutoRepeatOption) {
       clearInterval(repeatTimer);
       repeatTimer = null;
     }
-  }
+  };
 
-  function pointerDown(ev: Event) {
+  const pointerDown = (ev: Event) => {
     if (!enableRepeat) return;
     if (('isTrusted' in ev && !ev.isTrusted)
     || ('pointerType' in ev && !(ev as PointerEvent).pointerType)
     ) return;
     if (!ev.composedPath().some(path => path === el)) return;
     start(ev);
-  }
+  };
 
-  function enable(val: boolean) {
+  const enable = (val: boolean) => {
     enableRepeat = val;
     if (!enableRepeat) {
       stop();
     }
-  }
+  };
 
-  function setOptions(val: AutoRepeatOption) {
+  const setOptions = (val: AutoRepeatOptions) => {
     enableRepeat = !!val.enable;
     repeatInterval = val.interval || REPEAT_INTERVAL;
     repeatDelay = val.delay || REPEAT_DELAY;
-  }
+  };
 
 
   const doc = document;
@@ -101,36 +98,52 @@ function createAutoRepeat(el: HTMLElement, options: AutoRepeatOption) {
   };
 }
 
+export interface AutoRepeatDirective extends VNodeDirective {
+  value?: AutoRepeatOptions;
+}
+
 function inserted(el: HTMLElement, binding: AutoRepeatDirective) {
   if (binding.value === false) return;
-  const vAutoRepeat = createAutoRepeat(el, binding.value as AutoRepeatOption);
+
+  const vAutoRepeat = createAutoRepeat(el, binding.value as AutoRepeatOptions);
+
   (el as any).vAutoRepeat = vAutoRepeat;
 }
 
+function unbind(el: HTMLElement) {
+  const { vAutoRepeat } = el as any;
+
+  if (!vAutoRepeat) return;
+
+  vAutoRepeat.destroy();
+
+  delete (el as any).vAutoRepeat;
+}
+
 function update(el: HTMLElement, binding: AutoRepeatDirective) {
-  if (binding.value === binding.oldValue) {
+  const { value, oldValue } = binding;
+
+  if (value === oldValue) {
     return;
   }
+
   const { vAutoRepeat } = (el as any);
+
   if (!vAutoRepeat) {
     inserted(el, binding);
     return;
   }
+
   vAutoRepeat.stop();
   vAutoRepeat.update(binding.value);
 }
 
-function unbind(el: HTMLElement, binding: AutoRepeatDirective) {
-  const { vAutoRepeat } = el as any;
-  if (!vAutoRepeat) return;
-  vAutoRepeat.destroy();
-  delete (el as any).vAutoRepeat;
-}
 
-export const VAutoRepeat = {
+export const VAutoRepeat = /*#__PURE__*/ defineDirective({
+  name : 'autorepeat',
   inserted,
   update,
   unbind,
-} as DirectiveOptions;
+});
 
 export default VAutoRepeat;

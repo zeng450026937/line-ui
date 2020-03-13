@@ -1,17 +1,14 @@
-import { DirectiveOptions, VNodeDirective } from 'vue';
+import { VNodeDirective } from 'vue';
+import { defineDirective } from 'skyline/utils/directive';
 import { on } from 'skyline/utils/dom';
 
-interface HoverVNodeDirective extends VNodeDirective {
-  value?: (hover: boolean, ev: Event) => void;
+export interface HoverOptions {
+  callback: (hover: boolean, ev: Event) => void;
+  passive?: boolean;
 }
 
-function inserted(el: HTMLElement, binding: HoverVNodeDirective) {
-  if (!binding.value) return;
-
-  const {
-    value: callback,
-    modifiers: options = { passive: true },
-  } = binding;
+export function createHover(el: HTMLElement, options: HoverOptions) {
+  const { callback } = options;
 
   const enter = (ev: Event) => callback(true, ev);
   const leave = (ev: Event) => callback(false, ev);
@@ -28,37 +25,61 @@ function inserted(el: HTMLElement, binding: HoverVNodeDirective) {
     blurOff();
   };
 
-  (el as any).vHover = {
-    callback,
+  return {
     options,
-
     enter,
     leave,
     destroy,
   };
 }
 
+export interface HoverVNodeDirective extends VNodeDirective {
+  value?: (hover: boolean, ev: Event) => void;
+}
+
+function inserted(el: HTMLElement, binding: HoverVNodeDirective) {
+  const {
+    value: callback,
+    modifiers: options,
+  } = binding;
+
+  if (!callback) return;
+
+  (el as any).vHover = createHover(el, {
+    callback,
+    passive : true,
+    ...options,
+  });
+}
+
 function unbind(el: HTMLElement) {
   const { vHover } = el as any;
+
   if (!vHover) return;
+
   vHover.destroy();
+
   delete (el as any).vHover;
 }
 
 function update(el: HTMLElement, binding: HoverVNodeDirective) {
-  if (binding.value === binding.oldValue) {
+  const { value, oldValue } = binding;
+
+  if (value === oldValue) {
     return;
   }
-  if (binding.oldValue) {
+  if (oldValue) {
     unbind(el);
   }
+
   inserted(el, binding);
 }
 
-export const VHover = {
+export const VHover = defineDirective({
+  name : 'hover',
   inserted,
   unbind,
   update,
-} as DirectiveOptions;
+});
 
 export default VHover;

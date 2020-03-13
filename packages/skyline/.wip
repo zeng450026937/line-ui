@@ -1,3 +1,5 @@
-components/progress-bar
+components/progress
 components/range-slider
+components/swiper
 directives/tooltip
+directives/trigger

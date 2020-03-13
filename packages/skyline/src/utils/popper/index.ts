@@ -1,3 +1,3 @@
-import { createPopper } from '@popperjs/core/lib/popper-base';
+import { createPopper } from '@popperjs/core/lib/popper-lite';
 
 export { createPopper };

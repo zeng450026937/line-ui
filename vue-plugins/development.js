@@ -1,5 +1,11 @@
 module.exports = (api, options) => {
   api.chainWebpack(config => {
+    // disable typescipt checker if you think it's ignoring
+    // we will fix it out later
+    if (api.hasPlugin('typescript')) {
+      config.plugins.delete('fork-ts-checker');
+    }
+
     if (process.env.TARGET) {
       const packagesDir = api.resolve('packages');
       const packageDir = `${ packagesDir }/${ process.env.TARGET }`;

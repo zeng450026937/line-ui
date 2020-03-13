@@ -30,6 +30,7 @@
       "scripts/mixins.js"
     ],
     "scripts": [
+      "scripts/import.js",
       "scripts/style.js"
     ],
     "babel": true

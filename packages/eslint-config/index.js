@@ -15,6 +15,10 @@ module.exports = {
     '@vue/typescript/recommended',
   ],
 
+  plugins : [
+    'modules-newline',
+  ],
+
   parserOptions : {
     ecmaVersion : 2020,
   },
@@ -32,6 +36,7 @@ module.exports = {
     {
       files : ['*.ts', '*.tsx'],
       rules : {
+        'consistent-return'                       : 0,
         '@typescript-eslint/no-explicit-any'      : 0,
         '@typescript-eslint/no-inferrable-types'  : 0,
         '@typescript-eslint/no-empty-function'    : 1,
@@ -74,7 +79,6 @@ module.exports = {
     'no-restricted-syntax'  : 0,
     'no-continue'           : 0,
     'no-mixed-operators'    : 1,
-    'consistent-return'     : 1,
     'max-len'               : [2, 120,
       {
         tabWidth               : 2,
@@ -116,8 +120,11 @@ module.exports = {
       memberSyntaxSortOrder : ['none', 'all', 'multiple', 'single'],
     }],
     'max-classes-per-file' : 0,
-    'spaced-comment' : ['warn', 'always', { 
-      block: { exceptions: ['#__PURE__'] } 
+    'spaced-comment'       : ['warn', 'always', {
+      block : { exceptions: ['#__PURE__'] },
     }],
+
+    'modules-newline/import-declaration-newline' : 'warn',
+    'modules-newline/export-declaration-newline' : 'warn',
   },
 };

@@ -23,7 +23,7 @@ module.exports = (api, options) => {
           .use('skyline-auto-import')
           .loader(require.resolve('@skyline/webpack-loader-auto-import'))
           // check kebab case components
-          .options('kebab')
+          .options(require('skyline/dist/import.config.json'))
           .after('vue-loader');
       });
 

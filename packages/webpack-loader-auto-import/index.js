@@ -1,4 +1,10 @@
 const qs = require('querystring');
+const { getOptions } = require('loader-utils');
+const parse = require('./parse');
+const codegen = require('./codegen');
+
+const templateRE = /<template[\s\S]+<\/template>/g;
+const commentRE = /<!--[\S\s]+-->/g;
 
 module.exports = function autoImport(content) {
   const loaderContext = this;
@@ -9,77 +15,37 @@ module.exports = function autoImport(content) {
 
   const rawQuery = resourceQuery.slice(1);
   const incomingQuery = qs.parse(rawQuery);
+  const options = getOptions(loaderContext);
 
-  if (/<template functional>/.test(content)) {
-    return content;
+  if (!rawQuery) {
+    // trigger vue-loader custom block process
+    return `${ content }\n<import lang=js></import>\n`;
   }
   if (incomingQuery.type && incomingQuery.blockType !== 'import') {
     return content;
   }
 
-  const { components } = extract(content, this.query);
+  // match template
+  const matched = content.match(templateRE);
 
-  if (!components) {
+  // no template
+  if (!matched) {
     return content;
   }
 
-  const code = `
-<import lang="js">
-import { ${ components.join(',') } } from 'skyline';
+  // functional
+  if (/<template functional>/.test(content)) {
+    return content;
+  }
 
-export default function (component) {
-  const { options } = component;
-  const components = {
-    ${ components.map(component => `[${ component }.name]: ${ component }`).join(',\n    ') }
-  };
+  // remove comment
+  const template = matched[0].replace(commentRE, '');
 
-  options.components = Object.assign(
-    components,
-    options.components,
-  );
-}
-</import>
-`;
+  // parse tags & dirs
+  const parsed = parse(template, options);
+
+  // gen code
+  const code = codegen(parsed, options);
 
   return content + code;
 };
-
-const camelizeRE = /-(\w)/g;
-// hyphenate => camel
-const camelize = (str) => {
-  return str.replace(camelizeRE, (_, c) => (c ? c.toUpperCase() : ''));
-};
-
-// TODO
-// make prefix configurable
-const compRegex = {
-  '?kebab'    : /line-\w+/g,
-  '?pascal'   : /Line[A-Z]\w+/g,
-  '?combined' : /(line-\w+|Line[A-Z]\w+)/g,
-};
-
-function extract(content, query) {
-  let components = content.match(compRegex[query]);
-
-  if (components !== null) {
-    // de-duplicates
-    components = Array.from(new Set(components));
-
-    if (query === '?kebab') {
-      components = components.map(name => camelize(name.replace('line', '')));
-    }
-    if (query === '?pascal') {
-      components = components.map(name => name.replace('Line', ''));
-    }
-
-    if (query === '?combined') {
-      // could have been transformed QIcon and q-icon too,
-      // de-duplicates
-      components = Array.from(new Set(components));
-    }
-  }
-
-  return {
-    components,
-  };
-}

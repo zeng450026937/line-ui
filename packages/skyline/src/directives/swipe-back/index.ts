@@ -1,8 +1,12 @@
-import { DirectiveOptions, VNodeDirective } from 'vue';
+import { VNodeDirective } from 'vue';
+import { defineDirective } from 'skyline/utils/directive';
 import { createSwipeBackGesture } from 'skyline/utils/gesture/swipe-back';
-import { NO, NOOP } from 'skyline/utils/helpers';
+import {
+  NO,
+  NOOP,
+} from 'skyline/utils/helpers';
 
-interface SwipeBackVNodeDirective extends VNodeDirective {
+export interface SwipeBackVNodeDirective extends VNodeDirective {
   value?: {
     canStartHandler: () => boolean;
     onStartHandler: () => void;
@@ -12,14 +16,16 @@ interface SwipeBackVNodeDirective extends VNodeDirective {
 }
 
 function inserted(el: HTMLElement, binding: SwipeBackVNodeDirective) {
-  if (!binding.value) return;
+  const { value } = binding;
+
+  if (!value) return;
 
   const {
     canStartHandler = NO,
     onStartHandler = NOOP,
     onMoveHandler = NOOP,
     onEndHandler = NOOP,
-  } = binding.value;
+  } = value;
 
   (el as any).vSwipeBack = createSwipeBackGesture(
     el,
@@ -32,25 +38,32 @@ function inserted(el: HTMLElement, binding: SwipeBackVNodeDirective) {
 
 function unbind(el: HTMLElement) {
   const { vSwipeBack } = el as any;
+
   if (!vSwipeBack) return;
+
   vSwipeBack.destroy();
+
   delete (el as any).vSwipeBack;
 }
 
 function update(el: HTMLElement, binding: SwipeBackVNodeDirective) {
-  if (binding.value === binding.oldValue) {
+  const { value, oldValue } = binding;
+
+  if (value === oldValue) {
     return;
   }
-  if (binding.oldValue) {
+  if (oldValue) {
     unbind(el);
   }
+
   inserted(el, binding);
 }
 
-export const VSwipeBack = {
+export const VSwipeBack = defineDirective({
+  name : 'swipe-back',
   inserted,
   unbind,
   update,
-} as DirectiveOptions;
+});
 
 export default VSwipeBack;

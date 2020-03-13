@@ -1,22 +1,50 @@
 import { VNodeDirective } from 'vue';
+import { defineDirective } from 'skyline/utils/directive';
 
 function createTrigger() {
   return {};
 }
 
-function inserted(el: HTMLElement, binding: VNodeDirective) {
+export interface TriggerVNodeDirective extends VNodeDirective {
+  value?: any;
+}
+
+function inserted(el: HTMLElement, binding: TriggerVNodeDirective) {
+  const { value } = binding;
+
+  if (!value) return;
+
   (el as any).vTrigger = createTrigger();
 }
 
 function unbind(el: HTMLElement) {
-  if (!(el as any).vTrigger) return;
+  const { vTrigger } = el as any;
+
+  if (!vTrigger) return;
+
+  vTrigger.destroy();
 
   delete (el as any).vTrigger;
 }
 
-export const VTrigger = {
+function update(el: HTMLElement, binding: TriggerVNodeDirective) {
+  const { value, oldValue } = binding;
+
+  if (value === oldValue) {
+    return;
+  }
+  if (oldValue) {
+    unbind(el);
+  }
+
+  inserted(el, binding);
+}
+
+export const VTrigger = defineDirective({
+  name : 'trigger',
   inserted,
   unbind,
-};
+  update,
+});
 
 export default VTrigger;

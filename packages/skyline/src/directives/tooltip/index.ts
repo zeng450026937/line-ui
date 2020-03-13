@@ -1,21 +1,43 @@
 import { VNodeDirective } from 'vue';
+import { defineDirective } from 'skyline/utils/directive';
 import { TooltipController } from 'skyline/controller/tooltip';
+import { isObject } from 'skyline/utils/helpers';
 
-interface TooltipVNodeDirective extends VNodeDirective {
-  value?: string | boolean;
+let ctrl: TooltipController | undefined;
+
+export interface TooltipOptions {
+  text: string;
+  delay?: number;
+  placement?: string;
+  hover?: boolean;
+  click?: boolean;
+  active?: boolean;
 }
 
-const ctrl = /*#__PURE__*/ new TooltipController();
+export function createTooltip(el: HTMLElement, options: TooltipOptions) {
+  const {
+    text,
+    delay = 300,
+    placement, // top
+    hover: openOnHover = true,
+    click: openOnClick,
+    active: activeFocus,
+  } = options;
 
-function inserted(el: HTMLElement, binding: TooltipVNodeDirective) {
-  if (binding.value === false) return;
+  if (!ctrl) {
+    ctrl = /*#__PURE__*/ new TooltipController();
+  }
 
   const tooltip = ctrl.create({
-    text        : binding.value,
-    delay       : 300,
-    trigger     : el,
-    openOnHover : true,
+    trigger : el,
+    text,
+    delay,
+    placement,
+    openOnHover,
+    openOnClick,
+    activeFocus,
   });
+
   tooltip.destroyWhenClose = false;
 
   const destroy = () => {
@@ -23,35 +45,62 @@ function inserted(el: HTMLElement, binding: TooltipVNodeDirective) {
     tooltip.close() || tooltip.$destroy();
   };
 
-  (el as any).vTooltip = {
+  return {
     tooltip,
     destroy,
   };
 }
 
-function unbind(el: HTMLElement, binding: TooltipVNodeDirective) {
+export interface TooltipVNodeDirective extends VNodeDirective {
+  value?: false | string | TooltipOptions;
+}
+
+function inserted(el: HTMLElement, binding: TooltipVNodeDirective) {
+  const { value = '', modifiers } = binding;
+
+  if (value === false) return;
+
+  const options = isObject(value)
+    ? value as TooltipOptions
+    : { text: value };
+
+  (el as any).vTooltip = createTooltip(el, {
+    ...modifiers,
+    ...options,
+  });
+}
+
+function unbind(el: HTMLElement) {
   const { vTooltip } = el as any;
+
   if (!vTooltip) return;
+
   vTooltip.destroy();
+
   delete (el as any).vTooltip;
 }
 
 function update(el: HTMLElement, binding: TooltipVNodeDirective) {
-  if (binding.value === binding.oldValue) {
+  const { value, oldValue } = binding;
+
+  if (value === oldValue) {
     return;
   }
-  if (binding.value === false) {
-    unbind(el, binding);
+  if (value === false) {
+    unbind(el);
     return;
   }
+
   const { vTooltip } = (el as any);
+
   vTooltip.tooltip.text = binding.value;
 }
 
-export const VTooltip = {
+export const VTooltip = defineDirective({
+  name : 'tooltip',
   inserted,
   unbind,
   update,
-};
+});
 
 export default VTooltip;

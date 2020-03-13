@@ -28,11 +28,9 @@ export default /*#__PURE__*/ createComponent({
       type    : String,
       default : 'top',
     },
-    activeFocus : {
-      type    : Boolean,
-      default : false,
-    },
+    activeFocus : Boolean,
     openOnHover : Boolean,
+    openOnClick : Boolean,
   },
 
   watch : {

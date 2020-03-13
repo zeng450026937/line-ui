@@ -43,7 +43,7 @@ const nano = postcss([
   }),
 ]);
 
-const { camelize, matchWIP } = require('./utils');
+const { camelize, matchWIP, stringifyJSON } = require('./utils');
 const warning = require('./warning');
 const logger = require('./logger');
 
@@ -190,33 +190,18 @@ async function run() {
   // BUNDLE EFFECTS
   sideEffects.bundle = effectPath(distDir, defaultBundle);
 
+  logger.log('effects.json', 'GEN');
   await fs.writeFile(
     `${ distDir }/effects.json`,
     stringifyJSON(sideEffects, null, 2),
   );
 
-  logger.done(`total :  ${ count } styles`);
+  logger.log(`total :  ${ count } styles`, 'DONE');
 }
 
 function effectPath(dir, filename, css = true) {
   return `${ pkgName }/${ relative(packageDir, dir) }/`
    + `${ path.basename(filename, '.scss') }.${ css ? 'css' : 'scss' }`;
-}
-
-// stable stringify with alphabetically
-function stringifyJSON(obj, ...args) {
-  const keys = [];
-  /* eslint-disable guard-for-in */
-  for (const key in obj) {
-    keys.push(key);
-  }
-  /* eslint-enable guard-for-in */
-  keys.sort();
-  const newObj = {};
-  for (const key of keys) {
-    newObj[key] = obj[key];
-  }
-  return JSON.stringify(newObj, ...args);
 }
 
 async function generate(files, dist, deps = []) {

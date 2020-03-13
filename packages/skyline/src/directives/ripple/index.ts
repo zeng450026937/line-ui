@@ -1,8 +1,5 @@
-import { DirectiveOptions, VNodeDirective } from 'vue';
-
-interface RippleVNodeDirective extends VNodeDirective {
-  value?: boolean;
-}
+import { VNodeDirective } from 'vue';
+import { defineDirective } from 'skyline/utils/directive';
 
 const PADDING = 10;
 const INITIAL_ORIGIN_SCALE = 0.5;
@@ -15,16 +12,16 @@ const removeRipple = (ripple: HTMLElement, effect?: HTMLElement) => {
   }, 200);
 };
 
-type RippleOption = {
+export type RippleOption = {
   unbounded: boolean;
   delay: boolean | number;
 }
 
-function createRippleEffect(el: HTMLElement, options: RippleOption) {
+export function createRippleEffect(el: HTMLElement, options: RippleOption) {
   const { unbounded = false } = options;
 
-  function addRipple(x: number, y: number) {
-    return new Promise<() => void>((resolve) => {
+  const addRipple = (x: number, y: number) => {
+    return new Promise<() => void>(resolve => {
       const rect = el.getBoundingClientRect();
       const { width } = rect;
       const { height } = rect;
@@ -46,6 +43,7 @@ function createRippleEffect(el: HTMLElement, options: RippleOption) {
 
       const ripple = document.createElement('div');
       ripple.classList.add('ripple');
+
       const { style } = ripple;
       style.top = `${ styleY }px`;
       style.left = `${ styleX }px`;
@@ -62,13 +60,14 @@ function createRippleEffect(el: HTMLElement, options: RippleOption) {
 
       const container = el;
       container.appendChild(effect);
+
       setTimeout(() => {
         resolve(() => {
           removeRipple(ripple, effect);
         });
       }, 225 + 100);
     });
-  }
+  };
 
   return {
     addRipple,
@@ -76,32 +75,44 @@ function createRippleEffect(el: HTMLElement, options: RippleOption) {
   };
 }
 
+export interface RippleVNodeDirective extends VNodeDirective {
+  value?: boolean;
+}
+
 function inserted(el: HTMLElement, binding: RippleVNodeDirective) {
-  const { modifiers, value } = binding;
+  const { value, modifiers } = binding;
+
   if (value === false) return;
+
   (el as any).vRipple = createRippleEffect(el, modifiers as RippleOption);
 }
 
 function unbind(el: HTMLElement, binding: RippleVNodeDirective) {
   const { vRipple } = el as any;
+
   if (!vRipple) return;
+
   delete (el as any).vRipple;
 }
 
 function update(el: HTMLElement, binding: RippleVNodeDirective) {
-  if (binding.value === binding.oldValue) {
+  const { value, oldValue } = binding;
+
+  if (value === oldValue) {
     return;
   }
-  if (binding.oldValue !== false) {
+  if (oldValue !== false) {
     unbind(el, binding);
   }
+
   inserted(el, binding);
 }
 
-export const VRipple = {
+export const VRipple = defineDirective({
+  name : 'ripple',
   inserted,
   update,
   unbind,
-} as DirectiveOptions;
+});
 
 export default VRipple;

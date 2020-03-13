@@ -43,7 +43,7 @@ async function run() {
     count++;
   }
 
-  logger.done(`total :  ${ count } directives`);
+  logger.log(`total :  ${ count } directives`, 'DONE');
 
   // const dist = resolve(`${ root }/index.ts`);
   // const dist = resolve('gen/directives/index.ts');

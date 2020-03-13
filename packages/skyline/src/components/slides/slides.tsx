@@ -1,6 +1,8 @@
 import { createNamespace } from 'skyline/utils/namespace';
-import { Swiper } from 'skyline/utils/swiper';
-import { SwiperOptions } from 'swiper';
+import {
+  Swiper,
+  SwiperOptions,
+} from 'skyline/utils/swiper';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('slides');
 

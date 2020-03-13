@@ -1,42 +1,48 @@
-import { DirectiveOptions, VNodeDirective } from 'vue';
-import { createGesture, GestureConfig } from 'skyline/utils/gesture/index';
+import { VNodeDirective } from 'vue';
+import { defineDirective } from 'skyline/utils/directive';
+import {
+  createGesture,
+  GestureConfig,
+} from 'skyline/utils/gesture/index';
 
-interface GestureVNodeDirective extends VNodeDirective {
+export interface GestureVNodeDirective extends VNodeDirective {
   value?: GestureConfig;
 }
 
 function inserted(el: HTMLElement, binding: GestureVNodeDirective) {
   if (!binding.value) return;
 
-  const config = {
-    ...binding.value,
-    el,
-  };
-
-  (el as any).vGesture = createGesture(config);
+  (el as any).vGesture = createGesture({ ...binding.value, el });
 }
 
 function unbind(el: HTMLElement) {
   const { vGesture } = el as any;
+
   if (!vGesture) return;
+
   vGesture.destroy();
+
   delete (el as any).vGesture;
 }
 
 function update(el: HTMLElement, binding: GestureVNodeDirective) {
-  if (binding.value === binding.oldValue) {
+  const { value, oldValue } = binding;
+
+  if (value === oldValue) {
     return;
   }
-  if (binding.oldValue) {
+  if (oldValue) {
     unbind(el);
   }
+
   inserted(el, binding);
 }
 
-export const VGesture = {
+export const VGesture = defineDirective({
+  name : 'gesture',
   inserted,
   unbind,
   update,
-} as DirectiveOptions;
+});
 
 export default VGesture;

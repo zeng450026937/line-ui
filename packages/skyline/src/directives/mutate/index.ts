@@ -1,96 +1,121 @@
-import { DirectiveOptions, VNodeDirective } from 'vue';
+import { VNodeDirective } from 'vue';
+import { defineDirective } from 'skyline/utils/directive';
 import { isObject } from 'skyline/utils/helpers';
 
-interface MutateVNodeDirective extends VNodeDirective {
-  options?: MutationObserverInit;
-  value: MutateDirectiveValue | MutateDirectiveHandler;
-}
-
-type MutateDirectiveValue = {
-  handler: MutateDirectiveHandler;
-  options?: MutationObserverInit;
-};
-
-type MutateDirectiveHandler = (
+export type MutateHandler = (
   mutationsList: MutationRecord[],
   observer: MutationObserver,
 ) => void;
 
-function inserted(el: HTMLElement, binding: MutateVNodeDirective) {
-  if (!binding.value) return;
+export interface MutateOptions extends MutationObserverInit {
+  handler: MutateHandler;
+  once?: boolean;
+}
 
-  const modifiers = binding.modifiers || {};
-  const { value } = binding;
-  const callback = isObject(value)
-    ? (value as MutateDirectiveValue).handler
-    : (value as MutateDirectiveHandler);
-  const { once, ...modifierKeys } = modifiers;
-  const hasModifiers = Object.keys(modifierKeys).length > 0;
-  const hasOptions = !!(value as any).options;
-
-  // Options take top priority
-  const options = hasOptions ? (value as MutateDirectiveValue).options : hasModifiers
-    // If we have modifiers, use only those provided
-    ? {
-      attributes    : modifierKeys.attr,
-      childList     : modifierKeys.child,
-      subtree       : modifierKeys.sub,
-      characterData : modifierKeys.char,
-    }
+export function createMutate(el: HTMLElement, options: MutateOptions) {
+  const {
+    handler,
+    once,
     // Defaults to everything on
-    : {
-      attributes    : true,
-      childList     : true,
-      subtree       : true,
-      characterData : true,
-    };
+    attributes = true,
+    childList = true,
+    subtree = true,
+    characterData = true,
+  } = options;
 
-  const observer = new MutationObserver((
-    mutationsList: MutationRecord[],
-    observer: MutationObserver,
-  ) => {
-    if (!(el as any).vMutate) return; // Just in case, should never fire
+  const observer = new MutationObserver(
+    (
+      mutationsList: MutationRecord[],
+      observer: MutationObserver,
+    ) => {
+      handler(mutationsList, observer);
 
-    callback(mutationsList, observer);
-
-    // If has the once modifier, unbind
-    /* eslint-disable-next-line */
-    once && unbind(el);
-  });
+      // If has the once modifier, unbind
+      if (once) {
+      /* eslint-disable-next-line @typescript-eslint/no-use-before-define */
+        destroy();
+      }
+    },
+  );
 
   const destroy = () => {
     observer.disconnect();
   };
 
-  (el as any).vMutate = {
+  observer.observe(el, {
+    attributes,
+    childList,
+    subtree,
+    characterData,
+  });
+
+  return {
     observer,
     destroy,
   };
+}
 
-  observer.observe(el, options);
+export interface MutateVNodeDirective extends VNodeDirective {
+  value?: MutateOptions | MutateHandler;
+  modifiers: { [key: string]: boolean };
+}
+
+function inserted(el: HTMLElement, binding: MutateVNodeDirective) {
+  const { value, modifiers } = binding;
+
+  if (!value) return;
+
+  const options = isObject(value)
+    ? value as MutateOptions
+    : { handler: value } as MutateOptions;
+
+  // alias for MutationObserverInit
+  const {
+    attr: attributes = true,
+    child: childList = true,
+    sub: subtree = true,
+    char: characterData = true,
+    once,
+  } = modifiers;
+
+  (el as any).vMutate = createMutate(el, {
+    attributes,
+    childList,
+    subtree,
+    characterData,
+    once,
+    ...options,
+  });
 }
 
 function unbind(el: HTMLElement) {
   const { vMutate } = el as any;
+
   if (!vMutate) return;
+
   vMutate.destroy();
+
   delete (el as any).vMutate;
 }
 
 function update(el: HTMLElement, binding: MutateVNodeDirective) {
-  if (binding.value === binding.oldValue) {
+  const { value, oldValue } = binding;
+
+  if (value === oldValue) {
     return;
   }
-  if (binding.oldValue) {
+  if (oldValue) {
     unbind(el);
   }
+
   inserted(el, binding);
 }
 
-export const VMutate = {
+export const VMutate = defineDirective({
+  name : 'mutate',
   inserted,
   unbind,
   update,
-} as DirectiveOptions;
+});
 
 export default VMutate;

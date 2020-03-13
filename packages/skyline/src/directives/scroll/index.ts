@@ -1,54 +1,79 @@
-import { DirectiveOptions, VNodeDirective } from 'vue';
+import { VNodeDirective } from 'vue';
+import { defineDirective } from 'skyline/utils/directive';
+import { isString } from 'skyline/utils/helpers';
 import { on } from 'skyline/utils/dom';
 
-interface ScrollVNodeDirective extends VNodeDirective {
-  arg: string;
-  value: EventListener;
-  options?: AddEventListenerOptions;
+export interface ScrollOptions extends AddEventListenerOptions {
+  target?: string | Element;
+  callback: EventListener;
 }
 
-function inserted(el: HTMLElement, binding: ScrollVNodeDirective) {
-  const callback = binding.value;
-  const options = binding.options || { passive: true };
-  const target = binding.arg ? document.querySelector(binding.arg) : window;
+export function createScroll(options: ScrollOptions) {
+  const win = window;
+  const { target = win, callback } = options;
+  const targetEl = isString(target)
+    ? document.querySelector(target) || win
+    : target;
 
-  if (!target) return;
-
-  const scrollOff = on(target, 'scroll', callback, options);
+  const scrollOff = on(targetEl, 'scroll', callback, options);
 
   const destroy = () => {
     scrollOff();
   };
 
-  (el as any).vScroll = {
-    callback,
+  return {
     options,
     target,
     destroy,
   };
 }
 
+export interface ScrollVNodeDirective extends VNodeDirective {
+  arg?: string;
+  value?: EventListener;
+}
+
+function inserted(el: HTMLElement, binding: ScrollVNodeDirective) {
+  const { value, arg, modifiers } = binding;
+
+  if (!value) return;
+
+  (el as any).vScroll = createScroll({
+    passive  : true,
+    ...modifiers,
+    target   : arg,
+    callback : value,
+  });
+}
+
 function unbind(el: HTMLElement) {
   const { vScroll } = el as any;
+
   if (!vScroll) return;
+
   vScroll.destroy();
+
   delete (el as any).vScroll;
 }
 
 function update(el: HTMLElement, binding: ScrollVNodeDirective) {
-  if (binding.value === binding.oldValue) {
+  const { value, oldValue } = binding;
+
+  if (value === oldValue) {
     return;
   }
-  if (binding.oldValue) {
+  if (oldValue) {
     unbind(el);
   }
+
   inserted(el, binding);
 }
 
-export const VScroll = {
+export const VScroll = defineDirective({
+  name : 'scroll',
   inserted,
   unbind,
   update,
-} as DirectiveOptions;
+});
 
 export default VScroll;

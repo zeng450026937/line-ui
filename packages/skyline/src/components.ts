@@ -43,7 +43,7 @@ export * from 'skyline/components/picker';
 export * from 'skyline/components/picker-column';
 export * from 'skyline/components/popover';
 export * from 'skyline/components/popup';
-export * from 'skyline/components/progress';
+export * from 'skyline/components/progress-bar';
 export * from 'skyline/components/radio';
 export * from 'skyline/components/radio-button';
 export * from 'skyline/components/range';

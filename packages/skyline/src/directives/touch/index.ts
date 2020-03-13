@@ -1,40 +1,10 @@
-import { DirectiveOptions, VNodeDirective } from 'vue';
-import { off, on } from 'skyline/utils/dom';
+import { VNodeDirective } from 'vue';
+import { defineDirective } from 'skyline/utils/directive';
 import { keys } from 'skyline/utils/helpers';
-
-export interface TouchStoredHandlers {
-  touchstart: (e: TouchEvent) => void;
-  touchend: (e: TouchEvent) => void;
-  touchmove: (e: TouchEvent) => void;
-}
-
-interface TouchHandlers {
-  start?: (wrapperEvent: TouchEvent & TouchWrapper) => void;
-  end?: (wrapperEvent: TouchEvent & TouchWrapper) => void;
-  move?: (wrapperEvent: TouchEvent & TouchWrapper) => void;
-  left?: (wrapper: TouchWrapper) => void;
-  right?: (wrapper: TouchWrapper) => void;
-  up?: (wrapper: TouchWrapper) => void;
-  down?: (wrapper: TouchWrapper) => void;
-}
-
-export interface TouchWrapper extends TouchHandlers {
-  touchstartX: number;
-  touchstartY: number;
-  touchmoveX: number;
-  touchmoveY: number;
-  touchendX: number;
-  touchendY: number;
-  offsetX: number;
-  offsetY: number;
-}
-
-interface TouchVNodeDirective extends VNodeDirective {
-  value?: TouchHandlers & {
-    parent?: boolean;
-    options?: AddEventListenerOptions;
-  };
-}
+import {
+  off,
+  on,
+} from 'skyline/utils/dom';
 
 const DIR_RATIO = 0.5;
 const MIN_DISTANCE = 16;
@@ -85,6 +55,13 @@ function touchmove(event: TouchEvent, wrapper: TouchWrapper) {
   wrapper.move && wrapper.move(Object.assign(event, wrapper));
 }
 
+
+interface TouchStoredHandlers {
+  touchstart: (e: TouchEvent) => void;
+  touchend: (e: TouchEvent) => void;
+  touchmove: (e: TouchEvent) => void;
+}
+
 function createHandlers(value: TouchHandlers): TouchStoredHandlers {
   const wrapper = {
     touchstartX : 0,
@@ -111,15 +88,36 @@ function createHandlers(value: TouchHandlers): TouchStoredHandlers {
   };
 }
 
-function inserted(el: HTMLElement, binding: TouchVNodeDirective) {
-  const value = binding.value!;
-  const target = value.parent ? el.parentElement : el;
-  const options = value.options || { passive: true };
+export interface TouchWrapper extends TouchHandlers {
+  touchstartX: number;
+  touchstartY: number;
+  touchmoveX: number;
+  touchmoveY: number;
+  touchendX: number;
+  touchendY: number;
+  offsetX: number;
+  offsetY: number;
+}
 
-  // Needed to pass unit tests
-  if (!target) return;
+export interface TouchHandlers {
+  start?: (wrapperEvent: TouchEvent & TouchWrapper) => void;
+  end?: (wrapperEvent: TouchEvent & TouchWrapper) => void;
+  move?: (wrapperEvent: TouchEvent & TouchWrapper) => void;
+  left?: (wrapper: TouchWrapper) => void;
+  right?: (wrapper: TouchWrapper) => void;
+  up?: (wrapper: TouchWrapper) => void;
+  down?: (wrapper: TouchWrapper) => void;
+}
 
-  const handlers = createHandlers(binding.value!);
+export interface TouchOptions extends TouchHandlers, AddEventListenerOptions {
+  parent?: boolean;
+}
+
+export function createTouch(el: HTMLElement, options: TouchOptions) {
+  const { parent } = options;
+  const target = parent ? el.parentElement || document.body : el;
+
+  const handlers = createHandlers(options);
 
   keys(handlers).forEach((eventName) => {
     on(target, eventName, handlers[eventName] as EventListener, options);
@@ -127,36 +125,55 @@ function inserted(el: HTMLElement, binding: TouchVNodeDirective) {
 
   const destroy = () => {
     keys(handlers).forEach((eventName) => {
-      off(target!, eventName, handlers[eventName] as EventListener);
+      off(target, eventName, handlers[eventName] as EventListener);
     });
   };
 
-  (target as any).vTouch = {
+  return {
     destroy,
   };
 }
 
+export interface TouchVNodeDirective extends VNodeDirective {
+  value?: TouchOptions;
+}
+
+function inserted(el: HTMLElement, binding: TouchVNodeDirective) {
+  const { value } = binding;
+
+  if (!value) return;
+
+  (el as any).vTouch = createTouch(el, value);
+}
+
 function unbind(el: HTMLElement) {
   const { vTouch } = el as any;
+
   if (!vTouch) return;
+
   vTouch.destroy();
+
   delete (el as any).vTouch;
 }
 
 function update(el: HTMLElement, binding: TouchVNodeDirective) {
-  if (binding.value === binding.oldValue) {
+  const { value, oldValue } = binding;
+
+  if (value === oldValue) {
     return;
   }
-  if (binding.oldValue) {
+  if (oldValue) {
     unbind(el);
   }
+
   inserted(el, binding);
 }
 
-export const VTouch = {
+export const VTouch = defineDirective({
+  name : 'touch',
   inserted,
   unbind,
   update,
-} as DirectiveOptions;
+});
 
 export default VTouch;

@@ -1,5 +1,4 @@
 import { VueConstructor } from 'vue';
-import { hyphenate } from 'skyline/utils/string-transform';
 import { keys } from 'skyline/utils/helpers';
 
 export interface LineOptions {
@@ -20,8 +19,7 @@ export function install(Vue: VueConstructor, opts: LineOptions = {}) {
   }
   if (directives) {
     keys(directives).forEach(key => {
-      Vue.directive(hyphenate(key as string), directives[key]);
-      Vue.directive(key as string, directives[key]);
+      Vue.use(directives[key]);
     });
   }
 }

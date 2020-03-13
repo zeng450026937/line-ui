@@ -219,7 +219,9 @@
   },
   "PopupLegacy": {},
   "ProgressBar": {
-    "base": "skyline/dist/style/progress/progress-bar.css"
+    "base": "skyline/dist/style/progress-bar/progress-bar.css",
+    "ios": "skyline/dist/style/progress-bar/progress-bar.ios.css",
+    "md": "skyline/dist/style/progress-bar/progress-bar.md.css"
   },
   "ProgressCircular": {
     "base": "skyline/dist/style/progress/progress-circular.css"
@@ -242,6 +244,9 @@
     "base": "skyline/dist/style/range/range.css",
     "ios": "skyline/dist/style/range/range.ios.css",
     "md": "skyline/dist/style/range/range.md.css"
+  },
+  "RangeSlider": {
+    "base": "skyline/dist/style/range-slider/range-slider.css"
   },
   "Refresher": {
     "base": "skyline/dist/style/refresher/refresher.css",

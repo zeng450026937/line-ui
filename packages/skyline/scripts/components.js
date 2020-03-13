@@ -44,7 +44,7 @@ async function run() {
     }
   }
 
-  logger.done(`total :  ${ count } components`);
+  logger.log(`total :  ${ count } components`, 'DONE');
 
   // const dist = resolve(`${ root }/index.ts`);
   const dist = resolve('src/components.ts');
