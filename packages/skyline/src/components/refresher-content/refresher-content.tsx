@@ -47,10 +47,9 @@ export default /*#__PURE__*/ createComponent({
 
   render() {
     const {
-      icon: pullingIcon, pullingText, spinner: refreshingSpinner, refreshingText,
+      icon: pullingIcon, pullingText, spinner: refreshingSpinner, refreshingText, mode,
     } = this;
     const hasSpinner = pullingIcon != null && SPINNERS[pullingIcon] as any !== undefined;
-    const { mode } = this;
 
     return (
       <div class={bem()}>

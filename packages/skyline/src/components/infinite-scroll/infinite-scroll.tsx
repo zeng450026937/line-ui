@@ -3,6 +3,10 @@ import { createNamespace } from 'skyline/utils/namespace';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('infinite-scroll');
 
 export default /*#__PURE__*/ createComponent({
+  inject : {
+    Content : { default: undefined },
+  },
+
   props : {
     threshold : {
       type    : String,

@@ -57,9 +57,7 @@ export default /*#__PURE__*/ createComponent({
   },
 
   data() {
-    // let gesture: Gesture;
     let scrollListenerCallback: any;
-    // let animations: Animation[];
 
     return {
       appliedStyles : false,
@@ -67,8 +65,6 @@ export default /*#__PURE__*/ createComponent({
       progress      : 0,
 
       scrollListenerCallback,
-      // gesture,
-      // animations,
 
       pointerDown     : false,
       needsCompletion : false,

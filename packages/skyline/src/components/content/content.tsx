@@ -42,6 +42,12 @@ export default /*#__PURE__*/ createComponent({
     /*#__PURE__*/ useColor(),
   ],
 
+  provide(): any {
+    return {
+      Content : this,
+    };
+  },
+
   props : {
     forceOverscroll : Boolean,
     fullscreen      : Boolean,
