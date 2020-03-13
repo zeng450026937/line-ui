@@ -3,24 +3,21 @@ import Skyline from 'skyline';
 import router from '../router';
 import App from './app.vue';
 
+/*
+* import either one of below but never both
+*/
+
+// import 'skyline/style/skyline.scss';
+import 'skyline/style/skyline.ios.scss';
+// import 'skyline/style/skyline.md.scss';
 
 // import style bundle
 import 'skyline/style/skyline.bundle.scss';
 
-/*
- * import either one of below but never both
- */
-
-// import 'skyline/themes/skyline.components.scss';
-import 'skyline/themes/skyline.components.ios.scss';
-// import 'skyline/themes/skyline.components.md.scss';
-// import 'skyline/themes/skyline.globals.ios.scss';
-
 import 'skyline/iconfont/material-icons.scss';
+// TODO menu-content
+import 'skyline/style/core.scss';
 
-
-// import 'skyline/components/button/button.scss';
-// import 'skyline/components/button/button.ios.scss';
 
 Vue.use(Skyline);
 

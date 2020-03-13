@@ -1,36 +1,50 @@
 <template>
-  <line-content fullscreen>
-    <line-list>
-      <line-item v-for="item in items" :key="item.src">
-        <template #start>
-          <line-thumbnail>
-            <img :src="item.src">
-          </line-thumbnail>
-        </template>
-        <line-label>{{ item.text }}</line-label>
-      </line-item>
+  <line-app>
+    <line-header translucent>
+      <line-toolbar>
+        <line-title>Image</line-title>
+      </line-toolbar>
+    </line-header>
 
-      <!-- lazy loading -->
-      <line-list-header>
-        Lazy Loading
-      </line-list-header>
+    <line-content class="line-padding">
+      <line-list>
+        <line-item
+          v-for="item in items"
+          :key="item.src"
+        >
+          <template #start>
+            <line-thumbnail>
+              <img :src="item.src">
+            </line-thumbnail>
+          </template>
+          <line-label>{{ item.text }}</line-label>
+        </line-item>
 
-      <line-item lines="none">
-        <line-label style="height: 400px;">
-          <h2>scroll down</h2>
-        </line-label>
-      </line-item>
+        <!-- lazy loading -->
+        <line-list-header>
+          Lazy Loading
+        </line-list-header>
 
-      <line-item v-for="item in lazyitems" :key="item.src">
-        <template #start>
-          <line-thumbnail>
-            <line-img :src="item.src"></line-img>
-          </line-thumbnail>
-        </template>
-        <line-label>{{ item.text }}</line-label>
-      </line-item>
-    </line-list>
-  </line-content>
+        <line-item lines="none">
+          <line-label style="height: 400px;">
+            <h2>scroll down</h2>
+          </line-label>
+        </line-item>
+
+        <line-item
+          v-for="item in lazyitems"
+          :key="item.src"
+        >
+          <template #start>
+            <line-thumbnail>
+              <line-img :src="item.src"></line-img>
+            </line-thumbnail>
+          </template>
+          <line-label>{{ item.text }}</line-label>
+        </line-item>
+      </line-list>
+    </line-content>
+  </line-app>
 </template>
 
 <script lang="ts">
@@ -57,5 +71,4 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-
 </style>

@@ -11,10 +11,6 @@ export default Vue.extend({
   data() {
     return {};
   },
-
-  created() {
-    // this.$router.push('/mobile/home');
-  },
 });
 </script>
 

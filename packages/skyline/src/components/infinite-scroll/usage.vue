@@ -1,22 +1,33 @@
 <template>
-  <line-content fullscreen>
-    <line-list id="list">
-      <line-item v-for="(item, index) in list" :key="index">{{item.text}}</line-item>
-    </line-list>
+  <line-app>
+    <line-header translucent>
+      <line-toolbar>
+        <line-title>Infinite-Scroll</line-title>
+      </line-toolbar>
+    </line-header>
 
-    <line-infinite-scroll
-      threshold="100px"
-      id="infinite-scroll"
-      :disabled="disabled"
-      @infinite="onInfinite"
-    >
-      <line-infinite-scroll-content
-        loading-spinner="bubbles"
-        loading-text="Loading more data..."
+    <line-content>
+      <line-list id="list">
+        <line-item
+          v-for="(item, index) in list"
+          :key="index"
+        >{{item.text}}</line-item>
+      </line-list>
+
+      <line-infinite-scroll
+        threshold="100px"
+        id="infinite-scroll"
+        :disabled="disabled"
+        @infinite="onInfinite"
       >
-      </line-infinite-scroll-content>
-    </line-infinite-scroll>
-  </line-content>
+        <line-infinite-scroll-content
+          loading-spinner="bubbles"
+          loading-text="Loading more data..."
+        >
+        </line-infinite-scroll-content>
+      </line-infinite-scroll>
+    </line-content>
+  </line-app>
 </template>
 
 <script lang="ts">

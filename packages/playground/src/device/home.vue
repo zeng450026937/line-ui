@@ -1,5 +1,5 @@
 <template>
-  <line-app>
+  <div class="device-home">
     <svg
       class="device-system-bar"
       viewBox="0 0 1384.3 40.3"
@@ -31,34 +31,25 @@
       >
       </path>
     </svg>
-
     <div class="device-screen line-page">
-      <line-header translucent>
+      <line-header translucent v-if="false">
         <line-toolbar>
           <line-title>SKYLINE</line-title>
         </line-toolbar>
       </line-header>
-      <router-view name="usage"></router-view>
+      <router-view ref="usage" name="usage"></router-view>
       <line-content v-if="false">
         <div class="gallery-content">
           <line-spinner type="dots"></line-spinner>
         </div>
       </line-content>
     </div>
-  </line-app>
+  </div>
 </template>
 
 <script>
 export default {
   name : 'DeviceHome',
-
-  components : {
-
-  },
-
-  props : {
-
-  },
 
   data() {
     return {
@@ -66,28 +57,8 @@ export default {
     };
   },
 
-  computed : {
-
-  },
-
-  created() {
-    // window.router.push({ path: '/mobile/home/button' });
-  },
-
-  mounted() {
-    // setTimeout(() => {
-    //   window.router.push({ path: '/mobile/home/button' });
-    // }, 1000);
-  },
-
-  methods : {
-
-  },
-
-  watch : {
-    $route() {
-      console.log('???', this.$route);
-    },
+  updated() {
+    console.log(this.$refs.usage);
   },
 };
 </script>

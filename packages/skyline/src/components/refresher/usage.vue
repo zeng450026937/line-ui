@@ -1,21 +1,32 @@
 <template>
-  <line-content>
-    <template #fixed>
-      <line-refresher
-        @start="onStart"
-        @pull="onPull"
-        @refresh="refresh"
-      >
-        <line-refresher-content></line-refresher-content>
-      </line-refresher>
-    </template>
+  <line-app>
+    <line-header translucent>
+      <line-toolbar>
+        <line-title>Refresher</line-title>
+      </line-toolbar>
+    </line-header>
 
-    <line-list>
-      <line-item v-for="(item, index) in list" :key="index">
-        <line-label>{{item}}</line-label>
-      </line-item>
-    </line-list>
-  </line-content>
+    <line-content>
+      <template #fixed>
+        <line-refresher
+          @start="onStart"
+          @pull="onPull"
+          @refresh="refresh"
+        >
+          <line-refresher-content></line-refresher-content>
+        </line-refresher>
+      </template>
+
+      <line-list>
+        <line-item
+          v-for="(item, index) in list"
+          :key="index"
+        >
+          <line-label>{{item}}</line-label>
+        </line-item>
+      </line-list>
+    </line-content>
+  </line-app>
 </template>
 
 <script>

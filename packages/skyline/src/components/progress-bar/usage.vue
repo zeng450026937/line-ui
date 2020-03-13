@@ -1,60 +1,68 @@
 <template>
-  <line-content>
-    <line-list>
-      <line-list-header>
-        <line-label>Default</line-label>
-      </line-list-header>
+  <line-app>
+    <line-header translucent>
+      <line-toolbar>
+        <line-title>Progress-Bar</line-title>
+      </line-toolbar>
+    </line-header>
 
-      <line-progress-bar></line-progress-bar>
+    <line-content>
+      <line-list>
+        <line-list-header>
+          <line-label>Default</line-label>
+        </line-list-header>
 
-      <line-list-header>
-        <line-label>Default at 50%</line-label>
-      </line-list-header>
+        <line-progress-bar></line-progress-bar>
 
-      <line-progress-bar :value="0.5"></line-progress-bar>
+        <line-list-header>
+          <line-label>Default at 50%</line-label>
+        </line-list-header>
 
-      <line-list-header>
-        <line-label>Color</line-label>
-      </line-list-header>
+        <line-progress-bar :value="0.5"></line-progress-bar>
 
-      <!-- Progress Bar with Color -->
-      <line-progress-bar
-        color="secondary"
-        :value="0.5"
-      ></line-progress-bar>
-      <line-progress-bar
-        color="tertiary"
-        :value="0.8"
-      ></line-progress-bar>
+        <line-list-header>
+          <line-label>Color</line-label>
+        </line-list-header>
 
-      <line-list-header>
-        <line-label>
-          Indeterminate
-        </line-label>
-      </line-list-header>
-      <line-progress-bar type="indeterminate"></line-progress-bar>
+        <!-- Progress Bar with Color -->
+        <line-progress-bar
+          color="secondary"
+          :value="0.5"
+        ></line-progress-bar>
+        <line-progress-bar
+          color="tertiary"
+          :value="0.8"
+        ></line-progress-bar>
 
-      <line-list-header>
-        <line-label>
-          Indeterminate (reversed)
-        </line-label>
-      </line-list-header>
-      <line-progress-bar
-        type="indeterminate"
-        :reversed="true"
-      ></line-progress-bar>
+        <line-list-header>
+          <line-label>
+            Indeterminate
+          </line-label>
+        </line-list-header>
+        <line-progress-bar type="indeterminate"></line-progress-bar>
 
-      <line-list-header>
-        <line-label>
-          Buffer
-        </line-label>
-      </line-list-header>
-      <line-progress-bar
-        :value="0.25"
-        :buffer="0.5"
-      ></line-progress-bar>
-    </line-list>
-  </line-content>
+        <line-list-header>
+          <line-label>
+            Indeterminate (reversed)
+          </line-label>
+        </line-list-header>
+        <line-progress-bar
+          type="indeterminate"
+          :reversed="true"
+        ></line-progress-bar>
+
+        <line-list-header>
+          <line-label>
+            Buffer
+          </line-label>
+        </line-list-header>
+        <line-progress-bar
+          :value="0.25"
+          :buffer="0.5"
+        ></line-progress-bar>
+      </line-list>
+    </line-content>
+  </line-app>
 </template>
 
 <script>

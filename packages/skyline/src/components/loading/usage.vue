@@ -2,7 +2,7 @@
   <line-app>
     <line-header translucent>
       <line-toolbar>
-        <line-title>Alert</line-title>
+        <line-title>Loading</line-title>
       </line-toolbar>
     </line-header>
     <line-content class="line-padding">
@@ -10,7 +10,7 @@
         expand="block"
         @click="open"
       >
-        Show Alert
+        Show Loading
       </line-button>
     </line-content>
   </line-app>
@@ -18,24 +18,21 @@
 
 <script>
 import Vue from 'vue';
-import { AlertController } from 'skyline/controller/alert';
+import { LoadingController } from 'skyline/controller/loading';
 
-const controller = new AlertController();
+const controller = new LoadingController();
 
 export default Vue.extend({
+  data() {
+    return {
+
+    };
+  },
   methods : {
     open() {
       controller.create({
-        header  : 'Alert',
-        message : 'Alert successfully',
-        buttons : [
-          {
-            text : 'Disagree',
-          },
-          {
-            text : 'Agree',
-          },
-        ],
+        message : 'loading...',
+        spinner : 'circles',
       }).open();
     },
   },
