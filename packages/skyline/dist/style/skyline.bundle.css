@@ -117,19 +117,19 @@ body.backdrop-no-scroll {
   position: relative;
 }
 
-ion-route,
-ion-route-redirect,
-ion-router,
-ion-select-option,
-ion-nav-controller,
-ion-menu-controller,
-ion-action-sheet-controller,
-ion-alert-controller,
-ion-loading-controller,
-ion-modal-controller,
-ion-picker-controller,
-ion-popover-controller,
-ion-toast-controller,
+.line-route,
+.line-route-redirect,
+.line-router,
+.line-select-option,
+.line-nav-controller,
+.line-menu-controller,
+.line-action-sheet-controller,
+.line-alert-controller,
+.line-loading-controller,
+.line-modal-controller,
+.line-picker-controller,
+.line-popover-controller,
+.line-toast-controller,
 .line-page-hidden,
 [hidden] {
   /* stylelint-disable-next-line declaration-no-important */
@@ -140,7 +140,7 @@ ion-toast-controller,
   opacity: 0;
 }
 
-.can-go-back > ion-header ion-back-button {
+.can-go-back > .line-header .line-back-button {
   display: block;
 }
 
@@ -169,40 +169,32 @@ html.plt-ios.plt-hybrid, html.plt-ios.plt-pwa {
     --line-safe-area-right: env(safe-area-inset-right);
   }
 }
-/*
 .menu-content {
-  @include transform(translate3d(0, 0, 0));
+  transform: translate3d(0,  0,  0);
 }
 
 .menu-content-open {
   cursor: pointer;
   touch-action: manipulation;
-
-  // the containing element itself should be clickable but
-  // everything inside of it should not clickable when menu is open
   pointer-events: none;
 }
 
 .ios .menu-content-reveal {
-  box-shadow: $menu-ios-box-shadow-reveal;
+  box-shadow: -8px 0 42px rgba(0, 0, 0, 0.08);
 }
 
 [dir=rtl].ios .menu-content-reveal {
-  box-shadow: $menu-ios-box-shadow-reveal-rtl;
-}
-
-.ios .menu-content-push {
-  box-shadow: $menu-ios-box-shadow-push;
+  box-shadow: 8px 0 42px rgba(0, 0, 0, 0.08);
 }
 
 .md .menu-content-reveal {
-  box-shadow: $menu-md-box-shadow;
+  box-shadow: 4px 0px 16px rgba(0, 0, 0, 0.18);
 }
 
 .md .menu-content-push {
-  box-shadow: $menu-md-box-shadow;
+  box-shadow: 4px 0px 16px rgba(0, 0, 0, 0.18);
 }
-*/
+
 audio,
 canvas,
 progress,

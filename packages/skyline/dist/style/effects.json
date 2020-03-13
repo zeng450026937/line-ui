@@ -60,12 +60,6 @@
     "ios": "skyline/dist/style/card/card-title.ios.css",
     "md": "skyline/dist/style/card/card-title.md.css"
   },
-  "Cell": {
-    "base": "skyline/dist/style/cell/cell.css"
-  },
-  "CellGroup": {
-    "base": "skyline/dist/style/cell/cell-group.css"
-  },
   "CheckBox": {
     "base": "skyline/dist/style/check-box/check-box.css",
     "ios": "skyline/dist/style/check-box/check-box.ios.css",
@@ -87,12 +81,6 @@
   "Col": {
     "base": "skyline/dist/style/col/col.css"
   },
-  "Collapse": {
-    "base": "skyline/dist/style/collapse/collapse.css"
-  },
-  "CollapseItem": {
-    "base": "skyline/dist/style/collapse/collapse-item.css"
-  },
   "Content": {
     "base": "skyline/dist/style/content/content.css"
   },
@@ -100,9 +88,6 @@
     "base": "skyline/dist/style/datetime/datetime.css",
     "ios": "skyline/dist/style/datetime/datetime.ios.css",
     "md": "skyline/dist/style/datetime/datetime.md.css"
-  },
-  "Dialog": {
-    "base": "skyline/dist/style/dialog/dialog.css"
   },
   "Fab": {
     "base": "skyline/dist/style/fab/fab.css"
@@ -136,6 +121,14 @@
   },
   "Image": {
     "base": "skyline/dist/style/image/image.css"
+  },
+  "InfiniteScroll": {
+    "base": "skyline/dist/style/infinite-scroll/infinite-scroll.css"
+  },
+  "InfiniteScrollContent": {
+    "base": "skyline/dist/style/infinite-scroll-content/infinite-scroll-content.css",
+    "ios": "skyline/dist/style/infinite-scroll-content/infinite-scroll-content.ios.css",
+    "md": "skyline/dist/style/infinite-scroll-content/infinite-scroll-content.md.css"
   },
   "Input": {
     "base": "skyline/dist/style/input/input.css",
@@ -194,9 +187,6 @@
     "ios": "skyline/dist/style/overlay/overlay.ios.css",
     "md": "skyline/dist/style/overlay/overlay.md.css"
   },
-  "PageIndicator": {
-    "base": "skyline/dist/style/page-indicator/page-indicator.css"
-  },
   "Picker": {
     "base": "skyline/dist/style/picker/picker.css",
     "ios": "skyline/dist/style/picker/picker.ios.css",
@@ -223,30 +213,15 @@
     "ios": "skyline/dist/style/progress-bar/progress-bar.ios.css",
     "md": "skyline/dist/style/progress-bar/progress-bar.md.css"
   },
-  "ProgressCircular": {
-    "base": "skyline/dist/style/progress/progress-circular.css"
-  },
   "Radio": {
     "base": "skyline/dist/style/radio/radio.css",
     "ios": "skyline/dist/style/radio/radio.ios.css",
     "md": "skyline/dist/style/radio/radio.md.css"
   },
-  "RadioButton": {
-    "base": "skyline/dist/style/radio-button/radio-button.css"
-  },
-  "RadioButtonGroup": {
-    "base": "skyline/dist/style/radio-button/radio-button-group.css"
-  },
-  "RadioIndicator": {
-    "base": "skyline/dist/style/radio-button/radio-indicator.css"
-  },
   "Range": {
     "base": "skyline/dist/style/range/range.css",
     "ios": "skyline/dist/style/range/range.ios.css",
     "md": "skyline/dist/style/range/range.md.css"
-  },
-  "RangeSlider": {
-    "base": "skyline/dist/style/range-slider/range-slider.css"
   },
   "Refresher": {
     "base": "skyline/dist/style/refresher/refresher.css",
@@ -254,14 +229,22 @@
     "md": "skyline/dist/style/refresher/refresher.md.css"
   },
   "RefresherContent": {},
+  "Reorder": {
+    "base": "skyline/dist/style/reorder/reorder.css",
+    "ios": "skyline/dist/style/reorder/reorder.ios.css",
+    "md": "skyline/dist/style/reorder/reorder.md.css"
+  },
+  "ReorderGroup": {
+    "base": "skyline/dist/style/reorder-group/reorder-group.css"
+  },
   "Row": {
     "base": "skyline/dist/style/row/row.css"
   },
+  "SkeletonText": {
+    "base": "skyline/dist/style/skeleton-text/skeleton-text.css"
+  },
   "Slide": {
     "base": "skyline/dist/style/slide/slide.css"
-  },
-  "Slider": {
-    "base": "skyline/dist/style/slider/slider.css"
   },
   "Slides": {
     "base": "skyline/dist/style/slides/slides.css",
@@ -270,9 +253,6 @@
   },
   "Spinner": {
     "base": "skyline/dist/style/spinner/spinner.css"
-  },
-  "Stepper": {
-    "base": "skyline/dist/style/stepper/stepper.css"
   },
   "SvgIcon": {
     "base": "skyline/dist/style/icon/svg-icon.css"

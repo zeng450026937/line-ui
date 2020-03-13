@@ -220,8 +220,9 @@ function createSlots(context, functional = true) {
                     [`slot-${name}`]: name !== 'default',
                 };
                 vnodes.forEach((vnode, index) => {
-                    if (!vnode.data)
+                    if (!vnode.tag)
                         return;
+                    vnode.data = vnode.data || {};
                     if (!vnode.data.__slotted) {
                         vnode.data = mergeData(vnode.data, { class: slotclass });
                         vnode.data.__slotted = true;
@@ -3606,6 +3607,14 @@ const getClientHeight = () => {
     return Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 };
 
+/* eslint-disable consistent-return */
+function stop(fn) {
+    return (event, ...args) => {
+        event.stopPropagation();
+        return fn(event, ...args);
+    };
+}
+
 const pointerCoord = (ev) => {
     // get X coordinates for either a mouse click
     // or a touch depending on the given event
@@ -4306,14 +4315,142 @@ createComponent$f({
 
 });
 
+function useCheckGroup(name) {
+    return createMixins({
+        mixins: [
+            useGroup(name),
+        ],
+        props: {
+            exclusive: Boolean,
+        },
+        data() {
+            return {
+                // TODO:
+                // Vue 3
+                // Use Set() instead of Array()
+                checkedItem: [],
+            };
+        },
+        watch: {
+            exclusive(val) {
+                if (!val)
+                    return;
+                if (this.checkedItem.length > 1) {
+                    const [first] = this.checkedItem;
+                    this.checkedItem = [first];
+                }
+            },
+        },
+        beforeMount() {
+            const onItemChecked = (item, checked) => {
+                this.$emit('item:checked', item, !!checked);
+                if (this.exclusive) {
+                    if (checked) {
+                        this.checkedItem = item;
+                        this.items.forEach((i) => {
+                            if (i === item)
+                                return;
+                            i.checked = false;
+                        });
+                    }
+                    else if (this.checkedItem === item) {
+                        this.checkedItem = null;
+                    }
+                }
+                else {
+                    this.checkedItem = this.checkedItem || [];
+                    const index = this.checkedItem.indexOf(item);
+                    if (checked && index === -1) {
+                        this.checkedItem.push(item);
+                    }
+                    else if (!checked && index !== -1) {
+                        this.checkedItem.splice(index, 1);
+                    }
+                }
+            };
+            this.$on('item:register', (item) => {
+                item.$watch('checked', async (val, oldVal) => {
+                    // false & undifined & null are all falsy value
+                    // ignore it
+                    if (!!oldVal === val)
+                        return;
+                    if (!this.exclusive) {
+                        // handle check in next tick
+                        // so checkedItem changes will fire only once if
+                        // multiple items are changed
+                        await this.$nextTick();
+                    }
+                    onItemChecked(item, val);
+                }, { immediate: true });
+            });
+        },
+    });
+}
+function getItemValue(item) {
+    const { modelValue, itemIndex } = item;
+    return isDef(modelValue) ? modelValue : itemIndex;
+}
+function useCheckGroupWithModel(name, options) {
+    return createMixins({
+        mixins: [
+            useCheckGroup(name),
+            useModel('checkedItemValue', options, true),
+        ],
+        computed: {
+            checkedItemValue: {
+                get() {
+                    const { checkedItem } = this;
+                    return isArray(checkedItem)
+                        ? checkedItem.map(item => getItemValue(item))
+                        : checkedItem && getItemValue(checkedItem);
+                },
+                async set(val) {
+                    if (!val)
+                        return;
+                    // ensure item are all registered
+                    await this.$nextTick();
+                    // TODO
+                    // may has perf impact if we have lots of items
+                    this.items.forEach((item) => {
+                        if (Array.isArray(val)) {
+                            item.checked = val.includes(getItemValue(item));
+                        }
+                        else {
+                            item.checked = getItemValue(item) === val;
+                        }
+                    });
+                },
+            },
+        },
+    });
+}
+
+const NAMESPACE$4 = 'CheckBoxGroup';
 const {
   createComponent: createComponent$g,
   bem: bem$g
 } =
 /*#__PURE__*/
-createNamespace('cell-group');
-var cellGroup = /*#__PURE__*/
+createNamespace('check-box-group');
+var checkBoxGroup = /*#__PURE__*/
 createComponent$g({
+  mixins: [
+  /*#__PURE__*/
+  useCheckGroup(NAMESPACE$4)],
+  props: {// nextCheckState : {
+    //   type : Function,
+    //   default(checkState: CheckState) {
+    //     return checkState === CheckState.Checked ? CheckState.Unchecked : CheckState.Checked;
+    //   },
+    // },
+  },
+  methods: {
+    onClick() {
+      this.checkState = this.nextCheckState(this.checkState);
+    }
+
+  },
+
   render() {
     const h = arguments[0];
     return h("div", {
@@ -4322,6 +4459,50 @@ createComponent$g({
   }
 
 });
+
+function useCheckItem(name) {
+    return createMixins({
+        mixins: [useGroupItem(name)],
+        props: {
+            checkable: {
+                type: Boolean,
+                default: true,
+            },
+            disabled: Boolean,
+        },
+        data() {
+            return {
+                checked: false,
+            };
+        },
+        methods: {
+            toggle() {
+                if (this.disabled)
+                    return;
+                this.$emit('clicked');
+                if (!this.checkable)
+                    return;
+                this.checked = !this.checked;
+                this.$emit('toggled', this.checked);
+            },
+        },
+        beforeMount() {
+            this.checked = this.checked || (isDef(this.$attrs.checked)
+                && this.$attrs.checked !== false);
+        },
+    });
+}
+function useCheckItemWithModel(name, options) {
+    return createMixins({
+        mixins: [
+            useCheckItem(name),
+            useModel('checked', options),
+        ],
+        props: {
+            modelValue: null,
+        },
+    });
+}
 
 const {
   createComponent: createComponent$h,
@@ -4465,253 +4646,10 @@ const {
   bem: bem$j
 } =
 /*#__PURE__*/
-createNamespace('cell');
-var cell = /*#__PURE__*/
-createComponent$k({
-  components: {
-    Icon
-  },
-  props: {
-    title: {
-      type: [String, Number],
-      default: ''
-    },
-    content: {
-      type: [String, Number],
-      default: ''
-    },
-    arrow: {
-      type: Boolean,
-      default: false
-    }
-  },
-
-  render() {
-    const h = arguments[0];
-    const {
-      arrow
-    } = this;
-    return h("div", helper([{
-      "class": bem$j({
-        arrow
-      })
-    }, {
-      "on": this.$listeners
-    }]), [h("div", {
-      "class": bem$j('title')
-    }, [this.slots('title') || this.title]), h("div", {
-      "class": bem$j('content')
-    }, [this.slots('content') || this.content, arrow && h("span", {
-      "class": bem$j('arrow')
-    }, [h("icon", {
-      "attrs": {
-        "name": 'chevron_right',
-        "width": "24",
-        "height": "24"
-      }
-    })])])]);
-  }
-
-});
-
-function useCheckGroup(name) {
-    return createMixins({
-        mixins: [
-            useGroup(name),
-        ],
-        props: {
-            exclusive: Boolean,
-        },
-        data() {
-            return {
-                // TODO:
-                // Vue 3
-                // Use Set() instead of Array()
-                checkedItem: [],
-            };
-        },
-        watch: {
-            exclusive(val) {
-                if (!val)
-                    return;
-                if (this.checkedItem.length > 1) {
-                    const [first] = this.checkedItem;
-                    this.checkedItem = [first];
-                }
-            },
-        },
-        beforeMount() {
-            const onItemChecked = (item, checked) => {
-                this.$emit('item:checked', item, !!checked);
-                if (this.exclusive) {
-                    if (checked) {
-                        this.checkedItem = item;
-                        this.items.forEach((i) => {
-                            if (i === item)
-                                return;
-                            i.checked = false;
-                        });
-                    }
-                    else if (this.checkedItem === item) {
-                        this.checkedItem = null;
-                    }
-                }
-                else {
-                    this.checkedItem = this.checkedItem || [];
-                    const index = this.checkedItem.indexOf(item);
-                    if (checked && index === -1) {
-                        this.checkedItem.push(item);
-                    }
-                    else if (!checked && index !== -1) {
-                        this.checkedItem.splice(index, 1);
-                    }
-                }
-            };
-            this.$on('item:register', (item) => {
-                item.$watch('checked', async (val, oldVal) => {
-                    // false & undifined & null are all falsy value
-                    // ignore it
-                    if (!!oldVal === val)
-                        return;
-                    if (!this.exclusive) {
-                        // handle check in next tick
-                        // so checkedItem changes will fire only once if
-                        // multiple items are changed
-                        await this.$nextTick();
-                    }
-                    onItemChecked(item, val);
-                }, { immediate: true });
-            });
-        },
-    });
-}
-function getItemValue(item) {
-    const { modelValue, itemIndex } = item;
-    return isDef(modelValue) ? modelValue : itemIndex;
-}
-function useCheckGroupWithModel(name, options) {
-    return createMixins({
-        mixins: [
-            useCheckGroup(name),
-            useModel('checkedItemValue', options, true),
-        ],
-        computed: {
-            checkedItemValue: {
-                get() {
-                    const { checkedItem } = this;
-                    return isArray(checkedItem)
-                        ? checkedItem.map(item => getItemValue(item))
-                        : checkedItem && getItemValue(checkedItem);
-                },
-                async set(val) {
-                    if (!val)
-                        return;
-                    // ensure item are all registered
-                    await this.$nextTick();
-                    // TODO
-                    // may has perf impact if we have lots of items
-                    this.items.forEach((item) => {
-                        if (Array.isArray(val)) {
-                            item.checked = val.includes(getItemValue(item));
-                        }
-                        else {
-                            item.checked = getItemValue(item) === val;
-                        }
-                    });
-                },
-            },
-        },
-    });
-}
-
-const NAMESPACE$4 = 'CheckBoxGroup';
-const {
-  createComponent: createComponent$l,
-  bem: bem$k
-} =
-/*#__PURE__*/
-createNamespace('check-box-group');
-var checkBoxGroup = /*#__PURE__*/
-createComponent$l({
-  mixins: [
-  /*#__PURE__*/
-  useCheckGroup(NAMESPACE$4)],
-  props: {// nextCheckState : {
-    //   type : Function,
-    //   default(checkState: CheckState) {
-    //     return checkState === CheckState.Checked ? CheckState.Unchecked : CheckState.Checked;
-    //   },
-    // },
-  },
-  methods: {
-    onClick() {
-      this.checkState = this.nextCheckState(this.checkState);
-    }
-
-  },
-
-  render() {
-    const h = arguments[0];
-    return h("div", {
-      "class": bem$k()
-    }, [this.slots()]);
-  }
-
-});
-
-function useCheckItem(name) {
-    return createMixins({
-        mixins: [useGroupItem(name)],
-        props: {
-            checkable: {
-                type: Boolean,
-                default: true,
-            },
-            disabled: Boolean,
-        },
-        data() {
-            return {
-                checked: false,
-            };
-        },
-        methods: {
-            toggle() {
-                if (this.disabled)
-                    return;
-                this.$emit('clicked');
-                if (!this.checkable)
-                    return;
-                this.checked = !this.checked;
-                this.$emit('toggled', this.checked);
-            },
-        },
-        beforeMount() {
-            this.checked = this.checked || (isDef(this.$attrs.checked)
-                && this.$attrs.checked !== false);
-        },
-    });
-}
-function useCheckItemWithModel(name, options) {
-    return createMixins({
-        mixins: [
-            useCheckItem(name),
-            useModel('checked', options),
-        ],
-        props: {
-            modelValue: null,
-        },
-    });
-}
-
-const {
-  createComponent: createComponent$m,
-  bem: bem$l
-} =
-/*#__PURE__*/
 createNamespace('check-indicator');
 let path;
 var CheckIndicator = /*#__PURE__*/
-createComponent$m({
+createComponent$k({
   functional: true,
   props: {
     checked: {
@@ -4733,7 +4671,7 @@ createComponent$m({
     data
   }) {
     return h(SvgIcon, helper([{
-      "class": bem$l({
+      "class": bem$j({
         checked: props.checked,
         indeterminate: props.indeterminate,
         disabled: props.disabled
@@ -4752,13 +4690,13 @@ createComponent$m({
 
 const NAMESPACE$5 = 'CheckBoxGroup';
 const {
-  createComponent: createComponent$n,
-  bem: bem$m
+  createComponent: createComponent$l,
+  bem: bem$k
 } =
 /*#__PURE__*/
 createNamespace('check-box');
 var checkBox = /*#__PURE__*/
-createComponent$n({
+createComponent$l({
   mixins: [
   /*#__PURE__*/
   useCheckItem(NAMESPACE$5),
@@ -4791,7 +4729,7 @@ createComponent$n({
   methods: {
     emitStyle() {
       if (!this.Item) return;
-      this.Item.itemStyle('line-check-box', {
+      this.Item.itemStyle('check-box', {
         'checkbox-checked': this.checked,
         'interactive-disabled': this.disabled
       });
@@ -4819,7 +4757,7 @@ createComponent$n({
       inItem
     } = this;
     return h("div", {
-      "class": [bem$m({
+      "class": [bem$k({
         disabled,
         indeterminate,
         checked
@@ -4855,13 +4793,13 @@ createComponent$n({
 });
 
 const {
-  createComponent: createComponent$o,
-  bem: bem$n
+  createComponent: createComponent$m,
+  bem: bem$l
 } =
 /*#__PURE__*/
 createNamespace('chip');
 var chip = /*#__PURE__*/
-createComponent$o({
+createComponent$m({
   mixins: [
   /*#__PURE__*/
   useColor()],
@@ -4890,7 +4828,7 @@ createComponent$o({
         name: "ripple",
         value: ripple
       }],
-      "class": [bem$n({
+      "class": [bem$l({
         outline
       }), {
         'line-activatable': true
@@ -4925,13 +4863,13 @@ const matchBreakpoint = (breakpoint) => {
 
 const BREAKPOINTS = ['', 'xs', 'sm', 'md', 'lg', 'xl'];
 const {
-  createComponent: createComponent$p,
-  bem: bem$o
+  createComponent: createComponent$n,
+  bem: bem$m
 } =
 /*#__PURE__*/
 createNamespace('col');
 var col = /*#__PURE__*/
-createComponent$p({
+createComponent$n({
   props: {
     offset: String,
     offsetXs: String,
@@ -5058,7 +4996,7 @@ createComponent$p({
     const h = arguments[0];
     const isRTL = document.dir === 'rtl';
     return h("div", helper([{
-      "class": bem$o(),
+      "class": bem$m(),
       "style": { ...this.calculateOffset(isRTL),
         ...this.calculatePull(isRTL),
         ...this.calculatePush(isRTL),
@@ -5067,102 +5005,6 @@ createComponent$p({
     }, {
       "on": this.$listeners
     }]), [this.slots()]);
-  }
-
-});
-
-const NAMESPACE$6 = 'Collapse';
-const {
-  createComponent: createComponent$q,
-  bem: bem$p
-} =
-/*#__PURE__*/
-createNamespace('collapse-item');
-var collapseItem = /*#__PURE__*/
-createComponent$q({
-  mixins: [
-  /*#__PURE__*/
-  useCheckItem(NAMESPACE$6)],
-  components: {
-    Icon
-  },
-  props: {
-    title: {
-      type: String,
-      default: ''
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-  methods: {
-    onClick() {
-      if (this.checkable && !this.disabled) {
-        this.checked = !this.checked;
-      }
-    }
-
-  },
-
-  render() {
-    const h = arguments[0];
-    const {
-      checked,
-      disabled,
-      title
-    } = this;
-    return h("div", {
-      "class": bem$p({
-        active: checked
-      })
-    }, [h("div", {
-      "class": bem$p('title', {
-        disabled
-      }),
-      "on": {
-        "click": this.onClick
-      }
-    }, [this.slots('title') || title, this.slots('icon') || h("icon", {
-      "class": bem$p('title-icon', {
-        rotate: checked
-      }),
-      "attrs": {
-        "name": "expand_more",
-        "width": "18",
-        "height": "18"
-      }
-    })]), checked && h("div", {
-      "class": bem$p('content')
-    }, [this.slots()])]);
-  }
-
-});
-
-const NAMESPACE$7 = 'Collapse';
-const {
-  createComponent: createComponent$r,
-  bem: bem$q
-} =
-/*#__PURE__*/
-createNamespace('collapse');
-var collapse = /*#__PURE__*/
-createComponent$r({
-  mixins: [
-  /*#__PURE__*/
-  useCheckGroup(NAMESPACE$7)],
-  props: {
-    exclusive: {
-      type: Boolean,
-      default: true
-    }
-  },
-
-  render() {
-    const h = arguments[0];
-    return h("div", {
-      "class": bem$q()
-    }, [this.slots()]);
   }
 
 });
@@ -5276,8 +5118,8 @@ const updateScrollDetail = (detail, el, timestamp, shouldStart) => {
 };
 
 const {
-  createComponent: createComponent$s,
-  bem: bem$r
+  createComponent: createComponent$o,
+  bem: bem$n
 } =
 /*#__PURE__*/
 createNamespace('content');
@@ -5313,10 +5155,17 @@ const getPageElement = el => {
 };
 
 var content = /*#__PURE__*/
-createComponent$s({
+createComponent$o({
   mixins: [
   /*#__PURE__*/
   useColor()],
+
+  provide() {
+    return {
+      Content: this
+    };
+  },
+
   props: {
     forceOverscroll: Boolean,
     fullscreen: Boolean,
@@ -5497,7 +5346,7 @@ createComponent$s({
       shouldForceOverscroll
     } = this;
     return h("div", helper([{
-      "class": [bem$r(), false , shouldForceOverscroll && 'overscroll'],
+      "class": [bem$n(), false , shouldForceOverscroll && 'overscroll'],
       "style": {
         '--offset-top': `${this.cTop || 0}px`,
         '--offset-bottom': `${this.cBottom || 0}px`
@@ -5528,8 +5377,8 @@ createComponent$s({
 });
 
 const {
-  createComponent: createComponent$t,
-  bem: bem$s
+  createComponent: createComponent$p,
+  bem: bem$o
 } =
 /*#__PURE__*/
 createNamespace('picker-column');
@@ -5543,7 +5392,7 @@ const DECELERATION_FRICTION = 0.97;
 const MAX_PICKER_SPEED = 90;
 const TRANSITION_DURATION = 150;
 var LinePickerColumn = /*#__PURE__*/
-createComponent$t({
+createComponent$p({
   props: {
     col: Object
   },
@@ -5887,7 +5736,7 @@ createComponent$t({
       col
     } = this;
     return h("div", {
-      "class": [bem$s(), {
+      "class": [bem$o(), {
         'picker-col': true,
         'picker-opts-left': this.col.align === 'left',
         'picker-opts-right': this.col.align === 'right'
@@ -5966,8 +5815,8 @@ const iosLeaveAnimation$2 = (baseEl) => {
 };
 
 const {
-  createComponent: createComponent$u,
-  bem: bem$t
+  createComponent: createComponent$q,
+  bem: bem$p
 } =
 /*#__PURE__*/
 createNamespace('picker');
@@ -5993,7 +5842,7 @@ const safeCall = (handler, arg) => {
 };
 
 var Picker = /*#__PURE__*/
-createComponent$u({
+createComponent$q({
   mixins: [
   /*#__PURE__*/
   usePopup()],
@@ -6123,7 +5972,7 @@ createComponent$u({
         name: "show",
         value: visible
       }],
-      "class": [bem$t(), {
+      "class": [bem$p(), {
         // Used internally for styling
         [`picker-${mode}`]: true
       }],
@@ -6763,8 +6612,8 @@ const VALID_AMPM_PREFIX = [
 ];
 
 const {
-  createComponent: createComponent$v,
-  bem: bem$u
+  createComponent: createComponent$r,
+  bem: bem$q
 } =
 /*#__PURE__*/
 createNamespace('datetime');
@@ -6820,7 +6669,7 @@ const divyColumns = columns => {
 const DEFAULT_FORMAT = 'MMM D, YYYY';
 let datetimeIds = 0;
 var datetime = /*#__PURE__*/
-createComponent$v({
+createComponent$r({
   mixins: [
   /*#__PURE__*/
   useModel('dateValue')],
@@ -6918,7 +6767,8 @@ createComponent$v({
       dayShortNames: convertToArrayOfStrings(dayShortNames, 'dayShortNames')
     };
     this.updateDatetimeValue(this.dateValue); // TODO
-    // this.emitStyle();
+
+    this.emitStyle();
   },
 
   mounted() {
@@ -6964,7 +6814,7 @@ createComponent$v({
     },
 
     emitStyle() {
-      this.Item && this.Item.itemStyle('line-datatime', {
+      this.Item && this.Item.itemStyle('datatime', {
         interactive: true,
         datetime: true,
         'has-placeholder': this.placeholder != null,
@@ -7287,7 +7137,7 @@ createComponent$v({
         "aria-haspopup": "true",
         "aria-labelledby": labelId
       },
-      "class": [bem$u(), {
+      "class": [bem$q(), {
         'datetime-disabled': disabled,
         'datetime-readonly': readonly,
         'datetime-placeholder': addPlaceholderClass,
@@ -7306,35 +7156,6 @@ createComponent$v({
       },
       "ref": "buttonEl"
     })]);
-  }
-
-});
-
-const {
-  createComponent: createComponent$w,
-  bem: bem$v
-} =
-/*#__PURE__*/
-createNamespace('dialog');
-const CONTENT_ELEMENT = 'content';
-var dialog = /*#__PURE__*/
-createComponent$w({
-  mixins: [
-  /*#__PURE__*/
-  usePopup()],
-
-  render() {
-    const h = arguments[0];
-    return h("div", {
-      "directives": [{
-        name: "show",
-        value: this.visible
-      }],
-      "class": bem$v()
-    }, [h("div", {
-      "class": bem$v(CONTENT_ELEMENT),
-      "ref": CONTENT_ELEMENT
-    }, [this.slots()])]);
   }
 
 });
@@ -7404,18 +7225,18 @@ function useClickOutside(options = {}) {
     });
 }
 
-const NAMESPACE$8 = 'FabGroup';
+const NAMESPACE$6 = 'FabGroup';
 const {
-  createComponent: createComponent$x,
-  bem: bem$w
+  createComponent: createComponent$s,
+  bem: bem$r
 } =
 /*#__PURE__*/
 createNamespace('fab-group');
 var FabGroup = /*#__PURE__*/
-createComponent$x({
+createComponent$s({
   mixins: [
   /*#__PURE__*/
-  useGroup(NAMESPACE$8),
+  useGroup(NAMESPACE$6),
   /*#__PURE__*/
   useLazy('visible'),
   /*#__PURE__*/
@@ -7451,7 +7272,7 @@ createComponent$x({
         "tag": "div",
         "appear": true
       },
-      "class": bem$w({
+      "class": bem$r({
         [`side-${side}`]: true
       })
     }, {
@@ -7469,14 +7290,14 @@ createComponent$x({
 });
 
 const {
-  createComponent: createComponent$y,
-  bem: bem$x
+  createComponent: createComponent$t,
+  bem: bem$s
 } =
 /*#__PURE__*/
 createNamespace('fab');
 const FAB_SIDES = ['start', 'end', 'top', 'bottom'];
 var fab = /*#__PURE__*/
-createComponent$y({
+createComponent$t({
   mixins: [
   /*#__PURE__*/
   useModel('activated'),
@@ -7521,7 +7342,7 @@ createComponent$y({
       activated
     } = this;
     return h("div", helper([{
-      "class": bem$x({
+      "class": bem$s({
         [`horizontal-${horizontal}`]: isDef(horizontal),
         [`vertical-${vertical}`]: isDef(vertical),
         edge
@@ -7552,20 +7373,20 @@ createComponent$y({
 
 });
 
-const NAMESPACE$9 = 'FabGroup';
+const NAMESPACE$7 = 'FabGroup';
 const {
-  createComponent: createComponent$z,
-  bem: bem$y
+  createComponent: createComponent$u,
+  bem: bem$t
 } =
 /*#__PURE__*/
 createNamespace('fab-button');
 var fabButton = /*#__PURE__*/
-createComponent$z({
+createComponent$u({
   mixins: [
   /*#__PURE__*/
   useColor(),
   /*#__PURE__*/
-  useGroupItem(NAMESPACE$9)],
+  useGroupItem(NAMESPACE$7)],
   directives: {
     ripple: VRipple
   },
@@ -7616,7 +7437,7 @@ createComponent$z({
       "attrs": {
         "aria-disabled": disabled ? 'true' : null
       },
-      "class": ['activatable', 'line-focusable', bem$y({
+      "class": ['activatable', 'line-focusable', bem$t({
         [size]: isDef(size),
         'in-list': inList,
         'translucent-in-list': inList && translucent,
@@ -7635,26 +7456,26 @@ createComponent$z({
         name: "ripple",
         value: this.ripple
       }],
-      "class": bem$y('content', {
+      "class": bem$t('content', {
         vertical
       })
     }, [h("span", {
-      "class": bem$y('indicator')
+      "class": bem$t('indicator')
     }, [this.slots('indicator')]), h("span", {
-      "class": bem$y('inner')
+      "class": bem$t('inner')
     }, [this.slots() || text])])]);
   }
 
 });
 
 const {
-  createComponent: createComponent$A,
-  bem: bem$z
+  createComponent: createComponent$v,
+  bem: bem$u
 } =
 /*#__PURE__*/
 createNamespace('footer');
 var footer = /*#__PURE__*/
-createComponent$A({
+createComponent$v({
   inject: ['App'],
   props: {
     translucent: Boolean
@@ -7679,7 +7500,7 @@ createComponent$A({
       "attrs": {
         "role": "contentinfo"
       },
-      "class": bem$z({
+      "class": bem$u({
         translucent
       })
     }, {
@@ -7690,13 +7511,13 @@ createComponent$A({
 });
 
 const {
-  createComponent: createComponent$B,
-  bem: bem$A
+  createComponent: createComponent$w,
+  bem: bem$v
 } =
 /*#__PURE__*/
 createNamespace('grid');
 var grid = /*#__PURE__*/
-createComponent$B({
+createComponent$w({
   functional: true,
   props: {
     fixed: Boolean
@@ -7708,7 +7529,7 @@ createComponent$B({
     slots
   }) {
     return h("div", helper([{
-      "class": bem$A({
+      "class": bem$v({
         fixed: props.fixed
       })
     }, data]), [slots()]);
@@ -7717,13 +7538,13 @@ createComponent$B({
 });
 
 const {
-  createComponent: createComponent$C,
-  bem: bem$B
+  createComponent: createComponent$x,
+  bem: bem$w
 } =
 /*#__PURE__*/
 createNamespace('header');
 var header = /*#__PURE__*/
-createComponent$C({
+createComponent$x({
   inject: ['App'],
   props: {
     collapse: String,
@@ -7748,7 +7569,7 @@ createComponent$C({
       "attrs": {
         "role": "banner"
       },
-      "class": [bem$B(), `line-header-${mode}`, `line-header-collapse-${collapse}`, this.translucent && 'line-header-translucent', this.translucent && `line-header-translucent-${mode}`]
+      "class": [bem$w(), `line-header-${mode}`, `line-header-collapse-${collapse}`, this.translucent && 'line-header-translucent', this.translucent && `line-header-translucent-${mode}`]
     }, {
       "on": this.$listeners
     }]), [this.slots()]);
@@ -7757,13 +7578,13 @@ createComponent$C({
 });
 
 const {
-  createComponent: createComponent$D,
-  bem: bem$C
+  createComponent: createComponent$y,
+  bem: bem$x
 } =
 /*#__PURE__*/
 createNamespace('check-group');
 var checkGroup = /*#__PURE__*/
-createComponent$D({
+createComponent$y({
   mixins: [
   /*#__PURE__*/
   useCheckGroupWithModel('Group')],
@@ -7771,20 +7592,20 @@ createComponent$D({
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$C()
+      "class": bem$x()
     }, [this.slots()]);
   }
 
 });
 
 const {
-  createComponent: createComponent$E,
-  bem: bem$D
+  createComponent: createComponent$z,
+  bem: bem$y
 } =
 /*#__PURE__*/
 createNamespace('check-item');
 var checkItem = /*#__PURE__*/
-createComponent$E({
+createComponent$z({
   mixins: [
   /*#__PURE__*/
   useCheckItemWithModel('Group')],
@@ -7792,7 +7613,7 @@ createComponent$E({
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$D(),
+      "class": bem$y(),
       "on": {
         "click": this.toggle
       }
@@ -7802,13 +7623,13 @@ createComponent$E({
 });
 
 const {
-  createComponent: createComponent$F,
-  bem: bem$E
+  createComponent: createComponent$A,
+  bem: bem$z
 } =
 /*#__PURE__*/
 createNamespace('lazy');
 var lazy = /*#__PURE__*/
-createComponent$F({
+createComponent$A({
   mixins: [
   /*#__PURE__*/
   useLazy()],
@@ -7816,7 +7637,7 @@ createComponent$F({
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$E()
+      "class": bem$z()
     }, [this.slots()]);
   }
 
@@ -7915,13 +7736,13 @@ function useTreeItem(name) {
 }
 
 const {
-  createComponent: createComponent$G,
-  bem: bem$F
+  createComponent: createComponent$B,
+  bem: bem$A
 } =
 /*#__PURE__*/
 createNamespace('tree-item');
 var treeItem = /*#__PURE__*/
-createComponent$G({
+createComponent$B({
   mixins: [
   /*#__PURE__*/
   useTreeItem('Tree')],
@@ -7936,7 +7757,7 @@ createComponent$G({
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$F(),
+      "class": bem$A(),
       "on": {
         "click": this.onClick
       }
@@ -7946,13 +7767,13 @@ createComponent$G({
 });
 
 const {
-  createComponent: createComponent$H,
-  bem: bem$G
+  createComponent: createComponent$C,
+  bem: bem$B
 } =
 /*#__PURE__*/
 createNamespace('img');
 var image = /*#__PURE__*/
-createComponent$H({
+createComponent$C({
   props: {
     alt: String,
     src: String
@@ -8037,7 +7858,7 @@ createComponent$H({
   render() {
     const h = arguments[0];
     return h("div", helper([{
-      "class": bem$G()
+      "class": bem$B()
     }, {
       "on": this.$listeners
     }]), [h("img", {
@@ -8056,35 +7877,471 @@ createComponent$H({
 });
 
 const {
-  createComponent: createComponent$I,
-  bem: bem$H
+  createComponent: createComponent$D,
+  bem: bem$C
+} =
+/*#__PURE__*/
+createNamespace('infinite-scroll');
+var infiniteScroll = /*#__PURE__*/
+createComponent$D({
+  inject: {
+    Content: {
+      default: undefined
+    }
+  },
+  props: {
+    threshold: {
+      type: String,
+      default: '15%'
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    position: {
+      type: String,
+      default: 'bottom'
+    }
+  },
+
+  data() {
+    return {
+      isLoading: false
+    };
+  },
+
+  watch: {
+    threshold() {
+      this.thresholdChanged();
+    }
+
+  },
+
+  async mounted() {
+    const contentEl = this.$parent.$options.name === 'line-content' ? this.$parent.$el : null;
+
+    if (!contentEl) {
+      console.error('<line-infinite-scroll> must be used inside an <line-content>');
+      return;
+    }
+
+    this.scrollEl = await this.$parent.getScrollElement();
+    this.thresholdChanged();
+    this.disabledChanged();
+
+    if (this.position === 'top') {
+      this.$nextTick(() => {
+        if (this.scrollEl) {
+          this.scrollEl.scrollTop = this.scrollEl.scrollHeight - this.scrollEl.clientHeight;
+        }
+      });
+    }
+  },
+
+  beforeDestroy() {
+    this.enableScrollEvents(false);
+    this.scrollEl = undefined;
+  },
+
+  methods: {
+    onScroll() {
+      const {
+        scrollEl
+      } = this;
+
+      if (!scrollEl || !this.canStart()) {
+        return 1;
+      }
+
+      const infiniteHeight = this.$el.offsetHeight;
+
+      if (infiniteHeight === 0) {
+        // if there is no height of this element then do nothing
+        return 2;
+      }
+
+      const {
+        scrollTop
+      } = scrollEl;
+      const {
+        scrollHeight
+      } = scrollEl;
+      const height = scrollEl.offsetHeight;
+      const threshold = this.thrPc !== 0 ? height * this.thrPc : this.thrPx;
+      const distanceFromInfinite = this.position === 'bottom' ? scrollHeight - infiniteHeight - scrollTop - threshold - height : scrollTop - infiniteHeight - threshold;
+
+      if (distanceFromInfinite < 0) {
+        if (!this.didFire) {
+          this.isLoading = true;
+          this.didFire = true;
+          this.$emit('infinite', {
+            complete: this.complete.bind(this)
+          });
+          return 3;
+        }
+      } else {
+        this.didFire = false;
+      }
+
+      return 4;
+    },
+
+    /**
+     * Call `complete()` within the `ionInfinite` output event handler when
+     * your async operation has completed. For example, the `loading`
+     * state is while the app is performing an asynchronous operation,
+     * such as receiving more data from an AJAX request to add more items
+     * to a data list. Once the data has been received and UI updated, you
+     * then call this method to signify that the loading has completed.
+     * This method will change the infinite scroll's state from `loading`
+     * to `enabled`.
+     */
+    async complete() {
+      const {
+        scrollEl
+      } = this;
+
+      if (!this.isLoading || !scrollEl) {
+        return;
+      }
+
+      this.isLoading = false;
+
+      if (this.position === 'top') {
+        /**
+         * New content is being added at the top, but the scrollTop position stays the same,
+         * which causes a scroll jump visually. This algorithm makes sure to prevent this.
+         * (Frame 1)
+         *    - complete() is called, but the UI hasn't had time to update yet.
+         *    - Save the current content dimensions.
+         *    - Wait for the next frame using _dom.read, so the UI will be updated.
+         * (Frame 2)
+         *    - Read the new content dimensions.
+         *    - Calculate the height difference and the new scroll position.
+         *    - Delay the scroll position change until other possible dom
+         * reads are done using _dom.write to be performant.
+         * (Still frame 2, if I'm correct)
+         *    - Change the scroll position (= visually maintain the scroll position).
+         *    - Change the state to re-enable the InfiniteScroll.
+         *    - This should be after changing the scroll position, or it could
+         *    cause the InfiniteScroll to be triggered again immediately.
+         * (Frame 3)
+         *    Done.
+         */
+        this.isBusy = true; // ******** DOM READ ****************
+        // Save the current content dimensions before the UI updates
+
+        const prev = scrollEl.scrollHeight - scrollEl.scrollTop; // ******** DOM READ ****************
+
+        requestAnimationFrame(() => {
+          this.$nextTick(() => {
+            // UI has updated, save the new content dimensions
+            const {
+              scrollHeight
+            } = scrollEl; // New content was added on top, so the scroll position
+            // should be changed immediately to prevent it from jumping around
+
+            const newScrollTop = scrollHeight - prev; // ******** DOM WRITE ****************
+
+            requestAnimationFrame(() => {
+              this.$nextTick(() => {
+                scrollEl.scrollTop = newScrollTop;
+                this.isBusy = false;
+              });
+            });
+          });
+        });
+      }
+    },
+
+    canStart() {
+      return !this.disabled && !this.isBusy && !!this.scrollEl && !this.isLoading;
+    },
+
+    enableScrollEvents(shouldListen) {
+      if (this.scrollEl) {
+        if (shouldListen) {
+          this.scrollEl.addEventListener('scroll', this.onScroll);
+        } else {
+          this.scrollEl.removeEventListener('scroll', this.onScroll);
+        }
+      }
+    },
+
+    thresholdChanged() {
+      const val = this.threshold;
+
+      if (val.lastIndexOf('%') > -1) {
+        this.thrPx = 0;
+        this.thrPc = parseFloat(val) / 100;
+      } else {
+        this.thrPx = parseFloat(val);
+        this.thrPc = 0;
+      }
+    },
+
+    disabledChanged() {
+      const {
+        disabled
+      } = this;
+
+      if (disabled) {
+        this.isLoading = false;
+        this.isBusy = false;
+      }
+
+      this.enableScrollEvents(!disabled);
+    }
+
+  },
+
+  render() {
+    const h = arguments[0];
+    const {
+      disabled,
+      isLoading
+    } = this;
+    return h("div", {
+      "class": [bem$C(), {
+        'infinite-scroll-loading': isLoading,
+        'infinite-scroll-enabled': !disabled
+      }]
+    }, [this.slots()]);
+  }
+
+});
+
+/* eslint-disable */
+/**
+ * Does a simple sanitization of all elements
+ * in an untrusted string
+ */
+const sanitizeDOMString = (untrustedString) => {
+    try {
+        if (typeof untrustedString !== 'string' || untrustedString === '') {
+            return untrustedString;
+        }
+        /**
+         * Create a document fragment
+         * separate from the main DOM,
+         * create a div to do our work in
+         */
+        const documentFragment = document.createDocumentFragment();
+        const workingDiv = document.createElement('div');
+        documentFragment.appendChild(workingDiv);
+        workingDiv.innerHTML = untrustedString;
+        /**
+         * Remove any elements
+         * that are blocked
+         */
+        blockedTags.forEach(blockedTag => {
+            const getElementsToRemove = documentFragment.querySelectorAll(blockedTag);
+            for (let elementIndex = getElementsToRemove.length - 1; elementIndex >= 0; elementIndex--) {
+                const element = getElementsToRemove[elementIndex];
+                if (element.parentNode) {
+                    element.parentNode.removeChild(element);
+                }
+                else {
+                    documentFragment.removeChild(element);
+                }
+                /**
+                 * We still need to sanitize
+                 * the children of this element
+                 * as they are left behind
+                 */
+                const childElements = getElementChildren(element);
+                /* tslint:disable-next-line */
+                for (let childIndex = 0; childIndex < childElements.length; childIndex++) {
+                    sanitizeElement(childElements[childIndex]);
+                }
+            }
+        });
+        /**
+         * Go through remaining elements and remove
+         * non-allowed attribs
+         */
+        // IE does not support .children on document fragments, only .childNodes
+        const dfChildren = getElementChildren(documentFragment);
+        /* tslint:disable-next-line */
+        for (let childIndex = 0; childIndex < dfChildren.length; childIndex++) {
+            sanitizeElement(dfChildren[childIndex]);
+        }
+        // Append document fragment to div
+        const fragmentDiv = document.createElement('div');
+        fragmentDiv.appendChild(documentFragment);
+        // First child is always the div we did our work in
+        const getInnerDiv = fragmentDiv.querySelector('div');
+        return (getInnerDiv !== null) ? getInnerDiv.innerHTML : fragmentDiv.innerHTML;
+    }
+    catch (err) {
+        console.error(err);
+        return '';
+    }
+};
+/**
+ * Clean up current element based on allowed attributes
+ * and then recursively dig down into any child elements to
+ * clean those up as well
+ */
+const sanitizeElement = (element) => {
+    // IE uses childNodes, so ignore nodes that are not elements
+    if (element.nodeType && element.nodeType !== 1) {
+        return;
+    }
+    for (let i = element.attributes.length - 1; i >= 0; i--) {
+        const attribute = element.attributes.item(i);
+        const attributeName = attribute.name;
+        // remove non-allowed attribs
+        if (!allowedAttributes.includes(attributeName.toLowerCase())) {
+            element.removeAttribute(attributeName);
+            continue;
+        }
+        // clean up any allowed attribs
+        // that attempt to do any JS funny-business
+        const attributeValue = attribute.value;
+        /* tslint:disable-next-line */
+        if (attributeValue != null && attributeValue.toLowerCase().includes('javascript:')) {
+            element.removeAttribute(attributeName);
+        }
+    }
+    /**
+     * Sanitize any nested children
+     */
+    const childElements = getElementChildren(element);
+    /* tslint:disable-next-line */
+    for (let i = 0; i < childElements.length; i++) {
+        sanitizeElement(childElements[i]);
+    }
+};
+/**
+ * IE doesn't always support .children
+ * so we revert to .childNodes instead
+ */
+const getElementChildren = (el) => {
+    return (el.children != null) ? el.children : el.childNodes;
+};
+const allowedAttributes = ['class', 'id', 'href', 'src', 'name', 'slot'];
+const blockedTags = ['script', 'style', 'iframe', 'meta', 'link', 'object', 'embed'];
+
+const {
+  createComponent: createComponent$E,
+  bem: bem$D
+} =
+/*#__PURE__*/
+createNamespace('infinite-scroll-content');
+var infiniteScrollContent = /*#__PURE__*/
+createComponent$E({
+  props: {
+    loadingSpinner: {
+      type: String
+    },
+    loadingText: {
+      type: String,
+      default: ''
+    }
+  },
+
+  beforeMount() {
+    let spinner = this.loadingSpinner;
+
+    if (spinner === undefined) {
+      const {
+        mode
+      } = this;
+      spinner = config.get('infiniteLoadingSpinner', config.get('spinner', mode === 'ios' ? 'lines' : 'crescent'));
+    }
+  },
+
+  render() {
+    const h = arguments[0];
+    const {
+      mode,
+      loadingText,
+      loadingSpinner
+    } = this;
+    return h("div", {
+      "class": [bem$D(), {
+        // Used internally for styling
+        [`infinite-scroll-content-${mode}`]: true
+      }]
+    }, [h("div", {
+      "class": "infinite-loading"
+    }, [loadingSpinner && h("div", {
+      "class": "infinite-loading-spinner"
+    }, [h("line-spinner", {
+      "attrs": {
+        "name": loadingSpinner
+      }
+    })]), loadingText && h("div", {
+      "class": "infinite-loading-text",
+      "attrs": {
+        "innerHTML": sanitizeDOMString(loadingText)
+      }
+    })])]);
+  }
+
+});
+
+const {
+  createComponent: createComponent$F,
+  bem: bem$E
 } =
 /*#__PURE__*/
 createNamespace('input');
+
+const findItemLabel$1 = componentEl => {
+  const itemEl = componentEl && componentEl.closest('.line-item');
+
+  if (itemEl) {
+    return itemEl.querySelector('.line-label');
+  }
+
+  return null;
+};
+
+let inputIds = 0;
 var input = /*#__PURE__*/
-createComponent$I({
+createComponent$F({
+  mixins: [
+  /*#__PURE__*/
+  useModel('nativeValue', {
+    event: 'inputChange'
+  }),
+  /*#__PURE__*/
+  useColor()],
+  inject: {
+    Item: {
+      default: undefined
+    }
+  },
   props: {
-    prefixIcon: {
-      type: [String, Object]
-    },
-    suffixIcon: {
-      type: [String, Object]
-    },
-    label: {
+    accept: String,
+    autocapitalize: {
       type: String,
-      default: ''
+      default: 'off'
     },
-    value: {
-      type: [String, Number],
-      default: ''
+    autocomplete: {
+      type: String,
+      default: 'off'
     },
-    type: {
+    autocorrect: {
+      type: String,
+      default: 'off'
+    },
+    autofocus: {
+      type: Boolean,
+      default: false
+    },
+    clearInput: {
+      type: Boolean,
+      default: false
+    },
+    clearOnEdit: {
+      type: Boolean
+    },
+    inputmode: {
       type: String,
       default: 'text'
-    },
-    placeholderText: {
-      type: String,
-      default: ''
     },
     max: {
       type: String
@@ -8095,36 +8352,29 @@ createComponent$I({
     min: {
       type: String
     },
-    size: {
-      type: Number
+    multiple: {
+      type: Boolean
+    },
+    pattern: {
+      type: String
+    },
+    placeholder: {
+      type: String
     },
     readonly: {
       type: Boolean,
       default: false
     },
-    autofocus: {
-      type: Boolean,
-      default: false
+    size: {
+      type: Number
     },
-    autocomplete: {
+    type: {
       type: String,
-      default: 'off'
-    },
-    clearOnEdit: {
-      type: Boolean,
-      default: false
+      default: 'text'
     },
     disabled: {
       type: Boolean,
       default: false
-    },
-    clearable: {
-      type: Boolean,
-      default: false
-    },
-    clearableIcon: {
-      type: String,
-      default: 'cancel'
     }
   },
 
@@ -8136,6 +8386,51 @@ createComponent$I({
   },
 
   methods: {
+    /**
+     * Sets focus on the specified `ion-input`. Use this method instead of the global
+     * `input.focus()`.
+     */
+    setFocus() {
+      if (this.nativeInput) {
+        this.nativeInput.focus();
+      }
+    },
+
+    /**
+     * Returns the native `<input>` element used under the hood.
+     */
+    getInputElement() {
+      return Promise.resolve(this.nativeInput);
+    },
+
+    disabledChanged() {
+      this.emitStyle();
+    },
+
+    shouldClearOnEdit() {
+      const {
+        type,
+        clearOnEdit
+      } = this;
+      return clearOnEdit === undefined ? type === 'password' : clearOnEdit;
+    },
+
+    getValue() {
+      return typeof this.nativeValue === 'number' ? this.nativeValue.toString() : (this.nativeValue || '').toString();
+    },
+
+    emitStyle() {
+      if (!this.Item) return;
+      this.Item.itemStyle('input', {
+        interactive: true,
+        input: true,
+        'has-placeholder': this.placeholder != null,
+        'has-value': this.hasValue(),
+        'has-focus': this.hasFocus,
+        'interactive-disabled': this.disabled
+      });
+    },
+
     setInputValue() {
       const {
         input
@@ -8148,29 +8443,32 @@ createComponent$I({
       const input = ev.target;
 
       if (input) {
-        // this.value = input.value || '';
-        this.$emit('input', input.value);
+        this.nativeValue = input.value || '';
       }
     },
 
     onBlur() {
       this.hasFocus = false;
-      this.focusChanged(); // this.emitStyle(); ?
-
-      this.$emit('onBlur');
+      this.focusChanged();
+      this.emitStyle();
+      this.$emit('blur');
     },
 
     onFocus() {
       this.hasFocus = true;
-      this.focusChanged(); // this.emitStyle(); ?
-
-      this.$emit('onFocus');
+      this.focusChanged();
+      this.emitStyle();
+      this.$emit('focus');
     },
 
-    onKeydown() {
+    onChange() {//
+    },
+
+    onKeydown(ev) {
       if (this.shouldClearOnEdit()) {
         // Did the input value change after it was blurred and edited?
-        if (this.didBlurAfterEdit && this.hasValue()) {
+        // Do not clear if user is hitting Enter to submit form
+        if (this.didBlurAfterEdit && this.hasValue() && ev.key !== 'Enter') {
           // Clear the input
           this.clearTextInput();
         } // Reset the flag
@@ -8180,27 +8478,25 @@ createComponent$I({
       }
     },
 
-    onClearValue(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.$emit('input', '');
-      this.$emit('clear', event);
-    },
+    clearTextInput(ev) {
+      if (this.clearInput && !this.readonly && !this.disabled && ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+      }
 
-    getValue() {
-      return this.value || '';
-    },
+      console.log('object'); // TODO
+      // this.value = '';
 
-    hasValue() {
-      return this.getValue().length > 0;
-    },
+      this.nativeValue = '';
+      /**
+       * This is needed for clearOnEdit
+       * Otherwise the value will not be cleared
+       * if user is inside the input
+       */
 
-    shouldClearOnEdit() {
-      const {
-        type,
-        clearOnEdit
-      } = this;
-      return clearOnEdit === undefined ? type === 'password' : clearOnEdit;
+      if (this.nativeInput) {
+        this.nativeInput.value = '';
+      }
     },
 
     focusChanged() {
@@ -8208,21 +8504,56 @@ createComponent$I({
       if (!this.hasFocus && this.shouldClearOnEdit() && this.hasValue()) {
         this.didBlurAfterEdit = true;
       }
+    },
+
+    hasValue() {
+      return this.getValue().length > 0;
+    },
+
+    onClearValue(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      this.nativeValue = '';
+      this.$emit('clear', event);
     }
 
   },
-  watch: {},
+
+  beforeMount() {
+    this.inputId = `line-input-${inputIds++}`;
+    this.emitStyle();
+  },
+
+  mounted() {
+    const {
+      nativeInput
+    } = this.$refs;
+    this.nativeInput = nativeInput;
+  },
+
+  watch: {
+    disabled() {
+      this.disabledChanged();
+    },
+
+    nativeValue() {
+      this.emitStyle();
+    }
+
+  },
 
   render() {
     const h = arguments[0];
+    const labelId = `${this.inputId}-lbl`;
+    const label = findItemLabel$1(this.$el);
     const {
-      value,
+      nativeValue,
       hasFocus,
       accept,
       type,
       maxlength,
       readonly,
-      placeholderText,
+      placeholder,
       autocomplete,
       disabled,
       max,
@@ -8230,19 +8561,24 @@ createComponent$I({
       size,
       autoFocus,
       pattern,
-      required
-    } = this; // const mode = getSkylineMode(this);
+      required,
+      color
+    } = this;
+
+    if (label) {
+      label.id = labelId;
+    }
 
     return h("div", helper([{
-      "class": [bem$H(), {
-        // 'has-value' : this.value.length,
+      "class": [bem$E(), { ...createColorClasses(color),
+        'has-value': nativeValue && nativeValue.length,
         'has-focus': hasFocus
       }]
     }, {
       "on": this.$listeners
     }]), [h("input", {
       "class": "native-input",
-      "ref": "input",
+      "ref": "nativeInput",
       "attrs": {
         "accept": accept,
         "type": type,
@@ -8251,7 +8587,7 @@ createComponent$I({
         "max": max,
         "min": min,
         "readonly": readonly,
-        "placeholder": placeholderText,
+        "placeholder": placeholder,
         "pattern": pattern,
         "required": required,
         "autocomplete": autocomplete,
@@ -8259,12 +8595,13 @@ createComponent$I({
         "disabled": disabled
       },
       "domProps": {
-        "value": value
+        "value": nativeValue
       },
       "on": {
         "input": this.onInput,
         "focus": this.onFocus,
-        "blur": this.onBlur
+        "blur": this.onBlur,
+        "change": this.onChange
       }
     }), this.clearInput && !readonly && !disabled && h("button", {
       "attrs": {
@@ -8274,7 +8611,8 @@ createComponent$I({
       "class": "input-clear-icon",
       "on": {
         "touchStart": this.clearTextInput,
-        "mouseDown": this.clearTextInput
+        "mouseDown": this.clearTextInput,
+        "click": this.clearTextInput
       }
     })]);
   }
@@ -8282,13 +8620,13 @@ createComponent$I({
 });
 
 const {
-  createComponent: createComponent$J,
-  bem: bem$I
+  createComponent: createComponent$G,
+  bem: bem$F
 } =
 /*#__PURE__*/
 createNamespace('item');
 var item = /*#__PURE__*/
-createComponent$J({
+createComponent$G({
   mixins: [
   /*#__PURE__*/
   useColor()],
@@ -8418,7 +8756,7 @@ createComponent$J({
       "attrs": {
         "aria-disabled": disabled ? 'true' : null
       },
-      "class": [bem$I({}), { ...childStyles,
+      "class": [bem$F({}), { ...childStyles,
         item: true,
         [`item-lines-${lines}`]: isDef(lines),
         'item-disabled': disabled,
@@ -8453,13 +8791,13 @@ createComponent$J({
 });
 
 const {
-  createComponent: createComponent$K,
-  bem: bem$J
+  createComponent: createComponent$H,
+  bem: bem$G
 } =
 /*#__PURE__*/
 createNamespace('item-divider');
 var itemDivider = /*#__PURE__*/
-createComponent$K({
+createComponent$H({
   mixins: [
   /*#__PURE__*/
   useColor()],
@@ -8473,28 +8811,28 @@ createComponent$K({
       sticky = false
     } = this;
     return h("div", helper([{
-      "class": [bem$J({
+      "class": [bem$G({
         sticky
       }), 'item']
     }, {
       "on": this.$listeners
     }]), [this.slots('start'), h("div", {
-      "class": bem$J('inner')
+      "class": bem$G('inner')
     }, [h("div", {
-      "class": bem$J('wrapper')
+      "class": bem$G('wrapper')
     }, [this.slots()]), this.slots('end')])]);
   }
 
 });
 
 const {
-  createComponent: createComponent$L,
-  bem: bem$K
+  createComponent: createComponent$I,
+  bem: bem$H
 } =
 /*#__PURE__*/
 createNamespace('label');
 var label = /*#__PURE__*/
-createComponent$L({
+createComponent$I({
   mixins: [
   /*#__PURE__*/
   useColor()],
@@ -8539,10 +8877,10 @@ createComponent$L({
     const h = arguments[0];
     const {
       position
-    } = this;
-    this.noAnimate = position === 'floating';
+    } = this; // this.noAnimate = (position === 'floating');
+
     return h("div", helper([{
-      "class": [bem$K(), {
+      "class": [bem$H(), {
         [`label-${position}`]: isDef(position),
         'label-no-animate': this.noAnimate
       }]
@@ -8554,13 +8892,13 @@ createComponent$L({
 });
 
 const {
-  createComponent: createComponent$M,
-  bem: bem$L
+  createComponent: createComponent$J,
+  bem: bem$I
 } =
 /*#__PURE__*/
 createNamespace('list');
 var list = /*#__PURE__*/
-createComponent$M({
+createComponent$J({
   props: {
     // 'full' | 'inset' | 'none' | undefined
     lines: String,
@@ -8574,7 +8912,7 @@ createComponent$M({
       inset = false
     } = this;
     return h("div", helper([{
-      "class": bem$L({
+      "class": bem$I({
         [`lines-${lines}`]: isDef(lines),
         inset
       })
@@ -8586,13 +8924,13 @@ createComponent$M({
 });
 
 const {
-  createComponent: createComponent$N,
-  bem: bem$M
+  createComponent: createComponent$K,
+  bem: bem$J
 } =
 /*#__PURE__*/
 createNamespace('list-header');
 var listHeader = /*#__PURE__*/
-createComponent$N({
+createComponent$K({
   mixins: [
   /*#__PURE__*/
   useColor()],
@@ -8607,7 +8945,7 @@ createComponent$N({
       lines
     } = this;
     return h("div", helper([{
-      "class": bem$M({
+      "class": bem$J({
         [`lines-${lines}`]: isDef(lines)
       })
     }, {
@@ -8619,16 +8957,16 @@ createComponent$N({
 
 });
 
-const NAMESPACE$a = 'ListView';
+const NAMESPACE$8 = 'ListView';
 const {
-  createComponent: createComponent$O,
-  bem: bem$N
+  createComponent: createComponent$L,
+  bem: bem$K
 } =
 /*#__PURE__*/
 createNamespace('list-item');
 var ListItem = /*#__PURE__*/
-createComponent$O({
-  inject: [NAMESPACE$a],
+createComponent$L({
+  inject: [NAMESPACE$8],
   props: {
     index: {
       type: Number,
@@ -8646,7 +8984,7 @@ createComponent$O({
     onLayoutChanged() {
       const {
         itemLayoutAtIndex
-      } = this[NAMESPACE$a];
+      } = this[NAMESPACE$8];
       const item = itemLayoutAtIndex(this.index);
       this.offsetWidth = item.geometry.width;
       this.offsetHeight = item.geometry.height;
@@ -8658,7 +8996,7 @@ createComponent$O({
         onLayout,
         horizontal,
         vertical
-      } = this[NAMESPACE$a];
+      } = this[NAMESPACE$8];
       if (!offsetWidth || !offsetHeight) return;
 
       if (this.offsetWidth !== offsetWidth && horizontal || this.offsetHeight !== offsetHeight && vertical) {
@@ -8681,7 +9019,7 @@ createComponent$O({
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$N()
+      "class": bem$K()
     }, [this.cachedNode]);
   }
 
@@ -9263,18 +9601,18 @@ function exponentialSearch(array = [], wanted, compare, from, to, bound) {
     return binarySearch(array, wanted, compare, Math.floor(index / 2), Math.min(index, to), bound);
 }
 
-const NAMESPACE$b = 'ListView';
+const NAMESPACE$9 = 'ListView';
 const {
-  createComponent: createComponent$P,
-  bem: bem$O
+  createComponent: createComponent$M,
+  bem: bem$L
 } =
 /*#__PURE__*/
 createNamespace('list-view');
 var listView = /*#__PURE__*/
-createComponent$P({
+createComponent$M({
   provide() {
     return {
-      [NAMESPACE$b]: this
+      [NAMESPACE$9]: this
     };
   },
 
@@ -9788,13 +10126,13 @@ createComponent$P({
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$O(),
+      "class": bem$L(),
       "ref": "viewport",
       "on": {
         "scroll": this.onScroll
       }
     }, [h("div", {
-      "class": bem$O('spacer'),
+      "class": bem$L('spacer'),
       "style": {
         width: `${this.layout.geometry.width}px`,
         height: `${this.layout.geometry.height}px`
@@ -9803,7 +10141,7 @@ createComponent$P({
       "attrs": {
         "tag": 'div'
       },
-      "class": bem$O('content')
+      "class": bem$L('content')
     }, [Object.keys(this.views).map(index => {
       const view = this.views[index];
       return h(ListItem, {
@@ -9957,8 +10295,8 @@ const spinners = {
 const SPINNERS = spinners;
 
 const {
-  createComponent: createComponent$Q,
-  bem: bem$P
+  createComponent: createComponent$N,
+  bem: bem$M
 } =
 /*#__PURE__*/
 createNamespace('spinner');
@@ -10013,7 +10351,7 @@ function buildLine(h, spinner, duration, index, total) {
 }
 
 var Spinner = /*#__PURE__*/
-createComponent$Q({
+createComponent$N({
   functional: true,
   props: {
     color: String,
@@ -10042,7 +10380,7 @@ createComponent$Q({
     }
 
     return h("div", helper([{
-      "class": [bem$P({
+      "class": [bem$M({
         [spinnerName]: true,
         paused: !!props.paused || config.getBoolean('testing')
       }), createColorClasses(props.color)],
@@ -10150,13 +10488,13 @@ const mdLeaveAnimation$2 = (baseEl) => {
 };
 
 const {
-  createComponent: createComponent$R,
-  bem: bem$Q
+  createComponent: createComponent$O,
+  bem: bem$N
 } =
 /*#__PURE__*/
 createNamespace('loading');
 var loading = /*#__PURE__*/
-createComponent$R({
+createComponent$O({
   mixins: [
   /*#__PURE__*/
   usePopup(),
@@ -10201,7 +10539,7 @@ createComponent$R({
         "role": "dialog",
         "aria-modal": "true"
       },
-      "class": bem$Q({
+      "class": bem$N({
         translucent: this.translucent
       })
     }, {
@@ -10217,15 +10555,15 @@ createComponent$R({
       "attrs": {
         "role": "dialog"
       },
-      "class": bem$Q('wrapper')
+      "class": bem$N('wrapper')
     }, [spinner && h("div", {
-      "class": bem$Q('spinner')
+      "class": bem$N('spinner')
     }, [h(Spinner, {
       "attrs": {
         "type": spinner
       }
     })]), message && h("div", {
-      "class": bem$Q('content')
+      "class": bem$N('content')
     }, [message])])]);
   }
 
@@ -10525,8 +10863,8 @@ const createMenuController = () => {
 const menuController = /* @__PURE__ */ createMenuController();
 
 const {
-  createComponent: createComponent$S,
-  bem: bem$R
+  createComponent: createComponent$P,
+  bem: bem$O
 } =
 /*#__PURE__*/
 createNamespace('menu');
@@ -10578,7 +10916,7 @@ const SHOW_MENU = 'show-menu';
 const SHOW_BACKDROP = 'show-overlay';
 const MENU_CONTENT_OPEN = 'menu-content-open';
 var menu = /*#__PURE__*/
-createComponent$S({
+createComponent$P({
   mixins: [
   /*#__PURE__*/
   useModel('actived')],
@@ -10846,12 +11184,8 @@ createComponent$S({
       this.isAnimating = true;
 
       if (shouldOpen) {
-        // TODO
-        // this.ionWillOpen.emit();
         this.$emit('willOpen');
       } else {
-        // TODO
-        // this.ionWillClose.emit();
         this.$emit('willClose');
       }
     },
@@ -11083,7 +11417,7 @@ createComponent$S({
       visible
     } = this;
     return h("div", {
-      "class": [bem$R(), {
+      "class": [bem$O(), {
         [`menu-type-${type}`]: true,
         'show-menu': visible,
         'menu-enabled': !disabled,
@@ -11108,13 +11442,13 @@ createComponent$S({
 });
 
 const {
-  createComponent: createComponent$T,
-  bem: bem$S
+  createComponent: createComponent$Q,
+  bem: bem$P
 } =
 /*#__PURE__*/
 createNamespace('note');
 var note = /*#__PURE__*/
-createComponent$T({
+createComponent$Q({
   functional: true,
   props: {
     color: String
@@ -11126,192 +11460,8 @@ createComponent$T({
     slots
   }) {
     return h("div", helper([{
-      "class": [bem$S(), createColorClasses(props.color)]
+      "class": [bem$P(), createColorClasses(props.color)]
     }, data]), [slots()]);
-  }
-
-});
-
-const {
-  createComponent: createComponent$U,
-  bem: bem$T
-} =
-/*#__PURE__*/
-createNamespace('page-indicator');
-var pageIndicator = /*#__PURE__*/
-createComponent$U({
-  props: {
-    count: {
-      type: Number,
-      default: 0,
-      validator: val => val % 1 === 0
-    },
-    value: {
-      type: Number,
-      default: 1
-    },
-    delegate: {
-      type: Object,
-      default: () => ({})
-    },
-    interactive: {
-      type: Boolean,
-      default: true
-    },
-    nextIcon: {
-      type: [String, Object],
-      default: 'chevron_right'
-    },
-    prevIcon: {
-      type: [String, Object],
-      default: 'chevron_left'
-    },
-    countVisible: {
-      type: [Number, String],
-      default: 6
-    }
-  },
-
-  data() {
-    return {
-      length: 0
-    };
-  },
-
-  computed: {
-    list() {
-      const countVisible = parseInt(this.countVisible, 10);
-      const maxLength = Math.min(Math.max(0, countVisible) || this.count, Math.max(0, this.length) || this.count, this.count);
-
-      if (this.count <= maxLength) {
-        return this.range(1, this.count);
-      }
-
-      const even = maxLength % 2 === 0 ? 1 : 0;
-      const left = Math.floor(maxLength / 2);
-      const right = this.count - left + 1 + even;
-
-      if (this.value > left && this.value < right) {
-        const start = this.value - left + 2;
-        const end = this.value + left - 2 - even;
-        return [1, '...', ...this.range(start, end), '...', this.count];
-      }
-
-      if (this.value === left) {
-        const end = this.value + left - 1 - even;
-        return [...this.range(1, end), '...', this.count];
-      }
-
-      if (this.value === right) {
-        const start = this.value - left + 1;
-        return [1, '...', ...this.range(start, this.count)];
-      }
-
-      return [...this.range(1, left), '...', ...this.range(right, this.count)];
-    }
-
-  },
-
-  mounted() {
-    this.onResize();
-    window.addEventListener('resize', this.onResize);
-  },
-
-  beforeDestroy() {
-    window.removeEventListener('resize', this.onResize);
-  },
-
-  methods: {
-    onResize() {
-      const width = this.$refs.indicator.clientWidth;
-      this.length = Math.floor((width - 100) / 46);
-    },
-
-    range(from, to) {
-      const range = [];
-      from = from > 0 ? from : 1;
-
-      for (let i = from; i <= to; i++) {
-        range.push(i);
-      }
-
-      return range;
-    },
-
-    onClick(value) {
-      value = Number.parseInt(value, 10);
-
-      if (Number.isNaN(value)) {
-        return;
-      }
-
-      this.$emit('input', value);
-    },
-
-    next() {
-      let value = this.value + 1;
-
-      if (value > this.count) {
-        value = this.count;
-      }
-
-      this.$emit('input', value);
-      this.$emit('next', value);
-    },
-
-    previous() {
-      let value = this.value - 1;
-
-      if (value < 1) {
-        value = 1;
-      }
-
-      this.$emit('input', value);
-      this.$emit('previous', value);
-    }
-
-  },
-
-  render() {
-    const h = arguments[0];
-    const {
-      value,
-      list
-    } = this;
-    return h("ul", {
-      "class": bem$T(),
-      "ref": "indicator"
-    }, [h("li", {
-      "class": bem$T('item'),
-      "on": {
-        "click": () => this.previous()
-      }
-    }, [h(Icon, {
-      "props": { ...(isObject(this.prevIcon) ? this.prevIcon : {
-          name: this.prevIcon
-        })
-      }
-    })]), list.map((item, index) => {
-      return h("li", {
-        "key": index,
-        "class": bem$T('item', {
-          active: value === item
-        }),
-        "on": {
-          "click": () => this.onClick(item)
-        }
-      }, [item]);
-    }), h("li", {
-      "class": bem$T('item'),
-      "on": {
-        "click": () => this.next()
-      }
-    }, [h(Icon, {
-      "props": { ...(isObject(this.nextIcon) ? this.nextIcon : {
-          name: this.nextIcon
-        })
-      }
-    })])]);
   }
 
 });
@@ -11540,13 +11690,13 @@ const mdLeaveAnimation$3 = (baseEl) => {
 };
 
 const {
-  createComponent: createComponent$V,
-  bem: bem$U
+  createComponent: createComponent$R,
+  bem: bem$Q
 } =
 /*#__PURE__*/
 createNamespace('popover');
 var popover = /*#__PURE__*/
-createComponent$V({
+createComponent$R({
   mixins: [
   /*#__PURE__*/
   usePopup()],
@@ -11581,7 +11731,7 @@ createComponent$V({
       "attrs": {
         "aria-modal": "true"
       },
-      "class": bem$U({
+      "class": bem$Q({
         translucent: this.translucent
       })
     }, {
@@ -11594,25 +11744,25 @@ createComponent$V({
         "tap": this.onTap
       }
     }), h("div", {
-      "class": bem$U('wrapper')
+      "class": bem$Q('wrapper')
     }, [h("div", {
-      "class": bem$U('arrow')
+      "class": bem$Q('arrow')
     }), h("div", {
-      "class": bem$U('content')
+      "class": bem$Q('content')
     }, [this.slots()])])]);
   }
 
 });
 
 const {
-  createComponent: createComponent$W,
-  bem: bem$V
+  createComponent: createComponent$S,
+  bem: bem$R
 } =
 /*#__PURE__*/
 createNamespace('popup');
-const CONTENT_ELEMENT$1 = 'content';
+const CONTENT_ELEMENT = 'content';
 var popupLegacy = /*#__PURE__*/
-createComponent$W({
+createComponent$S({
   mixins: [
   /*#__PURE__*/
   usePopup()],
@@ -11628,13 +11778,13 @@ createComponent$W({
         "aria-modal": "true",
         "role": "dialog"
       },
-      "class": bem$V()
+      "class": bem$R()
     }, [h("div", {
       "attrs": {
         "role": "dialog"
       },
-      "class": bem$V(CONTENT_ELEMENT$1),
-      "ref": CONTENT_ELEMENT$1
+      "class": bem$R(CONTENT_ELEMENT),
+      "ref": CONTENT_ELEMENT
     }, [this.slots()])]);
   }
 
@@ -11732,13 +11882,13 @@ const mdLeaveAnimation$4 = (baseEl) => {
 };
 
 const {
-  createComponent: createComponent$X,
-  bem: bem$W
+  createComponent: createComponent$T,
+  bem: bem$S
 } =
 /*#__PURE__*/
 createNamespace('popup');
 var popup = /*#__PURE__*/
-createComponent$X({
+createComponent$T({
   mixins: [
   /*#__PURE__*/
   usePopup()],
@@ -11773,7 +11923,7 @@ createComponent$X({
         "aria-modal": "true",
         "role": "dialog"
       },
-      "class": bem$W()
+      "class": bem$S()
     }, {
       "on": this.$listeners
     }]), [h(Overlay, {
@@ -11784,15 +11934,15 @@ createComponent$X({
       "attrs": {
         "role": "dialog"
       },
-      "class": bem$W('wrapper')
+      "class": bem$S('wrapper')
     }, [this.slots()])]);
   }
 
 });
 
 const {
-  createComponent: createComponent$Y,
-  bem: bem$X
+  createComponent: createComponent$U,
+  bem: bem$T
 } =
 /*#__PURE__*/
 createNamespace('progress-bar');
@@ -11832,7 +11982,7 @@ const renderProgress = (h, value, buffer) => {
 };
 
 var progressBar = /*#__PURE__*/
-createComponent$Y({
+createComponent$U({
   mixins: [
   /*#__PURE__*/
   useColor()],
@@ -11872,7 +12022,7 @@ createComponent$Y({
         "aria-valuemin": "0",
         "aria-valuemax": "1"
       },
-      "class": [bem$X(), { ...createColorClasses(color),
+      "class": [bem$T(), { ...createColorClasses(color),
         [mode]: true,
         [`progress-bar-${type}`]: true,
         'progress-paused': paused,
@@ -11883,18 +12033,18 @@ createComponent$Y({
 
 });
 
-const NAMESPACE$c = 'RadioGroup';
+const NAMESPACE$a = 'RadioGroup';
 const {
-  createComponent: createComponent$Z,
-  bem: bem$Y
+  createComponent: createComponent$V,
+  bem: bem$U
 } =
 /*#__PURE__*/
 createNamespace('radio');
 var radio = /*#__PURE__*/
-createComponent$Z({
+createComponent$V({
   mixins: [
   /*#__PURE__*/
-  useCheckItem(NAMESPACE$c),
+  useCheckItem(NAMESPACE$a),
   /*#__PURE__*/
   useRipple(),
   /*#__PURE__*/
@@ -11919,7 +12069,7 @@ createComponent$Z({
   methods: {
     emitStyle() {
       if (!this.Item) return;
-      this.Item.itemStyle('line-radio', {
+      this.Item.itemStyle('radio', {
         'radio-checked': this.checked,
         'interactive-disabled': this.disabled
       });
@@ -11950,7 +12100,7 @@ createComponent$Z({
       inItem
     } = this;
     return h("div", helper([{
-      "class": [bem$Y({
+      "class": [bem$U({
         checked,
         disabled
       }), { ...createColorClasses(color),
@@ -11965,9 +12115,9 @@ createComponent$Z({
     }, {
       "on": this.$listeners
     }]), [h("div", {
-      "class": bem$Y('icon')
+      "class": bem$U('icon')
     }, [h("div", {
-      "class": bem$Y('inner')
+      "class": bem$U('inner')
     })]), this.slots(), h("button", {
       "attrs": {
         "type": "button",
@@ -11978,110 +12128,9 @@ createComponent$Z({
 
 });
 
-const NAMESPACE$d = 'RadioButtonGroup';
 const {
-  createComponent: createComponent$_,
-  bem: bem$Z
-} =
-/*#__PURE__*/
-createNamespace('radio-button-group');
-var radioButtonGroup = /*#__PURE__*/
-createComponent$_({
-  mixins: [
-  /*#__PURE__*/
-  useCheckGroup(NAMESPACE$d)],
-  props: {
-    exclusive: {
-      type: Boolean,
-      default: true
-    }
-  },
-
-  render() {
-    const h = arguments[0];
-    return h("div", {
-      "class": bem$Z()
-    }, [this.slots()]);
-  }
-
-});
-
-const {
-  createComponent: createComponent$$,
-  bem: bem$_
-} =
-/*#__PURE__*/
-createNamespace('radio-indicator');
-var RadioIndicator = /*#__PURE__*/
-createComponent$$({
-  functional: true,
-  props: {
-    checked: {
-      type: Boolean,
-      default: false
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    }
-  },
-
-  render(h, {
-    props,
-    data
-  }) {
-    return h("div", helper([{
-      "class": [bem$_({
-        checked: props.checked,
-        disabled: props.disabled
-      }), data.class]
-    }, data]));
-  }
-
-});
-
-const NAMESPACE$e = 'RadioButtonGroup';
-const {
-  createComponent: createComponent$10,
-  bem: bem$$
-} =
-/*#__PURE__*/
-createNamespace('radio-button');
-var radioButton = /*#__PURE__*/
-createComponent$10({
-  mixins: [
-  /*#__PURE__*/
-  useCheckItem(NAMESPACE$e),
-  /*#__PURE__*/
-  useRipple()],
-  props: {
-    text: String
-  },
-
-  render() {
-    const h = arguments[0];
-    const {
-      checked,
-      disabled,
-      text
-    } = this;
-    return h("div", helper([{
-      "class": bem$$()
-    }, {
-      "on": this.$listeners
-    }]), [this.slots('indicator') || h(RadioIndicator, {
-      "attrs": {
-        "checked": checked,
-        "disabled": disabled
-      }
-    }), this.slots() || text]);
-  }
-
-});
-
-const {
-  createComponent: createComponent$11,
-  bem: bem$10
+  createComponent: createComponent$W,
+  bem: bem$V
 } =
 /*#__PURE__*/
 createNamespace('range');
@@ -12112,7 +12161,7 @@ const renderKnob = (h, isRTL, {
   };
 
   return h("div", {
-    "class": [bem$10('knob-handle', {
+    "class": [bem$V('knob-handle', {
       min: value === min,
       max: value === max
     }), {
@@ -12147,12 +12196,12 @@ const renderKnob = (h, isRTL, {
       "aria-valuenow": value
     }
   }, [pin && h("div", {
-    "class": bem$10('pin'),
+    "class": bem$V('pin'),
     "attrs": {
       "role": "presentation"
     }
   }, [Math.round(value)]), h("div", {
-    "class": bem$10('knob'),
+    "class": bem$V('knob'),
     "attrs": {
       "role": "presentation"
     }
@@ -12174,7 +12223,7 @@ const valueToRatio = (value, min, max) => {
 };
 
 var range = /*#__PURE__*/
-createComponent$11({
+createComponent$W({
   mixins: [
   /*#__PURE__*/
   useColor()],
@@ -12546,7 +12595,7 @@ createComponent$11({
 
 
     return h("div", {
-      "class": bem$10({
+      "class": bem$V({
         disabled,
         pressed: pressedKnob !== undefined,
         'has-pin': pin
@@ -12556,23 +12605,23 @@ createComponent$11({
         "blur": this.onBlur
       }
     }, [this.slots('start'), h("div", {
-      "class": bem$10('slider'),
+      "class": bem$V('slider'),
       "ref": "rangeSlider"
     }, [ticks.map(tick => h("div", {
       "style": tickStyle(tick),
       "attrs": {
         "role": "presentation"
       },
-      "class": bem$10('tick', {
+      "class": bem$V('tick', {
         active: tick.active
       })
     })), h("div", {
-      "class": bem$10('bar'),
+      "class": bem$V('bar'),
       "attrs": {
         "role": "presentation"
       }
     }), h("div", {
-      "class": bem$10('bar', {
+      "class": bem$V('bar', {
         active: true
       }),
       "attrs": {
@@ -12770,8 +12819,8 @@ const translateElement = (el, value) => {
 };
 
 const {
-  createComponent: createComponent$12,
-  bem: bem$11
+  createComponent: createComponent$X,
+  bem: bem$W
 } =
 /*#__PURE__*/
 createNamespace('refresher');
@@ -12781,7 +12830,7 @@ const clamp$5 = (min, n, max) => {
 };
 
 var refresher = /*#__PURE__*/
-createComponent$12({
+createComponent$X({
   props: {
     pullMin: {
       type: Number,
@@ -12810,16 +12859,12 @@ createComponent$12({
   },
 
   data() {
-    // let gesture: Gesture;
-    let scrollListenerCallback; // let animations: Animation[];
-
+    let scrollListenerCallback;
     return {
       appliedStyles: false,
       didStart: false,
       progress: 0,
       scrollListenerCallback,
-      // gesture,
-      // animations,
       pointerDown: false,
       needsCompletion: false,
       didRefresh: false,
@@ -13462,7 +13507,7 @@ createComponent$12({
       mode
     } = this;
     return h("div", {
-      "class": [bem$11(), {
+      "class": [bem$W(), {
         // Used internally for styling
         [`refresher-${mode}`]: true,
         'refresher-native': this.nativeRefresher,
@@ -13490,126 +13535,14 @@ createComponent$12({
 
 });
 
-/* eslint-disable */
-/**
- * Does a simple sanitization of all elements
- * in an untrusted string
- */
-const sanitizeDOMString = (untrustedString) => {
-    try {
-        if (typeof untrustedString !== 'string' || untrustedString === '') {
-            return untrustedString;
-        }
-        /**
-         * Create a document fragment
-         * separate from the main DOM,
-         * create a div to do our work in
-         */
-        const documentFragment = document.createDocumentFragment();
-        const workingDiv = document.createElement('div');
-        documentFragment.appendChild(workingDiv);
-        workingDiv.innerHTML = untrustedString;
-        /**
-         * Remove any elements
-         * that are blocked
-         */
-        blockedTags.forEach(blockedTag => {
-            const getElementsToRemove = documentFragment.querySelectorAll(blockedTag);
-            for (let elementIndex = getElementsToRemove.length - 1; elementIndex >= 0; elementIndex--) {
-                const element = getElementsToRemove[elementIndex];
-                if (element.parentNode) {
-                    element.parentNode.removeChild(element);
-                }
-                else {
-                    documentFragment.removeChild(element);
-                }
-                /**
-                 * We still need to sanitize
-                 * the children of this element
-                 * as they are left behind
-                 */
-                const childElements = getElementChildren(element);
-                /* tslint:disable-next-line */
-                for (let childIndex = 0; childIndex < childElements.length; childIndex++) {
-                    sanitizeElement(childElements[childIndex]);
-                }
-            }
-        });
-        /**
-         * Go through remaining elements and remove
-         * non-allowed attribs
-         */
-        // IE does not support .children on document fragments, only .childNodes
-        const dfChildren = getElementChildren(documentFragment);
-        /* tslint:disable-next-line */
-        for (let childIndex = 0; childIndex < dfChildren.length; childIndex++) {
-            sanitizeElement(dfChildren[childIndex]);
-        }
-        // Append document fragment to div
-        const fragmentDiv = document.createElement('div');
-        fragmentDiv.appendChild(documentFragment);
-        // First child is always the div we did our work in
-        const getInnerDiv = fragmentDiv.querySelector('div');
-        return (getInnerDiv !== null) ? getInnerDiv.innerHTML : fragmentDiv.innerHTML;
-    }
-    catch (err) {
-        console.error(err);
-        return '';
-    }
-};
-/**
- * Clean up current element based on allowed attributes
- * and then recursively dig down into any child elements to
- * clean those up as well
- */
-const sanitizeElement = (element) => {
-    // IE uses childNodes, so ignore nodes that are not elements
-    if (element.nodeType && element.nodeType !== 1) {
-        return;
-    }
-    for (let i = element.attributes.length - 1; i >= 0; i--) {
-        const attribute = element.attributes.item(i);
-        const attributeName = attribute.name;
-        // remove non-allowed attribs
-        if (!allowedAttributes.includes(attributeName.toLowerCase())) {
-            element.removeAttribute(attributeName);
-            continue;
-        }
-        // clean up any allowed attribs
-        // that attempt to do any JS funny-business
-        const attributeValue = attribute.value;
-        /* tslint:disable-next-line */
-        if (attributeValue != null && attributeValue.toLowerCase().includes('javascript:')) {
-            element.removeAttribute(attributeName);
-        }
-    }
-    /**
-     * Sanitize any nested children
-     */
-    const childElements = getElementChildren(element);
-    /* tslint:disable-next-line */
-    for (let i = 0; i < childElements.length; i++) {
-        sanitizeElement(childElements[i]);
-    }
-};
-/**
- * IE doesn't always support .children
- * so we revert to .childNodes instead
- */
-const getElementChildren = (el) => {
-    return (el.children != null) ? el.children : el.childNodes;
-};
-const allowedAttributes = ['class', 'id', 'href', 'src', 'name', 'slot'];
-const blockedTags = ['script', 'style', 'iframe', 'meta', 'link', 'object', 'embed'];
-
 const {
-  createComponent: createComponent$13,
-  bem: bem$12
+  createComponent: createComponent$Y,
+  bem: bem$X
 } =
 /*#__PURE__*/
 createNamespace('refresher-content');
 var refresherContent = /*#__PURE__*/
-createComponent$13({
+createComponent$Y({
   props: {
     pullingIcon: String,
     pullingText: String,
@@ -13652,14 +13585,12 @@ createComponent$13({
       icon: pullingIcon,
       pullingText,
       spinner: refreshingSpinner,
-      refreshingText
-    } = this;
-    const hasSpinner = pullingIcon != null && SPINNERS[pullingIcon] !== undefined;
-    const {
+      refreshingText,
       mode
     } = this;
+    const hasSpinner = pullingIcon != null && SPINNERS[pullingIcon] !== undefined;
     return h("div", {
-      "class": bem$12()
+      "class": bem$X()
     }, [h("div", {
       "class": "refresher-pulling"
     }, [pullingIcon && hasSpinner && h("div", {
@@ -13708,40 +13639,408 @@ createComponent$13({
 });
 
 const {
-  createComponent: createComponent$14,
-  bem: bem$13
+  createComponent: createComponent$Z,
+  bem: bem$Y
 } =
 /*#__PURE__*/
-createNamespace('row');
-var row = /*#__PURE__*/
-createComponent$14({
-  functional: true,
+createNamespace('reorder');
+var reorder = /*#__PURE__*/
+createComponent$Z({
+  data() {
+    return {
+      reorderIndex: -1
+    };
+  },
 
-  render(h, {
-    data,
-    slots
-  }) {
-    return h("div", helper([{
-      "class": bem$13()
-    }, data]), [slots()]);
+  render() {
+    const h = arguments[0];
+    const reorderIcon = 'menu';
+    return h("div", {
+      "class": bem$Y()
+    }, [this.slots() || h("line-icon", {
+      "class": "reorder-icon",
+      "attrs": {
+        "size": "small",
+        "name": reorderIcon,
+        "lazy": false
+      }
+    })]);
   }
 
 });
 
 const {
-  createComponent: createComponent$15,
-  bem: bem$14
+  createComponent: createComponent$_,
+  bem: bem$Z
 } =
 /*#__PURE__*/
-createNamespace('slide');
-var slide = /*#__PURE__*/
-createComponent$15({
+createNamespace('reorder-group');
+
+const indexForItem = element => {
+  return element.$lineIndex;
+};
+
+const findReorderItem = (node, container) => {
+  let parent;
+
+  while (node) {
+    parent = node.parentElement;
+
+    if (parent === container) {
+      return node;
+    }
+
+    node = parent;
+  }
+
+  return undefined;
+};
+
+const AUTO_SCROLL_MARGIN = 60;
+const SCROLL_JUMP = 10;
+const ITEM_REORDER_SELECTED = 'reorder-selected';
+
+const reorderArray = (array, from, to) => {
+  const element = array[from];
+  array.splice(from, 1);
+  array.splice(to, 0, element);
+  return array.slice();
+};
+
+var reorderGroup = /*#__PURE__*/
+createComponent$_({
+  inject: {
+    Content: {
+      default: undefined
+    }
+  },
+  props: {
+    disabled: {
+      type: Boolean,
+      default: true
+    }
+  },
+
+  data() {
+    return {
+      state: 0
+      /* Idle */
+
+    };
+  },
+
+  beforeMount() {
+    this.lastToIndex = -1;
+    this.cachedHeights = [];
+    this.scrollElTop = 0;
+    this.scrollElBottom = 0;
+    this.scrollElInitial = 0;
+    this.containerTop = 0;
+    this.containerBottom = 0;
+  },
+
+  async mounted() {
+    const contentEl = this.Content;
+
+    if (contentEl) {
+      this.scrollEl = await contentEl.getScrollElement();
+    }
+
+    this.gesture = createGesture({
+      el: this.$el,
+      gestureName: 'reorder',
+      gesturePriority: 110,
+      threshold: 0,
+      direction: 'y',
+      passive: false,
+      canStart: detail => this.canStart(detail),
+      onStart: ev => this.onStart(ev),
+      onMove: ev => this.onMove(ev),
+      onEnd: () => this.onEnd()
+    });
+    this.disabledChanged();
+  },
+
+  beforeDestroy() {
+    this.onEnd();
+
+    if (this.gesture) {
+      this.gesture.destroy();
+      this.gesture = undefined;
+    }
+  },
+
+  methods: {
+    disabledChanged() {
+      console.log('gesture: ', this.disabled);
+
+      if (this.gesture) {
+        this.gesture.enable(!this.disabled);
+      }
+    },
+
+    /**
+     * Completes the reorder operation. Must be called by the `ionItemReorder` event.
+     *
+     * If a list of items is passed, the list will be reordered and returned in the
+     * proper order.
+     *
+     * If no parameters are passed or if `true` is passed in, the reorder will complete
+     * and the item will remain in the position it was dragged to. If `false` is passed,
+     * the reorder will complete and the item will bounce back to its original position.
+     *
+     * @param listOrReorder A list of items to be sorted and returned in the new order or a
+     * boolean of whether or not the reorder should reposition the item.
+     */
+    complete(listOrReorder) {
+      return Promise.resolve(this.completeSync(listOrReorder));
+    },
+
+    canStart(ev) {
+      if (this.selectedItemEl || this.state !== 0
+      /* Idle */
+      ) {
+          return false;
+        }
+
+      const target = ev.event.target;
+      const reorderEl = target.closest('.line-reorder');
+
+      if (!reorderEl) {
+        return false;
+      }
+
+      const item = findReorderItem(reorderEl, this.$el);
+
+      if (!item) {
+        return false;
+      }
+
+      ev.data = item;
+      return true;
+    },
+
+    onStart(ev) {
+      ev.event.preventDefault();
+      const item = this.selectedItemEl = ev.data;
+      const heights = this.cachedHeights;
+      heights.length = 0;
+      const {
+        $el
+      } = this;
+      const {
+        children
+      } = $el;
+
+      if (!children || children.length === 0) {
+        return;
+      }
+
+      let sum = 0;
+
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+        sum += child.offsetHeight;
+        heights.push(sum);
+        child.$lineIndex = i;
+      }
+
+      const box = $el.getBoundingClientRect();
+      this.containerTop = box.top;
+      this.containerBottom = box.bottom;
+
+      if (this.scrollEl) {
+        const scrollBox = this.scrollEl.getBoundingClientRect();
+        this.scrollElInitial = this.scrollEl.scrollTop;
+        this.scrollElTop = scrollBox.top + AUTO_SCROLL_MARGIN;
+        this.scrollElBottom = scrollBox.bottom - AUTO_SCROLL_MARGIN;
+      } else {
+        this.scrollElInitial = 0;
+        this.scrollElTop = 0;
+        this.scrollElBottom = 0;
+      }
+
+      this.lastToIndex = indexForItem(item);
+      this.selectedItemHeight = item.offsetHeight;
+      this.state = 1
+      /* Active */
+      ;
+      item.classList.add(ITEM_REORDER_SELECTED); // hapticSelectionStart();
+    },
+
+    onMove(ev) {
+      const selectedItem = this.selectedItemEl;
+
+      if (!selectedItem) {
+        return;
+      } // Scroll if we reach the scroll margins
+
+
+      const scroll = this.autoscroll(ev.currentY); // // Get coordinate
+
+      const top = this.containerTop - scroll;
+      const bottom = this.containerBottom - scroll;
+      const currentY = Math.max(top, Math.min(ev.currentY, bottom));
+      const deltaY = scroll + currentY - ev.startY;
+      const normalizedY = currentY - top;
+      const toIndex = this.itemIndexForTop(normalizedY);
+
+      if (toIndex !== this.lastToIndex) {
+        const fromIndex = indexForItem(selectedItem);
+        this.lastToIndex = toIndex; // hapticSelectionChanged();
+
+        this.reorderMove(fromIndex, toIndex);
+      } // Update selected item position
+
+
+      selectedItem.style.transform = `translateY(${deltaY}px)`;
+    },
+
+    onEnd() {
+      const {
+        selectedItemEl
+      } = this;
+      this.state = 2
+      /* Complete */
+      ;
+
+      if (!selectedItemEl) {
+        this.state = 0
+        /* Idle */
+        ;
+        return;
+      }
+
+      const toIndex = this.lastToIndex;
+      const fromIndex = indexForItem(selectedItemEl);
+
+      if (toIndex === fromIndex) {
+        this.completeSync();
+      } else {
+        this.$emit('itemReorder', {
+          from: fromIndex,
+          to: toIndex,
+          complete: this.completeSync.bind(this)
+        });
+      } // hapticSelectionEnd();
+
+    },
+
+    completeSync(listOrReorder) {
+      const {
+        selectedItemEl
+      } = this;
+
+      if (selectedItemEl && this.state === 2
+      /* Complete */
+      ) {
+          const children = this.$el.children;
+          const len = children.length;
+          const toIndex = this.lastToIndex;
+          const fromIndex = indexForItem(selectedItemEl);
+
+          if (toIndex !== fromIndex && (!listOrReorder || listOrReorder === true)) {
+            const ref = fromIndex < toIndex ? children[toIndex + 1] : children[toIndex];
+            this.$el.insertBefore(selectedItemEl, ref);
+          }
+
+          if (Array.isArray(listOrReorder)) {
+            listOrReorder = reorderArray(listOrReorder, fromIndex, toIndex);
+          }
+
+          for (let i = 0; i < len; i++) {
+            children[i].style.transform = '';
+          }
+
+          selectedItemEl.style.transition = '';
+          selectedItemEl.classList.remove(ITEM_REORDER_SELECTED);
+          this.selectedItemEl = undefined;
+          this.state = 0
+          /* Idle */
+          ;
+        }
+
+      return listOrReorder;
+    },
+
+    itemIndexForTop(deltaY) {
+      const heights = this.cachedHeights;
+      let i = 0; // TODO: since heights is a sorted array of integers, we can do
+      // speed up the search using binary search. Remember that linear-search is still
+      // faster than binary-search for small arrays (<64) due CPU branch misprediction.
+
+      for (i = 0; i < heights.length; i++) {
+        if (heights[i] > deltaY) {
+          break;
+        }
+      }
+
+      return i;
+    },
+
+    /** ******* DOM WRITE ********* */
+    reorderMove(fromIndex, toIndex) {
+      const itemHeight = this.selectedItemHeight;
+      const {
+        children
+      } = this.$el;
+
+      for (let i = 0; i < children.length; i++) {
+        const {
+          style
+        } = children[i];
+        let value = '';
+
+        if (i > fromIndex && i <= toIndex) {
+          value = `translateY(${-itemHeight}px)`;
+        } else if (i < fromIndex && i >= toIndex) {
+          value = `translateY(${itemHeight}px)`;
+        }
+
+        style.transform = value;
+      }
+    },
+
+    autoscroll(posY) {
+      if (!this.scrollEl) {
+        return 0;
+      }
+
+      let amount = 0;
+
+      if (posY < this.scrollElTop) {
+        amount = -SCROLL_JUMP;
+      } else if (posY > this.scrollElBottom) {
+        amount = SCROLL_JUMP;
+      }
+
+      if (amount !== 0) {
+        this.scrollEl.scrollBy(0, amount);
+      }
+
+      return this.scrollEl.scrollTop - this.scrollElInitial;
+    }
+
+  },
+  watch: {
+    disabled() {
+      this.disabledChanged();
+    }
+
+  },
+
   render() {
     const h = arguments[0];
+    const {
+      disabled,
+      state
+    } = this;
     return h("div", {
-      "class": [bem$14(), {
-        'swiper-slide': true,
-        'swiper-zoom-container': true
+      "class": [bem$Z(), {
+        'reorder-enabled': !disabled,
+        'reorder-list-active': state !== 0
+        /* Idle */
+
       }]
     }, [this.slots()]);
   }
@@ -13749,322 +14048,71 @@ createComponent$15({
 });
 
 const {
-  createComponent: createComponent$16,
-  bem: bem$15
+  createComponent: createComponent$$,
+  bem: bem$_
 } =
 /*#__PURE__*/
-createNamespace('slider');
-var slider = /*#__PURE__*/
-createComponent$16({
+createNamespace('row');
+var row = /*#__PURE__*/
+createComponent$$({
+  functional: true,
+
+  render(h, {
+    data,
+    slots
+  }) {
+    return h("div", helper([{
+      "class": bem$_()
+    }, data]), [slots()]);
+  }
+
+});
+
+const {
+  createComponent: createComponent$10,
+  bem: bem$$
+} =
+/*#__PURE__*/
+createNamespace('skeleton-text');
+var skeletonText = /*#__PURE__*/
+createComponent$10({
   props: {
-    from: {
-      type: Number,
-      default: 0
-    },
-    handle: {
-      type: Object,
-      default: () => ({})
-    },
-    live: {
-      type: Boolean,
-      default: true
-    },
-    orientation: {
-      type: Number,
-      default: 0
-    },
-    pressed: {
-      type: Boolean,
-      default: true
-    },
-    snapMode: {
-      type: Number,
-      default: 0
-    },
-    stepSize: {
-      type: Number,
-      default: 0
-    },
-    to: {
-      type: Number,
-      default: 100
-    },
-    touchDragThreshold: {
-      type: Number,
-      default: 0
-    },
-    value: {
-      type: Number,
-      default: 0
-    },
-    height: {
-      type: String,
-      default: '100px'
-    },
-    disabled: {
+    animated: {
       type: Boolean,
       default: false
     }
   },
 
-  data() {
-    return {
-      dragging: false,
-      startX: 0,
-      currentX: 0,
-      startY: 0,
-      currentY: 0,
-      position: 0,
-      clientY: 0,
-      clientX: 0
-    };
-  },
-
-  computed: {
-    containerStyle() {
-      const style = {};
-
-      if (this.vertical) {
-        style.height = this.height;
-      }
-
-      return style;
-    },
-
-    buttonStyle() {
-      const style = {};
-      const key = this.horizontal ? 'left' : 'top';
-      style[key] = `calc(${this.position * 100}% - 28px)`;
-      return style;
-    },
-
-    barStyle() {
-      const style = {};
-      const key = this.horizontal ? 'width' : 'height';
-      style[key] = `${this.position * 100}%`;
-      return style;
-    },
-
-    stepList() {
-      let list = [];
-      const {
-        from,
-        to,
-        stepSize
-      } = this;
-
-      if (!stepSize || stepSize < 0) {
-        return [];
-      }
-
-      const length = 100 / ((to - from) / stepSize);
-      const step = 100 * stepSize / (to - from);
-
-      for (let i = 0; i <= length; i++) {
-        list.push({
-          position: i * step
-        });
-      }
-
-      list = list.filter(el => el.position >= from && el.position <= to);
-      return list;
-    },
-
-    horizontal() {
-      return this.orientation === 0;
-    },
-
-    vertical() {
-      return this.orientation === 1;
-    },
-
-    visualPosition() {
-      return false;
-    }
-
-  },
-  methods: {
-    setPosition(value) {
-      const {
-        from,
-        to,
-        stepSize
-      } = this;
-
-      if (value > to) {
-        value = to;
-        console.warn('value', this.value);
-      } else if (value < from) {
-        value = from;
-        console.warn('value', this.value);
-      }
-
-      let position = (value - from) / (to - from);
-
-      if (stepSize) {
-        const length = 100 / ((to - from) / stepSize);
-        const steps = Math.round(value / length);
-        position = steps / length;
-      }
-
-      this.position = position;
-    },
-
-    getStepStyle(position) {
-      const style = {};
-      const key = this.vertical ? 'top' : 'left';
-      style[key] = `${position}%`;
-      return style;
-    },
-
-    onSliderClick(event) {
-      if (this.disabled || this.dragging) {
-        return;
-      }
-
-      const clientRect = this.$refs.slider.getBoundingClientRect();
-
-      if (this.vertical) {
-        this.currentY = event.clientY - clientRect.top;
-        const value = Math.round(this.currentY / clientRect.height * 100);
-        this.$emit('input', value);
-        this.startY = this.currentY;
-      } else {
-        this.currentX = event.clientX - clientRect.left;
-        const value = Math.round(this.currentX / clientRect.width * 100);
-        this.$emit('input', value);
-        this.startX = this.currentX;
-      }
-    },
-
-    onMousedown(event) {
-      event.preventDefault();
-      this.onDragStart(event);
-      window.addEventListener('mousemove', this.onDragging); // window.addEventListener('touchmove', this.onDragging);
-
-      window.addEventListener('mouseup', this.onDragEnd); // window.addEventListener('touchend', this.onDragEnd);
-
-      window.addEventListener('contextmenu', this.onDragEnd);
-    },
-
-    onDragStart(event) {
-      this.dragging = true;
-      const clientRect = this.$refs.slider.getBoundingClientRect();
-      this.clientY = event.type === 'touchstart' ? event.touches[0].clientY : event.clientY;
-      this.clientX = event.type === 'touchstart' ? event.touches[0].clientX : event.clientX;
-
-      if (this.vertical) {
-        this.startY = this.clientY - clientRect.top;
-      } else {
-        this.startX = this.clientX - clientRect.left;
-      }
-    },
-
-    onDragging(event) {
-      if (this.dragging) {
-        this.clientY = event.type === 'touchstart' ? event.touches[0].clientY : event.clientY;
-        this.clientX = event.type === 'touchstart' ? event.touches[0].clientX : event.clientX;
-        const clientRect = this.$refs.slider.getBoundingClientRect();
-        let value = 0;
-
-        if (this.vertical) {
-          this.currentY = this.clientY - clientRect.top;
-          value = Math.round(this.currentY / clientRect.height * 100);
-
-          if (value > this.to) {
-            value = this.to;
-          } else if (value < this.from) {
-            value = this.from;
-          }
-
-          this.startY = this.currentY;
-        } else {
-          this.currentX = this.clientX - clientRect.left;
-          value = Math.round(this.currentX / clientRect.width * 100);
-          this.startX = this.currentX;
-
-          if (value > this.to) {
-            value = this.to;
-          } else if (value < this.from) {
-            value = this.from;
-          }
-        }
-
-        this.setPosition(value);
-        this.$emit('input', value);
-      }
-    },
-
-    onDragEnd() {
-      if (this.dragging) {
-        setTimeout(() => {
-          this.dragging = false;
-        }, 0);
-        window.removeEventListener('mousemove', this.onDragging); // window.removeEventListener('touchmove', this.onDragging);
-
-        window.removeEventListener('mouseup', this.onDragEnd); // window.removeEventListener('touchend', this.onDragEnd);
-
-        window.removeEventListener('contextmenu', this.onDragEnd);
-      }
-    }
-
-  },
-
-  beforeMount() {
-    this.setPosition(this.value);
-    this.$emit('moved');
-  },
-
-  mounted() {
-    const clientRect = this.$refs.slider.getBoundingClientRect();
-    this.clientRect = clientRect;
-  },
-
   render() {
     const h = arguments[0];
-    const {
-      vertical,
-      dragging,
-      containerStyle,
-      buttonStyle,
-      barStyle
-    } = this;
+    const animated = this.animated && config.getBoolean('animated', true);
+    const inMedia = this.$el && (this.$el.closest('.line-avatar') || this.$el.closest('.line-thumbnail'));
     return h("div", {
-      "class": bem$15({
-        vertical
-      }),
-      "style": containerStyle,
-      "ref": "slider"
-    }, [h("div", {
-      "class": bem$15('container'),
-      "on": {
-        "click": this.onSliderClick
-      }
-    }, [this.stepList.map((item, index) => {
-      return h("span", {
-        "class": {
-          step: true,
-          'step--active': item.position <= this.position * 100
-        },
-        "key": index,
-        "style": this.getStepStyle(item.position)
-      });
-    })]), h("div", {
-      "class": bem$15('bar'),
-      "style": barStyle,
-      "on": {
-        "click": this.onSliderClick
-      }
-    }), h("div", {
-      "class": bem$15('button', {
-        dragging
-      }),
-      "style": buttonStyle,
-      "on": {
-        "mousedown": this.onMousedown,
-        "touchstart": this.onMousedown
-      }
-    })]);
+      "class": [bem$$(), {
+        'skeleton-text-animated': animated,
+        'in-media': inMedia
+      }]
+    }, [h("span", ["\xA0"])]);
+  }
+
+});
+
+const {
+  createComponent: createComponent$11,
+  bem: bem$10
+} =
+/*#__PURE__*/
+createNamespace('slide');
+var slide = /*#__PURE__*/
+createComponent$11({
+  render() {
+    const h = arguments[0];
+    return h("div", {
+      "class": [bem$10(), {
+        'swiper-slide': true,
+        'swiper-zoom-container': true
+      }]
+    }, [this.slots()]);
   }
 
 });
@@ -18881,13 +18929,13 @@ if (typeof Swiper.use === 'undefined') {
 Swiper.use(components);
 
 const {
-  createComponent: createComponent$17,
-  bem: bem$16
+  createComponent: createComponent$12,
+  bem: bem$11
 } =
 /*#__PURE__*/
 createNamespace('slides');
 var slides = /*#__PURE__*/
-createComponent$17({
+createComponent$12({
   props: {
     options: {
       type: Object
@@ -19288,7 +19336,7 @@ createComponent$17({
       mode
     } = this;
     return h("div", {
-      "class": [bem$16(), {
+      "class": [bem$11(), {
         // Used internally for styling
         [`slides-${mode}`]: true,
         'swiper-container': true
@@ -19306,250 +19354,36 @@ createComponent$17({
 
 });
 
+const NAMESPACE$b = 'SwitchGroup';
 const {
-  createComponent: createComponent$18,
-  bem: bem$17
-} =
-/*#__PURE__*/
-createNamespace('stepper');
-var stepper = /*#__PURE__*/
-createComponent$18({
-  components: {
-    Icon
-  },
-  props: {
-    min: {
-      type: Number,
-      default: -Infinity
-    },
-    max: {
-      type: Number,
-      default: Infinity
-    },
-    step: {
-      type: Number,
-      default: 1
-    },
-    value: {
-      type: Number
-    },
-    readonly: {
-      type: Boolean,
-      default: false
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    placeholder: {
-      type: String,
-      default: ''
-    },
-    precision: {
-      type: Number,
-
-      validator(value) {
-        return value >= 0;
-      }
-
-    }
-  },
-
-  data() {
-    return {
-      nativeValue: ''
-    };
-  },
-
-  computed: {
-    inputValue() {
-      const {
-        min
-      } = this;
-      let {
-        value
-      } = this;
-
-      if (value === null || value === undefined || Number.isNaN(value)) {
-        value = min !== -Infinity ? min : 1;
-      }
-
-      return value;
-    }
-
-  },
-
-  mounted() {
-    this.$nextTick(this.setInputValue);
-  },
-
-  methods: {
-    onChange(type) {
-      const {
-        step,
-        max,
-        min
-      } = this;
-      let {
-        value
-      } = this;
-
-      if (type === 'add') {
-        value += step;
-      } else if (type === 'reduce') {
-        value -= step;
-      }
-
-      value = Math.max(value, min);
-      value = Math.min(value, max);
-      value = value === -Infinity || value === Infinity ? 1 : value;
-      this.$emit('input', value);
-      this.$emit('change', value);
-    },
-
-    setInputValue() {
-      const {
-        input
-      } = this.$refs;
-
-      if (input.value === String(this.inputValue) || !input) {
-        return;
-      }
-
-      input.value = String(this.inputValue);
-    },
-
-    onBlur(event) {
-      this.$emit('blur', event);
-    },
-
-    onFocus(event) {
-      this.$emit('focus', event);
-    },
-
-    onInput(event) {
-      let {
-        value
-      } = event.target;
-      value = Number.parseFloat(value);
-      const {
-        max,
-        min
-      } = this;
-      value = Math.max(value, min);
-      value = Math.min(value, max);
-      value = value === -Infinity || value === Infinity ? 1 : value;
-      this.$emit('input', value);
-      this.$emit('change', value);
-      this.$nextTick(this.setInputValue);
-    }
-
-  },
-  watch: {
-    value: {
-      handler() {
-        this.onChange('init');
-      },
-
-      immediate: true
-    },
-
-    inputValue() {
-      this.setInputValue();
-    }
-
-  },
-
-  render() {
-    const h = arguments[0];
-    const {
-      placeholder,
-      disabled,
-      max,
-      min,
-      step,
-      number,
-      value
-    } = this;
-    return h("div", {
-      "class": bem$17()
-    }, [h("span", {
-      "class": bem$17('button', {
-        disabled: value <= min
-      }),
-      "on": {
-        "click": () => this.onChange('reduce')
-      }
-    }, [h("icon", {
-      "attrs": {
-        "name": 'remove',
-        "width": '24',
-        "height": '24'
-      }
-    })]), h("input", helper([{
-      "ref": 'input',
-      "attrs": {
-        "placeholder": placeholder,
-        "disabled": disabled,
-        "max": max,
-        "min": min,
-        "step": step,
-        "type": number
-      }
-    }, {
-      "on": {
-        '!blur': this.onBlur,
-        '!input': this.onInput,
-        '!focus': this.onFocus
-      }
-    }])), h("span", {
-      "class": bem$17('button', {
-        disabled: value >= max
-      }),
-      "on": {
-        "click": () => this.onChange('add')
-      }
-    }, [h("icon", {
-      "attrs": {
-        "name": 'add',
-        "width": '24',
-        "height": '24'
-      }
-    })])]);
-  }
-
-});
-
-const NAMESPACE$f = 'SwitchGroup';
-const {
-  createComponent: createComponent$19,
-  bem: bem$18
+  createComponent: createComponent$13,
+  bem: bem$12
 } =
 /*#__PURE__*/
 createNamespace('switch-group');
 var switchGroup = /*#__PURE__*/
-createComponent$19({
+createComponent$13({
   mixins: [
   /*#__PURE__*/
-  useGroup(NAMESPACE$f)],
+  useGroup(NAMESPACE$b)],
 
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$18()
+      "class": bem$12()
     }, [this.slots()]);
   }
 
 });
 
 const {
-  createComponent: createComponent$1a,
-  bem: bem$19
+  createComponent: createComponent$14,
+  bem: bem$13
 } =
 /*#__PURE__*/
 createNamespace('switch-indicator');
 var switchIndicator = /*#__PURE__*/
-createComponent$1a({
+createComponent$14({
   functional: true,
   props: {
     checked: {
@@ -19569,30 +19403,30 @@ createComponent$1a({
   }) {
     const Tag = 'div';
     return h(Tag, helper([{
-      "class": bem$19({
+      "class": bem$13({
         'is-checked': props.checked,
         'is-disabled': props.disabled
       })
     }, data]), [h("div", {
-      "class": bem$19('thumb')
+      "class": bem$13('thumb')
     }, [slots()])]);
   }
 
 });
 
-const NAMESPACE$g = 'SwitchGroup';
+const NAMESPACE$c = 'SwitchGroup';
 const {
-  createComponent: createComponent$1b,
-  bem: bem$1a
+  createComponent: createComponent$15,
+  bem: bem$14
 } =
 /*#__PURE__*/
 createNamespace('switch');
 let gesture;
 var _switch = /*#__PURE__*/
-createComponent$1b({
+createComponent$15({
   mixins: [
   /*#__PURE__*/
-  useCheckItem(NAMESPACE$g),
+  useCheckItem(NAMESPACE$c),
   /*#__PURE__*/
   useColor()],
 
@@ -19641,7 +19475,7 @@ createComponent$1b({
 
     emitStyle() {
       if (!this.Item) return;
-      this.Item.itemStyle('line-switch', {
+      this.Item.itemStyle('switch', {
         'interactive-disabled': this.disabled
       });
     },
@@ -19700,7 +19534,7 @@ createComponent$1b({
       "attrs": {
         "role": "checkbox"
       },
-      "class": [bem$1a({
+      "class": [bem$14({
         disabled,
         checked,
         activated
@@ -19712,9 +19546,9 @@ createComponent$1b({
     }, {
       "on": this.$listeners
     }]), [h("div", {
-      "class": bem$1a('icon')
+      "class": bem$14('icon')
     }, [h("div", {
-      "class": bem$1a('inner')
+      "class": bem$14('inner')
     })]), h("button", {
       "attrs": {
         "type": "button",
@@ -19725,28 +19559,24 @@ createComponent$1b({
 
 });
 
-const NAMESPACE$h = 'TabBar';
+const NAMESPACE$d = 'TabBar';
 const {
-  createComponent: createComponent$1c,
-  bem: bem$1b
+  createComponent: createComponent$16,
+  bem: bem$15
 } =
 /*#__PURE__*/
 createNamespace('tab-bar');
 var tabBar = /*#__PURE__*/
-createComponent$1c({
+createComponent$16({
   mixins: [
   /*#__PURE__*/
-  useCheckGroupWithModel(NAMESPACE$h),
+  useCheckGroupWithModel(NAMESPACE$d),
   /*#__PURE__*/
   useColor()],
   props: {
     exclusive: {
       type: Boolean,
       default: true
-    },
-    keyboardVisible: {
-      type: Boolean,
-      default: false
     },
     value: {
       type: String,
@@ -19755,20 +19585,49 @@ createComponent$1c({
     translucent: {
       type: Boolean,
       default: false
+    },
+    keyboardVisible: {
+      type: Boolean,
+      default: false
+    },
+    selectedTab: {
+      type: String
     }
+  },
+  methods: {
+    selectedTabChanged() {
+      if (this.selectedTab !== undefined) {
+        this.$emit('tabBarChanged', {
+          tab: this.selectedTab
+        });
+      }
+    }
+
+  },
+  watch: {
+    selectedTab() {
+      this.selectedTabChanged();
+    }
+
+  },
+
+  beforeMount() {
+    this.selectedTabChanged();
   },
 
   render() {
     const h = arguments[0];
     const {
       translucent,
-      keyboardVisible
+      keyboardVisible,
+      color
     } = this;
     return h("div", helper([{
-      "class": bem$1b({
+      "class": [bem$15({
         translucent,
         hidden: keyboardVisible
-      })
+      }), { ...createColorClasses(color)
+      }]
     }, {
       "on": this.$listeners
     }]), [this.slots()]);
@@ -19776,18 +19635,18 @@ createComponent$1c({
 
 });
 
-const NAMESPACE$i = 'TabBar';
+const NAMESPACE$e = 'TabBar';
 const {
-  createComponent: createComponent$1d,
-  bem: bem$1c
+  createComponent: createComponent$17,
+  bem: bem$16
 } =
 /*#__PURE__*/
 createNamespace('tab-button');
 var tabButton = /*#__PURE__*/
-createComponent$1d({
+createComponent$17({
   mixins: [
   /*#__PURE__*/
-  useCheckItemWithModel(NAMESPACE$i),
+  useCheckItemWithModel(NAMESPACE$e),
   /*#__PURE__*/
   useRipple()],
   props: {
@@ -19800,6 +19659,10 @@ createComponent$1d({
     tab: {
       type: String,
       default: ''
+    },
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -19829,13 +19692,13 @@ createComponent$1d({
     const h = arguments[0];
     const {
       hasLabel,
-      hasIcon
+      hasIcon,
+      mode
     } = this;
     return h("div", helper([{
-      "class": [bem$1c({
-        selected: this.checked,
-        disabled: this.disabled
-      }), {
+      "class": [bem$16({}), {
+        'tab-selected': this.checked,
+        'tab-disabled': this.disabled,
         'line-activatable': true,
         'line-selectable': true,
         'line-focusable': true,
@@ -19849,27 +19712,34 @@ createComponent$1d({
       }
     }, {
       "on": this.$listeners
-    }]), [h("a", {
+    }]), [h("div", {
+      "class": "button-native",
       "attrs": {
         "tabIndex": -1
       }
-    }, [this.slots() || this.text])]);
+    }, [h("span", {
+      "class": "button-inner"
+    }, [this.slots() || this.text]), mode === 'md' && h("line-ripple-effect", {
+      "attrs": {
+        "type": "unbounded"
+      }
+    })])]);
   }
 
 });
 
-const NAMESPACE$j = 'Tabs';
+const NAMESPACE$f = 'Tabs';
 const {
-  createComponent: createComponent$1e,
-  bem: bem$1d
+  createComponent: createComponent$18,
+  bem: bem$17
 } =
 /*#__PURE__*/
 createNamespace('tab');
 var tab = /*#__PURE__*/
-createComponent$1e({
+createComponent$18({
   mixins: [
   /*#__PURE__*/
-  useCheckItemWithModel(NAMESPACE$j)],
+  useCheckItemWithModel(NAMESPACE$f)],
   props: {
     title: {
       type: String,
@@ -19895,8 +19765,6 @@ createComponent$1e({
 
   },
 
-  mounted() {},
-
   render() {
     const h = arguments[0];
     const {
@@ -19904,7 +19772,7 @@ createComponent$1e({
       tab
     } = this;
     return h("div", helper([{
-      "class": [bem$1d({
+      "class": [bem$17({
         hidden: !checked
       })],
       "attrs": {
@@ -19919,18 +19787,18 @@ createComponent$1e({
 
 });
 
-const NAMESPACE$k = 'Tabs';
+const NAMESPACE$g = 'Tabs';
 const {
-  createComponent: createComponent$1f,
-  bem: bem$1e
+  createComponent: createComponent$19,
+  bem: bem$18
 } =
 /*#__PURE__*/
 createNamespace('tabs');
 var tabs = /*#__PURE__*/
-createComponent$1f({
+createComponent$19({
   mixins: [
   /*#__PURE__*/
-  useCheckGroupWithModel(NAMESPACE$k)],
+  useCheckGroupWithModel(NAMESPACE$g)],
   props: {
     exclusive: {
       type: Boolean,
@@ -19941,151 +19809,168 @@ createComponent$1f({
   render() {
     const h = arguments[0];
     return h("div", helper([{
-      "class": bem$1e()
+      "class": bem$18()
     }, {
       "on": this.$listeners
     }]), [this.slots('top'), h("div", {
-      "class": bem$1e('inner')
+      "class": bem$18('inner')
     }, [this.slots()]), this.slots('bottom')]);
   }
 
 });
 
 const {
-  createComponent: createComponent$1g,
-  bem: bem$1f
+  createComponent: createComponent$1a,
+  bem: bem$19
 } =
 /*#__PURE__*/
 createNamespace('textarea');
+
+const findItemLabel$2 = componentEl => {
+  const itemEl = componentEl && componentEl.closest('.line-item');
+
+  if (itemEl) {
+    return itemEl.querySelector('.line-label');
+  }
+
+  return null;
+};
+
+let textareaIds = 0;
 var textarea = /*#__PURE__*/
-createComponent$1g({
+createComponent$1a({
+  mixins: [
+  /*#__PURE__*/
+  useModel('nativeValue', {
+    event: 'textareaChange'
+  }),
+  /*#__PURE__*/
+  useColor()],
+  inject: {
+    Item: {
+      default: undefined
+    }
+  },
   props: {
-    canPaste: {
-      type: Boolean,
-      default: true
+    autocapitalize: {
+      type: String,
+      default: 'none'
     },
-    canRedo: {
-      type: Boolean,
-      default: true
-    },
-    canUndo: {
-      type: Boolean,
-      default: true
-    },
-    persistentSelection: {
+    autofocus: {
       type: Boolean,
       default: false
     },
-    readonly: {
+    clearOnEdit: {
       type: Boolean,
-      default: false
-    },
-    resize: {
-      type: Boolean,
-      default: false
-    },
-    text: {
-      type: String,
-      default: ''
-    },
-    hoverEnabled: {
-      type: Boolean,
-      default: true
-    },
-    value: {
-      type: [String, Number],
-      default: ''
-    },
-    placeholderText: {
-      type: String,
-      default: ''
-    },
-    placeholderTextColor: {
-      type: String,
-      default: ''
-    },
-    rows: {
-      type: Number,
-      default: 2
-    },
-    maxlength: {
-      type: Number
-    },
-    autosize: {
-      type: [Boolean, Object],
       default: false
     },
     disabled: {
       type: Boolean,
       default: false
     },
-    clearable: {
+    maxlength: {
+      type: Number
+    },
+    minlength: {
+      type: Number
+    },
+    placeholder: {
+      type: String
+    },
+    readonly: {
       type: Boolean,
       default: false
     },
-    clearableIcon: {
-      type: String,
-      default: 'cancel'
+    required: {
+      type: Boolean,
+      default: false
+    },
+    spellcheck: {
+      type: Boolean,
+      default: false
+    },
+    cols: {
+      type: Number
+    },
+    rows: {
+      type: Number
+    },
+    wrap: {
+      type: String
+    },
+    autoGrow: {
+      type: Boolean,
+      default: false
     }
   },
 
   data() {
     return {
-      isFocus: false,
+      hasFocus: false,
       didBlurAfterEdit: false
     };
   },
 
-  computed: {
-    selectedText() {
-      return '';
-    },
-
-    inputValue() {
-      let {
-        value
-      } = this;
-      value = value === null || value === undefined ? '' : String(value);
-      return value;
-    }
-
+  beforeMount() {
+    this.inputId = `ion-input-${textareaIds++}`;
   },
 
-  beforeMount() {// this.$emit('pressAndHold');
-    // this.$emit('pressed');
-    // this.$emit('released');
-  },
-
-  mounted() {// this.$nextTick(this.setInputValue);
-    // this.$nextTick(this.adjustSize);
+  mounted() {
+    const {
+      nativeInput
+    } = this.$refs;
+    this.nativeInput = nativeInput;
+    this.runAutoGrow();
+    this.emitStyle();
   },
 
   methods: {
-    setInputValue() {
+    disabledChanged() {
+      this.emitStyle();
+    },
+
+    // TODO: performance hit, this cause layout thrashing
+    runAutoGrow() {
       const {
-        input
-      } = this.$refs;
+        nativeInput
+      } = this;
 
-      if (input.value === this.inputValue || !input) {
-        return;
+      if (nativeInput && this.autoGrow) {
+        this.$nextTick(() => {
+          nativeInput.style.height = 'inherit';
+          nativeInput.style.height = `${nativeInput.scrollHeight}px`;
+        });
       }
-
-      input.value = this.inputValue;
     },
 
-    onClearValue(event) {
-      event.preventDefault();
-      event.stopPropagation();
-      this.$emit('input', '');
-      this.$emit('clear');
+    /**
+     * Sets focus on the specified `ion-textarea`. Use this method instead of the global
+     * `input.focus()`.
+     */
+    async setFocus() {
+      if (this.nativeInput) {
+        this.nativeInput.focus();
+      }
     },
 
-    hasValue() {
-      return this.getValue() !== '';
+    /**
+     * Returns the native `<textarea>` element used under the hood.
+     */
+    getInputElement() {
+      return Promise.resolve(this.nativeInput);
     },
 
-    getValue() {
-      return this.value || '';
+    emitStyle() {
+      if (!this.Item) return;
+      this.Item.itemStyle('textarea', {
+        interactive: true,
+        textarea: true,
+        input: true,
+        'interactive-disabled': this.disabled,
+        'has-placeholder': this.placeholder != null,
+        'has-value': this.hasValue(),
+        'has-focus': this.hasFocus
+      });
     },
 
     /**
@@ -20099,7 +19984,7 @@ createComponent$1g({
 
       if (this.didBlurAfterEdit && this.hasValue()) {
         // Clear the input
-        this.$emit('input', '');
+        this.nativeValue = '';
       } // Reset the flag
 
 
@@ -20110,31 +19995,40 @@ createComponent$1g({
       // If clearOnEdit is enabled and the input blurred but has a value, set a flag
       if (this.clearOnEdit && !this.hasFocus && this.hasValue()) {
         this.didBlurAfterEdit = true;
-      } // this.emitStyle(); ?
+      }
 
+      this.emitStyle();
+    },
+
+    hasValue() {
+      return this.getValue() !== '';
+    },
+
+    getValue() {
+      return this.value || '';
     },
 
     onInput() {
-      const {
-        textarea
-      } = this.$refs;
+      if (this.nativeInput) {
+        this.nativeValue = this.nativeInput.value;
+      }
 
-      if (textarea) {
-        this.$emit('input', textarea.value);
-      } // his.emitStyle(); ?
-
+      this.emitStyle();
     },
 
     onFocus() {
       this.hasFocus = true;
       this.focusChange();
-      this.$emit('onFocus');
+      this.$emit('focus');
     },
 
     onBlur() {
       this.hasFocus = false;
       this.focusChange();
-      this.$emit('onBlur');
+      this.$emit('blur');
+    },
+
+    onChange() {//
     },
 
     onKeyDown() {
@@ -20143,65 +20037,81 @@ createComponent$1g({
 
   },
   watch: {
-    value(value) {
-      const {
-        textarea
-      } = this.$ref;
+    value() {
+      this.runAutoGrow();
+      this.emitStyle();
+    },
 
-      if (textarea && textarea.value !== value) {
-        textarea.value = value;
-      }
+    disabled() {
+      this.disabledChanged();
     }
 
   },
 
   render() {
     const h = arguments[0];
-    // const mode = getSkylineMode(this);
-    const value = this.getValue();
     const {
+      nativeValue,
       rows,
       maxlength,
-      placeholderText,
+      placeholder,
       readonly,
       disabled,
       autocapitalize,
-      autofocus
+      autofocus,
+      color,
+      cols,
+      spellcheck,
+      wrap,
+      minlength
     } = this;
+    const labelId = `${this.inputId}-lbl`;
+    const label = findItemLabel$2(this.$el);
+
+    if (label) {
+      label.id = labelId;
+    }
+
     return h("div", helper([{
-      "class": bem$1f()
+      "class": [bem$19(), { ...createColorClasses(color)
+      }]
     }, {
       "on": this.$listeners
     }]), [h("textarea", {
       "class": "native-textarea",
-      "ref": 'textarea',
+      "ref": 'nativeInput',
       "attrs": {
         "autoCapitalize": autocapitalize,
         "autoFocus": autofocus,
+        "cols": cols,
         "rows": rows,
+        "wrap": wrap,
         "maxlength": maxlength,
-        "placeholder": placeholderText,
+        "minlength": minlength,
+        "placeholder": placeholder || '',
+        "spellCheck": spellcheck,
         "readonly": readonly,
         "disabled": disabled
       },
       "on": {
         "input": this.onInput,
         "focus": this.onFocus,
-        "blur": this.onBlur
+        "blur": this.onBlur,
+        "change": stop(this.onChange)
       }
-    }, [value])]);
+    }, [nativeValue])]);
   }
 
 });
 
 const {
-  createComponent: createComponent$1h,
-  bem: bem$1g
+  createComponent: createComponent$1b,
+  bem: bem$1a
 } =
 /*#__PURE__*/
 createNamespace('thumbnail');
 var thumbnail = /*#__PURE__*/
-createComponent$1h({
+createComponent$1b({
   functional: true,
 
   render(h, {
@@ -20209,7 +20119,7 @@ createComponent$1h({
     slots
   }) {
     return h("div", helper([{
-      "class": bem$1g()
+      "class": bem$1a()
     }, data]), [slots()]);
   }
 
@@ -20325,13 +20235,13 @@ const mdLeaveAnimation$5 = (baseEl) => {
 };
 
 const {
-  createComponent: createComponent$1i,
-  bem: bem$1h
+  createComponent: createComponent$1c,
+  bem: bem$1b
 } =
 /*#__PURE__*/
 createNamespace('toast');
 var toast = /*#__PURE__*/
-createComponent$1i({
+createComponent$1c({
   mixins: [
   /*#__PURE__*/
   usePopup(),
@@ -20382,32 +20292,32 @@ createComponent$1i({
         name: "show",
         value: this.visible
       }],
-      "class": [bem$1h()]
+      "class": [bem$1b()]
     }, {
       "on": this.$listeners
     }]), [h("div", {
-      "class": bem$1h('wrapper', {
+      "class": bem$1b('wrapper', {
         [position]: true
       })
     }, [h("div", {
-      "class": bem$1h('container')
+      "class": bem$1b('container')
     }, [h("div", {
-      "class": bem$1h('content')
+      "class": bem$1b('content')
     }, [h("div", {
-      "class": bem$1h('message')
+      "class": bem$1b('message')
     }, [this.message]), h("div")])])])]);
   }
 
 });
 
 const {
-  createComponent: createComponent$1j,
-  bem: bem$1i
+  createComponent: createComponent$1d,
+  bem: bem$1c
 } =
 /*#__PURE__*/
 createNamespace('toolbar');
 var toolbar = /*#__PURE__*/
-createComponent$1j({
+createComponent$1d({
   mixins: [
   /*#__PURE__*/
   useColor()],
@@ -20416,28 +20326,28 @@ createComponent$1j({
   render() {
     const h = arguments[0];
     return h("div", helper([{
-      "class": bem$1i()
+      "class": bem$1c()
     }, {
       "on": this.$listeners
     }]), [h("div", {
-      "class": bem$1i('background')
+      "class": bem$1c('background')
     }), h("div", {
-      "class": bem$1i('container')
+      "class": bem$1c('container')
     }, [this.slots('start'), this.slots('secondary'), h("div", {
-      "class": bem$1i('content')
+      "class": bem$1c('content')
     }, [this.slots()]), this.slots('primary'), this.slots('end')])]);
   }
 
 });
 
 const {
-  createComponent: createComponent$1k,
-  bem: bem$1j
+  createComponent: createComponent$1e,
+  bem: bem$1d
 } =
 /*#__PURE__*/
 createNamespace('title');
 var title = /*#__PURE__*/
-createComponent$1k({
+createComponent$1e({
   mixins: [
   /*#__PURE__*/
   useColor()],
@@ -20452,13 +20362,13 @@ createComponent$1k({
       size
     } = this;
     return h("div", helper([{
-      "class": bem$1j({
+      "class": bem$1d({
         [size]: isDef(size)
       })
     }, {
       "on": this.$listeners
     }]), [h("div", {
-      "class": bem$1j('inner')
+      "class": bem$1d('inner')
     }, [this.slots()])]);
   }
 
@@ -21647,13 +21557,13 @@ const VHover = defineDirective({
 });
 
 const {
-  createComponent: createComponent$1l,
-  bem: bem$1k
+  createComponent: createComponent$1f,
+  bem: bem$1e
 } =
 /*#__PURE__*/
 createNamespace('tooltip');
 var tooltip = /*#__PURE__*/
-createComponent$1l({
+createComponent$1f({
   mixins: [
   /*#__PURE__*/
   useColor(),
@@ -21756,18 +21666,18 @@ createComponent$1l({
       "attrs": {
         "role": "tooltip"
       },
-      "class": bem$1k({
+      "class": bem$1e({
         translucent: this.translucent
       })
     }, {
       "on": this.$listeners
     }]), [h("div", {
-      "class": bem$1k('arrow'),
+      "class": bem$1e('arrow'),
       "attrs": {
         "x-arrow": true
       }
     }), h("div", {
-      "class": bem$1k('content')
+      "class": bem$1e('content')
     }, [this.slots() || text])]);
   }
 
@@ -21792,18 +21702,13 @@ var components$1 = /*#__PURE__*/Object.freeze({
   CardSubtitle: cardSubtitle,
   CardTitle: cardTitle,
   Card: card,
-  CellGroup: cellGroup,
-  Cell: cell,
   CheckBoxGroup: checkBoxGroup,
   CheckBox: checkBox,
   CheckIndicator: CheckIndicator,
   Chip: chip,
   Col: col,
-  CollapseItem: collapseItem,
-  Collapse: collapse,
   Content: content,
   Datetime: datetime,
-  Dialog: dialog,
   Fab: fab,
   FabButton: fabButton,
   FabGroup: FabGroup,
@@ -21818,6 +21723,8 @@ var components$1 = /*#__PURE__*/Object.freeze({
   Icon: Icon,
   SvgIcon: SvgIcon,
   Image: image,
+  InfiniteScroll: infiniteScroll,
+  InfiniteScrollContent: infiniteScrollContent,
   Input: input,
   Item: item,
   ItemDivider: itemDivider,
@@ -21830,7 +21737,6 @@ var components$1 = /*#__PURE__*/Object.freeze({
   Menu: menu,
   Note: note,
   Overlay: Overlay,
-  PageIndicator: pageIndicator,
   Picker: Picker,
   PickerColumn: LinePickerColumn,
   Popover: popover,
@@ -21838,18 +21744,16 @@ var components$1 = /*#__PURE__*/Object.freeze({
   Popup: popup,
   ProgressBar: progressBar,
   Radio: radio,
-  RadioButtonGroup: radioButtonGroup,
-  RadioButton: radioButton,
-  RadioIndicator: RadioIndicator,
   Range: range,
   Refresher: refresher,
   RefresherContent: refresherContent,
+  Reorder: reorder,
+  ReorderGroup: reorderGroup,
   Row: row,
+  SkeletonText: skeletonText,
   Slide: slide,
-  Slider: slider,
   Slides: slides,
   Spinner: Spinner,
-  Stepper: stepper,
   SwitchGroup: switchGroup,
   SwitchIndicator: switchIndicator,
   Switch: _switch,
@@ -22808,8 +22712,6 @@ exports.CardContent = cardContent;
 exports.CardHeader = cardHeader;
 exports.CardSubtitle = cardSubtitle;
 exports.CardTitle = cardTitle;
-exports.Cell = cell;
-exports.CellGroup = cellGroup;
 exports.CheckBox = checkBox;
 exports.CheckBoxGroup = checkBoxGroup;
 exports.CheckGroup = checkGroup;
@@ -22817,11 +22719,8 @@ exports.CheckIndicator = CheckIndicator;
 exports.CheckItem = checkItem;
 exports.Chip = chip;
 exports.Col = col;
-exports.Collapse = collapse;
-exports.CollapseItem = collapseItem;
 exports.Content = content;
 exports.Datetime = datetime;
-exports.Dialog = dialog;
 exports.Fab = fab;
 exports.FabButton = fabButton;
 exports.FabGroup = FabGroup;
@@ -22831,6 +22730,8 @@ exports.Grid = grid;
 exports.Header = header;
 exports.Icon = Icon;
 exports.Image = image;
+exports.InfiniteScroll = infiniteScroll;
+exports.InfiniteScrollContent = infiniteScrollContent;
 exports.Input = input;
 exports.Item = item;
 exports.ItemDivider = itemDivider;
@@ -22844,7 +22745,6 @@ exports.Loading = loading;
 exports.Menu = menu;
 exports.Note = note;
 exports.Overlay = Overlay;
-exports.PageIndicator = pageIndicator;
 exports.Picker = Picker;
 exports.PickerColumn = LinePickerColumn;
 exports.Popover = popover;
@@ -22852,19 +22752,17 @@ exports.Popup = popup;
 exports.PopupLegacy = popupLegacy;
 exports.ProgressBar = progressBar;
 exports.Radio = radio;
-exports.RadioButton = radioButton;
-exports.RadioButtonGroup = radioButtonGroup;
-exports.RadioIndicator = RadioIndicator;
 exports.Range = range;
 exports.Refresher = refresher;
 exports.RefresherContent = refresherContent;
+exports.Reorder = reorder;
+exports.ReorderGroup = reorderGroup;
 exports.Row = row;
+exports.SkeletonText = skeletonText;
 exports.Skyline = Skyline;
 exports.Slide = slide;
-exports.Slider = slider;
 exports.Slides = slides;
 exports.Spinner = Spinner;
-exports.Stepper = stepper;
 exports.SvgIcon = SvgIcon;
 exports.Switch = _switch;
 exports.SwitchGroup = switchGroup;

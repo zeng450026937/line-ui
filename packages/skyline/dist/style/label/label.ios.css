@@ -62,7 +62,7 @@
   line-height: 1.5;
 }
 
-.line-label.label-stacked {
+.line-label.label-stacked.slotted {
   margin-bottom: 4px;
   font-size: 13.6px;
 }

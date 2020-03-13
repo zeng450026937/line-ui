@@ -1,0 +1,16 @@
+.line-reorder.slot-start,
+.line-reorder.slot-end {
+  display: none;
+  line-height: 0;
+  z-index: 100;
+}
+
+.reorder-icon {
+  display: block;
+  font-size: 22px;
+}
+
+.reorder-icon {
+  font-size: 34px;
+  opacity: 0.4;
+}

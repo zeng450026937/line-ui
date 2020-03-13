@@ -2,8 +2,10 @@
   /**
    * @prop --background: Background of the tab button
    * @prop --background-focused: Background of the tab button when focused with the tab key
+   * @prop --background-focused-opacity: Opacity of the tab button background when focused with the tab key
    *
    * @prop --color: Color of the tab button
+   * @prop --color-focused: Color of the tab button when focused with the tab key
    * @prop --color-selected: Color of the selected tab button
    *
    * @prop --padding-top: Top padding of the tab button
@@ -14,6 +16,7 @@
    * @prop --ripple-color: Color of the button ripple effect
    */
   --ripple-color: var(--color-selected);
+  --background-focused-opacity: 1;
   flex: 1;
   flex-direction: column;
   align-items: center;
@@ -24,7 +27,8 @@
   color: var(--color);
 }
 
-a {
+.button-native {
+  border-radius: inherit;
   margin-left: 0;
   margin-right: 0;
   margin-top: 0;
@@ -61,7 +65,7 @@ a {
   -webkit-user-drag: none;
 }
 @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
-  a {
+  .button-native {
     padding-left: unset;
     padding-right: unset;
     padding-inline-start: var(--padding-start);
@@ -69,31 +73,56 @@ a {
   }
 }
 
-.line-focused {
+.button-native::after {
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  content: "";
+  opacity: 0;
+}
+
+.button-inner {
+  display: flex;
+  position: relative;
+  flex-flow: inherit;
+  align-items: inherit;
+  justify-content: inherit;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.line-tab-button.line-focused .button-native {
+  color: var(--color-focused);
+}
+.line-tab-button.line-focused .button-native::after {
   background: var(--background-focused);
+  opacity: var(--background-focused-opacity);
 }
 
 @media (any-hover: hover) {
-  a:hover {
+  .line-tab-button .button-native:hover {
     color: var(--color-selected);
   }
 }
-.line-tab-button--selected {
+.line-tab-button.tab-selected {
   color: var(--color-selected);
 }
 
-.line-tab-button--hidden {
+.line-tab-button.tab-hidden {
   /* stylelint-disable-next-line declaration-no-important */
   display: none !important;
 }
 
-.line-tab-button--disabled {
+.line-tab-button.tab-disabled {
   pointer-events: none;
   opacity: 0.4;
 }
 
-.line-tab-button .line-label,
-.line-tab-button .line-icon {
+.line-tab-button .slotted.line-label,
+.line-tab-button .slotted.line-icon {
   display: block;
   align-self: center;
   max-width: 100%;
@@ -103,46 +132,46 @@ a {
   box-sizing: border-box;
 }
 
-.line-tab-button .line-label {
+.line-tab-button .slotted.line-label {
   order: 0;
 }
 
-.line-tab-button .line-icon {
+.line-tab-button .slotted.line-icon {
   order: -1;
   height: 1em;
 }
 
-.tab-has-label-only .line-label {
+.line-tab-button.tab-has-label-only .slotted.line-label {
   white-space: normal;
 }
 
-.line-tab-button .line-badge {
+.line-tab-button .slotted.line-badge {
   box-sizing: border-box;
   position: absolute;
   z-index: 1;
 }
 
-.tab-layout-icon-start {
+.line-tab-button.tab-layout-icon-start {
   flex-direction: row;
 }
 
-.tab-layout-icon-end {
+.line-tab-button.tab-layout-icon-end {
   flex-direction: row-reverse;
 }
 
-.tab-layout-icon-bottom {
+.line-tab-button.tab-layout-icon-bottom {
   flex-direction: column-reverse;
 }
 
-.tab-layout-icon-hide .line-icon {
+.line-tab-button.tab-layout-icon-hide .slotted.line-icon {
   display: none;
 }
 
-.tab-layout-label-hide .line-label {
+.line-tab-button.tab-layout-label-hide .slotted.line-label {
   display: none;
 }
 
-.line-ripple-effect {
+.line-tab-button .line-ripple-effect {
   color: var(--ripple-color);
 }
 
@@ -155,17 +184,7 @@ a {
   font-size: 10px;
 }
 
-.tab-has-label-only ::slotted(.line-label) {
-  margin-left: 0;
-  margin-right: 0;
-  margin-top: 2px;
-  margin-bottom: 2px;
-  font-size: 12px;
-  font-size: 14px;
-  line-height: 1.1;
-}
-
-.line-tab-button .line-badge {
+.line-tab-button .slotted.line-badge {
   padding-left: 6px;
   padding-right: 6px;
   padding-top: 1px;
@@ -177,43 +196,55 @@ a {
   line-height: 16px;
 }
 @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
-  .line-tab-button .line-badge {
+  .line-tab-button .slotted.line-badge {
     padding-left: unset;
     padding-right: unset;
     padding-inline-start: 6px;
     padding-inline-end: 6px;
   }
 }
-[dir=rtl] .line-tab-button .line-badge {
+[dir=rtl] .line-tab-button .slotted.line-badge {
   right: unset;
   right: calc(50% + 6px);
   left: unset;
 }
 
-.line-tab-button .line-icon {
-  margin-top: 4px;
+.line-tab-button .slotted.line-icon {
+  margin-top: 2px;
+  margin-bottom: 2px;
   font-size: 30px;
 }
-.line-tab-button .line-icon::before {
+.line-tab-button .slotted.line-icon::before {
   vertical-align: top;
 }
 
-.line-tab-button .line-label {
+.line-tab-button .slotted.line-label {
   margin-top: 0;
   margin-bottom: 1px;
   min-height: 11px;
+  font-weight: 500;
 }
-.tab-layout-icon-end ::slotted(.line-label),
-.tab-layout-icon-start ::slotted(.line-label),
-.tab-layout-icon-hide ::slotted(.line-label) {
+.line-tab-button.tab-has-label-only .slotted.line-label {
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  font-size: 12px;
+  font-size: 14px;
+  line-height: 1.1;
+}
+
+.line-tab-button.tab-layout-icon-end .slotted.line-label,
+.line-tab-button.tab-layout-icon-start .slotted.line-label,
+.line-tab-button.tab-layout-icon-hide .slotted.line-label {
   margin-top: 2px;
   margin-bottom: 2px;
   font-size: 14px;
   line-height: 1.1;
 }
 
-.tab-layout-icon-end ::slotted(.line-icon),
-.tab-layout-icon-start ::slotted(.line-icon) {
+.line-tab-button.tab-layout-icon-end .slotted.line-icon,
+.line-tab-button.tab-layout-icon-start .slotted.line-icon {
   min-width: 24px;
   height: 26px;
   margin-top: 2px;
@@ -221,50 +252,50 @@ a {
   font-size: 24px;
 }
 
-.tab-layout-icon-bottom ::slotted(.line-badge) {
+.line-tab-button.tab-layout-icon-bottom .slotted.line-badge {
   left: calc(50% + 12px);
 }
-[dir=rtl] .tab-layout-icon-bottom ::slotted(.line-badge) {
+[dir=rtl] .line-tab-button.tab-layout-icon-bottom .slotted.line-badge {
   right: unset;
   right: calc(50% + 12px);
   left: unset;
 }
 
-.tab-layout-icon-bottom ::slotted(.line-icon) {
+.line-tab-button.tab-layout-icon-bottom .slotted.line-icon {
   margin-top: 0;
   margin-bottom: 1px;
 }
-.tab-layout-icon-bottom ::slotted(.line-label) {
+.line-tab-button.tab-layout-icon-bottom .slotted.line-label {
   margin-top: 4px;
 }
-.tab-layout-icon-start ::slotted(.line-badge),
-.tab-layout-icon-end ::slotted(.line-badge) {
+.line-tab-button.tab-layout-icon-start .slotted.line-badge,
+.line-tab-button.tab-layout-icon-end .slotted.line-badge {
   left: calc(50% + 35px);
   top: 10px;
 }
-[dir=rtl] .tab-layout-icon-start ::slotted(.line-badge), [dir=rtl] .tab-layout-icon-end ::slotted(.line-badge) {
+[dir=rtl] .line-tab-button.tab-layout-icon-start .slotted.line-badge, [dir=rtl] .line-tab-button.tab-layout-icon-end .slotted.line-badge {
   right: unset;
   right: calc(50% + 35px);
   left: unset;
 }
 
-.tab-layout-icon-hide ::slotted(.line-badge),
-.tab-has-label-only ::slotted(.line-badge) {
+.line-tab-button.tab-layout-icon-hide .slotted.line-badge,
+.line-tab-button.tab-has-label-only .slotted.line-badge {
   left: calc(50% + 30px);
   top: 10px;
 }
-[dir=rtl] .tab-layout-icon-hide ::slotted(.line-badge), [dir=rtl] .tab-has-label-only ::slotted(.line-badge) {
+[dir=rtl] .line-tab-button.tab-layout-icon-hide .slotted.line-badge, [dir=rtl] .line-tab-button.tab-has-label-only .slotted.line-badge {
   right: unset;
   right: calc(50% + 30px);
   left: unset;
 }
 
-.tab-layout-label-hide ::slotted(.line-badge),
-.tab-has-icon-only ::slotted(.line-badge) {
+.line-tab-button.tab-layout-label-hide .slotted.line-badge,
+.line-tab-button.tab-has-icon-only .slotted.line-badge {
   top: 10px;
 }
 
-.tab-layout-label-hide ::slotted(.line-icon) {
+.line-tab-button.tab-layout-label-hide .slotted.line-icon {
   margin-left: 0;
   margin-right: 0;
   margin-top: 0;

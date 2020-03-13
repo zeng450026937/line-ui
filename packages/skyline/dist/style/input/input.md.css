@@ -27,6 +27,7 @@
   display: flex;
   position: relative;
   flex: 1;
+  flex-shrink: 0;
   align-items: center;
   width: 100%;
   /* stylelint-disable-next-line all */
@@ -41,11 +42,11 @@
   --padding-start: 0;
 }
 
-.line-color {
+.line-input.line-color {
   color: var(--line-color-base);
 }
 
-.native-input {
+.line-input > .native-input {
   border-radius: var(--border-radius);
   padding-left: var(--padding-start);
   padding-right: var(--padding-end);
@@ -76,27 +77,27 @@
           appearance: none;
 }
 @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
-  .native-input {
+  .line-input > .native-input {
     padding-left: unset;
     padding-right: unset;
     padding-inline-start: var(--padding-start);
     padding-inline-end: var(--padding-end);
   }
 }
-.native-input::placeholder {
+.line-input > .native-input::placeholder {
   color: var(--placeholder-color);
   font-family: inherit;
   font-style: var(--placeholder-font-style);
   font-weight: var(--placeholder-font-weight);
   opacity: var(--placeholder-opacity);
 }
-.native-input:-webkit-autofill {
+.line-input > .native-input:-webkit-autofill {
   background-color: transparent;
 }
-.native-input:invalid {
+.line-input > .native-input:invalid {
   box-shadow: none;
 }
-.native-input::-ms-clear {
+.line-input > .native-input::-ms-clear {
   display: none;
 }
 
@@ -104,19 +105,19 @@
   opacity: 0.4;
 }
 
-.cloned-input {
+.line-input > .cloned-input {
   left: 0;
   top: 0;
   position: absolute;
   pointer-events: none;
 }
-[dir=rtl] .cloned-input {
+[dir=rtl] .line-input > .cloned-input {
   right: unset;
   right: 0;
   left: unset;
 }
 
-.line-input__clear-icon {
+.line-input .input-clear-icon {
   margin-left: 0;
   margin-right: 0;
   margin-top: 0;
@@ -136,17 +137,17 @@
           appearance: none;
 }
 
-.has-focus.has-value .line-input__clear-icon {
+.line-input.has-value .input-clear-icon {
   visibility: visible;
 }
 
-.has-focus {
+.line-input.has-focus {
   pointer-events: none;
 }
 
-.has-focus input,
-.has-focus a,
-.has-focus button {
+.line-input.has-focus input,
+.line-input.has-focus a,
+.line-input.has-focus button {
   pointer-events: auto;
 }
 
@@ -154,7 +155,7 @@
   --padding-top: 10px;
   --padding-end: 0;
   --padding-bottom: 10px;
-  --padding-start: 0;
+  --padding-start: 8px;
   font-size: inherit;
 }
 
@@ -165,7 +166,7 @@
   --padding-start: 0;
 }
 
-.line-input__clear-icon {
+.input-clear-icon {
   background-image: url("data:image/svg+xml;charset=utf-8,<svg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20512%20512'><polygon%20fill='var(--line-color-step-600,%20%23666666)'%20points='405,136.798%20375.202,107%20256,226.202%20136.798,107%20107,136.798%20226.202,256%20107,375.202%20136.798,405%20256,285.798%20375.202,405%20405,375.202%20285.798,256'/></svg>");
   width: 30px;
   height: 30px;

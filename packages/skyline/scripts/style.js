@@ -83,15 +83,15 @@ async function run() {
   }
 
   for (const component of components) {
-    if (matchWIP(`${ srcDir }/${ component }`)) {
-      skipped.push(component);
-      logger.log(`${ component } (skipped)`, 'WIP');
-      continue;
-    }
-
     const dirname = path.dirname(component);
     const filename = path.basename(component, '.tsx');
     const name = camelize(`-${ filename }`);
+
+    if (matchWIP(`${ srcDir }/${ dirname }`)) {
+      skipped.push(component);
+      logger.log(`${ filename } (skipped)`, 'WIP');
+      continue;
+    }
 
     styles[name] = {};
     sideEffects[name] = new SideEffect();
