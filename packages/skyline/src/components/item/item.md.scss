@@ -213,7 +213,7 @@
 // Material Design Slotted Label
 // --------------------------------------------------
 
-.slotted.line-label {
+.line-item .slotted.line-label {
   @include margin($item-md-label-margin-top, $item-md-label-margin-end, $item-md-label-margin-bottom, $item-md-label-margin-start);
 }
 

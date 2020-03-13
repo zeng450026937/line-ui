@@ -17,14 +17,14 @@ $tabbar-ios-background:                     var(--line-tab-bar-background, $back
 $tabbar-ios-background-focused:             var(--line-tab-bar-background-focused, get-color-shade(#fff)) !default;
 $tabbar-ios-border-color:                   var(--line-tab-bar-border-color, var(--line-border-color, var(--line-color-step-150, rgba(0, 0, 0, .2)))) !default;
 $tabbar-ios-color:                          var(--line-tab-bar-color, $text-color-step-550) !default;
-$tabbar-ios-color-activated:                var(--line-tab-bar-color-activated, ion-color(primary, base)) !default;
+$tabbar-ios-color-activated:                var(--line-tab-bar-color-activated, line-color(primary, base)) !default;
 
 // iOS Toolbar
 // --------------------------------------------------
 $toolbar-ios-background:                    var(--line-toolbar-background, var(--line-color-step-50, #fff)) !default;
 $toolbar-ios-border-color:                  var(--line-toolbar-border-color, var(--line-border-color, var(--line-color-step-150, rgba(0, 0, 0, .2)))) !default;
 $toolbar-ios-color:                         var(--line-toolbar-color, $text-color) !default;
-$toolbar-ios-color-activated:               var(--line-toolbar-color-activated, ion-color(primary, base)) !default;
+$toolbar-ios-color-activated:               var(--line-toolbar-color-activated, line-color(primary, base)) !default;
 
 // iOS List & List Items
 // --------------------------------------------------

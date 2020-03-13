@@ -14,7 +14,6 @@
   font-size: $input-md-font-size;
 }
 
-// TODO ?
 .item-label-stacked .line-input,
 .item-label-floating .line-input {
   --padding-top: 8px;
@@ -22,7 +21,7 @@
   --padding-start: 0;
 }
 
-.line-input__clear-icon {
+.input-clear-icon {
   @include svg-background-image($input-md-input-clear-icon-svg);
 
   width: $input-md-input-clear-icon-width;

@@ -1,12 +1,19 @@
 <template>
-  <div class="alert-usage">
-    <line-button
-      expand="block"
-      @click="open"
-    >
-      Show Alert
-    </line-button>
-  </div>
+  <line-app>
+    <line-header translucent>
+      <line-toolbar>
+        <line-title>Alert</line-title>
+      </line-toolbar>
+    </line-header>
+    <line-content class="line-padding">
+      <line-button
+        expand="block"
+        @click="open"
+      >
+        Show Alert
+      </line-button>
+    </line-content>
+  </line-app>
 </template>
 
 <script>
@@ -36,10 +43,4 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.alert-usage {
-  width: 100%;
-  height: 100%;
-
-  padding: 16px;
-}
 </style>

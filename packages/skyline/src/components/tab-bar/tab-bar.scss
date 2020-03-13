@@ -33,36 +33,35 @@
   box-sizing: content-box !important;
 }
 
-.line-tab-bar.line-color .line-tab-button {
+.line-tab-bar.line-color .slotted.line-tab-button {
   --background-focused: #{current-color(shade)};
   --color-selected: #{current-color(contrast)};
 }
 
-.line-tab-bar.line-color .line-tab-selected {
+.line-tab-bar.line-color .slotted.line-tab-selected {
   color: #{current-color(contrast)};;
 }
 
 .line-tab-bar.line-color,
-.line-tab-bar.line-color .line-tab-button {
+.line-tab-bar.line-color .slotted.line-tab-button {
   color: #{current-color(contrast, .7)};
 }
 
 .line-tab-bar.line-color,
-.line-tab-bar.line-color .line-tab-button {
+.line-tab-bar.line-color .slotted.line-tab-button {
   background: #{current-color(base)};
 }
 
-.line-tab-bar.line-color .line-tab-button.line-focused,
-.line-tab-bar-translucent .line-tab-button.line-focused {
+.line-tab-bar.line-color .slotted.line-tab-button.line-focused,
+.line-tab-bar-translucent .slotted.line-tab-button.line-focused {
   background: var(--background-focused)
 }
 
-.line-tab-bar.line-tab-bar-translucent .line-tab-button {
+.line-tab-bar.line-tab-bar-translucent .slotted.line-tab-button {
   background: transparent;
 }
 
-// TODO
-.line-tab-bar.slot-top {
+.line-tab-bar.slotted.slot-top {
   padding-bottom: 0;
 
   border-top: 0;

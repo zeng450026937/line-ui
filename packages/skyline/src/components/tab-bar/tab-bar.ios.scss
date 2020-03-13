@@ -19,17 +19,17 @@
 // --------------------------------------------------
 
 @supports (backdrop-filter: blur(0)) {
-  .line-tab-bar--translucent {
+  .line-tab-bar.line-tab-bar--translucent {
     --background: #{$tab-bar-ios-translucent-background-color};
     backdrop-filter: $tab-bar-ios-translucent-filter;
   }
 
   // iOS Translucent Tab bar with Color
-  .line-color.line-tab-bar--translucent {
+  .line-tab-bar.line-color.line-tab-bar--translucent {
     background: #{current-color(base, $tab-bar-ios-translucent-background-color-alpha)};
   }
 
-  .line-tab-bar--translucent ::slotted(line-tab-button.line-focused) {
+  .line-tab-bar.line-tab-bar--translucent ::slotted(line-tab-button.line-focused) {
     background: rgba($background-color-rgb, .6);
   }
 }

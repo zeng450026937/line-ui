@@ -23,6 +23,8 @@ export interface SkylinConfig {
   refreshingIcon?: string;
   refreshingSpinner?: string;
 
+  infiniteLoadingSpinner?: string;
+
   // PRIVATE configs
   keyboardHeight?: number;
   inputShims?: boolean;

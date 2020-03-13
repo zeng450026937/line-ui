@@ -12,20 +12,11 @@
   font-size: $tab-button-ios-font-size;
 }
 
-.tab-has-label-only ::slotted(.line-label) {
-  @include margin(2px, 0);
-
-  font-size: $tab-button-ios-font-size + 2;
-  font-size: 14px;
-
-  line-height: 1.1;
-}
-
 
 // iOS Tab Button: Badge
 // --------------------------------------------------
 
-.line-tab-button .line-badge {
+.line-tab-button .slotted.line-badge {
   @include padding(1px, 6px);
   @include position(4px, null, null, calc(50% + 6px));
 
@@ -40,13 +31,13 @@
 // iOS Tab Button: Icon
 // --------------------------------------------------
 
-.line-tab-button .line-icon {
-  @include margin(4px, null, null, null);
+.line-tab-button .slotted.line-icon {
+  @include margin(2px, null, 2px, null);
 
   font-size: $tab-button-ios-icon-size;
 }
 
-.line-tab-button .line-icon::before {
+.line-tab-button .slotted.line-icon::before {
   vertical-align: top;
 }
 
@@ -54,19 +45,34 @@
 // iOS Tab Button: Label
 // --------------------------------------------------
 
-.line-tab-button .line-label {
+.line-tab-button .slotted.line-label {
   @include margin(0, null, 1px, null);
 
   min-height: $tab-button-ios-font-size + 1;
+
+  font-weight: 500;
+}
+
+
+// iOS Tab Button Label Only
+// --------------------------------------------------
+
+.line-tab-button.tab-has-label-only .slotted.line-label {
+  @include margin(2px, 0);
+
+  font-size: $tab-button-ios-font-size + 2;
+  font-size: 14px;
+
+  line-height: 1.1;
 }
 
 
 // iOS Tab Button Layout
 // --------------------------------------------------
 
-.tab-layout-icon-end ::slotted(.line-label),
-.tab-layout-icon-start ::slotted(.line-label),
-.tab-layout-icon-hide ::slotted(.line-label) {
+.line-tab-button.tab-layout-icon-end .slotted.line-label,
+.line-tab-button.tab-layout-icon-start .slotted.line-label,
+.line-tab-button.tab-layout-icon-hide .slotted.line-label {
   margin-top: 2px;
   margin-bottom: 2px;
 
@@ -75,8 +81,8 @@
   line-height: 1.1;
 }
 
-.tab-layout-icon-end ::slotted(.line-icon),
-.tab-layout-icon-start ::slotted(.line-icon) {
+.line-tab-button.tab-layout-icon-end .slotted.line-icon,
+.line-tab-button.tab-layout-icon-start .slotted.line-icon {
   min-width: 24px;
   height: 26px;
 
@@ -91,17 +97,17 @@
 // --------------------------------------------------
 
 // Badge
-.tab-layout-icon-bottom ::slotted(.line-badge) {
+.line-tab-button.tab-layout-icon-bottom .slotted.line-badge {
   @include position(null, null, null, calc(50% + 12px));
 }
 
 // Icon
-.tab-layout-icon-bottom ::slotted(.line-icon) {
+.line-tab-button.tab-layout-icon-bottom .slotted.line-icon {
   @include margin(0, null, 1px, null);
 }
 
 // Label
-.tab-layout-icon-bottom ::slotted(.line-label) {
+.line-tab-button.tab-layout-icon-bottom .slotted.line-label {
   @include margin(4px, null, null, null);
 }
 
@@ -109,8 +115,8 @@
 // iOS Tab Button: Icon Start / End Layout
 // --------------------------------------------------
 
-.tab-layout-icon-start ::slotted(.line-badge),
-.tab-layout-icon-end ::slotted(.line-badge) {
+.line-tab-button.tab-layout-icon-start .slotted.line-badge,
+.line-tab-button.tab-layout-icon-end .slotted.line-badge {
   @include position(10px, null, null, calc(50% + 35px));
 }
 
@@ -119,8 +125,8 @@
 // --------------------------------------------------------------
 
 // Badge
-.tab-layout-icon-hide ::slotted(.line-badge),
-.tab-has-label-only ::slotted(.line-badge) {
+.line-tab-button.tab-layout-icon-hide .slotted.line-badge,
+.line-tab-button.tab-has-label-only .slotted.line-badge {
   @include position(10px, null, null, calc(50% + 30px));
 }
 
@@ -129,11 +135,11 @@
 // --------------------------------------------------------------
 
 // Badge
-.tab-layout-label-hide ::slotted(.line-badge),
-.tab-has-icon-only ::slotted(.line-badge) {
+.line-tab-button.tab-layout-label-hide .slotted.line-badge,
+.line-tab-button.tab-has-icon-only .slotted.line-badge {
   @include position(10px, null, null, null);
 }
 
-.tab-layout-label-hide ::slotted(.line-icon) {
+.line-tab-button.tab-layout-label-hide .slotted.line-icon {
   @include margin(0);
 }

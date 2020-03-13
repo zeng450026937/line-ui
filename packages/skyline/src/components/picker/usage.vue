@@ -1,14 +1,22 @@
 <template>
-  <line-content>
-    <line-button
-      expand="block"
-      @click="onClick()"
-    >Show Single Column Picker</line-button>
-    <line-button
-      expand="block"
-      @click="onClick(2, 5, multiColumnOptions)"
-    >Show Multi Column Picker</line-button>
-  </line-content>
+  <line-app>
+    <line-header translucent>
+      <line-toolbar>
+        <line-title>Picker</line-title>
+      </line-toolbar>
+    </line-header>
+
+    <line-content class="line-padding">
+      <line-button
+        expand="block"
+        @click="onClick()"
+      >Show Single Column Picker</line-button>
+      <line-button
+        expand="block"
+        @click="onClick(2, 5, multiColumnOptions)"
+      >Show Multi Column Picker</line-button>
+    </line-content>
+  </line-app>
 </template>
 
 <script>

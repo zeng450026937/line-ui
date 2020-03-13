@@ -65,7 +65,7 @@ export default /*#__PURE__*/ createComponent({
       if (!this.Item) return;
 
       this.Item.itemStyle(
-        'line-switch',
+        'switch',
         { 'interactive-disabled': this.disabled },
       );
     },

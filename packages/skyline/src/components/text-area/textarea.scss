@@ -51,15 +51,11 @@
   z-index: $z-index-item-input;
 }
 
-.line-color {
+.line-textarea.line-color {
   background: initial;
-}
-
-.line-color {
   color: current-color(base);
 }
 
-// TODO
 // Textarea Within An Item
 // --------------------------------------------------
 
@@ -75,7 +71,7 @@
 // Native Textarea
 // --------------------------------------------------
 
-.native-textarea {
+.line-textarea .native-textarea {
   @include border-radius(var(--border-radius));
   @include margin(0);
   @include padding(var(--padding-top), var(--padding-end), var(--padding-bottom), var(--padding-start));
@@ -109,7 +105,7 @@
   }
 }
 
-.native-textarea[disabled] {
+.line-textarea .native-textarea[disabled] {
   opacity: .4;
 }
 

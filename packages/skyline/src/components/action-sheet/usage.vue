@@ -1,12 +1,19 @@
 <template>
-  <div class="action-sheet-usage">
-    <line-button
-      expand="block"
-      @click="open"
-    >
-      Show ActionSheet
-    </line-button>
-  </div>
+  <line-app>
+    <line-header translucent>
+      <line-toolbar>
+        <line-title>ActionSheet</line-title>
+      </line-toolbar>
+    </line-header>
+    <line-content class="line-padding">
+      <line-button
+        expand="block"
+        @click="open"
+      >
+        Show ActionSheet
+      </line-button>
+    </line-content>
+  </line-app>
 </template>
 
 <script>
@@ -50,10 +57,4 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.action-sheet-usage {
-  width: 100%;
-  height: 100%;
-
-  padding: 16px;
-}
 </style>

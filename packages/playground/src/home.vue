@@ -25,7 +25,6 @@
 
     <div class="gallery-wrapper">
       <div class="gallery-toggle"></div>
-
       <div class="gallery-device">
         <figure>
           <iframe
@@ -38,17 +37,11 @@
         </figure>
       </div>
     </div>
-
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
-// import VueRouter from 'vue-router/types/index.d';
-
-// interface contentWindow extends Window {
-//   router?: VueRouter;
-// }
 
 export default Vue.extend({
   name : 'line-home',
@@ -79,11 +72,7 @@ export default Vue.extend({
       const { device } = this.$refs;
 
       if (device) {
-        console.log('changePath()');
-        // const { contentWindow } = device as HTMLFrameElement;
-
         setTimeout(() => {
-          // (contentWindow as any).router.push({ path: `/mobile/home${ path }` });
           this.src = `/mobile/home${ path }`;
         }, 0);
       }

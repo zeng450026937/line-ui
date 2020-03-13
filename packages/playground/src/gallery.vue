@@ -7,13 +7,10 @@
 <script lang="ts">
 import Vue from 'vue';
 
-export default Vue.extend({
-
-});
+export default Vue.extend({});
 </script>
 
 <style>
-
 .gallery-content {
   display: flex;
 
@@ -22,5 +19,4 @@ export default Vue.extend({
 
   height: 100%;
 }
-
 </style>

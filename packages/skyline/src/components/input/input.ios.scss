@@ -10,7 +10,6 @@
   font-size: $input-ios-font-size;
 }
 
-// TODO ?
 .item-label-stacked .line-input,
 .item-label-floating .line-input {
   --padding-top: 8px;
@@ -18,7 +17,7 @@
   --padding-start: 0px;
 }
 
-.line-input__clear-icon {
+.input-clear-icon {
   @include svg-background-image($input-ios-input-clear-icon-svg);
 
   width: $input-ios-input-clear-icon-width;

@@ -1,34 +1,58 @@
-// import { getSkylineMode } from 'skyline/utils/config';
-// import { Icon } from 'skyline/components/icon';
 import { createNamespace } from 'skyline/utils/namespace';
-// import { isObject } from 'skyline/utils/helpers';
-
+import { useModel } from 'skyline/mixins/use-model';
+// import { stop } from 'skyline/utils/dom/event-modifier';
+import { createColorClasses, useColor } from 'skyline/mixins/use-color';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('input');
 
+const findItemLabel = (componentEl: HTMLElement) => {
+  const itemEl = componentEl && componentEl.closest('.line-item');
+  if (itemEl) {
+    return itemEl.querySelector('.line-label');
+  }
+  return null;
+};
+
+let inputIds = 0;
+
 export default /*#__PURE__*/ createComponent({
+  mixins : [
+    /*#__PURE__*/ useModel('nativeValue', { event: 'inputChange' }),
+    /*#__PURE__*/ useColor(),
+  ],
+
+  inject : {
+    Item : { default: undefined },
+  },
+
   props : {
-    prefixIcon : {
-      type : [String, Object],
-    },
-    suffixIcon : {
-      type : [String, Object],
-    },
-    label : {
+    accept         : String,
+    autocapitalize : {
       type    : String,
-      default : '',
+      default : 'off',
     },
-    value : {
-      type    : [String, Number],
-      default : '',
+    autocomplete : {
+      type    : String,
+      default : 'off',
     },
-    type : {
+    autocorrect : {
+      type    : String,
+      default : 'off',
+    },
+    autofocus : {
+      type    : Boolean,
+      default : false,
+    },
+    clearInput : {
+      type    : Boolean,
+      default : false,
+    },
+    clearOnEdit : {
+      type : Boolean,
+    },
+    inputmode : {
       type    : String,
       default : 'text',
-    },
-    placeholderText : {
-      type    : String,
-      default : '',
     },
     max : {
       type : String,
@@ -39,36 +63,29 @@ export default /*#__PURE__*/ createComponent({
     min : {
       type : String,
     },
-    size : {
-      type : Number,
+    multiple : {
+      type : Boolean,
+    },
+    pattern : {
+      type : String,
+    },
+    placeholder : {
+      type : String,
     },
     readonly : {
       type    : Boolean,
       default : false,
     },
-    autofocus : {
-      type    : Boolean,
-      default : false,
+    size : {
+      type : Number,
     },
-    autocomplete : {
+    type : {
       type    : String,
-      default : 'off',
-    },
-    clearOnEdit : {
-      type    : Boolean,
-      default : false,
+      default : 'text',
     },
     disabled : {
       type    : Boolean,
       default : false,
-    },
-    clearable : {
-      type    : Boolean,
-      default : false,
-    },
-    clearableIcon : {
-      type    : String,
-      default : 'cancel',
     },
   },
 
@@ -76,11 +93,59 @@ export default /*#__PURE__*/ createComponent({
     return {
       hasFocus         : false,
       didBlurAfterEdit : false,
-      // nativeValue      : '',
     };
   },
 
   methods : {
+    /**
+     * Sets focus on the specified `ion-input`. Use this method instead of the global
+     * `input.focus()`.
+     */
+    setFocus() {
+      if (this.nativeInput) {
+        this.nativeInput.focus();
+      }
+    },
+
+    /**
+     * Returns the native `<input>` element used under the hood.
+     */
+    getInputElement(): Promise<HTMLInputElement> {
+      return Promise.resolve(this.nativeInput!);
+    },
+
+    disabledChanged() {
+      this.emitStyle();
+    },
+
+    shouldClearOnEdit() {
+      const { type, clearOnEdit } = this;
+      return (clearOnEdit === undefined)
+        ? type === 'password'
+        : clearOnEdit;
+    },
+
+    getValue(): string {
+      return typeof this.nativeValue === 'number' ? this.nativeValue.toString()
+        : (this.nativeValue || '').toString();
+    },
+
+    emitStyle() {
+      if (!this.Item) return;
+
+      this.Item.itemStyle(
+        'input',
+        {
+          interactive            : true,
+          input                  : true,
+          'has-placeholder'      : this.placeholder != null,
+          'has-value'            : this.hasValue(),
+          'has-focus'            : this.hasFocus,
+          'interactive-disabled' : this.disabled,
+        },
+      );
+    },
+
     setInputValue(): void {
       const { input } = this.$refs;
       if ((input as HTMLInputElement).value === this.inputValue || !input) return;
@@ -89,32 +154,34 @@ export default /*#__PURE__*/ createComponent({
 
     onInput(ev: Event): void {
       const input = ev.target as HTMLInputElement | null;
-      if (input) {
-        // this.value = input.value || '';
-        this.$emit('input', input.value);
-      }
+      if (input) { this.nativeValue = input.value || ''; }
     },
 
     onBlur(): void {
       this.hasFocus = false;
       this.focusChanged();
-      // this.emitStyle(); ?
+      this.emitStyle();
 
-      this.$emit('onBlur');
+      this.$emit('blur');
     },
 
     onFocus(): void {
       this.hasFocus = true;
       this.focusChanged();
-      // this.emitStyle(); ?
+      this.emitStyle();
 
-      this.$emit('onFocus');
+      this.$emit('focus');
     },
 
-    onKeydown() {
+    onChange() {
+      //
+    },
+
+    onKeydown(ev: KeyboardEvent) {
       if (this.shouldClearOnEdit()) {
         // Did the input value change after it was blurred and edited?
-        if (this.didBlurAfterEdit && this.hasValue()) {
+        // Do not clear if user is hitting Enter to submit form
+        if (this.didBlurAfterEdit && this.hasValue() && ev.key !== 'Enter') {
           // Clear the input
           this.clearTextInput();
         }
@@ -124,54 +191,87 @@ export default /*#__PURE__*/ createComponent({
       }
     },
 
-    onClearValue(event: MouseEvent): void {
-      event.preventDefault();
-      event.stopPropagation();
+    clearTextInput(ev?: Event) {
+      if (this.clearInput && !this.readonly && !this.disabled && ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+      }
+      console.log('object');
+      // TODO
+      // this.value = '';
+      this.nativeValue = '';
 
-      this.$emit('input', '');
-      this.$emit('clear', event);
+      /**
+       * This is needed for clearOnEdit
+       * Otherwise the value will not be cleared
+       * if user is inside the input
+       */
+      if (this.nativeInput) {
+        this.nativeInput.value = '';
+      }
     },
 
-    getValue(): string {
-      return this.value as string || '';
+    focusChanged() {
+      // If clearOnEdit is enabled and the input blurred but has a value, set a flag
+      if (!this.hasFocus && this.shouldClearOnEdit() && this.hasValue()) {
+        this.didBlurAfterEdit = true;
+      }
     },
 
     hasValue(): boolean {
       return this.getValue().length > 0;
     },
 
-    shouldClearOnEdit(): boolean {
-      const { type, clearOnEdit } = this;
-      return (clearOnEdit === undefined)
-        ? type === 'password'
-        : clearOnEdit;
-    },
+    onClearValue(event: MouseEvent): void {
+      event.preventDefault();
+      event.stopPropagation();
 
-    focusChanged(): void {
-      // If clearOnEdit is enabled and the input blurred but has a value, set a flag
-      if (!this.hasFocus && this.shouldClearOnEdit() && this.hasValue()) {
-        this.didBlurAfterEdit = true;
-      }
+      this.nativeValue = '';
+      this.$emit('clear', event);
     },
   },
 
+  beforeMount() {
+    this.inputId = `line-input-${ inputIds++ }`;
+    this.emitStyle();
+  },
+
+  mounted() {
+    const { nativeInput } = this.$refs;
+    this.nativeInput = nativeInput;
+  },
+
   watch : {
+    disabled() {
+      this.disabledChanged();
+    },
+
+    nativeValue() {
+      this.emitStyle();
+    },
 
   },
 
   render() {
+    const labelId = `${ this.inputId }-lbl`;
+    const label = findItemLabel(this.$el as HTMLElement);
+
     const {
-      value, hasFocus, accept, type, maxlength, readonly, placeholderText, autocomplete, disabled,
-      max, min, size, autoFocus, pattern, required,
+      nativeValue, hasFocus, accept, type, maxlength, readonly, placeholder, autocomplete, disabled,
+      max, min, size, autoFocus, pattern, required, color,
     } = this;
-    // const mode = getSkylineMode(this);
+
+    if (label) {
+      label.id = labelId;
+    }
 
     return (
       <div
         class={[
           bem(),
           {
-            // 'has-value' : this.value.length,
+            ...createColorClasses(color),
+            'has-value' : nativeValue && (nativeValue as string).length,
             'has-focus' : hasFocus,
           },
         ]}
@@ -179,16 +279,16 @@ export default /*#__PURE__*/ createComponent({
       >
         <input
           class="native-input"
-          ref="input"
+          ref="nativeInput"
           accept={accept}
           type={type}
-          value={value}
+          value={nativeValue}
           size={size}
           maxlength={maxlength}
           max={max}
           min={min}
           readonly={readonly}
-          placeholder={placeholderText}
+          placeholder={placeholder}
           pattern={pattern}
           required={required}
           autocomplete={autocomplete}
@@ -197,7 +297,9 @@ export default /*#__PURE__*/ createComponent({
           onInput={this.onInput}
           onFocus={this.onFocus}
           onBlur={this.onBlur}
+          onChange={this.onChange}
         >
+          {/* onChange={stop(this.onChange)} */}
         </input>
         {(this.clearInput && !readonly && !disabled) && <button
           type="button"
@@ -205,6 +307,7 @@ export default /*#__PURE__*/ createComponent({
           tabindex="-1"
           onTouchStart={this.clearTextInput}
           onMouseDown={this.clearTextInput}
+          onClick={this.clearTextInput}
         />}
     </div>
     );

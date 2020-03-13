@@ -1,30 +1,38 @@
 <template>
-  <line-content class="line-padding">
-    <line-list>
-      <line-item>
-        <line-label>Start Date</line-label>
-        <line-datetime
-          v-model="startDate"
-          placeholder="DateTime"
-        ></line-datetime>
-      </line-item>
-      <line-item>
-        <line-label>Start Time</line-label>
-        <line-datetime
-          display-format="h:mm A"
-          picker-format="h:mm A"
-          v-model="startTime"
-        ></line-datetime>
-      </line-item>
-      <line-item>
-        <line-label>Ends</line-label>
-        <line-datetime
-          v-model="endDate"
-          placeholder="Select Date"
-        ></line-datetime>
-      </line-item>
-    </line-list>
-  </line-content>
+  <line-app>
+    <line-header translucent>
+      <line-toolbar>
+        <line-title>DateTime</line-title>
+      </line-toolbar>
+    </line-header>
+
+    <line-content>
+      <line-list>
+        <line-item>
+          <line-label>Start Date</line-label>
+          <line-datetime
+            v-model="startDate"
+            placeholder="DateTime"
+          ></line-datetime>
+        </line-item>
+        <line-item>
+          <line-label>Start Time</line-label>
+          <line-datetime
+            display-format="h:mm A"
+            picker-format="h:mm A"
+            v-model="startTime"
+          ></line-datetime>
+        </line-item>
+        <line-item>
+          <line-label>Ends</line-label>
+          <line-datetime
+            v-model="endDate"
+            placeholder="Select Date"
+          ></line-datetime>
+        </line-item>
+      </line-list>
+    </line-content>
+  </line-app>
 </template>
 
 <script>

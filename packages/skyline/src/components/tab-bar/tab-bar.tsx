@@ -1,5 +1,5 @@
-import { useColor } from 'skyline/mixins/use-color';
 import { createNamespace } from 'skyline/utils/namespace';
+import { createColorClasses, useColor } from 'skyline/mixins/use-color';
 import { useCheckGroupWithModel } from 'skyline/mixins/use-check-group';
 
 const NAMESPACE = 'TabBar';
@@ -16,10 +16,6 @@ export default /*#__PURE__*/ createComponent({
       type    : Boolean,
       default : true,
     },
-    keyboardVisible : {
-      type    : Boolean,
-      default : false,
-    },
     value : {
       type    : String,
       default : '',
@@ -28,17 +24,48 @@ export default /*#__PURE__*/ createComponent({
       type    : Boolean,
       default : false,
     },
+    keyboardVisible : {
+      type    : Boolean,
+      default : false,
+    },
+    selectedTab : {
+      type : String,
+    },
+  },
+
+  methods : {
+    selectedTabChanged() {
+      if (this.selectedTab !== undefined) {
+        this.$emit('tabBarChanged', {
+          tab : this.selectedTab,
+        });
+      }
+    },
+
+  },
+
+  watch : {
+    selectedTab() {
+      this.selectedTabChanged();
+    },
+  },
+
+  beforeMount() {
+    this.selectedTabChanged();
   },
 
   render() {
-    const { translucent, keyboardVisible } = this;
+    const { translucent, keyboardVisible, color } = this;
 
     return (
       <div
-        class={bem({
-          translucent,
-          hidden : keyboardVisible,
-        })}
+        class={[
+          bem({
+            translucent,
+            hidden : keyboardVisible,
+          }),
+          { ...createColorClasses(color) },
+        ]}
         on={this.$listeners}
       >
         {this.slots()}

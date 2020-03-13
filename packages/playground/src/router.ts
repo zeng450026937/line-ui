@@ -1,10 +1,6 @@
 import Vue from 'vue';
 import VueRouter, { RouteConfig } from 'vue-router';
 
-// import Home from './home.vue';
-// import DeviceHome from './src/device/home.vue';
-// import Gallery from './gallery.vue';
-
 Vue.use(VueRouter);
 
 function useComponentRoute(): RouteConfig[] {
@@ -66,9 +62,3 @@ export default new VueRouter({
     return to.hash ? { selector: to.hash } : { x: 0, y: 0 };
   },
 });
-// export function createRouter() {
-//   return new VueRouter({
-//     mode : 'history',
-//     routes,
-//   });
-// }

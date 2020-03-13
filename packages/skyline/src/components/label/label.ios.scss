@@ -15,7 +15,7 @@
 // iOS Stacked & Floating Labels
 // --------------------------------------------------
 
-.line-label.label-stacked {
+.line-label.label-stacked.slotted {
   @include margin(null, null, 4px, null);
 
   font-size: 13.6px;

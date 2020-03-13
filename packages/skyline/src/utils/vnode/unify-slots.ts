@@ -52,7 +52,9 @@ export function createSlots<T extends UnifyContext>(context: T, functional = tru
         };
 
         vnodes.forEach((vnode, index) => {
-          if (!vnode.data) return;
+          if (!vnode.tag) return;
+
+          vnode.data = vnode.data || {};
 
           if (!(vnode.data as any).__slotted) {
             vnode.data = mergeData(

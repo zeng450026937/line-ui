@@ -2,7 +2,7 @@ function commitLint() {
   const fs = require('fs');
   const chalk = require('chalk');
 
-  const commitRE = /^(revert: )?(fix|feat|docs|perf|test|types|build|ci|chore|style|refactor|breaking change)(\(.+\))?: .{1,50}/;
+  const commitRE = /^(revert: )?(feat|fix|docs|dx|style|refactor|perf|test|workflow|build|ci|chore|types|wip|release)(\(.+\))?: .{1,50}/;
 
   const msgPath = process.env.GIT_PARAMS;
   const msg = fs.readFileSync(msgPath, 'utf-8').trim();

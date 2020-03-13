@@ -34,7 +34,7 @@ export default /*#__PURE__*/ createComponent({
       if (!this.Item) return;
 
       this.Item.itemStyle(
-        'line-radio',
+        'radio',
         {
           'radio-checked'        : this.checked,
           'interactive-disabled' : this.disabled,

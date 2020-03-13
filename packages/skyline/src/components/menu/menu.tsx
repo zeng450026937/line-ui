@@ -352,12 +352,8 @@ export default /*#__PURE__*/ createComponent({
       this.blocker.block();
       this.isAnimating = true;
       if (shouldOpen) {
-        // TODO
-        // this.ionWillOpen.emit();
         this.$emit('willOpen');
       } else {
-        // TODO
-        // this.ionWillClose.emit();
         this.$emit('willClose');
       }
     },
