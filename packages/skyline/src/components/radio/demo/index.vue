@@ -7,7 +7,7 @@
 </template>
 
 <script>
-import { Radio as LineRadio } from 'skyline/components/radio';
+import { Radio as LineRadio } from 'skyline/src/components/radio';
 
 export default {
   name : 'RadioDemo',

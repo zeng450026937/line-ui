@@ -1,5 +1,5 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { config } from 'skyline/utils/config';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { config } from 'skyline/src/utils/config';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('skeleton-text');
 

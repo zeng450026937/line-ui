@@ -1,7 +1,7 @@
-import { createMixins } from 'skyline/utils/mixins';
-import { useGroup } from 'skyline/mixins/use-group';
-import { useGroupItem } from 'skyline/mixins/use-group-item';
-import { isDef } from 'skyline/utils/helpers';
+import { createMixins } from 'skyline/src/utils/mixins';
+import { useGroup } from 'skyline/src/mixins/use-group';
+import { useGroupItem } from 'skyline/src/mixins/use-group-item';
+import { isDef } from 'skyline/src/utils/helpers';
 
 export const enum CheckState {
   // The checkbox is unchecked.

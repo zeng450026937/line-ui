@@ -1,6 +1,6 @@
 import { VNodeDirective } from 'vue';
-import { defineDirective } from 'skyline/utils/directive';
-import { isString } from 'skyline/utils/helpers';
+import { defineDirective } from 'skyline/src/utils/directive';
+import { isString } from 'skyline/src/utils/helpers';
 
 const CONTAINER = '[skyline-app]';
 

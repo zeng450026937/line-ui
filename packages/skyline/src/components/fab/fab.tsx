@@ -1,8 +1,8 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { useModel } from 'skyline/mixins/use-model';
-import { useClickOutside } from 'skyline/mixins/use-click-outside';
-import { isDef } from 'skyline/utils/helpers';
-import { FabGroup } from 'skyline/components/fab-group';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { useModel } from 'skyline/src/mixins/use-model';
+import { useClickOutside } from 'skyline/src/mixins/use-click-outside';
+import { isDef } from 'skyline/src/utils/helpers';
+import { FabGroup } from 'skyline/src/components/fab-group';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('fab');
 const FAB_SIDES = ['start', 'end', 'top', 'bottom'];

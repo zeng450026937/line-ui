@@ -1,5 +1,5 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { useGroup } from 'skyline/mixins/use-group';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { useGroup } from 'skyline/src/mixins/use-group';
 
 const NAMESPACE = 'ButtonGroup';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('button-group');

@@ -1,5 +1,5 @@
-import { useColor } from 'skyline/mixins/use-color';
-import { createNamespace } from 'skyline/utils/namespace';
+import { useColor } from 'skyline/src/mixins/use-color';
+import { createNamespace } from 'skyline/src/utils/namespace';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('badge');
 

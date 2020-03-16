@@ -1,6 +1,6 @@
 <script>
 import ProgressIndicator from './ProgressIndicator.vue';
-// import { AbstractButton } from 'skyline/components/button';
+// import { AbstractButton } from 'skyline/src/components/button';
 
 export default {
   name : 'DelayButton',

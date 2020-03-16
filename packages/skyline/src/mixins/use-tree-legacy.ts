@@ -1,10 +1,10 @@
 /* eslint-disable-next-line import/extensions */
 import { Vue } from 'vue/types/vue';
-import { createMixins } from 'skyline/utils/mixins';
-import { useGroup } from 'skyline/mixins/use-group';
-import { useGroupItem } from 'skyline/mixins/use-group-item';
-import { ModelOptions, useModel } from 'skyline/mixins/use-model';
-import { isArray, isDef } from 'skyline/utils/helpers';
+import { createMixins } from 'skyline/src/utils/mixins';
+import { useGroup } from 'skyline/src/mixins/use-group';
+import { useGroupItem } from 'skyline/src/mixins/use-group-item';
+import { ModelOptions, useModel } from 'skyline/src/mixins/use-model';
+import { isArray, isDef } from 'skyline/src/utils/helpers';
 
 export const enum CheckState {
   // The checkbox is unchecked.

@@ -31,7 +31,7 @@ async function run() {
       continue;
     }
     const filename = path.basename(file, '.ts');
-    code += `export * from 'skyline/mixins/${ filename }';\n`;
+    code += `export * from 'skyline/src/mixins/${ filename }';\n`;
     count++;
   }
 

@@ -1,6 +1,6 @@
 /* eslint-disable-next-line */
 import { Vue } from 'vue/types/vue';
-import { BackButtonEvent } from 'skyline/utils/hardware-back-button';
+import { BackButtonEvent } from 'skyline/src/utils/hardware-back-button';
 
 export type Transition = {
   name?: string;

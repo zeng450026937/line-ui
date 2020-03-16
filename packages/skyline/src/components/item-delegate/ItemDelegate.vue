@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import { AbstractButton } from 'skyline/components/button';
+import { AbstractButton } from 'skyline/src/components/button';
 
 export default {
   name : 'ItemDelegate',

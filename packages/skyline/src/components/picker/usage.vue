@@ -22,7 +22,7 @@
 <script>
 import Vue from 'vue';
 
-import { PickerController } from 'skyline/controller/picker';
+import { PickerController } from 'skyline/src/controller/picker';
 
 const controller = new PickerController();
 const defaultColumnOptions = [

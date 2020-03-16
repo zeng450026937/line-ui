@@ -1,5 +1,5 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { isDef } from 'skyline/utils/helpers';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { isDef } from 'skyline/src/utils/helpers';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('list');
 

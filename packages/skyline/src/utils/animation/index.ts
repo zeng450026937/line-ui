@@ -1,3 +1,3 @@
-export * from 'skyline/utils/animation/animation-interface';
-export * from 'skyline/utils/animation/animation';
-export * from 'skyline/utils/animation/cubic-bezier';
+export * from 'skyline/src/utils/animation/animation-interface';
+export * from 'skyline/src/utils/animation/animation';
+export * from 'skyline/src/utils/animation/cubic-bezier';

@@ -33,7 +33,7 @@
 
 <script>
 import Vue from 'vue';
-import { PopoverController } from 'skyline/controller/popover';
+import { PopoverController } from 'skyline/src/controller/popover';
 
 const controller = new PopoverController();
 

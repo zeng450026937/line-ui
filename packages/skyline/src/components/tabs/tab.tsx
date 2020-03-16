@@ -1,5 +1,5 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { useCheckItemWithModel } from 'skyline/mixins/use-check-item';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { useCheckItemWithModel } from 'skyline/src/mixins/use-check-item';
 
 const NAMESPACE = 'Tabs';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('tab');

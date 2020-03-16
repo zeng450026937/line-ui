@@ -1,5 +1,5 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { createColorClasses } from 'skyline/mixins/use-color';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { createColorClasses } from 'skyline/src/mixins/use-color';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('note');
 

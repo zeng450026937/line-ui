@@ -1,11 +1,11 @@
 import { VNodeDirective } from 'vue';
-import { defineDirective } from 'skyline/utils/directive';
-import { isObject } from 'skyline/utils/helpers';
+import { defineDirective } from 'skyline/src/utils/directive';
+import { isObject } from 'skyline/src/utils/helpers';
 import {
   getScrollParent,
   isWindow,
   on,
-} from 'skyline/utils/dom';
+} from 'skyline/src/utils/dom';
 
 function getScrollTop(el: Element | Window) {
   return isWindow(el)

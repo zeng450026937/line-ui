@@ -40,7 +40,7 @@ async function run() {
     );
 
     if (components.length) {
-      code += `export * from 'skyline/components/${ folder }';\n`;
+      code += `export * from 'skyline/src/components/${ folder }';\n`;
     }
   }
 
@@ -61,7 +61,7 @@ async function generate(patterns, folder, dist) {
     const name = camelize(`-${ filename }`);
 
     function toImport() {
-      return `import ${ name } from 'skyline/components/${ dir }/${ filename }';`;
+      return `import ${ name } from 'skyline/src/components/${ dir }/${ filename }';`;
     }
 
     return {

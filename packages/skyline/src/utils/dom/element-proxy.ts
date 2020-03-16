@@ -1,4 +1,4 @@
-import { isFunction } from 'skyline/utils/helpers';
+import { isFunction } from 'skyline/src/utils/helpers';
 
 export function createElementProxy(element: HTMLElement | object) {
   return new Proxy({}, {

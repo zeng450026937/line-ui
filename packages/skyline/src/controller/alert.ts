@@ -1,6 +1,6 @@
-import { Alert } from 'skyline/components/alert';
-import { createFactory } from 'skyline/controller/factory';
-import { popupContext, PopupInterface } from 'skyline/utils/popup';
+import { Alert } from 'skyline/src/components/alert';
+import { createFactory } from 'skyline/src/controller/factory';
+import { popupContext, PopupInterface } from 'skyline/src/utils/popup';
 
 export class AlertController {
   private factory: ReturnType<typeof createFactory>;

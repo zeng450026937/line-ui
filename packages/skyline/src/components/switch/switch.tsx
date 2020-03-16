@@ -1,8 +1,8 @@
-// import SwitchIndicator from 'skyline/components/switch/switch-indicator';
-import { createColorClasses, useColor } from 'skyline/mixins/use-color';
-import { useCheckItem } from 'skyline/mixins/use-check-item';
-import { createNamespace } from 'skyline/utils/namespace';
-import { createGesture, Gesture, GestureDetail } from 'skyline/utils/gesture';
+// import SwitchIndicator from 'skyline/src/components/switch/switch-indicator';
+import { createColorClasses, useColor } from 'skyline/src/mixins/use-color';
+import { useCheckItem } from 'skyline/src/mixins/use-check-item';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { createGesture, Gesture, GestureDetail } from 'skyline/src/utils/gesture';
 
 const NAMESPACE = 'SwitchGroup';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('switch');

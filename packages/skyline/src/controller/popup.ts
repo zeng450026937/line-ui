@@ -1,6 +1,6 @@
-import { Popup } from 'skyline/components/popup';
-import { createFactory } from 'skyline/controller/factory';
-import { popupContext, PopupInterface } from 'skyline/utils/popup';
+import { Popup } from 'skyline/src/components/popup';
+import { createFactory } from 'skyline/src/controller/factory';
+import { popupContext, PopupInterface } from 'skyline/src/utils/popup';
 
 export class PopupController {
   private factory: ReturnType<typeof createFactory>;

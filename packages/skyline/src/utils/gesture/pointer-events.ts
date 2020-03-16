@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { on } from 'skyline/utils/dom/event-listener';
+import { on } from 'skyline/src/utils/dom/event-listener';
 
 const MOUSE_WAIT = 2000;
 

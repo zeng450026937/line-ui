@@ -18,7 +18,7 @@
 
 <script>
 import Popper, { Placement } from 'popper.js';
-import { Popup } from 'skyline/components/popup';
+import { Popup } from 'skyline/src/components/popup';
 
 export { Placement };
 

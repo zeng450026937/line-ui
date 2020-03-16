@@ -1,8 +1,8 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { config } from 'skyline/utils/config';
-import { isPlatform } from 'skyline/utils/platform';
-import { sanitizeDOMString } from 'skyline/utils/sanitization';
-import { SPINNERS, SpinnerTypes } from 'skyline/components/spinner/spinner-configs';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { config } from 'skyline/src/utils/config';
+import { isPlatform } from 'skyline/src/utils/platform';
+import { sanitizeDOMString } from 'skyline/src/utils/sanitization';
+import { SPINNERS, SpinnerTypes } from 'skyline/src/components/spinner/spinner-configs';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('refresher-content');
 

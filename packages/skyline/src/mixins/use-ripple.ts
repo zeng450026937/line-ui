@@ -1,6 +1,6 @@
 import { VNode } from 'vue';
-import { createMixins } from 'skyline/utils/mixins';
-import ripple from 'skyline/directives/ripple';
+import { createMixins } from 'skyline/src/utils/mixins';
+import ripple from 'skyline/src/directives/ripple';
 
 export function useRipple() {
   return createMixins({

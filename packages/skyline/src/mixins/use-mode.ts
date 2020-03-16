@@ -1,5 +1,5 @@
-import { createMixins } from 'skyline/utils/mixins';
-import { mergeStaticClass } from 'skyline/utils/vnode';
+import { createMixins } from 'skyline/src/utils/mixins';
+import { mergeStaticClass } from 'skyline/src/utils/vnode';
 
 export function createModeClasses(mode?: string) {
   if (!mode) return undefined;

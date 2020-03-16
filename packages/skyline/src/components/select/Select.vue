@@ -32,9 +32,9 @@
 
 <script lang="js">
 import Vue from 'vue';
-import { Popup } from 'skyline/components/popup';
-import { useGroup } from 'skyline/components/group';
-import { FontIcon } from 'skyline/components/icon';
+import { Popup } from 'skyline/src/components/popup';
+import { useGroup } from 'skyline/src/components/group';
+import { FontIcon } from 'skyline/src/components/icon';
 
 const NAMESPACE = 'Select';
 

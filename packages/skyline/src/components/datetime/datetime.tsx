@@ -1,6 +1,6 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { PickerController } from 'skyline/controller/picker';
-import { useModel } from 'skyline/mixins/use-model';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { PickerController } from 'skyline/src/controller/picker';
+import { useModel } from 'skyline/src/mixins/use-model';
 import { PickerColumn, PickerColumnOption } from './datetime-interface';
 import {
   convertDataToISO, convertFormatToKey, convertToArrayOfNumbers, convertToArrayOfStrings,

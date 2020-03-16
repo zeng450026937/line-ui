@@ -1,6 +1,6 @@
-import { createMixins } from 'skyline/utils/mixins';
-import { off, on } from 'skyline/utils/dom';
-import { isArray, isFunction } from 'skyline/utils/helpers';
+import { createMixins } from 'skyline/src/utils/mixins';
+import { off, on } from 'skyline/src/utils/dom';
+import { isArray, isFunction } from 'skyline/src/utils/helpers';
 /* eslint-disable-next-line */
 import { Vue } from 'vue/types/vue';
 

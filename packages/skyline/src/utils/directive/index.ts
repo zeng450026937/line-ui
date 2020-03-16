@@ -1,2 +1,2 @@
-export * from 'skyline/utils/directive/create-directive';
-export * from 'skyline/utils/directive/define-directive';
+export * from 'skyline/src/utils/directive/create-directive';
+export * from 'skyline/src/utils/directive/define-directive';

@@ -1,5 +1,5 @@
-import { Config } from 'skyline/utils/config';
-import { now, pointerCoord } from 'skyline/utils/dom';
+import { Config } from 'skyline/src/utils/config';
+import { now, pointerCoord } from 'skyline/src/utils/dom';
 
 /* eslint-disable @typescript-eslint/no-use-before-define */
 

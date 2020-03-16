@@ -1,8 +1,8 @@
-import { createNamespace } from 'skyline/utils/namespace';
+import { createNamespace } from 'skyline/src/utils/namespace';
 import { CssClassMap } from 'skyline/types/interface.d';
-import { usePopup } from 'skyline/mixins/use-popup';
-import { Overlay } from 'skyline/components/overlay';
-import { PickerColumn as LinePickerColumn } from 'skyline/components/picker-column';
+import { usePopup } from 'skyline/src/mixins/use-popup';
+import { Overlay } from 'skyline/src/components/overlay';
+import { PickerColumn as LinePickerColumn } from 'skyline/src/components/picker-column';
 import { iosEnterAnimation } from './animations/ios.enter';
 import { iosLeaveAnimation } from './animations/ios.leave';
 import { PickerButton } from './picker-interface.d';

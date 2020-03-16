@@ -1,8 +1,8 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { useColor } from 'skyline/mixins/use-color';
-import { useGroupItem } from 'skyline/mixins/use-group-item';
-import { isDef } from 'skyline/utils/helpers';
-import ripple from 'skyline/directives/ripple';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { useColor } from 'skyline/src/mixins/use-color';
+import { useGroupItem } from 'skyline/src/mixins/use-group-item';
+import { isDef } from 'skyline/src/utils/helpers';
+import ripple from 'skyline/src/directives/ripple';
 
 const NAMESPACE = 'ButtonGroup';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('button');

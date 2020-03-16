@@ -1,5 +1,5 @@
-import { useGroup } from 'skyline/mixins/use-group';
-import { createNamespace } from 'skyline/utils/namespace';
+import { useGroup } from 'skyline/src/mixins/use-group';
+import { createNamespace } from 'skyline/src/utils/namespace';
 
 const NAMESPACE = 'SwitchGroup';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('switch-group');

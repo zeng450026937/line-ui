@@ -1,14 +1,14 @@
 /* eslint-disable-next-line */
 import { Mode } from 'skyline/types/interface';
-import { isPlatform } from 'skyline/utils/platform';
+import { isPlatform } from 'skyline/src/utils/platform';
 import {
   config,
   configFromSession,
   configFromURL,
   saveConfig,
-} from 'skyline/utils/config/config';
+} from 'skyline/src/utils/config/config';
 // export config
-export * from 'skyline/utils/config/config';
+export * from 'skyline/src/utils/config/config';
 
 let defaultMode: Mode;
 

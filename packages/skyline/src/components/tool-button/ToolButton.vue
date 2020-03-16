@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import { Button } from 'skyline/components/button';
+import { Button } from 'skyline/src/components/button';
 
 export default {
   name : 'ToolButton',

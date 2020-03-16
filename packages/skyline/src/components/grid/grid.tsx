@@ -1,4 +1,4 @@
-import { createNamespace } from 'skyline/utils/namespace';
+import { createNamespace } from 'skyline/src/utils/namespace';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('grid');
 

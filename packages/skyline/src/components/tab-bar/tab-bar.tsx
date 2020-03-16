@@ -1,6 +1,6 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { createColorClasses, useColor } from 'skyline/mixins/use-color';
-import { useCheckGroupWithModel } from 'skyline/mixins/use-check-group';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { createColorClasses, useColor } from 'skyline/src/mixins/use-color';
+import { useCheckGroupWithModel } from 'skyline/src/mixins/use-check-group';
 
 const NAMESPACE = 'TabBar';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('tab-bar');

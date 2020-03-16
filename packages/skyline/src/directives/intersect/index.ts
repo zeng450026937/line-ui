@@ -1,9 +1,9 @@
 import { VNodeDirective } from 'vue';
-import { defineDirective } from 'skyline/utils/directive';
+import { defineDirective } from 'skyline/src/utils/directive';
 import {
   isObject,
   isString,
-} from 'skyline/utils/helpers';
+} from 'skyline/src/utils/helpers';
 
 export type IntersectHandler = (
   entries: IntersectionObserverEntry[],

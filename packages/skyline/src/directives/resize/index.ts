@@ -1,6 +1,6 @@
 import { VNodeDirective } from 'vue';
-import { defineDirective } from 'skyline/utils/directive';
-import { on } from 'skyline/utils/dom';
+import { defineDirective } from 'skyline/src/utils/directive';
+import { on } from 'skyline/src/utils/dom';
 
 export interface ResizeOptions extends AddEventListenerOptions {
   callback: () => void;

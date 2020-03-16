@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-import { clamp } from 'skyline/utils/number';
+import { clamp } from 'skyline/src/utils/number';
 
 import { Gesture, GestureDetail, createGesture } from './index';
 

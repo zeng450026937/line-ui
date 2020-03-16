@@ -1,4 +1,4 @@
-import { createNamespace } from 'skyline/utils/namespace';
+import { createNamespace } from 'skyline/src/utils/namespace';
 
 export const Orientation = {
   Horizontal : 0,

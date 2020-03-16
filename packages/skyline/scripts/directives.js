@@ -39,7 +39,7 @@ async function run() {
       logger.log(`${ folder } (skipped)`, 'WIP');
       continue;
     }
-    code += `export * from 'skyline/directives/${ folder }';\n`;
+    code += `export * from 'skyline/src/directives/${ folder }';\n`;
     count++;
   }
 

@@ -25,7 +25,7 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { ToastController } from 'skyline/controller/toast';
+import { ToastController } from 'skyline/src/controller/toast';
 
 const controller = new ToastController();
 

@@ -1,6 +1,6 @@
 /* eslint-disable-next-line */
 import { AnimationBuilder, Mode } from 'skyline/types/interface';
-import { SpinnerTypes } from 'skyline/components/spinner/spinner-configs';
+import { SpinnerTypes } from 'skyline/src/components/spinner/spinner-configs';
 
 export interface LoadingOptions {
   spinner?: SpinnerTypes | null;

@@ -18,7 +18,7 @@
 
 <script>
 import Vue from 'vue';
-import { AlertController } from 'skyline/controller/alert';
+import { AlertController } from 'skyline/src/controller/alert';
 
 const controller = new AlertController();
 

@@ -1,13 +1,13 @@
 import Vue from 'vue';
-import { createMixins } from 'skyline/utils/mixins';
-import { useLazy } from 'skyline/mixins/use-lazy';
-import { useRemote } from 'skyline/mixins/use-remote';
-import { useModel } from 'skyline/mixins/use-model';
-import { useClickOutside } from 'skyline/mixins/use-click-outside';
-import { useTransition } from 'skyline/mixins/use-transition';
-import { PopupInterface, popupStack } from 'skyline/utils/popup';
-import { isDef } from 'skyline/utils/helpers';
-import { Overlay } from 'skyline/components/overlay';
+import { createMixins } from 'skyline/src/utils/mixins';
+import { useLazy } from 'skyline/src/mixins/use-lazy';
+import { useRemote } from 'skyline/src/mixins/use-remote';
+import { useModel } from 'skyline/src/mixins/use-model';
+import { useClickOutside } from 'skyline/src/mixins/use-click-outside';
+import { useTransition } from 'skyline/src/mixins/use-transition';
+import { PopupInterface, popupStack } from 'skyline/src/utils/popup';
+import { isDef } from 'skyline/src/utils/helpers';
+import { Overlay } from 'skyline/src/components/overlay';
 
 export interface PopupOptions {
   scoped?: boolean;

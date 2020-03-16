@@ -1,8 +1,8 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { useCheckItem } from 'skyline/mixins/use-check-item';
-import { useRipple } from 'skyline/mixins/use-ripple';
-import { useColor } from 'skyline/mixins/use-color';
-import CheckIndicator from 'skyline/components/check-box/check-indicator';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { useCheckItem } from 'skyline/src/mixins/use-check-item';
+import { useRipple } from 'skyline/src/mixins/use-ripple';
+import { useColor } from 'skyline/src/mixins/use-color';
+import CheckIndicator from 'skyline/src/components/check-box/check-indicator';
 
 const NAMESPACE = 'CheckBoxGroup';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('check-box');

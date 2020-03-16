@@ -1,6 +1,6 @@
-import { isObject } from 'skyline/utils/helpers';
-import { createNamespace } from 'skyline/utils/namespace';
-import { Icon } from 'skyline/components/icon';
+import { isObject } from 'skyline/src/utils/helpers';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { Icon } from 'skyline/src/components/icon';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('page-indicator');
 

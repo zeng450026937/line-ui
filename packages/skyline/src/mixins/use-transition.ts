@@ -1,6 +1,6 @@
-import { createMixins } from 'skyline/utils/mixins';
-import { createTransitionHooks } from 'skyline/utils/transition';
-import { isObject } from 'skyline/utils/helpers';
+import { createMixins } from 'skyline/src/utils/mixins';
+import { createTransitionHooks } from 'skyline/src/utils/transition';
+import { isObject } from 'skyline/src/utils/helpers';
 
 export interface TransitionOptions {
   appear?: boolean;

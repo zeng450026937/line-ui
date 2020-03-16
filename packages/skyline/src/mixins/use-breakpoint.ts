@@ -1,12 +1,12 @@
-import { createMixins } from 'skyline/utils/mixins';
+import { createMixins } from 'skyline/src/utils/mixins';
 import {
   getClientHeight,
   getClientWidth,
   hasWindow,
   off,
   on,
-} from 'skyline/utils/dom';
-import { debounce } from 'skyline/utils/helpers';
+} from 'skyline/src/utils/dom';
+import { debounce } from 'skyline/src/utils/helpers';
 
 export function useBreakPoint() {
   return createMixins({

@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Config } from 'skyline/utils/config';
+import { Config } from 'skyline/src/utils/config';
 
 import { enableHideCaretOnScroll } from './hacks/hide-caret';
 import { enableInputBlurring } from './hacks/input-blurring';

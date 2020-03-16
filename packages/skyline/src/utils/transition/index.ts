@@ -1,6 +1,6 @@
 /* eslint-disable-next-line */
 import { Vue } from 'vue/types/vue';
-import { NOOP } from 'skyline/utils/helpers';
+import { NOOP } from 'skyline/src/utils/helpers';
 
 export const ENTER_EVENTS = [
   'before-enter',

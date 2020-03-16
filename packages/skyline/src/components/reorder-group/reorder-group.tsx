@@ -1,5 +1,5 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { createGesture } from 'skyline/utils/gesture';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { createGesture } from 'skyline/src/utils/gesture';
 import { GestureDetail } from 'skyline/types/interface.d';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('reorder-group');

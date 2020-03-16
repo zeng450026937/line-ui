@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import { Popup } from 'skyline/components/popup';
+import { Popup } from 'skyline/src/components/popup';
 
 export default {
   name : 'Dialog',

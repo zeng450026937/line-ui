@@ -1,12 +1,12 @@
 import { Animation, GestureDetail, Side } from 'skyline/types/interface.d';
-import { createGesture, GESTURE_CONTROLLER } from 'skyline/utils/gesture';
-import { menuController } from 'skyline/utils/menu-controller/index';
-import { getTimeGivenProgression } from 'skyline/utils/animation/cubic-bezier';
+import { createGesture, GESTURE_CONTROLLER } from 'skyline/src/utils/gesture';
+import { menuController } from 'skyline/src/utils/menu-controller/index';
+import { getTimeGivenProgression } from 'skyline/src/utils/animation/cubic-bezier';
 
-import { useModel } from 'skyline/mixins/use-model';
-import { createNamespace } from 'skyline/utils/namespace';
+import { useModel } from 'skyline/src/mixins/use-model';
+import { createNamespace } from 'skyline/src/utils/namespace';
 
-import { Overlay } from 'skyline/components/overlay';
+import { Overlay } from 'skyline/src/components/overlay';
 
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('menu');

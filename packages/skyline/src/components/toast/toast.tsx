@@ -1,11 +1,11 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { usePopup } from 'skyline/mixins/use-popup';
-import { usePopupDuration } from 'skyline/mixins/use-popup-duration';
-import { useColor } from 'skyline/mixins/use-color';
-import { iosEnterAnimation } from 'skyline/components/toast/animations/ios.enter';
-import { iosLeaveAnimation } from 'skyline/components/toast/animations/ios.leave';
-import { mdEnterAnimation } from 'skyline/components/toast/animations/md.enter';
-import { mdLeaveAnimation } from 'skyline/components/toast/animations/md.leave';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { usePopup } from 'skyline/src/mixins/use-popup';
+import { usePopupDuration } from 'skyline/src/mixins/use-popup-duration';
+import { useColor } from 'skyline/src/mixins/use-color';
+import { iosEnterAnimation } from 'skyline/src/components/toast/animations/ios.enter';
+import { iosLeaveAnimation } from 'skyline/src/components/toast/animations/ios.leave';
+import { mdEnterAnimation } from 'skyline/src/components/toast/animations/md.enter';
+import { mdLeaveAnimation } from 'skyline/src/components/toast/animations/md.leave';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('toast');
 

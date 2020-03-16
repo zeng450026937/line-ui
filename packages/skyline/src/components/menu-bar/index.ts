@@ -1,3 +1,3 @@
-import MenuBar from 'skyline/components/menu-bar/menu-bar';
+import MenuBar from 'skyline/src/components/menu-bar/menu-bar';
 
 export { MenuBar };

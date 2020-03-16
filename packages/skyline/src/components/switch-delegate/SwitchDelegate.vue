@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import { ItemDelegate } from 'skyline/components/item-delegate';
+import { ItemDelegate } from 'skyline/src/components/item-delegate';
 
 export default {
   name : 'SwitchDelegate',

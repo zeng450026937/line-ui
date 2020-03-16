@@ -1,7 +1,7 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { config } from 'skyline/utils/config';
-import { SpinnerTypes } from 'skyline/components/spinner/spinner-configs';
-import { sanitizeDOMString } from 'skyline/utils/sanitization';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { config } from 'skyline/src/utils/config';
+import { SpinnerTypes } from 'skyline/src/components/spinner/spinner-configs';
+import { sanitizeDOMString } from 'skyline/src/utils/sanitization';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('infinite-scroll-content');
 

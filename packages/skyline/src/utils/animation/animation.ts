@@ -1,7 +1,7 @@
 /* eslint-disable */
 // TODO: Add more tests. until then, be sure to manually test menu and swipe to go back/routing transitions
 
-import { raf } from 'skyline/utils/dom/raf';
+import { raf } from 'skyline/src/utils/dom/raf';
 
 import { Animation, AnimationCallbackOptions, AnimationDirection, AnimationFill, AnimationKeyFrame, AnimationKeyFrameEdge, AnimationKeyFrames, AnimationLifecycle, AnimationPlayOptions } from './animation-interface';
 import { addClassToArray, animationEnd, createKeyframeStylesheet, generateKeyframeName, generateKeyframeRules, processKeyframes, removeStyleProperty, setStyleProperty } from './animation-utils';

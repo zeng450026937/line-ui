@@ -1,8 +1,8 @@
-import { createMixins } from 'skyline/utils/mixins';
+import { createMixins } from 'skyline/src/utils/mixins';
 import {
   EventOptions,
   useEvent,
-} from 'skyline/mixins/use-event';
+} from 'skyline/src/mixins/use-event';
 
 /* eslint-disable-next-line @typescript-eslint/no-empty-interface */
 export interface PopstateCloseOptions extends EventOptions {

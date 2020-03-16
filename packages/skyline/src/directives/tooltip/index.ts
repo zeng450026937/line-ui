@@ -1,7 +1,7 @@
 import { VNodeDirective } from 'vue';
-import { defineDirective } from 'skyline/utils/directive';
-import { TooltipController } from 'skyline/controller/tooltip';
-import { isObject } from 'skyline/utils/helpers';
+import { defineDirective } from 'skyline/src/utils/directive';
+import { TooltipController } from 'skyline/src/controller/tooltip';
+import { isObject } from 'skyline/src/utils/helpers';
 
 let ctrl: TooltipController | undefined;
 

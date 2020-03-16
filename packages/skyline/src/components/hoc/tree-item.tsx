@@ -1,5 +1,5 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { useTreeItem } from 'skyline/mixins/use-tree-item';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { useTreeItem } from 'skyline/src/mixins/use-tree-item';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('tree-item');
 

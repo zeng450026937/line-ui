@@ -1,6 +1,6 @@
 import { Animation } from 'skyline/types/interface.d';
 import { MenuI } from '../menu-interface';
-import { createAnimation } from 'skyline/utils/animation/animation';
+import { createAnimation } from 'skyline/src/utils/animation/animation';
 
 import { baseAnimation } from './base';
 

@@ -1,4 +1,4 @@
-import { ScrollDetail } from 'skyline/components/content/content-interface';
+import { ScrollDetail } from 'skyline/src/components/content/content-interface';
 
 export const updateScrollDetail = (
   detail: ScrollDetail,
