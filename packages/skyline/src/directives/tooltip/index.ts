@@ -96,11 +96,11 @@ function update(el: HTMLElement, binding: TooltipVNodeDirective) {
   vTooltip.tooltip.text = binding.value;
 }
 
-export const VTooltip = defineDirective({
+export const vTooltip = defineDirective({
   name : 'tooltip',
   inserted,
   unbind,
   update,
 });
 
-export default VTooltip;
+export default vTooltip;

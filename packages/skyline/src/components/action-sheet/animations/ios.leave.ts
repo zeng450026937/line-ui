@@ -1,4 +1,7 @@
-import { Animation, createAnimation } from 'skyline/src/utils/animation';
+import {
+  Animation,
+  createAnimation,
+} from 'skyline/src/utils/animation';
 
 /**
  * iOS Action Sheet Leave Animation

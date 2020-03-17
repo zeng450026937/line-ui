@@ -57,11 +57,11 @@ function update(el: HTMLElement, binding: VNodeDirective) {
   inserted(el, binding);
 }
 
-export const VActivatable = /*#__PURE__*/ defineDirective({
+export const vActivatable = /*#__PURE__*/ defineDirective({
   name : 'activatable',
   inserted,
   unbind,
   update,
 });
 
-export default VActivatable;
+export default vActivatable;

@@ -34,7 +34,7 @@ module.exports = (api, options) => {
 
     // for development, set "skyline" alias to source code
     // config.resolve.alias
-    //   .set('skyline', api.resolve('packages/skyline/src'));
+    //   .set('skyline', api.resolve('packages/skyline'));
 
     // auto import
     // config.module.rule('vue')

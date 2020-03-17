@@ -1,4 +1,4 @@
-import { Animation } from 'skyline/types/interface.d';
+import { Animation } from 'skyline/src/types/interface';
 import { createAnimation } from 'skyline/src/utils/animation/animation';
 
 /**

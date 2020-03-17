@@ -33,7 +33,8 @@ function install(Vue, opts = {}) {
         });
     }
     if (directives) {
-        keys(directives).forEach(key => {
+        keys(directives).filter(key => /^v/i.test(key))
+            .forEach(key => {
             Vue.use(directives[key]);
         });
     }
@@ -593,7 +594,7 @@ function update(el, binding) {
     }
     inserted(el, binding);
 }
-const VRipple = defineDirective({
+const vRipple = defineDirective({
     name: 'ripple',
     inserted,
     update,
@@ -603,7 +604,7 @@ const VRipple = defineDirective({
 function useRipple() {
     return createMixins({
         directives: {
-            ripple: VRipple,
+            ripple: vRipple,
         },
         props: {
             ripple: {
@@ -777,7 +778,7 @@ function update$1(el, binding) {
     }
     inserted$1(el, binding);
 }
-const VRemote = defineDirective({
+const vRemote = defineDirective({
     name: 'remote',
     inserted: inserted$1,
     update: update$1,
@@ -787,7 +788,7 @@ const VRemote = defineDirective({
 function useRemote() {
     return createMixins({
         directives: {
-            remote: VRemote,
+            remote: vRemote,
         },
         props: {
             container: [String, Function],
@@ -4022,7 +4023,7 @@ createComponent$a({
   /*#__PURE__*/
   useGroupItem(NAMESPACE$3)],
   directives: {
-    ripple: VRipple
+    ripple: vRipple
   },
   props: {
     text: String,
@@ -4249,7 +4250,7 @@ createComponent$f({
   /*#__PURE__*/
   useColor()],
   directives: {
-    ripple: VRipple
+    ripple: vRipple
   },
   props: {
     button: Boolean,
@@ -4303,7 +4304,7 @@ createComponent$f({
       },
       "directives": [{
         name: "ripple",
-        value: clickable && (VRipple || mode === 'md')
+        value: clickable && (vRipple || mode === 'md')
       }],
       "class": "card-native"
     }, [this.slots()])]);
@@ -4800,7 +4801,7 @@ createComponent$m({
   /*#__PURE__*/
   useColor()],
   directives: {
-    ripple: VRipple
+    ripple: vRipple
   },
   props: {
     ripple: Boolean,
@@ -5387,7 +5388,7 @@ const PICKER_OPT_SELECTED = 'picker-opt-selected';
 const DECELERATION_FRICTION = 0.97;
 const MAX_PICKER_SPEED = 90;
 const TRANSITION_DURATION = 150;
-var LinePickerColumn = /*#__PURE__*/
+var PickerColumn = /*#__PURE__*/
 createComponent$p({
   props: {
     col: Object
@@ -6007,7 +6008,7 @@ createComponent$q({
       "class": "picker-columns"
     }, [h("div", {
       "class": "picker-above-highlight"
-    }), visible && columns.map(c => h(LinePickerColumn, {
+    }), visible && columns.map(c => h(PickerColumn, {
       "on": {
         "colChange": this.colChange
       },
@@ -7384,7 +7385,7 @@ createComponent$u({
   /*#__PURE__*/
   useGroupItem(NAMESPACE$7)],
   directives: {
-    ripple: VRipple
+    ripple: vRipple
   },
   props: {
     ripple: Boolean,
@@ -8557,8 +8558,7 @@ createComponent$F({
       size,
       autoFocus,
       pattern,
-      required,
-      color
+      required
     } = this;
 
     if (label) {
@@ -8566,7 +8566,7 @@ createComponent$F({
     }
 
     return h("div", helper([{
-      "class": [bem$E(), { ...createColorClasses(color),
+      "class": [bem$E(), {
         'has-value': nativeValue && nativeValue.length,
         'has-focus': hasFocus
       }]
@@ -8627,7 +8627,7 @@ createComponent$G({
   /*#__PURE__*/
   useColor()],
   directives: {
-    ripple: VRipple
+    ripple: vRipple
   },
 
   provide() {
@@ -12008,8 +12008,7 @@ createComponent$U({
       value,
       paused,
       reversed,
-      buffer,
-      color
+      buffer
     } = this;
     return h("div", {
       "attrs": {
@@ -12018,7 +12017,7 @@ createComponent$U({
         "aria-valuemin": "0",
         "aria-valuemax": "1"
       },
-      "class": [bem$T(), { ...createColorClasses(color),
+      "class": [bem$T(), {
         [mode]: true,
         [`progress-bar-${type}`]: true,
         'progress-paused': paused,
@@ -12092,14 +12091,13 @@ createComponent$V({
     const {
       checked,
       disabled,
-      color,
       inItem
     } = this;
     return h("div", helper([{
       "class": [bem$U({
         checked,
         disabled
-      }), { ...createColorClasses(color),
+      }), {
         'in-item': inItem
       }],
       "attrs": {
@@ -19523,8 +19521,7 @@ createComponent$15({
     const {
       checked,
       disabled,
-      activated,
-      color
+      activated
     } = this;
     return h("div", helper([{
       "attrs": {
@@ -19534,8 +19531,7 @@ createComponent$15({
         disabled,
         checked,
         activated
-      }), { ...createColorClasses(color)
-      }],
+      })],
       "on": {
         "click": this.onClick
       }
@@ -19615,15 +19611,13 @@ createComponent$16({
     const h = arguments[0];
     const {
       translucent,
-      keyboardVisible,
-      color
+      keyboardVisible
     } = this;
     return h("div", helper([{
       "class": [bem$15({
         translucent,
         hidden: keyboardVisible
-      }), { ...createColorClasses(color)
-      }]
+      })]
     }, {
       "on": this.$listeners
     }]), [this.slots()]);
@@ -20055,7 +20049,6 @@ createComponent$1a({
       disabled,
       autocapitalize,
       autofocus,
-      color,
       cols,
       spellcheck,
       wrap,
@@ -20069,8 +20062,7 @@ createComponent$1a({
     }
 
     return h("div", helper([{
-      "class": [bem$19(), { ...createColorClasses(color)
-      }]
+      "class": [bem$19()]
     }, {
       "on": this.$listeners
     }]), [h("textarea", {
@@ -21545,7 +21537,7 @@ function update$3(el, binding) {
     }
     inserted$2(el, binding);
 }
-const VHover = defineDirective({
+const vHover = defineDirective({
     name: 'hover',
     inserted: inserted$2,
     unbind: unbind$2,
@@ -21614,7 +21606,7 @@ createComponent$1f({
   async mounted() {
     await this.$nextTick();
     if (!this.$triggerEl) return;
-    this.vHover = createDirective(VHover, this.$triggerEl, {
+    this.vHover = createDirective(vHover, this.$triggerEl, {
       name: 'hover'
     });
     this.vHover.inserted();
@@ -21734,7 +21726,7 @@ var components$1 = /*#__PURE__*/Object.freeze({
   Note: note,
   Overlay: Overlay,
   Picker: Picker,
-  PickerColumn: LinePickerColumn,
+  PickerColumn: PickerColumn,
   Popover: popover,
   PopupLegacy: popupLegacy,
   Popup: popup,
@@ -21804,7 +21796,7 @@ function update$4(el, binding) {
     }
     inserted$3(el, binding);
 }
-const VActivatable = /*#__PURE__*/ defineDirective({
+const vActivatable = /*#__PURE__*/ defineDirective({
     name: 'activatable',
     inserted: inserted$3,
     unbind: unbind$3,
@@ -21890,8 +21882,7 @@ function createAutoRepeat(el, options) {
 function inserted$4(el, binding) {
     if (binding.value === false)
         return;
-    const vAutoRepeat = createAutoRepeat(el, binding.value);
-    el.vAutoRepeat = vAutoRepeat;
+    el.vAutoRepeat = createAutoRepeat(el, binding.value);
 }
 function unbind$4(el) {
     const { vAutoRepeat } = el;
@@ -21913,7 +21904,7 @@ function update$5(el, binding) {
     vAutoRepeat.stop();
     vAutoRepeat.update(binding.value);
 }
-const VAutoRepeat = /*#__PURE__*/ defineDirective({
+const vAutoRepeat = /*#__PURE__*/ defineDirective({
     name: 'autorepeat',
     inserted: inserted$4,
     update: update$5,
@@ -21950,11 +21941,10 @@ function createClickOutside(el, options) {
 function inserted$5(el, binding) {
     if (!binding.value)
         return;
-    const vClickOutside = createClickOutside(el, {
+    el.vClickOutside = createClickOutside(el, {
         ...binding.args,
         callback: binding.value,
     });
-    el.vClickOutside = vClickOutside;
 }
 function unbind$5(el) {
     const { vClickOutside } = el;
@@ -21973,7 +21963,7 @@ function update$6(el, binding) {
     }
     inserted$5(el, binding);
 }
-const VClickOutside = /*#__PURE__*/ defineDirective({
+const vClickOutside = /*#__PURE__*/ defineDirective({
     name: 'click-outside',
     inserted: inserted$5,
     unbind: unbind$5,
@@ -22002,7 +21992,7 @@ function update$7(el, binding) {
     }
     inserted$6(el, binding);
 }
-const VGesture = defineDirective({
+const vGesture = defineDirective({
     name: 'gesture',
     inserted: inserted$6,
     unbind: unbind$6,
@@ -22073,7 +22063,7 @@ function update$8(el, binding) {
     }
     inserted$7(el, binding);
 }
-const VIntersect = defineDirective({
+const vIntersect = defineDirective({
     name: 'intersect',
     inserted: inserted$7,
     update: update$8,
@@ -22141,7 +22131,7 @@ function update$9(el, binding) {
     }
     inserted$8(el, binding);
 }
-const VMutate = defineDirective({
+const vMutate = defineDirective({
     name: 'mutate',
     inserted: inserted$8,
     unbind: unbind$8,
@@ -22189,7 +22179,7 @@ function update$a(el, binding) {
     }
     inserted$9(el, binding);
 }
-const VResize = defineDirective({
+const vResize = defineDirective({
     name: 'resize',
     inserted: inserted$9,
     unbind: unbind$9,
@@ -22240,7 +22230,7 @@ function update$b(el, binding) {
     }
     inserted$a(el, binding);
 }
-const VScroll = defineDirective({
+const vScroll = defineDirective({
     name: 'scroll',
     inserted: inserted$a,
     unbind: unbind$a,
@@ -22321,7 +22311,7 @@ function update$c(el, binding) {
     }
     inserted$b(el, binding);
 }
-const VSwipeBack = defineDirective({
+const vSwipeBack = defineDirective({
     name: 'swipe-back',
     inserted: inserted$b,
     unbind: unbind$b,
@@ -22427,7 +22417,7 @@ function update$d(el, binding) {
     }
     inserted$c(el, binding);
 }
-const VTouch = defineDirective({
+const vTouch = defineDirective({
     name: 'touch',
     inserted: inserted$c,
     unbind: unbind$c,
@@ -22439,29 +22429,29 @@ const VTouch = defineDirective({
 var directives = /*#__PURE__*/Object.freeze({
   __proto__: null,
   createActivatable: createActivatable,
-  VActivatable: VActivatable,
+  vActivatable: vActivatable,
   createAutoRepeat: createAutoRepeat,
-  VAutoRepeat: VAutoRepeat,
+  vAutoRepeat: vAutoRepeat,
   createClickOutside: createClickOutside,
-  VClickOutside: VClickOutside,
-  VGesture: VGesture,
+  vClickOutside: vClickOutside,
+  vGesture: vGesture,
   createHover: createHover,
-  VHover: VHover,
+  vHover: vHover,
   createIntersect: createIntersect,
-  VIntersect: VIntersect,
+  vIntersect: vIntersect,
   createMutate: createMutate,
-  VMutate: VMutate,
+  vMutate: vMutate,
   createRemote: createRemote,
-  VRemote: VRemote,
+  vRemote: vRemote,
   createResize: createResize,
-  VResize: VResize,
+  vResize: vResize,
   createRippleEffect: createRippleEffect,
-  VRipple: VRipple,
+  vRipple: vRipple,
   createScroll: createScroll,
-  VScroll: VScroll,
-  VSwipeBack: VSwipeBack,
+  vScroll: vScroll,
+  vSwipeBack: vSwipeBack,
   createTouch: createTouch,
-  VTouch: VTouch
+  vTouch: vTouch
 });
 
 function useAsyncRender() {
@@ -22694,4 +22684,4 @@ function defaulExport() {
 var index$1 = /*#__PURE__*/ defaulExport();
 
 export default index$1;
-export { action as Action, actionGroup as ActionGroup, actionSheet as ActionSheet, alert as Alert, app as App, avatar as Avatar, badge as Badge, busyIndicator as BusyIndicator, button as Button, buttonGroup as ButtonGroup, card as Card, cardContent as CardContent, cardHeader as CardHeader, cardSubtitle as CardSubtitle, cardTitle as CardTitle, checkBox as CheckBox, checkBoxGroup as CheckBoxGroup, checkGroup as CheckGroup, CheckIndicator, checkItem as CheckItem, chip as Chip, col as Col, content as Content, datetime as Datetime, fab as Fab, fabButton as FabButton, FabGroup, FontIcon, footer as Footer, grid as Grid, header as Header, Icon, image as Image, infiniteScroll as InfiniteScroll, infiniteScrollContent as InfiniteScrollContent, input as Input, item as Item, itemDivider as ItemDivider, label as Label, lazy as Lazy, list as List, listHeader as ListHeader, ListItem, listView as ListView, loading as Loading, menu as Menu, note as Note, Overlay, Picker, LinePickerColumn as PickerColumn, popover as Popover, popup as Popup, popupLegacy as PopupLegacy, progressBar as ProgressBar, radio as Radio, range as Range, refresher as Refresher, refresherContent as RefresherContent, reorder as Reorder, reorderGroup as ReorderGroup, row as Row, skeletonText as SkeletonText, Skyline, slide as Slide, slides as Slides, Spinner, SvgIcon, _switch as Switch, switchGroup as SwitchGroup, switchIndicator as SwitchIndicator, tab as Tab, tabBar as TabBar, tabButton as TabButton, tabs as Tabs, textarea as Textarea, thumbnail as Thumbnail, title as Title, toast as Toast, toolbar as Toolbar, tooltip as Tooltip, treeItem as TreeItem, VActivatable, VAutoRepeat, VClickOutside, VGesture, VHover, VIntersect, VMutate, VRemote, VResize, VRipple, VScroll, VSwipeBack, VTouch, createActivatable, createAutoRepeat, createClickOutside, createColorClasses, createHover, createIntersect, createModeClasses, createMutate, createRemote, createResize, createRippleEffect, createScroll, createTouch, getItemValue, invoke, isVue, useAsyncRender, useBreakPoint, useCheckGroup, useCheckGroupWithModel, useCheckItem, useCheckItemWithModel, useClickOutside, useColor, useEvent, useGroup, useGroupItem, useLazy, useMode, useModel, useOptions, usePopstateClose, usePopup, usePopupDelay, usePopupDuration, useRemote, useRender, useRipple, useSlots, useTransition, useTreeItem, useTrigger };
+export { action as Action, actionGroup as ActionGroup, actionSheet as ActionSheet, alert as Alert, app as App, avatar as Avatar, badge as Badge, busyIndicator as BusyIndicator, button as Button, buttonGroup as ButtonGroup, card as Card, cardContent as CardContent, cardHeader as CardHeader, cardSubtitle as CardSubtitle, cardTitle as CardTitle, checkBox as CheckBox, checkBoxGroup as CheckBoxGroup, checkGroup as CheckGroup, CheckIndicator, checkItem as CheckItem, chip as Chip, col as Col, content as Content, datetime as Datetime, fab as Fab, fabButton as FabButton, FabGroup, FontIcon, footer as Footer, grid as Grid, header as Header, Icon, image as Image, infiniteScroll as InfiniteScroll, infiniteScrollContent as InfiniteScrollContent, input as Input, item as Item, itemDivider as ItemDivider, label as Label, lazy as Lazy, list as List, listHeader as ListHeader, ListItem, listView as ListView, loading as Loading, menu as Menu, note as Note, Overlay, Picker, PickerColumn, popover as Popover, popup as Popup, popupLegacy as PopupLegacy, progressBar as ProgressBar, radio as Radio, range as Range, refresher as Refresher, refresherContent as RefresherContent, reorder as Reorder, reorderGroup as ReorderGroup, row as Row, skeletonText as SkeletonText, Skyline, slide as Slide, slides as Slides, Spinner, SvgIcon, _switch as Switch, switchGroup as SwitchGroup, switchIndicator as SwitchIndicator, tab as Tab, tabBar as TabBar, tabButton as TabButton, tabs as Tabs, textarea as Textarea, thumbnail as Thumbnail, title as Title, toast as Toast, toolbar as Toolbar, tooltip as Tooltip, treeItem as TreeItem, createActivatable, createAutoRepeat, createClickOutside, createColorClasses, createHover, createIntersect, createModeClasses, createMutate, createRemote, createResize, createRippleEffect, createScroll, createTouch, getItemValue, invoke, isVue, useAsyncRender, useBreakPoint, useCheckGroup, useCheckGroupWithModel, useCheckItem, useCheckItemWithModel, useClickOutside, useColor, useEvent, useGroup, useGroupItem, useLazy, useMode, useModel, useOptions, usePopstateClose, usePopup, usePopupDelay, usePopupDuration, useRemote, useRender, useRipple, useSlots, useTransition, useTreeItem, useTrigger, vActivatable, vAutoRepeat, vClickOutside, vGesture, vHover, vIntersect, vMutate, vRemote, vResize, vRipple, vScroll, vSwipeBack, vTouch };

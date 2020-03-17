@@ -1,5 +1,5 @@
 /* eslint-disable-next-line */
-import { Mode } from 'skyline/types/interface';
+import { Mode } from 'skyline/src/types/interface';
 import { isPlatform } from 'skyline/src/utils/platform';
 import {
   config,

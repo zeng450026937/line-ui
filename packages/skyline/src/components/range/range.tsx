@@ -1,5 +1,8 @@
 import { createNamespace } from 'skyline/src/utils/namespace';
-import { createGesture, GestureDetail } from 'skyline/src/utils/gesture';
+import {
+  createGesture,
+  GestureDetail,
+} from 'skyline/src/utils/gesture';
 import { useColor } from 'skyline/src/mixins/use-color';
 
 import { Rect } from 'skyline/src/utils/layout';

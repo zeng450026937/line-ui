@@ -111,11 +111,11 @@ function update(el: HTMLElement, binding: MutateVNodeDirective) {
   inserted(el, binding);
 }
 
-export const VMutate = defineDirective({
+export const vMutate = defineDirective({
   name : 'mutate',
   inserted,
   unbind,
   update,
 });
 
-export default VMutate;
+export default vMutate;

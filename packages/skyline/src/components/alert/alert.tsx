@@ -5,7 +5,10 @@ import { iosEnterAnimation } from 'skyline/src/components/alert/animations/ios.e
 import { iosLeaveAnimation } from 'skyline/src/components/alert/animations/ios.leave';
 import { mdEnterAnimation } from 'skyline/src/components/alert/animations/md.enter';
 import { mdLeaveAnimation } from 'skyline/src/components/alert/animations/md.leave';
-import { AlertButton, AlertInput } from 'skyline/src/components/alert/alert-interface';
+import {
+  AlertButton,
+  AlertInput,
+} from 'skyline/src/components/alert/alert-interface';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('alert');
 

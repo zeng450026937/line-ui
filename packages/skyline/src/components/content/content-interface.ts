@@ -1,5 +1,4 @@
-/* eslint-disable-next-line */
-import { GestureDetail } from 'skyline/types/interface';
+import { GestureDetail } from 'skyline/src/types/interface';
 
 export interface ScrollBaseDetail {
   isScrolling: boolean;

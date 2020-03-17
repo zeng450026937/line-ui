@@ -1,5 +1,5 @@
-import { Animation } from 'skyline/types/interface.d';
-import { createAnimation } from '../../../utils/animation/animation';
+import { Animation } from 'skyline/src/types/interface';
+import { createAnimation } from 'skyline/src/utils/animation/animation';
 
 /**
  * iOS Picker Enter Animation

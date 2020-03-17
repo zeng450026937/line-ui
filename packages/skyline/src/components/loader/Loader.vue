@@ -1,5 +1,7 @@
 <script lang="ts">
-import Vue, { VNode } from 'vue';
+import Vue, {
+  VNode,
+} from 'vue';
 
 export default Vue.extend({
   name : 'Loader',

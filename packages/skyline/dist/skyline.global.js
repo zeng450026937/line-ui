@@ -36,7 +36,8 @@ var Skyline = (function (exports, Vue) {
           });
       }
       if (directives) {
-          keys(directives).forEach(key => {
+          keys(directives).filter(key => /^v/i.test(key))
+              .forEach(key => {
               Vue.use(directives[key]);
           });
       }
@@ -596,7 +597,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted(el, binding);
   }
-  const VRipple = defineDirective({
+  const vRipple = defineDirective({
       name: 'ripple',
       inserted,
       update,
@@ -606,7 +607,7 @@ var Skyline = (function (exports, Vue) {
   function useRipple() {
       return createMixins({
           directives: {
-              ripple: VRipple,
+              ripple: vRipple,
           },
           props: {
               ripple: {
@@ -780,7 +781,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$1(el, binding);
   }
-  const VRemote = defineDirective({
+  const vRemote = defineDirective({
       name: 'remote',
       inserted: inserted$1,
       update: update$1,
@@ -790,7 +791,7 @@ var Skyline = (function (exports, Vue) {
   function useRemote() {
       return createMixins({
           directives: {
-              remote: VRemote,
+              remote: vRemote,
           },
           props: {
               container: [String, Function],
@@ -4025,7 +4026,7 @@ var Skyline = (function (exports, Vue) {
     /*#__PURE__*/
     useGroupItem(NAMESPACE$3)],
     directives: {
-      ripple: VRipple
+      ripple: vRipple
     },
     props: {
       text: String,
@@ -4252,7 +4253,7 @@ var Skyline = (function (exports, Vue) {
     /*#__PURE__*/
     useColor()],
     directives: {
-      ripple: VRipple
+      ripple: vRipple
     },
     props: {
       button: Boolean,
@@ -4306,7 +4307,7 @@ var Skyline = (function (exports, Vue) {
         },
         "directives": [{
           name: "ripple",
-          value: clickable && (VRipple || mode === 'md')
+          value: clickable && (vRipple || mode === 'md')
         }],
         "class": "card-native"
       }, [this.slots()])]);
@@ -4803,7 +4804,7 @@ var Skyline = (function (exports, Vue) {
     /*#__PURE__*/
     useColor()],
     directives: {
-      ripple: VRipple
+      ripple: vRipple
     },
     props: {
       ripple: Boolean,
@@ -5390,7 +5391,7 @@ var Skyline = (function (exports, Vue) {
   const DECELERATION_FRICTION = 0.97;
   const MAX_PICKER_SPEED = 90;
   const TRANSITION_DURATION = 150;
-  var LinePickerColumn = /*#__PURE__*/
+  var PickerColumn = /*#__PURE__*/
   createComponent$p({
     props: {
       col: Object
@@ -6010,7 +6011,7 @@ var Skyline = (function (exports, Vue) {
         "class": "picker-columns"
       }, [h("div", {
         "class": "picker-above-highlight"
-      }), visible && columns.map(c => h(LinePickerColumn, {
+      }), visible && columns.map(c => h(PickerColumn, {
         "on": {
           "colChange": this.colChange
         },
@@ -7387,7 +7388,7 @@ var Skyline = (function (exports, Vue) {
     /*#__PURE__*/
     useGroupItem(NAMESPACE$7)],
     directives: {
-      ripple: VRipple
+      ripple: vRipple
     },
     props: {
       ripple: Boolean,
@@ -8560,8 +8561,7 @@ var Skyline = (function (exports, Vue) {
         size,
         autoFocus,
         pattern,
-        required,
-        color
+        required
       } = this;
 
       if (label) {
@@ -8569,7 +8569,7 @@ var Skyline = (function (exports, Vue) {
       }
 
       return h("div", helper([{
-        "class": [bem$E(), { ...createColorClasses(color),
+        "class": [bem$E(), {
           'has-value': nativeValue && nativeValue.length,
           'has-focus': hasFocus
         }]
@@ -8630,7 +8630,7 @@ var Skyline = (function (exports, Vue) {
     /*#__PURE__*/
     useColor()],
     directives: {
-      ripple: VRipple
+      ripple: vRipple
     },
 
     provide() {
@@ -12011,8 +12011,7 @@ var Skyline = (function (exports, Vue) {
         value,
         paused,
         reversed,
-        buffer,
-        color
+        buffer
       } = this;
       return h("div", {
         "attrs": {
@@ -12021,7 +12020,7 @@ var Skyline = (function (exports, Vue) {
           "aria-valuemin": "0",
           "aria-valuemax": "1"
         },
-        "class": [bem$T(), { ...createColorClasses(color),
+        "class": [bem$T(), {
           [mode]: true,
           [`progress-bar-${type}`]: true,
           'progress-paused': paused,
@@ -12095,14 +12094,13 @@ var Skyline = (function (exports, Vue) {
       const {
         checked,
         disabled,
-        color,
         inItem
       } = this;
       return h("div", helper([{
         "class": [bem$U({
           checked,
           disabled
-        }), { ...createColorClasses(color),
+        }), {
           'in-item': inItem
         }],
         "attrs": {
@@ -19526,8 +19524,7 @@ var Skyline = (function (exports, Vue) {
       const {
         checked,
         disabled,
-        activated,
-        color
+        activated
       } = this;
       return h("div", helper([{
         "attrs": {
@@ -19537,8 +19534,7 @@ var Skyline = (function (exports, Vue) {
           disabled,
           checked,
           activated
-        }), { ...createColorClasses(color)
-        }],
+        })],
         "on": {
           "click": this.onClick
         }
@@ -19618,15 +19614,13 @@ var Skyline = (function (exports, Vue) {
       const h = arguments[0];
       const {
         translucent,
-        keyboardVisible,
-        color
+        keyboardVisible
       } = this;
       return h("div", helper([{
         "class": [bem$15({
           translucent,
           hidden: keyboardVisible
-        }), { ...createColorClasses(color)
-        }]
+        })]
       }, {
         "on": this.$listeners
       }]), [this.slots()]);
@@ -20058,7 +20052,6 @@ var Skyline = (function (exports, Vue) {
         disabled,
         autocapitalize,
         autofocus,
-        color,
         cols,
         spellcheck,
         wrap,
@@ -20072,8 +20065,7 @@ var Skyline = (function (exports, Vue) {
       }
 
       return h("div", helper([{
-        "class": [bem$19(), { ...createColorClasses(color)
-        }]
+        "class": [bem$19()]
       }, {
         "on": this.$listeners
       }]), [h("textarea", {
@@ -21548,7 +21540,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$2(el, binding);
   }
-  const VHover = defineDirective({
+  const vHover = defineDirective({
       name: 'hover',
       inserted: inserted$2,
       unbind: unbind$2,
@@ -21617,7 +21609,7 @@ var Skyline = (function (exports, Vue) {
     async mounted() {
       await this.$nextTick();
       if (!this.$triggerEl) return;
-      this.vHover = createDirective(VHover, this.$triggerEl, {
+      this.vHover = createDirective(vHover, this.$triggerEl, {
         name: 'hover'
       });
       this.vHover.inserted();
@@ -21737,7 +21729,7 @@ var Skyline = (function (exports, Vue) {
     Note: note,
     Overlay: Overlay,
     Picker: Picker,
-    PickerColumn: LinePickerColumn,
+    PickerColumn: PickerColumn,
     Popover: popover,
     PopupLegacy: popupLegacy,
     Popup: popup,
@@ -21807,7 +21799,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$3(el, binding);
   }
-  const VActivatable = /*#__PURE__*/ defineDirective({
+  const vActivatable = /*#__PURE__*/ defineDirective({
       name: 'activatable',
       inserted: inserted$3,
       unbind: unbind$3,
@@ -21893,8 +21885,7 @@ var Skyline = (function (exports, Vue) {
   function inserted$4(el, binding) {
       if (binding.value === false)
           return;
-      const vAutoRepeat = createAutoRepeat(el, binding.value);
-      el.vAutoRepeat = vAutoRepeat;
+      el.vAutoRepeat = createAutoRepeat(el, binding.value);
   }
   function unbind$4(el) {
       const { vAutoRepeat } = el;
@@ -21916,7 +21907,7 @@ var Skyline = (function (exports, Vue) {
       vAutoRepeat.stop();
       vAutoRepeat.update(binding.value);
   }
-  const VAutoRepeat = /*#__PURE__*/ defineDirective({
+  const vAutoRepeat = /*#__PURE__*/ defineDirective({
       name: 'autorepeat',
       inserted: inserted$4,
       update: update$5,
@@ -21953,11 +21944,10 @@ var Skyline = (function (exports, Vue) {
   function inserted$5(el, binding) {
       if (!binding.value)
           return;
-      const vClickOutside = createClickOutside(el, {
+      el.vClickOutside = createClickOutside(el, {
           ...binding.args,
           callback: binding.value,
       });
-      el.vClickOutside = vClickOutside;
   }
   function unbind$5(el) {
       const { vClickOutside } = el;
@@ -21976,7 +21966,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$5(el, binding);
   }
-  const VClickOutside = /*#__PURE__*/ defineDirective({
+  const vClickOutside = /*#__PURE__*/ defineDirective({
       name: 'click-outside',
       inserted: inserted$5,
       unbind: unbind$5,
@@ -22005,7 +21995,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$6(el, binding);
   }
-  const VGesture = defineDirective({
+  const vGesture = defineDirective({
       name: 'gesture',
       inserted: inserted$6,
       unbind: unbind$6,
@@ -22076,7 +22066,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$7(el, binding);
   }
-  const VIntersect = defineDirective({
+  const vIntersect = defineDirective({
       name: 'intersect',
       inserted: inserted$7,
       update: update$8,
@@ -22144,7 +22134,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$8(el, binding);
   }
-  const VMutate = defineDirective({
+  const vMutate = defineDirective({
       name: 'mutate',
       inserted: inserted$8,
       unbind: unbind$8,
@@ -22192,7 +22182,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$9(el, binding);
   }
-  const VResize = defineDirective({
+  const vResize = defineDirective({
       name: 'resize',
       inserted: inserted$9,
       unbind: unbind$9,
@@ -22243,7 +22233,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$a(el, binding);
   }
-  const VScroll = defineDirective({
+  const vScroll = defineDirective({
       name: 'scroll',
       inserted: inserted$a,
       unbind: unbind$a,
@@ -22324,7 +22314,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$b(el, binding);
   }
-  const VSwipeBack = defineDirective({
+  const vSwipeBack = defineDirective({
       name: 'swipe-back',
       inserted: inserted$b,
       unbind: unbind$b,
@@ -22430,7 +22420,7 @@ var Skyline = (function (exports, Vue) {
       }
       inserted$c(el, binding);
   }
-  const VTouch = defineDirective({
+  const vTouch = defineDirective({
       name: 'touch',
       inserted: inserted$c,
       unbind: unbind$c,
@@ -22442,29 +22432,29 @@ var Skyline = (function (exports, Vue) {
   var directives = /*#__PURE__*/Object.freeze({
     __proto__: null,
     createActivatable: createActivatable,
-    VActivatable: VActivatable,
+    vActivatable: vActivatable,
     createAutoRepeat: createAutoRepeat,
-    VAutoRepeat: VAutoRepeat,
+    vAutoRepeat: vAutoRepeat,
     createClickOutside: createClickOutside,
-    VClickOutside: VClickOutside,
-    VGesture: VGesture,
+    vClickOutside: vClickOutside,
+    vGesture: vGesture,
     createHover: createHover,
-    VHover: VHover,
+    vHover: vHover,
     createIntersect: createIntersect,
-    VIntersect: VIntersect,
+    vIntersect: vIntersect,
     createMutate: createMutate,
-    VMutate: VMutate,
+    vMutate: vMutate,
     createRemote: createRemote,
-    VRemote: VRemote,
+    vRemote: vRemote,
     createResize: createResize,
-    VResize: VResize,
+    vResize: vResize,
     createRippleEffect: createRippleEffect,
-    VRipple: VRipple,
+    vRipple: vRipple,
     createScroll: createScroll,
-    VScroll: VScroll,
-    VSwipeBack: VSwipeBack,
+    vScroll: vScroll,
+    vSwipeBack: vSwipeBack,
     createTouch: createTouch,
-    VTouch: VTouch
+    vTouch: vTouch
   });
 
   function useAsyncRender() {
@@ -22745,7 +22735,7 @@ var Skyline = (function (exports, Vue) {
   exports.Note = note;
   exports.Overlay = Overlay;
   exports.Picker = Picker;
-  exports.PickerColumn = LinePickerColumn;
+  exports.PickerColumn = PickerColumn;
   exports.Popover = popover;
   exports.Popup = popup;
   exports.PopupLegacy = popupLegacy;
@@ -22777,19 +22767,6 @@ var Skyline = (function (exports, Vue) {
   exports.Toolbar = toolbar;
   exports.Tooltip = tooltip;
   exports.TreeItem = treeItem;
-  exports.VActivatable = VActivatable;
-  exports.VAutoRepeat = VAutoRepeat;
-  exports.VClickOutside = VClickOutside;
-  exports.VGesture = VGesture;
-  exports.VHover = VHover;
-  exports.VIntersect = VIntersect;
-  exports.VMutate = VMutate;
-  exports.VRemote = VRemote;
-  exports.VResize = VResize;
-  exports.VRipple = VRipple;
-  exports.VScroll = VScroll;
-  exports.VSwipeBack = VSwipeBack;
-  exports.VTouch = VTouch;
   exports.createActivatable = createActivatable;
   exports.createAutoRepeat = createAutoRepeat;
   exports.createClickOutside = createClickOutside;
@@ -22833,6 +22810,19 @@ var Skyline = (function (exports, Vue) {
   exports.useTransition = useTransition;
   exports.useTreeItem = useTreeItem;
   exports.useTrigger = useTrigger;
+  exports.vActivatable = vActivatable;
+  exports.vAutoRepeat = vAutoRepeat;
+  exports.vClickOutside = vClickOutside;
+  exports.vGesture = vGesture;
+  exports.vHover = vHover;
+  exports.vIntersect = vIntersect;
+  exports.vMutate = vMutate;
+  exports.vRemote = vRemote;
+  exports.vResize = vResize;
+  exports.vRipple = vRipple;
+  exports.vScroll = vScroll;
+  exports.vSwipeBack = vSwipeBack;
+  exports.vTouch = vTouch;
 
   return exports;
 

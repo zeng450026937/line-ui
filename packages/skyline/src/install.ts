@@ -18,7 +18,7 @@ export function install(Vue: VueConstructor, opts: LineOptions = {}) {
     });
   }
   if (directives) {
-    keys(directives)
+    keys(directives).filter(key => /^v/i.test(key as string))
       .forEach(key => {
         Vue.use(directives[key]);
       });

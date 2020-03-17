@@ -1,13 +1,22 @@
 import { createNamespace } from 'skyline/src/utils/namespace';
-import { Animation, GestureDetail } from 'skyline/types/interface.d';
+import {
+  Animation,
+  GestureDetail,
+} from 'skyline/src/types/interface';
 import { createGesture } from 'skyline/src/utils/gesture';
 import { getTimeGivenProgression } from 'skyline/src/utils/animation/cubic-bezier';
 
 import {
-  createPullingAnimation, createSnapBackAnimation, getRefresherAnimationType,
-  handleScrollWhilePulling, handleScrollWhileRefreshing, setSpinnerOpacity,
-  shouldUseNativeRefresher, transitionEndAsync, translateElement,
-} from './refresher.utils';
+  createPullingAnimation,
+  createSnapBackAnimation,
+  getRefresherAnimationType,
+  handleScrollWhilePulling,
+  handleScrollWhileRefreshing,
+  setSpinnerOpacity,
+  shouldUseNativeRefresher,
+  transitionEndAsync,
+  translateElement,
+} from 'skyline/src/components/refresher/refresher.utils';
 
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('refresher');

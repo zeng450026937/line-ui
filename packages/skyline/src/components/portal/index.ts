@@ -4,5 +4,8 @@ import PortalLegacy from './PortalLegacy.vue';
 import PortalRemoteLegacy from './PortalRemoteLegacy.vue';
 
 export {
-  Portal, PortalRemote, PortalLegacy, PortalRemoteLegacy,
+  Portal,
+  PortalRemote,
+  PortalLegacy,
+  PortalRemoteLegacy,
 };

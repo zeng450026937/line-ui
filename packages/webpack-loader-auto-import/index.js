@@ -17,9 +17,11 @@ module.exports = function autoImport(content) {
   const incomingQuery = qs.parse(rawQuery);
   const options = getOptions(loaderContext);
 
+  const trigger = '\n<import lang=js></import>\n';
+
   if (!rawQuery) {
     // trigger vue-loader custom block process
-    return `${ content }\n<import lang=js></import>\n`;
+    return content + trigger;
   }
   if (incomingQuery.type && incomingQuery.blockType !== 'import') {
     return content;
@@ -30,12 +32,12 @@ module.exports = function autoImport(content) {
 
   // no template
   if (!matched) {
-    return content;
+    return content + trigger;
   }
 
   // functional
   if (/<template functional>/.test(content)) {
-    return content;
+    return content + trigger;
   }
 
   // remove comment

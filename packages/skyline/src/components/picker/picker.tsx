@@ -1,11 +1,11 @@
 import { createNamespace } from 'skyline/src/utils/namespace';
-import { CssClassMap } from 'skyline/types/interface.d';
+import { CssClassMap } from 'skyline/src/types/interface';
 import { usePopup } from 'skyline/src/mixins/use-popup';
 import { Overlay } from 'skyline/src/components/overlay';
-import { PickerColumn as LinePickerColumn } from 'skyline/src/components/picker-column';
-import { iosEnterAnimation } from './animations/ios.enter';
-import { iosLeaveAnimation } from './animations/ios.leave';
-import { PickerButton } from './picker-interface.d';
+import { PickerColumn } from 'skyline/src/components/picker-column';
+import { iosEnterAnimation } from 'skyline/src/components/picker/animations/ios.enter';
+import { iosLeaveAnimation } from 'skyline/src/components/picker/animations/ios.leave';
+import { PickerButton } from 'skyline/src/components/picker/picker-interface';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('picker');
 
@@ -181,11 +181,11 @@ export default /*#__PURE__*/ createComponent({
           <div class="picker-columns">
             <div class="picker-above-highlight"></div>
               {visible && columns.map((c: any) => (
-              <LinePickerColumn
+              <PickerColumn
                 onColChange={this.colChange}
                 col={c}
               >
-              </LinePickerColumn>))}
+              </PickerColumn>))}
             <div class="picker-below-highlight"></div>
           </div>
         </div>

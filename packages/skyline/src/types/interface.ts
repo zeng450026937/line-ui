@@ -1,8 +1,15 @@
 // Types from utils
-export { Animation, AnimationBuilder } from 'skyline/src/utils/animation/animation-interface';
+export {
+  Animation,
+  AnimationBuilder,
+} from 'skyline/src/utils/animation/animation-interface';
 export * from 'skyline/src/utils/popup';
 export * from 'skyline/src/utils/config';
-export { Gesture, GestureConfig, GestureDetail } from 'skyline/src/utils/gesture';
+export {
+  Gesture,
+  GestureConfig,
+  GestureDetail,
+} from 'skyline/src/utils/gesture';
 
 export type TextFieldTypes = 'date' | 'email' | 'number' | 'password' | 'search' | 'tel' | 'text' | 'url' | 'time';
 export type Side = 'start' | 'end';

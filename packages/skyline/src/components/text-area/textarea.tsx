@@ -1,7 +1,7 @@
 import { createNamespace } from 'skyline/src/utils/namespace';
 import { useModel } from 'skyline/src/mixins/use-model';
 import { stop } from 'skyline/src/utils/dom/event-modifier';
-import { createColorClasses, useColor } from 'skyline/src/mixins/use-color';
+import { useColor } from 'skyline/src/mixins/use-color';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('textarea');
 
@@ -225,7 +225,7 @@ export default /*#__PURE__*/ createComponent({
   render() {
     const {
       nativeValue, rows, maxlength, placeholder, readonly, disabled,
-      autocapitalize, autofocus, color, cols, spellcheck, wrap, minlength,
+      autocapitalize, autofocus, cols, spellcheck, wrap, minlength,
     } = this;
     const labelId = `${ this.inputId }-lbl`;
     const label = findItemLabel(this.$el as HTMLElement);
@@ -235,7 +235,7 @@ export default /*#__PURE__*/ createComponent({
 
     return (
       <div
-        class={[bem(), { ...createColorClasses(color) }]}
+        class={[bem()]}
         on={this.$listeners}
       >
         <textarea

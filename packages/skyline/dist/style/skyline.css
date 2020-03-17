@@ -2095,6 +2095,7 @@ html.plt-mobile .line-app {
 
 .line-icon-stroke-width {
   stroke-width: 32px;
+  stroke-width: var(--line-icon-stroke-width, 32px);
 }
 
 .line-icon.line-svg-icon {

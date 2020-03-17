@@ -57,15 +57,13 @@ export interface ClickOutsideDirective extends VNodeDirective {
 function inserted(el: HTMLElement, binding: ClickOutsideDirective) {
   if (!binding.value) return;
 
-  const vClickOutside = createClickOutside(
+  (el as any).vClickOutside = createClickOutside(
     el,
     {
       ...binding.args,
       callback : binding.value,
     } as ClickOutsideOptions,
   );
-
-  (el as any).vClickOutside = vClickOutside;
 }
 
 function unbind(el: HTMLElement) {
@@ -91,11 +89,11 @@ function update(el: HTMLElement, binding: ClickOutsideDirective) {
   inserted(el, binding);
 }
 
-export const VClickOutside = /*#__PURE__*/ defineDirective({
+export const vClickOutside = /*#__PURE__*/ defineDirective({
   name : 'click-outside',
   inserted,
   unbind,
   update,
 });
 
-export default VClickOutside;
+export default vClickOutside;

@@ -1,8 +1,15 @@
 import { CreateElement } from 'vue';
 import { createNamespace } from 'skyline/src/utils/namespace';
 import { createColorClasses } from 'skyline/src/mixins/use-color';
-import { config, getSkylineMode } from 'skyline/src/utils/config';
-import { SpinnerConfig, SPINNERS, SpinnerTypes } from 'skyline/src/components/spinner/spinner-configs';
+import {
+  config,
+  getSkylineMode,
+} from 'skyline/src/utils/config';
+import {
+  SpinnerConfig,
+  SPINNERS,
+  SpinnerTypes,
+} from 'skyline/src/components/spinner/spinner-configs';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('spinner');
 

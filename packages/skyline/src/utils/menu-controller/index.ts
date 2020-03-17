@@ -1,4 +1,4 @@
-import { AnimationBuilder } from 'skyline/types/interface.d';
+import { AnimationBuilder } from 'skyline/src/types/interface';
 import { MenuI } from './menu-interface';
 import { menuOverlayAnimation } from './animations/overlay';
 import { menuPushAnimation } from './animations/push';

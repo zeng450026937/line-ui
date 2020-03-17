@@ -8,7 +8,7 @@ import { iosEnterAnimation } from 'skyline/src/components/tooltip/animations/ios
 import { iosLeaveAnimation } from 'skyline/src/components/tooltip/animations/ios.leave';
 import { createDirective } from 'skyline/src/utils/directive';
 import { createPopper } from 'skyline/src/utils/popper';
-import vHover from 'skyline/src/directives/hover';
+import { vHover } from 'skyline/src/directives/hover';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('tooltip');
 

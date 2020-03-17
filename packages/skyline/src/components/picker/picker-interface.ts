@@ -1,4 +1,7 @@
-import { AnimationBuilder, Mode } from 'skyline/types/interface.d';
+import {
+  AnimationBuilder,
+  Mode,
+} from 'skyline/src/types/interface';
 
 export interface PickerOptions {
   columns: PickerColumn[];

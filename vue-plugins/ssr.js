@@ -262,7 +262,7 @@ module.exports = (api, options) => {
       if (dev) {
         api.chainWebpack(config => {
           config.resolve.alias
-            .set('skyline', api.resolve('packages/skyline/src'));
+            .set('skyline', api.resolve('packages/skyline'));
         });
       }
 

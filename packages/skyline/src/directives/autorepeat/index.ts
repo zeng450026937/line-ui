@@ -105,9 +105,7 @@ export interface AutoRepeatDirective extends VNodeDirective {
 function inserted(el: HTMLElement, binding: AutoRepeatDirective) {
   if (binding.value === false) return;
 
-  const vAutoRepeat = createAutoRepeat(el, binding.value as AutoRepeatOptions);
-
-  (el as any).vAutoRepeat = vAutoRepeat;
+  (el as any).vAutoRepeat = createAutoRepeat(el, binding.value as AutoRepeatOptions);
 }
 
 function unbind(el: HTMLElement) {
@@ -139,11 +137,11 @@ function update(el: HTMLElement, binding: AutoRepeatDirective) {
 }
 
 
-export const VAutoRepeat = /*#__PURE__*/ defineDirective({
+export const vAutoRepeat = /*#__PURE__*/ defineDirective({
   name : 'autorepeat',
   inserted,
   update,
   unbind,
 });
 
-export default VAutoRepeat;
+export default vAutoRepeat;

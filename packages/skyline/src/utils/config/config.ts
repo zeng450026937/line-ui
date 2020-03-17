@@ -1,5 +1,5 @@
 /* eslint-disable-next-line */
-import { Mode } from 'skyline/types/interface';
+import { Mode } from 'skyline/src/types/interface';
 
 export interface SkylinConfig {
   /**

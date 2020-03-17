@@ -1,7 +1,7 @@
 import { createNamespace } from 'skyline/src/utils/namespace';
 import { useCheckItem } from 'skyline/src/mixins/use-check-item';
 import { useRipple } from 'skyline/src/mixins/use-ripple';
-import { createColorClasses, useColor } from 'skyline/src/mixins/use-color';
+import { useColor } from 'skyline/src/mixins/use-color';
 
 const NAMESPACE = 'RadioGroup';
 
@@ -59,7 +59,7 @@ export default /*#__PURE__*/ createComponent({
 
   render() {
     const {
-      checked, disabled, color, inItem,
+      checked, disabled, inItem,
     } = this;
 
     return (
@@ -69,7 +69,7 @@ export default /*#__PURE__*/ createComponent({
             checked,
             disabled,
           }),
-          { ...createColorClasses(color), 'in-item': inItem },
+          { 'in-item': inItem },
         ]}
         role="radio"
         onClick={this.toggle}

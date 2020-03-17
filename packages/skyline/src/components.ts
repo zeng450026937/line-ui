@@ -15,7 +15,6 @@ export * from 'skyline/src/components/chip';
 export * from 'skyline/src/components/col';
 export * from 'skyline/src/components/content';
 export * from 'skyline/src/components/datetime';
-export * from 'skyline/src/components/dropdown-menu';
 export * from 'skyline/src/components/fab';
 export * from 'skyline/src/components/fab-button';
 export * from 'skyline/src/components/fab-group';

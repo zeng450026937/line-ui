@@ -2,7 +2,10 @@ import { createNamespace } from 'skyline/src/utils/namespace';
 import { useGroup } from 'skyline/src/mixins/use-group';
 import { useLazy } from 'skyline/src/mixins/use-lazy';
 import { useModel } from 'skyline/src/mixins/use-model';
-import { isDef, isObject } from 'skyline/src/utils/helpers';
+import {
+  isDef,
+  isObject,
+} from 'skyline/src/utils/helpers';
 import { VNodeData } from 'vue';
 
 const NAMESPACE = 'FabGroup';

@@ -1,5 +1,8 @@
-/* eslint-disable-next-line */
-import { AnimationBuilder, Mode, TextFieldTypes } from 'skyline/types/interface';
+import {
+  AnimationBuilder,
+  Mode,
+  TextFieldTypes,
+} from 'skyline/src/types/interface';
 
 export interface AlertOptions {
   header?: string;

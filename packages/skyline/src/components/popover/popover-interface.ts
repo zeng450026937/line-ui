@@ -1,5 +1,7 @@
-/* eslint-disable-next-line */
-import { AnimationBuilder, Mode } from 'skyline/types/interface';
+import {
+  AnimationBuilder,
+  Mode,
+} from 'skyline/src/types/interface';
 
 export interface PopoverOptions {
   showBackdrop?: boolean;

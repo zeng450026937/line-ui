@@ -1,4 +1,7 @@
-import { Animation, createAnimation } from 'skyline/src/utils/animation';
+import {
+  Animation,
+  createAnimation,
+} from 'skyline/src/utils/animation';
 
 /**
  * Md Alert Leave Animation

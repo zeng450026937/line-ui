@@ -1,4 +1,4 @@
-import { Animation, Side } from 'skyline/types/interface.d';
+import { Animation, Side } from 'skyline/src/types/interface';
 
 export interface MenuI {
   el: Element;

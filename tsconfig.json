@@ -28,8 +28,8 @@
     "paths": {
       "@/*": ["src/*"],
       "@skyline/*": ["packages/*/src"],
-      "skyline": ["packages/skyline/src"],
-      "skyline/*": ["packages/skyline/src/*"],
+      "skyline": ["packages/skyline"],
+      "skyline/*": ["packages/skyline/*"],
     },
     "lib": [
       "esnext",

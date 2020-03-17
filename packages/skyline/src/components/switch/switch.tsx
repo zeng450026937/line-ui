@@ -1,8 +1,12 @@
 // import SwitchIndicator from 'skyline/src/components/switch/switch-indicator';
-import { createColorClasses, useColor } from 'skyline/src/mixins/use-color';
+import { useColor } from 'skyline/src/mixins/use-color';
 import { useCheckItem } from 'skyline/src/mixins/use-check-item';
 import { createNamespace } from 'skyline/src/utils/namespace';
-import { createGesture, Gesture, GestureDetail } from 'skyline/src/utils/gesture';
+import {
+  createGesture,
+  Gesture,
+  GestureDetail,
+} from 'skyline/src/utils/gesture';
 
 const NAMESPACE = 'SwitchGroup';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('switch');
@@ -112,7 +116,7 @@ export default /*#__PURE__*/ createComponent({
 
   render() {
     const {
-      checked, disabled, activated, color,
+      checked, disabled, activated,
     } = this;
     return (
       <div
@@ -123,7 +127,6 @@ export default /*#__PURE__*/ createComponent({
             checked,
             activated,
           }),
-          { ...createColorClasses(color) },
         ]}
         onClick={this.onClick}
         on={this.$listeners}

@@ -1,6 +1,6 @@
-import { PickerOptions } from 'skyline/src/components/picker/picker-interface.d';
+import { PickerOptions } from 'skyline/src/components/picker/picker-interface';
 
-export * from 'skyline/src/components/picker/picker-interface.d';
+export * from 'skyline/src/components/picker/picker-interface';
 
 export type DatetimeOptions = Partial<PickerOptions>;
 

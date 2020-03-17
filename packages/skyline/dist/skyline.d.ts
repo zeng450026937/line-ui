@@ -1,8 +1,8 @@
-import * as components from 'skyline/components';
-import * as directives from 'skyline/directives';
-import { install } from 'skyline/install';
-import { LineOptions } from 'skyline/install';
-import * as mixins from 'skyline/mixins';
+import * as components from 'skyline/src/components';
+import * as directives from 'skyline/src/directives';
+import { install } from 'skyline/src/install';
+import { LineOptions } from 'skyline/src/install';
+import * as mixins from 'skyline/src/mixins';
 import { VueConstructor } from 'vue';
 
 declare const _default: {
@@ -19,8 +19,8 @@ export declare const Skyline: {
     version: string;
 };
 
-export * from "skyline/components";
-export * from "skyline/directives";
-export * from "skyline/mixins";
+export * from "skyline/src/components";
+export * from "skyline/src/directives";
+export * from "skyline/src/mixins";
 
 export { }

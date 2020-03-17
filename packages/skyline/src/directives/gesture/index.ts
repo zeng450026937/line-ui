@@ -38,11 +38,11 @@ function update(el: HTMLElement, binding: GestureVNodeDirective) {
   inserted(el, binding);
 }
 
-export const VGesture = defineDirective({
+export const vGesture = defineDirective({
   name : 'gesture',
   inserted,
   unbind,
   update,
 });
 
-export default VGesture;
+export default vGesture;

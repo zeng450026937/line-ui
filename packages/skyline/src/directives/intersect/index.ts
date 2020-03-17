@@ -119,11 +119,11 @@ function update(el: HTMLElement, binding: ObserveVNodeDirective) {
   inserted(el, binding);
 }
 
-export const VIntersect = defineDirective({
+export const vIntersect = defineDirective({
   name : 'intersect',
   inserted,
   update,
   unbind,
 });
 
-export default VIntersect;
+export default vIntersect;

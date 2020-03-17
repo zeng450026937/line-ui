@@ -149,11 +149,11 @@ function update(el: HTMLElement, binding: WaterfallVNodeDirective) {
   inserted(el, binding);
 }
 
-export const VWaterfall = defineDirective({
+export const vWaterfall = defineDirective({
   name : 'waterfall',
   inserted,
   unbind,
   update,
 });
 
-export default VWaterfall;
+export default vWaterfall;

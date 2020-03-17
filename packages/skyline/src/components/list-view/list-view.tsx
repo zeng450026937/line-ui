@@ -1,5 +1,9 @@
 import { createNamespace } from 'skyline/src/utils/namespace';
-import { BoxLayout, LayoutItem, Orientation } from 'skyline/src/utils/layout';
+import {
+  BoxLayout,
+  LayoutItem,
+  Orientation,
+} from 'skyline/src/utils/layout';
 import { binarySearch } from 'skyline/src/utils/algorithm/binary-search';
 import { exponentialSearch } from 'skyline/src/utils/algorithm/exponential-search';
 import ListItem from 'skyline/src/components/list-view/list-item';

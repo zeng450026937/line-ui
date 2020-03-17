@@ -1,5 +1,5 @@
 import { createNamespace } from 'skyline/src/utils/namespace';
-import { createColorClasses, useColor } from 'skyline/src/mixins/use-color';
+import { useColor } from 'skyline/src/mixins/use-color';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('progress-bar');
 
@@ -52,7 +52,7 @@ export default /*#__PURE__*/ createComponent({
 
   render(h) {
     const {
-      mode, type, value, paused, reversed, buffer, color,
+      mode, type, value, paused, reversed, buffer,
     } = this;
 
     return (
@@ -64,7 +64,6 @@ export default /*#__PURE__*/ createComponent({
         class={[
           bem(),
           {
-            ...createColorClasses(color),
             [mode]                     : true,
             [`progress-bar-${ type }`] : true,
             'progress-paused'          : paused,

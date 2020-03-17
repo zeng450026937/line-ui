@@ -1,7 +1,6 @@
 import { createNamespace } from 'skyline/src/utils/namespace';
 import { useModel } from 'skyline/src/mixins/use-model';
-// import { stop } from 'skyline/src/utils/dom/event-modifier';
-import { createColorClasses, useColor } from 'skyline/src/mixins/use-color';
+import { useColor } from 'skyline/src/mixins/use-color';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('input');
 
@@ -258,7 +257,7 @@ export default /*#__PURE__*/ createComponent({
 
     const {
       nativeValue, hasFocus, accept, type, maxlength, readonly, placeholder, autocomplete, disabled,
-      max, min, size, autoFocus, pattern, required, color,
+      max, min, size, autoFocus, pattern, required,
     } = this;
 
     if (label) {
@@ -270,7 +269,6 @@ export default /*#__PURE__*/ createComponent({
         class={[
           bem(),
           {
-            ...createColorClasses(color),
             'has-value' : nativeValue && (nativeValue as string).length,
             'has-focus' : hasFocus,
           },
@@ -299,7 +297,6 @@ export default /*#__PURE__*/ createComponent({
           onBlur={this.onBlur}
           onChange={this.onChange}
         >
-          {/* onChange={stop(this.onChange)} */}
         </input>
         {(this.clearInput && !readonly && !disabled) && <button
           type="button"

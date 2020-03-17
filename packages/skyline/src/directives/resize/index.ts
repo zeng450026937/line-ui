@@ -65,11 +65,11 @@ function update(el: HTMLElement, binding: ResizeVNodeDirective) {
   inserted(el, binding);
 }
 
-export const VResize = defineDirective({
+export const vResize = defineDirective({
   name : 'resize',
   inserted,
   unbind,
   update,
 });
 
-export default VResize;
+export default vResize;

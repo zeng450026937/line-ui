@@ -1,5 +1,12 @@
-import { Animation, GestureDetail, Side } from 'skyline/types/interface.d';
-import { createGesture, GESTURE_CONTROLLER } from 'skyline/src/utils/gesture';
+import {
+  Animation,
+  GestureDetail,
+  Side,
+} from 'skyline/src/types/interface';
+import {
+  createGesture,
+  GESTURE_CONTROLLER,
+} from 'skyline/src/utils/gesture';
 import { menuController } from 'skyline/src/utils/menu-controller/index';
 import { getTimeGivenProgression } from 'skyline/src/utils/animation/cubic-bezier';
 

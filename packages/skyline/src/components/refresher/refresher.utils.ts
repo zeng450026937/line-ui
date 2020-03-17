@@ -1,7 +1,7 @@
 import Vue from 'vue';
 
 import { createAnimation } from 'skyline/src/utils/animation';
-import { isPlatform } from '../../utils/platform';
+import { isPlatform } from 'skyline/src/utils/platform';
 
 // Utils
 // -----------------------------

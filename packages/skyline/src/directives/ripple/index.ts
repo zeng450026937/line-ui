@@ -108,11 +108,11 @@ function update(el: HTMLElement, binding: RippleVNodeDirective) {
   inserted(el, binding);
 }
 
-export const VRipple = defineDirective({
+export const vRipple = defineDirective({
   name : 'ripple',
   inserted,
   update,
   unbind,
 });
 
-export default VRipple;
+export default vRipple;

@@ -1,5 +1,5 @@
 import { createNamespace } from 'skyline/src/utils/namespace';
-import { createColorClasses, useColor } from 'skyline/src/mixins/use-color';
+import { useColor } from 'skyline/src/mixins/use-color';
 import { useCheckGroupWithModel } from 'skyline/src/mixins/use-check-group';
 
 const NAMESPACE = 'TabBar';
@@ -55,7 +55,7 @@ export default /*#__PURE__*/ createComponent({
   },
 
   render() {
-    const { translucent, keyboardVisible, color } = this;
+    const { translucent, keyboardVisible } = this;
 
     return (
       <div
@@ -64,7 +64,6 @@ export default /*#__PURE__*/ createComponent({
             translucent,
             hidden : keyboardVisible,
           }),
-          { ...createColorClasses(color) },
         ]}
         on={this.$listeners}
       >
