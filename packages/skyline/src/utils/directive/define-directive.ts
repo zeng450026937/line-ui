@@ -3,7 +3,7 @@ import {
   VNodeDirective,
   VueConstructor,
 } from 'vue';
-import { directiveInstall as install } from 'skyline/utils/install';
+import { directiveInstall as install } from 'skyline/src/utils/install';
 
 export type DirectiveCallback<
   T extends VNodeDirective = VNodeDirective

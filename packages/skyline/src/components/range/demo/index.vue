@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { Range as LineRange } from 'skyline/components/range';
+import { Range as LineRange } from 'skyline/src/components/range';
 
 export default {
   name : 'RangeDemo',

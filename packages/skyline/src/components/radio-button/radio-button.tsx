@@ -1,7 +1,7 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { useCheckItem } from 'skyline/mixins/use-check-item';
-import { useRipple } from 'skyline/mixins/use-ripple';
-import RadioIndicator from 'skyline/components/radio-button/radio-indicator';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { useCheckItem } from 'skyline/src/mixins/use-check-item';
+import { useRipple } from 'skyline/src/mixins/use-ripple';
+import RadioIndicator from 'skyline/src/components/radio-button/radio-indicator';
 
 const NAMESPACE = 'RadioButtonGroup';
 

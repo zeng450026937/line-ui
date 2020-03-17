@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import AbstractButton from 'skyline/mixins/abstract-button';
+import AbstractButton from 'skyline/src/mixins/abstract-button';
 
 export default {
   name : 'SpinBox',

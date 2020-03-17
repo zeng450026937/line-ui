@@ -1,6 +1,6 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { useCheckItem } from 'skyline/mixins/use-check-item';
-import { Icon } from 'skyline/components/icon';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { useCheckItem } from 'skyline/src/mixins/use-check-item';
+import { Icon } from 'skyline/src/components/icon';
 
 const NAMESPACE = 'Collapse';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('collapse-item');

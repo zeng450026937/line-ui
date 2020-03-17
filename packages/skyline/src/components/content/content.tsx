@@ -1,15 +1,15 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { useColor } from 'skyline/mixins/use-color';
-import { isPlatform } from 'skyline/utils/platform';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { useColor } from 'skyline/src/mixins/use-color';
+import { isPlatform } from 'skyline/src/utils/platform';
 import {
   scrollByPoint,
   scrollToBottom,
   scrollToElement,
   scrollToPoint,
   scrollToTop,
-} from 'skyline/utils/scroll-to';
-import { isString } from 'skyline/utils/helpers';
-import { updateScrollDetail } from 'skyline/components/content/update-scroll-detail';
+} from 'skyline/src/utils/scroll-to';
+import { isString } from 'skyline/src/utils/helpers';
+import { updateScrollDetail } from 'skyline/src/components/content/update-scroll-detail';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('content');
 

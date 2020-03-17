@@ -1,5 +1,5 @@
 import { CreateElement, VNode } from 'vue';
-import { createMixins } from 'skyline/utils/mixins';
+import { createMixins } from 'skyline/src/utils/mixins';
 
 export function useAsyncRender() {
   return createMixins({

@@ -17,8 +17,8 @@
 <script>
 import {
   CheckBox as LineCheckBox, CheckBoxGroup as LineCheckBoxGroup, CheckIndicator as LineCheckIndicator,
-} from 'skyline/components/check-box';
-import { Cell as LineCell } from 'skyline/components/cell';
+} from 'skyline/src/components/check-box';
+import { Cell as LineCell } from 'skyline/src/components/cell';
 
 export default {
   name : 'CheckBoxDemo',

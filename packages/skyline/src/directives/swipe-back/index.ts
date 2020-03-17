@@ -1,10 +1,10 @@
 import { VNodeDirective } from 'vue';
-import { defineDirective } from 'skyline/utils/directive';
-import { createSwipeBackGesture } from 'skyline/utils/gesture/swipe-back';
+import { defineDirective } from 'skyline/src/utils/directive';
+import { createSwipeBackGesture } from 'skyline/src/utils/gesture/swipe-back';
 import {
   NO,
   NOOP,
-} from 'skyline/utils/helpers';
+} from 'skyline/src/utils/helpers';
 
 export interface SwipeBackVNodeDirective extends VNodeDirective {
   value?: {

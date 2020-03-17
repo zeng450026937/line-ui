@@ -2,7 +2,7 @@ import {
   DirectiveOptions,
   VNodeDirective,
 } from 'vue';
-import { createElementProxy } from 'skyline/utils/dom/element-proxy';
+import { createElementProxy } from 'skyline/src/utils/dom/element-proxy';
 
 export function createDirective(
   directive: DirectiveOptions,

@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { TextArea as LineTextArea } from 'skyline/components/text-area';
+import { TextArea as LineTextArea } from 'skyline/src/components/text-area';
 
 export default {
   name : 'TextAreaDemo',

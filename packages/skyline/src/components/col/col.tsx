@@ -1,6 +1,6 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { matchBreakpoint } from 'skyline/utils/media';
-import { isSupportsVars } from 'skyline/utils/dom';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { matchBreakpoint } from 'skyline/src/utils/media';
+import { isSupportsVars } from 'skyline/src/utils/dom';
 
 const BREAKPOINTS = ['', 'xs', 'sm', 'md', 'lg', 'xl'];
 

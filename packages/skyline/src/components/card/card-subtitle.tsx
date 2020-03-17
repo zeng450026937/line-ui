@@ -1,5 +1,5 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { useColor } from 'skyline/mixins/use-color';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { useColor } from 'skyline/src/mixins/use-color';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('card-subtitle');
 

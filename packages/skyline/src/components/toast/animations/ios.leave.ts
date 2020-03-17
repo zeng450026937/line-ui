@@ -1,4 +1,4 @@
-import { Animation, createAnimation } from 'skyline/utils/animation';
+import { Animation, createAnimation } from 'skyline/src/utils/animation';
 
 /**
  * iOS Toast Leave Animation

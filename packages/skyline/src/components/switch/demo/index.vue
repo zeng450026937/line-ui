@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import { Switch as LineSwitch } from 'skyline/components/switch';
+import { Switch as LineSwitch } from 'skyline/src/components/switch';
 
 export default {
   name : 'SwitchDemo',

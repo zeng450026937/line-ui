@@ -1,7 +1,7 @@
-import { createNamespace } from 'skyline/utils/namespace';
+import { createNamespace } from 'skyline/src/utils/namespace';
 import { Animation, GestureDetail } from 'skyline/types/interface.d';
-import { createGesture } from 'skyline/utils/gesture';
-import { getTimeGivenProgression } from 'skyline/utils/animation/cubic-bezier';
+import { createGesture } from 'skyline/src/utils/gesture';
+import { getTimeGivenProgression } from 'skyline/src/utils/animation/cubic-bezier';
 
 import {
   createPullingAnimation, createSnapBackAnimation, getRefresherAnimationType,

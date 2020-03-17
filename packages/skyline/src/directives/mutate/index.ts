@@ -1,6 +1,6 @@
 import { VNodeDirective } from 'vue';
-import { defineDirective } from 'skyline/utils/directive';
-import { isObject } from 'skyline/utils/helpers';
+import { defineDirective } from 'skyline/src/utils/directive';
+import { isObject } from 'skyline/src/utils/helpers';
 
 export type MutateHandler = (
   mutationsList: MutationRecord[],

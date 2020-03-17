@@ -1,6 +1,6 @@
 /* eslint-disable-next-line import/extensions */
 import { Vue } from 'vue/types/vue';
-import { createMixins } from 'skyline/utils/mixins';
+import { createMixins } from 'skyline/src/utils/mixins';
 
 export function useGroup(name: string) {
   return createMixins({

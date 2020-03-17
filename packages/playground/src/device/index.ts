@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Skyline from 'skyline';
+import Skyline from 'skyline/src';
 import router from '../router';
 import App from './app.vue';
 
@@ -8,15 +8,15 @@ import App from './app.vue';
 */
 
 // import 'skyline/style/skyline.scss';
-import 'skyline/style/skyline.ios.scss';
+import 'skyline/src/style/skyline.ios.scss';
 // import 'skyline/style/skyline.md.scss';
 
 // import style bundle
-import 'skyline/style/skyline.bundle.scss';
+import 'skyline/src/style/skyline.bundle.scss';
 
-import 'skyline/iconfont/material-icons.scss';
+import 'skyline/src/iconfont/material-icons.scss';
 // TODO menu-content
-import 'skyline/style/core.scss';
+import 'skyline/src/style/core.scss';
 
 
 Vue.use(Skyline);

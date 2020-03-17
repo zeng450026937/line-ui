@@ -1,5 +1,5 @@
 import { VNodeDirective } from 'vue';
-import { defineDirective } from 'skyline/utils/directive';
+import { defineDirective } from 'skyline/src/utils/directive';
 
 const PADDING = 10;
 const INITIAL_ORIGIN_SCALE = 0.5;

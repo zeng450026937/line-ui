@@ -1,5 +1,5 @@
 import { VNodeDirective } from 'vue';
-import { defineDirective } from 'skyline/utils/directive';
+import { defineDirective } from 'skyline/src/utils/directive';
 
 export interface ActivatableOptions {
   instant?: boolean;

@@ -1,5 +1,5 @@
 import { Animation } from 'skyline/types/interface.d';
-import { createAnimation } from 'skyline/utils/animation/animation';
+import { createAnimation } from 'skyline/src/utils/animation/animation';
 
 /**
  * baseAnimation

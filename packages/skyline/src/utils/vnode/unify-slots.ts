@@ -7,8 +7,8 @@ import {
   VNodeData,
 } from 'vue/types/vnode';
 
-import { mergeData } from 'skyline/utils/vnode/merge-data';
-import { hasOwn, isFunction } from 'skyline/utils/helpers';
+import { mergeData } from 'skyline/src/utils/vnode/merge-data';
+import { hasOwn, isFunction } from 'skyline/src/utils/helpers';
 
 type UnifyContext = RenderContext | Vue;
 

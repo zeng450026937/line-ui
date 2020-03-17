@@ -1,5 +1,5 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { usePopup } from 'skyline/mixins/use-popup';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { usePopup } from 'skyline/src/mixins/use-popup';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('dialog');
 const CONTENT_ELEMENT = 'content';

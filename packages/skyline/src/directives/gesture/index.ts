@@ -1,9 +1,9 @@
 import { VNodeDirective } from 'vue';
-import { defineDirective } from 'skyline/utils/directive';
+import { defineDirective } from 'skyline/src/utils/directive';
 import {
   createGesture,
   GestureConfig,
-} from 'skyline/utils/gesture/index';
+} from 'skyline/src/utils/gesture/index';
 
 export interface GestureVNodeDirective extends VNodeDirective {
   value?: GestureConfig;

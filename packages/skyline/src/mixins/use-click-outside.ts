@@ -1,11 +1,11 @@
-import { createMixins } from 'skyline/utils/mixins';
+import { createMixins } from 'skyline/src/utils/mixins';
 import {
   EventOptions,
   invoke,
   RestAny,
   useEvent,
   VueInstance,
-} from 'skyline/mixins/use-event';
+} from 'skyline/src/mixins/use-event';
 
 export type IncludeHandler<T = RestAny> = (this: VueInstance<T>) => Array<Element>;
 

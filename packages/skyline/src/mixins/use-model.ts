@@ -1,5 +1,5 @@
-import { createMixins } from 'skyline/utils/mixins';
-import { isDef } from 'skyline/utils/helpers';
+import { createMixins } from 'skyline/src/utils/mixins';
+import { isDef } from 'skyline/src/utils/helpers';
 
 export interface ModelOptions {
   prop?: string;

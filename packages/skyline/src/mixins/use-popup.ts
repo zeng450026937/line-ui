@@ -1,13 +1,13 @@
-import { createMixins } from 'skyline/utils/mixins';
-import { useLazy } from 'skyline/mixins/use-lazy';
-import { useModel } from 'skyline/mixins/use-model';
-import { useRemote } from 'skyline/mixins/use-remote';
-import { useTransition } from 'skyline/mixins/use-transition';
-import { popupContext, PopupInterface } from 'skyline/utils/popup';
-import { GESTURE_CONTROLLER } from 'skyline/utils/gesture';
-import { AnimationBuilder, createAnimation } from 'skyline/utils/animation';
-import { config } from 'skyline/utils/config';
-import { isDef } from 'skyline/utils/helpers';
+import { createMixins } from 'skyline/src/utils/mixins';
+import { useLazy } from 'skyline/src/mixins/use-lazy';
+import { useModel } from 'skyline/src/mixins/use-model';
+import { useRemote } from 'skyline/src/mixins/use-remote';
+import { useTransition } from 'skyline/src/mixins/use-transition';
+import { popupContext, PopupInterface } from 'skyline/src/utils/popup';
+import { GESTURE_CONTROLLER } from 'skyline/src/utils/gesture';
+import { AnimationBuilder, createAnimation } from 'skyline/src/utils/animation';
+import { config } from 'skyline/src/utils/config';
+import { isDef } from 'skyline/src/utils/helpers';
 
 export interface PopupOptions {
   disableScroll?: boolean;

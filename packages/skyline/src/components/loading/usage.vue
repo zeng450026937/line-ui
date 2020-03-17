@@ -18,7 +18,7 @@
 
 <script>
 import Vue from 'vue';
-import { LoadingController } from 'skyline/controller/loading';
+import { LoadingController } from 'skyline/src/controller/loading';
 
 const controller = new LoadingController();
 
@@ -32,7 +32,7 @@ export default Vue.extend({
     open() {
       controller.create({
         message : 'loading...',
-        spinner : 'circles',
+        spinner : 'lines-small', // bubbles circles circular crescent dots lines lines-small
       }).open();
     },
   },

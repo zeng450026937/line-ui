@@ -1,5 +1,5 @@
-import { createMixins } from 'skyline/utils/mixins';
-import { Group } from 'skyline/mixins/use-group';
+import { createMixins } from 'skyline/src/utils/mixins';
+import { Group } from 'skyline/src/mixins/use-group';
 
 export function useGroupItem(name: string) {
   return createMixins({

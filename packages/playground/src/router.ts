@@ -4,8 +4,8 @@ import VueRouter, { RouteConfig } from 'vue-router';
 Vue.use(VueRouter);
 
 function useComponentRoute(): RouteConfig[] {
-  const readmes = require.context('skyline/components/', true, /readme.md$/);
-  const usages = require.context('skyline/components/', true, /usage.vue$/);
+  const readmes = require.context('skyline/src/components/', true, /readme.md$/);
+  const usages = require.context('skyline/src/components/', true, /usage.vue$/);
 
   return readmes.keys().map(path => {
     const folder = path.split('/')[1];

@@ -15,13 +15,13 @@ import {
   VNode,
 } from 'vue/types/vnode';
 
-import { Mods } from 'skyline/utils/bem';
-import { unifySlots } from 'skyline/utils/vnode';
-import { componentInstall as install } from 'skyline/utils/install';
+import { Mods } from 'skyline/src/utils/bem';
+import { unifySlots } from 'skyline/src/utils/vnode';
+import { componentInstall as install } from 'skyline/src/utils/install';
 
-import { useRender } from 'skyline/mixins/use-render';
-import { useSlots } from 'skyline/mixins/use-slots';
-import { useMode } from 'skyline/mixins/use-mode';
+import { useRender } from 'skyline/src/mixins/use-render';
+import { useSlots } from 'skyline/src/mixins/use-slots';
+import { useMode } from 'skyline/src/mixins/use-mode';
 
 export type TsxComponentProps<Props, Slots> = Props & {
   // hack for jsx prop spread

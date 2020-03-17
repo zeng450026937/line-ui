@@ -18,7 +18,7 @@
 
 <script>
 import Vue from 'vue';
-import { ActionSheetController } from 'skyline/controller/action-sheet';
+import { ActionSheetController } from 'skyline/src/controller/action-sheet';
 
 const controller = new ActionSheetController();
 

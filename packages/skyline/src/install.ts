@@ -1,5 +1,5 @@
 import { VueConstructor } from 'vue';
-import { keys } from 'skyline/utils/helpers';
+import { keys } from 'skyline/src/utils/helpers';
 
 export interface LineOptions {
   components?: { [key: string]: any };
@@ -18,8 +18,9 @@ export function install(Vue: VueConstructor, opts: LineOptions = {}) {
     });
   }
   if (directives) {
-    keys(directives).forEach(key => {
-      Vue.use(directives[key]);
-    });
+    keys(directives)
+      .forEach(key => {
+        Vue.use(directives[key]);
+      });
   }
 }

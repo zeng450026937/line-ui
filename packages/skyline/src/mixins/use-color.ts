@@ -1,5 +1,5 @@
-import { createMixins } from 'skyline/utils/mixins';
-import { renderClass } from 'skyline/utils/vnode';
+import { createMixins } from 'skyline/src/utils/mixins';
+import { renderClass } from 'skyline/src/utils/vnode';
 
 export function createColorClasses(color: string) {
   if (!color) return undefined;

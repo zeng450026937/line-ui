@@ -1,5 +1,5 @@
-import { createMixins } from 'skyline/utils/mixins';
-import { createSlots } from 'skyline/utils/vnode/unify-slots';
+import { createMixins } from 'skyline/src/utils/mixins';
+import { createSlots } from 'skyline/src/utils/vnode/unify-slots';
 
 export function useSlots() {
   return createMixins({

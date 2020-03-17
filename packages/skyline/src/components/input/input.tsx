@@ -1,7 +1,7 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { useModel } from 'skyline/mixins/use-model';
-// import { stop } from 'skyline/utils/dom/event-modifier';
-import { createColorClasses, useColor } from 'skyline/mixins/use-color';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { useModel } from 'skyline/src/mixins/use-model';
+// import { stop } from 'skyline/src/utils/dom/event-modifier';
+import { createColorClasses, useColor } from 'skyline/src/mixins/use-color';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('input');
 

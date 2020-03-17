@@ -1,14 +1,14 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { useColor } from 'skyline/mixins/use-color';
-import { usePopup } from 'skyline/mixins/use-popup';
-import { usePopupDuration } from 'skyline/mixins/use-popup-duration';
-import { usePopupDelay } from 'skyline/mixins/use-popup-delay';
-import { useTrigger } from 'skyline/mixins/use-trigger';
-import { iosEnterAnimation } from 'skyline/components/tooltip/animations/ios.enter';
-import { iosLeaveAnimation } from 'skyline/components/tooltip/animations/ios.leave';
-import { createDirective } from 'skyline/utils/directive';
-import { createPopper } from 'skyline/utils/popper';
-import vHover from 'skyline/directives/hover';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { useColor } from 'skyline/src/mixins/use-color';
+import { usePopup } from 'skyline/src/mixins/use-popup';
+import { usePopupDuration } from 'skyline/src/mixins/use-popup-duration';
+import { usePopupDelay } from 'skyline/src/mixins/use-popup-delay';
+import { useTrigger } from 'skyline/src/mixins/use-trigger';
+import { iosEnterAnimation } from 'skyline/src/components/tooltip/animations/ios.enter';
+import { iosLeaveAnimation } from 'skyline/src/components/tooltip/animations/ios.leave';
+import { createDirective } from 'skyline/src/utils/directive';
+import { createPopper } from 'skyline/src/utils/popper';
+import vHover from 'skyline/src/directives/hover';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('tooltip');
 

@@ -1,4 +1,4 @@
-import { createNamespace } from 'skyline/utils/namespace';
+import { createNamespace } from 'skyline/src/utils/namespace';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('progress-circular');
 
@@ -56,11 +56,11 @@ export default /*#__PURE__*/ createComponent({
     },
 
     strokeDashOffset(): string {
-      return `${ (1 - this.position) * (this as any).circumference }px`;
+      return `${ (1 - this.position) * this.circumference }px`;
     },
 
     strokeWidth(): number {
-      return Number(this.width) / +this.size * this.viewBoxSize * 2;
+      return Number(this.width) / (+this.size) * this.viewBoxSize * 2;
     },
 
     classes(): object {
@@ -83,14 +83,14 @@ export default /*#__PURE__*/ createComponent({
     },
 
     viewBoxSize(): number {
-      return (this as any).radius / (1 - Number(this.width) / +this.size);
+      return this.radius / (1 - Number(this.width) / +this.size);
     },
   },
 
-  created() {
-    (this as any).radius = 20;
-    (this as any).circumference = 2 * Math.PI * (this as any).radius;
-    (this as any).strokeDashArray = Math.round((this as any).circumference * 1000) / 1000;
+  beforeMount() {
+    this.radius = 20;
+    this.circumference = 2 * Math.PI * this.radius;
+    this.strokeDashArray = Math.round(this.circumference * 1000) / 1000;
   },
 
   render() {

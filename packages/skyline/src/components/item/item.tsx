@@ -1,9 +1,9 @@
 import Vue from 'vue';
-import { createNamespace } from 'skyline/utils/namespace';
-import { useColor } from 'skyline/mixins/use-color';
-import { isDef } from 'skyline/utils/helpers';
-import { Icon } from 'skyline/components/icon';
-import ripple from 'skyline/directives/ripple';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { useColor } from 'skyline/src/mixins/use-color';
+import { isDef } from 'skyline/src/utils/helpers';
+import { Icon } from 'skyline/src/components/icon';
+import ripple from 'skyline/src/directives/ripple';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('item');
 

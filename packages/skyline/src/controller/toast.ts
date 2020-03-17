@@ -1,6 +1,6 @@
-import { Toast } from 'skyline/components/toast';
-import { createFactory } from 'skyline/controller/factory';
-import { popupContext, PopupInterface } from 'skyline/utils/popup';
+import { Toast } from 'skyline/src/components/toast';
+import { createFactory } from 'skyline/src/controller/factory';
+import { popupContext, PopupInterface } from 'skyline/src/utils/popup';
 
 export class ToastController {
   private factory: ReturnType<typeof createFactory>;

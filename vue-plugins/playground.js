@@ -8,14 +8,23 @@ module.exports = (api, options) => {
       details     : 'TBD',
     },
     (args, rawArgs) => {
+      options.pages = {
+        index  : './packages/playground/app.ts',
+        mobile : {
+          entry    : './packages/playground/src/device/index.ts',
+          template : 'public/index.html',
+          title    : 'Mobile',
+          filename : 'mobile.html',
+        },
+      };
       api.chainWebpack(config => {
-        config.entry('app')
-          .clear()
-          .add(api.resolve('packages/playground/app.ts'));
+        // config.entry('app')
+        //   .clear()
+        //   .add(api.resolve('packages/playground/app.ts'));
 
         // for development, set 'skyline' alias to source code
         config.resolve.alias
-          .set('skyline', api.resolve('packages/skyline/src'));
+          .set('skyline', api.resolve('packages/skyline'));
       });
 
       api.service.run('serve', args, rawArgs);

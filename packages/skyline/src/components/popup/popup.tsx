@@ -1,10 +1,10 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { usePopup } from 'skyline/mixins/use-popup';
-import { Overlay } from 'skyline/components/overlay';
-import { iosEnterAnimation } from 'skyline/components/popup/animations/ios.enter';
-import { iosLeaveAnimation } from 'skyline/components/popup/animations/ios.leave';
-import { mdEnterAnimation } from 'skyline/components/popup/animations/md.enter';
-import { mdLeaveAnimation } from 'skyline/components/popup/animations/md.leave';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { usePopup } from 'skyline/src/mixins/use-popup';
+import { Overlay } from 'skyline/src/components/overlay';
+import { iosEnterAnimation } from 'skyline/src/components/popup/animations/ios.enter';
+import { iosLeaveAnimation } from 'skyline/src/components/popup/animations/ios.leave';
+import { mdEnterAnimation } from 'skyline/src/components/popup/animations/md.enter';
+import { mdLeaveAnimation } from 'skyline/src/components/popup/animations/md.leave';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('popup');
 

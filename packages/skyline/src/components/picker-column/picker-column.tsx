@@ -1,6 +1,6 @@
-import { createNamespace } from 'skyline/utils/namespace';
+import { createNamespace } from 'skyline/src/utils/namespace';
 import { GestureDetail } from 'skyline/types/interface.d';
-import { createGesture } from 'skyline/utils/gesture';
+import { createGesture } from 'skyline/src/utils/gesture';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('picker-column');
 

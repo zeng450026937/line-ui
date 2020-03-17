@@ -1,5 +1,5 @@
 import Vue, { VNode } from 'vue';
-import { createMixins } from 'skyline/utils/mixins';
+import { createMixins } from 'skyline/src/utils/mixins';
 
 type BeforeRenderHook = () => void;
 type AfterRenderHook = (vnode: VNode) => VNode | void;

@@ -3,7 +3,7 @@ import Vue, {
   ComponentOptions,
   VueConstructor,
 } from 'vue';
-import { isFunction } from 'skyline/utils/helpers';
+import { isFunction } from 'skyline/src/utils/helpers';
 
 type AssertsKey = 'component' | 'directive';
 type AssertsPropKey = 'components' | 'directives';

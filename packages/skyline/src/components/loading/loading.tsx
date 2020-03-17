@@ -1,12 +1,12 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { usePopup } from 'skyline/mixins/use-popup';
-import { usePopupDuration } from 'skyline/mixins/use-popup-duration';
-import { Overlay } from 'skyline/components/overlay';
-import { Spinner } from 'skyline/components/spinner';
-import { iosEnterAnimation } from 'skyline/components/loading/animations/ios.enter';
-import { iosLeaveAnimation } from 'skyline/components/loading/animations/ios.leave';
-import { mdEnterAnimation } from 'skyline/components/loading/animations/md.enter';
-import { mdLeaveAnimation } from 'skyline/components/loading/animations/md.leave';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { usePopup } from 'skyline/src/mixins/use-popup';
+import { usePopupDuration } from 'skyline/src/mixins/use-popup-duration';
+import { Overlay } from 'skyline/src/components/overlay';
+import { Spinner } from 'skyline/src/components/spinner';
+import { iosEnterAnimation } from 'skyline/src/components/loading/animations/ios.enter';
+import { iosLeaveAnimation } from 'skyline/src/components/loading/animations/ios.leave';
+import { mdEnterAnimation } from 'skyline/src/components/loading/animations/md.enter';
+import { mdLeaveAnimation } from 'skyline/src/components/loading/animations/md.leave';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('loading');
 

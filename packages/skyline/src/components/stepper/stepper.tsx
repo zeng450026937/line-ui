@@ -1,5 +1,5 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { Icon } from 'skyline/components/icon';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { Icon } from 'skyline/src/components/icon';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('stepper');
 

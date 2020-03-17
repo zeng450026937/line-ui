@@ -1,5 +1,5 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { useLazy } from 'skyline/mixins/use-lazy';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { useLazy } from 'skyline/src/mixins/use-lazy';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('lazy');
 

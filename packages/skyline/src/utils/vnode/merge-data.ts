@@ -1,7 +1,7 @@
 import { VNodeData } from 'vue';
-import { mergeClass, mergeStaticClass } from 'skyline/utils/vnode/merge-class';
-import { mergeListener } from 'skyline/utils/vnode/merge-listener';
-import { isArray, isObject } from 'skyline/utils/helpers';
+import { mergeClass, mergeStaticClass } from 'skyline/src/utils/vnode/merge-class';
+import { mergeListener } from 'skyline/src/utils/vnode/merge-listener';
+import { isArray, isObject } from 'skyline/src/utils/helpers';
 
 export function mergeData(exist: VNodeData, value?: VNodeData) {
   if (!value) return exist;

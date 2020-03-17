@@ -1,10 +1,10 @@
 import { VNodeDirective } from 'vue';
-import { defineDirective } from 'skyline/utils/directive';
-import { keys } from 'skyline/utils/helpers';
+import { defineDirective } from 'skyline/src/utils/directive';
+import { keys } from 'skyline/src/utils/helpers';
 import {
   off,
   on,
-} from 'skyline/utils/dom';
+} from 'skyline/src/utils/dom';
 
 const DIR_RATIO = 0.5;
 const MIN_DISTANCE = 16;

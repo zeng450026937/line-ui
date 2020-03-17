@@ -1,6 +1,6 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { useGroupItem } from 'skyline/mixins/use-group-item';
-import { useRipple } from 'skyline/mixins/use-ripple';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { useGroupItem } from 'skyline/src/mixins/use-group-item';
+import { useRipple } from 'skyline/src/mixins/use-ripple';
 
 const NAMESPACE = 'ActionGroup';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('action');

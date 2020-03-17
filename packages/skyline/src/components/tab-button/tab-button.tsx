@@ -1,6 +1,6 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { useCheckItemWithModel } from 'skyline/mixins/use-check-item';
-import { useRipple } from 'skyline/mixins/use-ripple';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { useCheckItemWithModel } from 'skyline/src/mixins/use-check-item';
+import { useRipple } from 'skyline/src/mixins/use-ripple';
 
 const NAMESPACE = 'TabBar';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('tab-button');

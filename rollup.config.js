@@ -115,7 +115,7 @@ function createConfig(format, output, plugins = []) {
     resolvedPlugins.push(
       alias({
         entries : {
-          [name] : resolve('src'),
+          [name] : packageDir,
         },
       }),
     );

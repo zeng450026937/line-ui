@@ -35,8 +35,8 @@
 </template>
 
 <script>
-import { createNamespace } from 'skyline/utils/namespace';
-import { Popup } from 'skyline/components/popup';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { Popup } from 'skyline/src/components/popup';
 
 const [createComponent, bem, t] = createNamespace('drawer');
 

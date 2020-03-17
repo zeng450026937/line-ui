@@ -1,7 +1,7 @@
-import { createNamespace } from 'skyline/utils/namespace';
-import { useCheckItem } from 'skyline/mixins/use-check-item';
-import { useRipple } from 'skyline/mixins/use-ripple';
-import { createColorClasses, useColor } from 'skyline/mixins/use-color';
+import { createNamespace } from 'skyline/src/utils/namespace';
+import { useCheckItem } from 'skyline/src/mixins/use-check-item';
+import { useRipple } from 'skyline/src/mixins/use-ripple';
+import { createColorClasses, useColor } from 'skyline/src/mixins/use-color';
 
 const NAMESPACE = 'RadioGroup';
 

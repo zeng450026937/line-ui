@@ -1,4 +1,4 @@
-import { createMixins } from 'skyline/utils/mixins';
+import { createMixins } from 'skyline/src/utils/mixins';
 
 const DEFAULT_VALUE = 'value';
 

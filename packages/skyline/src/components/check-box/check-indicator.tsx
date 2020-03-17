@@ -1,6 +1,6 @@
 import { VNode } from 'vue';
-import { SvgIcon } from 'skyline/components/icon';
-import { createNamespace } from 'skyline/utils/namespace';
+import { SvgIcon } from 'skyline/src/components/icon';
+import { createNamespace } from 'skyline/src/utils/namespace';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('check-indicator');
 let path: VNode;

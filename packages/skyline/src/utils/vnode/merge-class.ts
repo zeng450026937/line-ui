@@ -3,7 +3,7 @@ import {
   isDef,
   isObject,
   isString,
-} from 'skyline/utils/helpers';
+} from 'skyline/src/utils/helpers';
 
 export const mergeClass = (exist?: any, value?: any) => {
   if (!value) return exist;

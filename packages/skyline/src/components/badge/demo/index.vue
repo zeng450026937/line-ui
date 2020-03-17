@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { Badge as LineBadge } from 'skyline/components/badge';
+import { Badge as LineBadge } from 'skyline/src/components/badge';
 
 export default {
   name : 'DadgeDemo',
