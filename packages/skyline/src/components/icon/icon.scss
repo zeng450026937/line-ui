@@ -7,4 +7,5 @@
 }
 .line-icon-stroke-width {
   stroke-width: 32px;
+  stroke-width: var(--line-icon-stroke-width, 32px);
 }

@@ -189,6 +189,7 @@ function createConfig(format, output, plugins = []) {
         root           : packageDir,
         rootMode       : 'upward',
         runtimeHelpers : true,
+        compact        : false,
       }),
     );
   }
