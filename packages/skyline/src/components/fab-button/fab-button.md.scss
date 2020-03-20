@@ -25,7 +25,7 @@
   --box-shadow: #{$fab-md-box-shadow-activated};
 }
 
-::slotted(ion-icon),
+.line-fab-button .slotted.line-icon,
 .line-fab-button__indicator {
   font-size: $fab-md-icon-font-size;
 }
@@ -44,6 +44,6 @@
   --background-hover: #{$fab-md-list-button-background-color-hover};
 }
 
-.line-fab-button.line-fab-button--in-list ::slotted(ion-icon) {
+.line-fab-button.line-fab-button--in-list .slotted.line-icon {
   font-size: $fab-md-list-button-icon-font-size;
 }

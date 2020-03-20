@@ -44,7 +44,7 @@
 // Material Design Checkbox: Disabled
 // --------------------------------------------------------
 
-// TODO .item-md.item-checkbox-disabled ion-label
+// TODO .item-md.item-checkbox-disabled .line-label
 .line-check-box--disabled {
   opacity: $checkbox-md-disabled-opacity;
 }
@@ -66,6 +66,6 @@
 }
 
 // REVIEW
-// .checkbox-md + .item-inner ion-label {
+// .checkbox-md + .item-inner .line-label {
 //   @include margin-horizontal(0, null);
 // }

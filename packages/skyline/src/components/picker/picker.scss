@@ -51,7 +51,7 @@
   display: none;
 }
 
-.picker-wrapper {
+.line-picker .picker-wrapper {
   @include border-radius(var(--border-radius));
   @include position(null, 0, 0, 0);
   @include margin(auto);
@@ -84,7 +84,7 @@
 // Picker Toolbar and Buttons
 // --------------------------------------------------
 
-.picker-toolbar {
+.line-picker .picker-toolbar {
   width: 100%;
 
   background: transparent;
@@ -93,13 +93,13 @@
   z-index: 1;
 }
 
-.picker-button {
+.line-picker .picker-button {
   border: 0;
 
   font-family: inherit;
 }
 
-.picker-button {
+.line-picker .picker-button {
   &:active,
   &:focus {
     outline: none;
@@ -109,7 +109,7 @@
 // Picker Columns and Highlight
 // --------------------------------------------------
 
-.picker-columns {
+.line-picker .picker-columns {
   display: flex;
   position: relative;
 
@@ -122,8 +122,8 @@
   overflow: hidden;
 }
 
-.picker-above-highlight,
-.picker-below-highlight {
+.line-picker .picker-above-highlight,
+.line-picker .picker-below-highlight {
   display: none;
   pointer-events: none;
 }

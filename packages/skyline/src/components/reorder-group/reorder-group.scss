@@ -36,6 +36,6 @@
   z-index: $z-index-reorder-selected;
 }
 
-.reorder-visible ion-reorder .reorder-icon {
+.reorder-visible .line-reorder .reorder-icon {
   @include transform(translate3d(0, 0, 0));
 }

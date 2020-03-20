@@ -9,7 +9,7 @@
 }
 
 @supports (backdrop-filter: blur(0)) {
-  :host(.line-card-header--translucent) {
+  .line-card-header.line-card-header--translucent {
     background-color: $card-ios-header-translucent-background-color;
     backdrop-filter: $card-ios-header-translucent-filter;
   }
