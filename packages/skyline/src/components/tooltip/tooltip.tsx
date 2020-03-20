@@ -29,7 +29,10 @@ export default /*#__PURE__*/ createComponent({
       default : 'top',
     },
     activeFocus : Boolean,
-    openOnHover : Boolean,
+    openOnHover : {
+      type    : Boolean,
+      default : false,
+    },
     openOnClick : Boolean,
   },
 
@@ -48,14 +51,29 @@ export default /*#__PURE__*/ createComponent({
           placement,
         } = this;
 
-        this.popper = createPopper(
+        this.popper = this.popper || createPopper(
           $triggerEl,
           $el as HTMLElement,
           {
             placement : placement as any,
             strategy  : 'fixed',
+            modifiers : [
+              {
+                name    : 'offset',
+                options : {
+                  offset : [0, 10],
+                },
+              },
+              {
+                name    : 'flip',
+                options : {
+                  rootBoundary : 'body',
+                },
+              },
+            ],
           },
         );
+
         return iosEnterAnimation(baseEl);
       };
     });
@@ -76,9 +94,9 @@ export default /*#__PURE__*/ createComponent({
   },
 
   updated() {
-    if (this.popper) {
-      this.popper.scheduleUpdate();
-    }
+    // if (this.popper) {
+    //   this.popper.update();
+    // }
   },
 
   beforeDestroy() {

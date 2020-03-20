@@ -31,7 +31,7 @@
 // Toolbar: Segment
 // --------------------------------------------------
 
-::slotted(ion-segment) {
+.line-toolbar .slotted.line-segment {
   min-height: var(--min-height);
 }
 
@@ -41,7 +41,7 @@
 
 // Style the first slot with additional margin start
 // this only ever gets added to the first start slot buttons
-::slotted(.buttons-first-slot) {
+.line-toolbar .slotted.buttons-first-slot {
   @include margin-horizontal(4px, null);
 }
 
@@ -49,7 +49,7 @@
 // this is added to the end, primary, or secondary slot
 // whichever it finds first, and the first one it finds
 // if multiple of the same name are found
-::slotted(.buttons-last-slot) {
+.line-toolbar .slotted.buttons-last-slot {
   @include margin-horizontal(null, 4px);
 }
 
@@ -57,21 +57,21 @@
 // Material Design Toolbar Slot Placement
 // --------------------------------------------------
 
-.slotted.slot-start {
+.line-toolbar .slotted.slot-start {
   order: map-get($toolbar-order-md, slot-start);
 }
 
-.slotted.slot-secondary {
+.line-toolbar .slotted.slot-secondary {
   order: map-get($toolbar-order-md, slot-secondary);
 }
 
-.slotted.slot-primary {
+.line-toolbar .slotted.slot-primary {
   order: map-get($toolbar-order-md, slot-primary);
 
   text-align: end;
 }
 
-.slotted.slot-end {
+.line-toolbar .slotted.slot-end {
   order: map-get($toolbar-order-md, slot-end);
 
   text-align: end;
