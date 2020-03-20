@@ -1,0 +1,17 @@
+@import "./segment";
+@import "./segment.md.vars";
+
+// Material Design Segment
+// --------------------------------------------------
+
+.line-segment {
+  --background: transparent;
+}
+
+
+// Segment: Scrollable
+// --------------------------------------------------
+
+.line-segment.segment-scrollable .slotted.line-segment-button {
+  min-width: $segment-button-md-min-width;
+}

@@ -1,0 +1,47 @@
+@import "./segment";
+@import "./segment.ios.vars";
+
+// iOS Segment
+// --------------------------------------------------
+
+.line-segment {
+  --background: #{$segment-ios-background-color};
+
+  @include border-radius($segment-ios-border-radius);
+
+  overflow: hidden;
+
+  z-index: 0;
+}
+
+
+// Segment: Color
+// --------------------------------------------------
+
+.line-segment.line-color {
+  background: #{current-color(base, 0.065)};
+}
+
+
+// Segment: Default Toolbar
+// --------------------------------------------------
+
+.line-segment.in-toolbar {
+  @include margin(0, auto);
+
+  width: auto;
+}
+
+// Default Segment, In a Toolbar
+.line-segment.in-toolbar:not(.line-color) {
+  background: var(--line-toolbar-segment-background, var(--background));
+}
+
+
+// Segment: Color Toolbar
+// --------------------------------------------------
+
+// Toolbar with Color, Default Segment
+.line-segment.in-toolbar-color:not(.line-color) {
+  background: #{current-color(contrast, 0.11)};
+}
