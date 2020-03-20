@@ -1,0 +1,45 @@
+@import "./dropdown-menu.scss";
+@import "../picker/picker.md.vars.scss";
+
+.line-dropdown-menu .picker-columns {
+  height: $picker-md-height - $picker-md-toolbar-height;
+  perspective: 1800px;
+}
+
+.line-dropdown-menu .picker-above-highlight {
+  @include position(0, null, null, 0);
+  @include transform(translate3d(0, 0, 90px));
+
+  position: absolute;
+
+  width: 100%;
+  height: $picker-md-option-offset-y + 4px;
+
+  border-bottom: 1px solid $picker-md-border-color;
+
+  background: linear-gradient(
+    to bottom,
+    $picker-md-top-background-color 20%,
+    $picker-md-bottom-background-color 100%);
+
+  z-index: 10;
+}
+
+.line-dropdown-menu .picker-below-highlight {
+  @include position($picker-md-option-offset-y + $picker-md-option-height - 4, null, null, 0);
+  @include transform(translate3d(0, 0, 90px));
+
+  position: absolute;
+
+  width: 100%;
+  height: $picker-md-option-offset-y + $picker-md-option-height;
+
+  border-top: 1px solid $picker-md-border-color;
+
+  background: linear-gradient(
+    to top,
+    $picker-md-top-background-color 30%,
+    $picker-md-bottom-background-color 100%);
+
+  z-index: 11;
+}

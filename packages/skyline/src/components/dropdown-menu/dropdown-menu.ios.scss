@@ -1,0 +1,47 @@
+@import "./dropdown-menu.scss";
+@import "../picker/picker.ios.vars.scss";
+
+.line-dropdown-menu .picker-columns {
+  height: $picker-ios-height - $picker-ios-toolbar-height - 1;
+  perspective: $picker-ios-column-perspective;
+}
+
+.line-dropdown-menu .picker-above-highlight {
+  @include position(0, null, null, 0);
+  @include transform(translate3d(0, 0, 90px));
+
+  display: block;
+  position: absolute;
+
+  width: 100%;
+  height: $picker-ios-option-offset-y + 4px;
+
+  border-bottom: 1px solid var(--border-color);
+
+  background: linear-gradient(
+    to bottom,
+    $picker-ios-top-background-color 20%,
+    $picker-ios-bottom-background-color 100%);
+
+  z-index: 10;
+}
+
+.line-dropdown-menu .picker-below-highlight {
+  @include position($picker-ios-option-offset-y + $picker-ios-option-height - 4, null, null, 0);
+  @include transform(translate3d(0, 0, 90px));
+
+  display: block;
+  position: absolute;
+
+  width: 100%;
+  height: $picker-ios-option-offset-y + $picker-ios-option-height;
+
+  border-top: 1px solid var(--border-color);
+
+  background: linear-gradient(
+    to top,
+    $picker-ios-top-background-color 30%,
+    $picker-ios-bottom-background-color 100%);
+
+  z-index: 11;
+}

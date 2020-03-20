@@ -1,0 +1,32 @@
+@import "../../themes/skyline.globals";
+
+// Popover
+// --------------------------------------------------
+
+/// @prop - Text color of the popover content
+$popover-text-color:                              $text-color !default;
+
+/// @prop - Background color of the popover content
+$popover-background-color:                        $background-color !default;
+
+/// @prop - Background Color of the picker wrapper
+$picker-ios-background-color:                     $background-color !default;
+
+/// @prop - Height of the picker wrapper
+$picker-ios-height:                               260px !default;
+
+
+/// @prop - Bottom Background Color alpha of the picker wrapper gradient
+$picker-ios-bottom-background-color-alpha:        .8 !default;
+
+/// @prop - Top Background Color of the picker wrapper gradient
+$picker-ios-top-background-color:                 var(--background, $picker-ios-background-color) !default;
+
+/// @prop - Height of the picker toolbar
+$picker-ios-toolbar-height:                       44px !default;
+
+/// @prop - Height of the picker option
+$picker-ios-option-height:                        42px !default;
+
+/// @prop - Offset y of the picker option
+$picker-ios-option-offset-y:                      (($picker-ios-height - $picker-ios-toolbar-height) / 2) - ($picker-ios-option-height / 2) - 10 !default;
