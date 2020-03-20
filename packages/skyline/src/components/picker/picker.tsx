@@ -90,10 +90,13 @@ export default /*#__PURE__*/ createComponent({
       if (role === 'cancel') {
         return this.close(role);
       }
-      const shouldDismiss = await this.callButtonHandler(button);
-      if (shouldDismiss) {
+
+      const shouldClose = await this.callButtonHandler(button);
+
+      if (shouldClose) {
         return this.close(button.role);
       }
+
       return Promise.resolve();
     },
 

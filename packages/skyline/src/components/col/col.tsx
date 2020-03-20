@@ -78,7 +78,7 @@ export default /*#__PURE__*/ createComponent({
       // If size wasn't set for any breakpoint
       // or if the user set the size without a value
       // it means we need to stick with the default and return
-      // e.g. <ion-col size-md>
+      // e.g. <line-col size-md>
       if (!columns || columns === '') {
         return;
       }
@@ -115,7 +115,7 @@ export default /*#__PURE__*/ createComponent({
         ? `calc(calc(${ columns } / var(--line-grid-columns, 12)) * 100%)`
       // Convert the columns to a percentage by dividing by the total number
       // of columns (12) and then multiplying by 100
-        : (columns > 0 && columns < 12) ? `${ columns / 12 * 100 }%` : 'auto';
+        : (columns > 0 && columns < 12) ? `${ (columns / 12) * 100 }%` : 'auto';
 
       /* eslint-disable-next-line consistent-return */
       return {

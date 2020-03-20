@@ -6,7 +6,7 @@
       </line-toolbar>
     </line-header>
 
-    <line-content class="line-padding">
+    <line-content>
       <section>
         <header>Small Size</header>
         <line-button size="small">Default</line-button>

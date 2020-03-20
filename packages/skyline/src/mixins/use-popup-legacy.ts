@@ -5,7 +5,10 @@ import { useRemote } from 'skyline/src/mixins/use-remote';
 import { useModel } from 'skyline/src/mixins/use-model';
 import { useClickOutside } from 'skyline/src/mixins/use-click-outside';
 import { useTransition } from 'skyline/src/mixins/use-transition';
-import { PopupInterface, popupStack } from 'skyline/src/utils/popup';
+import {
+  PopupInterface,
+  popupStack,
+} from 'skyline/src/utils/popup';
 import { isDef } from 'skyline/src/utils/helpers';
 import { Overlay } from 'skyline/src/components/overlay';
 
@@ -164,9 +167,7 @@ export function usePopup(options?: PopupOptions) {
         if (!this.closeOnClickOutside) return;
         this.visible = false;
       });
-    },
 
-    beforeMount() {
       this.visible = this.inited = this.visible || (
         isDef(this.$attrs.visible)
           && (this.$attrs.visible as string | boolean) !== false

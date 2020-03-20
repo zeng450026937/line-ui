@@ -1,3 +1,7 @@
+import { menuController } from 'skyline/src/utils/menu-controller/index';
+import { getTimeGivenProgression } from 'skyline/src/utils/animation/cubic-bezier';
+import { useModel } from 'skyline/src/mixins/use-model';
+import { createNamespace } from 'skyline/src/utils/namespace';
 import {
   Animation,
   GestureDetail,
@@ -7,11 +11,6 @@ import {
   createGesture,
   GESTURE_CONTROLLER,
 } from 'skyline/src/utils/gesture';
-import { menuController } from 'skyline/src/utils/menu-controller/index';
-import { getTimeGivenProgression } from 'skyline/src/utils/animation/cubic-bezier';
-
-import { useModel } from 'skyline/src/mixins/use-model';
-import { createNamespace } from 'skyline/src/utils/namespace';
 
 import { Overlay } from 'skyline/src/components/overlay';
 
@@ -237,7 +236,7 @@ export default /*#__PURE__*/ createComponent({
       // Do not allow swipe gesture if a modal is open
 
       // TODO isModalPresented
-      // const isModalPresented = !!document.querySelector('ion-modal.show-modal');
+      // const isModalPresented = !!document.querySelector('<div className="line"></div>-modal.show-modal');
       if (!this.canSwipe()) {
         return false;
       }

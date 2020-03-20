@@ -1,11 +1,10 @@
 import { createNamespace } from 'skyline/src/utils/namespace';
+import { createGesture } from 'skyline/src/utils/gesture';
+import { getTimeGivenProgression } from 'skyline/src/utils/animation/cubic-bezier';
 import {
   Animation,
   GestureDetail,
 } from 'skyline/src/types/interface';
-import { createGesture } from 'skyline/src/utils/gesture';
-import { getTimeGivenProgression } from 'skyline/src/utils/animation/cubic-bezier';
-
 import {
   createPullingAnimation,
   createSnapBackAnimation,

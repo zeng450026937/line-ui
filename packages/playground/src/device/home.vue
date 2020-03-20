@@ -56,10 +56,6 @@ export default {
 
     };
   },
-
-  updated() {
-    console.log(this.$refs.usage);
-  },
 };
 </script>
 

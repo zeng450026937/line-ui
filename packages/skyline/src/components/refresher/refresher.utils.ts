@@ -7,8 +7,8 @@ import { isPlatform } from 'skyline/src/utils/platform';
 // -----------------------------
 
 export const shouldUseNativeRefresher = (referenceEl: HTMLElement, mode: string) => {
-  const pullingSpinner = referenceEl.querySelector('ion-refresher-content .refresher-pulling ion-spinner');
-  const refreshingSpinner = referenceEl.querySelector('ion-refresher-content .refresher-refreshing ion-spinner');
+  const pullingSpinner = referenceEl.querySelector('.line-refresher-content .refresher-pulling .line-spinner');
+  const refreshingSpinner = referenceEl.querySelector('.line-refresher-content .refresher-refreshing .line-spinner');
 
   return (
     pullingSpinner !== null
@@ -63,11 +63,11 @@ export const transitionEndAsync = (el: HTMLElement | null) => {
 type RefresherAnimationType = 'scale' | 'translate';
 
 const createBaseAnimation = (pullingRefresherIcon: HTMLElement) => {
-  const spinner = pullingRefresherIcon.querySelector('ion-spinner') as HTMLElement;
+  const spinner = pullingRefresherIcon.querySelector('.line-spinner') as HTMLElement;
   const circle = spinner!.shadowRoot!.querySelector('circle') as any;
   const spinnerArrowContainer = pullingRefresherIcon.querySelector('.spinner-arrow-container') as HTMLElement;
   const arrowContainer = pullingRefresherIcon!.querySelector('.arrow-container');
-  const arrow = (arrowContainer) ? arrowContainer!.querySelector('ion-icon') as HTMLElement : null;
+  const arrow = (arrowContainer) ? arrowContainer!.querySelector('.line-icon') as HTMLElement : null;
 
   const baseAnimation = createAnimation()
     .duration(1000)

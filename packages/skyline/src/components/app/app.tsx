@@ -21,11 +21,14 @@ export default /*#__PURE__*/ createComponent({
     };
   },
 
-  beforeMount() {
+  created() {
     // TODO:
     // config must be setup before using
     // while child content is rendered before created
     setupConfig();
+  },
+
+  beforeMount() {
     setupPlatforms();
     setupTapClick();
     setupFocusVisible();

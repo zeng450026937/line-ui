@@ -97,7 +97,6 @@ export default /*#__PURE__*/ createComponent({
 
   methods : {
     disabledChanged() {
-      console.log('gesture: ', this.disabled);
       if (this.gesture) {
         this.gesture.enable(!this.disabled);
       }
