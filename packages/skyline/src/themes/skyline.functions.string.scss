@@ -78,7 +78,7 @@
 @function url-encode($val) {
   $spaces: str-replace($val, " ", "%20");
   $encoded: str-replace($spaces, "#", "%23");
-  
+
   @return $encoded;
 }
 
@@ -125,17 +125,17 @@
 
           @if str-contains($element, "))") {
             $scoped-element: str-replace($scoped-element, "))", ")");
-          } 
-          
+          }
+
           @else {
             $scoped-element: str-replace($scoped-element, ")", "");
           }
-          
+
           $scoped-element: str-replace($scoped-element, ":host(", ":host-context(#{$addHostSelector})");
 
           $new-element: append($new-element, $scoped-element, space);
-        } 
-        
+        }
+
         @else {
           $new-element: append($new-element, $element, space);
         }
@@ -145,13 +145,13 @@
     // If the selector contains :host it means it is targeting just the host
     // element so we can change it to look for host-context
     }
-    
+
     @else if str-contains($selector, ":host") {
       $list: append($list, ":host-context(#{$addHostSelector})", comma);
     // If the selector does not contain host at all it is either a shadow
     // or normal element so append both the dir check and host-context
-    } 
-    
+    }
+
     @else {
       $list: append($list, "#{$addHostSelector} #{$selector}", comma);
       $list: append($list, ":host-context(#{$addHostSelector}) #{$selector}", comma);

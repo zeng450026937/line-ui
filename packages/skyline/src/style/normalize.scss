@@ -138,26 +138,26 @@ input[type="submit"] {
 a,
 a div,
 a span,
-a ion-icon,
-a ion-label,
+a .line-icon,
+a .line-label,
 button,
 button div,
 button span,
-button ion-icon,
-button ion-label,
-.ion-tappable,
+button .line-icon,
+button .line-label,
+.line-tappable,
 [tappable],
 [tappable] div,
 [tappable] span,
-[tappable] ion-icon,
-[tappable] ion-label,
+[tappable] .line-icon,
+[tappable] .line-label,
 input,
 textarea {
   touch-action: manipulation;
 }
 
-a ion-label,
-button ion-label {
+a .line-label,
+button .line-label {
   pointer-events: none;
 }
 

@@ -8,13 +8,13 @@
   --background: #{$action-sheet-ios-background-color};
   --background-selected: #{$action-sheet-ios-button-background-selected};
   --background-activated: #{$action-sheet-ios-button-background-activated};
-  --backdrop-opacity: var(--ion-backdrop-opacity, 0.4);
+  --backdrop-opacity: var(--line-backdrop-opacity, 0.4);
 
   text-align: $action-sheet-ios-text-align;
 }
 
 .line-action-sheet__wrapper {
-  @include margin(var(--ion-safe-area-top, 0), auto, var(--ion-safe-area-bottom, 0), auto);
+  @include margin(var(--line-safe-area-top, 0), auto, var(--line-safe-area-bottom, 0), auto);
 }
 
 
@@ -157,4 +157,17 @@
   background: var(--background-selected);
 
   font-weight: $action-sheet-ios-button-cancel-font-weight;
+
+  &::after {
+    background: var(--button-background-selected);
+
+    opacity: var(--button-background-selected-opacity);
+  }
+}
+
+
+@media (any-hover: hover) {
+  .line-action-sheet__button--destructive:hover {
+    color: $action-sheet-ios-button-destructive-text-color;
+  }
 }

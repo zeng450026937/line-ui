@@ -36,7 +36,7 @@
 }
 
 
-.menu-inner {
+.line-menu .menu-inner {
   @include position(0, auto, 0, 0);
   @include transform(translate3d(-9999px, 0, 0));
 
@@ -60,7 +60,7 @@
 }
 
 .line-menu.menu-side-start .menu-inner {
-  --ion-safe-area-right: 0px;
+  --line-safe-area-right: 0px;
 
   @include multi-dir() {
     /* stylelint-disable property-blacklist */
@@ -70,7 +70,7 @@
 }
 
 .line-menu.menu-side-end .menu-inner {
-  --ion-safe-area-left: 0px;
+  --line-safe-area-left: 0px;
 
   @include multi-dir() {
     right: 0;

@@ -160,7 +160,7 @@ export const createSnapBackAnimation = (pullingRefresherIcon: HTMLElement) => {
   return createAnimation()
     .duration(125)
     .addElement(pullingRefresherIcon)
-    .fromTo('transform', 'translateY(var(--ion-pulling-refresher-translate, 100px))', 'translateY(0px)');
+    .fromTo('transform', 'translateY(var(--line-pulling-refresher-translate, 100px))', 'translateY(0px)');
 };
 
 export const getRefresherAnimationType = (contentEl: HTMLElement): RefresherAnimationType => {

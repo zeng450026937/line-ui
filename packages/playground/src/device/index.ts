@@ -18,6 +18,12 @@ import 'skyline/src/iconfont/material-icons.scss';
 // TODO menu-content
 import 'skyline/src/style/core.scss';
 
+// import 'skyline/src/themes/css-variables/css/dark.css';
+// import 'skyline/src/themes/css-variables/css/default.css';
+// import 'skyline/src/themes/css-variables/css/oceanic.css';
+// import 'skyline/src/themes/css-variables/css/toolbar.css';
+// import 'skyline/src/themes/css-variables/css/vibrant.css';
+
 
 Vue.use(Skyline);
 

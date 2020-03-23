@@ -87,7 +87,7 @@ export default /*#__PURE__*/ createComponent({
       const colSize = (columns === 'auto')
         ? 'auto'
         // If CSS supports variables we should use the grid columns var
-        : isSupportsVars() ? `calc(calc(${ columns } / var(--ion-grid-columns, 12)) * 100%)`
+        : isSupportsVars() ? `calc(calc(${ columns } / var(--line-grid-columns, 12)) * 100%)`
           // Convert the columns to a percentage by dividing by the total number
           // of columns (12) and then multiplying by 100
           : `${ (columns / 12) * 100 }%`;
@@ -112,7 +112,7 @@ export default /*#__PURE__*/ createComponent({
       // 12 we can position the column, else default to auto
       const amount = isSupportsVars()
       // If CSS supports variables we should use the grid columns var
-        ? `calc(calc(${ columns } / var(--ion-grid-columns, 12)) * 100%)`
+        ? `calc(calc(${ columns } / var(--line-grid-columns, 12)) * 100%)`
       // Convert the columns to a percentage by dividing by the total number
       // of columns (12) and then multiplying by 100
         : (columns > 0 && columns < 12) ? `${ columns / 12 * 100 }%` : 'auto';

@@ -5,19 +5,19 @@
 
 .line-grid {
   /**
-   * @prop --ion-grid-padding: Padding for the Grid
-   * @prop --ion-grid-padding-xs: Padding for the Grid on xs screens
-   * @prop --ion-grid-padding-sm: Padding for the Grid on sm screens
-   * @prop --ion-grid-padding-md: Padding for the Grid on md screens
-   * @prop --ion-grid-padding-lg: Padding for the Grid on lg screens
-   * @prop --ion-grid-padding-xl: Padding for the Grid on xl screens
+   * @prop --line-grid-padding: Padding for the Grid
+   * @prop --line-grid-padding-xs: Padding for the Grid on xs screens
+   * @prop --line-grid-padding-sm: Padding for the Grid on sm screens
+   * @prop --line-grid-padding-md: Padding for the Grid on md screens
+   * @prop --line-grid-padding-lg: Padding for the Grid on lg screens
+   * @prop --line-grid-padding-xl: Padding for the Grid on xl screens
    *
-   * @prop --ion-grid-width: Width of the fixed Grid
-   * @prop --ion-grid-width-xs: Width of the fixed Grid on xs screens
-   * @prop --ion-grid-width-sm: Width of the fixed Grid on sm screens
-   * @prop --ion-grid-width-md: Width of the fixed Grid on md screens
-   * @prop --ion-grid-width-lg: Width of the fixed Grid on lg screens
-   * @prop --ion-grid-width-xl: Width of the fixed Grid on xl screens
+   * @prop --line-grid-width: Width of the fixed Grid
+   * @prop --line-grid-width-xs: Width of the fixed Grid on xs screens
+   * @prop --line-grid-width-sm: Width of the fixed Grid on sm screens
+   * @prop --line-grid-width-md: Width of the fixed Grid on md screens
+   * @prop --line-grid-width-lg: Width of the fixed Grid on lg screens
+   * @prop --line-grid-width-xl: Width of the fixed Grid on xl screens
    */
 
   @include make-breakpoint-padding($grid-paddings);
@@ -40,10 +40,10 @@
 
 // Remove the padding from grid and all immediate children columns
 .line-grid.line-no-padding {
-  --ion-grid-column-padding: 0;
-  --ion-grid-column-padding-xs: 0;
-  --ion-grid-column-padding-sm: 0;
-  --ion-grid-column-padding-md: 0;
-  --ion-grid-column-padding-lg: 0;
-  --ion-grid-column-padding-xl: 0;
+  --line-grid-column-padding: 0;
+  --line-grid-column-padding-xs: 0;
+  --line-grid-column-padding-sm: 0;
+  --line-grid-column-padding-md: 0;
+  --line-grid-column-padding-lg: 0;
+  --line-grid-column-padding-xl: 0;
 }

@@ -25,8 +25,8 @@ body.backdrop-no-scroll {
   overflow: hidden;
 }
 
-// TODO: Block scrolling in ion-content, breaks inside ion-modal
-// body.backdrop-no-scroll .line-page > ion-content {
+// TODO: Block scrolling in line-content, breaks inside line-modal
+// body.backdrop-no-scroll .line-page > line-content {
 //   --overflow: hidden;
 // }
 

@@ -9,7 +9,7 @@
   --color: #{$list-header-ios-color};
   --border-color: #{$item-ios-border-bottom-color};
 
-  @include padding-horizontal(calc(var(--ion-safe-area-left, 0px) + #{$list-header-ios-padding-start}), null);
+  @include padding-horizontal(calc(var(--line-safe-area-left, 0px) + #{$list-header-ios-padding-start}), null);
 
   position: relative;
 

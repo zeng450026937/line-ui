@@ -14,7 +14,7 @@ $switch-md-track-width:                           36px !default;
 $switch-md-track-height:                          14px !default;
 
 /// @prop - Background color of the switch track
-$switch-md-track-background-color-off:            rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.3) !default;
+$switch-md-track-background-color-off:            rgba(var(--line-text-color-rgb, 0, 0, 0), 0.3) !default;
 
 /// @prop - Background color alpha of the checked switch track
 $switch-md-track-background-color-alpha-on:       .5 !default;
