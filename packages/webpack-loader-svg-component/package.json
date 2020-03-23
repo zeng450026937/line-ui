@@ -1,0 +1,21 @@
+{
+  "name": "@skyline/webpack-loader-svg-component",
+  "version": "1.0.0-alpha",
+  "description": "@skyline/webpack-loader-svg-component",
+  "main": "index.js",
+  "module": "dist/webpack-loader-svg-component.esm-bundler.js",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "types": "dist/webpack-loader-svg-component.d.ts",
+  "keywords": [
+    "skyline"
+  ],
+  "private": true,
+  "author": "Yealink Inc",
+  "license": "MIT",
+  "dependencies": {
+    "svgo": "^1.3.2"
+  }
+}

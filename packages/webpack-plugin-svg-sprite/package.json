@@ -1,0 +1,25 @@
+{
+  "name": "@skyline/webpack-plugin-svg-sprite",
+  "version": "1.0.0-alpha",
+  "description": "@skyline/webpack-plugin-svg-sprite",
+  "main": "lib/plugin.js",
+  "files": [
+    "index.js",
+    "lib/",
+    "schemas/"
+  ],
+  "keywords": [
+    "skyline"
+  ],
+  "private": true,
+  "author": "Yealink Inc",
+  "license": "MIT",
+    "dependencies": {
+    "loader-utils": "^1.1.0",
+    "lodash.merge": "^4.6.2",
+    "postcss": "^7.0.14",
+    "postcss-svg-mixer": "^0.3.13",
+    "svg-mixer": "^2.3.10",
+    "svg-mixer-utils": "^0.3.4"
+  }
+}

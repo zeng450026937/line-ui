@@ -7,6 +7,7 @@ const configs = [
   { removeViewBox: false },
   { removeDimensions: true },
   { mergePaths: false }, // ionic icons has multiple path
+  { removeAttrs: { attrs: '(data-.*)' } },
 ];
 
 const svgo = new SVGO({ plugins: configs });

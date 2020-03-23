@@ -106,7 +106,7 @@ module.exports = {
     'arrow-parens'                      : 0,
     'arrow-body-style'                  : 0,
     'prefer-arrow-callback'             : 1,
-    'prefer-destructuring'              : ['error', { object: true, array: false }],
+    'prefer-destructuring'              : ['warn', { object: true, array: false }],
     'lines-between-class-members'       : 0,
     'class-methods-use-this'            : 1,
     'import/prefer-default-export'      : 0,
