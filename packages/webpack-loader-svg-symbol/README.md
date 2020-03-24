@@ -1,1 +1,0 @@
-# @skyline/webpack-loader-svg
