@@ -6,6 +6,8 @@ const configs = [
   { cleanupListOfValues: true },
   { removeViewBox: false },
   { removeDimensions: true },
+  { removeStyleElement: true },
+  { removeScriptElement: true },
   { mergePaths: false }, // ionic icons has multiple path
   { removeAttrs: { attrs: '(data-.*)' } },
 ];

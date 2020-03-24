@@ -1,0 +1,2445 @@
+{
+  "name": "eva-icons",
+  "symbols": [
+    {
+      "id": "activity",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "activity-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "alert-circle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "alert-circle-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "alert-triangle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "alert-triangle-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "archive",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "archive-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-back",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-back-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-circle-down",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-circle-down-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-circle-left",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-circle-left-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-circle-right",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-circle-right-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-circle-up",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-circle-up-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-down",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-down-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-downward",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-downward-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-forward",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-forward-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-ios-back",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-ios-back-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-ios-downward",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-ios-downward-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-ios-forward",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-ios-forward-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-ios-upward",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-ios-upward-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-left",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-left-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-right",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-right-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-up",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-up-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-upward",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-upward-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrowhead-down",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrowhead-down-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrowhead-left",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrowhead-left-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrowhead-right",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrowhead-right-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrowhead-up",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrowhead-up-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "at",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "at-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "attach",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "attach-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "attach-2-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "attach-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "award",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "award-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "backspace",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "backspace-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bar-chart",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bar-chart-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bar-chart-2-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bar-chart-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "battery",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "battery-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "behance",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "behance-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bell",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bell-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bell-off-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bell-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bluetooth",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bluetooth-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "book",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "book-open",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "book-open-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "book-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bookmark",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bookmark-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "briefcase",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "briefcase-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "browser",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "browser-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "brush",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "brush-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bulb",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bulb-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "calendar",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "calendar-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "camera",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "camera-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "car",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "car-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "cast",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "cast-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "charging",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "charging-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "checkmark",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "checkmark-circle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "checkmark-circle-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "checkmark-circle-2-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "checkmark-circle-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "checkmark-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "checkmark-square",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "checkmark-square-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "checkmark-square-2-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "checkmark-square-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "chevron-down",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "chevron-down-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "chevron-left",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "chevron-left-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "chevron-right",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "chevron-right-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "chevron-up",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "chevron-up-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "clipboard",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "clipboard-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "clock",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "clock-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "close",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "close-circle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "close-circle-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "close-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "close-square",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "close-square-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "cloud-download",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "cloud-download-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "cloud-upload",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "cloud-upload-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "code",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "code-download",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "code-download-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "code-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "collapse",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "collapse-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "color-palette",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "color-palette-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "color-picker",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "color-picker-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "compass",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "compass-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "copy",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "copy-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "corner-down-left",
+      "width": 24.1,
+      "height": 24.1
+    },
+    {
+      "id": "corner-down-left-outline",
+      "width": 24.1,
+      "height": 24.1
+    },
+    {
+      "id": "corner-down-right",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "corner-down-right-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "corner-left-down",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "corner-left-down-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "corner-left-up",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "corner-left-up-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "corner-right-down",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "corner-right-down-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "corner-right-up",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "corner-right-up-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "corner-up-left",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "corner-up-left-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "corner-up-right",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "corner-up-right-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "credit-card",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "credit-card-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "crop",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "crop-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "cube",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "cube-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "diagonal-arrow-left-down",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "diagonal-arrow-left-down-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "diagonal-arrow-left-up",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "diagonal-arrow-left-up-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "diagonal-arrow-right-down",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "diagonal-arrow-right-down-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "diagonal-arrow-right-up",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "diagonal-arrow-right-up-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "done-all",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "done-all-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "download",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "download-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "droplet",
+      "width": 24.2,
+      "height": 24.2
+    },
+    {
+      "id": "droplet-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "droplet-off-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "droplet-outline",
+      "width": 24.2,
+      "height": 24.2
+    },
+    {
+      "id": "edit",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "edit-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "edit-2-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "edit-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "email",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "email-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "expand",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "expand-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "external-link",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "external-link-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "eye",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "eye-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "eye-off-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "eye-off-2-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "eye-off-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "eye-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "facebook",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "facebook-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "file",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "file-add",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "file-add-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "file-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "file-remove",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "file-remove-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "file-text",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "file-text-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "film",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "film-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flag",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flag-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flash",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flash-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flash-off-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flash-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flip",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flip-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flip-2-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flip-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "folder",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "folder-add",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "folder-add-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "folder-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "folder-remove",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "folder-remove-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "funnel",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "funnel-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "gift",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "gift-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "github",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "github-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "globe",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "globe-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "globe-2-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "globe-3",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "globe-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "google",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "google-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "grid",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "grid-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "hard-drive",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "hard-drive-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "hash",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "hash-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "headphones",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "headphones-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "heart",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "heart-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "home",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "home-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "image",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "image-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "image-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "inbox",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "inbox-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "info",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "info-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "keypad",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "keypad-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "layers",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "layers-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "layout",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "layout-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "link",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "link-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "link-2-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "link-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "linkedin",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "linkedin-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "list",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "list-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "loader-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "lock",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "lock-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "log-in",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "log-in-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "log-out",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "log-out-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "map",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "map-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "maximize",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "maximize-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "menu",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "menu-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "menu-2-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "menu-arrow",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "menu-arrow-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "menu-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "message-circle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "message-circle-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "message-square",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "message-square-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "mic",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "mic-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "mic-off-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "mic-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "minimize",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "minimize-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "minus",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "minus-circle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "minus-circle-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "minus-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "minus-square",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "minus-square-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "monitor",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "monitor-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "moon",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "moon-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "more-horizontal",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "more-horizontal-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "more-vertical",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "more-vertical-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "move",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "move-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "music",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "music-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "navigation",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "navigation-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "navigation-2-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "navigation-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "npm",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "npm-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "options",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "options-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "options-2-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "options-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pantone",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pantone-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "paper-plane",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "paper-plane-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pause-circle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pause-circle-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "people",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "people-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "percent",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "percent-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "person",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "person-add",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "person-add-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "person-delete",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "person-delete-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "person-done",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "person-done-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "person-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "person-remove",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "person-remove-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phone",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phone-call",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phone-call-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phone-missed",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phone-missed-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phone-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phone-off-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phone-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pie-chart",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pie-chart-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pie-chart-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pin",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pin-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "play-circle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "play-circle-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "plus",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "plus-circle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "plus-circle-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "plus-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "plus-square",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "plus-square-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "power",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "power-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pricetags",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pricetags-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "printer",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "printer-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "question-mark",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "question-mark-circle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "question-mark-circle-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "question-mark-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "radio",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "radio-button-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "radio-button-off-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "radio-button-on",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "radio-button-on-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "radio-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "recording",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "recording-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "refresh",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "refresh-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "repeat",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "repeat-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "rewind-left",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "rewind-left-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "rewind-right",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "rewind-right-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "save",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "save-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "scissors",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "scissors-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "search",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "search-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings-2-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "shake",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "shake-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "share",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "share-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "shield",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "shield-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "shield-off-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "shield-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "shopping-bag",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "shopping-bag-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "shopping-cart",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "shopping-cart-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "shuffle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "shuffle-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "shuffle-2-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "shuffle-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "skip-back",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "skip-back-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "skip-forward",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "skip-forward-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "slash",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "slash-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "smartphone",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "smartphone-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "speaker",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "speaker-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "square",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "square-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "star",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "star-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "stop-circle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "stop-circle-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "sun",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "sun-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "swap",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "swap-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "sync",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "sync-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "text",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "text-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "thermometer",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "thermometer-minus",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "thermometer-minus-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "thermometer-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "thermometer-plus",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "thermometer-plus-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "toggle-left",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "toggle-left-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "toggle-right",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "toggle-right-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "trash",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "trash-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "trash-2-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "trash-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "trending-down",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "trending-down-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "trending-up",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "trending-up-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "tv",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "tv-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "twitter",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "twitter-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "umbrella",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "umbrella-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "undo",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "undo-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "unlock",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "unlock-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "upload",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "upload-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "video",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "video-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "video-off-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "video-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "volume-down",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "volume-down-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "volume-mute",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "volume-mute-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "volume-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "volume-off-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "volume-up",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "volume-up-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "wifi",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "wifi-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "wifi-off-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "wifi-outline",
+      "width": 24,
+      "height": 24
+    }
+  ]
+}

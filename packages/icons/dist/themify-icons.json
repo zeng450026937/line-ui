@@ -1,0 +1,1765 @@
+{
+  "name": "themify-icons",
+  "symbols": [
+    {
+      "id": "agenda",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "alarm-clock",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "alert",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "align-center",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "align-justify",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "align-left",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "align-right",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "anchor",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "android",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "angle-double-down",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "angle-double-left",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "angle-double-right",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "angle-double-up",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "angle-down",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "angle-left",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "angle-right",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "angle-up",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "announcement",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "apple",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "archive",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "arrow",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "arrow-circle-down",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "arrow-circle-left",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "arrow-circle-right",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "arrow-circle-up",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "arrow-down",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "arrow-left",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "arrow-right",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "arrow-top-left",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "arrow-top-right",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "arrow-up",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "arrows-corner",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "arrows-horizontal",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "arrows-vertical",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "back-left",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "back-right",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "bag",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "bar-chart",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "bar-chart-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "basketball",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "bell",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "blackboard",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "bolt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "bolt-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "book",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "bookmark",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "bookmark-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "briefcase",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "brush",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "brush-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "calendar",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "camera",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "car",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "check",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "check-box",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "clip",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "clipboard",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "close",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "cloud",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "cloud-down",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "cloud-up",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "comment",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "comment-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "comments",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "comments-smiley",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "control-backward",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "control-eject",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "control-forward",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "control-pause",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "control-play",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "control-record",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "control-shuffle",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "control-skip-backward",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "control-skip-forward",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "control-stop",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "credit-card",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "crown",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "css3",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "cup",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "cut",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "dashboard",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "desktop",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "direction",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "direction-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "download",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "dribbble",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "dropbox",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "dropbox-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "drupal",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "email",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "envelope",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "eraser",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "exchange-vertical",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "export",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "eye",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "face-sad",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "face-smile",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "facebook",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "file",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "files",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "filter",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "flag",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "flag-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "flag-alt-2",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "flickr",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "flickr-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "folder",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "fullscreen",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "gallery",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "game",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "gift",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "github",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "google",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "hand-drag",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "hand-open",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "hand-point-down",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "hand-point-left",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "hand-point-right",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "hand-point-up",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "hand-stop",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "harddrive",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "harddrives",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "headphone",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "headphone-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "heart",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "heart-broken",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "help",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "help-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "home",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "html5",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "hummer",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "id-badge",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "image",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "import",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "infinite",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "info",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "info-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "ink-pen",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "instagram",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "italic",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "joomla",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "jsfiddle",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "key",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layers",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layers-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-accordion-list",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-accordion-merged",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-accordion-separated",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-column2",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-column2-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-column3",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-column3-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-column4",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-column4-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-cta-btn-left",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-cta-btn-right",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-cta-center",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-cta-left",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-cta-right",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-grid2",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-grid2-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-grid2-thumb",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-grid3",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-grid3-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-grid4",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-grid4-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-line-solid",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-list-large-image",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-list-post",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-list-thumb",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-list-thumb-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-media-center",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-media-center-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-media-left",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-media-left-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-media-overlay",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-media-overlay-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-media-overlay-alt-2",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-media-right",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-media-right-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-menu",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-menu-full",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-menu-separated",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-menu-v",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-placeholder",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-sidebar-2",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-sidebar-left",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-sidebar-none",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-sidebar-right",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-slider",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-slider-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-tab",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-tab-min",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-tab-v",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-tab-window",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-width-default",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-width-default-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "layout-width-full",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "light-bulb",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "line-dashed",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "line-dotted",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "line-double",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "link",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "linkedin",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "linux",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "list",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "list-ol",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "location-arrow",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "location-pin",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "lock",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "loop",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "magnet",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "map",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "map-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "marker",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "marker-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "medall",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "medall-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "menu",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "menu-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "microphone",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "microphone-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "microsoft",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "microsoft-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "minus",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "mobile",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "money",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "more",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "more-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "mouse",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "mouse-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "music",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "music-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "na",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "new-window",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "notepad",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "package",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "paint-bucket",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "paint-roller",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "palette",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "panel",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "paragraph",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "pencil",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "pencil-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "pencil-alt2",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "pie-chart",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "pin",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "pin-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "pin2",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "pinterest",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "pinterest-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "plug",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "plus",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "power-off",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "printer",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "pulse",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "quote-left",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "quote-right",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "receipt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "reddit",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "reload",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "rocket",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "rss",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "rss-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "ruler",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "ruler-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "ruler-alt-2",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "ruler-pencil",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "save",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "save-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "search",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "server",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "settings",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "share",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "share-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "sharethis",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "sharethis-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "shield",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "shift-left",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "shift-left-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "shift-right",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "shift-right-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "shine",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "shopping-cart",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "shopping-cart-full",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "shortcode",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "signal",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "skype",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "slice",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "smallcap",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "soundcloud",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "split-h",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "split-v",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "split-v-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "spray",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "stack-overflow",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "stamp",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "star",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "stats-down",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "stats-up",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "support",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "tablet",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "tag",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "target",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "text",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "themify-favicon",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "themify-favicon-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "themify-logo",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "thought",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "thumb-down",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "thumb-up",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "ticket",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "time",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "timer",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "trash",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "trello",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "truck",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "tumblr",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "tumblr-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "twitter",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "twitter-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "underline",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "unlink",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "unlock",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "upload",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "uppercase",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "user",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "vector",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "video-camera",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "video-clapper",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "view-grid",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "view-list",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "view-list-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "vimeo",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "vimeo-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "volume",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "wallet",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "wand",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "wheelchair",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "widget",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "widget-alt",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "widgetized",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "window",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "wordpress",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "world",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "write",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "yahoo",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "youtube",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "zip",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "zoom-in",
+      "width": 17,
+      "height": 17
+    },
+    {
+      "id": "zoom-out",
+      "width": 17,
+      "height": 17
+    }
+  ]
+}

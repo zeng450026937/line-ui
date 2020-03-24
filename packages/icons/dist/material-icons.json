@@ -1,0 +1,4800 @@
+{
+  "name": "material-icons",
+  "symbols": [
+    {
+      "id": "3d-rotation",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "ac-unit",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "access-alarm",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "access-alarms",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "access-time",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "accessibility",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "accessible",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "account-balance",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "account-balance-wallet",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "account-box",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "account-circle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "adb",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "add",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "add-a-photo",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "add-alarm",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "add-alert",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "add-box",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "add-circle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "add-circle-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "add-location",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "add-shopping-cart",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "add-to-photos",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "add-to-queue",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "adjust",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "airline-seat-flat",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "airline-seat-flat-angled",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "airline-seat-individual-suite",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "airline-seat-legroom-extra",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "airline-seat-legroom-normal",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "airline-seat-legroom-reduced",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "airline-seat-recline-extra",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "airline-seat-recline-normal",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "airplanemode-active",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "airplanemode-inactive",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "airplay",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "airport-shuttle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "alarm",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "alarm-add",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "alarm-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "alarm-on",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "album",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "all-inclusive",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "all-out",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "android",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "announcement",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "apps",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "archive",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-back",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-downward",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-drop-down",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-drop-down-circle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-drop-up",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-forward",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "arrow-upward",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "art-track",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "aspect-ratio",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "assessment",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "assignment",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "assignment-ind",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "assignment-late",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "assignment-return",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "assignment-returned",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "assignment-turned-in",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "assistant",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "assistant-photo",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "attach-file",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "attach-money",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "attachment",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "audiotrack",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "autorenew",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "av-timer",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "backspace",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "backup",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "battery-20",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "battery-30",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "battery-50",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "battery-60",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "battery-80",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "battery-90",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "battery-alert",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "battery-charging-20",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "battery-charging-30",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "battery-charging-50",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "battery-charging-60",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "battery-charging-80",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "battery-charging-90",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "battery-charging-full",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "battery-full",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "battery-std",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "battery-unknown",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "beach-access",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "beenhere",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "block",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bluetooth",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bluetooth-audio",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bluetooth-connected",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bluetooth-disabled",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bluetooth-searching",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "blur-circular",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "blur-linear",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "blur-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "blur-on",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "book",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bookmark",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bookmark-border",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "border-all",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "border-bottom",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "border-clear",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "border-color",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "border-horizontal",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "border-inner",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "border-left",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "border-outer",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "border-right",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "border-style",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "border-top",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "border-vertical",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "branding-watermark",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "brightness-1",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "brightness-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "brightness-3",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "brightness-4",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "brightness-5",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "brightness-6",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "brightness-7",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "brightness-auto",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "brightness-high",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "brightness-low",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "brightness-medium",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "broken-image",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "brush",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bubble-chart",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "bug-report",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "build",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "burst-mode",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "business",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "business-center",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "cached",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "cake",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "call",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "call-end",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "call-made",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "call-merge",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "call-missed",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "call-missed-outgoing",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "call-received",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "call-split",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "call-to-action",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "camera",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "camera-alt",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "camera-enhance",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "camera-front",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "camera-rear",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "camera-roll",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "cancel",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "card-giftcard",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "card-membership",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "card-travel",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "casino",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "cast",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "cast-connected",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "center-focus-strong",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "center-focus-weak",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "change-history",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "chat",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "chat-bubble",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "chat-bubble-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "check",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "check-box",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "check-box-outline-blank",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "check-circle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "chevron-left",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "chevron-right",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "child-care",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "child-friendly",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "chrome-reader-mode",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "class",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "clear",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "clear-all",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "close",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "closed-caption",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "cloud",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "cloud-circle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "cloud-done",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "cloud-download",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "cloud-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "cloud-queue",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "cloud-upload",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "code",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "collections",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "collections-bookmark",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "color-lens",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "colorize",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "comment",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "compare",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "compare-arrows",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "computer",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "confirmation-number",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "contact-mail",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "contact-phone",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "contacts",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "content-copy",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "content-cut",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "content-paste",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "control-point",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "control-point-duplicate",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "copyright",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "create",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "create-new-folder",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "credit-card",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "crop",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "crop-16-9",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "crop-3-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "crop-5-4",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "crop-7-5",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "crop-din",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "crop-free",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "crop-landscape",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "crop-original",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "crop-portrait",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "crop-rotate",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "crop-square",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "dashboard",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "data-usage",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "date-range",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "dehaze",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "delete",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "delete-forever",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "delete-sweep",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "description",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "desktop-mac",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "desktop-windows",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "details",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "developer-board",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "developer-mode",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "device-hub",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "devices",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "devices-other",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "dialer-sip",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "dialpad",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "directions",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "directions-bike",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "directions-boat",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "directions-bus",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "directions-car",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "directions-railway",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "directions-run",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "directions-subway",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "directions-transit",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "directions-walk",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "disc-full",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "dns",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "do-not-disturb",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "do-not-disturb-alt",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "do-not-disturb-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "do-not-disturb-on",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "dock",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "domain",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "done",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "done-all",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "donut-large",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "donut-small",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "drafts",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "drag-handle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "drive-eta",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "dvr",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "edit",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "edit-location",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "eject",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "email",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "enhanced-encryption",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "equalizer",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "error",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "error-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "euro-symbol",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "ev-station",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "event",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "event-available",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "event-busy",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "event-note",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "event-seat",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "exit-to-app",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "expand-less",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "expand-more",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "explicit",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "explore",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "exposure",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "exposure-neg-1",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "exposure-neg-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "exposure-plus-1",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "exposure-plus-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "exposure-zero",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "extension",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "face",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "fast-forward",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "fast-rewind",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "favorite",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "favorite-border",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "featured-play-list",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "featured-video",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "feedback",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "fiber-dvr",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "fiber-manual-record",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "fiber-new",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "fiber-pin",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "fiber-smart-record",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "file-download",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "file-upload",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "filter",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "filter-1",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "filter-2",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "filter-3",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "filter-4",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "filter-5",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "filter-6",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "filter-7",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "filter-8",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "filter-9",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "filter-9-plus",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "filter-b-and-w",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "filter-center-focus",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "filter-drama",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "filter-frames",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "filter-hdr",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "filter-list",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "filter-none",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "filter-tilt-shift",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "filter-vintage",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "find-in-page",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "find-replace",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "fingerprint",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "first-page",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "fitness-center",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flag",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flare",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flash-auto",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flash-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flash-on",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flight",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flight-land",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flight-takeoff",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flip",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flip-to-back",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "flip-to-front",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "folder",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "folder-open",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "folder-shared",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "folder-special",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "font-download",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-align-center",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-align-justify",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-align-left",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-align-right",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-bold",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-clear",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-color-fill",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-color-reset",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-color-text",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-indent-decrease",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-indent-increase",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-italic",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-line-spacing",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-list-bulleted",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-list-numbered",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-paint",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-quote",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-shapes",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-size",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-strikethrough",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-textdirection-l-to-r",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-textdirection-r-to-l",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "format-underlined",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "forum",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "forward",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "forward-10",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "forward-30",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "forward-5",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "free-breakfast",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "fullscreen",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "fullscreen-exit",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "functions",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "g-translate",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "gamepad",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "games",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "gavel",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "gesture",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "get-app",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "gif",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "golf-course",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "gps-fixed",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "gps-not-fixed",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "gps-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "grade",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "gradient",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "grain",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "graphic-eq",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "grid-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "grid-on",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "group",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "group-add",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "group-work",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "hd",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "hdr-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "hdr-on",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "hdr-strong",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "hdr-weak",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "headset",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "headset-mic",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "healing",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "hearing",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "help",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "help-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "high-quality",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "highlight",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "highlight-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "history",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "home",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "hot-tub",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "hotel",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "hourglass-empty",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "hourglass-full",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "http",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "https",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "image",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "image-aspect-ratio",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "import-contacts",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "import-export",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "important-devices",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "inbox",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "indeterminate-check-box",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "info",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "info-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "input",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "insert-chart",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "insert-comment",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "insert-drive-file",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "insert-emoticon",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "insert-invitation",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "insert-link",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "insert-photo",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "invert-colors",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "invert-colors-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "iso",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "keyboard",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "keyboard-arrow-down",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "keyboard-arrow-left",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "keyboard-arrow-right",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "keyboard-arrow-up",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "keyboard-backspace",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "keyboard-capslock",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "keyboard-hide",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "keyboard-return",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "keyboard-tab",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "keyboard-voice",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "kitchen",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "label",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "label-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "landscape",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "language",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "laptop",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "laptop-chromebook",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "laptop-mac",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "laptop-windows",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "last-page",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "launch",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "layers",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "layers-clear",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "leak-add",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "leak-remove",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "lens",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "library-add",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "library-books",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "library-music",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "lightbulb-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "line-style",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "line-weight",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "linear-scale",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "link",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "linked-camera",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "list",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "live-help",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "live-tv",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-activity",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-airport",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-atm",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-bar",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-cafe",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-car-wash",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-convenience-store",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-dining",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-drink",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-florist",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-gas-station",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-grocery-store",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-hospital",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-hotel",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-laundry-service",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-library",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-mall",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-movies",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-offer",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-parking",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-pharmacy",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-phone",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-pizza",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-play",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-post-office",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-printshop",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-see",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-shipping",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "local-taxi",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "location-city",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "location-disabled",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "location-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "location-on",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "location-searching",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "lock",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "lock-open",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "lock-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "looks",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "looks-3",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "looks-4",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "looks-5",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "looks-6",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "looks-one",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "looks-two",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "loop",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "loupe",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "low-priority",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "loyalty",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "mail",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "mail-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "map",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "markunread",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "markunread-mailbox",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "memory",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "menu",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "merge-type",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "message",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "mic",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "mic-none",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "mic-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "mms",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "mode-comment",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "mode-edit",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "monetization-on",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "money-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "monochrome-photos",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "mood",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "mood-bad",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "more",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "more-horiz",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "more-vert",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "motorcycle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "mouse",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "move-to-inbox",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "movie",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "movie-creation",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "movie-filter",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "multiline-chart",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "music-note",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "music-video",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "my-location",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "nature",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "nature-people",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "navigate-before",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "navigate-next",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "navigation",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "near-me",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "network-cell",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "network-check",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "network-locked",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "network-wifi",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "new-releases",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "next-week",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "nfc",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "no-encryption",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "no-sim",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "not-interested",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "note",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "note-add",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "notifications",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "notifications-active",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "notifications-none",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "notifications-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "notifications-paused",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "offline-pin",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "ondemand-video",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "opacity",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "open-in-browser",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "open-in-new",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "open-with",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pages",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pageview",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "palette",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pan-tool",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "panorama",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "panorama-fish-eye",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "panorama-horizontal",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "panorama-vertical",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "panorama-wide-angle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "party-mode",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pause",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pause-circle-filled",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pause-circle-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "payment",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "people",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "people-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "perm-camera-mic",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "perm-contact-calendar",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "perm-data-setting",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "perm-device-information",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "perm-identity",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "perm-media",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "perm-phone-msg",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "perm-scan-wifi",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "person",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "person-add",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "person-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "person-pin",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "person-pin-circle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "personal-video",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pets",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phone",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phone-android",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phone-bluetooth-speaker",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phone-forwarded",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phone-in-talk",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phone-iphone",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phone-locked",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phone-missed",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phone-paused",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phonelink",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phonelink-erase",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phonelink-lock",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phonelink-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phonelink-ring",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "phonelink-setup",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "photo",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "photo-album",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "photo-camera",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "photo-filter",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "photo-library",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "photo-size-select-actual",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "photo-size-select-large",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "photo-size-select-small",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "picture-as-pdf",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "picture-in-picture",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "picture-in-picture-alt",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pie-chart",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pie-chart-outlined",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pin-drop",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "place",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "play-arrow",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "play-circle-filled",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "play-circle-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "play-for-work",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "playlist-add",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "playlist-add-check",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "playlist-play",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "plus-one",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "poll",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "polymer",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pool",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "portable-wifi-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "portrait",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "power",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "power-input",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "power-settings-new",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "pregnant-woman",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "present-to-all",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "print",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "priority-high",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "public",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "publish",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "query-builder",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "question-answer",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "queue",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "queue-music",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "queue-play-next",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "radio",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "radio-button-checked",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "radio-button-unchecked",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "rate-review",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "receipt",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "recent-actors",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "record-voice-over",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "redeem",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "redo",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "refresh",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "remove",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "remove-circle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "remove-circle-outline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "remove-from-queue",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "remove-red-eye",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "remove-shopping-cart",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "reorder",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "repeat",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "repeat-one",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "replay",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "replay-10",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "replay-30",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "replay-5",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "reply",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "reply-all",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "report",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "report-problem",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "restaurant",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "restaurant-menu",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "restore",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "restore-page",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "ring-volume",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "room",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "room-service",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "rotate-90-degrees-ccw",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "rotate-left",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "rotate-right",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "rounded-corner",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "router",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "rowing",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "rss-feed",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "rv-hookup",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "satellite",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "save",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "scanner",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "schedule",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "school",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "screen-lock-landscape",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "screen-lock-portrait",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "screen-lock-rotation",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "screen-rotation",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "screen-share",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "sd-card",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "sd-storage",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "search",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "security",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "select-all",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "send",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "sentiment-dissatisfied",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "sentiment-neutral",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "sentiment-satisfied",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "sentiment-very-dissatisfied",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "sentiment-very-satisfied",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings-applications",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings-backup-restore",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings-bluetooth",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings-brightness",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings-cell",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings-ethernet",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings-input-antenna",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings-input-component",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings-input-composite",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings-input-hdmi",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings-input-svideo",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings-overscan",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings-phone",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings-power",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings-remote",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings-system-daydream",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "settings-voice",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "share",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "shop",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "shop-two",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "shopping-basket",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "shopping-cart",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "short-text",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "show-chart",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "shuffle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-cellular-0-bar",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-cellular-1-bar",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-cellular-2-bar",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-cellular-3-bar",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-cellular-4-bar",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-cellular-connected-no-internet-0-bar",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-cellular-connected-no-internet-1-bar",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-cellular-connected-no-internet-2-bar",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-cellular-connected-no-internet-3-bar",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-cellular-connected-no-internet-4-bar",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-cellular-no-sim",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-cellular-null",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-cellular-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-wifi-0-bar",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-wifi-1-bar",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-wifi-1-bar-lock",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-wifi-2-bar",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-wifi-2-bar-lock",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-wifi-3-bar",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-wifi-3-bar-lock",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-wifi-4-bar",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-wifi-4-bar-lock",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "signal-wifi-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "sim-card",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "sim-card-alert",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "skip-next",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "skip-previous",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "slideshow",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "slow-motion-video",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "smartphone",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "smoke-free",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "smoking-rooms",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "sms",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "sms-failed",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "snooze",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "sort",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "sort-by-alpha",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "spa",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "space-bar",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "speaker",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "speaker-group",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "speaker-notes",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "speaker-notes-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "speaker-phone",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "spellcheck",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "star",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "star-border",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "star-half",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "stars",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "stay-current-landscape",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "stay-current-portrait",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "stay-primary-landscape",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "stay-primary-portrait",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "stop",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "stop-screen-share",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "storage",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "store",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "store-mall-directory",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "straighten",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "streetview",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "strikethrough-s",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "style",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "subdirectory-arrow-left",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "subdirectory-arrow-right",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "subject",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "subscriptions",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "subtitles",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "subway",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "supervisor-account",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "surround-sound",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "swap-calls",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "swap-horiz",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "swap-vert",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "swap-vertical-circle",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "switch-camera",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "switch-video",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "sync",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "sync-disabled",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "sync-problem",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "system-update",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "system-update-alt",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "tab",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "tab-unselected",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "tablet",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "tablet-android",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "tablet-mac",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "tag-faces",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "tap-and-play",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "terrain",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "text-fields",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "text-format",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "textsms",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "texture",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "theaters",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "thumb-down",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "thumb-up",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "thumbs-up-down",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "time-to-leave",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "timelapse",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "timeline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "timer",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "timer-10",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "timer-3",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "timer-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "title",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "toc",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "today",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "toll",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "tonality",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "touch-app",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "toys",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "track-changes",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "traffic",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "train",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "tram",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "transfer-within-a-station",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "transform",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "translate",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "trending-down",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "trending-flat",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "trending-up",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "tune",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "turned-in",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "turned-in-not",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "tv",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "unarchive",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "undo",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "unfold-less",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "unfold-more",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "update",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "usb",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "verified-user",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "vertical-align-bottom",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "vertical-align-center",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "vertical-align-top",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "vibration",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "video-call",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "video-label",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "video-library",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "videocam",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "videocam-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "videogame-asset",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "view-agenda",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "view-array",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "view-carousel",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "view-column",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "view-comfy",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "view-compact",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "view-day",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "view-headline",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "view-list",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "view-module",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "view-quilt",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "view-stream",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "view-week",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "vignette",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "visibility",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "visibility-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "voice-chat",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "voicemail",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "volume-down",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "volume-mute",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "volume-off",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "volume-up",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "vpn-key",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "vpn-lock",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "wallpaper",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "warning",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "watch",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "watch-later",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "wb-auto",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "wb-cloudy",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "wb-incandescent",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "wb-iridescent",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "wb-sunny",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "wc",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "web",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "web-asset",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "weekend",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "whatshot",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "widgets",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "wifi",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "wifi-lock",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "wifi-tethering",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "work",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "wrap-text",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "youtube-searched-for",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "zoom-in",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "zoom-out",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "id": "zoom-out-map",
+      "width": 24,
+      "height": 24
+    }
+  ]
+}

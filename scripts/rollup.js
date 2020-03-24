@@ -89,6 +89,7 @@ async function build(target) {
         [resolve(script)],
         {
           stdio : 'inherit',
+          cwd   : pkgDir,
           env   : {
             COMMIT   : `${ commit }`,
             NODE_ENV : `${ env }`,
@@ -190,6 +191,7 @@ async function build(target) {
         ].filter(Boolean),
         {
           stdio : 'inherit',
+          cwd   : pkgDir,
           env   : {
             COMMIT   : `${ commit }`,
             NODE_ENV : `${ env }`,

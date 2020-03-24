@@ -1,0 +1,6140 @@
+{
+  "name": "ionic-icons",
+  "symbols": [
+    {
+      "id": "add",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "add-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "add-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "add-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "add-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "add-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "airplane",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "airplane-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "airplane-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "alarm",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "alarm-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "alarm-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "albums",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "albums-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "albums-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "alert",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "alert-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "alert-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "alert-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "alert-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "alert-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "american-football",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "american-football-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "american-football-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "analytics",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "analytics-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "analytics-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "aperture",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "aperture-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "aperture-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "apps",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "apps-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "apps-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "archive",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "archive-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "archive-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-back",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-back-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-back-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-back-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-back-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-back-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-down",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-down-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-down-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-down-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-down-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-down-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-forward",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-forward-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-forward-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-forward-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-forward-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-forward-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-redo",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-redo-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-redo-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-redo-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-redo-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-redo-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-undo",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-undo-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-undo-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-undo-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-undo-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-undo-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-up",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-up-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-up-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-up-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-up-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "arrow-up-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "at",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "at-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "at-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "at-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "at-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "at-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "attach",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "attach-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "attach-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "backspace",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "backspace-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "backspace-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bandage",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bandage-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bandage-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bar-chart",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bar-chart-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bar-chart-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "barbell",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "barbell-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "barbell-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "barcode",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "barcode-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "barcode-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "baseball",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "baseball-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "baseball-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "basket",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "basket-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "basket-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "basketball",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "basketball-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "basketball-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "battery-charging",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "battery-charging-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "battery-charging-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "battery-dead",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "battery-dead-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "battery-dead-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "battery-full",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "battery-full-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "battery-full-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "battery-half",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "battery-half-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "battery-half-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "beaker",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "beaker-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "beaker-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bed",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bed-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bed-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "beer",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "beer-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "beer-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bicycle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bicycle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bicycle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bluetooth",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bluetooth-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bluetooth-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "boat",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "boat-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "boat-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "body",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "body-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "body-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bonfire",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bonfire-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bonfire-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "book",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "book-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "book-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bookmark",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bookmark-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bookmark-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bookmarks",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bookmarks-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bookmarks-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "briefcase",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "briefcase-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "briefcase-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "browsers",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "browsers-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "browsers-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "brush",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "brush-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "brush-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bug",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bug-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bug-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "build",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "build-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "build-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bulb",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bulb-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bulb-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bus",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bus-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "bus-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "business",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "business-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "business-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cafe",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cafe-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cafe-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "calculator",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "calculator-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "calculator-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "calendar",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "calendar-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "calendar-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "call",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "call-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "call-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "camera",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "camera-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "camera-reverse",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "camera-reverse-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "camera-reverse-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "camera-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "car",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "car-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "car-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "car-sport",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "car-sport-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "car-sport-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "card",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "card-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "card-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-back",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-back-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-back-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-back-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-back-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-back-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-down",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-down-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-down-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-down-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-down-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-down-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-forward",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-forward-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-forward-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-forward-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-forward-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-forward-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-up",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-up-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-up-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-up-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-up-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "caret-up-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cart",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cart-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cart-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cash",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cash-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cash-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cellular",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cellular-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cellular-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chatbox",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chatbox-ellipses",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chatbox-ellipses-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chatbox-ellipses-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chatbox-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chatbox-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chatbubble",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chatbubble-ellipses",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chatbubble-ellipses-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chatbubble-ellipses-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chatbubble-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chatbubble-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chatbubbles",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chatbubbles-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chatbubbles-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "checkbox",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "checkbox-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "checkbox-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "checkmark",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "checkmark-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "checkmark-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "checkmark-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "checkmark-done",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "checkmark-done-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "checkmark-done-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "checkmark-done-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "checkmark-done-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "checkmark-done-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "checkmark-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "checkmark-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-back",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-back-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-back-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-back-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-back-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-back-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-down",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-down-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-down-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-down-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-down-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-down-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-forward",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-forward-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-forward-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-forward-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-forward-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-forward-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-up",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-up-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-up-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-up-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-up-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "chevron-up-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "clipboard",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "clipboard-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "clipboard-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "close",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "close-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "close-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "close-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "close-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "close-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloud",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloud-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloud-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloud-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloud-done",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloud-done-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloud-done-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloud-download",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloud-download-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloud-download-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloud-offline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloud-offline-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloud-offline-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloud-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloud-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloud-upload",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloud-upload-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloud-upload-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloudy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloudy-night",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloudy-night-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloudy-night-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloudy-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cloudy-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "code",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "code-download",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "code-download-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "code-download-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "code-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "code-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "code-slash",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "code-slash-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "code-slash-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "code-working",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "code-working-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "code-working-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cog",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cog-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cog-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "color-fill",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "color-fill-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "color-fill-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "color-filter",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "color-filter-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "color-filter-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "color-palette",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "color-palette-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "color-palette-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "color-wand",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "color-wand-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "color-wand-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "compass",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "compass-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "compass-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "construct",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "construct-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "construct-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "contract",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "contract-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "contract-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "contrast",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "contrast-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "contrast-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "copy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "copy-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "copy-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "create",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "create-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "create-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "crop",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "crop-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "crop-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cube",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cube-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cube-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cut",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cut-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "cut-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "desktop",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "desktop-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "desktop-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "disc",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "disc-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "disc-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "document",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "document-attach",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "document-attach-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "document-attach-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "document-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "document-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "document-text",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "document-text-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "document-text-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "documents",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "documents-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "documents-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "download",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "download-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "download-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "duplicate",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "duplicate-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "duplicate-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ear",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ear-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ear-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "earth",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "earth-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "earth-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "easel",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "easel-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "easel-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "egg",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "egg-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "egg-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ellipse",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ellipse-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ellipse-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ellipsis-horizontal",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ellipsis-horizontal-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ellipsis-horizontal-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ellipsis-horizontal-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ellipsis-horizontal-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ellipsis-horizontal-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ellipsis-vertical",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ellipsis-vertical-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ellipsis-vertical-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ellipsis-vertical-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ellipsis-vertical-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ellipsis-vertical-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "enter",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "enter-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "enter-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "exit",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "exit-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "exit-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "expand",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "expand-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "expand-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "eye",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "eye-off",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "eye-off-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "eye-off-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "eye-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "eye-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "eyedrop",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "eyedrop-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "eyedrop-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "fast-food",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "fast-food-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "fast-food-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "female",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "female-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "female-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "file-tray",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "file-tray-full",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "file-tray-full-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "file-tray-full-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "file-tray-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "file-tray-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "file-tray-stacked",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "file-tray-stacked-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "file-tray-stacked-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "film",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "film-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "film-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "filter",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "filter-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "filter-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "finger-print",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "finger-print-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "finger-print-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "fitness",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "fitness-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "fitness-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flag",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flag-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flag-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flame",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flame-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flame-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flash",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flash-off",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flash-off-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flash-off-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flash-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flash-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flashlight",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flashlight-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flashlight-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flask",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flask-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flask-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flower",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flower-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "flower-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "folder",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "folder-open",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "folder-open-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "folder-open-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "folder-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "folder-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "football",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "football-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "football-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "funnel",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "funnel-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "funnel-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "game-controller",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "game-controller-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "game-controller-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "gift",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "gift-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "gift-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "git-branch",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "git-branch-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "git-branch-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "git-commit",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "git-commit-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "git-commit-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "git-compare",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "git-compare-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "git-compare-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "git-merge",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "git-merge-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "git-merge-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "git-network",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "git-network-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "git-network-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "git-pull-request",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "git-pull-request-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "git-pull-request-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "glasses",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "glasses-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "glasses-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "globe",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "globe-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "globe-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "golf",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "golf-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "golf-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "grid",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "grid-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "grid-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "hammer",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "hammer-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "hammer-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "hand-left",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "hand-left-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "hand-left-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "hand-right",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "hand-right-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "hand-right-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "happy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "happy-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "happy-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "hardware-chip",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "hardware-chip-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "hardware-chip-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "headset",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "headset-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "headset-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "heart",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "heart-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "heart-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "heart-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "heart-dislike",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "heart-dislike-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "heart-dislike-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "heart-dislike-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "heart-dislike-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "heart-dislike-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "heart-half",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "heart-half-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "heart-half-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "heart-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "heart-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "help",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "help-buoy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "help-buoy-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "help-buoy-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "help-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "help-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "help-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "help-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "help-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "home",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "home-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "home-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "hourglass",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "hourglass-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "hourglass-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ice-cream",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ice-cream-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ice-cream-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "image",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "image-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "image-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "images",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "images-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "images-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "infinite",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "infinite-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "infinite-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "information",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "information-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "information-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "information-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "information-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "information-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "journal",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "journal-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "journal-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "key",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "key-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "key-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "keypad",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "keypad-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "keypad-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "language",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "language-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "language-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "laptop",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "laptop-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "laptop-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "layers",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "layers-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "layers-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "leaf",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "leaf-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "leaf-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "library",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "library-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "library-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "link",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "link-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "link-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "list",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "list-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "list-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "list-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "list-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "list-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "locate",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "locate-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "locate-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "location",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "location-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "location-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "lock-closed",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "lock-closed-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "lock-closed-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "lock-open",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "lock-open-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "lock-open-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "log-in",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "log-in-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "log-in-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "log-out",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "log-out-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "log-out-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-amazon",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-amplify",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-android",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-angular",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-apple",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-apple-appstore",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-bitbucket",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-bitcoin",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-buffer",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-capacitor",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-chrome",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-closed-captioning",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-codepen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-css3",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-designernews",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-dribbble",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-dropbox",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-edge",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-electron",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-euro",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-facebook",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-firebase",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-firefox",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-flickr",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-foursquare",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-github",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-google",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-google-playstore",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-hackernews",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-html5",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-instagram",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-ionic",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-ionitron",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-javascript",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-laravel",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-linkedin",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-markdown",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-no-smoking",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-nodejs",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-npm",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-octocat",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-pinterest",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-playstation",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-pwa",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-python",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-react",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-reddit",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-rss",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-sass",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-skype",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-slack",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-snapchat",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-stackoverflow",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-steam",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-stencil",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-tumblr",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-tux",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-twitch",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-twitter",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-usd",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-vimeo",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-vk",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-vue",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-web-component",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-whatsapp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-windows",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-wordpress",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-xbox",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-xing",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-yahoo",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-yen",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "logo-youtube",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "magnet",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "magnet-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "magnet-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mail",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mail-open",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mail-open-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mail-open-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mail-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mail-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mail-unread",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mail-unread-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mail-unread-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "male",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "male-female",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "male-female-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "male-female-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "male-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "male-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "man",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "man-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "man-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "map",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "map-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "map-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "medal",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "medal-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "medal-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "medical",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "medical-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "medical-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "medkit",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "medkit-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "medkit-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "megaphone",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "megaphone-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "megaphone-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "menu",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "menu-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "menu-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mic",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mic-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mic-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mic-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mic-off",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mic-off-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mic-off-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mic-off-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mic-off-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mic-off-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mic-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "mic-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "moon",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "moon-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "moon-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "move",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "move-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "move-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "musical-note",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "musical-note-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "musical-note-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "musical-notes",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "musical-notes-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "musical-notes-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "navigate",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "navigate-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "navigate-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "navigate-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "navigate-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "navigate-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "newspaper",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "newspaper-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "newspaper-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "notifications",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "notifications-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "notifications-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "notifications-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "notifications-off",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "notifications-off-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "notifications-off-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "notifications-off-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "notifications-off-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "notifications-off-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "notifications-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "notifications-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "nuclear",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "nuclear-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "nuclear-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "nutrition",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "nutrition-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "nutrition-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "open",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "open-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "open-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "options",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "options-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "options-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "paper-plane",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "paper-plane-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "paper-plane-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "partly-sunny",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "partly-sunny-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "partly-sunny-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pause",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pause-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pause-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pause-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pause-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pause-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "paw",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "paw-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "paw-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pencil",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pencil-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pencil-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "people",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "people-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "people-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "people-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "people-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "people-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "person",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "person-add",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "person-add-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "person-add-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "person-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "person-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "person-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "person-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "person-remove",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "person-remove-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "person-remove-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "person-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "phone-landscape",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "phone-landscape-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "phone-landscape-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "phone-portrait",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "phone-portrait-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "phone-portrait-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pie-chart",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pie-chart-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pie-chart-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pin",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pin-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pin-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pint",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pint-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pint-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pizza",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pizza-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pizza-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "planet",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "planet-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "planet-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-back",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-back-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-back-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-back-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-back-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-back-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-forward",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-forward-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-forward-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-forward-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-forward-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-forward-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-skip-back",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-skip-back-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-skip-back-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-skip-back-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-skip-back-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-skip-back-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-skip-forward",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-skip-forward-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-skip-forward-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-skip-forward-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-skip-forward-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "play-skip-forward-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "podium",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "podium-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "podium-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "power",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "power-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "power-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pricetag",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pricetag-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pricetag-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pricetags",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pricetags-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pricetags-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "print",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "print-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "print-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pulse",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pulse-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "pulse-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "push",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "push-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "push-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "qr-code",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "qr-code-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "qr-code-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "radio",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "radio-button-off",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "radio-button-off-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "radio-button-off-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "radio-button-on",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "radio-button-on-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "radio-button-on-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "radio-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "radio-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "rainy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "rainy-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "rainy-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "reader",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "reader-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "reader-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "receipt",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "receipt-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "receipt-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "recording",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "recording-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "recording-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "refresh",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "refresh-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "refresh-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "refresh-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "refresh-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "refresh-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "reload",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "reload-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "reload-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "reload-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "reload-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "reload-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "remove",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "remove-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "remove-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "remove-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "remove-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "remove-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "reorder-four",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "reorder-four-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "reorder-four-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "reorder-three",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "reorder-three-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "reorder-three-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "reorder-two",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "reorder-two-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "reorder-two-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "repeat",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "repeat-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "repeat-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "resize",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "resize-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "resize-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "restaurant",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "restaurant-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "restaurant-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "return-down-back",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "return-down-back-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "return-down-back-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "return-down-forward",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "return-down-forward-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "return-down-forward-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "return-up-back",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "return-up-back-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "return-up-back-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "return-up-forward",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "return-up-forward-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "return-up-forward-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ribbon",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ribbon-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "ribbon-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "rocket",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "rocket-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "rocket-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "rose",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "rose-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "rose-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "sad",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "sad-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "sad-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "save",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "save-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "save-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "scan",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "scan-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "scan-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "scan-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "scan-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "scan-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "school",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "school-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "school-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "search",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "search-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "search-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "search-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "search-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "search-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "send",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "send-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "send-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "server",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "server-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "server-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "settings",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "settings-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "settings-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "shapes",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "shapes-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "shapes-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "share",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "share-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "share-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "share-social",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "share-social-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "share-social-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "shield",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "shield-checkmark",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "shield-checkmark-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "shield-checkmark-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "shield-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "shield-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "shirt",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "shirt-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "shirt-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "shuffle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "shuffle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "shuffle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "skull",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "skull-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "skull-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "snow",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "snow-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "snow-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "speedometer",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "speedometer-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "speedometer-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "square",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "square-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "square-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "star",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "star-half",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "star-half-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "star-half-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "star-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "star-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "stats-chart",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "stats-chart-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "stats-chart-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "stop",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "stop-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "stop-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "stop-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "stop-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "stop-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "stopwatch",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "stopwatch-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "stopwatch-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "subway",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "subway-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "subway-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "sunny",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "sunny-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "sunny-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "swap-horizontal",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "swap-horizontal-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "swap-horizontal-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "swap-vertical",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "swap-vertical-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "swap-vertical-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "sync",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "sync-circle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "sync-circle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "sync-circle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "sync-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "sync-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "tablet-landscape",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "tablet-landscape-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "tablet-landscape-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "tablet-portrait",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "tablet-portrait-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "tablet-portrait-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "tennisball",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "tennisball-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "tennisball-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "terminal",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "terminal-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "terminal-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "text",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "text-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "text-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "thermometer",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "thermometer-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "thermometer-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "thumbs-down",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "thumbs-down-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "thumbs-down-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "thumbs-up",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "thumbs-up-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "thumbs-up-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "thunderstorm",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "thunderstorm-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "thunderstorm-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "time",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "time-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "time-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "timer",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "timer-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "timer-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "today",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "today-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "today-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "toggle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "toggle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "toggle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "trail-sign",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "trail-sign-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "trail-sign-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "train",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "train-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "train-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "transgender",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "transgender-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "transgender-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "trash",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "trash-bin",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "trash-bin-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "trash-bin-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "trash-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "trash-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "trending-down",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "trending-down-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "trending-down-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "trending-up",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "trending-up-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "trending-up-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "triangle",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "triangle-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "triangle-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "trophy",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "trophy-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "trophy-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "tv",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "tv-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "tv-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "umbrella",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "umbrella-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "umbrella-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "videocam",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "videocam-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "videocam-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "volume-high",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "volume-high-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "volume-high-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "volume-low",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "volume-low-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "volume-low-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "volume-medium",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "volume-medium-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "volume-medium-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "volume-mute",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "volume-mute-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "volume-mute-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "volume-off",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "volume-off-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "volume-off-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "walk",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "walk-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "walk-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "wallet",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "wallet-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "wallet-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "warning",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "warning-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "warning-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "watch",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "watch-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "watch-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "water",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "water-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "water-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "wifi",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "wifi-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "wifi-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "wine",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "wine-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "wine-sharp",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "woman",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "woman-outline",
+      "width": 512,
+      "height": 512
+    },
+    {
+      "id": "woman-sharp",
+      "width": 512,
+      "height": 512
+    }
+  ]
+}
