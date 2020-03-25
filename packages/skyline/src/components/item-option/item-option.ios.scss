@@ -1,0 +1,17 @@
+@import "./item-option";
+@import "./item-option.ios.vars";
+
+// iOS Item Option
+// --------------------------------------------------
+
+.line-item-option {
+  font-size: $item-option-button-ios-font-size;
+}
+
+.line-item-option.line-activated {
+  background: line-color(primary, shade);
+}
+
+.line-item-option.line-color.line-activated {
+  background: current-color(shade);
+}
