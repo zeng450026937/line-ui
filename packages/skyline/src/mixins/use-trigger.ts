@@ -33,7 +33,7 @@ export function useTrigger() {
           ? refs[trigger] || baseEl.querySelector(trigger)
           : trigger as HTMLElement;
 
-        if (isArray(resolved)) {
+        if (__DEV__ && isArray(resolved)) {
           console.warn(`
             There are more than one triggers in the context.
             Trigger element should be only one.

@@ -22,16 +22,19 @@ module.exports = (_, options) => {
     return effects;
   };
 
+  const config = {
+    effect : !isDev && effect,
+    fullImport,
+    memberImport,
+  };
+
   return {
     plugins : [
       [
         sideEffectPlugin,
         {
-          skyline : {
-            effect : !isDev && effect,
-            fullImport,
-            memberImport,
-          },
+          skyline       : config,
+          'skyline/src' : config,
         },
       ],
     ],

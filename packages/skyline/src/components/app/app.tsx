@@ -7,12 +7,11 @@ import { setupPopup } from 'skyline/src/utils/popup';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('app');
 
+let initialized: boolean | undefined;
+
 export default /*#__PURE__*/ createComponent({
   props : {
-    id : {
-      type    : String,
-      default : 'app',
-    },
+    id : String,
   },
 
   provide() {
@@ -22,6 +21,8 @@ export default /*#__PURE__*/ createComponent({
   },
 
   beforeMount() {
+    // Avoid multiple initialization
+    if (initialized) return;
     // TODO:
     // config must be setup before using
     // while child content is rendered before created
@@ -30,11 +31,14 @@ export default /*#__PURE__*/ createComponent({
     setupTapClick();
     setupFocusVisible();
     setupPopup();
+
+    initialized = true;
   },
 
   render() {
+    const { id = 'app' } = this;
     return (
-      <div id={this.id} skyline-app class={[bem(), 'line-page']}>
+      <div id={id} skyline-app class={[bem(), 'line-page']}>
         {this.slots()}
       </div>
     );
