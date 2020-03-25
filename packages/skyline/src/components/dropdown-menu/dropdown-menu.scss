@@ -1,5 +1,4 @@
-@import "./dropdown-menu.vars";
-
+@import './dropdown-menu.vars';
 
 // Action Sheet
 // --------------------------------------------------
@@ -11,7 +10,8 @@
   --min-height: auto;
   --height: 100%;
   --max-height: calc(100% - (var(--line-safe-area-top) + var(--line-safe-area-bottom)));
-  --background: #{$background-color};
+  // --background: #{$background-color};
+  --background: #fff;
   --border-width: #{1px 0 0};
   --backdrop-opacity: var(--line-backdrop-opacity, 0.26);
   --border-color: #{$item-ios-border-color};
@@ -56,6 +56,9 @@
 .line-dropdown-menu .line-dropdown-menu__content {
   display: flex;
   position: absolute;
+
+  left: 0;
+  right: 0;
 
   flex-direction: column;
 

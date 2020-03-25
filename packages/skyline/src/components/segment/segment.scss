@@ -33,7 +33,7 @@
 // Segment: Scrollable
 // --------------------------------------------------
 
-.line-segment.segment-scrollable {
+.line-segment.line-segment--scrollable {
   justify-content: start;
 
   width: auto;
@@ -41,6 +41,6 @@
   overflow-x: auto;
 }
 
-.line-segment.segment-scrollable::-webkit-scrollbar {
+.line-segment.line-segment--scrollable::-webkit-scrollbar {
   display: none;
 }

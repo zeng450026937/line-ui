@@ -4,7 +4,7 @@
 // iOS Menu
 // --------------------------------------------------
 
-.line-menu.menu-type-overlay .menu-inner {
+.line-menu.line-menu--type-overlay .line-menu__inner {
   box-shadow: $menu-ios-box-shadow-overlay;
 }
 
@@ -12,10 +12,10 @@
 // iOS Menu Push
 // --------------------------------------------------
 
-.line-menu.menu-type-push {
+.line-menu.line-menu--type-push {
   z-index: $z-index-menu-overlay;
 }
 
-.line-menu.menu-type-push .show-overlay {
+.line-menu.line-menu--type-push .show-overlay {
   display: block;
 }

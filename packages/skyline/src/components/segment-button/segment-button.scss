@@ -78,7 +78,7 @@
   cursor: pointer;
 }
 
-.line-segment-button .button-native {
+.line-segment-button .line-segment-button__button-native {
   @include border-radius(0);
   @include text-inherit();
   @include margin(var(--margin-top), var(--margin-end), var(--margin-bottom), var(--margin-start));
@@ -118,11 +118,11 @@
   z-index: 2;
 }
 
-.line-segment-button .button-native::after {
+.line-segment-button .line-segment-button__button-native::after {
   @include button-state();
 }
 
-.line-segment-button .button-inner {
+.line-segment-button .line-segment-button__button-inner {
   display: flex;
   position: relative;
 
@@ -140,7 +140,7 @@
 // Segment Button: Checked
 // --------------------------------------------------
 
-.line-segment-button.segment-button-checked {
+.line-segment-button.line-segment-button--checked {
   background: var(--background-checked);
   color: var(--color-checked);
 }
@@ -149,7 +149,7 @@
 // Segment Button: Disabled
 // --------------------------------------------------
 
-.line-segment-button.segment-button-disabled {
+.line-segment-button.line-segment-button--disabled {
   cursor: default;
   pointer-events: none;
 }
@@ -158,7 +158,7 @@
 // Segment Button: Focused
 // --------------------------------------------------
 
-.line-segment-button.line-focused .button-native {
+.line-segment-button.line-focused .line-segment-button__button-native {
   color: var(--color-focused);
 
   &::after {
@@ -172,7 +172,7 @@
 // --------------------------------------------------
 
 @media (any-hover: hover) {
-  .line-segment-button:hover .button-native {
+  .line-segment-button:hover .line-segment-button__button-native {
     color: var(--color-hover);
 
     &::after {
@@ -182,7 +182,7 @@
     }
   }
 
-  .line-segment-button.segment-button-checked:hover .button-native {
+  .line-segment-button.line-segment-button--checked:hover .line-segment-button__button-native {
     color: var(--color-checked);
   }
 }
@@ -224,32 +224,32 @@
 // --------------------------------------------------
 
 // Layout: icon top
-.line-segment-button.segment-button-layout-icon-top .button-native {
+.line-segment-button.line-segment-button--layout-icon-top .line-segment-button__button-native {
   flex-direction: column;
 }
 
 // Layout: icon start
-.line-segment-button.segment-button-layout-icon-start .button-native {
+.line-segment-button.line-segment-button--layout-icon-start .line-segment-button__button-native {
   flex-direction: row;
 }
 
 // Layout: icon end
-.line-segment-button.segment-button-layout-icon-end .button-native {
+.line-segment-button.line-segment-button--layout-icon-end .line-segment-button__button-native {
   flex-direction: row-reverse;
 }
 
 // Layout: icon bottom
-.line-segment-button.segment-button-layout-icon-bottom .button-native {
+.line-segment-button.line-segment-button--layout-icon-bottom .line-segment-button__button-native {
   flex-direction: column-reverse;
 }
 
 // Layout: icon hide
-.line-segment-button.segment-button-layout-icon-hide .slotted.line-icon {
+.line-segment-button.line-segment-button--layout-icon-hide .slotted.line-icon {
   display: none;
 }
 
 // Layout: label hide
-.line-segment-button.segment-button-layout-label-hide .slotted.line-label {
+.line-segment-button.line-segment-button--layout-label-hide .slotted.line-label {
   display: none;
 }
 
@@ -263,7 +263,7 @@
 // Segment Button: Indicator
 // --------------------------------------------------
 
-.line-segment-button .segment-button-indicator {
+.line-segment-button .line-segment-button__indicator {
   @include transform-origin(left);
 
   position: absolute;
@@ -277,7 +277,7 @@
   pointer-events: none;
 }
 
-.line-segment-button .segment-button-indicator-background {
+.line-segment-button .line-segment-button__indicator-background {
   width: 100%;
   height: var(--indicator-height);
 
@@ -288,11 +288,11 @@
   pointer-events: none;
 }
 
-.line-segment-button .segment-button-indicator-animated {
+.line-segment-button .line-segment-button__indicator--animated {
   transition: var(--indicator-transition);
 }
 
-.line-segment-button.segment-button-checked .segment-button-indicator {
+.line-segment-button.line-segment-button--checked .line-segment-button__indicator {
   opacity: 1;
 }
 
@@ -301,11 +301,11 @@
 // --------------------------------------------------
 
 @media (prefers-reduced-motion: reduce) {
-  .segment-button-indicator-background {
+  .line-segment-button__indicator-background {
     transform: none;
   }
 
-  .segment-button-indicator-animated {
+  .line-segment-button__indicator--animated {
     transition: none;
   }
 }

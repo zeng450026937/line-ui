@@ -37,7 +37,7 @@ export default /*#__PURE__*/ createComponent({
           bem(),
           {
             // Used internally for styling
-            [`infinite-scroll-content-${ mode }`] : true,
+            [`line-infinite-scroll-content-${ mode }`] : true,
           },
         ]}
       >

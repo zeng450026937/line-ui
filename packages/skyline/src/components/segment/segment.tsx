@@ -20,6 +20,10 @@ export default /*#__PURE__*/ createComponent({
     /*#__PURE__*/ useColor(),
   ],
 
+  inject : {
+    Item : { default: undefined },
+  },
+
   props : {
     disabled : {
       type    : Boolean,
@@ -43,7 +47,6 @@ export default /*#__PURE__*/ createComponent({
 
       gesture : {} as Gesture,
       didInit : false,
-
 
       valueAfterGesture : null as any,
     };
@@ -191,14 +194,14 @@ export default /*#__PURE__*/ createComponent({
 
       this.$nextTick(() => {
         // Remove the transition before positioning on top of the previous indicator
-        currentIndicator.classList.remove('segment-button-indicator-animated');
+        currentIndicator.classList.remove('line-segment-button__indicator--animated');
         currentIndicator.style.setProperty('transform', transform);
 
         // Force a repaint to ensure the transform happens
         currentIndicator.getBoundingClientRect();
 
         // Add the transition to move the indicator into place
-        currentIndicator.classList.add('segment-button-indicator-animated');
+        currentIndicator.classList.add('line-segment-button__indicator--animated');
 
         // Remove the transform to slide the indicator back to the button clicked
         currentIndicator.style.setProperty('transform', '');
@@ -294,8 +297,8 @@ export default /*#__PURE__*/ createComponent({
       /* tslint:disable-next-line */
       if (current != null) {
         /**
-         * If current element is ion-segment then that means
-         * user tried to select a disabled ion-segment-button,
+         * If current element is line-segment then that means
+         * user tried to select a disabled line-segment-button,
          * and we should not update the ripple.
          */
         if (current.$options.name === 'line-segment') {
@@ -311,9 +314,12 @@ export default /*#__PURE__*/ createComponent({
     },
 
     emitStyle() {
-      // this.ionStyle.emit({
-      //   segment : true,
-      // });
+      this.Item && this.Item.itemStyle(
+        'segment',
+        {
+          segment : true,
+        },
+      );
     },
 
     onClick(ev: Event) {
@@ -342,13 +348,17 @@ export default /*#__PURE__*/ createComponent({
 
     return (
       <div
-        class={[bem(), {
-          'in-toolbar'         : inToolbar,
-          'in-toolbar-color'   : inToolbarColor,
-          'segment-activated'  : activated,
-          'segment-disabled'   : disabled,
-          'segment-scrollable' : scrollable,
-        }]}
+        class={[
+          bem({
+            activated,
+            disabled,
+            scrollable,
+          }),
+          {
+            'in-toolbar'       : inToolbar,
+            'in-toolbar-color' : inToolbarColor,
+          },
+        ]}
         onClick={this.onClick}
       >
         {this.slots()}

@@ -8,7 +8,7 @@ const clamp = (min: number, n: number, max: number) => {
   return Math.max(min, Math.min(n, max));
 };
 
-const PICKER_OPT_SELECTED = 'picker-opt-selected';
+const PICKER_OPT_SELECTED = 'line-picker-column__opt--selected';
 const DECELERATION_FRICTION = 0.97;
 const MAX_PICKER_SPEED = 90;
 const TRANSITION_DURATION = 150;
@@ -343,38 +343,38 @@ export default /*#__PURE__*/ createComponent({
 
     return (
       <div
-        class={[
-          bem(),
-          {
-            'picker-col'        : true,
-            'picker-opts-left'  : this.col.align === 'left',
-            'picker-opts-right' : this.col.align === 'right',
-          },
-        ]}
+        class={
+          bem({
+            col          : true,
+            'opts-left'  : col.align === 'left',
+            'opts-right' : col.align === 'right',
+          })
+        }
         style={{
           'max-width' : this.col.columnWidth,
         }}
       >
         {col.prefix && (
-          <div class="picker-prefix" style={{ width: col.prefixWidth }}>
+          <div class={bem('prefix')} style={{ width: col.prefixWidth }}>
+            {/* "picker-prefix" */}
             {col.prefix}
           </div>
         )}
         <div
-          class="picker-opts"
+          class={bem('opts')}
           style={{ maxWidth: col.optionsWidth }}
           ref="optsEl"
         >
           { col.options.map((o: any, index: number) => <button
               type="button"
-              class={{ 'picker-opt': true, 'picker-opt-disabled': !!o.disabled }}
+              class={bem('opt', { disabled: !!o.disabled })}
               opt-index={index}
             >
               {o.text}
             </button>)}
         </div>
         {col.suffix && (
-          <div class="picker-suffix" style={{ width: col.suffixWidth }}>
+          <div class={bem('suffix')} style={{ width: col.suffixWidth }}>
             {col.suffix}
           </div>
         )}

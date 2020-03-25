@@ -1,6 +1,7 @@
 import { menuController } from 'skyline/src/utils/menu-controller/index';
 import { getTimeGivenProgression } from 'skyline/src/utils/animation/cubic-bezier';
 import { useModel } from 'skyline/src/mixins/use-model';
+import { config } from 'skyline/src/utils/config';
 import { createNamespace } from 'skyline/src/utils/namespace';
 import {
   Animation,
@@ -67,7 +68,7 @@ const isEnd = (side: Side): boolean => {
 
 const SHOW_MENU = 'show-menu';
 const SHOW_BACKDROP = 'show-overlay';
-const MENU_CONTENT_OPEN = 'menu-content-open';
+const MENU_CONTENT_OPEN = 'line-menu__content-open';
 
 
 export default /*#__PURE__*/ createComponent({
@@ -181,7 +182,7 @@ export default /*#__PURE__*/ createComponent({
     async loadAnimation(): Promise<void> {
       // Menu swipe animation takes the menu's inner width as parameter,
       // If `offsetWidth` changes, we need to create a new animation.
-      const width = this.menuInnerEl!.offsetWidth;
+      const width = this.menuInnerEl.offsetWidth;
       if (width === this.width && this.animation !== undefined) {
         return;
       }
@@ -193,12 +194,11 @@ export default /*#__PURE__*/ createComponent({
         this.animation = undefined;
       }
       // Create new animation
-      this.animation = await menuController._createAnimation(this.type!, this as any);
+      this.animation = await menuController._createAnimation(this.type, this as any);
 
-      // TODO global animated: false
-      // if (!config.getBoolean('animated', true)) {
-      //   this.animation.duration(0);
-      // }
+      if (!config.getBoolean('animated', true)) {
+        this.animation.duration(0);
+      }
       this.animation.fill('both');
     },
 
@@ -208,7 +208,7 @@ export default /*#__PURE__*/ createComponent({
       // type and value concurrent change, animation = undefined
       if (!this.animation) await this.loadAnimation();
 
-      const ani = (this.animation as Animation)!
+      const ani = (this.animation as Animation)
         .direction((isReversed) ? 'reverse' : 'normal')
         .easing((isReversed) ? this.easingReverse : this.easing)
         .onFinish(() => {
@@ -385,9 +385,7 @@ export default /*#__PURE__*/ createComponent({
           this.contentEl.classList.add(MENU_CONTENT_OPEN);
         }
 
-        // TODO
         // emit open event
-        // this.ionDidOpen.emit();
         this.$emit('open');
       } else {
         // remove css classes
@@ -405,9 +403,7 @@ export default /*#__PURE__*/ createComponent({
           this.animation.stop();
         }
 
-        // TODO
         // emit close event
-        // this.ionDidClose.emit();
         this.$emit('close');
       }
     },
@@ -435,7 +431,7 @@ export default /*#__PURE__*/ createComponent({
 
       this.isAnimating = true;
 
-      const ani = (this.animation as Animation)!.direction('reverse');
+      const ani = (this.animation as Animation).direction('reverse');
       ani.play({ sync: true });
 
       this.afterAnimation(false);
@@ -446,9 +442,9 @@ export default /*#__PURE__*/ createComponent({
       this.animation = undefined;
       if (contentEl) {
         if (oldValue !== undefined) {
-          contentEl.classList.remove(`menu-content-${ oldValue }`);
+          contentEl.classList.remove(`line-menu__content-${ oldValue }`);
         }
-        contentEl.classList.add(`menu-content-${ value }`);
+        contentEl.classList.add(`line-menu__content-${ value }`);
         contentEl.removeAttribute('style');
       }
       if (this.menuInnerEl) {
@@ -519,7 +515,7 @@ export default /*#__PURE__*/ createComponent({
     this.contentEl = content as HTMLElement;
 
     // add menu's content classes
-    content.classList.add('menu-content');
+    content.classList.add('line-menu__content');
 
 
     if (!content || !(content as HTMLElement).tagName) {
@@ -530,7 +526,7 @@ export default /*#__PURE__*/ createComponent({
     this.contentEl = content as HTMLElement;
 
     // add menu's content classes
-    (content as HTMLElement).classList.add('menu-content');
+    (content as HTMLElement).classList.add('line-menu__content');
 
     this.typeChanged(this.type, undefined);
     this.sideChanged();
@@ -586,27 +582,27 @@ export default /*#__PURE__*/ createComponent({
     return (
       <div
         class={[
-          bem(),
+          bem({
+            [`type-${ type }`] : true,
+            enabled            : !disabled,
+            'side-end'         : isEndSide,
+            'side-start'       : !isEndSide,
+            'pane-visible'     : isPaneVisible,
+          }),
           {
-            [`menu-type-${ type }`] : true,
-            'show-menu'             : visible,
-            'menu-enabled'          : !disabled,
-            'menu-side-end'         : isEndSide,
-            'menu-side-start'       : !isEndSide,
-            'menu-pane-visible'     : isPaneVisible,
+            'show-menu' : visible,
           }]}
       >
         <div
-          class="menu-inner"
+          class={bem('inner')}
           ref="menuInnerEl"
         >
           {this.slots()}
         </div>
 
         <Overlay
+          class={bem('backdrop')}
           ref="backdropEl"
-          class="menu-backdrop"
-          visible={visible}
           tappable={false}
           stopPropagation={false}
         />

@@ -10,9 +10,9 @@
   transform-style: preserve-3d;
 }
 
-.line-picker-column .picker-prefix,
-.line-picker-column .picker-suffix,
-.line-picker-column .picker-opts {
+.line-picker-column .line-picker-column__prefix,
+.line-picker-column .line-picker-column__suffix,
+.line-picker-column .line-picker-column__opts {
   top: $picker-md-option-offset-y;
 
   transform-style: preserve-3d;
@@ -25,8 +25,7 @@
   pointer-events: none;
 }
 
-
-.line-picker-column .picker-opt {
+.line-picker-column .line-picker-column__opt {
   @include margin(0);
   @include padding($picker-md-option-padding-top, $picker-md-option-padding-end, $picker-md-option-padding-bottom, $picker-md-option-padding-start);
 
@@ -44,8 +43,8 @@
   pointer-events: auto;
 }
 
-.line-picker-column .picker-prefix,
-.line-picker-column .picker-suffix,
-.line-picker-column .picker-opt.picker-opt-selected {
+.line-picker-column .line-picker-column__prefix,
+.line-picker-column .line-picker-column__suffix,
+.line-picker-column .line-picker-column__opt.line-picker-column__opt--selected {
   color: $picker-md-option-selected-color;
 }

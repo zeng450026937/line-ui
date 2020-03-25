@@ -23,7 +23,7 @@
   color: #{current-color(base)};
 }
 
-.line-title__inner {
+.line-title .line-title__inner {
   display: block;
 
   width: 100%;
@@ -40,6 +40,6 @@
 // Small Title
 // --------------------------------------------------
 
-.line-title--small .line-title__inner {
+.line-title.line-title--small .line-title__inner {
   white-space: normal;
 }

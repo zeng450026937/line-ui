@@ -14,7 +14,7 @@
   color: $picker-md-option-text-color;
 }
 
-.picker-toolbar {
+.line-picker .line-picker__toolbar {
   display: flex;
 
   justify-content: flex-end;
@@ -22,8 +22,8 @@
   height: $picker-md-toolbar-height;
 }
 
-.picker-button,
-.picker-button.line-activated {
+.line-picker .line-picker__button,
+.line-picker .line-picker__button.line-activated {
   @include margin(0);
   @include padding(0, 1.1em);
 
@@ -40,12 +40,12 @@
   box-shadow: none;
 }
 
-.picker-columns {
+.line-picker .line-picker__columns {
   height: $picker-md-height - $picker-md-toolbar-height;
   perspective: 1800px;
 }
 
-.picker-above-highlight {
+.line-picker .line-picker__above-highlight {
   @include position(0, null, null, 0);
   @include transform(translate3d(0, 0, 90px));
 
@@ -64,7 +64,7 @@
   z-index: 10;
 }
 
-.picker-below-highlight {
+.line-picker .line-picker__below-highlight {
   @include position($picker-md-option-offset-y + $picker-md-option-height - 4, null, null, 0);
   @include transform(translate3d(0, 0, 90px));
 

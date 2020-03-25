@@ -21,7 +21,7 @@
   --transition: #{$fab-ios-transition-activated};
 }
 
-::slotted(line-icon),
+.line-fab-button .slotted.line-icon,
 .line-fab-button__indicator {
   font-size: $fab-ios-icon-font-size;
 }
@@ -41,7 +41,7 @@
               opacity 200ms ease 10ms};
 }
 
-.line-fab-button.line-fab-button--in-list ::slotted(line-icon) {
+.line-fab-button.line-fab-button--in-list .slotted.line-icon {
   font-size: $fab-ios-list-button-icon-font-size;
 }
 

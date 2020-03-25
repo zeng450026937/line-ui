@@ -10,9 +10,9 @@
   transform-style: preserve-3d;
 }
 
-.line-picker-column .picker-prefix,
-.line-picker-column .picker-suffix,
-.line-picker-column .picker-opts {
+.line-picker-column .line-picker-column__prefix,
+.line-picker-column .line-picker-column__suffix,
+.line-picker-column .line-picker-column__opts {
   top: $picker-ios-option-offset-y;
 
   transform-style: preserve-3d;
@@ -25,7 +25,7 @@
   pointer-events: none;
 }
 
-.line-picker-column .picker-opt {
+.line-picker-column .line-picker-column__opt {
   @include padding($picker-ios-option-padding-top, $picker-ios-option-padding-end, $picker-ios-option-padding-bottom, $picker-ios-option-padding-start);
   @include margin(0);
   @include transform-origin(center, center);

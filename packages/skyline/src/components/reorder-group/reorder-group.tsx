@@ -28,7 +28,7 @@ const findReorderItem = (node: HTMLElement | null, container: HTMLElement): HTML
 
 const AUTO_SCROLL_MARGIN = 60;
 const SCROLL_JUMP = 10;
-const ITEM_REORDER_SELECTED = 'reorder-selected';
+const ITEM_REORDER_SELECTED = 'line-reorder--selected';
 
 const reorderArray = (array: any[], from: number, to: number): any[] => {
   const element = array[from];
@@ -324,12 +324,12 @@ export default /*#__PURE__*/ createComponent({
 
     return (
       <div
-        class={[
-          bem(), {
-            'reorder-enabled'     : !disabled,
-            'reorder-list-active' : state !== ReorderGroupState.Idle,
-          },
-        ]}
+        class={
+          bem({
+            enabled       : !disabled,
+            'list-active' : state !== ReorderGroupState.Idle,
+          })
+        }
       >
         {this.slots()}
       </div>

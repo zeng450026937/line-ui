@@ -16,7 +16,7 @@
   contain: content;
 }
 
-.line-picker-column .picker-opts {
+.line-picker-column .line-picker-column__opts {
   position: relative;
 
   flex: 1;
@@ -25,7 +25,7 @@
 }
 
 // contain property is supported by Chrome
-.line-picker-column .picker-opt {
+.line-picker-column .line-picker-column__opt {
   @include position(0, null, null, 0);
 
   display: block;
@@ -45,30 +45,30 @@
   will-change: transform;
 }
 
-.line-picker-column .picker-opt.picker-opt-disabled {
+.line-picker-column .line-picker-column__opt.line-picker-column__opt--disabled {
   pointer-events: none;
 }
 
-.line-picker-column .picker-opt-disabled {
+.line-picker-column .line-picker-column__opt--disabled {
   opacity: 0;
 }
 
-.line-picker-column.picker-opts-left {
+.line-picker-column.line-picker-column--opts-left {
   justify-content: flex-start;
 }
 
-.line-picker-column.picker-opts-right {
+.line-picker-column.line-picker-column--opts-right {
   justify-content: flex-end;
 }
 
-.line-picker-column .picker-opt {
+.line-picker-column .line-picker-column__opt {
   &:active,
   &:focus {
     outline: none;
   }
 }
 
-.line-picker-column .picker-prefix {
+.line-picker-column .line-picker-column__prefix {
   position: relative;
 
   flex: 1;
@@ -78,7 +78,7 @@
   white-space: nowrap;
 }
 
-.line-picker-column .picker-suffix {
+.line-picker-column .line-picker-column__suffix {
   position: relative;
 
   flex: 1;

@@ -138,13 +138,9 @@ export default /*#__PURE__*/ createComponent({
             class={bem('content')}
             ref="contentEl"
             style={{
-              top             : top === 'auto' ? '' : `${ 0 }px`,
-              bottom          : bottom === 'auto' ? '' : `${ 0 }px`,
-              position        : 'absolute',
-              left            : 0,
-              right           : 0,
-              height          : `${ height }px`,
-              backgroundColor : '#fff',
+              top    : top === 'auto' ? '' : `${ 0 }px`,
+              bottom : bottom === 'auto' ? '' : `${ 0 }px`,
+              height : `${ height }px`,
             }}
           >
             {this.slots() || (
@@ -159,9 +155,6 @@ export default /*#__PURE__*/ createComponent({
                 <div class="picker-below-highlight"></div>
               </div>)
             }
-          <div>
-
-          </div>
           </div>
         </div>
       </div>

@@ -29,7 +29,6 @@ export default /*#__PURE__*/ createComponent({
 
   beforeMount() {
     this.$on('clickoutside', () => {
-      console.log('clickoutside');
       this.activated = false;
     });
 

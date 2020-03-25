@@ -48,7 +48,7 @@
 // Segment Button: Disabled
 // --------------------------------------------------
 
-.line-segment-button.segment-button-disabled {
+.line-segment-button.line-segment-button--disabled {
   opacity: $segment-button-md-opacity-disabled;
 }
 
@@ -68,22 +68,22 @@
   color: #{current-color(base)};
 }
 
-.line-segment-button.in-segment-color .segment-button-indicator-background {
+.line-segment-button.in-segment-color .line-segment-button__indicator-background {
   background: #{current-color(base)};
 }
 
 // Checked
-.line-segment-button.in-segment-color.segment-button-checked .button-native {
+.line-segment-button.in-segment-color.line-segment-button--checked .line-segment-button__button-native {
   color: #{current-color(base)};
 }
 
 // Focused
-.line-segment-button.in-segment-color.line-focused .button-native::after {
+.line-segment-button.in-segment-color.line-focused .line-segment-button__button-native::after {
   background: #{current-color(base)};
 }
 
 @media (any-hover: hover) {
-  .line-segment-button.in-segment-color:hover .button-native {
+  .line-segment-button.in-segment-color:hover .line-segment-button__button-native {
     color: $segment-button-md-text-color;
 
     &::after {
@@ -91,7 +91,7 @@
     }
   }
 
-  .line-segment-button.in-segment-color.segment-button-checked:hover .button-native {
+  .line-segment-button.in-segment-color.line-segment-button--checked:hover .line-segment-button__button-native {
     color: #{current-color(base)};
   }
 }
@@ -113,18 +113,18 @@
 // --------------------------------------------------
 
 // Default Segment, In a Toolbar with Color
-.line-segment-button.in-toolbar-color:not(.in-segment-color) .button-native {
+.line-segment-button.in-toolbar-color:not(.in-segment-color) .line-segment-button__button-native {
   color: #{current-color(contrast, .6)};
 }
 
 // Default Segment, In a Toolbar with Color, Checked
-.line-segment-button.in-toolbar-color.segment-button-checked:not(.in-segment-color) .button-native {
+.line-segment-button.in-toolbar-color.line-segment-button--checked:not(.in-segment-color) .line-segment-button__button-native {
   color: #{current-color(contrast)};
 }
 
 // Default Segment, In a Toolbar with Color, Hover
 @media (any-hover: hover) {
-  .line-segment-button.in-toolbar-color:not(.in-segment-color) .button-native::after {
+  .line-segment-button.in-toolbar-color:not(.in-segment-color) .line-segment-button__button-native::after {
     background: #{current-color(contrast)};
   }
 }
@@ -150,54 +150,54 @@
 // --------------------------------------------------
 
 // Layout: icon top / icon bottom
-.line-segment-button.segment-button-layout-icon-top .slotted.line-label,
-.line-segment-button.segment-button-layout-icon-bottom .slotted.line-icon {
+.line-segment-button.line-segment-button--layout-icon-top .slotted.line-label,
+.line-segment-button.line-segment-button--layout-icon-bottom .slotted.line-icon {
   @include margin(0, null, null, null);
 }
 
-.line-segment-button .segment-button-layout-icon-top .slotted.line-icon,
-.line-segment-button .segment-button-layout-icon-bottom .slotted.line-label {
+.line-segment-button .line-segment-button--layout-icon-top .slotted.line-icon,
+.line-segment-button .line-segment-button--layout-icon-bottom .slotted.line-label {
   @include margin(null, null, 0, null);
 }
 
 // Layout: icon start
-.line-segment-button .segment-button-layout-icon-start .slotted.line-label {
+.line-segment-button .line-segment-button--layout-icon-start .slotted.line-label {
   @include margin-horizontal(8px, 0);
 }
 
 // Layout: icon end
-.line-segment-button .segment-button-layout-icon-end .slotted.line-label {
+.line-segment-button .line-segment-button--layout-icon-end .slotted.line-label {
   @include margin-horizontal(0, 8px);
 }
 
 // Layout: icon only
-.line-segment-button .segment-button-has-icon-only .slotted.line-icon {
+.line-segment-button .line-segment-button--has-icon-only .slotted.line-icon {
   @include margin(12px, null, 12px, null);
 }
 
 // Layout: label only
-.line-segment-button .segment-button-has-label-only .slotted.line-label {
+.line-segment-button .line-segment-button--has-label-only .slotted.line-label {
   @include margin(12px, null, 12px, null);
 }
 
 // Segment Button: Indicator
 // --------------------------------------------------
 
-.segment-button-indicator {
+.line-segment-button__indicator {
   @include position(null, 0, 0, 0);
 }
 
-.segment-button-indicator-background {
+.line-segment-button__indicator-background {
   background: var(--indicator-color);
 }
 
 // Segment button indicator color should use the background checked variable with
 // a fallback to the default value of --indicator-color
-.line-segment-button .in-toolbar:not(.in-segment-color) .segment-button-indicator-background {
+.line-segment-button .in-toolbar:not(.in-segment-color) .line-segment-button__indicator-background {
   background: #{var(--line-toolbar-segment-indicator-color, var(--indicator-color))};
 }
 
 // Do not use the global or local CSS variable if the toolbar has a color
-.line-segment-button .in-toolbar-color:not(.in-segment-color) .segment-button-indicator-background {
+.line-segment-button .in-toolbar-color:not(.in-segment-color) .line-segment-button__indicator-background {
   background: #{current-color(contrast)};
 }

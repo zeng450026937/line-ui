@@ -115,7 +115,7 @@
   height: 100%;
 
   transition: all ease-in-out 300ms;
-  transitline-property: transform, opacity;
+  transition-property: transform, opacity;
 }
 
 
@@ -189,7 +189,7 @@
 // FAB Content
 // --------------------------------------------------
 
-::slotted(line-icon) {
+.line-fab-button .slotted.line-icon {
   line-height: 1;
 }
 
@@ -221,7 +221,7 @@
   transform: scale(.4) rotateZ(-45deg);
 
   transition: all ease-in-out 300ms;
-  transitline-property: transform, opacity;
+  transition-property: transform, opacity;
 
   opacity: 0;
 }

@@ -3,16 +3,16 @@
 // Reorder Group
 // --------------------------------------------------
 
-.reorder-list-active > * {
+.line-reorder-group--list-active > * {
   transition: transform 300ms;
   will-change: transform;
 }
 
-.reorder-enabled {
+.line-reorder-group--enabled {
   user-select: none;
 }
 
-.reorder-enabled .line-reorder {
+.line-reorder-group--enabled .line-reorder {
   display: block;
 
   cursor: grab;
@@ -20,12 +20,12 @@
   touch-action: none;
 }
 
-.reorder-selected,
-.reorder-selected .line-reorder {
+.line-reorder-group--selected,
+.line-reorder-group--selected .line-reorder {
   cursor: grabbing;
 }
 
-.reorder-selected {
+.line-reorder-group--selected {
   position: relative;
 
   /* stylelint-disable-next-line declaration-no-important */
@@ -36,6 +36,6 @@
   z-index: $z-index-reorder-selected;
 }
 
-.reorder-visible .line-reorder .reorder-icon {
+.reorder-visible .line-reorder .line-reorder__icon {
   @include transform(translate3d(0, 0, 0));
 }

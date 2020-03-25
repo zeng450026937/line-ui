@@ -62,46 +62,48 @@ export default /*#__PURE__*/ createComponent({
 
     return (
       <div
-      aria-disabled={disabled ? 'true' : null}
-        class={[bem(), {
-          'in-toolbar'                          : inToolbar,
-          'in-toolbar-color'                    : inToolbarColor,
-          'in-segment'                          : inSegment,
-          'in-segment-color'                    : inSegmentColor,
-          'segment-button-has-label'            : hasLabel,
-          'segment-button-has-icon'             : hasIcon,
-          'segment-button-has-label-only'       : hasLabel && !hasIcon,
-          'segment-button-has-icon-only'        : hasIcon && !hasLabel,
-          'segment-button-disabled'             : disabled,
-          'segment-button-after-checked'        : afterChecked,
-          'segment-button-checked'              : checked,
-          'segment-button-activated'            : activated,
-          [`segment-button-layout-${ layout }`] : true,
-          'line-activatable'                    : true,
-          'line-activatable-instant'            : true,
-          'line-focusable'                      : true,
+        aria-disabled={disabled ? 'true' : null}
+        class={[bem({
+          'has-label'            : hasLabel,
+          'has-icon'             : hasIcon,
+          'has-label-only'       : hasLabel && !hasIcon,
+          'has-icon-only'        : hasIcon && !hasLabel,
+          'after-checked'        : afterChecked,
+          [`layout-${ layout }`] : true,
+          disabled,
+          checked,
+          activated,
+        }),
+        {
+          'in-toolbar'               : inToolbar,
+          'in-toolbar-color'         : inToolbarColor,
+          'in-segment'               : inSegment,
+          'in-segment-color'         : inSegmentColor,
+          'line-activatable'         : true,
+          'line-activatable-instant' : true,
+          'line-focusable'           : true,
         }]}
       >
         <button
           type={type}
           aria-pressed={checked ? 'true' : null}
-          class="button-native"
+          class={bem('button-native')}
           disabled={disabled}
         >
-          <span class="button-inner">
+          <span class={bem('button-inner')}>
             {this.slots()}
           </span>
           {mode === 'md' && <line-ripple-effect></line-ripple-effect>}
         </button>
         <div
           part="indicator"
-          class={{
-            'segment-button-indicator'          : true,
-            'segment-button-indicator-animated' : true,
-          }}
+          class={bem('indicator', { animated: true })}
           ref="indicatorEl"
         >
-          <div part="indicator-background" class="segment-button-indicator-background"></div>
+          <div
+            part="indicator-background"
+            class={bem('indicator-background')}
+          ></div>
         </div>
       </div>
     );

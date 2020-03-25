@@ -11,8 +11,8 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('picker');
 
 const buttonWrapperClass = (button: PickerButton): CssClassMap => {
   return {
-    [`picker-toolbar-${ button.role }`] : button.role !== undefined,
-    'picker-toolbar-button'             : true,
+    [`line-picker__toolbar-${ button.role }`] : button.role !== undefined,
+    'line-picker__toolbar-button'             : true,
   };
 };
 
@@ -164,32 +164,32 @@ export default /*#__PURE__*/ createComponent({
           onTap={this.onTap}
         >
         </Overlay>
-        <div class="picker-wrapper" role="dialog">
-          <div class="picker-toolbar">
+        <div class={bem('wrapper')} role="dialog">
+          <div class={bem('toolbar')}>
             {this.buttons.map((b: any) => (
               <div class={buttonWrapperClass(b)}>
                 <button
                   type="button"
                   onClick={() => this.buttonClick(b)}
-                  class={{
-                    'picker-button'    : true,
-                    'line-activatable' : true,
-                  }}
+                  class={[
+                    bem('button'),
+                    { 'line-activatable': true },
+                  ]}
                 >
                   {b.text}
                 </button>
               </div>
             ))}
           </div>
-          <div class="picker-columns">
-            <div class="picker-above-highlight"></div>
+          <div class={bem('columns')}>
+            <div class={bem('above-highlight')}></div>
               {visible && columns.map((c: any) => (
               <PickerColumn
                 onColChange={this.colChange}
                 col={c}
               >
               </PickerColumn>))}
-            <div class="picker-below-highlight"></div>
+            <div class={bem('below-highlight')}></div>
           </div>
         </div>
       </div>

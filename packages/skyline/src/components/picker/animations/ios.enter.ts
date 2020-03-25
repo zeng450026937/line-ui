@@ -14,7 +14,7 @@ export const iosEnterAnimation = (baseEl: HTMLElement): Animation => {
     .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
 
   wrapperAnimation
-    .addElement(baseEl.querySelector('.picker-wrapper') as Element)
+    .addElement(baseEl.querySelector('.line-picker__wrapper') as Element)
     .fromTo('transform', 'translateY(100%)', 'translateY(0%)');
 
   return baseAnimation

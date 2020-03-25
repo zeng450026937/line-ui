@@ -121,13 +121,13 @@
 
 // Badge
 .line-tab-button.tab-layout-icon-hide .slotted.line-badge,
-.line-tab-button.tab-has-label-only .slotted.line-badge {
+.line-tab-button.line-tab-button--has-label-only .slotted.line-badge {
   @include position(16px, null, null, 70%);
 }
 
 // Label
 .line-tab-button.tab-layout-icon-hide .slotted.line-label,
-.line-tab-button.tab-has-label-only .slotted.line-label {
+.line-tab-button.line-tab-button--has-label-only .slotted.line-label {
   @include margin(0, null, 0, null);
 }
 
@@ -137,13 +137,13 @@
 
 // Badge
 .line-tab-button.tab-layout-label-hide .slotted.line-badge,
-.line-tab-button.tab-has-icon-only .slotted.line-badge {
+.line-tab-button.line-tab-button--has-icon-only .slotted.line-badge {
   @include position(16px, null, null, null);
 }
 
 // Icon
 .line-tab-button.tab-layout-label-hide .slotted.line-icon,
-.line-tab-button.tab-has-icon-only .slotted.line-icon {
+.line-tab-button.line-tab-button--has-icon-only .slotted.line-icon {
   @include margin(0, null, 0, null);
 
   font-size: 24px;

@@ -203,11 +203,10 @@ export default /*#__PURE__*/ createComponent({
     return (
       <div
         class={[
-          bem(),
-          {
-            'infinite-scroll-loading' : isLoading,
-            'infinite-scroll-enabled' : !disabled,
-          },
+          bem({
+            loading : isLoading,
+            enabled : !disabled,
+          }),
         ]}
       >
         {this.slots()}

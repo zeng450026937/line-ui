@@ -74,7 +74,7 @@
 // Segment Button: Disabled
 // --------------------------------------------------
 
-.line-segment-button.segment-button-disabled {
+.line-segment-button.line-segment-button--disabled {
   opacity: $segment-button-ios-opacity-disabled;
 }
 
@@ -91,12 +91,12 @@
 // --------------------------------------------------
 
 // Layout: icon start
-.line-segment-button.segment-button-layout-icon-start .slotted.line-label {
+.line-segment-button.line-segment-button--layout-icon-start .slotted.line-label {
   @include margin-horizontal(2px, 0);
 }
 
 // Layout: icon end
-.line-segment-button.segment-button-layout-icon-end .slotted.line-label {
+.line-segment-button.line-segment-button--layout-icon-end .slotted.line-label {
   @include margin-horizontal(0, 2px);
 }
 
@@ -104,18 +104,18 @@
 // Segment Button: Checked Indicator
 // --------------------------------------------------
 
-.segment-button-indicator {
+.line-segment-button__indicator {
   @include padding(null, $segment-button-ios-margin);
   @include position(0, 0, 0, 0);
 }
 
-.segment-button-indicator-background {
+.line-segment-button__indicator-background {
   @include border-radius(var(--border-radius));
 
   background: var(--indicator-color);
 }
 
-.segment-button-indicator-background {
+.line-segment-button__indicator-background {
   transition: var(--indicator-transition);
 }
 
@@ -123,8 +123,8 @@
 // Segment Button: Checked Borders
 // --------------------------------------------------
 
-.line-segment-button.segment-button-checked::before,
-.line-segment-button.segment-button-after-checked::before {
+.line-segment-button.line-segment-button--checked::before,
+.line-segment-button.line-segment-button--after-checked::before {
   opacity: 0;
 }
 
@@ -132,7 +132,7 @@
 // Segment Button: Checked
 // --------------------------------------------------
 
-.line-segment-button.segment-button-checked {
+.line-segment-button.line-segment-button--checked {
   z-index: -1;
 }
 
@@ -140,21 +140,21 @@
 // Segment: States
 // --------------------------------------------------
 
-.line-segment-button.segment-button-activated {
+.line-segment-button.line-segment-button--activated {
   --indicator-transform: scale(0.95);
 }
 
-.line-segment-button.line-focused .button-native {
+.line-segment-button.line-focused .line-segment-button__button-native {
   opacity: $segment-button-ios-opacity-focused;
 }
 
 @media (any-hover: hover) {
   // Default Segment, Hover
-  .line-segment-button:hover .button-native {
+  .line-segment-button:hover .line-segment-button__button-native {
     opacity: $segment-button-ios-opacity-hover;
   }
 
-  .line-segment-button.segment-button-checked:hover .button-native {
+  .line-segment-button.line-segment-button--checked:hover .line-segment-button__button-native {
     opacity: 1;
   }
 }
@@ -171,15 +171,15 @@
 
 // Indicator color on a Segment w/ color
 // should not change if the variable is set
-.line-segment-button.in-segment-color .segment-button-indicator-background {
+.line-segment-button.in-segment-color .line-segment-button__indicator-background {
   background: $segment-button-ios-indicator-color;
 }
 
 @media (any-hover: hover) {
   // Toolbar with Color, Default Segment, Hover
   // Toolbar with Color, Default Segment, Checked, Hover
-  .line-segment-button.in-segment-color:hover .button-native,
-  .line-segment-button.in-segment-color.segment-button-checked:hover .button-native {
+  .line-segment-button.in-segment-color:hover .line-segment-button__button-native,
+  .line-segment-button.in-segment-color.line-segment-button--checked:hover .line-segment-button__button-native {
     color: $segment-button-ios-color;
   }
 }
@@ -202,28 +202,28 @@
 // --------------------------------------------------
 
 // Do not use the global or local CSS variable if the toolbar has a color
-.line-segment-button.in-toolbar-color .segment-button-indicator-background {
+.line-segment-button.in-toolbar-color .line-segment-button__indicator-background {
   background: #fff;
 }
 
 // Toolbar with Color, Default Segment
-.line-segment-button.in-toolbar-color:not(.in-segment-color) .button-native {
+.line-segment-button.in-toolbar-color:not(.in-segment-color) .line-segment-button__button-native {
   color: #{current-color(contrast)};
 }
 
 // Toolbar with Color, Default Segment, Checked
-.line-segment-button.in-toolbar-color.segment-button-checked:not(.in-segment-color) .button-native {
+.line-segment-button.in-toolbar-color.line-segment-button--checked:not(.in-segment-color) .line-segment-button__button-native {
   color: #{current-color(base)};
 }
 
 @media (any-hover: hover) {
   // Toolbar with Color, Default Segment, Hover
-  .line-segment-button.in-toolbar-color:not(.in-segment-color):hover .button-native {
+  .line-segment-button.in-toolbar-color:not(.in-segment-color):hover .line-segment-button__button-native {
     color: #{current-color(contrast)};
   }
 
   // Toolbar with Color, Default Segment, Checked / Hover
-  .line-segment-button.in-toolbar-color.segment-button-checked:not(.in-segment-color):hover .button-native {
+  .line-segment-button.in-toolbar-color.line-segment-button--checked:not(.in-segment-color):hover .line-segment-button__button-native {
     color: #{current-color(base)};
   }
 }
