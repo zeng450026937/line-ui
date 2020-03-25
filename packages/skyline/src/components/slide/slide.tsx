@@ -3,7 +3,9 @@ import { createNamespace } from 'skyline/src/utils/namespace';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('slide');
 
 export default /*#__PURE__*/ createComponent({
-  render() {
+  functional : true,
+
+  render(h, { data, slots }) {
     return (
       <div
         class={[
@@ -13,8 +15,9 @@ export default /*#__PURE__*/ createComponent({
             'swiper-zoom-container' : true,
           },
         ]}
+        {...data}
       >
-        {this.slots()}
+        {slots()}
       </div>
     );
   },

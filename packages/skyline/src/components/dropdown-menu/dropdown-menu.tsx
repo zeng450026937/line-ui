@@ -14,12 +14,8 @@ export default /*#__PURE__*/ createComponent({
     /*#__PURE__*/ usePopup(),
     /*#__PURE__*/ useTrigger(),
     /*#__PURE__*/ useClickOutside({
-      includes(this) {
-        const { trigger } = this as any;
-
-        if (!trigger) return [];
-
-        return [trigger.$el || trigger, this.$el];
+      includes(this: any) {
+        return [this.$triggerEl, this.$el].filter(Boolean);
       },
     }),
   ],

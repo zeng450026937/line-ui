@@ -10,9 +10,10 @@ export default /*#__PURE__*/ createComponent({
   },
 
   render(h, { props, data, slots }) {
+    const { running } = props;
     return (
       <div
-        class={bem({ running: props.running })}
+        class={bem({ running })}
         {...data}
       >
         { slots() }

@@ -19,9 +19,9 @@ export default /*#__PURE__*/ createComponent({
   },
 
   props : {
-    indeterminate : Boolean,
     text          : String,
     color         : String,
+    indeterminate : Boolean,
   },
 
   data() {
@@ -37,9 +37,11 @@ export default /*#__PURE__*/ createComponent({
 
   methods : {
     emitStyle() {
-      if (!this.Item) return;
+      const { Item } = this;
 
-      this.Item.itemStyle(
+      if (!Item) return;
+
+      Item.itemStyle(
         'check-box',
         {
           'checkbox-checked'     : this.checked,
@@ -88,7 +90,8 @@ export default /*#__PURE__*/ createComponent({
               disabled={disabled}
               width={26}
               height={26}
-            ></CheckIndicator>
+            >
+            </CheckIndicator>
           )
         }
         { this.slots() || text }

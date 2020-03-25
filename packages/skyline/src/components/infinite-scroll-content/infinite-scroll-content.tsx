@@ -23,7 +23,10 @@ export default /*#__PURE__*/ createComponent({
       const { mode } = this;
       spinner = config.get(
         'infiniteLoadingSpinner',
-        config.get('spinner', mode === 'ios' ? 'lines' : 'crescent'),
+        config.get(
+          'spinner',
+          mode === 'ios' ? 'lines' : 'crescent',
+        ),
       );
     }
   },
@@ -42,14 +45,18 @@ export default /*#__PURE__*/ createComponent({
         ]}
       >
         <div class="infinite-loading">
-          {loadingSpinner && (
-            <div class="infinite-loading-spinner">
-              <line-spinner name={loadingSpinner} />
-            </div>
-          )}
-          {loadingText && (
-            <div class="infinite-loading-text" innerHTML={sanitizeDOMString(loadingText)} />
-          )}
+          {
+            loadingSpinner && (
+              <div class="infinite-loading-spinner">
+                <line-spinner name={loadingSpinner} />
+              </div>
+            )
+          }
+          {
+            loadingText && (
+              <div class="infinite-loading-text" innerHTML={sanitizeDOMString(loadingText)} />
+            )
+          }
         </div>
       </div>
     );

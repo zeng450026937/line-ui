@@ -38,7 +38,12 @@ export default /*#__PURE__*/ createComponent({
   render() {
     const { id = 'app' } = this;
     return (
-      <div id={id} skyline-app class={[bem(), 'line-page']}>
+      <div
+        id={id}
+        skyline-app
+        class={[bem(), 'line-page']}
+        on={this.$listeners}
+       >
         {this.slots()}
       </div>
     );

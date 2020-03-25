@@ -3,24 +3,17 @@ import { SvgIcon } from 'skyline/src/components/icon';
 import { createNamespace } from 'skyline/src/utils/namespace';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('check-indicator');
-let path: VNode;
+
+let path: VNode | undefined;
+const CHECK_PATH = 'M1.73,12.91 8.1,19.28 22.79,4.59';
 
 export default /*#__PURE__*/ createComponent({
   functional : true,
 
   props : {
-    checked : {
-      type    : Boolean,
-      default : false,
-    },
-    indeterminate : {
-      type    : Boolean,
-      default : false,
-    },
-    disabled : {
-      type    : Boolean,
-      default : false,
-    },
+    checked       : Boolean,
+    indeterminate : Boolean,
+    disabled      : Boolean,
   },
 
   render(h, { props, data }) {
@@ -32,7 +25,7 @@ export default /*#__PURE__*/ createComponent({
           disabled      : props.disabled,
         })}
         scopedSlots={{
-          content : () => path || (path = h('path', { attrs: { d: 'M1.73,12.91 8.1,19.28 22.79,4.59' } })),
+          content : () => path || (path = h('path', { attrs: { d: CHECK_PATH } })),
         }}
         {...data}
       ></SvgIcon>

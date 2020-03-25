@@ -11,9 +11,13 @@ export default /*#__PURE__*/ createComponent({
   },
 
   render(h, { props, data, slots }) {
+    const { color } = props;
     return (
       <div
-        class={[bem(), createColorClasses(props.color)]}
+        class={[
+          bem(),
+          createColorClasses(color),
+        ]}
         {...data}
       >
         {slots()}

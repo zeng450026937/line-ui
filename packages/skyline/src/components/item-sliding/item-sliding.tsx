@@ -4,7 +4,6 @@ import {
   Side,
 } from 'skyline/src/types/interface';
 import { createGesture } from 'skyline/src/utils/gesture';
-// import { Vue } from 'vue/types/vue';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('item-sliding');
 

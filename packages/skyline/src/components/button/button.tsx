@@ -36,11 +36,7 @@ export default /*#__PURE__*/ createComponent({
     href      : String,
     rel       : String,
     target    : String,
-    // override default
-    checkable : {
-      type    : Boolean,
-      default : false,
-    },
+    checkable : Boolean,
   },
 
   data() {

@@ -28,7 +28,6 @@ export default /*#__PURE__*/ createComponent({
   methods : {
     onClick(ev: Event) {
       const el = (ev.target as HTMLElement).closest('.line-item-option');
-      console.log(el);
       if (el) {
         ev.preventDefault();
       }

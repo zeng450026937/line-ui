@@ -34,7 +34,6 @@ export default /*#__PURE__*/ createComponent({
         on={this.$listeners}
       >
         {this.slots()}
-        {/* {mode === 'md' && <line-ripple-effect></line-ripple-effect>} */}
       </div>
     );
   },

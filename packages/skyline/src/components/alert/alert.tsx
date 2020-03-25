@@ -26,10 +26,7 @@ export default /*#__PURE__*/ createComponent({
     subHeader : String,
     message   : String,
     inputs    : Array,
-    buttons   : {
-      type    : Array,
-      default : [],
-    },
+    buttons   : Array,
   },
 
   beforeMount() {

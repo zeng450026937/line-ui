@@ -20,18 +20,18 @@ export default /*#__PURE__*/ createComponent({
   },
 
   render(h, { props, data, slots }) {
+    const { attrs = {} } = data;
     const { name, size, color } = props;
     const text = name || getDefaultText(slots);
     return (
       <i
         class={[
           'line-icon',
-          'material-icons',
           bem({ [`${ size }`]: !!size }),
           createColorClasses(color),
         ]}
-        aria-hidden={!data.attrs!['aria-label']}
-        aria-label={data.attrs!['aria-label'] || text}
+        aria-hidden={!attrs['aria-label']}
+        aria-label={attrs['aria-label'] || text}
         {...data}
       >
         {text}

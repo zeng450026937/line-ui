@@ -32,9 +32,8 @@ export default /*#__PURE__*/ createComponent({
 
   methods : {
     addIO() {
-      if (this.src === undefined) {
-        return;
-      }
+      if (!this.src) return;
+
       if ('IntersectionObserver' in window) {
         this.removeIO();
         this.io = new IntersectionObserver(data => {

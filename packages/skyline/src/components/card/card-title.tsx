@@ -1,22 +1,29 @@
 import { createNamespace } from 'skyline/src/utils/namespace';
-import { useColor } from 'skyline/src/mixins/use-color';
+import { createColorClasses } from 'skyline/src/mixins/use-color';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('card-title');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ useColor(),
-  ],
+  functional : true,
 
-  render() {
+  props : {
+    color : String,
+  },
+
+  render(h, { props, data, slots }) {
+    const { color } = props;
     return (
       <div
         role="heading"
         aria-level="2"
-        class={[bem(), 'line-inherit-color']}
-        on={this.$listeners}
+        class={[
+          bem(),
+          createColorClasses(color),
+          'line-inherit-color',
+        ]}
+        {...data}
       >
-        {this.slots()}
+        {slots()}
       </div>
     );
   },

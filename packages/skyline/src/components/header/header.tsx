@@ -3,7 +3,9 @@ import { createNamespace } from 'skyline/src/utils/namespace';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('header');
 
 export default /*#__PURE__*/ createComponent({
-  inject : ['App'],
+  inject : {
+    App : { default: undefined },
+  },
 
   props : {
     collapse    : String,

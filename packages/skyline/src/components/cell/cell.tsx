@@ -4,27 +4,18 @@ import { createNamespace } from 'skyline/src/utils/namespace';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('cell');
 
 export default /*#__PURE__*/ createComponent({
-  components : {
-    Icon,
-  },
-
   props : {
-    title : {
-      type    : [String, Number],
-      default : '',
-    },
-    content : {
-      type    : [String, Number],
-      default : '',
-    },
-    arrow : {
-      type    : Boolean,
-      default : false,
-    },
+    title   : [String, Number],
+    content : [String, Number],
+    arrow   : Boolean,
   },
 
   render() {
-    const { arrow } = this;
+    const {
+      title = '',
+      content = '',
+      arrow = false,
+    } = this;
 
     return (
       <div
@@ -32,18 +23,23 @@ export default /*#__PURE__*/ createComponent({
         on={ this.$listeners }
       >
         <div class={bem('title')}>
-          { this.slots('title') || this.title }
+          { this.slots('title') || title }
         </div>
+
         <div class={bem('content')}>
-          { this.slots('content') || this.content }
-          {arrow && (
-          <span class={bem('arrow')} >
-            <icon
-              name='chevron_right'
-              width="24"
-              height="24"
-             ></icon>
-          </span>)}
+          { this.slots('content') || content }
+          {
+            arrow && (
+              <span class={bem('arrow')} >
+                <Icon
+                  name='chevron_right'
+                  width="24"
+                  height="24"
+                >
+                </Icon>
+              </span>
+            )
+          }
         </div>
       </div>
     );

@@ -16,12 +16,8 @@ export default /*#__PURE__*/ createComponent({
     /*#__PURE__*/ usePopup({ disableScroll: false }),
     /*#__PURE__*/ useTrigger(),
     /*#__PURE__*/ useClickOutside({
-      includes(this) {
-        const { trigger } = this as any;
-
-        if (!trigger) return [];
-
-        return [trigger.$el || trigger];
+      includes(this: any) {
+        return [this.$triggerEl].filter(Boolean);
       },
     }),
   ],

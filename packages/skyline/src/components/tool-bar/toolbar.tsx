@@ -1,34 +1,34 @@
 import { createNamespace } from 'skyline/src/utils/namespace';
-import { useColor } from 'skyline/src/mixins/use-color';
+import { createColorClasses } from 'skyline/src/mixins/use-color';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('toolbar');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ useColor(),
-  ],
+  functional : true,
 
   props : {
+    color : String,
   },
 
-  render() {
+  render(h, { props, data, slots }) {
+    const { color } = props;
     return (
       <div
-        class={bem()}
-        on={this.$listeners}
+        class={[bem(), createColorClasses(color)]}
+        {...data}
       >
         <div class={bem('background')}></div>
 
         <div class={bem('container')}>
-          {this.slots('start')}
-          {this.slots('secondary')}
+          {slots('start')}
+          {slots('secondary')}
 
           <div class={bem('content')}>
-            {this.slots()}
+            {slots()}
           </div>
 
-          {this.slots('primary')}
-          {this.slots('end')}
+          {slots('primary')}
+          {slots('end')}
         </div>
       </div>
     );

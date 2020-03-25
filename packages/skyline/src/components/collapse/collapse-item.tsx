@@ -10,19 +10,9 @@ export default /*#__PURE__*/ createComponent({
     /*#__PURE__*/ useCheckItem(NAMESPACE),
   ],
 
-  components : {
-    Icon,
-  },
-
   props : {
-    title : {
-      type    : String,
-      default : '',
-    },
-    disabled : {
-      type    : Boolean,
-      default : false,
-    },
+    title    : String,
+    disabled : Boolean,
   },
 
   methods : {
@@ -45,12 +35,13 @@ export default /*#__PURE__*/ createComponent({
         >
           { this.slots('title') || title }
           { this.slots('icon') || (
-            <icon
+            <Icon
               class={ bem('title-icon', { rotate: checked }) }
               name="expand_more"
               width="18"
               height="18"
-            ></icon>
+            >
+            </Icon>
           )}
 
         </div>

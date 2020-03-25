@@ -18,7 +18,7 @@ export function useTrigger() {
       $trigger(): Vue | Element | undefined | null {
         const { trigger, $vnode } = this;
 
-        if (!trigger) return undefined;
+        if (!trigger) return;
 
         const baseEl = (($vnode && $vnode.context!.$el) || document) as HTMLElement;
 

@@ -25,15 +25,9 @@ export default /*#__PURE__*/ createComponent({
   },
 
   props : {
-    disabled : {
-      type    : Boolean,
-      default : false,
-    },
-    scrollable : {
-      type    : Boolean,
-      default : false,
-    },
-    exclusive : {
+    disabled   : Boolean,
+    scrollable : Boolean,
+    exclusive  : {
       type    : Boolean,
       default : true,
     },

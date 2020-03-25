@@ -33,9 +33,9 @@ export default /*#__PURE__*/ createComponent({
 
   methods : {
     emitStyle() {
-      if (!this.Item) return;
-      const { position } = this;
-      this.Item.itemStyle(
+      const { Item, position } = this;
+      if (!Item) return;
+      Item.itemStyle(
         'label',
         {
           label                   : true,

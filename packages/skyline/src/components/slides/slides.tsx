@@ -8,17 +8,9 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('slides');
 
 export default /*#__PURE__*/ createComponent({
   props : {
-    options : {
-      type : Object,
-    },
-    pager : {
-      type    : Boolean,
-      default : false,
-    },
-    scrollbar : {
-      type    : Boolean,
-      default : false,
-    },
+    options   : Object,
+    pager     : Boolean,
+    scrollbar : Boolean,
   },
 
   data() {

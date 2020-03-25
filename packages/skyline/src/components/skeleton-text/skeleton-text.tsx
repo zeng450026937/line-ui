@@ -5,10 +5,7 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('skeleton-text');
 
 export default /*#__PURE__*/ createComponent({
   props : {
-    animated : {
-      type    : Boolean,
-      default : false,
-    },
+    animated : Boolean,
   },
 
   render() {

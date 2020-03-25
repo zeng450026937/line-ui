@@ -31,9 +31,9 @@ export default /*#__PURE__*/ createComponent({
 
   methods : {
     emitStyle() {
-      if (!this.Item) return;
-
-      this.Item.itemStyle(
+      const { Item } = this;
+      if (!Item) return;
+      Item.itemStyle(
         'radio',
         {
           'radio-checked'        : this.checked,
@@ -78,7 +78,9 @@ export default /*#__PURE__*/ createComponent({
         <div class={bem('icon')}>
           <div class={bem('inner')}/>
         </div>
+
         {this.slots()}
+
         <button
           type="button"
           disabled={disabled}

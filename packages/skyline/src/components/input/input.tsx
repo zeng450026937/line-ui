@@ -298,15 +298,17 @@ export default /*#__PURE__*/ createComponent({
           onChange={this.onChange}
         >
         </input>
-        {(this.clearInput && !readonly && !disabled) && <button
-          type="button"
-          class="input-clear-icon"
-          tabindex="-1"
-          onTouchStart={this.clearTextInput}
-          onMouseDown={this.clearTextInput}
-          onClick={this.clearTextInput}
-        />}
-    </div>
+        {
+          (this.clearInput && !readonly && !disabled) && <button
+            type="button"
+            class="input-clear-icon"
+            tabindex="-1"
+            onTouchStart={this.clearTextInput}
+            onMouseDown={this.clearTextInput}
+            onClick={this.clearTextInput}
+          />
+        }
+      </div>
     );
   },
 

@@ -225,6 +225,9 @@ export default /*#__PURE__*/ createComponent({
           ref="backgroundContentEl"
           id="background-content"
         ></div>
+
+        {this.slots('header')}
+
         <main
           class={{
             'inner-scroll' : true,
@@ -237,8 +240,10 @@ export default /*#__PURE__*/ createComponent({
         >
           {this.slots()}
         </main>
-        {this.slots('fixed')}
 
+        {this.slots('footer')}
+
+        {this.slots('fixed')}
       </div>
     );
   },

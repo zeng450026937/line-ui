@@ -13,21 +13,21 @@ export default /*#__PURE__*/ createComponent({
   functional : true,
 
   props : {
-    name    : String,
-    source  : String,
-    size    : String,
-    color   : String,
-    viewBox : String,
-    outline : Boolean,
+    name   : String,
+    source : String,
+    size   : String,
+    color  : String,
   },
 
   render(h, { props, data, slots }) {
-    data.attrs = Object(data.attrs);
     const {
-      name, size, color, viewBox, outline,
+      attrs = {},
+    } = data;
+    const {
+      name, source, size, color,
     } = props;
     const text = name || getDefaultText(slots);
-    const href = `${ props.source || '' }#${ text }`;
+    const href = `${ source || '' }#${ text }`;
     return (
       <div
         class={[
@@ -35,21 +35,17 @@ export default /*#__PURE__*/ createComponent({
           bem({ [`${ size }`]: !!size }),
           createColorClasses(color),
         ]}
-        {...data}
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           role="img"
-          viewBox={viewBox}
-          aria-hidden={!data.attrs!['aria-label']}
-          aria-label={data.attrs!['aria-label'] || text}
+          aria-hidden={!attrs['aria-label']}
+          aria-label={attrs['aria-label'] || text}
+          {...data}
         >
           {
             text
-              ? <use href={href} xlinkHref={href} class={{
-                'line-icon-fill-none'    : outline,
-                'line-icon-stroke-width' : outline,
-              }}></use>
+              ? <use href={href} xlinkHref={href}></use>
               : slots('content')
           }
         </svg>

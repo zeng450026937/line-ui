@@ -8,7 +8,8 @@ export default /*#__PURE__*/createComponent({
   functional : true,
 
   render(h, { data, children }) {
-    const hasSource = data.attrs && 'source' in data.attrs;
+    const { attrs } = data;
+    const hasSource = attrs && 'source' in attrs;
     if (hasSource) {
       return h(SvgIcon, data, children);
     }
