@@ -55,23 +55,26 @@ export default /*#__PURE__*/ createComponent({
       <div
         class={[
           bem({
+            'has-label'      : hasLabel,
+            'has-icon'       : hasIcon,
+            'has-label-only' : hasLabel && !hasIcon,
+            'has-icon-only'  : hasIcon && !hasLabel,
           }),
           {
-            'tab-selected'       : this.checked,
-            'tab-disabled'       : this.disabled,
-            'line-activatable'   : true,
-            'line-selectable'    : true,
-            'line-focusable'     : true,
-            'tab-has-label'      : hasLabel,
-            'tab-has-icon'       : hasIcon,
-            'tab-has-label-only' : hasLabel && !hasIcon,
-            'tab-has-icon-only'  : hasIcon && !hasLabel,
+            'tab-selected'     : this.checked,
+            'tab-disabled'     : this.disabled,
+            'line-activatable' : true,
+            'line-selectable'  : true,
+            'line-focusable'   : true,
           },
         ]}
         onClick={ this.onClick }
         on={this.$listeners}
       >
-        <div class="button-native" tabIndex={-1}>
+        <div
+          class="button-native"
+          tabIndex={-1}
+        >
           <span class="button-inner">
             { this.slots() || this.text }
           </span>

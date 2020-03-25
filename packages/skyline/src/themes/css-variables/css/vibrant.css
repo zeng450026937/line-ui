@@ -1,0 +1,80 @@
+/**
+ * Vibrant
+ * -----------------------------------------------------
+ * The vibrant theme uses a white background with
+ * varying shades of black as contrast and the Ionic
+ * colors are all changed to more vibrant shades.
+ *
+ * Looking to create a custom theme? Check out the generator!
+ * https://ionicframework.com/docs/theming/color-generator
+**/
+
+:root {
+  --line-color-primary: #ff7f50;
+  --line-color-primary-rgb: 255,127,80;
+  --line-color-primary-contrast: #000000;
+  --line-color-primary-contrast-rgb: 0,0,0;
+  --line-color-primary-shade: #e07046;
+  --line-color-primary-tint: #ff8c62;
+
+  --line-color-secondary: #17deee;
+  --line-color-secondary-rgb: 23,222,238;
+  --line-color-secondary-contrast: #000000;
+  --line-color-secondary-contrast-rgb: 0,0,0;
+  --line-color-secondary-shade: #14c3d1;
+  --line-color-secondary-tint: #2ee1f0;
+
+  --line-color-tertiary: #ff4162;
+  --line-color-tertiary-rgb: 255,65,98;
+  --line-color-tertiary-contrast: #ffffff;
+  --line-color-tertiary-contrast-rgb: 255,255,255;
+  --line-color-tertiary-shade: #e03956;
+  --line-color-tertiary-tint: #ff5472;
+
+  --line-color-success: #39ff14;
+  --line-color-success-rgb: 57,255,20;
+  --line-color-success-contrast: #000000;
+  --line-color-success-contrast-rgb: 0,0,0;
+  --line-color-success-shade: #32e012;
+  --line-color-success-tint: #4dff2c;
+
+  --line-color-warning: #ffce00;
+  --line-color-warning-rgb: 255,206,0;
+  --line-color-warning-contrast: #ffffff;
+  --line-color-warning-contrast-rgb: 255,255,255;
+  --line-color-warning-shade: #e0b500;
+  --line-color-warning-tint: #ffd31a;
+
+  --line-color-danger: #f04141;
+  --line-color-danger-rgb: 245,61,61;
+  --line-color-danger-contrast: #ffffff;
+  --line-color-danger-contrast-rgb: 255,255,255;
+  --line-color-danger-shade: #d33939;
+  --line-color-danger-tint: #f25454;
+
+  --line-color-dark: #222428;
+  --line-color-dark-rgb: 34,34,34;
+  --line-color-dark-contrast: #ffffff;
+  --line-color-dark-contrast-rgb: 255,255,255;
+  --line-color-dark-shade: #1e2023;
+  --line-color-dark-tint: #383a3e;
+
+  --line-color-medium: #989aa2;
+  --line-color-medium-rgb: 152,154,162;
+  --line-color-medium-contrast: #ffffff;
+  --line-color-medium-contrast-rgb: 255,255,255;
+  --line-color-medium-shade: #86888f;
+  --line-color-medium-tint: #a2a4ab;
+
+  --line-color-light: #f4f5f8;
+  --line-color-light-rgb: 244,244,244;
+  --line-color-light-contrast: #000000;
+  --line-color-light-contrast-rgb: 0,0,0;
+  --line-color-light-shade: #d7d8da;
+  --line-color-light-tint: #f5f6f9;
+
+  /* Item Backgrounds */
+  --line-background-color: #778899;
+  --line-item-background: #fff;
+  --line-item-border-color: #5bff76;
+}

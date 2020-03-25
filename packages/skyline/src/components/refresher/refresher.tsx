@@ -1,11 +1,10 @@
 import { createNamespace } from 'skyline/src/utils/namespace';
+import { createGesture } from 'skyline/src/utils/gesture';
+import { getTimeGivenProgression } from 'skyline/src/utils/animation/cubic-bezier';
 import {
   Animation,
   GestureDetail,
 } from 'skyline/src/types/interface';
-import { createGesture } from 'skyline/src/utils/gesture';
-import { getTimeGivenProgression } from 'skyline/src/utils/animation/cubic-bezier';
-
 import {
   createPullingAnimation,
   createSnapBackAnimation,
@@ -149,7 +148,7 @@ export default /*#__PURE__*/ createComponent({
       this.state = RefresherState.Inactive;
     },
 
-    async setupiOSNativeRefresher(pullingSpinner: HTMLElement, refreshingSpinner: HTMLElement) {
+    async setupIOSNativeRefresher(pullingSpinner: HTMLElement, refreshingSpinner: HTMLElement) {
       this.elementToTransform = this.scrollEl;
       const ticks = pullingSpinner && pullingSpinner.shadowRoot!.querySelectorAll('svg');
       const MAX_PULL = this.scrollEl.clientHeight * 0.16;
@@ -339,7 +338,7 @@ export default /*#__PURE__*/ createComponent({
           this.animations.push(snapBackAnimation);
 
           this.$nextTick(async () => {
-            pullingRefresherIcon.style.setProperty('--ion-pulling-refresher-translate', `${ (progress * 100) }px`);
+            pullingRefresherIcon.style.setProperty('--line-pulling-refresher-translate', `${ (progress * 100) }px`);
             ev.data.animation.progressEnd();
             await snapBackAnimation.play();
             this.beginRefresh();
@@ -363,7 +362,7 @@ export default /*#__PURE__*/ createComponent({
 
       const { mode } = this;
       if (mode === 'ios') {
-        this.setupiOSNativeRefresher(pullingSpinner, refreshingSpinner);
+        this.setupIOSNativeRefresher(pullingSpinner, refreshingSpinner);
       } else {
         this.setupMDNativeRefresher(contentEl, pullingSpinner, refreshingSpinner);
       }

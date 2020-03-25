@@ -86,7 +86,7 @@ export default /*#__PURE__*/ createComponent({
   },
 
   beforeMount() {
-    this.inputId = `ion-input-${ textareaIds++ }`;
+    this.inputId = `line-input-${ textareaIds++ }`;
   },
 
   mounted() {
@@ -114,7 +114,7 @@ export default /*#__PURE__*/ createComponent({
     },
 
     /**
-     * Sets focus on the specified `ion-textarea`. Use this method instead of the global
+     * Sets focus on the specified `line-textarea`. Use this method instead of the global
      * `input.focus()`.
      */
     async setFocus() {

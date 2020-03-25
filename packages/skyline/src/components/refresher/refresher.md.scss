@@ -31,7 +31,7 @@
 
   z-index: 1;
 
-  ion-spinner {
+  .line-spinner {
     @include margin(0, auto, 0, auto);
 
     width: 24px;
@@ -50,7 +50,7 @@
 
     width: 24px;
     height: 24px;
-    ion-icon {
+    .line-icon {
       @include margin(0, auto, 0, auto);
       @include position(null, 0, -4px, 0);
 

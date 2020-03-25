@@ -1,0 +1,128 @@
+@import "./item-option.vars";
+
+// Item Option
+// --------------------------------------------------
+
+.line-item-option {
+  /**
+   * @prop --background: Background of the item option
+   * @prop --color: Color of the item option
+   */
+  --background: #{line-color(primary, base)};
+  --color: #{line-color(primary, contrast)};
+
+  background: var(--background);
+  color: var(--color);
+
+  font-family: $font-family-base;
+}
+
+.line-item-option.in-list.line-item-options--end:last-child {
+  @include padding-horizontal(
+    null, calc(.7em + var(--line-safe-area-right))
+  );
+}
+
+.line-item-option.in-list.line-item-options--start:first-child {
+  @include padding-horizontal(
+    calc(.7em + var(--line-safe-area-left)), null
+  );
+}
+
+.line-item-option.line-color {
+  background: current-color(base);
+  color: current-color(contrast);
+}
+
+.line-item-option .line-item-option__button-native {
+  @include text-inherit();
+  @include padding(0, .7em);
+
+  display: inline-block;
+
+  position: relative;
+
+  width: 100%;
+  height: 100%;
+
+  border: 0;
+
+  outline: none;
+
+  background: transparent;
+
+  cursor: pointer;
+  appearance: none;
+
+  box-sizing: border-box;
+}
+
+.line-item-option .line-item-option__button-inner {
+  display: flex;
+
+  flex-flow: column nowrap;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  height: 100%;
+}
+
+.line-item-option .horizontal-wrapper {
+  display: flex;
+
+  flex-flow: row nowrap;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+}
+
+.line-item-option .slotted * {
+  flex-shrink: 0;
+}
+
+.line-item-option .slotted.slot-start {
+  @include margin(0, 5px, 0, 0);
+}
+
+.line-item-option .slotted.slot-end {
+  @include margin(0, 0, 0, 5px);
+}
+
+.line-item-option .slotted.slot-icon-only {
+  @include padding(0);
+  @include margin(0, 10px);
+
+  min-width: .9em;
+
+  font-size: 1.8em;
+}
+
+
+// Item Expandable Animation
+// --------------------------------------------------
+
+.line-item-option.line-item-option--expandable {
+  flex-shrink: 0;
+
+  transition-duration: 0;
+  transition-property: none;
+  transition-timing-function: cubic-bezier(.65, .05, .36, 1);
+}
+
+
+// Item Disabled Styling
+// --------------------------------------------------
+
+.line-item-option.line-item-option--disabled {
+  pointer-events: none;
+}
+
+.line-item-option.line-item-option--disabled .line-item-option__button-native {
+  cursor: default;
+  opacity: .5;
+  pointer-events: none;
+}

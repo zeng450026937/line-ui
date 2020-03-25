@@ -57,7 +57,7 @@
 // iOS Tab Button Label Only
 // --------------------------------------------------
 
-.line-tab-button.tab-has-label-only .slotted.line-label {
+.line-tab-button.line-tab-button--has-label-only .slotted.line-label {
   @include margin(2px, 0);
 
   font-size: $tab-button-ios-font-size + 2;
@@ -126,7 +126,7 @@
 
 // Badge
 .line-tab-button.tab-layout-icon-hide .slotted.line-badge,
-.line-tab-button.tab-has-label-only .slotted.line-badge {
+.line-tab-button.line-tab-button--has-label-only .slotted.line-badge {
   @include position(10px, null, null, calc(50% + 30px));
 }
 
@@ -136,7 +136,7 @@
 
 // Badge
 .line-tab-button.tab-layout-label-hide .slotted.line-badge,
-.line-tab-button.tab-has-icon-only .slotted.line-badge {
+.line-tab-button.line-tab-button--has-icon-only .slotted.line-badge {
   @include position(10px, null, null, null);
 }
 

@@ -4,15 +4,15 @@
 // Material Design Picker Column
 // --------------------------------------------------
 
-.picker-col {
+.line-picker-column {
   @include padding($picker-md-column-padding-top, $picker-md-column-padding-end, $picker-md-column-padding-bottom, $picker-md-column-padding-start);
 
   transform-style: preserve-3d;
 }
 
-.picker-prefix,
-.picker-suffix,
-.picker-opts {
+.line-picker-column .line-picker-column__prefix,
+.line-picker-column .line-picker-column__suffix,
+.line-picker-column .line-picker-column__opts {
   top: $picker-md-option-offset-y;
 
   transform-style: preserve-3d;
@@ -25,8 +25,7 @@
   pointer-events: none;
 }
 
-
-.picker-opt {
+.line-picker-column .line-picker-column__opt {
   @include margin(0);
   @include padding($picker-md-option-padding-top, $picker-md-option-padding-end, $picker-md-option-padding-bottom, $picker-md-option-padding-start);
 
@@ -44,8 +43,8 @@
   pointer-events: auto;
 }
 
-.picker-prefix,
-.picker-suffix,
-.picker-opt.picker-opt-selected {
+.line-picker-column .line-picker-column__prefix,
+.line-picker-column .line-picker-column__suffix,
+.line-picker-column .line-picker-column__opt.line-picker-column__opt--selected {
   color: $picker-md-option-selected-color;
 }

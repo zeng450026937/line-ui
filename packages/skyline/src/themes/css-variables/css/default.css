@@ -1,0 +1,75 @@
+/**
+ * Default
+ * -----------------------------------------------------
+ * The default theme uses a white background with
+ * varying shades of black as contrast and the Ionic
+ * primary color as an accent.
+ *
+ * Looking to create a custom theme? Check out the generator!
+ * https://ionicframework.com/docs/theming/color-generator
+**/
+
+/* :root {
+  --line-color-primary: #3880ff;
+  --line-color-primary-rgb: 56, 128, 255;
+  --line-color-primary-contrast: #ffffff;
+  --line-color-primary-contrast-rgb: 255, 255, 255;
+  --line-color-primary-shade: #3171e0;
+  --line-color-primary-tint: #4c8dff;
+
+  --line-color-secondary: #3dc2ff;
+  --line-color-secondary-rgb: 61, 194, 255;
+  --line-color-secondary-contrast: #ffffff;
+  --line-color-secondary-contrast-rgb: 255, 255, 255;
+  --line-color-secondary-shade: #36abe0;
+  --line-color-secondary-tint: #50c8ff;
+
+  --line-color-tertiary: #5260ff;
+  --line-color-tertiary-rgb: 82, 96, 255;
+  --line-color-tertiary-contrast: #ffffff;
+  --line-color-tertiary-contrast-rgb: 255, 255, 255;
+  --line-color-tertiary-shade: #4854e0;
+  --line-color-tertiary-tint: #6370ff;
+
+  --line-color-success: #2dd36f;
+  --line-color-success-rgb: 45, 211, 111;
+  --line-color-success-contrast: #ffffff;
+  --line-color-success-contrast-rgb: 255, 255, 255;
+  --line-color-success-shade: #28ba62;
+  --line-color-success-tint: #42d77d;
+
+  --line-color-warning: #ffc409;
+  --line-color-warning-rgb: 255, 196, 9;
+  --line-color-warning-contrast: #000000;
+  --line-color-warning-contrast-rgb: 0, 0, 0;
+  --line-color-warning-shade: #e0ac08;
+  --line-color-warning-tint: #ffca22;
+
+  --line-color-danger: #eb445a;
+  --line-color-danger-rgb: 235, 68, 90;
+  --line-color-danger-contrast: #ffffff;
+  --line-color-danger-contrast-rgb: 255, 255, 255;
+  --line-color-danger-shade: #cf3c4f;
+  --line-color-danger-tint: #ed576b;
+
+  --line-color-dark: #222428;
+  --line-color-dark-rgb: 34, 36, 40;
+  --line-color-dark-contrast: #ffffff;
+  --line-color-dark-contrast-rgb: 255, 255, 255;
+  --line-color-dark-shade: #1e2023;
+  --line-color-dark-tint: #383a3e;
+
+  --line-color-medium: #92949c;
+  --line-color-medium-rgb: 146, 148, 156;
+  --line-color-medium-contrast: #ffffff;
+  --line-color-medium-contrast-rgb: 255, 255, 255;
+  --line-color-medium-shade: #808289;
+  --line-color-medium-tint: #9d9fa6;
+
+  --line-color-light: #f4f5f8;
+  --line-color-light-rgb: 244, 245, 248;
+  --line-color-light-contrast: #000000;
+  --line-color-light-contrast-rgb: 0, 0, 0;
+  --line-color-light-shade: #d7d8da;
+  --line-color-light-tint: #f5f6f9;
+} */

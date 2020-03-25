@@ -14,7 +14,7 @@ export default /*#__PURE__*/ createComponent({
 
     return (
       <div class={bem()}>
-        {this.slots() || <line-icon class="reorder-icon" size="small" name={reorderIcon} lazy={false} />}
+        {this.slots() || <line-icon class={bem('icon')} size="small" name={reorderIcon} lazy={false} />}
       </div>
     );
   },

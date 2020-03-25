@@ -37,12 +37,13 @@ export default /*#__PURE__*/ createComponent({
       this.activated = true;
 
       // touch-action does not work in iOS
-      // this.setFocus();
+      this.setFocus();
     },
 
     onMove(detail: GestureDetail) {
       if (this.shouldToggle(document, this.checked, detail.deltaX, -10)) {
         this.checked = !this.checked;
+        // TODO
         // hapticSelection();
       }
     },
@@ -74,6 +75,12 @@ export default /*#__PURE__*/ createComponent({
       );
     },
 
+    setFocus() {
+      if (this.buttonEl) {
+        this.buttonEl.focus();
+      }
+    },
+
     disabledChanged() {
       if (this.gesture) {
         this.gesture.enable(!this.disabled);
@@ -82,6 +89,8 @@ export default /*#__PURE__*/ createComponent({
   },
 
   async mounted() {
+    this.buttonEl = this.$refs.buttonEl;
+
     this.gesture = createGesture({
       el              : this.$el,
       gestureName     : 'toggle',
@@ -137,6 +146,7 @@ export default /*#__PURE__*/ createComponent({
         <button
           type="button"
           disabled={disabled}
+          ref="buttonEl"
         >
         </button>
       </div>

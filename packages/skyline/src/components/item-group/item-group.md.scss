@@ -1,0 +1,11 @@
+@import "./item-group";
+@import "./item-group.md.vars";
+
+
+// Material Design Item Group
+// --------------------------------------------------
+
+.item-group-md .line-item:last-child,
+.item-group-md .line-item-sliding:last-child .line-item {
+  --border-width: 0;
+}

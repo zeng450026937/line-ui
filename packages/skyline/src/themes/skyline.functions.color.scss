@@ -7,8 +7,8 @@
 @function current-color($variation, $alpha: null) {
   @if $alpha == null {
     @return var(--line-color-#{$variation});
-  } 
-  
+  }
+
   @else {
     @return rgba(var(--line-color-#{$variation}-rgb), #{$alpha});
   }
@@ -32,10 +32,10 @@
 
   @if ($alpha) {
     $value: color-to-rgb-list($value);
-    
+
     @return rgba(var(#{$variable}-rgb, $value), $alpha);
   }
-  
+
   @if ($rgb) {
     $value: color-to-rgb-list($value);
     $variable: #{$variable}-rgb;

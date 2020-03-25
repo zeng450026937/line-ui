@@ -563,16 +563,15 @@ export default /*#__PURE__*/ createComponent({
         aria-haspopup="true"
         aria-labelledby={labelId}
         class={[
-          bem(),
-          {
-            'datetime-disabled'    : disabled,
-            'datetime-readonly'    : readonly,
-            'datetime-placeholder' : addPlaceholderClass,
-            'in-item'              : inItem,
-          },
+          bem({
+            disabled,
+            readonly,
+            placeholder : addPlaceholderClass,
+          }),
+          { 'in-item': inItem },
         ]}
       >
-        <div class="datetime-text">{datetimeText}</div>
+        <div class={bem('text')}>{datetimeText}</div>
         <button
           type="button"
           onFocus={this.onFocus}

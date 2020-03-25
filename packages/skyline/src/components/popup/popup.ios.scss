@@ -6,7 +6,7 @@
 
 .line {
   &-popup {
-    --backdrop-opacity: var(--ion-backdrop-opacity, 0.4);
+    --backdrop-opacity: var(--line-backdrop-opacity, 0.4);
   }
 }
 

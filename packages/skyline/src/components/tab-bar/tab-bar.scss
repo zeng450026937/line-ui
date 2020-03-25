@@ -7,7 +7,7 @@
    * @prop --color: Color of the tab bar
    */
 
-  @include padding-horizontal(var(--ion-safe-area-left), var(--ion-safe-area-right));
+  @include padding-horizontal(var(--line-safe-area-left), var(--line-safe-area-right));
 
   display: flex;
 
@@ -16,7 +16,7 @@
 
   width: auto;
 
-  padding-bottom: var(--ion-safe-area-bottom, 0);
+  padding-bottom: var(--line-safe-area-bottom, 0);
 
   border-top: var(--border);
 

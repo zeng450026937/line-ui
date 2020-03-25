@@ -36,7 +36,7 @@
 }
 
 
-.menu-inner {
+.line-menu .line-menu__inner {
   @include position(0, auto, 0, 0);
   @include transform(translate3d(-9999px, 0, 0));
 
@@ -59,8 +59,8 @@
   contain: strict;
 }
 
-.line-menu.menu-side-start .menu-inner {
-  --ion-safe-area-right: 0px;
+.line-menu.line-menu--side-start .line-menu__inner {
+  --line-safe-area-right: 0px;
 
   @include multi-dir() {
     /* stylelint-disable property-blacklist */
@@ -69,8 +69,8 @@
   }
 }
 
-.line-menu.menu-side-end .menu-inner {
-  --ion-safe-area-left: 0px;
+.line-menu.line-menu--side-end .line-menu__inner {
+  --line-safe-area-left: 0px;
 
   @include multi-dir() {
     right: 0;
@@ -87,7 +87,7 @@
 }
 
 @media (max-width: 340px) {
-  .menu-inner {
+  .line-menu__inner {
     --width: #{$menu-small-width};
   }
 }
@@ -98,11 +98,11 @@
 // The content slides over to reveal the menu underneath.
 // The menu itself, which is under the content, does not move.
 
-.line-menu.menu-type-reveal {
+.line-menu.line-menu--type-reveal {
   z-index: 0;
 }
 
-.line-menu.menu-type-reveal.show-menu .menu-inner {
+.line-menu.line-menu--type-reveal.show-menu .line-menu__inner {
   @include transform(translate3d(0, 0, 0));
 }
 
@@ -112,11 +112,11 @@
 // The menu slides over the content. The content
 // itself, which is under the menu, does not move.
 
-.line-menu.menu-type-overlay {
+.line-menu.line-menu--type-overlay {
   z-index: $z-index-menu-overlay;
 }
 
-.line-menu.menu-type-overlay .show-overlay {
+.line-menu.line-menu--type-overlay .show-overlay {
   display: block;
 
   cursor: pointer;
@@ -132,7 +132,7 @@
   max-width: var(--max-width);
 }
 
-.line-menu.menu-pane-visible .menu-inner {
+.line-menu.menu-pane-visible .line-menu__inner {
   @include position-horizontal(0, 0);
 
   width: auto;

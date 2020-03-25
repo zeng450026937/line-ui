@@ -9,6 +9,19 @@ import { ActionSheetButton } from 'skyline/src/components/action-sheet/action-sh
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('action-sheet');
 
+// TODO
+const safeCall = (handler: any, arg?: any) => {
+  if (typeof handler === 'function') {
+    try {
+      return handler(arg);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  return undefined;
+};
+
 export default /*#__PURE__*/ createComponent({
   mixins : [
     /*#__PURE__*/ usePopup(),
@@ -56,19 +69,45 @@ export default /*#__PURE__*/ createComponent({
     onTap() {
       this.$emit('overlay-tap');
     },
+
+    async buttonClick(button: any) {
+      const { role } = button;
+      if (role === 'cancel') {
+        return this.close(role);
+      }
+
+      const shouldClose = await this.callButtonHandler(button);
+      if (shouldClose) {
+        return this.close(button.role);
+      }
+
+      return Promise.resolve();
+    },
+
+    async callButtonHandler(button: ActionSheetButton | undefined) {
+      if (button) {
+        // a handler has been provided, execute it
+        // pass the handler the values from the inputs
+        const rtn = await safeCall(button.handler);
+        if (rtn === false) {
+          // if the return value of the handler is false then do not dismiss
+          return false;
+        }
+      }
+
+      return true;
+    },
   },
 
   render() {
-    const { optionActions, cancelAction } = this;
+    const { optionActions, cancelAction, translucent } = this;
 
     return (
       <div
         v-show={this.visible}
         role="dialog"
         aria-modal="true"
-        class={bem({
-          translucent : this.translucent,
-        })}
+        class={bem({ translucent })}
       >
         <Overlay
           visible={this.dim}
@@ -105,6 +144,7 @@ export default /*#__PURE__*/ createComponent({
                       bem('button', { [`${ action.role }`]: !!action.role }),
                       'line-activatable',
                     ]}
+                    onClick={() => this.buttonClick(action)}
                   >
                     <span class={bem('button-inner')}>
                       {action.text}
@@ -123,6 +163,7 @@ export default /*#__PURE__*/ createComponent({
                       bem('button', { [`${ cancelAction.role }`]: !!cancelAction.role }),
                       'line-activatable',
                     ]}
+                    onClick={() => this.buttonClick(cancelAction)}
                   >
                     <span class={bem('button-inner')}>
                       {cancelAction.text}

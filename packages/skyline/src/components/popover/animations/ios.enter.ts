@@ -1,4 +1,7 @@
-import { Animation, createAnimation } from 'skyline/src/utils/animation';
+import {
+  Animation,
+  createAnimation,
+} from 'skyline/src/utils/animation';
 
 /**
  * iOS Popover Enter Animation
@@ -90,11 +93,11 @@ export const iosEnterAnimation = (baseEl: HTMLElement, ev?: Event): Animation =>
   contentEl.style.left = `${ popoverCSS.left }px`;
 
   if (checkSafeAreaLeft) {
-    contentEl.style.left = `calc(${ popoverCSS.left }px + var(--ion-safe-area-left, 0px))`;
+    contentEl.style.left = `calc(${ popoverCSS.left }px + var(--line-safe-area-left, 0px))`;
   }
 
   if (checkSafeAreaRight) {
-    contentEl.style.left = `calc(${ popoverCSS.left }px - var(--ion-safe-area-right, 0px))`;
+    contentEl.style.left = `calc(${ popoverCSS.left }px - var(--line-safe-area-right, 0px))`;
   }
 
   contentEl.style.transformOrigin = `${ originY } ${ originX }`;

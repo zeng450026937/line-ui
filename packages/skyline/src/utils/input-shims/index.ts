@@ -18,14 +18,14 @@ export const setupInputShims = (config: Config) => {
   const hideCaret = config.getBoolean('hideCaretOnScroll', true);
   const inputBlurring = config.getBoolean('inputBlurring', true);
   const scrollPadding = config.getBoolean('scrollPadding', true);
-  const inputs = Array.from(doc.querySelectorAll('ion-input, ion-textarea')) as HTMLElement[];
+  const inputs = Array.from(doc.querySelectorAll('.line-input, .line-textarea')) as HTMLElement[];
 
   const hideCaretMap = new WeakMap<HTMLElement, () => void>();
   const scrollAssistMap = new WeakMap<HTMLElement, () => void>();
 
   const registerInput = (componentEl: HTMLElement) => {
     const inputEl = (componentEl.shadowRoot || componentEl).querySelector('input') || (componentEl.shadowRoot || componentEl).querySelector('textarea');
-    const scrollEl = componentEl.closest('ion-content');
+    const scrollEl = componentEl.closest('.line-content');
 
     if (!inputEl) {
       return;
@@ -68,7 +68,7 @@ export const setupInputShims = (config: Config) => {
     enableScrollPadding(keyboardHeight);
   }
 
-  // Input might be already loaded in the DOM before ion-device-hacks did.
+  // Input might be already loaded in the DOM before line-device-hacks did.
   // At this point we need to look for all of the inputs not registered yet
   // and register them.
   for (const input of inputs) {

@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import { deepAssign } from 'skyline/src/utils/language';
+import { deepAssign } from 'skyline/src/utils/helpers/deep-assign';
 import defaultMessages from './lang/zh-CN';
 
 declare module 'vue' {

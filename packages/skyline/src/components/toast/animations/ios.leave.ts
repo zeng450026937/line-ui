@@ -1,4 +1,7 @@
-import { Animation, createAnimation } from 'skyline/src/utils/animation';
+import {
+  Animation,
+  createAnimation,
+} from 'skyline/src/utils/animation';
 
 /**
  * iOS Toast Leave Animation
@@ -9,8 +12,8 @@ export const iosLeaveAnimation = (baseEl: HTMLElement, position: string): Animat
 
   const wrapperEl = baseEl.querySelector('.line-toast__wrapper') as HTMLElement;
 
-  const bottom = 'calc(-10px - var(--ion-safe-area-bottom, 0px))';
-  const top = 'calc(10px + var(--ion-safe-area-top, 0px))';
+  const bottom = 'calc(-10px - var(--line-safe-area-bottom, 0px))';
+  const top = 'calc(10px + var(--line-safe-area-top, 0px))';
 
   wrapperAnimation.addElement(wrapperEl);
 

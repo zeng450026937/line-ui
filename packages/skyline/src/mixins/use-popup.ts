@@ -3,9 +3,15 @@ import { useLazy } from 'skyline/src/mixins/use-lazy';
 import { useModel } from 'skyline/src/mixins/use-model';
 import { useRemote } from 'skyline/src/mixins/use-remote';
 import { useTransition } from 'skyline/src/mixins/use-transition';
-import { popupContext, PopupInterface } from 'skyline/src/utils/popup';
+import {
+  popupContext,
+  PopupInterface,
+} from 'skyline/src/utils/popup';
 import { GESTURE_CONTROLLER } from 'skyline/src/utils/gesture';
-import { AnimationBuilder, createAnimation } from 'skyline/src/utils/animation';
+import {
+  AnimationBuilder,
+  createAnimation,
+} from 'skyline/src/utils/animation';
 import { config } from 'skyline/src/utils/config';
 import { isDef } from 'skyline/src/utils/helpers';
 
@@ -18,7 +24,7 @@ export function usePopup(options?: PopupOptions) {
   let closeReason: any;
   // TODO
   // animation should move to instance
-  let animation: any;
+  // let animation: any;
 
   async function animate(
     baseEl: HTMLElement,
@@ -30,7 +36,7 @@ export function usePopup(options?: PopupOptions) {
       options,
     } = builder;
 
-    animation = animationBuilder(baseEl, options);
+    const animation = popup.animation = animationBuilder(baseEl, options);
 
     if (popup.transition || !config.getBoolean('animated', true)) {
       animation.duration(0);
@@ -47,7 +53,6 @@ export function usePopup(options?: PopupOptions) {
 
     await animation.play();
 
-    animation = null;
     return true;
   }
 
@@ -193,12 +198,20 @@ export function usePopup(options?: PopupOptions) {
         this.opening = false;
         this.closing = false;
 
+        popupContext.pop(this as any);
+
         this.$emit('canceled');
 
-        if (!animation) return;
+        if (!this.animation) return;
 
-        animation.destroy();
-        animation = null;
+        // setTimeout(() => {
+        // console.log('setTimeout => ', this._uid);
+        // this.animation.destroy();
+        // this.animation = null;
+        // }, 0);
+
+        // this.animation.stop();
+        this.animation = null;
       };
 
       this.$on('before-enter', onBeforeEnter);

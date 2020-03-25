@@ -52,7 +52,7 @@ export default /*#__PURE__*/ createComponent({
 
   render(h) {
     const {
-      mode, type, value, paused, reversed, buffer,
+      type, value, paused, reversed, buffer,
     } = this;
 
     return (
@@ -64,7 +64,6 @@ export default /*#__PURE__*/ createComponent({
         class={[
           bem(),
           {
-            [mode]                     : true,
             [`progress-bar-${ type }`] : true,
             'progress-paused'          : paused,
             'progress-bar-reversed'    : document.dir === 'rtl' ? !reversed : reversed,

@@ -9,7 +9,7 @@
   --color: #{$list-header-md-color};
   --border-color: #{$item-md-border-bottom-color};
 
-  @include padding-horizontal(calc(var(--ion-safe-area-left, 0) + #{$list-header-md-padding-start}), null);
+  @include padding-horizontal(calc(var(--line-safe-area-left, 0) + #{$list-header-md-padding-start}), null);
 
   min-height: $list-header-md-min-height;
 

@@ -28,30 +28,35 @@ export default Vue.extend({
       actions : [],
     };
   },
+
   methods : {
     open() {
       controller.create({
         header  : 'ActionSheet',
-        actions : [
-          {
-            text    : 'Delete',
-            role    : 'destructive',
-            handler : () => {
-              console.log('Delete clicked');
-            },
-          },
-          {
-            text : 'Share',
-          },
-          { text: 'Play' },
-          { text: 'Favorite' },
-          {
-            text : 'Cancel',
-            role : 'cancel',
-          },
-        ],
+        actions : this.actions,
       }).open();
     },
+  },
+
+  mounted() {
+    this.actions = [
+      {
+        text    : 'Delete',
+        role    : 'destructive',
+        handler : () => {
+          console.log('Delete clicked');
+        },
+      },
+      {
+        text : 'Share',
+      },
+      { text: 'Play' },
+      { text: 'Favorite' },
+      {
+        text : 'Cancel',
+        role : 'cancel',
+      },
+    ];
   },
 });
 </script>

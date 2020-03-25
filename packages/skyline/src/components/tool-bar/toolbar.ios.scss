@@ -28,7 +28,7 @@
 
 // Toolbar: Segment
 // --------------------------------------------------
-
+// TODO
 .line-toolbar.toolbar-segment {
   --min-height: auto;
 }
@@ -41,15 +41,15 @@
   @include padding(0, null);
 }
 
-.line-toolbar.toolbar-searchbar ::slotted(*) {
+.line-toolbar.toolbar-searchbar .slotted {
   align-self: start;
 }
 
-.line-toolbar.toolbar-searchbar ::slotted(ion-chip) {
+.line-toolbar.toolbar-searchbar .slotted.line-chip {
   @include margin(3px, null, null, null);
 }
 
-.line-toolbar.toolbar-searchbar ::slotted(ion-back-button) {
+.line-toolbar.toolbar-searchbar .slotted.line-back-button {
   height: 38px;
 }
 
@@ -92,7 +92,7 @@
   align-items: flex-start;
 }
 
-.line-toolbar.line-toolbar-title--large .toolbar-content ion-title {
+.line-toolbar.line-toolbar-title--large .toolbar-content .line-title {
   flex: 1;
   order: map-get($toolbar-order-ios, title-large);
 

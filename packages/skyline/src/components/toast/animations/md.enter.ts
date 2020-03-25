@@ -1,4 +1,7 @@
-import { Animation, createAnimation } from 'skyline/src/utils/animation';
+import {
+  Animation,
+  createAnimation,
+} from 'skyline/src/utils/animation';
 
 /**
  * MD Toast Enter Animation
@@ -9,8 +12,8 @@ export const mdEnterAnimation = (baseEl: HTMLElement, position: string): Animati
 
   const wrapperEl = baseEl.querySelector('.line-toast__wrapper') as HTMLElement;
 
-  const bottom = 'calc(8px + var(--ion-safe-area-bottom, 0px))';
-  const top = 'calc(8px + var(--ion-safe-area-top, 0px))';
+  const bottom = 'calc(8px + var(--line-safe-area-bottom, 0px))';
+  const top = 'calc(8px + var(--line-safe-area-top, 0px))';
 
   wrapperAnimation.addElement(wrapperEl);
 

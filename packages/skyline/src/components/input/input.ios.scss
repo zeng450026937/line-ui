@@ -17,7 +17,7 @@
   --padding-start: 0px;
 }
 
-.input-clear-icon {
+.line-input .input-clear-icon {
   @include svg-background-image($input-ios-input-clear-icon-svg);
 
   width: $input-ios-input-clear-icon-width;

@@ -37,7 +37,7 @@
 // Tab Button: Native
 // --------------------------------------------------
 
-.button-native {
+.line-tab-button .button-native {
   @include border-radius(inherit);
   @include margin(0);
   @include padding(var(--padding-top), var(--padding-end), var(--padding-bottom), var(--padding-start));
@@ -67,11 +67,11 @@
   -webkit-user-drag: none;
 }
 
-.button-native::after {
+.line-tab-button .button-native::after {
   @include button-state();
 }
 
-.button-inner {
+.line-tab-button .button-inner {
   display: flex;
   position: relative;
 
@@ -150,7 +150,7 @@
 }
 
 
-.line-tab-button.tab-has-label-only .slotted.line-label {
+.line-tab-button.line-tab-button--has-label-only .slotted.line-label {
   white-space: normal;
 }
 

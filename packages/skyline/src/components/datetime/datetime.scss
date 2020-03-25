@@ -34,16 +34,16 @@
   position: static;
 }
 
-.line-datetime.datetime-placeholder {
+.line-datetime.line-datetime--placeholder {
   color: var(--placeholder-color);
 }
 
-.line-datetime.datetime-disabled {
+.line-datetime.line-datetime--disabled {
   opacity: .3;
   pointer-events: none;
 }
 
-.line-datetime.datetime-readonly {
+.line-datetime.line-datetime--readonly {
   pointer-events: none;
 }
 
@@ -53,7 +53,7 @@
   }
 }
 
-.line-datetime .datetime-text {
+.line-datetime .line-datetime__text {
   @include text-inherit();
 
   @include rtl() {

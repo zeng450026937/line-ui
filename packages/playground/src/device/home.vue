@@ -56,10 +56,6 @@ export default {
 
     };
   },
-
-  updated() {
-    console.log(this.$refs.usage);
-  },
 };
 </script>
 
@@ -96,8 +92,8 @@ export default {
 }
 
 .device-screen {
-  --ion-safe-area-top: 20px;
-  --ion-safe-area-bottom: 22px;
+  --line-safe-area-top: 20px;
+  --line-safe-area-bottom: 22px;
 
   line-height: initial;
 }

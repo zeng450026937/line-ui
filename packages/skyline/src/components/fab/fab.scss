@@ -20,13 +20,13 @@
 
 .line-fab.line-fab--horizontal-start {
   @include position-horizontal(
-    calc(#{$fab-content-margin} + var(--ion-safe-area-left, 0px)), null
+    calc(#{$fab-content-margin} + var(--line-safe-area-left, 0px)), null
   );
 }
 
 .line-fab.line-fab--horizontal-end {
   @include position-horizontal(
-    null, calc(#{$fab-content-margin} + var(--ion-safe-area-right, 0px))
+    null, calc(#{$fab-content-margin} + var(--line-safe-area-right, 0px))
   );
 }
 

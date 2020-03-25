@@ -1,0 +1,103 @@
+@import './dropdown-menu.vars';
+
+// Action Sheet
+// --------------------------------------------------
+
+.line-dropdown-menu {
+  --min-width: auto;
+  --width: 100%;
+  --max-width: 100%;
+  --min-height: auto;
+  --height: 100%;
+  --max-height: calc(100% - (var(--line-safe-area-top) + var(--line-safe-area-bottom)));
+  // --background: #{$background-color};
+  --background: #fff;
+  --border-width: #{1px 0 0};
+  --backdrop-opacity: var(--line-backdrop-opacity, 0.26);
+  --border-color: #{$item-ios-border-color};
+  --backdrop-opacity: var(--line-backdrop-opacity, 0.26);
+
+  @include font-smoothing();
+  @include position(0, 0, 0, 0);
+
+  display: block;
+  position: fixed;
+
+  font-family: $font-family-base;
+
+  touch-action: none;
+  user-select: none;
+  z-index: $z-index-overlay;
+
+  overflow: hidden;
+}
+
+.line-dropdown-menu.overlay-hidden {
+  display: none;
+}
+
+.line-dropdown-menu .line-dropdown-menu__wrapper {
+  @include position(0, 0, 0, 0);
+  @include transform(translate3d(0, 100%, 0));
+
+  display: block;
+  position: absolute;
+
+  width: var(--width);
+  min-width: var(--min-width);
+
+  height: var(--height);
+  min-height: var(--min-height);
+
+  z-index: $z-index-overlay-wrapper;
+  pointer-events: none;
+}
+
+.line-dropdown-menu .line-dropdown-menu__content {
+  display: flex;
+  position: absolute;
+
+  left: 0;
+  right: 0;
+
+  flex-direction: column;
+
+  width: var(--width);
+  min-width: var(--min-width);
+  max-width: var(--max-width);
+
+  height: var(--height);
+  min-height: var(--min-height);
+  max-height: var(--max-height);
+
+  background: var(--background);
+
+  box-shadow: var(--box-shadow);
+
+  overflow: auto;
+  z-index: $z-index-overlay-wrapper;
+
+  pointer-events: all;
+}
+
+// Picker Columns and Highlight
+// --------------------------------------------------
+
+.line-dropdown-menu .picker-columns {
+  display: flex;
+  position: relative;
+
+  justify-content: center;
+
+  margin-bottom: var(--line-safe-area-bottom, 0);
+
+  contain: strict;
+  direction: ltr;
+  overflow: hidden;
+}
+
+.line-dropdown-menu .picker-above-highlight,
+.line-dropdown-menu .picker-below-highlight {
+  display: none;
+  pointer-events: none;
+}

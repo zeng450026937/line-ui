@@ -428,7 +428,6 @@ export default /*#__PURE__*/ createComponent({
       min, max, step, handleKeyboard, pressedKnob, disabled, pin, ratioLower, ratioUpper,
     } = this;
 
-    // const mode = getSkylineMode(this);
     const barStart = `${ ratioLower * 100 }%`;
     const barEnd = `${ 100 - ratioUpper * 100 }%`;
 
