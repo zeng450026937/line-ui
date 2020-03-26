@@ -5,10 +5,12 @@ import {
 } from 'skyline/src/install';
 import * as components from 'skyline/src/components';
 import * as directives from 'skyline/src/directives';
+import * as controllers from 'skyline/src/controllers';
 import * as mixins from 'skyline/src/mixins';
 
 export * from 'skyline/src/components';
 export * from 'skyline/src/directives';
+export * from 'skyline/src/controllers';
 export * from 'skyline/src/mixins';
 
 
@@ -37,6 +39,7 @@ function defaulExport() {
 
     components,
     directives,
+    controllers,
     mixins,
 
     version : __VERSION__,

@@ -1,9 +1,7 @@
 import { VNodeDirective } from 'vue';
 import { defineDirective } from 'skyline/src/utils/directive';
-import { TooltipController } from 'skyline/src/controller/tooltip';
+import { TooltipController } from 'skyline/src/controllers';
 import { isObject } from 'skyline/src/utils/helpers';
-
-let ctrl: TooltipController | undefined;
 
 export interface TooltipOptions {
   text: string;
@@ -24,11 +22,7 @@ export function createTooltip(el: HTMLElement, options: TooltipOptions) {
     active: activeFocus,
   } = options;
 
-  if (!ctrl) {
-    ctrl = /*#__PURE__*/ new TooltipController();
-  }
-
-  const tooltip = ctrl.create({
+  const tooltip = TooltipController.create({
     trigger : el,
     text,
     delay,

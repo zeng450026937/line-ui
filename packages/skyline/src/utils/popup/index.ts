@@ -50,17 +50,20 @@ export class PopupContext {
   getPopup(index: number = this.stack.length - 1) {
     return this.stack[index];
   }
-  getActiveFocusPopup() {
+  findPopup(matcher: (popup: PopupInterface) => boolean) {
     let index = this.stack.length - 1;
     let popup = this.stack[index];
     while (popup) {
-      if (popup.activeFocus) {
+      if (matcher(popup)) {
         break;
       }
       index--;
       popup = this.stack[index];
     }
     return popup;
+  }
+  getActiveFocusPopup() {
+    return this.findPopup(p => p.activeFocus);
   }
   getOverlayIndex() {
     return this.base + this.index;

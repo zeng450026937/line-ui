@@ -1,5 +1,5 @@
 import { createNamespace } from 'skyline/src/utils/namespace';
-import { PickerController } from 'skyline/src/controller/picker';
+import { PickerController } from 'skyline/src/controllers';
 import { useModel } from 'skyline/src/mixins/use-model';
 import {
   PickerColumn,
@@ -192,7 +192,7 @@ export default /*#__PURE__*/ createComponent({
       }
 
       const pickerOptions = this.generatePickerOptions();
-      const pickerController = new PickerController();
+      const pickerController = PickerController;
       const picker = await pickerController.create(pickerOptions);
 
       this.isExpanded = true;
