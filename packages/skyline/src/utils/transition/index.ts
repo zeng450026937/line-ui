@@ -21,7 +21,7 @@ export const APPEAR_EVENTS = [
   'appear-cancelled',
 ];
 
-export function createTransitionHooks(delegate: Vue, appear = false, css = false) {
+export function createTransitionHooks(delegate: Vue, appear = false) {
   const events = [
     ...ENTER_EVENTS,
     ...LEAVE_EVENTS,
@@ -31,9 +31,7 @@ export function createTransitionHooks(delegate: Vue, appear = false, css = false
     // Vue check hook funcion's argments length with Function.length
     // While ...args will left Function.length to be 0
     // and the hook will not work right
-    prev[val] = css
-      ? (el: HTMLElement) => delegate.$emit(val, el, NOOP)
-      : (el: HTMLElement, done: Function) => delegate.$emit(val, el, done);
+    prev[val] = (el: HTMLElement, done: Function) => delegate.$emit(val, el, done || NOOP);
     return prev;
   }, {} as Record<string, any>);
 }

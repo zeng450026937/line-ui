@@ -41,13 +41,11 @@ export default /*#__PURE__*/ createComponent({
   },
 
   beforeMount() {
-    this.$on('animation-enter', (builder: any) => {
-      builder.build = iosEnterAnimation;
-      builder.options = this.event;
+    this.$on('animation-enter', (baseEl: HTMLElement, animate: Function) => {
+      animate(iosEnterAnimation(baseEl));
     });
-
-    this.$on('animation-leave', (builder: any) => {
-      builder.build = iosLeaveAnimation;
+    this.$on('animation-leave', (baseEl: HTMLElement, animate: Function) => {
+      animate(iosLeaveAnimation(baseEl));
     });
   },
 

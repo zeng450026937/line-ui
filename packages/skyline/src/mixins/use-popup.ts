@@ -3,17 +3,17 @@ import { useLazy } from 'skyline/src/mixins/use-lazy';
 import { useModel } from 'skyline/src/mixins/use-model';
 import { useRemote } from 'skyline/src/mixins/use-remote';
 import { useTransition } from 'skyline/src/mixins/use-transition';
-import {
-  popupContext,
-  PopupInterface,
-} from 'skyline/src/utils/popup';
+import { popupContext } from 'skyline/src/utils/popup';
 import { GESTURE_CONTROLLER } from 'skyline/src/utils/gesture';
+import { config } from 'skyline/src/utils/config';
 import {
-  AnimationBuilder,
+  Animation,
   createAnimation,
 } from 'skyline/src/utils/animation';
-import { config } from 'skyline/src/utils/config';
-import { isDef } from 'skyline/src/utils/helpers';
+import {
+  isDef,
+  NOOP,
+} from 'skyline/src/utils/helpers';
 
 export interface PopupOptions {
   disableScroll?: boolean;
@@ -21,49 +21,15 @@ export interface PopupOptions {
 
 export function usePopup(options?: PopupOptions) {
   const { disableScroll = true } = options || {};
-  let closeReason: any;
-  // TODO
-  // animation should move to instance
-  // let animation: any;
-
-  async function animate(
-    baseEl: HTMLElement,
-    popup: PopupInterface,
-    builder: { build: AnimationBuilder; options?: any },
-  ): Promise<boolean> {
-    const {
-      build: animationBuilder,
-      options,
-    } = builder;
-
-    const animation = popup.animation = animationBuilder(baseEl, options);
-
-    if (popup.transition || !config.getBoolean('animated', true)) {
-      animation.duration(0);
-    }
-
-    if (popup.closeOnEscape) {
-      animation.beforeAddWrite(() => {
-        const activeElement = baseEl.ownerDocument!.activeElement as HTMLElement;
-        if (activeElement && activeElement.matches('input, textarea')) {
-          activeElement.blur();
-        }
-      });
-    }
-
-    await animation.play();
-
-    return true;
-  }
 
   return createMixins({
     mixins : [
       useModel('visible'),
       useLazy('visible'),
       useRemote(),
-      // Alway use transition
-      // as our lifecycle event depends on it
-      useTransition({ css: false }),
+      // Popup lifecycle events depend on Transition mechanism
+      // Transition should not be disabled
+      useTransition(),
     ],
 
     props : {
@@ -132,7 +98,6 @@ export function usePopup(options?: PopupOptions) {
         this.opened = false;
         this.opening = true;
         this.$emit('aboutToShow');
-
         popupContext.push(this as any);
       };
       const onEnter = async (el: HTMLElement, done: Function) => {
@@ -145,14 +110,18 @@ export function usePopup(options?: PopupOptions) {
         // update zIndex
         el.style.zIndex = `${ popupContext.getOverlayIndex() }`;
 
-        const builder = {};
-        this.$emit('animation-enter', builder);
+        const animate = (animation: Animation) => {
+          if (!config.getBoolean('animated', true)) {
+            animation.duration(0);
+          }
+          this.animation = animation;
+        };
 
-        try {
-          await animate(el, this as any, builder as any);
-        } catch (e) {
-          console.error(e);
-        }
+        this.$emit('animation-enter', el, animate);
+
+        await (this.animation as Animation).play().catch(
+          __DEV__ ? (e) => console.error(e) : NOOP,
+        );
 
         done();
       };
@@ -163,19 +132,31 @@ export function usePopup(options?: PopupOptions) {
       };
 
       const onBeforeLeave = () => {
-        this.$emit('aboutToHide');
         this.opened = false;
         this.closing = true;
+        this.$emit('aboutToHide');
       };
       const onLeave = async (el: HTMLElement, done: Function) => {
-        const builder = {};
-        this.$emit('animation-leave', builder);
+        const animate = (animation: Animation) => {
+          if (!config.getBoolean('animated', true)) {
+            animation.duration(0);
+          }
+          if (this.closeOnEscape) {
+            animation.beforeAddWrite(() => {
+              const activeElement = el.ownerDocument!.activeElement as HTMLElement;
+              if (activeElement && activeElement.matches('input, textarea')) {
+                activeElement.blur();
+              }
+            });
+          }
+          this.animation = animation;
+        };
 
-        try {
-          await animate(el, this as any, builder as any);
-        } catch (e) {
-          console.error(e);
-        }
+        this.$emit('animation-leave', el, animate);
+
+        await (this.animation as Animation).play().catch(
+          __DEV__ ? (e) => console.error(e) : NOOP,
+        );
 
         done();
       };
@@ -184,11 +165,12 @@ export function usePopup(options?: PopupOptions) {
 
         popupContext.pop(this as any);
 
-        this.$emit('closed', closeReason);
+        this.$emit('closed');
         this.blocker.unblock();
 
         if (this.destroyWhenClose) {
           await this.$nextTick();
+
           this.$destroy();
           this.$el.remove();
         }
@@ -202,16 +184,10 @@ export function usePopup(options?: PopupOptions) {
 
         this.$emit('canceled');
 
-        if (!this.animation) return;
-
-        // setTimeout(() => {
-        // console.log('setTimeout => ', this._uid);
-        // this.animation.destroy();
-        // this.animation = null;
-        // }, 0);
-
-        // this.animation.stop();
-        this.animation = null;
+        if (this.animation) {
+          this.animation.stop();
+          this.animation = null;
+        }
       };
 
       this.$on('before-enter', onBeforeEnter);
@@ -262,36 +238,32 @@ export function usePopup(options?: PopupOptions) {
 
     methods : {
       open(ev?: Event) {
-        if (this.$isServer) return true;
         if (this.opened) return false;
 
         this.event = ev;
         this.inited = true;
         this.visible = true;
 
-        // this.blocker.block();
         return true;
       },
-      close(reason?: any) {
-        if (this.$isServer) return true;
+      close() {
         if (!this.opened) return false;
 
         this.visible = false;
-        closeReason = reason;
 
-        // this.blocker.unblock();
         return true;
       },
       focus() {
         // TODO
         // if modal
         // add shake animation
-        const builder = {
-          build : (baseEl: HTMLElement) => {
-            const baseAnimation = createAnimation();
-            (window as any).baseAnimation = baseAnimation;
-            return baseAnimation
-              .addElement(baseEl.querySelector('.line-tooltip__content')!)
+        const animate = (animation?: Animation) => {
+          if (!animation) {
+            animation = createAnimation();
+            animation
+              // TODO
+              // fix shake animation
+              .addElement(this.$el.querySelector('.line-tooltip__content')!)
               .easing('cubic-bezier(0.25, 0.8, 0.25, 1)')
               .duration(150)
               .beforeStyles({ 'transform-origin': 'center' })
@@ -300,13 +272,18 @@ export function usePopup(options?: PopupOptions) {
                 { offset: 0.5, transform: 'scale(1.03)' },
                 { offset: 1, transform: 'scale(1)' },
               ]);
-          },
+          }
+          if (!config.getBoolean('animated', true)) {
+            animation.duration(0);
+          }
+          this.animation = animation;
         };
-        this.$emit('animation-focus', builder);
+        this.$emit('animation-focus', this.$el, animate);
 
-        animate(this.$el as HTMLElement, this as any, builder as any);
+        (this.animation as Animation).play();
 
-        const firstInput = this.$el.querySelector('input,button') as HTMLElement | null;
+        const firstInput = this.$el.querySelector('input, button') as HTMLElement | null;
+
         if (firstInput) {
           firstInput.focus();
         }

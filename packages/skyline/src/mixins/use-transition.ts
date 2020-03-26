@@ -1,68 +1,26 @@
 import { createMixins } from 'skyline/src/utils/mixins';
 import { createTransitionHooks } from 'skyline/src/utils/transition';
-import { isObject } from 'skyline/src/utils/helpers';
 
-export interface TransitionOptions {
-  appear?: boolean;
-  css?: boolean;
-  appearHook?: boolean;
-}
-
-export function useTransition(options?: TransitionOptions) {
-  const {
-    appear = true,
-    css = true,
-    appearHook = false,
-  } = options || {};
+export function useTransition(appear: boolean = true) {
+  const props = { appear, css: false };
 
   return createMixins({
     props : {
-      // string | object | false
-      transition : null as any,
-    },
-
-    beforeMount() {
-      this.useTransition = {
-        transition : {
-          appear,
-          css,
-        },
-      };
+      transition : {
+        type    : Boolean,
+        default : undefined,
+      },
     },
 
     afterRender(vnode) {
-      const transition = isObject(this.transition)
-        ? {
-          appear,
-          // css,
-          ...this.transition,
-        }
-        : {
-          name   : this.transition,
-          appear : !!this.transition || appear,
-          css    : !!this.transition || css,
-        };
-      // allow user to change transition
-      // for internally use
-      this.$emit('transition', transition);
-
-      if (transition.css && !transition.name) return;
-
-      const { useTransition } = this;
-
-      if (!useTransition.hooks || useTransition.transition.css !== transition.css) {
-        useTransition.transition = transition;
-        useTransition.hooks = createTransitionHooks(this, appearHook, transition.css);
-      }
-
-      const data = {
-        props : transition,
-        on    : useTransition.hooks,
-      };
-
-      /* eslint-disable-next-line */
+      if (this.transition === false) return;
       return this.$createElement(
-        'transition', data, [vnode],
+        'transition',
+        {
+          props,
+          on : createTransitionHooks(this),
+        },
+        [vnode],
       );
     },
   });

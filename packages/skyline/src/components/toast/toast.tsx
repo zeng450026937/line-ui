@@ -27,13 +27,13 @@ export default /*#__PURE__*/ createComponent({
 
   beforeMount() {
     const { mode } = this;
-    this.$on('animation-enter', (builder: any) => {
-      builder.build = mode === 'md' ? mdEnterAnimation : iosEnterAnimation;
-      builder.options = this.position;
+    this.$on('animation-enter', (baseEl: HTMLElement, animate: Function) => {
+      const builder = mode === 'md' ? mdEnterAnimation : iosEnterAnimation;
+      animate(builder(baseEl, this.position));
     });
-    this.$on('animation-leave', (builder: any) => {
-      builder.build = mode === 'md' ? mdLeaveAnimation : iosLeaveAnimation;
-      builder.options = this.position;
+    this.$on('animation-leave', (baseEl: HTMLElement, animate: Function) => {
+      const builder = mode === 'md' ? mdLeaveAnimation : iosLeaveAnimation;
+      animate(builder(baseEl, this.position));
     });
 
     this.$on('opened', () => {

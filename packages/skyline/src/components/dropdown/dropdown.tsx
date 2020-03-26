@@ -38,52 +38,49 @@ export default /*#__PURE__*/ createComponent({
   },
 
   beforeMount() {
-    this.$on('animation-enter', (builder: any) => {
-      builder.build = (baseEl: HTMLElement) => {
-        const {
-          $triggerEl = (this.event && this.event.target) || document.body,
-          $el,
-          placement,
-          offset,
-        } = this;
+    this.$on('animation-enter', (baseEl: HTMLElement, animate: Function) => {
+      const {
+        $triggerEl = (this.event && this.event.target) || document.body,
+        $el,
+        placement,
+        offset,
+      } = this;
 
-        this.popper = this.popper || createPopper(
-          $triggerEl,
-          $el as HTMLElement,
-          {
-            placement : placement as any,
-            strategy  : 'fixed',
-            modifiers : [
-              // {
-              //   name    : 'preventOverflow',
-              //   options : {
-              //     mainAxis : false, // true by default
-              //   },
-              // },
-              {
-                name    : 'offset',
-                options : {
-                  offset,
-                },
+      this.popper = this.popper || createPopper(
+        $triggerEl,
+        $el as HTMLElement,
+        {
+          placement : placement as any,
+          strategy  : 'fixed',
+          modifiers : [
+            // {
+            //   name    : 'preventOverflow',
+            //   options : {
+            //     mainAxis : false, // true by default
+            //   },
+            // },
+            {
+              name    : 'offset',
+              options : {
+                offset,
               },
-              {
-                name    : 'flip',
-                options : {
-                  rootBoundary : 'body',
-                  // fallbackPlacements : ['top'],
-                },
+            },
+            {
+              name    : 'flip',
+              options : {
+                rootBoundary : 'body',
+                // fallbackPlacements : ['top'],
               },
+            },
+          ],
+        },
+      );
 
-            ],
-          },
-        );
-
-        return iosEnterAnimation(baseEl);
-      };
+      animate(iosEnterAnimation(baseEl));
     });
 
-    this.$on('animation-leave', (builder: any) => {
-      builder.build = iosLeaveAnimation;
+    this.$on('animation-leave', (baseEl: HTMLElement, animate: Function) => {
+      animate(iosLeaveAnimation(baseEl));
     });
   },
 

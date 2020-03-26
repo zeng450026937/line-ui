@@ -43,43 +43,41 @@ export default /*#__PURE__*/ createComponent({
   },
 
   beforeMount() {
-    this.$on('animation-enter', (builder: any) => {
-      builder.build = (baseEl: HTMLElement) => {
-        const {
-          $triggerEl = (this.event && this.event.target) || document.body,
-          $el,
-          placement,
-        } = this;
+    this.$on('animation-enter', (baseEl: HTMLElement, animate: Function) => {
+      const {
+        $triggerEl = (this.event && this.event.target) || document.body,
+        $el,
+        placement,
+      } = this;
 
-        this.popper = this.popper || createPopper(
-          $triggerEl,
-          $el as HTMLElement,
-          {
-            placement : placement as any,
-            strategy  : 'fixed',
-            modifiers : [
-              {
-                name    : 'offset',
-                options : {
-                  offset : [0, 10],
-                },
+      this.popper = this.popper || createPopper(
+        $triggerEl,
+        $el as HTMLElement,
+        {
+          placement : placement as any,
+          strategy  : 'fixed',
+          modifiers : [
+            {
+              name    : 'offset',
+              options : {
+                offset : [0, 10],
               },
-              {
-                name    : 'flip',
-                options : {
-                  rootBoundary : 'body',
-                },
+            },
+            {
+              name    : 'flip',
+              options : {
+                rootBoundary : 'body',
               },
-            ],
-          },
-        );
+            },
+          ],
+        },
+      );
 
-        return iosEnterAnimation(baseEl);
-      };
+      animate(iosEnterAnimation(baseEl));
     });
 
-    this.$on('animation-leave', (builder: any) => {
-      builder.build = iosLeaveAnimation;
+    this.$on('animation-leave', (baseEl: HTMLElement, animate: Function) => {
+      animate(iosLeaveAnimation(baseEl));
     });
   },
 

@@ -36,12 +36,13 @@ module.exports = {
     {
       files : ['*.ts', '*.tsx'],
       rules : {
-        'consistent-return'                       : 0,
-        '@typescript-eslint/no-explicit-any'      : 0,
-        '@typescript-eslint/no-inferrable-types'  : 0,
-        '@typescript-eslint/no-empty-function'    : 1,
-        '@typescript-eslint/no-this-alias'        : 1,
-        '@typescript-eslint/no-use-before-define' : 1,
+        'consistent-return'                        : 0,
+        '@typescript-eslint/no-explicit-any'       : 0,
+        '@typescript-eslint/no-inferrable-types'   : 0,
+        '@typescript-eslint/no-non-null-assertion' : 0,
+        '@typescript-eslint/no-empty-function'     : 1,
+        '@typescript-eslint/no-this-alias'         : 1,
+        '@typescript-eslint/no-use-before-define'  : 1,
       },
     },
     {
