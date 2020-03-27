@@ -25,7 +25,8 @@ const clearDist = args.clear || isRelease;
 const distFolder = args.dist || args.d;
 
 const pkgName = require(resolve('package.json')).name;
-const srcDir = resolve('src/components');
+const componentsDir = resolve('src/components');
+const directivesDir = resolve('src/directives');
 const distDir = resolve(distFolder || 'dist/style');
 
 const styleDir = resolve('src/components');
@@ -67,7 +68,8 @@ async function run() {
   };
   const styles = {};
   const sideEffects = {};
-  const components = await globby(['**/*.tsx'], { cwd: srcDir, deep: 2 });
+  const components = await globby(['**/*.tsx'], { cwd: componentsDir, deep: 2 });
+  const directives = await globby(['**/*.ts'], { cwd: directivesDir, deep: 2 });
 
   let baseStyles = [];
   let iosStyles = [];
@@ -87,9 +89,9 @@ async function run() {
     const filename = path.basename(component, '.tsx');
     const name = camelize(`-${ filename }`);
 
-    if (matchWIP(`${ srcDir }/${ dirname }`)) {
+    if (matchWIP(`${ componentsDir }/${ dirname }`)) {
       skipped.push(component);
-      logger.log(`${ filename } (skipped)`, 'WIP');
+      logger.log(`component: ${ filename } (skipped)`, 'WIP');
       continue;
     }
 
@@ -100,7 +102,51 @@ async function run() {
       Object.keys(themes).map(async (theme) => {
         const ext = themes[theme];
         const stylename = `${ filename }${ ext }`;
-        const stylefile = `${ srcDir }/${ dirname }/${ stylename }`;
+        const stylefile = `${ componentsDir }/${ dirname }/${ stylename }`;
+        const exsit = fs.existsSync(stylefile);
+        const distdir = `${ distDir }/${ dirname }`;
+
+        if (!exsit) return;
+
+        styles[name][theme] = stylefile;
+
+        if (buildComp) {
+          await build(stylefile, distdir);
+        }
+
+        sideEffects[name][theme] = effectPath(distdir, stylename);
+      }),
+    );
+
+    const {
+      base: baseStyle,
+      ios: iosStyle,
+      md: mdStyle,
+    } = styles[name];
+
+    baseStyles.push(baseStyle);
+    iosStyles.push(iosStyle || baseStyle);
+    mdStyles.push(mdStyle || baseStyle);
+  }
+
+  for (const directive of directives) {
+    const dirname = path.dirname(directive);
+    const name = camelize(`v-${ dirname }`);
+
+    if (matchWIP(`${ directivesDir }/${ dirname }`)) {
+      skipped.push(dirname);
+      logger.log(`directive: ${ name } (skipped)`, 'WIP');
+      continue;
+    }
+
+    styles[name] = {};
+    sideEffects[name] = new SideEffect();
+
+    await Promise.all(
+      Object.keys(themes).map(async (theme) => {
+        const ext = themes[theme];
+        const stylename = `${ dirname }${ ext }`;
+        const stylefile = `${ directivesDir }/${ dirname }/${ stylename }`;
         const exsit = fs.existsSync(stylefile);
         const distdir = `${ distDir }/${ dirname }`;
 

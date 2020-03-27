@@ -69,6 +69,8 @@ export function createRippleEffect(el: HTMLElement, options: RippleOption) {
     });
   };
 
+  el.classList.add('line-ripple-effect');
+
   return {
     addRipple,
     options,
@@ -87,7 +89,7 @@ function inserted(el: HTMLElement, binding: RippleVNodeDirective) {
   (el as any).vRipple = createRippleEffect(el, modifiers as RippleOption);
 }
 
-function unbind(el: HTMLElement, binding: RippleVNodeDirective) {
+function unbind(el: HTMLElement) {
   const { vRipple } = el as any;
 
   if (!vRipple) return;
@@ -102,7 +104,7 @@ function update(el: HTMLElement, binding: RippleVNodeDirective) {
     return;
   }
   if (oldValue !== false) {
-    unbind(el, binding);
+    unbind(el);
   }
 
   inserted(el, binding);

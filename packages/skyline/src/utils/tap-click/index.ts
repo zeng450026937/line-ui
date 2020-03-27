@@ -1,11 +1,14 @@
 import { Config } from 'skyline/src/utils/config';
-import { now, pointerCoord } from 'skyline/src/utils/dom';
+import {
+  now,
+  pointerCoord,
+} from 'skyline/src/utils/dom';
 
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
-const ACTIVATED = 'line-activated';
-const ACTIVATABLE = 'line-activatable';
-const ACTIVATABLE_INSTANT = 'line-activatable-instant';
+export const ACTIVATED = 'line-activated';
+export const ACTIVATABLE = 'line-activatable';
+export const ACTIVATABLE_INSTANT = 'line-activatable-instant';
 const ADD_ACTIVATED_DEFERS = 200;
 const CLEAR_STATE_DEFERS = 200;
 const MOUSE_WAIT = 2500;
@@ -174,16 +177,13 @@ const getActivatableTarget = (ev: any): any => {
     const path = ev.composedPath() as HTMLElement[];
     for (let i = 0; i < path.length - 2; i++) {
       const el = path[i];
-      if ((el as any).vRipple) {
-        return el;
-      }
       if (el.classList && el.classList.contains(ACTIVATABLE)) {
         return el;
       }
     }
     return undefined;
   }
-  return ev.target.closest('.activatable');
+  return ev.target.closest(ACTIVATABLE);
 };
 
 const isInstant = (el: HTMLElement) => {
@@ -191,5 +191,8 @@ const isInstant = (el: HTMLElement) => {
 };
 
 const getRippleEffect = (el: HTMLElement) => {
-  return (el as any).vRipple;
+  const ripple = el.querySelector('.line-ripple-effect');
+  if (ripple) {
+    return (ripple as any).vRipple;
+  }
 };

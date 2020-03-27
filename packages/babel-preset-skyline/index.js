@@ -15,7 +15,7 @@ module.exports = (_, options) => {
 
     const effect = sideEffect[importName];
     const effects = [
-      effect[theme] || effect.base,
+      effect && (effect[theme] || effect.base),
       sideEffect.bundle,
     ];
 

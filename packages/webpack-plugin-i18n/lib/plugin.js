@@ -47,7 +47,8 @@ class I18nPlugin {
             if (!evaluated.isString()) return;
 
             const text = evaluated.string;
-            const disambiguation = parser.state.current.resource;
+            const { resource } = parser.state.current;
+            const disambiguation = resource.replace(/\\/g, '/');
 
             const index = this.translations.push({
               id : generateToken(text, disambiguation),

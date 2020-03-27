@@ -344,5 +344,21 @@
     "base": "skyline/dist/style/skyline.css",
     "ios": "skyline/dist/style/skyline.ios.css",
     "md": "skyline/dist/style/skyline.md.css"
-  }
+  },
+  "vActivatable": {},
+  "vAutorepeat": {},
+  "vClickOutside": {},
+  "vGesture": {},
+  "vHover": {},
+  "vIntersect": {},
+  "vMutate": {},
+  "vRemote": {},
+  "vResize": {},
+  "vRipple": {
+    "base": "skyline/dist/style/ripple/ripple.css"
+  },
+  "vScroll": {},
+  "vSwipeBack": {},
+  "vTouch": {},
+  "vWaterfall": {}
 }

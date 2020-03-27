@@ -1,5 +1,9 @@
 import { VNodeDirective } from 'vue';
 import { defineDirective } from 'skyline/src/utils/directive';
+import {
+  ACTIVATABLE,
+  ACTIVATABLE_INSTANT,
+} from 'skyline/src/utils/tap-click';
 
 export interface ActivatableOptions {
   instant?: boolean;
@@ -8,15 +12,15 @@ export interface ActivatableOptions {
 export function createActivatable(el: HTMLElement, options: ActivatableOptions) {
   const { instant } = options;
 
-  el.classList.add('line-activatable');
+  el.classList.add(ACTIVATABLE);
   if (instant) {
-    el.classList.add('line-activatable-instant');
+    el.classList.add(ACTIVATABLE_INSTANT);
   }
 
   const destroy = () => {
-    el.classList.remove('line-activatable');
+    el.classList.remove(ACTIVATABLE);
     if (instant) {
-      el.classList.add('line-activatable-instant');
+      el.classList.add(ACTIVATABLE_INSTANT);
     }
   };
 
