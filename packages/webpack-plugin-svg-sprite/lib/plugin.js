@@ -93,17 +93,33 @@ class ExtractSvgSpritePlugin {
           loaderCtx => this.hookNormalModuleLoader(loaderCtx),
         );
 
-        compilation.plugin('additional-assets', done => this.compileSprites(compilation).then(result => {
-          this.hookAdditionalAssets(compilation, result);
-          done();
-        }));
+        // NOT TESTED
+        compilation.plugin(
+          'optimize-tree',
+          done => this.hookOptimizeTree(compilation).then(done),
+        );
 
+        // NOT TESTED
+        compilation.plugin(
+          'before-chunk-assets',
+          () => this.hookBeforeChunkAssets(compilation),
+        );
+
+        // NOT TESTED
+        compilation.plugin(
+          'additional-assets',
+          done => this.hookAdditionalAssets(compilation).then(done),
+        );
+
+        // NOT TESTED
         compilation.plugin(
           'html-webpack-plugin-before-html-generation',
-          (htmlPluginData, done) => this.compileSprites(compilation).then(result => {
-            this.hookBeforeHtmlGeneration(htmlPluginData, result);
-            done(null, htmlPluginData);
-          }),
+          (htmlPluginData, done) => {
+            this.compileSprites(compilation).then(result => {
+              this.hookBeforeHtmlGeneration(htmlPluginData, result);
+              done(null, htmlPluginData);
+            });
+          },
         );
       });
     }
@@ -151,7 +167,6 @@ class ExtractSvgSpritePlugin {
     });
   }
 
-  // eslint-disable-next-line class-methods-use-this
   async hookAdditionalAssets(compilation) {
     const result = await this.compileSprites(compilation);
 

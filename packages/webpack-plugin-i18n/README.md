@@ -1,0 +1,1 @@
+# @skyline/webpack-plugin-i18n

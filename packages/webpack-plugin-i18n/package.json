@@ -1,0 +1,16 @@
+{
+  "name": "@skyline/webpack-plugin-i18n",
+  "version": "1.0.0-alpha",
+  "description": "@skyline/webpack-plugin-i18n",
+  "main": "lib/plugin.js",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "keywords": [
+    "skyline"
+  ],
+  "private": true,
+  "author": "Yealink Inc",
+  "license": "MIT"
+}
