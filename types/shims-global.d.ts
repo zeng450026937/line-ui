@@ -9,6 +9,3 @@ declare const __GLOBAL__: boolean;
 declare const __NODE_JS__: boolean;
 declare const __COMMIT__: string;
 declare const __VERSION__: string;
-
-// Feature flags
-declare const __FEATURE_OPTIONS__: boolean;

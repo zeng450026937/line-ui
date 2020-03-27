@@ -1,6 +1,7 @@
 const ConstDependency = require('webpack/lib/dependencies/ConstDependency');
 const NullFactory = require('webpack/lib/NullFactory');
 const BasicEvaluatedExpression = require('webpack/lib/BasicEvaluatedExpression');
+const ParserHelpers = require('webpack/lib/ParserHelpers');
 const { getHashDigest } = require('loader-utils');
 
 const NS = 'i18n-plugin';
@@ -40,14 +41,15 @@ class I18nPlugin {
 
             if (!args.length) return;
 
-            const evaluated = parser.evaluateExpression(args[0]);
+            const arg = args[0];
+            const evaluated = parser.evaluateExpression(arg);
 
             if (!evaluated.isString()) return;
 
             const text = evaluated.string;
             const disambiguation = parser.state.current.resource;
 
-            this.translations.push({
+            const index = this.translations.push({
               id : generateToken(text, disambiguation),
               text,
               disambiguation,
@@ -55,6 +57,12 @@ class I18nPlugin {
                 return this.text;
               },
             });
+
+            // replace arg with index
+            ParserHelpers.toConstantDependency(
+              parser,
+              JSON.stringify(index - 1),
+            )(arg);
           };
           parser.hooks
             .call.for('tr')
@@ -63,6 +71,28 @@ class I18nPlugin {
           parser.hooks
             .call.for('_vm.tr')
             .tap(NS, hookCall);
+
+          parser.hooks
+            .evaluate.for('MemberExpression')
+            .tap(NS, expression => {
+              const res = parser.state.current.resource;
+
+              if (!/\.vue/.test(res)) return;
+
+              const { object, property } = expression;
+
+              if (!object || !property) return;
+              if (object.name !== '_vm') return;
+              if (property.name !== 'tr') return;
+
+              const exprName = parser.getNameForExpression(expression);
+              const identifier = exprName.name;
+              /* eslint-disable-next-line */
+              return new BasicEvaluatedExpression()
+                .setRange(expression.range)
+                .setIdentifier(identifier)
+                .setExpression(expression);
+            });
 
           parser.hooks
             .evaluate.for('MemberExpression')
