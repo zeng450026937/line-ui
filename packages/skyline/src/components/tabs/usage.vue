@@ -35,23 +35,22 @@
             Dashboard
           </div>
         </line-tab>
-        <line-tab-bar
-          v-model="value"
-          slot="bottom"
-        >
-          <line-tab-button modelValue="1">
-            <line-icon name="class"></line-icon>
-            Class
-          </line-tab-button>
-          <line-tab-button modelValue="2">
-            <line-icon name="account_box"></line-icon>
-            Account
-          </line-tab-button>
-          <line-tab-button modelValue="3">
-            <line-icon name="dashboard"></line-icon>
-            Dashboard
-          </line-tab-button>
-        </line-tab-bar>
+        <template #bottom>
+          <line-tab-bar v-model="value">
+            <line-tab-button modelValue="1">
+              <line-icon name="class"></line-icon>
+              Class
+            </line-tab-button>
+            <line-tab-button modelValue="2">
+              <line-icon name="account_box"></line-icon>
+              Account
+            </line-tab-button>
+            <line-tab-button modelValue="3">
+              <line-icon name="dashboard"></line-icon>
+              Dashboard
+            </line-tab-button>
+          </line-tab-bar>
+        </template>
       </line-tabs>
     </line-content>
   </line-app>
@@ -78,8 +77,10 @@ export default Vue.extend({
 <style lang="scss" scoped>
 .content {
   display: flex;
-  align-items: center;
+
   flex-direction: column;
+  align-items: center;
+
   padding: 20px;
 }
 </style>

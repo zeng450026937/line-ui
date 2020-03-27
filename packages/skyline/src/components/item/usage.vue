@@ -15,11 +15,10 @@
           <line-label>Label</line-label>
         </line-item>
         <line-item>
-          <line-icon
-            slot="end"
-            name="logo-lineic"
-          ></line-icon>
-          <line-label>Label with Icon</line-label>
+          <template #end>
+            <line-icon name="logo"></line-icon>
+          </template>
+          <line-label>Label with Skyline</line-label>
         </line-item>
       </line-list>
       <line-list>
@@ -106,45 +105,39 @@
         </line-list-header>
         <line-item>
           <line-label>Primary Note</line-label>
-          <line-note
-            slot="end"
-            color="primary"
-          >99</line-note>
+          <template #end>
+            <line-note color="primary">99</line-note>
+          </template>
         </line-item>
         <line-item>
           <line-label>Secondary Note</line-label>
-          <line-note
-            slot="end"
-            color="secondary"
-          >99</line-note>
+          <template #end>
+            <line-note color="secondary">99</line-note>
+          </template>
         </line-item>
         <line-item>
           <line-label>Tertiary Note</line-label>
-          <line-note
-            slot="end"
-            color="tertiary"
-          >99</line-note>
+          <template #end>
+            <line-note color="tertiary">99</line-note>
+          </template>
         </line-item>
         <line-item>
           <line-label>Success Note</line-label>
-          <line-note
-            slot="end"
-            color="success"
-          >99</line-note>
+          <template #end>
+            <line-note color="success">99</line-note>
+          </template>
         </line-item>
         <line-item>
           <line-label>Warning Note</line-label>
-          <line-note
-            slot="end"
-            color="warning"
-          >99</line-note>
+          <template #end>
+            <line-note color="warning">99</line-note>
+          </template>
         </line-item>
         <line-item>
           <line-label>Danger Note</line-label>
-          <line-note
-            slot="end"
-            color="danger"
-          >99</line-note>
+          <template #end>
+            <line-note color="danger">99</line-note>
+          </template>
         </line-item>
       </line-list>
     </line-content>

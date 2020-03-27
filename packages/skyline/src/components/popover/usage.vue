@@ -33,15 +33,11 @@
 
 <script>
 import Vue from 'vue';
-import { PopoverController } from 'skyline/src/controller/popover';
-
-const controller = new PopoverController();
 
 export default Vue.extend({
   data() {
     return {
       event : null,
-      controller,
     };
   },
 
