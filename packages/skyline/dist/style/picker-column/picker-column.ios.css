@@ -1,4 +1,4 @@
-.picker-col {
+.line-picker-column {
   display: flex;
   position: relative;
   flex: 1;
@@ -8,13 +8,13 @@
   contain: content;
 }
 
-.picker-opts {
+.line-picker-column .line-picker-column__opts {
   position: relative;
   flex: 1;
   max-width: 100%;
 }
 
-.picker-opt {
+.line-picker-column .line-picker-column__opt {
   left: 0;
   top: 0;
   display: block;
@@ -28,47 +28,47 @@
   overflow: hidden;
   will-change: transform;
 }
-[dir=rtl] .picker-opt {
+[dir=rtl] .line-picker-column .line-picker-column__opt {
   right: unset;
   right: 0;
   left: unset;
 }
 
-.picker-opt.picker-opt-disabled {
+.line-picker-column .line-picker-column__opt.line-picker-column__opt--disabled {
   pointer-events: none;
 }
 
-.picker-opt-disabled {
+.line-picker-column .line-picker-column__opt--disabled {
   opacity: 0;
 }
 
-.picker-opts-left {
+.line-picker-column.line-picker-column--opts-left {
   justify-content: flex-start;
 }
 
-.picker-opts-right {
+.line-picker-column.line-picker-column--opts-right {
   justify-content: flex-end;
 }
 
-.picker-opt:active, .picker-opt:focus {
+.line-picker-column .line-picker-column__opt:active, .line-picker-column .line-picker-column__opt:focus {
   outline: none;
 }
 
-.picker-prefix {
+.line-picker-column .line-picker-column__prefix {
   position: relative;
   flex: 1;
   text-align: end;
   white-space: nowrap;
 }
 
-.picker-suffix {
+.line-picker-column .line-picker-column__suffix {
   position: relative;
   flex: 1;
   text-align: start;
   white-space: nowrap;
 }
 
-.picker-col {
+.line-picker-column {
   padding-left: 4px;
   padding-right: 4px;
   padding-top: 0;
@@ -76,7 +76,7 @@
   transform-style: preserve-3d;
 }
 @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
-  .picker-col {
+  .line-picker-column {
     padding-left: unset;
     padding-right: unset;
     padding-inline-start: 4px;
@@ -84,9 +84,9 @@
   }
 }
 
-.picker-prefix,
-.picker-suffix,
-.picker-opts {
+.line-picker-column .line-picker-column__prefix,
+.line-picker-column .line-picker-column__suffix,
+.line-picker-column .line-picker-column__opts {
   top: 77px;
   transform-style: preserve-3d;
   color: inherit;
@@ -95,7 +95,7 @@
   pointer-events: none;
 }
 
-.picker-opt {
+.line-picker-column .line-picker-column__opt {
   padding-left: 0;
   padding-right: 0;
   padding-top: 0;

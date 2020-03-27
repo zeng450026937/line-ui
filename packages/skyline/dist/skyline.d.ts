@@ -1,4 +1,5 @@
 import * as components from 'skyline/src/components';
+import * as controllers from 'skyline/src/controllers';
 import * as directives from 'skyline/src/directives';
 import { install } from 'skyline/src/install';
 import { LineOptions } from 'skyline/src/install';
@@ -9,6 +10,7 @@ declare const _default: {
     install(Vue: VueConstructor<import("vue").default>, opts?: LineOptions | undefined): void;
     components: typeof components;
     directives: typeof directives;
+    controllers: typeof controllers;
     mixins: typeof mixins;
     version: string;
 };
@@ -20,6 +22,7 @@ export declare const Skyline: {
 };
 
 export * from "skyline/src/components";
+export * from "skyline/src/controllers";
 export * from "skyline/src/directives";
 export * from "skyline/src/mixins";
 

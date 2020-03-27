@@ -169,29 +169,29 @@ html.plt-ios.plt-hybrid, html.plt-ios.plt-pwa {
     --line-safe-area-right: env(safe-area-inset-right);
   }
 }
-.menu-content {
+.line-menu__content {
   transform: translate3d(0,  0,  0);
 }
 
-.menu-content-open {
+.line-menu__content-open {
   cursor: pointer;
   touch-action: manipulation;
   pointer-events: none;
 }
 
-.ios .menu-content-reveal {
+.ios .line-menu__content-reveal {
   box-shadow: -8px 0 42px rgba(0, 0, 0, 0.08);
 }
 
-[dir=rtl].ios .menu-content-reveal {
+[dir=rtl].ios .line-menu__content-reveal {
   box-shadow: 8px 0 42px rgba(0, 0, 0, 0.08);
 }
 
-.md .menu-content-reveal {
+.md .line-menu__content-reveal {
   box-shadow: 4px 0px 16px rgba(0, 0, 0, 0.18);
 }
 
-.md .menu-content-push {
+.md .line-menu__content-push {
   box-shadow: 4px 0px 16px rgba(0, 0, 0, 0.18);
 }
 
@@ -281,26 +281,26 @@ input[type=submit] {
 a,
 a div,
 a span,
-a ion-icon,
-a ion-label,
+a .line-icon,
+a .line-label,
 button,
 button div,
 button span,
-button ion-icon,
-button ion-label,
-.ion-tappable,
+button .line-icon,
+button .line-label,
+.line-tappable,
 [tappable],
 [tappable] div,
 [tappable] span,
-[tappable] ion-icon,
-[tappable] ion-label,
+[tappable] .line-icon,
+[tappable] .line-label,
 input,
 textarea {
   touch-action: manipulation;
 }
 
-a ion-label,
-button ion-label {
+a .line-label,
+button .line-label {
   pointer-events: none;
 }
 
@@ -1120,4 +1120,148 @@ sub {
   .line-hide-xl-down {
     display: none !important;
   }
+}
+@keyframes line-slide-up-enter {
+  from {
+    transform: translate3d(0, 100%, 0);
+  }
+}
+@keyframes line-slide-up-leave {
+  to {
+    transform: translate3d(0, 100%, 0);
+  }
+}
+@keyframes line-slide-down-enter {
+  from {
+    transform: translate3d(0, -100%, 0);
+  }
+}
+@keyframes line-slide-down-leave {
+  to {
+    transform: translate3d(0, -100%, 0);
+  }
+}
+@keyframes line-slide-left-enter {
+  from {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+@keyframes line-slide-left-leave {
+  to {
+    transform: translate3d(-100%, 0, 0);
+  }
+}
+@keyframes line-slide-right-enter {
+  from {
+    transform: translate3d(100%, 0, 0);
+  }
+}
+@keyframes line-slide-right-leave {
+  to {
+    transform: translate3d(100%, 0, 0);
+  }
+}
+@keyframes line-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes line-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes line-rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+.line-fade-enter-active {
+  animation: 0.3s line-fade-in;
+}
+.line-fade-leave-active {
+  animation: 0.3s line-fade-out;
+}
+
+.line-slide-up-enter-active {
+  animation: line-slide-up-enter 0.3s both ease;
+}
+.line-slide-up-leave-active {
+  animation: line-slide-up-leave 0.3s both ease;
+}
+
+.line-slide-down-enter-active {
+  animation: line-slide-down-enter 0.3s both ease;
+}
+.line-slide-down-leave-active {
+  animation: line-slide-down-leave 0.3s both ease;
+}
+
+.line-slide-left-enter-active {
+  animation: line-slide-left-enter 0.3s both ease;
+}
+.line-slide-left-leave-active {
+  animation: line-slide-left-leave 0.3s both ease;
+}
+
+.line-slide-right-enter-active {
+  animation: line-slide-right-enter 0.3s both ease;
+}
+.line-slide-right-leave-active {
+  animation: line-slide-right-leave 0.3s both ease;
+}
+
+@keyframes line-fab-in {
+  from {
+    opacity: 0;
+    transform: scale(0.4) rotateZ(-45deg);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) rotateZ(0deg);
+  }
+}
+@keyframes line-fab-out {
+  from {
+    opacity: 1;
+    transform: scale(1) rotateZ(0deg);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.4) rotateZ(-45deg);
+  }
+}
+.line-fab-enter-active {
+  animation: line-fab-in 0.3s both ease-in-out;
+}
+.line-fab-leave-active {
+  animation: line-fab-out 0.3s both ease-in-out;
+}
+
+@keyframes line-scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+@keyframes line-scale-out {
+  to {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+}
+.line-scale-enter-active {
+  animation: line-scale-in 0.3s both ease-in-out;
+}
+.line-scale-leave-active {
+  animation: line-scale-out 0.3s both ease-in-out;
 }

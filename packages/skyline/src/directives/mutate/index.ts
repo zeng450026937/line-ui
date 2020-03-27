@@ -111,7 +111,7 @@ function update(el: HTMLElement, binding: MutateVNodeDirective) {
   inserted(el, binding);
 }
 
-export const vMutate = defineDirective({
+export const vMutate = /*#__PURE__*/ defineDirective({
   name : 'mutate',
   inserted,
   unbind,

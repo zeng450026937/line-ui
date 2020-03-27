@@ -28,7 +28,7 @@
   margin-right: 0;
   margin-top: 0;
   margin-bottom: 0;
-  padding-left: calc(var(--padding-start) + var(--ion-safe-area-left, 0px));
+  padding-left: calc(var(--padding-start) + var(--line-safe-area-left, 0px));
   padding-right: var(--padding-end);
   padding-top: var(--padding-top);
   padding-bottom: var(--padding-bottom);
@@ -48,7 +48,7 @@
   .line-item-divider {
     padding-left: unset;
     padding-right: unset;
-    padding-inline-start: calc(var(--padding-start) + var(--ion-safe-area-left, 0px));
+    padding-inline-start: calc(var(--padding-start) + var(--line-safe-area-left, 0px));
     padding-inline-end: var(--padding-end);
   }
 }
@@ -69,7 +69,7 @@
   margin-top: 0;
   margin-bottom: 0;
   padding-left: var(--inner-padding-start);
-  padding-right: calc(var(--ion-safe-area-right, 0px) + var(--inner-padding-end));
+  padding-right: calc(var(--line-safe-area-right, 0px) + var(--inner-padding-end));
   padding-top: var(--inner-padding-top);
   padding-bottom: var(--inner-padding-bottom);
   display: flex;
@@ -86,7 +86,7 @@
     padding-left: unset;
     padding-right: unset;
     padding-inline-start: var(--inner-padding-start);
-    padding-inline-end: calc(var(--ion-safe-area-right, 0px) + var(--inner-padding-end));
+    padding-inline-end: calc(var(--line-safe-area-right, 0px) + var(--inner-padding-end));
   }
 }
 

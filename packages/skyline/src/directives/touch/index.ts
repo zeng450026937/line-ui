@@ -169,7 +169,7 @@ function update(el: HTMLElement, binding: TouchVNodeDirective) {
   inserted(el, binding);
 }
 
-export const vTouch = defineDirective({
+export const vTouch = /*#__PURE__*/ defineDirective({
   name : 'touch',
   inserted,
   unbind,

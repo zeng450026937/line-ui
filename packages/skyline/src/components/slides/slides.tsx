@@ -212,7 +212,7 @@ export default /*#__PURE__*/ createComponent({
      * Use this to access the full Swiper API.
      * See https://idangero.us/swiper/api/ for all API options.
      */
-    async getSwiper(): Promise<any> {
+    async getSwiper(): Promise<Swiper> {
       return this.swiper;
     },
 

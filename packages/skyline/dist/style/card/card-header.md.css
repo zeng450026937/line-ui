@@ -27,7 +27,7 @@
   }
 }
 
-::slotted(ion-card-title:not(:first-child)),
-::slotted(ion-card-subtitle:not(:first-child)) {
+.line-card-header .slotted.line-card-title:not(:first-child),
+.line-card-header .slotted.line-card-subtitle:not(:first-child) {
   margin-top: 8px;
 }

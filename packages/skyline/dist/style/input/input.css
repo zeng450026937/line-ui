@@ -101,7 +101,7 @@
   display: none;
 }
 
-.native-input[disabled] {
+.line-input .native-input[disabled] {
   opacity: 0.4;
 }
 

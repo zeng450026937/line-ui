@@ -1,0 +1,8 @@
+.line-item-group {
+  display: block;
+}
+
+.item-group-md .line-item:last-child,
+.item-group-md .line-item-sliding:last-child .line-item {
+  --border-width: 0;
+}

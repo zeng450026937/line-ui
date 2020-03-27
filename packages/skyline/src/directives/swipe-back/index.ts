@@ -59,7 +59,7 @@ function update(el: HTMLElement, binding: SwipeBackVNodeDirective) {
   inserted(el, binding);
 }
 
-export const vSwipeBack = defineDirective({
+export const vSwipeBack = /*#__PURE__*/ defineDirective({
   name : 'swipe-back',
   inserted,
   unbind,

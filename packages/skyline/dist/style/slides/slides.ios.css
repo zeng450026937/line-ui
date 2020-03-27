@@ -137,6 +137,7 @@
    * @prop --scroll-bar-background: Background of the pagination scroll-bar
    * @prop --scroll-bar-background-active: Background of the active pagination scroll-bar
    */
+  display: block;
   user-select: none;
 }
 

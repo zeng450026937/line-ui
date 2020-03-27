@@ -22,8 +22,8 @@
   --opacity: 1;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
-  padding-left: var(--ion-safe-area-left);
-  padding-right: var(--ion-safe-area-right);
+  padding-left: var(--line-safe-area-left);
+  padding-right: var(--line-safe-area-right);
   display: block;
   position: relative;
   width: 100%;
@@ -37,8 +37,8 @@
   .line-toolbar {
     padding-left: unset;
     padding-right: unset;
-    padding-inline-start: var(--ion-safe-area-left);
-    padding-inline-end: var(--ion-safe-area-right);
+    padding-inline-start: var(--line-safe-area-left);
+    padding-inline-end: var(--line-safe-area-right);
   }
 }
 
@@ -93,7 +93,7 @@
   pointer-events: none;
 }
 
-::slotted(ion-progress-bar) {
+.line-toolbar .slotted.line-progress-bar {
   right: 0;
   left: 0;
   bottom: 0;
@@ -125,14 +125,14 @@
   padding-top: 0;
   padding-bottom: 0;
 }
-.line-toolbar.toolbar-searchbar ::slotted(*) {
+.line-toolbar.toolbar-searchbar .slotted {
   align-self: start;
 }
 
-.line-toolbar.toolbar-searchbar ::slotted(ion-chip) {
+.line-toolbar.toolbar-searchbar .slotted.line-chip {
   margin-top: 3px;
 }
-.line-toolbar.toolbar-searchbar ::slotted(ion-back-button) {
+.line-toolbar.toolbar-searchbar .slotted.line-back-button {
   height: 38px;
 }
 
@@ -159,7 +159,7 @@
   align-items: flex-start;
 }
 
-.line-toolbar.line-toolbar-title--large .toolbar-content ion-title {
+.line-toolbar.line-toolbar-title--large .toolbar-content .line-title {
   flex: 1;
   order: 8;
   min-width: 100%;

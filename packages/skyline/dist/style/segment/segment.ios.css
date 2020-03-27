@@ -1,0 +1,62 @@
+.line-segment {
+  /**
+   * @prop --background: Background of the segment button
+   */
+  --ripple-color: currentColor;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  position: relative;
+  align-items: stretch;
+  justify-content: center;
+  width: 100%;
+  background: var(--background);
+  font-family: var(--line-font-family, inherit);
+  text-align: center;
+  contain: paint;
+}
+
+.line-segment.line-segment--scrollable {
+  justify-content: start;
+  width: auto;
+  overflow-x: auto;
+}
+
+.line-segment.line-segment--scrollable::-webkit-scrollbar {
+  display: none;
+}
+
+.line-segment {
+  --background: rgba(var(--line-text-color-rgb, 0, 0, 0), 0.065);
+  border-radius: 8px;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.line-segment.line-color {
+  background: rgba(var(--line-color-base-rgb), 0.065);
+}
+
+.line-segment.in-toolbar {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+  width: auto;
+}
+@supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+  .line-segment.in-toolbar {
+    margin-left: unset;
+    margin-right: unset;
+    margin-inline-start: auto;
+    margin-inline-end: auto;
+  }
+}
+
+.line-segment.in-toolbar:not(.line-color) {
+  background: var(--line-toolbar-segment-background, var(--background));
+}
+
+.line-segment.in-toolbar-color:not(.line-color) {
+  background: rgba(var(--line-color-contrast-rgb), 0.11);
+}

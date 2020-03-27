@@ -188,7 +188,7 @@
   transition: background-color, opacity 100ms linear;
   border: 0;
   background-color: transparent;
-  font-family: var(--ion-font-family);
+  font-family: var(--line-font-family);
   font-size: 17px;
   font-weight: 500;
   overflow: hidden;

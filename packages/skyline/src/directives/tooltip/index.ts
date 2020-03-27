@@ -90,7 +90,7 @@ function update(el: HTMLElement, binding: TooltipVNodeDirective) {
   vTooltip.tooltip.text = binding.value;
 }
 
-export const vTooltip = defineDirective({
+export const vTooltip = /*#__PURE__*/ defineDirective({
   name : 'tooltip',
   inserted,
   unbind,

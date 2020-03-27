@@ -1,0 +1,35 @@
+.line-segment {
+  /**
+   * @prop --background: Background of the segment button
+   */
+  --ripple-color: currentColor;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  position: relative;
+  align-items: stretch;
+  justify-content: center;
+  width: 100%;
+  background: var(--background);
+  font-family: var(--line-font-family, inherit);
+  text-align: center;
+  contain: paint;
+}
+
+.line-segment.line-segment--scrollable {
+  justify-content: start;
+  width: auto;
+  overflow-x: auto;
+}
+
+.line-segment.line-segment--scrollable::-webkit-scrollbar {
+  display: none;
+}
+
+.line-segment {
+  --background: transparent;
+}
+
+.line-segment.line-segment--scrollable .slotted.line-segment-button {
+  min-width: 90px;
+}

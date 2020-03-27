@@ -5,7 +5,7 @@
   z-index: 100;
 }
 
-.reorder-icon {
+.line-reorder .line-reorder__icon {
   display: block;
   font-size: 22px;
 }

@@ -117,7 +117,7 @@
   justify-content: center;
   height: 100%;
   transition: all ease-in-out 300ms;
-  transitline-property: transform, opacity;
+  transition-property: transform, opacity;
 }
 
 .line-fab-button.line-color .line-fab-button__content {
@@ -166,7 +166,7 @@
   color: var(--line-color-contrast);
 }
 
-::slotted(line-icon) {
+.line-fab-button .slotted.line-icon {
   line-height: 1;
 }
 
@@ -198,7 +198,7 @@
   height: 100%;
   transform: scale(0.4) rotateZ(-45deg);
   transition: all ease-in-out 300ms;
-  transitline-property: transform, opacity;
+  transition-property: transform, opacity;
   opacity: 0;
 }
 
@@ -238,7 +238,7 @@
   --transition: 0.2s transform ease-out;
 }
 
-::slotted(line-icon),
+.line-fab-button .slotted.line-icon,
 .line-fab-button__indicator {
   font-size: 28px;
 }
@@ -254,7 +254,7 @@
   --transition: transform 200ms ease 10ms, opacity 200ms ease 10ms;
 }
 
-.line-fab-button.line-fab-button--in-list ::slotted(line-icon) {
+.line-fab-button.line-fab-button--in-list .slotted.line-icon {
   font-size: 18px;
 }
 

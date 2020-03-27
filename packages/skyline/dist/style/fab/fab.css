@@ -21,21 +21,21 @@
 }
 
 .line-fab.line-fab--horizontal-start {
-  left: calc(10px + var(--ion-safe-area-left, 0px));
+  left: calc(10px + var(--line-safe-area-left, 0px));
 }
 [dir=rtl] .line-fab.line-fab--horizontal-start {
   right: unset;
-  right: calc(10px + var(--ion-safe-area-left, 0px));
+  right: calc(10px + var(--line-safe-area-left, 0px));
   left: unset;
 }
 
 .line-fab.line-fab--horizontal-end {
-  right: calc(10px + var(--ion-safe-area-right, 0px));
+  right: calc(10px + var(--line-safe-area-right, 0px));
 }
 [dir=rtl] .line-fab.line-fab--horizontal-end {
   right: unset;
   left: unset;
-  left: calc(10px + var(--ion-safe-area-right, 0px));
+  left: calc(10px + var(--line-safe-area-right, 0px));
 }
 
 .line-fab.line-fab--vertical-top {

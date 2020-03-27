@@ -1,1 +1,1 @@
-.line-tabs{right:0;left:0;top:0;bottom:0;display:flex;position:absolute;flex-direction:column;width:100%;height:100%;contain:layout size style;z-index:0}.line-tabs__inner{position:relative;flex:1;contain:layout size style}
+.line-tabs{right:0;left:0;top:0;bottom:0;display:flex;position:absolute;flex-direction:column;width:100%;height:100%;contain:layout size style;z-index:0}.line-tabs .line-tabs__inner{position:relative;flex:1;contain:layout size style}

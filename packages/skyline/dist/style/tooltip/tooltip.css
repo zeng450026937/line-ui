@@ -5,14 +5,6 @@
   z-index: 10;
 }
 
-.line-tooltip__arrow {
-  position: absolute;
-  margin: 5px;
-  border-style: solid;
-  background: var(--color);
-  color: var(--background);
-}
-
 .line-tooltip[x-placement^=top] {
   margin-bottom: 5px;
 }
@@ -79,8 +71,11 @@
   flex: 1;
   flex-direction: column;
   justify-content: center;
-  padding: 5px;
-  border-radius: 3px;
+  padding: 5px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  line-height: 22px;
+  text-transform: none;
   background: var(--background);
   color: var(--color);
 }

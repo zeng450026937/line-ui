@@ -1,6 +1,6 @@
 .line-progress-bar {
   /**
-  * @prop --background:  Same as --buffer-background when using a determinate progress bar, otherwise it styles the background of the ion-progress-bar itself.
+  * @prop --background:  Same as --buffer-background when using a determinate progress bar, otherwise it styles the background of the line-progress-bar itself.
   * @prop --progress-background: Color of the progress bar
   * @prop --buffer-background: Color of the buffer bar
   */

@@ -14,7 +14,7 @@
   color: var(--line-color-base);
 }
 
-.line-title__inner {
+.line-title .line-title__inner {
   display: block;
   width: 100%;
   text-overflow: ellipsis;
@@ -23,7 +23,7 @@
   pointer-events: auto;
 }
 
-.line-title--small .line-title__inner {
+.line-title.line-title--small .line-title__inner {
   white-space: normal;
 }
 
@@ -45,7 +45,7 @@
   }
 }
 
-.line-title--small {
+.line-title.line-title--small {
   width: 100%;
   height: 100%;
   font-size: 15px;

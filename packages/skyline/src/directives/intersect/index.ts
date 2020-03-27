@@ -119,7 +119,7 @@ function update(el: HTMLElement, binding: ObserveVNodeDirective) {
   inserted(el, binding);
 }
 
-export const vIntersect = defineDirective({
+export const vIntersect = /*#__PURE__*/ defineDirective({
   name : 'intersect',
   inserted,
   update,

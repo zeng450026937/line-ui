@@ -63,7 +63,7 @@
   --max-width: 280px;
   --max-height: 90%;
   --spinner-color: var(--line-color-primary, #3880ff);
-  --backdrop-opacity: var(--ion-backdrop-opacity, 0.32);
+  --backdrop-opacity: var(--line-backdrop-opacity, 0.32);
   color: var(--line-color-step-850, #262626);
   font-size: 14px;
 }

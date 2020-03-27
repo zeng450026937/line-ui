@@ -25,11 +25,11 @@
 
   font-family: $font-family-base;
 
+  overflow: hidden;
+
   touch-action: none;
   user-select: none;
   z-index: $z-index-overlay;
-
-  overflow: hidden;
 }
 
 .line-dropdown-menu.overlay-hidden {

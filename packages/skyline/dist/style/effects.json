@@ -145,6 +145,24 @@
     "ios": "skyline/dist/style/item-divider/item-divider.ios.css",
     "md": "skyline/dist/style/item-divider/item-divider.md.css"
   },
+  "ItemGroup": {
+    "base": "skyline/dist/style/item-group/item-group.css",
+    "ios": "skyline/dist/style/item-group/item-group.ios.css",
+    "md": "skyline/dist/style/item-group/item-group.md.css"
+  },
+  "ItemOption": {
+    "base": "skyline/dist/style/item-option/item-option.css",
+    "ios": "skyline/dist/style/item-option/item-option.ios.css",
+    "md": "skyline/dist/style/item-option/item-option.md.css"
+  },
+  "ItemOptions": {
+    "base": "skyline/dist/style/item-options/item-options.css",
+    "ios": "skyline/dist/style/item-options/item-options.ios.css",
+    "md": "skyline/dist/style/item-options/item-options.md.css"
+  },
+  "ItemSliding": {
+    "base": "skyline/dist/style/item-sliding/item-sliding.css"
+  },
   "Label": {
     "base": "skyline/dist/style/label/label.css",
     "ios": "skyline/dist/style/label/label.ios.css",
@@ -239,6 +257,16 @@
   },
   "Row": {
     "base": "skyline/dist/style/row/row.css"
+  },
+  "Segment": {
+    "base": "skyline/dist/style/segment/segment.css",
+    "ios": "skyline/dist/style/segment/segment.ios.css",
+    "md": "skyline/dist/style/segment/segment.md.css"
+  },
+  "SegmentButton": {
+    "base": "skyline/dist/style/segment-button/segment-button.css",
+    "ios": "skyline/dist/style/segment-button/segment-button.ios.css",
+    "md": "skyline/dist/style/segment-button/segment-button.md.css"
   },
   "SkeletonText": {
     "base": "skyline/dist/style/skeleton-text/skeleton-text.css"

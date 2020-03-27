@@ -14,7 +14,7 @@
   color: var(--line-color-base);
 }
 
-.line-title__inner {
+.line-title .line-title__inner {
   display: block;
   width: 100%;
   text-overflow: ellipsis;
@@ -23,7 +23,7 @@
   pointer-events: auto;
 }
 
-.line-title--small .line-title__inner {
+.line-title.line-title--small .line-title__inner {
   white-space: normal;
 }
 
@@ -59,7 +59,7 @@
   }
 }
 
-.line-title--small {
+.line-title.line-title--small {
   padding-left: 9px;
   padding-right: 9px;
   padding-top: 6px;
@@ -69,7 +69,7 @@
   font-weight: normal;
 }
 @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
-  .line-title--small {
+  .line-title.line-title--small {
     padding-left: unset;
     padding-right: unset;
     padding-inline-start: 9px;
@@ -77,7 +77,7 @@
   }
 }
 
-.line-title--large {
+.line-title.line-title--large {
   padding-left: 16px;
   padding-right: 16px;
   padding-top: 0;
@@ -91,7 +91,7 @@
   text-align: start;
 }
 @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
-  .line-title--large {
+  .line-title.line-title--large {
     padding-left: unset;
     padding-right: unset;
     padding-inline-start: 16px;

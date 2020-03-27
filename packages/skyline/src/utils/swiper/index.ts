@@ -1,13 +1,6 @@
-import {
-  Autoplay,
-  Pagination,
-  Scrollbar,
-  Swiper,
+import Swiper, {
   SwiperOptions,
-  Zoom,
-} from 'swiper/js/swiper.esm';
-
-Swiper.use([Pagination, Scrollbar, Autoplay, Zoom]);
+} from 'swiper';
 
 export {
   Swiper,

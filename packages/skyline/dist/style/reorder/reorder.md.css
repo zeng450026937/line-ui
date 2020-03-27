@@ -5,12 +5,12 @@
   z-index: 100;
 }
 
-.reorder-icon {
+.line-reorder .line-reorder__icon {
   display: block;
   font-size: 22px;
 }
 
-.reorder-icon {
+.line-reorder .line-reorder__icon {
   font-size: 31px;
   opacity: 0.3;
 }

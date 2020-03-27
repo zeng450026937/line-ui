@@ -148,7 +148,7 @@
   --knob-box-shadow: 0 3px 1px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.13), 0 0 0 1px rgba(0, 0, 0, 0.02);
   --knob-size: 28px;
   --bar-height: 2px;
-  --bar-background: rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.1);
+  --bar-background: rgba(var(--line-text-color-rgb, 0, 0, 0), 0.1);
   --bar-background-active: var(--line-color-primary, #3880ff);
   --bar-border-radius: 0;
   --height: 42px;
@@ -166,8 +166,8 @@
   }
 }
 
-.line-color .line-range__bar--active,
-.line-color .line-range__tick--active {
+.line-range.line-color .line-range__bar--active,
+.line-range.line-color .line-range__tick--active {
   background: var(--line-color-base);
 }
 
@@ -217,7 +217,7 @@
   top: 18px;
   width: 2px;
   height: 8px;
-  background: rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.1);
+  background: rgba(var(--line-text-color-rgb, 0, 0, 0), 0.1);
   pointer-events: none;
 }
 @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {

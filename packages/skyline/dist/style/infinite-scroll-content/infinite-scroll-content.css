@@ -7,7 +7,7 @@
   user-select: none;
 }
 
-.infinite-loading {
+.line-infinite-scroll-content .infinite-loading {
   margin-left: 0;
   margin-right: 0;
   margin-top: 0;
@@ -16,14 +16,14 @@
   width: 100%;
 }
 
-.infinite-loading-text {
+.line-infinite-scroll-content .infinite-loading-text {
   margin-left: 32px;
   margin-right: 32px;
   margin-top: 4px;
   margin-bottom: 0;
 }
 @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
-  .infinite-loading-text {
+  .line-infinite-scroll-content .infinite-loading-text {
     margin-left: unset;
     margin-right: unset;
     margin-inline-start: 32px;
@@ -31,6 +31,6 @@
   }
 }
 
-.infinite-scroll-loading .line-infinite-scroll-content > .infinite-loading {
+.line-infinite-scroll--loading .line-infinite-scroll-content > .infinite-loading {
   display: block;
 }

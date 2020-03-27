@@ -4,13 +4,13 @@
    * @prop --border: Border of the tab bar
    * @prop --color: Color of the tab bar
    */
-  padding-left: var(--ion-safe-area-left);
-  padding-right: var(--ion-safe-area-right);
+  padding-left: var(--line-safe-area-left);
+  padding-right: var(--line-safe-area-right);
   display: flex;
   align-items: center;
   justify-content: center;
   width: auto;
-  padding-bottom: var(--ion-safe-area-bottom, 0);
+  padding-bottom: var(--line-safe-area-bottom, 0);
   border-top: var(--border);
   background: var(--background);
   color: var(--color);
@@ -25,8 +25,8 @@
   .line-tab-bar {
     padding-left: unset;
     padding-right: unset;
-    padding-inline-start: var(--ion-safe-area-left);
-    padding-inline-end: var(--ion-safe-area-right);
+    padding-inline-start: var(--line-safe-area-left);
+    padding-inline-end: var(--line-safe-area-right);
   }
 }
 

@@ -108,7 +108,7 @@
   display: block;
   z-index: 1;
 }
-.line-refresher.refresher-native ion-spinner {
+.line-refresher.refresher-native .line-spinner {
   margin-left: auto;
   margin-right: auto;
   margin-top: 0;
@@ -118,7 +118,7 @@
   color: var(--line-color-primary, #3880ff);
 }
 @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
-  .line-refresher.refresher-native ion-spinner {
+  .line-refresher.refresher-native .line-spinner {
     margin-left: unset;
     margin-right: unset;
     margin-inline-start: auto;
@@ -134,7 +134,7 @@
   width: 24px;
   height: 24px;
 }
-.line-refresher.refresher-native .arrow-container ion-icon {
+.line-refresher.refresher-native .arrow-container .line-icon {
   margin-left: auto;
   margin-right: auto;
   margin-top: 0;
@@ -147,7 +147,7 @@
   font-size: 12px;
 }
 @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
-  .line-refresher.refresher-native .arrow-container ion-icon {
+  .line-refresher.refresher-native .arrow-container .line-icon {
     margin-left: unset;
     margin-right: unset;
     margin-inline-start: auto;

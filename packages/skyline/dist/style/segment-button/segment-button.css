@@ -1,0 +1,253 @@
+.line-segment-button {
+  /**
+   * @prop --background: Background of the segment button
+   * @prop --background-checked: Background of the checked segment button
+   *
+   * @prop --background-hover: Background of the segment button on hover
+   * @prop --background-focused: Background of the segment button when focused with the tab key
+   *
+   * @prop --background-hover-opacity: Opacity of the segment button background on hover
+   * @prop --background-focused-opacity: Opacity of the segment button background when focused with the tab key
+   *
+   * @prop --color: Color of the segment button
+   * @prop --color-checked: Color of the checked segment button
+   * @prop --color-hover: Color of the segment button on hover
+   * @prop --color-focused: Color of the segment button when focused with the tab key
+   *
+   * @prop --border-radius: Radius of the segment button border
+   * @prop --border-color: Color of the segment button border
+   * @prop --border-style: Style of the segment button border
+   * @prop --border-width: Width of the segment button border
+   *
+   * @prop --margin-top: Top margin of the segment button
+   * @prop --margin-end: Right margin if direction is left-to-right, and left margin if direction is right-to-left of the segment button
+   * @prop --margin-bottom: Bottom margin of the segment button
+   * @prop --margin-start: Left margin if direction is left-to-right, and right margin if direction is right-to-left of the segment button
+   *
+   * @prop --padding-top: Top padding of the segment button
+   * @prop --padding-end: Right padding if direction is left-to-right, and left padding if direction is right-to-left of the segment button
+   * @prop --padding-bottom: Bottom padding of the segment button
+   * @prop --padding-start: Left padding if direction is left-to-right, and right padding if direction is right-to-left of the segment button
+   *
+   * @prop --transition: Transition of the segment button
+   *
+   * @prop --indicator-height: Height of the indicator for the checked segment button
+   * @prop --indicator-box-shadow: Box shadow on the indicator for the checked segment button
+   * @prop --indicator-color: Color of the indicator for the checked segment button
+   * @prop --indicator-transition: Transition of the indicator for the checked segment button
+   * @prop --indicator-transform: Transform of the indicator for the checked segment button
+   */
+  --color: initial;
+  --color-hover: var(--color);
+  --color-checked: var(--color);
+  --color-disabled: var(--color);
+  --padding-start: 0;
+  --padding-end: 0;
+  --padding-top: 0;
+  --padding-bottom: 0;
+  border-radius: var(--border-radius);
+  display: flex;
+  position: relative;
+  flex: 1 1 auto;
+  flex-direction: column;
+  height: auto;
+  background: var(--background);
+  color: var(--color);
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  user-select: none;
+  font-kerning: none;
+  cursor: pointer;
+}
+
+.line-segment-button .line-segment-button__button-native {
+  border-radius: 0;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-style: inherit;
+  font-weight: inherit;
+  letter-spacing: inherit;
+  text-align: inherit;
+  text-decoration: inherit;
+  text-overflow: inherit;
+  text-transform: inherit;
+  white-space: inherit;
+  margin-left: var(--margin-start);
+  margin-right: var(--margin-end);
+  margin-top: var(--margin-top);
+  margin-bottom: var(--margin-bottom);
+  padding-left: var(--padding-start);
+  padding-right: var(--padding-end);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+  transform: translate3d(0,  0,  0);
+  display: flex;
+  position: relative;
+  flex-direction: inherit;
+  flex-grow: 1;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: inherit;
+  max-width: inherit;
+  height: auto;
+  min-height: inherit;
+  max-height: inherit;
+  transition: var(--transition);
+  border: none;
+  outline: none;
+  background: transparent;
+  contain: content;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 2;
+}
+@supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+  .line-segment-button .line-segment-button__button-native {
+    margin-left: unset;
+    margin-right: unset;
+    margin-inline-start: var(--margin-start);
+    margin-inline-end: var(--margin-end);
+  }
+}
+@supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+  .line-segment-button .line-segment-button__button-native {
+    padding-left: unset;
+    padding-right: unset;
+    padding-inline-start: var(--padding-start);
+    padding-inline-end: var(--padding-end);
+  }
+}
+
+.line-segment-button .line-segment-button__button-native::after {
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  content: "";
+  opacity: 0;
+}
+
+.line-segment-button .line-segment-button__button-inner {
+  display: flex;
+  position: relative;
+  flex-flow: inherit;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.line-segment-button.line-segment-button--checked {
+  background: var(--background-checked);
+  color: var(--color-checked);
+}
+
+.line-segment-button.line-segment-button--disabled {
+  cursor: default;
+  pointer-events: none;
+}
+
+.line-segment-button.line-focused .line-segment-button__button-native {
+  color: var(--color-focused);
+}
+.line-segment-button.line-focused .line-segment-button__button-native::after {
+  background: var(--background-focused);
+  opacity: var(--background-focused-opacity);
+}
+
+@media (any-hover: hover) {
+  .line-segment-button:hover .line-segment-button__button-native {
+    color: var(--color-hover);
+  }
+  .line-segment-button:hover .line-segment-button__button-native::after {
+    background: var(--background-hover);
+    opacity: var(--background-hover-opacity);
+  }
+
+  .line-segment-button.line-segment-button--checked:hover .line-segment-button__button-native {
+    color: var(--color-checked);
+  }
+}
+.line-segment-button .slotted.line-icon {
+  flex-shrink: 0;
+  order: -1;
+  pointer-events: none;
+}
+
+.line-segment-button .slotted.line-label {
+  display: block;
+  align-self: center;
+  line-height: 22px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.line-segment-button.line-segment-button--layout-icon-top .line-segment-button__button-native {
+  flex-direction: column;
+}
+
+.line-segment-button.line-segment-button--layout-icon-start .line-segment-button__button-native {
+  flex-direction: row;
+}
+
+.line-segment-button.line-segment-button--layout-icon-end .line-segment-button__button-native {
+  flex-direction: row-reverse;
+}
+
+.line-segment-button.line-segment-button--layout-icon-bottom .line-segment-button__button-native {
+  flex-direction: column-reverse;
+}
+
+.line-segment-button.line-segment-button--layout-icon-hide .slotted.line-icon {
+  display: none;
+}
+
+.line-segment-button.line-segment-button--layout-label-hide .slotted.line-label {
+  display: none;
+}
+
+.line-segment-button .line-ripple-effect {
+  color: var(--ripple-color, var(--color-checked));
+}
+
+.line-segment-button .line-segment-button__indicator {
+  transform-origin: left;
+  position: absolute;
+  opacity: 0;
+  box-sizing: border-box;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+.line-segment-button .line-segment-button__indicator-background {
+  width: 100%;
+  height: var(--indicator-height);
+  transform: var(--indicator-transform);
+  box-shadow: var(--indicator-box-shadow);
+  pointer-events: none;
+}
+
+.line-segment-button .line-segment-button__indicator--animated {
+  transition: var(--indicator-transition);
+}
+
+.line-segment-button.line-segment-button--checked .line-segment-button__indicator {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .line-segment-button__indicator-background {
+    transform: none;
+  }
+
+  .line-segment-button__indicator--animated {
+    transition: none;
+  }
+}

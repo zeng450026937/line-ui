@@ -73,14 +73,14 @@
   --background: transparent;
   --color: var(--line-text-color, #000);
   --border-color: var(--line-item-border-color, var(--line-border-color, var(--line-color-step-150, rgba(0, 0, 0, 0.13))));
-  padding-left: calc(var(--ion-safe-area-left, 0) + 16px);
+  padding-left: calc(var(--line-safe-area-left, 0) + 16px);
   min-height: 45px;
   font-size: 14px;
 }
 @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
   .line-list-header {
     padding-left: unset;
-    padding-inline-start: calc(var(--ion-safe-area-left, 0) + 16px);
+    padding-inline-start: calc(var(--line-safe-area-left, 0) + 16px);
   }
 }
 

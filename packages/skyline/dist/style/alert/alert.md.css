@@ -190,7 +190,7 @@ textarea.line-alert__input {
 .line-alert {
   --background: var(--line-overlay-background-color, var(--line-background-color, #fff));
   --max-width: 280px;
-  --backdrop-opacity: var(--ion-backdrop-opacity, 0.32);
+  --backdrop-opacity: var(--line-backdrop-opacity, 0.32);
   font-size: 14px;
 }
 

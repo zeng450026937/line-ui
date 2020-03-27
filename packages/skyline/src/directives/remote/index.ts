@@ -74,7 +74,7 @@ function update(el: HTMLElement, binding: RemoteVNodeDirective) {
   inserted(el, binding);
 }
 
-export const vRemote = defineDirective({
+export const vRemote = /*#__PURE__*/ defineDirective({
   name : 'remote',
   inserted,
   update,

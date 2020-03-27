@@ -2,25 +2,26 @@
   "editor.tabSize": 2,
   "files.eol": "\n",
   "eslint.validate": [
-      {
-        "language": "javascript",
-        "autoFix": true,
-      },
-      {
-        "language": "javascriptreact",
-        "autoFix": true,
-      },
-      {
-        "language": "typescript",
-        "autoFix": true,
-      },
-      {
-        "language": "typescriptreact",
-        "autoFix": true,
-      },
-      {
-        "language": "vue",
-        "autoFix": true,
-      },
+    {
+      "language": "javascript",
+      "autoFix": true
+    },
+    {
+      "language": "javascriptreact",
+      "autoFix": true
+    },
+    {
+      "language": "typescript",
+      "autoFix": true
+    },
+    {
+      "language": "typescriptreact",
+      "autoFix": true
+    },
+    {
+      "language": "vue",
+      "autoFix": true
+    }
   ],
+  "eslint.enable": true,
 }

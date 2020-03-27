@@ -594,7 +594,7 @@ function update(el, binding) {
     }
     inserted(el, binding);
 }
-const vRipple = defineDirective({
+const vRipple = /*#__PURE__*/ defineDirective({
     name: 'ripple',
     inserted,
     update,
@@ -778,7 +778,7 @@ function update$1(el, binding) {
     }
     inserted$1(el, binding);
 }
-const vRemote = defineDirective({
+const vRemote = /*#__PURE__*/ defineDirective({
     name: 'remote',
     inserted: inserted$1,
     update: update$1,
@@ -825,7 +825,7 @@ const APPEAR_EVENTS = [
     'after-appear',
     'appear-cancelled',
 ];
-function createTransitionHooks(delegate, appear = false, css = false) {
+function createTransitionHooks(delegate, appear = false) {
     const events = [
         ...ENTER_EVENTS,
         ...LEAVE_EVENTS,
@@ -835,56 +835,27 @@ function createTransitionHooks(delegate, appear = false, css = false) {
         // Vue check hook funcion's argments length with Function.length
         // While ...args will left Function.length to be 0
         // and the hook will not work right
-        prev[val] = css
-            ? (el) => delegate.$emit(val, el, NOOP)
-            : (el, done) => delegate.$emit(val, el, done);
+        prev[val] = (el, done) => delegate.$emit(val, el, done || NOOP);
         return prev;
     }, {});
 }
 
-function useTransition(options) {
-    const { appear = true, css = true, appearHook = false, } = options || {};
+function useTransition(appear = true) {
+    const props = { appear, css: false };
     return createMixins({
         props: {
-            // string | object | false
-            transition: null,
-        },
-        beforeMount() {
-            this.useTransition = {
-                transition: {
-                    appear,
-                    css,
-                },
-            };
+            transition: {
+                type: Boolean,
+                default: undefined,
+            },
         },
         afterRender(vnode) {
-            const transition = isObject(this.transition)
-                ? {
-                    appear,
-                    // css,
-                    ...this.transition,
-                }
-                : {
-                    name: this.transition,
-                    appear: !!this.transition || appear,
-                    css: !!this.transition || css,
-                };
-            // allow user to change transition
-            // for internally use
-            this.$emit('transition', transition);
-            if (transition.css && !transition.name)
+            if (this.transition === false)
                 return;
-            const { useTransition } = this;
-            if (!useTransition.hooks || useTransition.transition.css !== transition.css) {
-                useTransition.transition = transition;
-                useTransition.hooks = createTransitionHooks(this, appearHook, transition.css);
-            }
-            const data = {
-                props: transition,
-                on: useTransition.hooks,
-            };
-            /* eslint-disable-next-line */
-            return this.$createElement('transition', data, [vnode]);
+            return this.$createElement('transition', {
+                props,
+                on: createTransitionHooks(this),
+            }, [vnode]);
         },
     });
 }
@@ -899,17 +870,20 @@ class PopupContext {
     getPopup(index = this.stack.length - 1) {
         return this.stack[index];
     }
-    getActiveFocusPopup() {
+    findPopup(matcher) {
         let index = this.stack.length - 1;
         let popup = this.stack[index];
         while (popup) {
-            if (popup.activeFocus) {
+            if (matcher(popup)) {
                 break;
             }
             index--;
             popup = this.stack[index];
         }
         return popup;
+    }
+    getActiveFocusPopup() {
+        return this.findPopup(p => p.activeFocus);
     }
     getOverlayIndex() {
         return this.base + this.index;
@@ -976,7 +950,7 @@ class GestureController {
         return new GestureDelegate(this, this.newID(), config.name, config.priority || 0, !!config.disableScroll);
     }
     /**
-     * Creates a blocker that will block any other gesture events from firing. Set in the ion-gesture component.
+     * Creates a blocker that will block any other gesture events from firing. Set in the line-gesture component.
      */
     createBlocker(opts = {}) {
         return new BlockerDelegate(this, this.newID(), opts.disable, !!opts.disableScroll);
@@ -1572,6 +1546,200 @@ const now = (ev) => {
     return ev.timeStamp || Date.now();
 };
 
+const testUserAgent = (win, expr) => expr.test(win.navigator.userAgent);
+const matchMedia = (win, query) => win.matchMedia(query).matches;
+const isMobile = (win) => matchMedia(win, '(any-pointer:coarse)');
+const isDesktop = (win) => !isMobile(win);
+const isIpad = (win) => {
+    // iOS 12 and below
+    if (testUserAgent(win, /iPad/i)) {
+        return true;
+    }
+    // iOS 13+
+    if (testUserAgent(win, /Macintosh/i) && isMobile(win)) {
+        return true;
+    }
+    return false;
+};
+const isIphone = (win) => testUserAgent(win, /iPhone/i);
+const isIOS = (win) => testUserAgent(win, /iPhone|iPod/i) || isIpad(win);
+const isAndroid = (win) => testUserAgent(win, /android|sink/i);
+const isAndroidTablet = (win) => {
+    return isAndroid(win) && !testUserAgent(win, /mobile/i);
+};
+const isPhablet = (win) => {
+    const width = win.innerWidth;
+    const height = win.innerHeight;
+    const smallest = Math.min(width, height);
+    const largest = Math.max(width, height);
+    return (smallest > 390 && smallest < 520)
+        && (largest > 620 && largest < 800);
+};
+const isTablet = (win) => {
+    const width = win.innerWidth;
+    const height = win.innerHeight;
+    const smallest = Math.min(width, height);
+    const largest = Math.max(width, height);
+    return (isIpad(win)
+        || isAndroidTablet(win)
+        || ((smallest > 460 && smallest < 820)
+            && (largest > 780 && largest < 1400)));
+};
+const isCordova = (win) => !!(win.cordova || win.phonegap || win.PhoneGap);
+const isCapacitorNative = (win) => {
+    const capacitor = win.Capacitor;
+    return !!(capacitor && capacitor.isNative);
+};
+const isHybrid = (win) => isCordova(win) || isCapacitorNative(win);
+const isMobileWeb = (win) => isMobile(win) && !isHybrid(win);
+const isElectron = (win) => testUserAgent(win, /electron/i);
+const isPWA = (win) => !!(win.matchMedia('(display-mode: standalone)').matches || win.navigator.standalone);
+const PLATFORMS_MAP = {
+    ipad: isIpad,
+    iphone: isIphone,
+    ios: isIOS,
+    android: isAndroid,
+    phablet: isPhablet,
+    tablet: isTablet,
+    cordova: isCordova,
+    capacitor: isCapacitorNative,
+    electron: isElectron,
+    pwa: isPWA,
+    mobile: isMobile,
+    mobileweb: isMobileWeb,
+    desktop: isDesktop,
+    hybrid: isHybrid,
+};
+/* eslint-disable max-len */
+const detectPlatforms = (win) => Object.keys(PLATFORMS_MAP).filter(p => PLATFORMS_MAP[p](win));
+const setupPlatforms = (win = window) => {
+    win.Skyline = win.Skyline || {};
+    let { platforms } = win.Skyline;
+    if (platforms == null) {
+        platforms = win.Skyline.platforms = detectPlatforms(win);
+        platforms.forEach((p) => win.document.documentElement.classList.add(`plt-${p}`));
+    }
+    return platforms;
+};
+const getPlatforms = (win) => setupPlatforms(win);
+const isPlatform = (winOrPlatform, platform) => {
+    if (typeof winOrPlatform === 'string') {
+        platform = winOrPlatform;
+        winOrPlatform = undefined;
+    }
+    return getPlatforms(winOrPlatform).includes(platform);
+};
+
+const startsWith = (input, search) => {
+    return input.substr(0, search.length) === search;
+};
+const SKYLINE_PREFIX = 'skyline:';
+const SKYLINE_SESSION_KEY = 'skyline-persist-config';
+class Config {
+    constructor() {
+        this.m = new Map();
+    }
+    reset(configObj) {
+        this.m = new Map(Object.entries(configObj));
+    }
+    get(key, fallback) {
+        const value = this.m.get(key);
+        return (value !== undefined) ? value : fallback;
+    }
+    getBoolean(key, fallback = false) {
+        const val = this.m.get(key);
+        if (val === undefined) {
+            return fallback;
+        }
+        if (typeof val === 'string') {
+            return val === 'true';
+        }
+        return !!val;
+    }
+    getNumber(key, fallback) {
+        const val = parseFloat(this.m.get(key));
+        return Number.isNaN(val) ? (fallback !== undefined ? fallback : NaN) : val;
+    }
+    set(key, value) {
+        this.m.set(key, value);
+    }
+}
+const config = new Config();
+const configFromSession = (win) => {
+    try {
+        const configStr = win.sessionStorage.getItem(SKYLINE_SESSION_KEY);
+        return configStr !== null ? JSON.parse(configStr) : {};
+    }
+    catch (e) {
+        return {};
+    }
+};
+const saveConfig = (win, c) => {
+    try {
+        win.sessionStorage.setItem(SKYLINE_SESSION_KEY, JSON.stringify(c));
+    }
+    catch (e) {
+        /* eslint-disable-next-line */
+        return;
+    }
+};
+const configFromURL = (win) => {
+    const configObj = {};
+    win.location.search.slice(1)
+        .split('&')
+        .map(entry => entry.split('='))
+        .map(([key, value]) => [decodeURIComponent(key), decodeURIComponent(value)])
+        .filter(([key]) => startsWith(key, SKYLINE_PREFIX))
+        .map(([key, value]) => [key.slice(SKYLINE_PREFIX.length), value])
+        .forEach(([key, value]) => {
+        configObj[key] = value;
+    });
+    return configObj;
+};
+
+let defaultMode;
+const getMode = (elm) => {
+    while (elm) {
+        const elmMode = elm.mode || elm.getAttribute('mode');
+        if (elmMode) {
+            return elmMode;
+        }
+        elm = elm.parentElement;
+    }
+    return defaultMode;
+};
+const getSkylineMode = (ref) => {
+    return (ref && getMode(ref)) || defaultMode;
+};
+function setupConfig() {
+    const doc = document;
+    const win = window;
+    const Skyline = win.Skyline = win.Skyline || {};
+    // create the Skyline.config from raw config object (if it exists)
+    // and convert Skyline.config into a ConfigApi that has a get() fn
+    const configObj = {
+        ...configFromSession(win),
+        persistConfig: false,
+        ...Skyline.config,
+        ...configFromURL(win),
+    };
+    config.reset(configObj);
+    if (config.getBoolean('persistConfig')) {
+        saveConfig(win, configObj);
+    }
+    // first see if the mode was set as an attribute on <html>
+    // which could have been set by the user, or by pre-rendering
+    // otherwise get the mode via config settings, and fallback to ios
+    Skyline.config = config;
+    Skyline.mode = defaultMode = config.get('mode', (doc.documentElement.getAttribute('mode')) || (isPlatform(win, 'android') ? 'md' : 'ios'));
+    config.set('mode', defaultMode);
+    doc.documentElement.setAttribute('mode', defaultMode);
+    doc.documentElement.classList.add(defaultMode);
+    if (config.getBoolean('testing')) {
+        config.set('animated', false);
+    }
+}
+
 const raf = (h) => {
     if (typeof requestAnimationFrame === 'function') {
         return requestAnimationFrame(h);
@@ -1668,7 +1836,7 @@ const generateKeyframeName = (keyframeRules) => {
     if (index < 0) {
         index = (keyframeIds.push(keyframeRules) - 1);
     }
-    return `ion-animation-${index}`;
+    return `line-animation-${index}`;
 };
 const getStyleContainer = (element) => {
     const rootNode = element.getRootNode();
@@ -2608,232 +2776,16 @@ const solveCubicEquation = (a, b, c, d) => {
     ];
 };
 
-const testUserAgent = (win, expr) => expr.test(win.navigator.userAgent);
-const matchMedia = (win, query) => win.matchMedia(query).matches;
-const isMobile = (win) => matchMedia(win, '(any-pointer:coarse)');
-const isDesktop = (win) => !isMobile(win);
-const isIpad = (win) => {
-    // iOS 12 and below
-    if (testUserAgent(win, /iPad/i)) {
-        return true;
-    }
-    // iOS 13+
-    if (testUserAgent(win, /Macintosh/i) && isMobile(win)) {
-        return true;
-    }
-    return false;
-};
-const isIphone = (win) => testUserAgent(win, /iPhone/i);
-const isIOS = (win) => testUserAgent(win, /iPhone|iPod/i) || isIpad(win);
-const isAndroid = (win) => testUserAgent(win, /android|sink/i);
-const isAndroidTablet = (win) => {
-    return isAndroid(win) && !testUserAgent(win, /mobile/i);
-};
-const isPhablet = (win) => {
-    const width = win.innerWidth;
-    const height = win.innerHeight;
-    const smallest = Math.min(width, height);
-    const largest = Math.max(width, height);
-    return (smallest > 390 && smallest < 520)
-        && (largest > 620 && largest < 800);
-};
-const isTablet = (win) => {
-    const width = win.innerWidth;
-    const height = win.innerHeight;
-    const smallest = Math.min(width, height);
-    const largest = Math.max(width, height);
-    return (isIpad(win)
-        || isAndroidTablet(win)
-        || ((smallest > 460 && smallest < 820)
-            && (largest > 780 && largest < 1400)));
-};
-const isCordova = (win) => !!(win.cordova || win.phonegap || win.PhoneGap);
-const isCapacitorNative = (win) => {
-    const capacitor = win.Capacitor;
-    return !!(capacitor && capacitor.isNative);
-};
-const isHybrid = (win) => isCordova(win) || isCapacitorNative(win);
-const isMobileWeb = (win) => isMobile(win) && !isHybrid(win);
-const isElectron = (win) => testUserAgent(win, /electron/i);
-const isPWA = (win) => !!(win.matchMedia('(display-mode: standalone)').matches || win.navigator.standalone);
-const PLATFORMS_MAP = {
-    ipad: isIpad,
-    iphone: isIphone,
-    ios: isIOS,
-    android: isAndroid,
-    phablet: isPhablet,
-    tablet: isTablet,
-    cordova: isCordova,
-    capacitor: isCapacitorNative,
-    electron: isElectron,
-    pwa: isPWA,
-    mobile: isMobile,
-    mobileweb: isMobileWeb,
-    desktop: isDesktop,
-    hybrid: isHybrid,
-};
-/* eslint-disable max-len */
-const detectPlatforms = (win) => Object.keys(PLATFORMS_MAP).filter(p => PLATFORMS_MAP[p](win));
-const setupPlatforms = (win = window) => {
-    win.Skyline = win.Skyline || {};
-    let { platforms } = win.Skyline;
-    if (platforms == null) {
-        platforms = win.Skyline.platforms = detectPlatforms(win);
-        platforms.forEach((p) => win.document.documentElement.classList.add(`plt-${p}`));
-    }
-    return platforms;
-};
-const getPlatforms = (win) => setupPlatforms(win);
-const isPlatform = (winOrPlatform, platform) => {
-    if (typeof winOrPlatform === 'string') {
-        platform = winOrPlatform;
-        winOrPlatform = undefined;
-    }
-    return getPlatforms(winOrPlatform).includes(platform);
-};
-
-const startsWith = (input, search) => {
-    return input.substr(0, search.length) === search;
-};
-const SKYLINE_PREFIX = 'skyline:';
-const SKYLINE_SESSION_KEY = 'skyline-persist-config';
-class Config {
-    constructor() {
-        this.m = new Map();
-    }
-    reset(configObj) {
-        this.m = new Map(Object.entries(configObj));
-    }
-    get(key, fallback) {
-        const value = this.m.get(key);
-        return (value !== undefined) ? value : fallback;
-    }
-    getBoolean(key, fallback = false) {
-        const val = this.m.get(key);
-        if (val === undefined) {
-            return fallback;
-        }
-        if (typeof val === 'string') {
-            return val === 'true';
-        }
-        return !!val;
-    }
-    getNumber(key, fallback) {
-        const val = parseFloat(this.m.get(key));
-        return Number.isNaN(val) ? (fallback !== undefined ? fallback : NaN) : val;
-    }
-    set(key, value) {
-        this.m.set(key, value);
-    }
-}
-const config = new Config();
-const configFromSession = (win) => {
-    try {
-        const configStr = win.sessionStorage.getItem(SKYLINE_SESSION_KEY);
-        return configStr !== null ? JSON.parse(configStr) : {};
-    }
-    catch (e) {
-        return {};
-    }
-};
-const saveConfig = (win, c) => {
-    try {
-        win.sessionStorage.setItem(SKYLINE_SESSION_KEY, JSON.stringify(c));
-    }
-    catch (e) {
-        /* eslint-disable-next-line */
-        return;
-    }
-};
-const configFromURL = (win) => {
-    const configObj = {};
-    win.location.search.slice(1)
-        .split('&')
-        .map(entry => entry.split('='))
-        .map(([key, value]) => [decodeURIComponent(key), decodeURIComponent(value)])
-        .filter(([key]) => startsWith(key, SKYLINE_PREFIX))
-        .map(([key, value]) => [key.slice(SKYLINE_PREFIX.length), value])
-        .forEach(([key, value]) => {
-        configObj[key] = value;
-    });
-    return configObj;
-};
-
-let defaultMode;
-const getMode = (elm) => {
-    while (elm) {
-        const elmMode = elm.mode || elm.getAttribute('mode');
-        if (elmMode) {
-            return elmMode;
-        }
-        elm = elm.parentElement;
-    }
-    return defaultMode;
-};
-const getSkylineMode = (ref) => {
-    return (ref && getMode(ref)) || defaultMode;
-};
-function setupConfig() {
-    const doc = document;
-    const win = window;
-    const Skyline = win.Skyline = win.Skyline || {};
-    // create the Skyline.config from raw config object (if it exists)
-    // and convert Skyline.config into a ConfigApi that has a get() fn
-    const configObj = {
-        ...configFromSession(win),
-        persistConfig: false,
-        ...Skyline.config,
-        ...configFromURL(win),
-    };
-    config.reset(configObj);
-    if (config.getBoolean('persistConfig')) {
-        saveConfig(win, configObj);
-    }
-    // first see if the mode was set as an attribute on <html>
-    // which could have been set by the user, or by pre-rendering
-    // otherwise get the mode via config settings, and fallback to ios
-    Skyline.config = config;
-    Skyline.mode = defaultMode = config.get('mode', (doc.documentElement.getAttribute('mode')) || (isPlatform(win, 'android') ? 'md' : 'ios'));
-    config.set('mode', defaultMode);
-    doc.documentElement.setAttribute('mode', defaultMode);
-    doc.documentElement.classList.add(defaultMode);
-    if (config.getBoolean('testing')) {
-        config.set('animated', false);
-    }
-}
-
 function usePopup(options) {
     const { disableScroll = true } = options || {};
-    let closeReason;
-    // TODO
-    // animation should move to instance
-    let animation;
-    async function animate(baseEl, popup, builder) {
-        const { build: animationBuilder, options, } = builder;
-        animation = animationBuilder(baseEl, options);
-        if (popup.transition || !config.getBoolean('animated', true)) {
-            animation.duration(0);
-        }
-        if (popup.closeOnEscape) {
-            animation.beforeAddWrite(() => {
-                const activeElement = baseEl.ownerDocument.activeElement;
-                if (activeElement && activeElement.matches('input, textarea')) {
-                    activeElement.blur();
-                }
-            });
-        }
-        await animation.play();
-        animation = null;
-        return true;
-    }
     return createMixins({
         mixins: [
             useModel('visible'),
             useLazy('visible'),
             useRemote(),
-            // Alway use transition
-            // as our lifecycle event depends on it
-            useTransition({ css: false }),
+            // Popup lifecycle events depend on Transition mechanism
+            // Transition should not be disabled
+            useTransition(),
         ],
         props: {
             // This property holds whether the popup show the overlay.
@@ -2909,14 +2861,14 @@ function usePopup(options) {
                 await this.$nextTick();
                 // update zIndex
                 el.style.zIndex = `${popupContext.getOverlayIndex()}`;
-                const builder = {};
-                this.$emit('animation-enter', builder);
-                try {
-                    await animate(el, this, builder);
-                }
-                catch (e) {
-                    console.error(e);
-                }
+                const animate = (animation) => {
+                    if (!config.getBoolean('animated', true)) {
+                        animation.duration(0);
+                    }
+                    this.animation = animation;
+                };
+                this.$emit('animation-enter', el, animate);
+                await this.animation.play().catch( (e) => console.error(e) );
                 done();
             };
             const onAfterEnter = () => {
@@ -2925,25 +2877,33 @@ function usePopup(options) {
                 this.$emit('opened');
             };
             const onBeforeLeave = () => {
-                this.$emit('aboutToHide');
                 this.opened = false;
                 this.closing = true;
+                this.$emit('aboutToHide');
             };
             const onLeave = async (el, done) => {
-                const builder = {};
-                this.$emit('animation-leave', builder);
-                try {
-                    await animate(el, this, builder);
-                }
-                catch (e) {
-                    console.error(e);
-                }
+                const animate = (animation) => {
+                    if (!config.getBoolean('animated', true)) {
+                        animation.duration(0);
+                    }
+                    if (this.closeOnEscape) {
+                        animation.beforeAddWrite(() => {
+                            const activeElement = el.ownerDocument.activeElement;
+                            if (activeElement && activeElement.matches('input, textarea')) {
+                                activeElement.blur();
+                            }
+                        });
+                    }
+                    this.animation = animation;
+                };
+                this.$emit('animation-leave', el, animate);
+                await this.animation.play().catch( (e) => console.error(e) );
                 done();
             };
             const onAfterLeave = async () => {
                 this.closing = false;
                 popupContext.pop(this);
-                this.$emit('closed', closeReason);
+                this.$emit('closed');
                 this.blocker.unblock();
                 if (this.destroyWhenClose) {
                     await this.$nextTick();
@@ -2954,11 +2914,12 @@ function usePopup(options) {
             const onCancel = async () => {
                 this.opening = false;
                 this.closing = false;
+                popupContext.pop(this);
                 this.$emit('canceled');
-                if (!animation)
-                    return;
-                animation.destroy();
-                animation = null;
+                if (this.animation) {
+                    this.animation.stop();
+                    this.animation = null;
+                }
             };
             this.$on('before-enter', onBeforeEnter);
             this.$on('after-enter', onAfterEnter);
@@ -2998,36 +2959,30 @@ function usePopup(options) {
         },
         methods: {
             open(ev) {
-                if (this.$isServer)
-                    return true;
                 if (this.opened)
                     return false;
                 this.event = ev;
                 this.inited = true;
                 this.visible = true;
-                // this.blocker.block();
                 return true;
             },
-            close(reason) {
-                if (this.$isServer)
-                    return true;
+            close() {
                 if (!this.opened)
                     return false;
                 this.visible = false;
-                closeReason = reason;
-                // this.blocker.unblock();
                 return true;
             },
             focus() {
                 // TODO
                 // if modal
                 // add shake animation
-                const builder = {
-                    build: (baseEl) => {
-                        const baseAnimation = createAnimation();
-                        window.baseAnimation = baseAnimation;
-                        return baseAnimation
-                            .addElement(baseEl.querySelector('.line-tooltip__content'))
+                const animate = (animation) => {
+                    if (!animation) {
+                        animation = createAnimation();
+                        animation
+                            // TODO
+                            // fix shake animation
+                            .addElement(this.$el.querySelector('.line-tooltip__content'))
                             .easing('cubic-bezier(0.25, 0.8, 0.25, 1)')
                             .duration(150)
                             .beforeStyles({ 'transform-origin': 'center' })
@@ -3036,11 +2991,15 @@ function usePopup(options) {
                             { offset: 0.5, transform: 'scale(1.03)' },
                             { offset: 1, transform: 'scale(1)' },
                         ]);
-                    },
+                    }
+                    if (!config.getBoolean('animated', true)) {
+                        animation.duration(0);
+                    }
+                    this.animation = animation;
                 };
-                this.$emit('animation-focus', builder);
-                animate(this.$el, this, builder);
-                const firstInput = this.$el.querySelector('input,button');
+                this.$emit('animation-focus', this.$el, animate);
+                this.animation.play();
+                const firstInput = this.$el.querySelector('input, button');
                 if (firstInput) {
                     firstInput.focus();
                 }
@@ -3211,8 +3170,21 @@ const {
   bem: bem$3
 } =
 /*#__PURE__*/
-createNamespace('action-sheet');
-var actionSheet = /*#__PURE__*/
+createNamespace('action-sheet'); // TODO
+
+const safeCall = (handler, arg) => {
+  if (typeof handler === 'function') {
+    try {
+      return handler(arg);
+    } catch (e) {
+      console.error(e);
+    }
+  }
+
+  return undefined;
+};
+
+var ActionSheet = /*#__PURE__*/
 createComponent$3({
   mixins: [
   /*#__PURE__*/
@@ -3251,17 +3223,52 @@ createComponent$3({
     const {
       mode
     } = this;
-    this.$on('animation-enter', builder => {
-      builder.build = mode === 'md' ? mdEnterAnimation : iosEnterAnimation;
+    this.$on('animation-enter', (baseEl, animate) => {
+      const builder = mode === 'md' ? mdEnterAnimation : iosEnterAnimation;
+      animate(builder(baseEl));
     });
-    this.$on('animation-leave', builder => {
-      builder.build = mode === 'md' ? mdLeaveAnimation : iosLeaveAnimation;
+    this.$on('animation-leave', (baseEl, animate) => {
+      const builder = mode === 'md' ? mdLeaveAnimation : iosLeaveAnimation;
+      animate(builder(baseEl));
     });
   },
 
   methods: {
     onTap() {
       this.$emit('overlay-tap');
+    },
+
+    async buttonClick(button) {
+      const {
+        role
+      } = button;
+
+      if (role === 'cancel') {
+        return this.close(role);
+      }
+
+      const shouldClose = await this.callButtonHandler(button);
+
+      if (shouldClose) {
+        return this.close(button.role);
+      }
+
+      return Promise.resolve();
+    },
+
+    async callButtonHandler(button) {
+      if (button) {
+        // a handler has been provided, execute it
+        // pass the handler the values from the inputs
+        const rtn = await safeCall(button.handler);
+
+        if (rtn === false) {
+          // if the return value of the handler is false then do not dismiss
+          return false;
+        }
+      }
+
+      return true;
     }
 
   },
@@ -3270,7 +3277,8 @@ createComponent$3({
     const h = arguments[0];
     const {
       optionActions,
-      cancelAction
+      cancelAction,
+      translucent
     } = this;
     return h("div", {
       "directives": [{
@@ -3282,7 +3290,7 @@ createComponent$3({
         "aria-modal": "true"
       },
       "class": bem$3({
-        translucent: this.translucent
+        translucent
       })
     }, [h(Overlay, {
       "attrs": {
@@ -3310,7 +3318,10 @@ createComponent$3({
       },
       "class": [bem$3('button', {
         [`${action.role}`]: !!action.role
-      }), 'line-activatable']
+      }), 'line-activatable'],
+      "on": {
+        "click": () => this.buttonClick(action)
+      }
     }, [h("span", {
       "class": bem$3('button-inner')
     }, [action.text])]))]), cancelAction && h("div", {
@@ -3323,7 +3334,10 @@ createComponent$3({
       },
       "class": [bem$3('button', {
         [`${cancelAction.role}`]: !!cancelAction.role
-      }), 'line-activatable']
+      }), 'line-activatable'],
+      "on": {
+        "click": () => this.buttonClick(cancelAction)
+      }
     }, [h("span", {
       "class": bem$3('button-inner')
     }, [cancelAction.text])])])])])]);
@@ -3429,7 +3443,7 @@ createNamespace('alert');
 const isCancel = role => {
   return role === 'cancel' || role === 'overlay';
 };
-var alert = /*#__PURE__*/
+var Alert = /*#__PURE__*/
 createComponent$4({
   mixins: [
   /*#__PURE__*/
@@ -3439,21 +3453,20 @@ createComponent$4({
     subHeader: String,
     message: String,
     inputs: Array,
-    buttons: {
-      type: Array,
-      default: []
-    }
+    buttons: Array
   },
 
   beforeMount() {
     const {
       mode
     } = this;
-    this.$on('animation-enter', builder => {
-      builder.build = mode === 'md' ? mdEnterAnimation$1 : iosEnterAnimation$1;
+    this.$on('animation-enter', (baseEl, animate) => {
+      const builder = mode === 'md' ? mdEnterAnimation$1 : iosEnterAnimation$1;
+      animate(builder(baseEl));
     });
-    this.$on('animation-leave', builder => {
-      builder.build = mode === 'md' ? mdLeaveAnimation$1 : iosLeaveAnimation$1;
+    this.$on('animation-leave', (baseEl, animate) => {
+      const builder = mode === 'md' ? mdLeaveAnimation$1 : iosLeaveAnimation$1;
+      animate(builder(baseEl));
     });
   },
 
@@ -3850,13 +3863,11 @@ const {
 } =
 /*#__PURE__*/
 createNamespace('app');
+let initialized;
 var app = /*#__PURE__*/
 createComponent$5({
   props: {
-    id: {
-      type: String,
-      default: 'app'
-    }
+    id: String
   },
 
   provide() {
@@ -3866,25 +3877,33 @@ createComponent$5({
   },
 
   beforeMount() {
-    // TODO:
+    // Avoid multiple initialization
+    if (initialized) return; // TODO:
     // config must be setup before using
     // while child content is rendered before created
+
     setupConfig();
     setupPlatforms();
     setupTapClick();
     setupFocusVisible();
     setupPopup();
+    initialized = true;
   },
 
   render() {
     const h = arguments[0];
-    return h("div", {
+    const {
+      id = 'app'
+    } = this;
+    return h("div", helper([{
       "attrs": {
-        "id": this.id,
+        "id": id,
         "skyline-app": true
       },
       "class": [bem$5(), 'line-page']
-    }, [this.slots()]);
+    }, {
+      "on": this.$listeners
+    }]), [this.slots()]);
   }
 
 });
@@ -3977,9 +3996,12 @@ createComponent$8({
     data,
     slots
   }) {
+    const {
+      running
+    } = props;
     return h("div", helper([{
       "class": bem$8({
-        running: props.running
+        running
       })
     }, data]), [slots()]);
   }
@@ -4046,11 +4068,7 @@ createComponent$a({
     href: String,
     rel: String,
     target: String,
-    // override default
-    checkable: {
-      type: Boolean,
-      default: false
-    }
+    checkable: Boolean
   },
 
   data() {
@@ -4138,17 +4156,22 @@ const {
 createNamespace('card-content');
 var cardContent = /*#__PURE__*/
 createComponent$b({
-  mixins: [
-  /*#__PURE__*/
-  useColor()],
+  functional: true,
+  props: {
+    color: String
+  },
 
-  render() {
-    const h = arguments[0];
+  render(h, {
+    props,
+    data,
+    slots
+  }) {
+    const {
+      color
+    } = props;
     return h("div", helper([{
-      "class": bem$b()
-    }, {
-      "on": this.$listeners
-    }]), [this.slots()]);
+      "class": [bem$b(), createColorClasses(color)]
+    }, data]), [slots()]);
   }
 
 });
@@ -4161,25 +4184,26 @@ const {
 createNamespace('card-header');
 var cardHeader = /*#__PURE__*/
 createComponent$c({
-  mixins: [
-  /*#__PURE__*/
-  useColor()],
+  functional: true,
   props: {
+    color: String,
     translucent: Boolean
   },
 
-  render() {
-    const h = arguments[0];
+  render(h, {
+    props,
+    data,
+    slots
+  }) {
     const {
+      color,
       translucent
-    } = this;
+    } = props;
     return h("div", helper([{
       "class": [bem$c({
         translucent
-      }), 'line-inherit-color']
-    }, {
-      "on": this.$listeners
-    }]), [this.slots()]);
+      }), createColorClasses(color), 'line-inherit-color']
+    }, data]), [slots()]);
   }
 
 });
@@ -4192,21 +4216,26 @@ const {
 createNamespace('card-subtitle');
 var cardSubtitle = /*#__PURE__*/
 createComponent$d({
-  mixins: [
-  /*#__PURE__*/
-  useColor()],
+  functional: true,
+  props: {
+    color: String
+  },
 
-  render() {
-    const h = arguments[0];
+  render(h, {
+    props,
+    data,
+    slots
+  }) {
+    const {
+      color
+    } = props;
     return h("div", helper([{
       "attrs": {
         "role": "heading",
         "aria-level": "3"
       },
-      "class": [bem$d(), 'line-inherit-color']
-    }, {
-      "on": this.$listeners
-    }]), [this.slots()]);
+      "class": [bem$d(), createColorClasses(color), 'line-inherit-color']
+    }, data]), [slots()]);
   }
 
 });
@@ -4219,21 +4248,26 @@ const {
 createNamespace('card-title');
 var cardTitle = /*#__PURE__*/
 createComponent$e({
-  mixins: [
-  /*#__PURE__*/
-  useColor()],
+  functional: true,
+  props: {
+    color: String
+  },
 
-  render() {
-    const h = arguments[0];
+  render(h, {
+    props,
+    data,
+    slots
+  }) {
+    const {
+      color
+    } = props;
     return h("div", helper([{
       "attrs": {
         "role": "heading",
         "aria-level": "2"
       },
-      "class": [bem$e(), 'line-inherit-color']
-    }, {
-      "on": this.$listeners
-    }]), [this.slots()]);
+      "class": [bem$e(), createColorClasses(color), 'line-inherit-color']
+    }, data]), [slots()]);
   }
 
 });
@@ -4530,18 +4564,21 @@ createComponent$h({
     slots
   }) {
     const {
+      attrs = {}
+    } = data;
+    const {
       name,
       size,
       color
     } = props;
     const text = name || getDefaultText(slots);
     return h("i", helper([{
-      "class": ['line-icon', 'material-icons', bem$h({
+      "class": ['line-icon', bem$h({
         [`${size}`]: !!size
       }), createColorClasses(color)],
       "attrs": {
-        "aria-hidden": !data.attrs['aria-label'],
-        "aria-label": data.attrs['aria-label'] || text
+        "aria-hidden": !attrs['aria-label'],
+        "aria-label": attrs['aria-label'] || text
       }
     }, data]), [text]);
   }
@@ -4568,9 +4605,7 @@ createComponent$i({
     name: String,
     source: String,
     size: String,
-    color: String,
-    viewBox: String,
-    outline: Boolean
+    color: String
   },
 
   render(h, {
@@ -4578,36 +4613,32 @@ createComponent$i({
     data,
     slots
   }) {
-    data.attrs = Object(data.attrs);
+    const {
+      attrs = {}
+    } = data;
     const {
       name,
+      source,
       size,
-      color,
-      viewBox,
-      outline
+      color
     } = props;
     const text = name || getDefaultText$1(slots);
-    const href = `${props.source || ''}#${text}`;
-    return h("div", helper([{
+    const href = `${source || ''}#${text}`;
+    return h("div", {
       "class": ['line-icon', bem$i({
         [`${size}`]: !!size
       }), createColorClasses(color)]
-    }, data]), [h("svg", {
+    }, [h("svg", helper([{
       "attrs": {
         "xmlns": "http://www.w3.org/2000/svg",
         "role": "img",
-        "viewBox": viewBox,
-        "aria-hidden": !data.attrs['aria-label'],
-        "aria-label": data.attrs['aria-label'] || text
+        "aria-hidden": !attrs['aria-label'],
+        "aria-label": attrs['aria-label'] || text
       }
-    }, [text ? h("use", {
+    }, data]), [text ? h("use", {
       "attrs": {
         "href": href,
         "xlink:href": href
-      },
-      "class": {
-        'line-icon-fill-none': outline,
-        'line-icon-stroke-width': outline
       }
     }) : slots('content')])]);
   }
@@ -4627,7 +4658,10 @@ createComponent$j({
     data,
     children
   }) {
-    const hasSource = data.attrs && 'source' in data.attrs;
+    const {
+      attrs
+    } = data;
+    const hasSource = attrs && 'source' in attrs;
 
     if (hasSource) {
       return h(SvgIcon, data, children);
@@ -4645,22 +4679,14 @@ const {
 /*#__PURE__*/
 createNamespace('check-indicator');
 let path;
+const CHECK_PATH = 'M1.73,12.91 8.1,19.28 22.79,4.59';
 var CheckIndicator = /*#__PURE__*/
 createComponent$k({
   functional: true,
   props: {
-    checked: {
-      type: Boolean,
-      default: false
-    },
-    indeterminate: {
-      type: Boolean,
-      default: false
-    },
-    disabled: {
-      type: Boolean,
-      default: false
-    }
+    checked: Boolean,
+    indeterminate: Boolean,
+    disabled: Boolean
   },
 
   render(h, {
@@ -4676,7 +4702,7 @@ createComponent$k({
       "scopedSlots": {
         content: () => path || (path = h('path', {
           attrs: {
-            d: 'M1.73,12.91 8.1,19.28 22.79,4.59'
+            d: CHECK_PATH
           }
         }))
       }
@@ -4707,9 +4733,9 @@ createComponent$l({
     }
   },
   props: {
-    indeterminate: Boolean,
     text: String,
-    color: String
+    color: String,
+    indeterminate: Boolean
   },
 
   data() {
@@ -4725,8 +4751,11 @@ createComponent$l({
 
   methods: {
     emitStyle() {
-      if (!this.Item) return;
-      this.Item.itemStyle('check-box', {
+      const {
+        Item
+      } = this;
+      if (!Item) return;
+      Item.itemStyle('check-box', {
         'checkbox-checked': this.checked,
         'interactive-disabled': this.disabled
       });
@@ -4934,7 +4963,7 @@ createComponent$n({
       const columns = this.getColumns('size'); // If size wasn't set for any breakpoint
       // or if the user set the size without a value
       // it means we need to stick with the default and return
-      // e.g. <ion-col size-md>
+      // e.g. <line-col size-md>
 
       if (!columns || columns === '') {
         return;
@@ -4942,7 +4971,7 @@ createComponent$n({
 
 
       const colSize = columns === 'auto' ? 'auto' // If CSS supports variables we should use the grid columns var
-      : isSupportsVars() ? `calc(calc(${columns} / var(--ion-grid-columns, 12)) * 100%)` // Convert the columns to a percentage by dividing by the total number
+      : isSupportsVars() ? `calc(calc(${columns} / var(--line-grid-columns, 12)) * 100%)` // Convert the columns to a percentage by dividing by the total number
       // of columns (12) and then multiplying by 100
       : `${columns / 12 * 100}%`;
       /* eslint-disable-next-line consistent-return */
@@ -4965,7 +4994,7 @@ createComponent$n({
 
 
       const amount = isSupportsVars() // If CSS supports variables we should use the grid columns var
-      ? `calc(calc(${columns} / var(--ion-grid-columns, 12)) * 100%)` // Convert the columns to a percentage by dividing by the total number
+      ? `calc(calc(${columns} / var(--line-grid-columns, 12)) * 100%)` // Convert the columns to a percentage by dividing by the total number
       // of columns (12) and then multiplying by 100
       : columns > 0 && columns < 12 ? `${columns / 12 * 100}%` : 'auto';
       /* eslint-disable-next-line consistent-return */
@@ -5357,7 +5386,7 @@ createComponent$o({
       "attrs": {
         "id": "background-content"
       }
-    }), h("main", {
+    }), this.slots('header'), h("main", {
       "class": {
         'inner-scroll': true,
         'scroll-x': scrollX,
@@ -5368,14 +5397,423 @@ createComponent$o({
       "on": {
         "scroll": this.onScroll
       }
-    }, [this.slots()]), this.slots('fixed')]);
+    }, [this.slots()]), this.slots('footer'), this.slots('fixed')]);
+  }
+
+});
+
+function usePopupDuration() {
+    return createMixins({
+        props: {
+            // This property holds the timeout (milliseconds) after which the tool tip is hidden.
+            // A tooltip with a negative timeout does not hide automatically.
+            // The default value is -1.
+            duration: Number,
+        },
+        beforeMount() {
+            this.$on('opened', () => {
+                if (this.duration > 0) {
+                    this.durationTimeout = setTimeout(() => this.close('timeout'), this.duration);
+                }
+            });
+            this.$on('aboutToHide', () => {
+                if (this.durationTimeout) {
+                    clearTimeout(this.durationTimeout);
+                }
+            });
+        },
+    });
+}
+
+const spinners = {
+    bubbles: {
+        dur: 1000,
+        circles: 9,
+        fn: (dur, index, total) => {
+            const animationDelay = `${(dur * index / total) - dur}ms`;
+            const angle = 2 * Math.PI * index / total;
+            return {
+                r: 5,
+                style: {
+                    top: `${9 * Math.sin(angle)}px`,
+                    left: `${9 * Math.cos(angle)}px`,
+                    'animation-delay': animationDelay,
+                },
+            };
+        },
+    },
+    circles: {
+        dur: 1000,
+        circles: 8,
+        fn: (dur, index, total) => {
+            const step = index / total;
+            const animationDelay = `${(dur * step) - dur}ms`;
+            const angle = 2 * Math.PI * step;
+            return {
+                r: 5,
+                style: {
+                    top: `${9 * Math.sin(angle)}px`,
+                    left: `${9 * Math.cos(angle)}px`,
+                    'animation-delay': animationDelay,
+                },
+            };
+        },
+    },
+    circular: {
+        dur: 1400,
+        elmDuration: true,
+        circles: 1,
+        fn: () => {
+            return {
+                r: 20,
+                cx: 44,
+                cy: 44,
+                fill: 'none',
+                viewBox: '22 22 44 44',
+                transform: 'translate(0,0)',
+                style: {},
+            };
+        },
+    },
+    crescent: {
+        dur: 750,
+        circles: 1,
+        fn: () => {
+            return {
+                r: 26,
+                style: {},
+            };
+        },
+    },
+    dots: {
+        dur: 750,
+        circles: 3,
+        fn: (_, index) => {
+            const animationDelay = `${-(110 * index)}ms`;
+            return {
+                r: 6,
+                style: {
+                    left: `${9 - (9 * index)}px`,
+                    'animation-delay': animationDelay,
+                },
+            };
+        },
+    },
+    lines: {
+        dur: 1000,
+        lines: 12,
+        fn: (dur, index, total) => {
+            const transform = `rotate(${30 * index + (index < 6 ? 180 : -180)}deg)`;
+            const animationDelay = `${(dur * index / total) - dur}ms`;
+            return {
+                y1: 17,
+                y2: 29,
+                style: {
+                    transform,
+                    'animation-delay': animationDelay,
+                },
+            };
+        },
+    },
+    'lines-small': {
+        dur: 1000,
+        lines: 12,
+        fn: (dur, index, total) => {
+            const transform = `rotate(${30 * index + (index < 6 ? 180 : -180)}deg)`;
+            const animationDelay = `${(dur * index / total) - dur}ms`;
+            return {
+                y1: 12,
+                y2: 20,
+                style: {
+                    transform,
+                    'animation-delay': animationDelay,
+                },
+            };
+        },
+    },
+};
+const SPINNERS = spinners;
+
+const {
+  createComponent: createComponent$p,
+  bem: bem$o
+} =
+/*#__PURE__*/
+createNamespace('spinner');
+
+function getSpinnerName(name) {
+  const spinnerName = name || config.get('spinner');
+  const mode = getSkylineMode();
+
+  if (spinnerName) {
+    return spinnerName;
+  }
+
+  return mode === 'ios' ? 'lines' : 'circular';
+}
+
+function buildCircle(h, spinner, duration, index, total) {
+  const data = spinner.fn(duration, index, total);
+  data.style['animation-duration'] = `${duration}ms`;
+  return h("svg", {
+    "attrs": {
+      "viewBox": data.viewBox || '0 0 64 64'
+    },
+    "style": data.style
+  }, [h("circle", {
+    "attrs": {
+      "transform": data.transform || 'translate(32,32)',
+      "cx": data.cx,
+      "cy": data.cy,
+      "r": data.r
+    },
+    "style": spinner.elmDuration ? {
+      animationDuration: `${duration}ms`
+    } : {}
+  })]);
+}
+
+function buildLine(h, spinner, duration, index, total) {
+  const data = spinner.fn(duration, index, total);
+  data.style['animation-duration'] = `${duration}ms`;
+  return h("svg", {
+    "attrs": {
+      "viewBox": data.viewBox || '0 0 64 64'
+    },
+    "style": data.style
+  }, [h("line", {
+    "attrs": {
+      "transform": "translate(32,32)",
+      "y1": data.y1,
+      "y2": data.y2
+    }
+  })]);
+}
+
+var Spinner = /*#__PURE__*/
+createComponent$p({
+  functional: true,
+  props: {
+    color: String,
+    duration: Number,
+    type: String,
+    paused: Boolean
+  },
+
+  render(h, {
+    props,
+    data
+  }) {
+    const spinnerName = getSpinnerName(props.type);
+    const spinner = SPINNERS[spinnerName] || SPINNERS.lines;
+    const duration = props.duration > 10 ? props.duration : spinner.dur;
+    const svgs = [];
+
+    if (spinner.circles !== undefined) {
+      for (let i = 0; i < spinner.circles; i++) {
+        svgs.push(buildCircle(h, spinner, duration, i, spinner.circles));
+      }
+    } else if (spinner.lines !== undefined) {
+      for (let i = 0; i < spinner.lines; i++) {
+        svgs.push(buildLine(h, spinner, duration, i, spinner.lines));
+      }
+    }
+
+    return h("div", helper([{
+      "class": [bem$o({
+        [spinnerName]: true,
+        paused: !!props.paused || config.getBoolean('testing')
+      }), createColorClasses(props.color)],
+      "attrs": {
+        "role": "progressbar"
+      },
+      "style": spinner.elmDuration && {
+        animationDuration: `${duration}ms`
+      }
+    }, data]), [svgs]);
+  }
+
+});
+
+/**
+ * iOS Loading Enter Animation
+ */
+const iosEnterAnimation$2 = (baseEl) => {
+    const baseAnimation = createAnimation();
+    const backdropAnimation = createAnimation();
+    const wrapperAnimation = createAnimation();
+    backdropAnimation
+        .addElement(baseEl.querySelector('.line-overlay'))
+        .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
+    wrapperAnimation
+        .addElement(baseEl.querySelector('.line-loading__wrapper'))
+        .keyframes([
+        { offset: 0, opacity: 0.01, transform: 'scale(1.1)' },
+        { offset: 1, opacity: 1, transform: 'scale(1)' },
+    ]);
+    return baseAnimation
+        .addElement(baseEl)
+        .easing('ease-in-out')
+        .duration(200)
+        .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+/**
+ * iOS Loading Leave Animation
+ */
+const iosLeaveAnimation$2 = (baseEl) => {
+    const baseAnimation = createAnimation();
+    const backdropAnimation = createAnimation();
+    const wrapperAnimation = createAnimation();
+    backdropAnimation
+        .addElement(baseEl.querySelector('.line-overlay'))
+        .fromTo('opacity', 'var(--backdrop-opacity)', 0);
+    wrapperAnimation
+        .addElement(baseEl.querySelector('.line-loading__wrapper'))
+        .keyframes([
+        { offset: 0, opacity: 0.99, transform: 'scale(1)' },
+        { offset: 1, opacity: 0, transform: 'scale(0.9)' },
+    ]);
+    return baseAnimation
+        .addElement(baseEl)
+        .easing('ease-in-out')
+        .duration(200)
+        .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+/**
+ * Md Loading Enter Animation
+ */
+const mdEnterAnimation$2 = (baseEl) => {
+    const baseAnimation = createAnimation();
+    const backdropAnimation = createAnimation();
+    const wrapperAnimation = createAnimation();
+    backdropAnimation
+        .addElement(baseEl.querySelector('.line-overlay'))
+        .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
+    wrapperAnimation
+        .addElement(baseEl.querySelector('.line-loading__wrapper'))
+        .keyframes([
+        { offset: 0, opacity: 0.01, transform: 'scale(1.1)' },
+        { offset: 1, opacity: 1, transform: 'scale(1)' },
+    ]);
+    return baseAnimation
+        .addElement(baseEl)
+        .easing('ease-in-out')
+        .duration(200)
+        .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+/**
+ * Md Loading Leave Animation
+ */
+const mdLeaveAnimation$2 = (baseEl) => {
+    const baseAnimation = createAnimation();
+    const backdropAnimation = createAnimation();
+    const wrapperAnimation = createAnimation();
+    backdropAnimation
+        .addElement(baseEl.querySelector('.line-overlay'))
+        .fromTo('opacity', 'var(--backdrop-opacity)', 0);
+    wrapperAnimation
+        .addElement(baseEl.querySelector('.line-loading__wrapper'))
+        .keyframes([
+        { offset: 0, opacity: 0.99, transform: 'scale(1)' },
+        { offset: 1, opacity: 0, transform: 'scale(0.9)' },
+    ]);
+    return baseAnimation
+        .addElement(baseEl)
+        .easing('ease-in-out')
+        .duration(200)
+        .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+const {
+  createComponent: createComponent$q,
+  bem: bem$p
+} =
+/*#__PURE__*/
+createNamespace('loading');
+var Loading = /*#__PURE__*/
+createComponent$q({
+  mixins: [
+  /*#__PURE__*/
+  usePopup(),
+  /*#__PURE__*/
+  usePopupDuration()],
+  props: {
+    message: String,
+    spinner: String
+  },
+
+  beforeMount() {
+    const {
+      mode
+    } = this;
+    this.$on('animation-enter', (baseEl, animate) => {
+      const builder = mode === 'md' ? mdEnterAnimation$2 : iosEnterAnimation$2;
+      animate(builder(baseEl));
+    });
+    this.$on('animation-leave', (baseEl, animate) => {
+      const builder = mode === 'md' ? mdLeaveAnimation$2 : iosLeaveAnimation$2;
+      animate(builder(baseEl));
+    });
+  },
+
+  methods: {
+    onTap() {
+      this.$emit('overlay-tap');
+    }
+
+  },
+
+  render() {
+    const h = arguments[0];
+    const {
+      message,
+      spinner
+    } = this;
+    return h("div", helper([{
+      "directives": [{
+        name: "show",
+        value: this.visible
+      }],
+      "attrs": {
+        "role": "dialog",
+        "aria-modal": "true"
+      },
+      "class": bem$p({
+        translucent: this.translucent
+      })
+    }, {
+      "on": this.$listeners
+    }]), [h(Overlay, {
+      "attrs": {
+        "visible": this.dim
+      },
+      "on": {
+        "tap": this.onTap
+      }
+    }), h("div", {
+      "attrs": {
+        "role": "dialog"
+      },
+      "class": bem$p('wrapper')
+    }, [spinner && h("div", {
+      "class": bem$p('spinner')
+    }, [h(Spinner, {
+      "attrs": {
+        "type": spinner
+      }
+    })]), message && h("div", {
+      "class": bem$p('content')
+    }, [message])])]);
   }
 
 });
 
 const {
-  createComponent: createComponent$p,
-  bem: bem$o
+  createComponent: createComponent$r,
+  bem: bem$q
 } =
 /*#__PURE__*/
 createNamespace('picker-column');
@@ -5384,12 +5822,12 @@ const clamp = (min, n, max) => {
   return Math.max(min, Math.min(n, max));
 };
 
-const PICKER_OPT_SELECTED = 'picker-opt-selected';
+const PICKER_OPT_SELECTED = 'line-picker-column__opt--selected';
 const DECELERATION_FRICTION = 0.97;
 const MAX_PICKER_SPEED = 90;
 const TRANSITION_DURATION = 150;
 var PickerColumn = /*#__PURE__*/
-createComponent$p({
+createComponent$r({
   props: {
     col: Object
   },
@@ -5733,21 +6171,21 @@ createComponent$p({
       col
     } = this;
     return h("div", {
-      "class": [bem$o(), {
-        'picker-col': true,
-        'picker-opts-left': this.col.align === 'left',
-        'picker-opts-right': this.col.align === 'right'
-      }],
+      "class": bem$q({
+        col: true,
+        'opts-left': col.align === 'left',
+        'opts-right': col.align === 'right'
+      }),
       "style": {
         'max-width': this.col.columnWidth
       }
     }, [col.prefix && h("div", {
-      "class": "picker-prefix",
+      "class": bem$q('prefix'),
       "style": {
         width: col.prefixWidth
       }
     }, [col.prefix]), h("div", {
-      "class": "picker-opts",
+      "class": bem$q('opts'),
       "style": {
         maxWidth: col.optionsWidth
       },
@@ -5757,12 +6195,11 @@ createComponent$p({
         "type": "button",
         "opt-index": index
       },
-      "class": {
-        'picker-opt': true,
-        'picker-opt-disabled': !!o.disabled
-      }
+      "class": bem$q('opt', {
+        disabled: !!o.disabled
+      })
     }, [o.text]))]), col.suffix && h("div", {
-      "class": "picker-suffix",
+      "class": bem$q('suffix'),
       "style": {
         width: col.suffixWidth
       }
@@ -5774,7 +6211,7 @@ createComponent$p({
 /**
  * iOS Picker Enter Animation
  */
-const iosEnterAnimation$2 = (baseEl) => {
+const iosEnterAnimation$3 = (baseEl) => {
     const baseAnimation = createAnimation();
     const backdropAnimation = createAnimation();
     const wrapperAnimation = createAnimation();
@@ -5782,7 +6219,7 @@ const iosEnterAnimation$2 = (baseEl) => {
         .addElement(baseEl.querySelector('.line-overlay'))
         .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
     wrapperAnimation
-        .addElement(baseEl.querySelector('.picker-wrapper'))
+        .addElement(baseEl.querySelector('.line-picker__wrapper'))
         .fromTo('transform', 'translateY(100%)', 'translateY(0%)');
     return baseAnimation
         .addElement(baseEl)
@@ -5794,7 +6231,7 @@ const iosEnterAnimation$2 = (baseEl) => {
 /**
  * iOS Picker Leave Animation
  */
-const iosLeaveAnimation$2 = (baseEl) => {
+const iosLeaveAnimation$3 = (baseEl) => {
     const baseAnimation = createAnimation();
     const backdropAnimation = createAnimation();
     const wrapperAnimation = createAnimation();
@@ -5802,7 +6239,7 @@ const iosLeaveAnimation$2 = (baseEl) => {
         .addElement(baseEl.querySelector('.line-overlay'))
         .fromTo('opacity', 'var(--backdrop-opacity)', 0.01);
     wrapperAnimation
-        .addElement(baseEl.querySelector('.picker-wrapper'))
+        .addElement(baseEl.querySelector('.line-picker__wrapper'))
         .fromTo('transform', 'translateY(0%)', 'translateY(100%)');
     return baseAnimation
         .addElement(baseEl)
@@ -5812,21 +6249,21 @@ const iosLeaveAnimation$2 = (baseEl) => {
 };
 
 const {
-  createComponent: createComponent$q,
-  bem: bem$p
+  createComponent: createComponent$s,
+  bem: bem$r
 } =
 /*#__PURE__*/
 createNamespace('picker');
 
 const buttonWrapperClass = button => {
   return {
-    [`picker-toolbar-${button.role}`]: button.role !== undefined,
-    'picker-toolbar-button': true
+    [`line-picker__toolbar-${button.role}`]: button.role !== undefined,
+    'line-picker__toolbar-button': true
   };
 }; // TODO
 
 
-const safeCall = (handler, arg) => {
+const safeCall$1 = (handler, arg) => {
   if (typeof handler === 'function') {
     try {
       return handler(arg);
@@ -5839,7 +6276,7 @@ const safeCall = (handler, arg) => {
 };
 
 var Picker = /*#__PURE__*/
-createComponent$q({
+createComponent$s({
   mixins: [
   /*#__PURE__*/
   usePopup()],
@@ -5886,11 +6323,11 @@ createComponent$q({
   },
 
   beforeMount() {
-    this.$on('animation-enter', builder => {
-      builder.build = iosEnterAnimation$2;
+    this.$on('animation-enter', (baseEl, animate) => {
+      animate(iosEnterAnimation$3(baseEl));
     });
-    this.$on('animation-leave', builder => {
-      builder.build = iosLeaveAnimation$2;
+    this.$on('animation-leave', (baseEl, animate) => {
+      animate(iosLeaveAnimation$3(baseEl));
     });
   },
 
@@ -5904,9 +6341,9 @@ createComponent$q({
         return this.close(role);
       }
 
-      const shouldDismiss = await this.callButtonHandler(button);
+      const shouldClose = await this.callButtonHandler(button);
 
-      if (shouldDismiss) {
+      if (shouldClose) {
         return this.close(button.role);
       }
 
@@ -5917,7 +6354,7 @@ createComponent$q({
       if (button) {
         // a handler has been provided, execute it
         // pass the handler the values from the inputs
-        const rtn = await safeCall(button.handler, this.getSelected());
+        const rtn = await safeCall$1(button.handler, this.getSelected());
 
         if (rtn === false) {
           // if the return value of the handler is false then do not dismiss
@@ -5969,7 +6406,7 @@ createComponent$q({
         name: "show",
         value: visible
       }],
-      "class": [bem$p(), {
+      "class": [bem$r(), {
         // Used internally for styling
         [`picker-${mode}`]: true
       }],
@@ -5985,12 +6422,12 @@ createComponent$q({
         "tap": this.onTap
       }
     }), h("div", {
-      "class": "picker-wrapper",
+      "class": bem$r('wrapper'),
       "attrs": {
         "role": "dialog"
       }
     }, [h("div", {
-      "class": "picker-toolbar"
+      "class": bem$r('toolbar')
     }, [this.buttons.map(b => h("div", {
       "class": buttonWrapperClass(b)
     }, [h("button", {
@@ -6000,14 +6437,13 @@ createComponent$q({
       "on": {
         "click": () => this.buttonClick(b)
       },
-      "class": {
-        'picker-button': true,
+      "class": [bem$r('button'), {
         'line-activatable': true
-      }
+      }]
     }, [b.text])]))]), h("div", {
-      "class": "picker-columns"
+      "class": bem$r('columns')
     }, [h("div", {
-      "class": "picker-above-highlight"
+      "class": bem$r('above-highlight')
     }), visible && columns.map(c => h(PickerColumn, {
       "on": {
         "colChange": this.colChange
@@ -6016,8 +6452,2681 @@ createComponent$q({
         "col": c
       }
     })), h("div", {
-      "class": "picker-below-highlight"
+      "class": bem$r('below-highlight')
     })])])]);
+  }
+
+});
+
+/**
+ * iOS Popover Enter Animation
+ */
+const POPOVER_IOS_BODY_PADDING = 5;
+const iosEnterAnimation$4 = (baseEl, ev) => {
+    let originY = 'top';
+    let originX = 'left';
+    const contentEl = baseEl.querySelector('.line-popover__content');
+    const contentDimentions = contentEl.getBoundingClientRect();
+    const contentWidth = contentDimentions.width;
+    const contentHeight = contentDimentions.height;
+    const bodyWidth = baseEl.ownerDocument.defaultView.innerWidth;
+    const bodyHeight = baseEl.ownerDocument.defaultView.innerHeight;
+    // If ev was passed, use that for target element
+    const targetDim = ev && ev.target && ev.target.getBoundingClientRect();
+    const targetTop = targetDim != null && 'top' in targetDim ? targetDim.top : bodyHeight / 2 - contentHeight / 2;
+    const targetLeft = targetDim != null && 'left' in targetDim ? targetDim.left : bodyWidth / 2;
+    const targetWidth = (targetDim && targetDim.width) || 0;
+    const targetHeight = (targetDim && targetDim.height) || 0;
+    const arrowEl = baseEl.querySelector('.line-popover__arrow');
+    const arrowDim = arrowEl.getBoundingClientRect();
+    const arrowWidth = arrowDim.width;
+    const arrowHeight = arrowDim.height;
+    if (targetDim == null) {
+        arrowEl.style.display = 'none';
+    }
+    const arrowCSS = {
+        top: targetTop + targetHeight,
+        left: targetLeft + targetWidth / 2 - arrowWidth / 2,
+    };
+    const popoverCSS = {
+        top: targetTop + targetHeight + (arrowHeight - 1),
+        left: targetLeft + targetWidth / 2 - contentWidth / 2,
+    };
+    // If the popover left is less than the padding it is off screen
+    // to the left so adjust it, else if the width of the popover
+    // exceeds the body width it is off screen to the right so adjust
+    //
+    let checkSafeAreaLeft = false;
+    let checkSafeAreaRight = false;
+    // If the popover left is less than the padding it is off screen
+    // to the left so adjust it, else if the width of the popover
+    // exceeds the body width it is off screen to the right so adjust
+    // 25 is a random/arbitrary number. It seems to work fine for ios11
+    // and iPhoneX. Is it perfect? No. Does it work? Yes.
+    if (popoverCSS.left < POPOVER_IOS_BODY_PADDING + 25) {
+        checkSafeAreaLeft = true;
+        popoverCSS.left = POPOVER_IOS_BODY_PADDING;
+    }
+    else if (contentWidth + POPOVER_IOS_BODY_PADDING + popoverCSS.left + 25 > bodyWidth) {
+        // Ok, so we're on the right side of the screen,
+        // but now we need to make sure we're still a bit further right
+        // cus....notchurally... Again, 25 is random. It works tho
+        checkSafeAreaRight = true;
+        popoverCSS.left = bodyWidth - contentWidth - POPOVER_IOS_BODY_PADDING;
+        originX = 'right';
+    }
+    // make it pop up if there's room above
+    if (targetTop + targetHeight + contentHeight > bodyHeight && targetTop - contentHeight > 0) {
+        arrowCSS.top = targetTop - (arrowHeight + 1);
+        popoverCSS.top = targetTop - contentHeight - (arrowHeight - 1);
+        baseEl.className += ' line-popover--bottom';
+        originY = 'bottom';
+        // If there isn't room for it to pop up above the target cut it off
+    }
+    else if (targetTop + targetHeight + contentHeight > bodyHeight) {
+        contentEl.style.bottom = `${POPOVER_IOS_BODY_PADDING}%`;
+    }
+    arrowEl.style.top = `${arrowCSS.top}px`;
+    arrowEl.style.left = `${arrowCSS.left}px`;
+    contentEl.style.top = `${popoverCSS.top}px`;
+    contentEl.style.left = `${popoverCSS.left}px`;
+    if (checkSafeAreaLeft) {
+        contentEl.style.left = `calc(${popoverCSS.left}px + var(--line-safe-area-left, 0px))`;
+    }
+    if (checkSafeAreaRight) {
+        contentEl.style.left = `calc(${popoverCSS.left}px - var(--line-safe-area-right, 0px))`;
+    }
+    contentEl.style.transformOrigin = `${originY} ${originX}`;
+    const baseAnimation = createAnimation();
+    const backdropAnimation = createAnimation();
+    const wrapperAnimation = createAnimation();
+    backdropAnimation
+        .addElement(baseEl.querySelector('.line-overlay'))
+        .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
+    wrapperAnimation
+        .addElement(baseEl.querySelector('.line-popover__wrapper'))
+        .fromTo('opacity', 0.01, 1);
+    return baseAnimation
+        .addElement(baseEl)
+        .easing('ease')
+        .duration(100)
+        .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+/**
+ * iOS Popover Leave Animation
+ */
+const iosLeaveAnimation$4 = (baseEl) => {
+    const baseAnimation = createAnimation();
+    const backdropAnimation = createAnimation();
+    const wrapperAnimation = createAnimation();
+    backdropAnimation
+        .addElement(baseEl.querySelector('.line-overlay'))
+        .fromTo('opacity', 'var(--backdrop-opacity)', 0);
+    wrapperAnimation
+        .addElement(baseEl.querySelector('.line-popover__wrapper'))
+        .fromTo('opacity', 0.99, 0);
+    return baseAnimation
+        .addElement(baseEl)
+        .easing('ease')
+        .duration(500)
+        .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+/**
+ * Md Popover Enter Animation
+ */
+const mdEnterAnimation$3 = (baseEl, ev) => {
+    const POPOVER_MD_BODY_PADDING = 12;
+    const doc = baseEl.ownerDocument;
+    const isRTL = doc.dir === 'rtl';
+    let originY = 'top';
+    let originX = isRTL ? 'right' : 'left';
+    const contentEl = baseEl.querySelector('.line-popover__content');
+    const contentDimentions = contentEl.getBoundingClientRect();
+    const contentWidth = contentDimentions.width;
+    const contentHeight = contentDimentions.height;
+    const bodyWidth = doc.defaultView.innerWidth;
+    const bodyHeight = doc.defaultView.innerHeight;
+    // If ev was passed, use that for target element
+    const targetDim = ev && ev.target && ev.target.getBoundingClientRect();
+    // As per MD spec, by default position the popover below the target (trigger) element
+    const targetTop = targetDim != null && 'bottom' in targetDim
+        ? targetDim.bottom
+        : bodyHeight / 2 - contentHeight / 2;
+    const targetLeft = targetDim != null && 'left' in targetDim
+        ? isRTL
+            ? targetDim.left - contentWidth + targetDim.width
+            : targetDim.left
+        : bodyWidth / 2 - contentWidth / 2;
+    const targetHeight = (targetDim && targetDim.height) || 0;
+    const popoverCSS = {
+        top: targetTop,
+        left: targetLeft,
+    };
+    // If the popover left is less than the padding it is off screen
+    // to the left so adjust it, else if the width of the popover
+    // exceeds the body width it is off screen to the right so adjust
+    if (popoverCSS.left < POPOVER_MD_BODY_PADDING) {
+        popoverCSS.left = POPOVER_MD_BODY_PADDING;
+        // Same origin in this case for both LTR & RTL
+        // Note: in LTR, originX is already 'left'
+        originX = 'left';
+    }
+    else if (contentWidth + POPOVER_MD_BODY_PADDING + popoverCSS.left
+        > bodyWidth) {
+        popoverCSS.left = bodyWidth - contentWidth - POPOVER_MD_BODY_PADDING;
+        // Same origin in this case for both LTR & RTL
+        // Note: in RTL, originX is already 'right'
+        originX = 'right';
+    }
+    // If the popover when popped down stretches past bottom of screen,
+    // make it pop up if there's room above
+    if (targetTop + targetHeight + contentHeight > bodyHeight
+        && targetTop - contentHeight > 0) {
+        popoverCSS.top = targetTop - contentHeight - targetHeight;
+        baseEl.className += ' line-popover--bottom';
+        originY = 'bottom';
+        // If there isn't room for it to pop up above the target cut it off
+    }
+    else if (targetTop + targetHeight + contentHeight > bodyHeight) {
+        contentEl.style.bottom = `${POPOVER_MD_BODY_PADDING}px`;
+    }
+    const baseAnimation = createAnimation();
+    const backdropAnimation = createAnimation();
+    const wrapperAnimation = createAnimation();
+    const contentAnimation = createAnimation();
+    const viewportAnimation = createAnimation();
+    backdropAnimation
+        .addElement(baseEl.querySelector('.line-overlay'))
+        .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
+    wrapperAnimation
+        .addElement(baseEl.querySelector('.line-popover__wrapper'))
+        .fromTo('opacity', 0.01, 1);
+    contentAnimation
+        .addElement(contentEl)
+        .beforeStyles({
+        top: `${popoverCSS.top}px`,
+        left: `${popoverCSS.left}px`,
+        'transform-origin': `${originY} ${originX}`,
+    })
+        .fromTo('transform', 'scale(0.01)', 'scale(1)');
+    viewportAnimation
+        .addElement(baseEl.querySelector('.popover-viewport'))
+        .fromTo('opacity', 0.01, 1);
+    return baseAnimation
+        .addElement(baseEl)
+        .easing('cubic-bezier(0.36,0.66,0.04,1)')
+        .duration(300)
+        .addAnimation([backdropAnimation, wrapperAnimation, contentAnimation, viewportAnimation]);
+};
+
+/**
+ * Md Popover Leave Animation
+ */
+const mdLeaveAnimation$3 = (baseEl) => {
+    const baseAnimation = createAnimation();
+    const backdropAnimation = createAnimation();
+    const wrapperAnimation = createAnimation();
+    backdropAnimation
+        .addElement(baseEl.querySelector('.line-overlay'))
+        .fromTo('opacity', 'var(--backdrop-opacity)', 0);
+    wrapperAnimation
+        .addElement(baseEl.querySelector('.line-popover__wrapper'))
+        .fromTo('opacity', 0.99, 0);
+    return baseAnimation
+        .addElement(baseEl)
+        .easing('ease')
+        .duration(500)
+        .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+const {
+  createComponent: createComponent$t,
+  bem: bem$s
+} =
+/*#__PURE__*/
+createNamespace('popover');
+var Popover = /*#__PURE__*/
+createComponent$t({
+  mixins: [
+  /*#__PURE__*/
+  usePopup()],
+
+  beforeMount() {
+    const {
+      mode
+    } = this;
+    this.$on('animation-enter', (baseEl, animate) => {
+      const builder = mode === 'md' ? mdEnterAnimation$3 : iosEnterAnimation$4;
+      animate(builder(baseEl, this.event));
+    });
+    this.$on('animation-leave', (baseEl, animate) => {
+      const builder = mode === 'md' ? mdLeaveAnimation$3 : iosLeaveAnimation$4;
+      animate(builder(baseEl));
+    });
+  },
+
+  methods: {
+    onTap() {
+      this.$emit('overlay-tap');
+    }
+
+  },
+
+  render() {
+    const h = arguments[0];
+    return h("div", helper([{
+      "directives": [{
+        name: "show",
+        value: this.visible
+      }],
+      "attrs": {
+        "aria-modal": "true"
+      },
+      "class": bem$s({
+        translucent: this.translucent
+      })
+    }, {
+      "on": this.$listeners
+    }]), [h(Overlay, {
+      "attrs": {
+        "visible": this.dim
+      },
+      "on": {
+        "tap": this.onTap
+      }
+    }), h("div", {
+      "class": bem$s('wrapper')
+    }, [h("div", {
+      "class": bem$s('arrow')
+    }), h("div", {
+      "class": bem$s('content')
+    }, [this.slots()])])]);
+  }
+
+});
+
+const {
+  createComponent: createComponent$u,
+  bem: bem$t
+} =
+/*#__PURE__*/
+createNamespace('popup');
+const CONTENT_ELEMENT = 'content';
+var popupLegacy = /*#__PURE__*/
+createComponent$u({
+  mixins: [
+  /*#__PURE__*/
+  usePopup()],
+
+  render() {
+    const h = arguments[0];
+    return h("div", {
+      "directives": [{
+        name: "show",
+        value: this.visible
+      }],
+      "attrs": {
+        "aria-modal": "true",
+        "role": "dialog"
+      },
+      "class": bem$t()
+    }, [h("div", {
+      "attrs": {
+        "role": "dialog"
+      },
+      "class": bem$t(CONTENT_ELEMENT),
+      "ref": CONTENT_ELEMENT
+    }, [this.slots()])]);
+  }
+
+});
+
+/**
+ * iOS Modal Enter Animation
+ */
+const iosEnterAnimation$5 = (baseEl) => {
+    const baseAnimation = createAnimation();
+    const backdropAnimation = createAnimation();
+    const wrapperAnimation = createAnimation();
+    backdropAnimation
+        .addElement(baseEl.querySelector('.line-overlay'))
+        .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
+    wrapperAnimation
+        .addElement(baseEl.querySelector('.line-popup__wrapper'))
+        .beforeStyles({ opacity: 1 })
+        .fromTo('transform', 'translateY(100%)', 'translateY(0%)');
+    return baseAnimation
+        .addElement(baseEl)
+        .easing('cubic-bezier(0.36,0.66,0.04,1)')
+        .duration(400)
+        .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+/**
+ * iOS Modal Leave Animation
+ */
+const iosLeaveAnimation$5 = (baseEl) => {
+    const baseAnimation = createAnimation();
+    const backdropAnimation = createAnimation();
+    const wrapperAnimation = createAnimation();
+    const wrapperEl = baseEl.querySelector('.line-popup__wrapper');
+    const wrapperElRect = wrapperEl.getBoundingClientRect();
+    backdropAnimation
+        .addElement(baseEl.querySelector('.line-overlay'))
+        .fromTo('opacity', 'var(--backdrop-opacity)', 0.0);
+    wrapperAnimation
+        .addElement(wrapperEl)
+        .beforeStyles({ opacity: 1 })
+        .fromTo('transform', 'translateY(0%)', `translateY(${baseEl.ownerDocument.defaultView.innerHeight - wrapperElRect.top}px)`);
+    return baseAnimation
+        .addElement(baseEl)
+        .easing('ease-out')
+        .duration(250)
+        .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+/**
+ * Md Modal Enter Animation
+ */
+const mdEnterAnimation$4 = (baseEl) => {
+    const baseAnimation = createAnimation();
+    const backdropAnimation = createAnimation();
+    const wrapperAnimation = createAnimation();
+    backdropAnimation
+        .addElement(baseEl.querySelector('.line-overlay'))
+        .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
+    wrapperAnimation
+        .addElement(baseEl.querySelector('.line-popup__wrapper'))
+        .keyframes([
+        { offset: 0, opacity: 0.01, transform: 'translateY(40px)' },
+        { offset: 1, opacity: 1, transform: 'translateY(0px)' },
+    ]);
+    return baseAnimation
+        .addElement(baseEl)
+        .easing('cubic-bezier(0.36,0.66,0.04,1)')
+        .duration(280)
+        .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+/**
+ * Md Modal Leave Animation
+ */
+const mdLeaveAnimation$4 = (baseEl) => {
+    const baseAnimation = createAnimation();
+    const backdropAnimation = createAnimation();
+    const wrapperAnimation = createAnimation();
+    const wrapperEl = baseEl.querySelector('.line-popup__wrapper');
+    backdropAnimation
+        .addElement(baseEl.querySelector('.line-overlay'))
+        .fromTo('opacity', 'var(--backdrop-opacity)', 0.0);
+    wrapperAnimation
+        .addElement(wrapperEl)
+        .keyframes([
+        { offset: 0, opacity: 0.99, transform: 'translateY(0px)' },
+        { offset: 1, opacity: 0, transform: 'translateY(40px)' },
+    ]);
+    return baseAnimation
+        .addElement(baseEl)
+        .easing('cubic-bezier(0.47,0,0.745,0.715)')
+        .duration(200)
+        .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+const {
+  createComponent: createComponent$v,
+  bem: bem$u
+} =
+/*#__PURE__*/
+createNamespace('popup');
+var Popup = /*#__PURE__*/
+createComponent$v({
+  mixins: [
+  /*#__PURE__*/
+  usePopup()],
+
+  beforeMount() {
+    const {
+      mode
+    } = this;
+    this.$on('animation-enter', (baseEl, animate) => {
+      const builder = mode === 'md' ? mdEnterAnimation$4 : iosEnterAnimation$5;
+      animate(builder(baseEl));
+    });
+    this.$on('animation-leave', (baseEl, animate) => {
+      const builder = mode === 'md' ? mdLeaveAnimation$4 : iosLeaveAnimation$5;
+      animate(builder(baseEl));
+    });
+  },
+
+  methods: {
+    onTap() {
+      this.$emit('overlay-tap');
+    }
+
+  },
+
+  render() {
+    const h = arguments[0];
+    return h("div", helper([{
+      "directives": [{
+        name: "show",
+        value: this.visible
+      }],
+      "attrs": {
+        "aria-modal": "true",
+        "role": "dialog"
+      },
+      "class": bem$u()
+    }, {
+      "on": this.$listeners
+    }]), [h(Overlay, {
+      "on": {
+        "tap": this.onTap
+      }
+    }), h("div", {
+      "attrs": {
+        "role": "dialog"
+      },
+      "class": bem$u('wrapper')
+    }, [this.slots()])]);
+  }
+
+});
+
+/**
+ * iOS Toast Enter Animation
+ */
+const iosEnterAnimation$6 = (baseEl, position) => {
+    const baseAnimation = createAnimation();
+    const wrapperAnimation = createAnimation();
+    const wrapperEl = baseEl.querySelector('.line-toast__wrapper');
+    const bottom = 'calc(-10px - var(--line-safe-area-bottom, 0px))';
+    const top = 'calc(10px + var(--line-safe-area-top, 0px))';
+    wrapperAnimation.addElement(wrapperEl);
+    switch (position) {
+        case 'top':
+            wrapperAnimation.fromTo('transform', 'translateY(-100%)', `translateY(${top})`);
+            break;
+        case 'middle':
+            /* eslint-disable-next-line */
+            const topPosition = Math.floor(baseEl.clientHeight / 2 - wrapperEl.clientHeight / 2);
+            wrapperEl.style.top = `${topPosition}px`;
+            wrapperAnimation.fromTo('opacity', 0.01, 1);
+            break;
+        default:
+            wrapperAnimation.fromTo('transform', 'translateY(100%)', `translateY(${bottom})`);
+            break;
+    }
+    return baseAnimation
+        .addElement(baseEl)
+        .easing('cubic-bezier(.155,1.105,.295,1.12)')
+        .duration(400)
+        .addAnimation(wrapperAnimation);
+};
+
+/**
+ * iOS Toast Leave Animation
+ */
+const iosLeaveAnimation$6 = (baseEl, position) => {
+    const baseAnimation = createAnimation();
+    const wrapperAnimation = createAnimation();
+    const wrapperEl = baseEl.querySelector('.line-toast__wrapper');
+    const bottom = 'calc(-10px - var(--line-safe-area-bottom, 0px))';
+    const top = 'calc(10px + var(--line-safe-area-top, 0px))';
+    wrapperAnimation.addElement(wrapperEl);
+    switch (position) {
+        case 'top':
+            wrapperAnimation.fromTo('transform', `translateY(${top})`, 'translateY(-100%)');
+            break;
+        case 'middle':
+            wrapperAnimation.fromTo('opacity', 0.99, 0);
+            break;
+        default:
+            wrapperAnimation.fromTo('transform', `translateY(${bottom})`, 'translateY(100%)');
+            break;
+    }
+    return baseAnimation
+        .addElement(baseEl)
+        .easing('cubic-bezier(.36,.66,.04,1)')
+        .duration(300)
+        .addAnimation(wrapperAnimation);
+};
+
+/**
+ * MD Toast Enter Animation
+ */
+const mdEnterAnimation$5 = (baseEl, position) => {
+    const baseAnimation = createAnimation();
+    const wrapperAnimation = createAnimation();
+    const wrapperEl = baseEl.querySelector('.line-toast__wrapper');
+    const bottom = 'calc(8px + var(--line-safe-area-bottom, 0px))';
+    const top = 'calc(8px + var(--line-safe-area-top, 0px))';
+    wrapperAnimation.addElement(wrapperEl);
+    switch (position) {
+        case 'top':
+            wrapperEl.style.top = top;
+            wrapperAnimation.fromTo('opacity', 0.01, 1);
+            break;
+        case 'middle':
+            /* eslint-disable-next-line */
+            const topPosition = Math.floor(baseEl.clientHeight / 2 - wrapperEl.clientHeight / 2);
+            wrapperEl.style.top = `${topPosition}px`;
+            wrapperAnimation.fromTo('opacity', 0.01, 1);
+            break;
+        default:
+            wrapperEl.style.bottom = bottom;
+            wrapperAnimation.fromTo('opacity', 0.01, 1);
+            break;
+    }
+    return baseAnimation
+        .addElement(baseEl)
+        .easing('cubic-bezier(.36,.66,.04,1)')
+        .duration(400)
+        .addAnimation(wrapperAnimation);
+};
+
+/**
+ * md Toast Leave Animation
+ */
+const mdLeaveAnimation$5 = (baseEl) => {
+    const baseAnimation = createAnimation();
+    const wrapperAnimation = createAnimation();
+    const wrapperEl = baseEl.querySelector('.line-toast__wrapper');
+    wrapperAnimation
+        .addElement(wrapperEl)
+        .fromTo('opacity', 0.99, 0);
+    return baseAnimation
+        .addElement(baseEl)
+        .easing('cubic-bezier(.36,.66,.04,1)')
+        .duration(300)
+        .addAnimation(wrapperAnimation);
+};
+
+const {
+  createComponent: createComponent$w,
+  bem: bem$v
+} =
+/*#__PURE__*/
+createNamespace('toast');
+var Toast = /*#__PURE__*/
+createComponent$w({
+  mixins: [
+  /*#__PURE__*/
+  usePopup(),
+  /*#__PURE__*/
+  usePopupDuration(),
+  /*#__PURE__*/
+  useColor()],
+  props: {
+    /**
+     * The position of the toast on the screen.
+     */
+    // top | bottom | middle
+    position: String,
+    message: String
+  },
+
+  beforeMount() {
+    const {
+      mode
+    } = this;
+    this.$on('animation-enter', (baseEl, animate) => {
+      const builder = mode === 'md' ? mdEnterAnimation$5 : iosEnterAnimation$6;
+      animate(builder(baseEl, this.position));
+    });
+    this.$on('animation-leave', (baseEl, animate) => {
+      const builder = mode === 'md' ? mdLeaveAnimation$5 : iosLeaveAnimation$6;
+      animate(builder(baseEl, this.position));
+    });
+    this.$on('opened', () => {
+      if (this.duration > 0) {
+        this.durationTimeout = setTimeout(() => this.close('timeout'), this.duration);
+      }
+    });
+    this.$on('aboutToHide', () => {
+      if (this.durationTimeout) {
+        clearTimeout(this.durationTimeout);
+      }
+    });
+  },
+
+  render() {
+    const h = arguments[0];
+    const {
+      position = 'bottom'
+    } = this;
+    return h("div", helper([{
+      "directives": [{
+        name: "show",
+        value: this.visible
+      }],
+      "class": [bem$v()]
+    }, {
+      "on": this.$listeners
+    }]), [h("div", {
+      "class": bem$v('wrapper', {
+        [position]: true
+      })
+    }, [h("div", {
+      "class": bem$v('container')
+    }, [h("div", {
+      "class": bem$v('content')
+    }, [h("div", {
+      "class": bem$v('message')
+    }, [this.message]), h("div")])])])]);
+  }
+
+});
+
+function usePopupDelay() {
+    return createMixins({
+        props: {
+            // This property holds the delay (milliseconds) after which the tool tip is shown.
+            // A tooltip with a negative delay is shown immediately.
+            // The default value is 0.
+            delay: {
+                type: Number,
+                default: 0,
+            },
+        },
+        data() {
+            return {
+                delayedVisible: this.visible,
+            };
+        },
+        watch: {
+            visible(val) {
+                if (this.appearTimer) {
+                    clearTimeout(this.appearTimer);
+                }
+                if (val === this.delayedVisible)
+                    return;
+                if (!val) {
+                    this.delayedVisible = val;
+                    return;
+                }
+                const delay = Math.max(this.delay, 0);
+                this.appearTimer = setTimeout(() => this.delayedVisible = val, delay);
+            },
+        },
+    });
+}
+
+const isVue = (val) => val && val._isVue;
+function useTrigger() {
+    return createMixins({
+        props: {
+            // string or Element
+            trigger: null,
+        },
+        computed: {
+            // TODO
+            // Evaluate before mounted may resolve $refs uncorrectly
+            $trigger() {
+                const { trigger, $vnode } = this;
+                if (!trigger)
+                    return;
+                const baseEl = (($vnode && $vnode.context.$el) || document);
+                if (!$vnode) {
+                    return isString(trigger)
+                        ? baseEl.querySelector(trigger)
+                        : trigger;
+                }
+                const refs = $vnode.context.$refs;
+                const resolved = isString(trigger)
+                    ? refs[trigger] || baseEl.querySelector(trigger)
+                    : trigger;
+                if ( isArray(resolved)) {
+                    console.warn(`
+            There are more than one triggers in the context.
+            Trigger element should be only one.
+          `);
+                }
+                return isArray(resolved)
+                    ? resolved[0]
+                    : resolved;
+            },
+            $triggerEl() {
+                const trigger = this.$trigger;
+                return isVue(trigger)
+                    ? trigger.$el
+                    : trigger;
+            },
+        },
+    });
+}
+
+/**
+ * iOS Tooltip Enter Animation
+ */
+const iosEnterAnimation$7 = (baseEl) => {
+    const baseAnimation = createAnimation();
+    return baseAnimation
+        .addElement(baseEl)
+        .easing('ease')
+        .duration(100)
+        .fromTo('opacity', 0.01, 1);
+};
+
+/**
+ * iOS Popover Leave Animation
+ */
+const iosLeaveAnimation$7 = (baseEl) => {
+    const baseAnimation = createAnimation();
+    return baseAnimation
+        .addElement(baseEl)
+        .easing('ease')
+        .duration(500)
+        .fromTo('opacity', 0.99, 0);
+};
+
+function getBoundingClientRect(element) {
+  var rect = element.getBoundingClientRect();
+  return {
+    width: rect.width,
+    height: rect.height,
+    top: rect.top,
+    right: rect.right,
+    bottom: rect.bottom,
+    left: rect.left,
+    x: rect.left,
+    y: rect.top
+  };
+}
+
+/*:: import type { Window } from '../types'; */
+
+/*:: declare function getWindow(node: Node | Window): Window; */
+function getWindow(node) {
+  if (node.toString() !== '[object Window]') {
+    var ownerDocument = node.ownerDocument;
+    return ownerDocument ? ownerDocument.defaultView : window;
+  }
+
+  return node;
+}
+
+function getWindowScroll(node) {
+  var win = getWindow(node);
+  var scrollLeft = win.pageXOffset;
+  var scrollTop = win.pageYOffset;
+  return {
+    scrollLeft: scrollLeft,
+    scrollTop: scrollTop
+  };
+}
+
+/*:: declare function isElement(node: mixed): boolean %checks(node instanceof
+  Element); */
+
+function isElement(node) {
+  var OwnElement = getWindow(node).Element;
+  return node instanceof OwnElement;
+}
+/*:: declare function isHTMLElement(node: mixed): boolean %checks(node instanceof
+  HTMLElement); */
+
+
+function isHTMLElement(node) {
+  var OwnElement = getWindow(node).HTMLElement;
+  return node instanceof OwnElement;
+}
+
+function getHTMLElementScroll(element) {
+  return {
+    scrollLeft: element.scrollLeft,
+    scrollTop: element.scrollTop
+  };
+}
+
+function getNodeScroll(node) {
+  if (node === getWindow(node) || !isHTMLElement(node)) {
+    return getWindowScroll(node);
+  } else {
+    return getHTMLElementScroll(node);
+  }
+}
+
+function getNodeName(element) {
+  return element ? (element.nodeName || '').toLowerCase() : null;
+}
+
+function getDocumentElement(element) {
+  // $FlowFixMe: assume body is always available
+  return (isElement(element) ? element.ownerDocument : element.document).documentElement;
+}
+
+function getWindowScrollBarX(element) {
+  // If <html> has a CSS width greater than the viewport, then this will be
+  // incorrect for RTL.
+  // Popper 1 is broken in this case and never had a bug report so let's assume
+  // it's not an issue. I don't think anyone ever specifies width on <html>
+  // anyway.
+  // Browsers where the left scrollbar doesn't cause an issue report `0` for
+  // this (e.g. Edge 2019, IE11, Safari)
+  return getBoundingClientRect(getDocumentElement(element)).left + getWindowScroll(element).scrollLeft;
+}
+
+// Composite means it takes into account transforms as well as layout.
+
+function getCompositeRect(elementOrVirtualElement, offsetParent, isFixed) {
+  if (isFixed === void 0) {
+    isFixed = false;
+  }
+
+  var documentElement;
+  var rect = getBoundingClientRect(elementOrVirtualElement);
+  var scroll = {
+    scrollLeft: 0,
+    scrollTop: 0
+  };
+  var offsets = {
+    x: 0,
+    y: 0
+  };
+
+  if (!isFixed) {
+    if (getNodeName(offsetParent) !== 'body') {
+      scroll = getNodeScroll(offsetParent);
+    }
+
+    if (isHTMLElement(offsetParent)) {
+      offsets = getBoundingClientRect(offsetParent);
+      offsets.x += offsetParent.clientLeft;
+      offsets.y += offsetParent.clientTop;
+    } else if (documentElement = getDocumentElement(offsetParent)) {
+      offsets.x = getWindowScrollBarX(documentElement);
+    }
+  }
+
+  return {
+    x: rect.left + scroll.scrollLeft - offsets.x,
+    y: rect.top + scroll.scrollTop - offsets.y,
+    width: rect.width,
+    height: rect.height
+  };
+}
+
+// Returns the layout rect of an element relative to its offsetParent. Layout
+// means it doesn't take into account transforms.
+function getLayoutRect(element) {
+  return {
+    x: element.offsetLeft,
+    y: element.offsetTop,
+    width: element.offsetWidth,
+    height: element.offsetHeight
+  };
+}
+
+function getParentNode(element) {
+  if (getNodeName(element) === 'html') {
+    return element;
+  }
+
+  return element.parentNode || // DOM Element detected
+  // $FlowFixMe: need a better way to handle this...
+  element.host || // ShadowRoot detected
+  document.ownerDocument || // Fallback to ownerDocument if available
+  document.documentElement // Or to documentElement if everything else fails
+  ;
+}
+
+function getComputedStyle(element) {
+  return getWindow(element).getComputedStyle(element);
+}
+
+function getScrollParent(node) {
+  if (['html', 'body', '#document'].indexOf(getNodeName(node)) >= 0) {
+    // $FlowFixMe: assume body is always available
+    return node.ownerDocument.body;
+  }
+
+  if (isHTMLElement(node)) {
+    // Firefox wants us to check `-x` and `-y` variations as well
+    var _getComputedStyle = getComputedStyle(node),
+        overflow = _getComputedStyle.overflow,
+        overflowX = _getComputedStyle.overflowX,
+        overflowY = _getComputedStyle.overflowY;
+
+    if (/auto|scroll|overlay|hidden/.test(overflow + overflowY + overflowX)) {
+      return node;
+    }
+  }
+
+  return getScrollParent(getParentNode(node));
+}
+
+function listScrollParents(element, list) {
+  if (list === void 0) {
+    list = [];
+  }
+
+  var scrollParent = getScrollParent(element);
+  var isBody = getNodeName(scrollParent) === 'body';
+  var target = isBody ? getWindow(scrollParent) : scrollParent;
+  var updatedList = list.concat(target);
+  return isBody ? updatedList : // $FlowFixMe: isBody tells us target will be an HTMLElement here
+  updatedList.concat(listScrollParents(getParentNode(target)));
+}
+
+function isTableElement(element) {
+  return ['table', 'td', 'th'].indexOf(getNodeName(element)) >= 0;
+}
+
+var isFirefox = function isFirefox() {
+  return typeof window.InstallTrigger !== 'undefined';
+};
+
+function getTrueOffsetParent(element) {
+  var offsetParent;
+
+  if (!isHTMLElement(element) || !(offsetParent = element.offsetParent) || // https://github.com/popperjs/popper-core/issues/837
+  isFirefox() && getComputedStyle(offsetParent).position === 'fixed') {
+    return null;
+  }
+
+  return offsetParent;
+}
+
+function getOffsetParent(element) {
+  var window = getWindow(element);
+  var offsetParent = getTrueOffsetParent(element); // Find the nearest non-table offsetParent
+
+  while (offsetParent && isTableElement(offsetParent)) {
+    offsetParent = getTrueOffsetParent(offsetParent);
+  }
+
+  if (offsetParent && getNodeName(offsetParent) === 'body' && getComputedStyle(offsetParent).position === 'static') {
+    return window;
+  }
+
+  return offsetParent || window;
+}
+
+var top = 'top';
+var bottom = 'bottom';
+var right = 'right';
+var left = 'left';
+var auto = 'auto';
+var basePlacements = [top, bottom, right, left];
+var start = 'start';
+var end = 'end';
+var clippingParents = 'clippingParents';
+var viewport = 'viewport';
+var popper = 'popper';
+var reference = 'reference';
+var variationPlacements =
+/*#__PURE__*/
+basePlacements.reduce(function (acc, placement) {
+  return acc.concat([placement + "-" + start, placement + "-" + end]);
+}, []);
+var placements =
+/*#__PURE__*/
+[].concat(basePlacements, [auto]).reduce(function (acc, placement) {
+  return acc.concat([placement, placement + "-" + start, placement + "-" + end]);
+}, []); // modifiers that need to read the DOM
+
+var beforeRead = 'beforeRead';
+var read = 'read';
+var afterRead = 'afterRead'; // pure-logic modifiers
+
+var beforeMain = 'beforeMain';
+var main = 'main';
+var afterMain = 'afterMain'; // modifier with the purpose to write to the DOM (or write into a framework state)
+
+var beforeWrite = 'beforeWrite';
+var write = 'write';
+var afterWrite = 'afterWrite';
+var modifierPhases = [beforeRead, read, afterRead, beforeMain, main, afterMain, beforeWrite, write, afterWrite];
+
+function order(modifiers) {
+  var map = new Map();
+  var visited = new Set();
+  var result = [];
+  modifiers.forEach(function (modifier) {
+    map.set(modifier.name, modifier);
+  }); // On visiting object, check for its dependencies and visit them recursively
+
+  function sort(modifier) {
+    visited.add(modifier.name);
+    var requires = [].concat(modifier.requires || [], modifier.requiresIfExists || []);
+    requires.forEach(function (dep) {
+      if (!visited.has(dep)) {
+        var depModifier = map.get(dep);
+
+        if (depModifier) {
+          sort(depModifier);
+        }
+      }
+    });
+    result.push(modifier);
+  }
+
+  modifiers.forEach(function (modifier) {
+    if (!visited.has(modifier.name)) {
+      // check for visited object
+      sort(modifier);
+    }
+  });
+  return result;
+}
+
+function orderModifiers(modifiers) {
+  // order based on dependencies
+  var orderedModifiers = order(modifiers); // order based on phase
+
+  return modifierPhases.reduce(function (acc, phase) {
+    return acc.concat(orderedModifiers.filter(function (modifier) {
+      return modifier.phase === phase;
+    }));
+  }, []);
+}
+
+function debounce$1(fn) {
+  var pending;
+  return function () {
+    if (!pending) {
+      pending = new Promise(function (resolve) {
+        Promise.resolve().then(function () {
+          pending = undefined;
+          resolve(fn());
+        });
+      });
+    }
+
+    return pending;
+  };
+}
+
+function format(str) {
+  for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+    args[_key - 1] = arguments[_key];
+  }
+
+  return [].concat(args).reduce(function (p, c) {
+    return p.replace(/%s/, c);
+  }, str);
+}
+
+var INVALID_MODIFIER_ERROR = 'Popper: modifier "%s" provided an invalid %s property, expected %s but got %s';
+var MISSING_DEPENDENCY_ERROR = 'Popper: modifier "%s" requires "%s", but "%s" modifier is not available';
+var VALID_PROPERTIES = ['name', 'enabled', 'phase', 'fn', 'effect', 'requires', 'options'];
+function validateModifiers(modifiers) {
+  modifiers.forEach(function (modifier) {
+    Object.keys(modifier).forEach(function (key) {
+      switch (key) {
+        case 'name':
+          if (typeof modifier.name !== 'string') {
+            console.error(format(INVALID_MODIFIER_ERROR, String(modifier.name), '"name"', '"string"', "\"" + String(modifier.name) + "\""));
+          }
+
+          break;
+
+        case 'enabled':
+          if (typeof modifier.enabled !== 'boolean') {
+            console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"enabled"', '"boolean"', "\"" + String(modifier.enabled) + "\""));
+          }
+
+        case 'phase':
+          if (modifierPhases.indexOf(modifier.phase) < 0) {
+            console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"phase"', "either " + modifierPhases.join(', '), "\"" + String(modifier.phase) + "\""));
+          }
+
+          break;
+
+        case 'fn':
+          if (typeof modifier.fn !== 'function') {
+            console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"fn"', '"function"', "\"" + String(modifier.fn) + "\""));
+          }
+
+          break;
+
+        case 'effect':
+          if (typeof modifier.effect !== 'function') {
+            console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"effect"', '"function"', "\"" + String(modifier.fn) + "\""));
+          }
+
+          break;
+
+        case 'requires':
+          if (!Array.isArray(modifier.requires)) {
+            console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"requires"', '"array"', "\"" + String(modifier.requires) + "\""));
+          }
+
+          break;
+
+        case 'requiresIfExists':
+          if (!Array.isArray(modifier.requiresIfExists)) {
+            console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"requiresIfExists"', '"array"', "\"" + String(modifier.requiresIfExists) + "\""));
+          }
+
+          break;
+
+        case 'options':
+        case 'data':
+          break;
+
+        default:
+          console.error("PopperJS: an invalid property has been provided to the \"" + modifier.name + "\" modifier, valid properties are " + VALID_PROPERTIES.map(function (s) {
+            return "\"" + s + "\"";
+          }).join(', ') + "; but \"" + key + "\" was provided.");
+      }
+
+      modifier.requires && modifier.requires.forEach(function (requirement) {
+        if (modifiers.find(function (mod) {
+          return mod.name === requirement;
+        }) == null) {
+          console.error(format(MISSING_DEPENDENCY_ERROR, String(modifier.name), requirement, requirement));
+        }
+      });
+    });
+  });
+}
+
+function uniqueBy(arr, fn) {
+  var identifiers = new Set();
+  return arr.filter(function (item) {
+    var identifier = fn(item);
+
+    if (!identifiers.has(identifier)) {
+      identifiers.add(identifier);
+      return true;
+    }
+  });
+}
+
+function getBasePlacement(placement) {
+  return placement.split('-')[0];
+}
+
+function mergeByName(modifiers) {
+  var merged = modifiers.reduce(function (merged, current) {
+    var existing = merged[current.name];
+    merged[current.name] = existing ? Object.assign({}, existing, {}, current, {
+      options: Object.assign({}, existing.options, {}, current.options),
+      data: Object.assign({}, existing.data, {}, current.data)
+    }) : current;
+    return merged;
+  }, {}); // IE11 does not support Object.values
+
+  return Object.keys(merged).map(function (key) {
+    return merged[key];
+  });
+}
+
+var INVALID_ELEMENT_ERROR = 'Popper: Invalid reference or popper argument provided. They must be either a DOM element or virtual element.';
+var INFINITE_LOOP_ERROR = 'Popper: An infinite loop in the modifiers cycle has been detected! The cycle has been interrupted to prevent a browser crash.';
+var DEFAULT_OPTIONS = {
+  placement: 'bottom',
+  modifiers: [],
+  strategy: 'absolute'
+};
+
+function areValidElements() {
+  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+    args[_key] = arguments[_key];
+  }
+
+  return !args.some(function (element) {
+    return !(element && typeof element.getBoundingClientRect === 'function');
+  });
+}
+
+function popperGenerator(generatorOptions) {
+  if (generatorOptions === void 0) {
+    generatorOptions = {};
+  }
+
+  var _generatorOptions = generatorOptions,
+      _generatorOptions$def = _generatorOptions.defaultModifiers,
+      defaultModifiers = _generatorOptions$def === void 0 ? [] : _generatorOptions$def,
+      _generatorOptions$def2 = _generatorOptions.defaultOptions,
+      defaultOptions = _generatorOptions$def2 === void 0 ? DEFAULT_OPTIONS : _generatorOptions$def2;
+  return function createPopper(reference, popper, options) {
+    if (options === void 0) {
+      options = defaultOptions;
+    }
+
+    var state = {
+      placement: 'bottom',
+      orderedModifiers: [],
+      options: Object.assign({}, DEFAULT_OPTIONS, {}, defaultOptions),
+      modifiersData: {},
+      elements: {
+        reference: reference,
+        popper: popper
+      },
+      attributes: {},
+      styles: {}
+    };
+    var effectCleanupFns = [];
+    var isDestroyed = false;
+    var instance = {
+      state: state,
+      setOptions: function setOptions(options) {
+        cleanupModifierEffects();
+        state.options = Object.assign({}, defaultOptions, {}, state.options, {}, options);
+        state.scrollParents = {
+          reference: isElement(reference) ? listScrollParents(reference) : [],
+          popper: listScrollParents(popper)
+        }; // Orders the modifiers based on their dependencies and `phase`
+        // properties
+
+        var orderedModifiers = orderModifiers(mergeByName([].concat(defaultModifiers, state.options.modifiers))); // Strip out disabled modifiers
+
+        state.orderedModifiers = orderedModifiers.filter(function (m) {
+          return m.enabled;
+        }); // Validate the provided modifiers so that the consumer will get warned
+        // if one of the modifiers is invalid for any reason
+
+        if (process.env.NODE_ENV !== "production") {
+          var modifiers = uniqueBy([].concat(orderedModifiers, state.options.modifiers), function (_ref) {
+            var name = _ref.name;
+            return name;
+          });
+          validateModifiers(modifiers);
+
+          if (getBasePlacement(state.options.placement) === auto) {
+            var flipModifier = state.orderedModifiers.find(function (_ref2) {
+              var name = _ref2.name;
+              return name === 'flip';
+            });
+
+            if (!flipModifier) {
+              console.error(['Popper: "auto" placements require the "flip" modifier be', 'present and enabled to work.'].join(' '));
+            }
+          }
+
+          var _getComputedStyle = getComputedStyle(popper),
+              marginTop = _getComputedStyle.marginTop,
+              marginRight = _getComputedStyle.marginRight,
+              marginBottom = _getComputedStyle.marginBottom,
+              marginLeft = _getComputedStyle.marginLeft; // We no longer take into account `margins` on the popper, and it can
+          // cause bugs with positioning, so we'll warn the consumer
+
+
+          if ([marginTop, marginRight, marginBottom, marginLeft].some(function (margin) {
+            return parseFloat(margin);
+          })) {
+            console.warn(['Popper: CSS "margin" styles cannot be used to apply padding', 'between the popper and its reference element or boundary.', 'To replicate margin, use the `offset` modifier, as well as', 'the `padding` option in the `preventOverflow` and `flip`', 'modifiers.'].join(' '));
+          }
+        }
+
+        runModifierEffects();
+        return instance.update();
+      },
+      // Sync update – it will always be executed, even if not necessary. This
+      // is useful for low frequency updates where sync behavior simplifies the
+      // logic.
+      // For high frequency updates (e.g. `resize` and `scroll` events), always
+      // prefer the async Popper#update method
+      forceUpdate: function forceUpdate() {
+        if (isDestroyed) {
+          return;
+        }
+
+        var _state$elements = state.elements,
+            reference = _state$elements.reference,
+            popper = _state$elements.popper; // Don't proceed if `reference` or `popper` are not valid elements
+        // anymore
+
+        if (!areValidElements(reference, popper)) {
+          if (process.env.NODE_ENV !== "production") {
+            console.error(INVALID_ELEMENT_ERROR);
+          }
+
+          return;
+        } // Store the reference and popper rects to be read by modifiers
+
+
+        state.rects = {
+          reference: getCompositeRect(reference, getOffsetParent(popper), state.options.strategy === 'fixed'),
+          popper: getLayoutRect(popper)
+        }; // Modifiers have the ability to reset the current update cycle. The
+        // most common use case for this is the `flip` modifier changing the
+        // placement, which then needs to re-run all the modifiers, because the
+        // logic was previously ran for the previous placement and is therefore
+        // stale/incorrect
+
+        state.reset = false;
+        state.placement = state.options.placement; // On each update cycle, the `modifiersData` property for each modifier
+        // is filled with the initial data specified by the modifier. This means
+        // it doesn't persist and is fresh on each update.
+        // To ensure persistent data, use `${name}#persistent`
+
+        state.orderedModifiers.forEach(function (modifier) {
+          return state.modifiersData[modifier.name] = Object.assign({}, modifier.data);
+        });
+        var __debug_loops__ = 0;
+
+        for (var index = 0; index < state.orderedModifiers.length; index++) {
+          if (process.env.NODE_ENV !== "production") {
+            __debug_loops__ += 1;
+
+            if (__debug_loops__ > 100) {
+              console.error(INFINITE_LOOP_ERROR);
+              break;
+            }
+          }
+
+          if (state.reset === true) {
+            state.reset = false;
+            index = -1;
+            continue;
+          }
+
+          var _state$orderedModifie = state.orderedModifiers[index],
+              fn = _state$orderedModifie.fn,
+              _state$orderedModifie2 = _state$orderedModifie.options,
+              _options = _state$orderedModifie2 === void 0 ? {} : _state$orderedModifie2,
+              name = _state$orderedModifie.name;
+
+          if (typeof fn === 'function') {
+            state = fn({
+              state: state,
+              options: _options,
+              name: name,
+              instance: instance
+            }) || state;
+          }
+        }
+      },
+      // Async and optimistically optimized update – it will not be executed if
+      // not necessary (debounced to run at most once-per-tick)
+      update: debounce$1(function () {
+        return new Promise(function (resolve) {
+          instance.forceUpdate();
+          resolve(state);
+        });
+      }),
+      destroy: function destroy() {
+        cleanupModifierEffects();
+        isDestroyed = true;
+      }
+    };
+
+    if (!areValidElements(reference, popper)) {
+      if (process.env.NODE_ENV !== "production") {
+        console.error(INVALID_ELEMENT_ERROR);
+      }
+
+      return instance;
+    }
+
+    instance.setOptions(options).then(function (state) {
+      if (!isDestroyed && options.onFirstUpdate) {
+        options.onFirstUpdate(state);
+      }
+    }); // Modifiers have the ability to execute arbitrary code before the first
+    // update cycle runs. They will be executed in the same order as the update
+    // cycle. This is useful when a modifier adds some persistent data that
+    // other modifiers need to use, but the modifier is run after the dependent
+    // one.
+
+    function runModifierEffects() {
+      state.orderedModifiers.forEach(function (_ref3) {
+        var name = _ref3.name,
+            _ref3$options = _ref3.options,
+            options = _ref3$options === void 0 ? {} : _ref3$options,
+            effect = _ref3.effect;
+
+        if (typeof effect === 'function') {
+          var cleanupFn = effect({
+            state: state,
+            name: name,
+            instance: instance,
+            options: options
+          });
+
+          var noopFn = function noopFn() {};
+
+          effectCleanupFns.push(cleanupFn || noopFn);
+        }
+      });
+    }
+
+    function cleanupModifierEffects() {
+      effectCleanupFns.forEach(function (fn) {
+        return fn();
+      });
+      effectCleanupFns = [];
+    }
+
+    return instance;
+  };
+}
+
+var passive = {
+  passive: true
+};
+
+function effect(_ref) {
+  var state = _ref.state,
+      instance = _ref.instance,
+      options = _ref.options;
+  var _options$scroll = options.scroll,
+      scroll = _options$scroll === void 0 ? true : _options$scroll,
+      _options$resize = options.resize,
+      resize = _options$resize === void 0 ? true : _options$resize;
+  var window = getWindow(state.elements.popper);
+  var scrollParents = [].concat(state.scrollParents.reference, state.scrollParents.popper);
+
+  if (scroll) {
+    scrollParents.forEach(function (scrollParent) {
+      scrollParent.addEventListener('scroll', instance.update, passive);
+    });
+  }
+
+  if (resize) {
+    window.addEventListener('resize', instance.update, passive);
+  }
+
+  return function () {
+    if (scroll) {
+      scrollParents.forEach(function (scrollParent) {
+        scrollParent.removeEventListener('scroll', instance.update, passive);
+      });
+    }
+
+    if (resize) {
+      window.removeEventListener('resize', instance.update, passive);
+    }
+  };
+}
+
+var eventListeners = {
+  name: 'eventListeners',
+  enabled: true,
+  phase: 'write',
+  fn: function fn() {},
+  effect: effect,
+  data: {}
+};
+
+function getVariation(placement) {
+  return placement.split('-')[1];
+}
+
+function getMainAxisFromPlacement(placement) {
+  return ['top', 'bottom'].indexOf(placement) >= 0 ? 'x' : 'y';
+}
+
+function computeOffsets(_ref) {
+  var reference = _ref.reference,
+      element = _ref.element,
+      placement = _ref.placement;
+  var basePlacement = placement ? getBasePlacement(placement) : null;
+  var variation = placement ? getVariation(placement) : null;
+  var commonX = reference.x + reference.width / 2 - element.width / 2;
+  var commonY = reference.y + reference.height / 2 - element.height / 2;
+  var offsets;
+
+  switch (basePlacement) {
+    case top:
+      offsets = {
+        x: commonX,
+        y: reference.y - element.height
+      };
+      break;
+
+    case bottom:
+      offsets = {
+        x: commonX,
+        y: reference.y + reference.height
+      };
+      break;
+
+    case right:
+      offsets = {
+        x: reference.x + reference.width,
+        y: commonY
+      };
+      break;
+
+    case left:
+      offsets = {
+        x: reference.x - element.width,
+        y: commonY
+      };
+      break;
+
+    default:
+      offsets = {
+        x: reference.x,
+        y: reference.y
+      };
+  }
+
+  var mainAxis = basePlacement ? getMainAxisFromPlacement(basePlacement) : null;
+
+  if (mainAxis != null) {
+    var len = mainAxis === 'y' ? 'height' : 'width';
+
+    switch (variation) {
+      case start:
+        offsets[mainAxis] = Math.floor(offsets[mainAxis]) - Math.floor(reference[len] / 2 - element[len] / 2);
+        break;
+
+      case end:
+        offsets[mainAxis] = Math.floor(offsets[mainAxis]) + Math.ceil(reference[len] / 2 - element[len] / 2);
+        break;
+    }
+  }
+
+  return offsets;
+}
+
+function popperOffsets(_ref) {
+  var state = _ref.state,
+      name = _ref.name;
+  // Offsets are the actual position the popper needs to have to be
+  // properly positioned near its reference element
+  // This is the most basic placement, and will be adjusted by
+  // the modifiers in the next step
+  state.modifiersData[name] = computeOffsets({
+    reference: state.rects.reference,
+    element: state.rects.popper,
+    strategy: 'absolute',
+    placement: state.placement
+  });
+}
+
+var popperOffsets$1 = {
+  name: 'popperOffsets',
+  enabled: true,
+  phase: 'read',
+  fn: popperOffsets,
+  data: {}
+};
+
+var unsetSides = {
+  top: 'auto',
+  right: 'auto',
+  bottom: 'auto',
+  left: 'auto'
+}; // Round the offsets to the nearest suitable subpixel based on the DPR.
+// Zooming can change the DPR, but it seems to report a value that will
+// cleanly divide the values into the appropriate subpixels.
+
+function roundOffsets(_ref) {
+  var x = _ref.x,
+      y = _ref.y;
+  var win = window;
+  var dpr = win.devicePixelRatio || 1;
+  return {
+    x: Math.round(x * dpr) / dpr || 0,
+    y: Math.round(y * dpr) / dpr || 0
+  };
+}
+
+function mapToStyles(_ref2) {
+  var _Object$assign2;
+
+  var popper = _ref2.popper,
+      popperRect = _ref2.popperRect,
+      placement = _ref2.placement,
+      offsets = _ref2.offsets,
+      position = _ref2.position,
+      gpuAcceleration = _ref2.gpuAcceleration,
+      adaptive = _ref2.adaptive;
+
+  var _roundOffsets = roundOffsets(offsets),
+      x = _roundOffsets.x,
+      y = _roundOffsets.y;
+
+  var hasX = offsets.hasOwnProperty('x');
+  var hasY = offsets.hasOwnProperty('y');
+  var sideX = left;
+  var sideY = top;
+  var win = window;
+
+  if (adaptive) {
+    var offsetParent = getOffsetParent(popper);
+
+    if (offsetParent === getWindow(popper)) {
+      offsetParent = getDocumentElement(popper);
+    } // $FlowFixMe: force type refinement, we compare offsetParent with window above, but Flow doesn't detect it
+
+    /*:: offsetParent = (offsetParent: Element); */
+
+
+    if (placement === top) {
+      sideY = bottom;
+      y -= offsetParent.clientHeight - popperRect.height;
+      y *= gpuAcceleration ? 1 : -1;
+    }
+
+    if (placement === left) {
+      sideX = right;
+      x -= offsetParent.clientWidth - popperRect.width;
+      x *= gpuAcceleration ? 1 : -1;
+    }
+  }
+
+  var commonStyles = Object.assign({
+    position: position
+  }, adaptive && unsetSides);
+
+  if (gpuAcceleration) {
+    var _Object$assign;
+
+    return Object.assign({}, commonStyles, (_Object$assign = {}, _Object$assign[sideY] = hasY ? '0' : '', _Object$assign[sideX] = hasX ? '0' : '', _Object$assign.transform = (win.devicePixelRatio || 1) < 2 ? "translate(" + x + "px, " + y + "px)" : "translate3d(" + x + "px, " + y + "px, 0)", _Object$assign));
+  }
+
+  return Object.assign({}, commonStyles, (_Object$assign2 = {}, _Object$assign2[sideY] = hasY ? y + "px" : '', _Object$assign2[sideX] = hasX ? x + "px" : '', _Object$assign2.transform = '', _Object$assign2));
+}
+
+function computeStyles(_ref3) {
+  var state = _ref3.state,
+      options = _ref3.options;
+  var _options$gpuAccelerat = options.gpuAcceleration,
+      gpuAcceleration = _options$gpuAccelerat === void 0 ? true : _options$gpuAccelerat,
+      _options$adaptive = options.adaptive,
+      adaptive = _options$adaptive === void 0 ? true : _options$adaptive;
+
+  if (process.env.NODE_ENV !== "production") {
+    var _getComputedStyle = getComputedStyle(state.elements.popper),
+        transitionProperty = _getComputedStyle.transitionProperty;
+
+    if (adaptive && ['transform', 'top', 'right', 'bottom', 'left'].some(function (property) {
+      return transitionProperty.indexOf(property) >= 0;
+    })) {
+      console.warn(['Popper: Detected CSS transitions on at least one of the following', 'CSS properties: "transform", "top", "right", "bottom", "left".', '\n\n', 'Disable the "computeStyles" modifier\'s `adaptive` option to allow', 'for smooth transitions, or remove these properties from the CSS', 'transition declaration on the popper element if only transitioning', 'opacity or background-color for example.', '\n\n', 'We recommend using the popper element as a wrapper around an inner', 'element that can have any CSS property transitioned for animations.'].join(' '));
+    }
+  }
+
+  var commonStyles = {
+    placement: getBasePlacement(state.placement),
+    popper: state.elements.popper,
+    popperRect: state.rects.popper,
+    gpuAcceleration: gpuAcceleration
+  }; // popper offsets are always available
+
+  state.styles.popper = Object.assign({}, state.styles.popper, {}, mapToStyles(Object.assign({}, commonStyles, {
+    offsets: state.modifiersData.popperOffsets,
+    position: state.options.strategy,
+    adaptive: adaptive
+  }))); // arrow offsets may not be available
+
+  if (state.modifiersData.arrow != null) {
+    state.styles.arrow = Object.assign({}, state.styles.arrow, {}, mapToStyles(Object.assign({}, commonStyles, {
+      offsets: state.modifiersData.arrow,
+      position: 'absolute',
+      adaptive: false
+    })));
+  }
+
+  state.attributes.popper = Object.assign({}, state.attributes.popper, {
+    'data-popper-placement': state.placement
+  });
+}
+
+var computeStyles$1 = {
+  name: 'computeStyles',
+  enabled: true,
+  phase: 'beforeWrite',
+  fn: computeStyles,
+  data: {}
+};
+
+// and applies them to the HTMLElements such as popper and arrow
+
+function applyStyles(_ref) {
+  var state = _ref.state;
+  Object.keys(state.elements).forEach(function (name) {
+    var style = state.styles[name] || {};
+    var attributes = state.attributes[name] || {};
+    var element = state.elements[name]; // arrow is optional + virtual elements
+
+    if (!isHTMLElement(element) || !getNodeName(element)) {
+      return;
+    } // Flow doesn't support to extend this property, but it's the most
+    // effective way to apply styles to an HTMLElement
+    // $FlowFixMe
+
+
+    Object.assign(element.style, style);
+    Object.keys(attributes).forEach(function (name) {
+      var value = attributes[name];
+
+      if (value === false) {
+        element.removeAttribute(name);
+      } else {
+        element.setAttribute(name, value === true ? '' : value);
+      }
+    });
+  });
+}
+
+function effect$1(_ref2) {
+  var state = _ref2.state;
+  var initialStyles = {
+    popper: {
+      position: 'absolute',
+      left: '0',
+      top: '0',
+      margin: '0'
+    },
+    arrow: {
+      position: 'absolute'
+    },
+    reference: {}
+  };
+  Object.assign(state.elements.popper.style, initialStyles.popper);
+
+  if (state.elements.arrow) {
+    Object.assign(state.elements.arrow.style, initialStyles.arrow);
+  }
+
+  return function () {
+    Object.keys(state.elements).forEach(function (name) {
+      var element = state.elements[name];
+      var attributes = state.attributes[name] || {};
+      var styleProperties = Object.keys(state.styles.hasOwnProperty(name) ? state.styles[name] : initialStyles[name]); // Set all values to an empty string to unset them
+
+      var style = styleProperties.reduce(function (style, property) {
+        style[property] = '';
+        return style;
+      }, {}); // arrow is optional + virtual elements
+
+      if (!isHTMLElement(element) || !getNodeName(element)) {
+        return;
+      } // Flow doesn't support to extend this property, but it's the most
+      // effective way to apply styles to an HTMLElement
+      // $FlowFixMe
+
+
+      Object.assign(element.style, style);
+      Object.keys(attributes).forEach(function (attribute) {
+        element.removeAttribute(attribute);
+      });
+    });
+  };
+}
+
+var applyStyles$1 = {
+  name: 'applyStyles',
+  enabled: true,
+  phase: 'write',
+  fn: applyStyles,
+  effect: effect$1,
+  requires: ['computeStyles']
+};
+
+function distanceAndSkiddingToXY(placement, rects, offset) {
+  var basePlacement = getBasePlacement(placement);
+  var invertDistance = [left, top].indexOf(basePlacement) >= 0 ? -1 : 1;
+
+  var _ref = typeof offset === 'function' ? offset(Object.assign({}, rects, {
+    placement: placement
+  })) : offset,
+      skidding = _ref[0],
+      distance = _ref[1];
+
+  skidding = skidding || 0;
+  distance = (distance || 0) * invertDistance;
+  return [left, right].indexOf(basePlacement) >= 0 ? {
+    x: distance,
+    y: skidding
+  } : {
+    x: skidding,
+    y: distance
+  };
+}
+
+function offset(_ref2) {
+  var state = _ref2.state,
+      options = _ref2.options,
+      name = _ref2.name;
+  var _options$offset = options.offset,
+      offset = _options$offset === void 0 ? [0, 0] : _options$offset;
+  var data = placements.reduce(function (acc, placement) {
+    acc[placement] = distanceAndSkiddingToXY(placement, state.rects, offset);
+    return acc;
+  }, {});
+  var _data$state$placement = data[state.placement],
+      x = _data$state$placement.x,
+      y = _data$state$placement.y;
+  state.modifiersData.popperOffsets.x += x;
+  state.modifiersData.popperOffsets.y += y;
+  state.modifiersData[name] = data;
+}
+
+var offset$1 = {
+  name: 'offset',
+  enabled: true,
+  phase: 'main',
+  requires: ['popperOffsets'],
+  fn: offset
+};
+
+var hash = {
+  left: 'right',
+  right: 'left',
+  bottom: 'top',
+  top: 'bottom'
+};
+function getOppositePlacement(placement) {
+  return placement.replace(/left|right|bottom|top/g, function (matched) {
+    return hash[matched];
+  });
+}
+
+var hash$1 = {
+  start: 'end',
+  end: 'start'
+};
+function getOppositeVariationPlacement(placement) {
+  return placement.replace(/start|end/g, function (matched) {
+    return hash$1[matched];
+  });
+}
+
+function getViewportRect(element) {
+  var win = getWindow(element);
+  return {
+    width: win.innerWidth,
+    height: win.innerHeight,
+    x: 0,
+    y: 0
+  };
+}
+
+function getDocumentRect(element) {
+  var win = getWindow(element);
+  var winScroll = getWindowScroll(element);
+  var documentRect = getCompositeRect(getDocumentElement(element), win);
+  documentRect.height = Math.max(documentRect.height, win.innerHeight);
+  documentRect.width = Math.max(documentRect.width, win.innerWidth);
+  documentRect.x = -winScroll.scrollLeft;
+  documentRect.y = -winScroll.scrollTop;
+  return documentRect;
+}
+
+function toNumber(cssValue) {
+  return parseFloat(cssValue) || 0;
+}
+
+function getBorders(element) {
+  var computedStyle = isHTMLElement(element) ? getComputedStyle(element) : {};
+  return {
+    top: toNumber(computedStyle.borderTopWidth),
+    right: toNumber(computedStyle.borderRightWidth),
+    bottom: toNumber(computedStyle.borderBottomWidth),
+    left: toNumber(computedStyle.borderLeftWidth)
+  };
+}
+
+function getDecorations(element) {
+  var win = getWindow(element);
+  var borders = getBorders(element);
+  var isHTML = getNodeName(element) === 'html';
+  var winScrollBarX = getWindowScrollBarX(element);
+  var x = element.clientWidth + borders.right;
+  var y = element.clientHeight + borders.bottom; // HACK:
+  // document.documentElement.clientHeight on iOS reports the height of the
+  // viewport including the bottom bar, even if the bottom bar isn't visible.
+  // If the difference between window innerHeight and html clientHeight is more
+  // than 50, we assume it's a mobile bottom bar and ignore scrollbars.
+  // * A 50px thick scrollbar is likely non-existent (macOS is 15px and Windows
+  //   is about 17px)
+  // * The mobile bar is 114px tall
+
+  if (isHTML && win.innerHeight - element.clientHeight > 50) {
+    y = win.innerHeight - borders.bottom;
+  }
+
+  return {
+    top: isHTML ? 0 : element.clientTop,
+    right: // RTL scrollbar (scrolling containers only)
+    element.clientLeft > borders.left ? borders.right : // LTR scrollbar
+    isHTML ? win.innerWidth - x - winScrollBarX : element.offsetWidth - x,
+    bottom: isHTML ? win.innerHeight - y : element.offsetHeight - y,
+    left: isHTML ? winScrollBarX : element.clientLeft
+  };
+}
+
+function contains(parent, child) {
+  // $FlowFixMe: hasOwnProperty doesn't seem to work in tests
+  var isShadow = Boolean(child.getRootNode && child.getRootNode().host); // First, attempt with faster native method
+
+  if (parent.contains(child)) {
+    return true;
+  } // then fallback to custom implementation with Shadow DOM support
+  else if (isShadow) {
+      var next = child;
+
+      do {
+        if (next && parent.isSameNode(next)) {
+          return true;
+        } // $FlowFixMe: need a better way to handle this...
+
+
+        next = next.parentNode || next.host;
+      } while (next);
+    } // Give up, the result is false
+
+
+  return false;
+}
+
+function rectToClientRect(rect) {
+  return Object.assign({}, rect, {
+    left: rect.x,
+    top: rect.y,
+    right: rect.x + rect.width,
+    bottom: rect.y + rect.height
+  });
+}
+
+function getClientRectFromMixedType(element, clippingParent) {
+  return clippingParent === viewport ? rectToClientRect(getViewportRect(element)) : isHTMLElement(clippingParent) ? getBoundingClientRect(clippingParent) : rectToClientRect(getDocumentRect(getDocumentElement(element)));
+} // A "clipping parent" is an overflowable container with the characteristic of
+// clipping (or hiding) overflowing elements with a position different from
+// `initial`
+
+
+function getClippingParents(element) {
+  var clippingParents = listScrollParents(element);
+  var canEscapeClipping = ['absolute', 'fixed'].indexOf(getComputedStyle(element).position) >= 0;
+  var clipperElement = canEscapeClipping && isHTMLElement(element) ? getOffsetParent(element) : element;
+
+  if (!isElement(clipperElement)) {
+    return [];
+  } // $FlowFixMe: https://github.com/facebook/flow/issues/1414
+
+
+  return clippingParents.filter(function (clippingParent) {
+    return isElement(clippingParent) && contains(clippingParent, clipperElement);
+  });
+} // Gets the maximum area that the element is visible in due to any number of
+// clipping parents
+
+
+function getClippingRect(element, boundary, rootBoundary) {
+  var mainClippingParents = boundary === 'clippingParents' ? getClippingParents(element) : [].concat(boundary);
+  var clippingParents = [].concat(mainClippingParents, [rootBoundary]);
+  var firstClippingParent = clippingParents[0];
+  var clippingRect = clippingParents.reduce(function (accRect, clippingParent) {
+    var rect = getClientRectFromMixedType(element, clippingParent);
+    var decorations = getDecorations(isHTMLElement(clippingParent) ? clippingParent : getDocumentElement(element));
+    accRect.top = Math.max(rect.top + decorations.top, accRect.top);
+    accRect.right = Math.min(rect.right - decorations.right, accRect.right);
+    accRect.bottom = Math.min(rect.bottom - decorations.bottom, accRect.bottom);
+    accRect.left = Math.max(rect.left + decorations.left, accRect.left);
+    return accRect;
+  }, getClientRectFromMixedType(element, firstClippingParent));
+  clippingRect.width = clippingRect.right - clippingRect.left;
+  clippingRect.height = clippingRect.bottom - clippingRect.top;
+  clippingRect.x = clippingRect.left;
+  clippingRect.y = clippingRect.top;
+  return clippingRect;
+}
+
+function getFreshSideObject() {
+  return {
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0
+  };
+}
+
+function mergePaddingObject(paddingObject) {
+  return Object.assign({}, getFreshSideObject(), {}, paddingObject);
+}
+
+function expandToHashMap(value, keys) {
+  return keys.reduce(function (hashMap, key) {
+    hashMap[key] = value;
+    return hashMap;
+  }, {});
+}
+
+function detectOverflow(state, options) {
+  if (options === void 0) {
+    options = {};
+  }
+
+  var _options = options,
+      _options$placement = _options.placement,
+      placement = _options$placement === void 0 ? state.placement : _options$placement,
+      _options$boundary = _options.boundary,
+      boundary = _options$boundary === void 0 ? clippingParents : _options$boundary,
+      _options$rootBoundary = _options.rootBoundary,
+      rootBoundary = _options$rootBoundary === void 0 ? viewport : _options$rootBoundary,
+      _options$elementConte = _options.elementContext,
+      elementContext = _options$elementConte === void 0 ? popper : _options$elementConte,
+      _options$altBoundary = _options.altBoundary,
+      altBoundary = _options$altBoundary === void 0 ? false : _options$altBoundary,
+      _options$padding = _options.padding,
+      padding = _options$padding === void 0 ? 0 : _options$padding;
+  var paddingObject = mergePaddingObject(typeof padding !== 'number' ? padding : expandToHashMap(padding, basePlacements));
+  var altContext = elementContext === popper ? reference : popper;
+  var referenceElement = state.elements.reference;
+  var popperRect = state.rects.popper;
+  var element = state.elements[altBoundary ? altContext : elementContext];
+  var clippingClientRect = getClippingRect(isElement(element) ? element : getDocumentElement(state.elements.popper), boundary, rootBoundary);
+  var referenceClientRect = getBoundingClientRect(referenceElement);
+  var popperOffsets = computeOffsets({
+    reference: referenceClientRect,
+    element: popperRect,
+    strategy: 'absolute',
+    placement: placement
+  });
+  var popperClientRect = rectToClientRect(Object.assign({}, popperRect, {}, popperOffsets));
+  var elementClientRect = elementContext === popper ? popperClientRect : referenceClientRect; // positive = overflowing the clipping rect
+  // 0 or negative = within the clipping rect
+
+  var overflowOffsets = {
+    top: clippingClientRect.top - elementClientRect.top + paddingObject.top,
+    bottom: elementClientRect.bottom - clippingClientRect.bottom + paddingObject.bottom,
+    left: clippingClientRect.left - elementClientRect.left + paddingObject.left,
+    right: elementClientRect.right - clippingClientRect.right + paddingObject.right
+  };
+  var offsetData = state.modifiersData.offset; // Offsets can be applied only to the popper element
+
+  if (elementContext === popper && offsetData) {
+    var offset = offsetData[placement];
+    Object.keys(overflowOffsets).forEach(function (key) {
+      var multiply = [right, bottom].indexOf(key) >= 0 ? 1 : -1;
+      var axis = [top, bottom].indexOf(key) >= 0 ? 'y' : 'x';
+      overflowOffsets[key] += offset[axis] * multiply;
+    });
+  }
+
+  return overflowOffsets;
+}
+
+function computeAutoPlacement(state, options) {
+  if (options === void 0) {
+    options = {};
+  }
+
+  var _options = options,
+      placement = _options.placement,
+      boundary = _options.boundary,
+      rootBoundary = _options.rootBoundary,
+      padding = _options.padding,
+      flipVariations = _options.flipVariations;
+  var variation = getVariation(placement);
+  var placements = variation ? flipVariations ? variationPlacements : variationPlacements.filter(function (placement) {
+    return getVariation(placement) === variation;
+  }) : basePlacements; // $FlowFixMe: Flow seems to have problems with two array unions...
+
+  var overflows = placements.reduce(function (acc, placement) {
+    acc[placement] = detectOverflow(state, {
+      placement: placement,
+      boundary: boundary,
+      rootBoundary: rootBoundary,
+      padding: padding
+    })[getBasePlacement(placement)];
+    return acc;
+  }, {});
+  return Object.keys(overflows).sort(function (a, b) {
+    return overflows[a] - overflows[b];
+  });
+}
+
+function getExpandedFallbackPlacements(placement) {
+  if (getBasePlacement(placement) === auto) {
+    return [];
+  }
+
+  var oppositePlacement = getOppositePlacement(placement);
+  return [getOppositeVariationPlacement(placement), oppositePlacement, getOppositeVariationPlacement(oppositePlacement)];
+}
+
+function flip(_ref) {
+  var state = _ref.state,
+      options = _ref.options,
+      name = _ref.name;
+
+  if (state.modifiersData[name]._skip) {
+    return;
+  }
+
+  var specifiedFallbackPlacements = options.fallbackPlacements,
+      padding = options.padding,
+      boundary = options.boundary,
+      rootBoundary = options.rootBoundary,
+      _options$flipVariatio = options.flipVariations,
+      flipVariations = _options$flipVariatio === void 0 ? true : _options$flipVariatio;
+  var preferredPlacement = state.options.placement;
+  var basePlacement = getBasePlacement(preferredPlacement);
+  var isBasePlacement = basePlacement === preferredPlacement;
+  var fallbackPlacements = specifiedFallbackPlacements || (isBasePlacement || !flipVariations ? [getOppositePlacement(preferredPlacement)] : getExpandedFallbackPlacements(preferredPlacement));
+  var placements = [preferredPlacement].concat(fallbackPlacements).reduce(function (acc, placement) {
+    return acc.concat(getBasePlacement(placement) === auto ? computeAutoPlacement(state, {
+      placement: placement,
+      boundary: boundary,
+      rootBoundary: rootBoundary,
+      padding: padding,
+      flipVariations: flipVariations
+    }) : placement);
+  }, []);
+  var referenceRect = state.rects.reference;
+  var popperRect = state.rects.popper;
+  var checksMap = new Map();
+  var makeFallbackChecks = true;
+  var firstFittingPlacement = placements[0];
+
+  for (var i = 0; i < placements.length; i++) {
+    var placement = placements[i];
+
+    var _basePlacement = getBasePlacement(placement);
+
+    var isStartVariation = getVariation(placement) === start;
+    var isVertical = [top, bottom].indexOf(_basePlacement) >= 0;
+    var len = isVertical ? 'width' : 'height';
+    var overflow = detectOverflow(state, {
+      placement: placement,
+      boundary: boundary,
+      rootBoundary: rootBoundary,
+      padding: padding
+    });
+    var mainVariationSide = isVertical ? isStartVariation ? right : left : isStartVariation ? bottom : top;
+
+    if (referenceRect[len] > popperRect[len]) {
+      mainVariationSide = getOppositePlacement(mainVariationSide);
+    }
+
+    var altVariationSide = getOppositePlacement(mainVariationSide);
+    var checks = [overflow[_basePlacement] <= 0, overflow[mainVariationSide] <= 0, overflow[altVariationSide] <= 0];
+
+    if (checks.every(function (check) {
+      return check;
+    })) {
+      firstFittingPlacement = placement;
+      makeFallbackChecks = false;
+      break;
+    }
+
+    checksMap.set(placement, checks);
+  }
+
+  if (makeFallbackChecks) {
+    // `2` may be desired in some cases – research later
+    var numberOfChecks = flipVariations ? 3 : 1;
+
+    var _loop = function _loop(_i) {
+      var fittingPlacement = placements.find(function (placement) {
+        var checks = checksMap.get(placement);
+
+        if (checks) {
+          return checks.slice(0, _i).every(function (check) {
+            return check;
+          });
+        }
+      });
+
+      if (fittingPlacement) {
+        firstFittingPlacement = fittingPlacement;
+        return "break";
+      }
+    };
+
+    for (var _i = numberOfChecks; _i > 0; _i--) {
+      var _ret = _loop(_i);
+
+      if (_ret === "break") break;
+    }
+  }
+
+  if (state.placement !== firstFittingPlacement) {
+    state.modifiersData[name]._skip = true;
+    state.placement = firstFittingPlacement;
+    state.reset = true;
+  }
+}
+
+var flip$1 = {
+  name: 'flip',
+  enabled: true,
+  phase: 'main',
+  fn: flip,
+  requiresIfExists: ['offset'],
+  data: {
+    _skip: false
+  }
+};
+
+function getAltAxis(axis) {
+  return axis === 'x' ? 'y' : 'x';
+}
+
+function within(min, value, max) {
+  return Math.max(min, Math.min(value, max));
+}
+
+function preventOverflow(_ref) {
+  var state = _ref.state,
+      options = _ref.options,
+      name = _ref.name;
+  var _options$mainAxis = options.mainAxis,
+      checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis,
+      _options$altAxis = options.altAxis,
+      checkAltAxis = _options$altAxis === void 0 ? false : _options$altAxis,
+      boundary = options.boundary,
+      rootBoundary = options.rootBoundary,
+      padding = options.padding,
+      _options$tether = options.tether,
+      tether = _options$tether === void 0 ? true : _options$tether,
+      _options$tetherOffset = options.tetherOffset,
+      tetherOffset = _options$tetherOffset === void 0 ? 0 : _options$tetherOffset;
+  var overflow = detectOverflow(state, {
+    boundary: boundary,
+    rootBoundary: rootBoundary,
+    padding: padding
+  });
+  var basePlacement = getBasePlacement(state.placement);
+  var variation = getVariation(state.placement);
+  var isBasePlacement = !variation;
+  var mainAxis = getMainAxisFromPlacement(basePlacement);
+  var altAxis = getAltAxis(mainAxis);
+  var popperOffsets = state.modifiersData.popperOffsets;
+  var referenceRect = state.rects.reference;
+  var popperRect = state.rects.popper;
+  var tetherOffsetValue = typeof tetherOffset === 'function' ? tetherOffset(Object.assign({}, state.rects, {
+    placement: state.placement
+  })) : tetherOffset;
+  var data = {
+    x: 0,
+    y: 0
+  };
+
+  if (checkMainAxis) {
+    var mainSide = mainAxis === 'y' ? top : left;
+    var altSide = mainAxis === 'y' ? bottom : right;
+    var len = mainAxis === 'y' ? 'height' : 'width';
+    var offset = popperOffsets[mainAxis];
+    var min = popperOffsets[mainAxis] + overflow[mainSide];
+    var max = popperOffsets[mainAxis] - overflow[altSide];
+    var additive = tether ? -popperRect[len] / 2 : 0;
+    var minLen = variation === start ? referenceRect[len] : popperRect[len];
+    var maxLen = variation === start ? -popperRect[len] : -referenceRect[len]; // We need to include the arrow in the calculation so the arrow doesn't go
+    // outside the reference bounds
+
+    var arrowElement = state.elements.arrow;
+    var arrowRect = tether && arrowElement ? getLayoutRect(arrowElement) : {
+      width: 0,
+      height: 0
+    };
+    var arrowPaddingObject = state.modifiersData['arrow#persistent'] ? state.modifiersData['arrow#persistent'].padding : getFreshSideObject();
+    var arrowPaddingMin = arrowPaddingObject[mainSide];
+    var arrowPaddingMax = arrowPaddingObject[altSide]; // If the reference length is smaller than the arrow length, we don't want
+    // to include its full size in the calculation. If the reference is small
+    // and near the edge of a boundary, the popper can overflow even if the
+    // reference is not overflowing as well (e.g. virtual elements with no
+    // width or height)
+
+    var arrowLen = within(0, referenceRect[len], arrowRect[len]);
+    var minOffset = isBasePlacement ? referenceRect[len] / 2 - additive - arrowLen - arrowPaddingMin - tetherOffsetValue : minLen - arrowLen - arrowPaddingMin - tetherOffsetValue;
+    var maxOffset = isBasePlacement ? -referenceRect[len] / 2 + additive + arrowLen + arrowPaddingMax + tetherOffsetValue : maxLen + arrowLen + arrowPaddingMax + tetherOffsetValue;
+    var offsetModifierValue = state.modifiersData.offset ? state.modifiersData.offset[state.placement][mainAxis] : 0;
+    var tetherMin = popperOffsets[mainAxis] + minOffset - offsetModifierValue;
+    var tetherMax = popperOffsets[mainAxis] + maxOffset - offsetModifierValue;
+    var preventedOffset = within(tether ? Math.min(min, tetherMin) : min, offset, tether ? Math.max(max, tetherMax) : max);
+    popperOffsets[mainAxis] = preventedOffset;
+    data[mainAxis] = preventedOffset - offset;
+  }
+
+  if (checkAltAxis) {
+    var _mainSide = mainAxis === 'x' ? top : left;
+
+    var _altSide = mainAxis === 'x' ? bottom : right;
+
+    var _offset = popperOffsets[altAxis];
+
+    var _min = _offset + overflow[_mainSide];
+
+    var _max = _offset - overflow[_altSide];
+
+    var _preventedOffset = within(_min, _offset, _max);
+
+    state.modifiersData.popperOffsets[altAxis] = _preventedOffset;
+    data[altAxis] = _preventedOffset - _offset;
+  }
+
+  state.modifiersData[name] = data;
+}
+
+var preventOverflow$1 = {
+  name: 'preventOverflow',
+  enabled: true,
+  phase: 'main',
+  fn: preventOverflow,
+  requiresIfExists: ['offset']
+};
+
+function arrow(_ref) {
+  var _state$modifiersData$;
+
+  var state = _ref.state,
+      name = _ref.name;
+  var arrowElement = state.elements.arrow;
+  var popperOffsets = state.modifiersData.popperOffsets;
+  var basePlacement = getBasePlacement(state.placement);
+  var axis = getMainAxisFromPlacement(basePlacement);
+  var isVertical = [left, right].indexOf(basePlacement) >= 0;
+  var len = isVertical ? 'height' : 'width';
+
+  if (!arrowElement) {
+    return;
+  }
+
+  var paddingObject = state.modifiersData[name + "#persistent"].padding;
+  var arrowRect = getLayoutRect(arrowElement);
+  var minProp = axis === 'y' ? top : left;
+  var maxProp = axis === 'y' ? bottom : right;
+  var endDiff = state.rects.reference[len] + state.rects.reference[axis] - popperOffsets[axis] - state.rects.popper[len];
+  var startDiff = popperOffsets[axis] - state.rects.reference[axis];
+  var centerToReference = endDiff / 2 - startDiff / 2; // Make sure the arrow doesn't overflow the popper if the center point is
+  // outside of the popper bounds
+
+  var center = within(paddingObject[minProp], state.rects.popper[len] / 2 - arrowRect[len] / 2 + centerToReference, state.rects.popper[len] - arrowRect[len] - paddingObject[maxProp]); // Prevents breaking syntax highlighting...
+
+  var axisProp = axis;
+  state.modifiersData[name] = (_state$modifiersData$ = {}, _state$modifiersData$[axisProp] = center, _state$modifiersData$);
+}
+
+function effect$2(_ref2) {
+  var state = _ref2.state,
+      options = _ref2.options,
+      name = _ref2.name;
+  var _options$element = options.element,
+      arrowElement = _options$element === void 0 ? '[data-popper-arrow]' : _options$element,
+      _options$padding = options.padding,
+      padding = _options$padding === void 0 ? 0 : _options$padding; // CSS selector
+
+  if (typeof arrowElement === 'string') {
+    arrowElement = state.elements.popper.querySelector(arrowElement);
+
+    if (!arrowElement) {
+      return;
+    }
+  }
+
+  if (!contains(state.elements.popper, arrowElement)) {
+    if (process.env.NODE_ENV !== "production") {
+      console.error(['Popper: "arrow" modifier\'s `element` must be a child of the popper', 'element.'].join(' '));
+    }
+
+    return;
+  }
+
+  state.elements.arrow = arrowElement;
+  state.modifiersData[name + "#persistent"] = {
+    padding: mergePaddingObject(typeof padding !== 'number' ? padding : expandToHashMap(padding, basePlacements))
+  };
+}
+
+var arrow$1 = {
+  name: 'arrow',
+  enabled: true,
+  phase: 'main',
+  fn: arrow,
+  effect: effect$2,
+  requires: ['popperOffsets'],
+  requiresIfExists: ['preventOverflow']
+};
+
+function getSideOffsets(overflow, rect, preventedOffsets) {
+  if (preventedOffsets === void 0) {
+    preventedOffsets = {
+      x: 0,
+      y: 0
+    };
+  }
+
+  return {
+    top: overflow.top - rect.height - preventedOffsets.y,
+    right: overflow.right - rect.width + preventedOffsets.x,
+    bottom: overflow.bottom - rect.height + preventedOffsets.y,
+    left: overflow.left - rect.width - preventedOffsets.x
+  };
+}
+
+function isAnySideFullyClipped(overflow) {
+  return [top, right, bottom, left].some(function (side) {
+    return overflow[side] >= 0;
+  });
+}
+
+function hide(_ref) {
+  var state = _ref.state,
+      name = _ref.name;
+  var referenceRect = state.rects.reference;
+  var popperRect = state.rects.popper;
+  var preventedOffsets = state.modifiersData.preventOverflow;
+  var referenceOverflow = detectOverflow(state, {
+    elementContext: 'reference'
+  });
+  var popperAltOverflow = detectOverflow(state, {
+    altBoundary: true
+  });
+  var referenceClippingOffsets = getSideOffsets(referenceOverflow, referenceRect);
+  var popperEscapeOffsets = getSideOffsets(popperAltOverflow, popperRect, preventedOffsets);
+  var isReferenceHidden = isAnySideFullyClipped(referenceClippingOffsets);
+  var hasPopperEscaped = isAnySideFullyClipped(popperEscapeOffsets);
+  state.modifiersData[name] = {
+    referenceClippingOffsets: referenceClippingOffsets,
+    popperEscapeOffsets: popperEscapeOffsets,
+    isReferenceHidden: isReferenceHidden,
+    hasPopperEscaped: hasPopperEscaped
+  };
+  state.attributes.popper = Object.assign({}, state.attributes.popper, {
+    'data-popper-reference-hidden': isReferenceHidden,
+    'data-popper-escaped': hasPopperEscaped
+  });
+}
+
+var hide$1 = {
+  name: 'hide',
+  enabled: true,
+  phase: 'main',
+  requiresIfExists: ['preventOverflow'],
+  fn: hide
+};
+
+var defaultModifiers = [eventListeners, popperOffsets$1, computeStyles$1, applyStyles$1, offset$1, flip$1, preventOverflow$1, arrow$1, hide$1];
+var createPopper =
+/*#__PURE__*/
+popperGenerator({
+  defaultModifiers: defaultModifiers
+}); // eslint-disable-next-line import/no-unused-modules
+
+function createHover(el, options) {
+    const { callback } = options;
+    const enter = (ev) => callback(true, ev);
+    const leave = (ev) => callback(false, ev);
+    const mouseenterOff = on(el, 'mouseenter', enter, options);
+    const mouseleaveOff = on(el, 'mouseleave', leave, options);
+    const focusOff = on(el, 'focus', enter, options);
+    const blurOff = on(el, 'blur', leave, options);
+    const destroy = () => {
+        mouseenterOff();
+        mouseleaveOff();
+        focusOff();
+        blurOff();
+    };
+    return {
+        options,
+        enter,
+        leave,
+        destroy,
+    };
+}
+function inserted$2(el, binding) {
+    const { value: callback, modifiers: options, } = binding;
+    if (!callback)
+        return;
+    el.vHover = createHover(el, {
+        callback,
+        passive: true,
+        ...options,
+    });
+}
+function unbind$2(el) {
+    const { vHover } = el;
+    if (!vHover)
+        return;
+    vHover.destroy();
+    delete el.vHover;
+}
+function update$2(el, binding) {
+    const { value, oldValue } = binding;
+    if (value === oldValue) {
+        return;
+    }
+    if (oldValue) {
+        unbind$2(el);
+    }
+    inserted$2(el, binding);
+}
+const vHover = /*#__PURE__*/ defineDirective({
+    name: 'hover',
+    inserted: inserted$2,
+    unbind: unbind$2,
+    update: update$2,
+});
+
+const {
+  createComponent: createComponent$x,
+  bem: bem$w
+} =
+/*#__PURE__*/
+createNamespace('tooltip');
+var Tooltip = /*#__PURE__*/
+createComponent$x({
+  mixins: [
+  /*#__PURE__*/
+  useColor(),
+  /*#__PURE__*/
+  usePopup({
+    disableScroll: false
+  }),
+  /*#__PURE__*/
+  usePopupDuration(),
+  /*#__PURE__*/
+  usePopupDelay(),
+  /*#__PURE__*/
+  useTrigger()],
+  props: {
+    // This property holds the text shown on the tool tip.
+    text: String,
+    placement: {
+      type: String,
+      default: 'top'
+    },
+    activeFocus: Boolean,
+    openOnHover: {
+      type: Boolean,
+      default: false
+    },
+    openOnClick: Boolean
+  },
+  watch: {
+    openOnHover(val) {
+      this.vHover.update(val && this.onHover);
+    }
+
+  },
+
+  beforeMount() {
+    this.$on('animation-enter', (baseEl, animate) => {
+      const {
+        $triggerEl = this.event && this.event.target || document.body,
+        $el,
+        placement
+      } = this;
+      this.popper = this.popper || createPopper($triggerEl, $el, {
+        placement: placement,
+        strategy: 'fixed',
+        modifiers: [{
+          name: 'offset',
+          options: {
+            offset: [0, 10]
+          }
+        }, {
+          name: 'flip',
+          options: {
+            rootBoundary: 'body'
+          }
+        }]
+      });
+      animate(iosEnterAnimation$7(baseEl));
+    });
+    this.$on('animation-leave', (baseEl, animate) => {
+      animate(iosLeaveAnimation$7(baseEl));
+    });
+  },
+
+  async mounted() {
+    await this.$nextTick();
+    if (!this.$triggerEl) return;
+    this.vHover = createDirective(vHover, this.$triggerEl, {
+      name: 'hover'
+    });
+    this.vHover.inserted();
+
+    if (this.openOnHover) {
+      this.vHover.update(this.onHover);
+    }
+  },
+
+  updated() {// if (this.popper) {
+    //   this.popper.update();
+    // }
+  },
+
+  beforeDestroy() {
+    if (this.popper) {
+      this.popper.destroy();
+    }
+
+    if (this.vHover) {
+      this.vHover.unbind();
+    }
+  },
+
+  methods: {
+    onHover(hover) {
+      if (!this.openOnHover) return;
+      this.visible = hover;
+    }
+
+  },
+
+  render() {
+    const h = arguments[0];
+    const {
+      delayedVisible,
+      text
+    } = this;
+    return h("div", helper([{
+      "directives": [{
+        name: "show",
+        value: delayedVisible
+      }],
+      "attrs": {
+        "role": "tooltip"
+      },
+      "class": bem$w({
+        translucent: this.translucent
+      })
+    }, {
+      "on": this.$listeners
+    }]), [h("div", {
+      "class": bem$w('arrow'),
+      "attrs": {
+        "x-arrow": true
+      }
+    }), h("div", {
+      "class": bem$w('content')
+    }, [this.slots() || text])]);
   }
 
 });
@@ -6043,23 +9152,49 @@ function createFactory(sfc) {
         create,
     };
 }
-
-class PickerController {
-    constructor() {
-        this.factory = createFactory(Picker);
-    }
-    create(props, destroyWhenClose) {
-        return this.factory.create(props, destroyWhenClose);
-    }
-    close(reason) {
-        const lastPopup = this.getTop();
+function createController(sfc) {
+    const factory = createFactory(sfc);
+    const create = (props, destroyWhenClose) => {
+        return factory.create(props, destroyWhenClose);
+    };
+    const getTop = () => {
+        return popupContext.findPopup(p => {
+            if (!sfc.name)
+                return true;
+            return p.$options.name === sfc.name;
+        });
+    };
+    const close = (reason) => {
+        const lastPopup = getTop();
         lastPopup && lastPopup.close(reason);
-    }
-    /* eslint-disable-next-line class-methods-use-this */
-    getTop() {
-        return popupContext.getPopup();
-    }
+    };
+    return {
+        create,
+        close,
+        getTop,
+    };
 }
+
+const ActionSheetController = /*#__PURE__*/ createController(ActionSheet);
+const AlertController = /*#__PURE__*/ createController(Alert);
+const LoadingController = /*#__PURE__*/ createController(Loading);
+const PickerController = /*#__PURE__*/ createController(Picker);
+const PopoverController = /*#__PURE__*/ createController(Popover);
+const PopupController = /*#__PURE__*/ createController(Popup);
+const ToastController = /*#__PURE__*/ createController(Toast);
+const TooltipController = /*#__PURE__*/ createController(Tooltip);
+
+var controllers = /*#__PURE__*/Object.freeze({
+  __proto__: null,
+  ActionSheetController: ActionSheetController,
+  AlertController: AlertController,
+  LoadingController: LoadingController,
+  PickerController: PickerController,
+  PopoverController: PopoverController,
+  PopupController: PopupController,
+  ToastController: ToastController,
+  TooltipController: TooltipController
+});
 
 /**
  * Gets a date value given a format
@@ -6609,8 +9744,8 @@ const VALID_AMPM_PREFIX = [
 ];
 
 const {
-  createComponent: createComponent$r,
-  bem: bem$q
+  createComponent: createComponent$y,
+  bem: bem$x
 } =
 /*#__PURE__*/
 createNamespace('datetime');
@@ -6666,7 +9801,7 @@ const divyColumns = columns => {
 const DEFAULT_FORMAT = 'MMM D, YYYY';
 let datetimeIds = 0;
 var datetime = /*#__PURE__*/
-createComponent$r({
+createComponent$y({
   mixins: [
   /*#__PURE__*/
   useModel('dateValue')],
@@ -6786,7 +9921,7 @@ createComponent$r({
       }
 
       const pickerOptions = this.generatePickerOptions();
-      const pickerController = new PickerController();
+      const pickerController = PickerController;
       const picker = await pickerController.create(pickerOptions);
       this.isExpanded = true;
       picker.$on('opened', () => {
@@ -7134,14 +10269,15 @@ createComponent$r({
         "aria-haspopup": "true",
         "aria-labelledby": labelId
       },
-      "class": [bem$q(), {
-        'datetime-disabled': disabled,
-        'datetime-readonly': readonly,
-        'datetime-placeholder': addPlaceholderClass,
+      "class": [bem$x({
+        disabled,
+        readonly,
+        placeholder: addPlaceholderClass
+      }), {
         'in-item': inItem
       }]
     }, [h("div", {
-      "class": "datetime-text"
+      "class": bem$x('text')
     }, [datetimeText]), h("button", {
       "attrs": {
         "type": "button",
@@ -7224,13 +10360,13 @@ function useClickOutside(options = {}) {
 
 const NAMESPACE$6 = 'FabGroup';
 const {
-  createComponent: createComponent$s,
-  bem: bem$r
+  createComponent: createComponent$z,
+  bem: bem$y
 } =
 /*#__PURE__*/
 createNamespace('fab-group');
 var FabGroup = /*#__PURE__*/
-createComponent$s({
+createComponent$z({
   mixins: [
   /*#__PURE__*/
   useGroup(NAMESPACE$6),
@@ -7269,7 +10405,7 @@ createComponent$s({
         "tag": "div",
         "appear": true
       },
-      "class": bem$r({
+      "class": bem$y({
         [`side-${side}`]: true
       })
     }, {
@@ -7287,14 +10423,14 @@ createComponent$s({
 });
 
 const {
-  createComponent: createComponent$t,
-  bem: bem$s
+  createComponent: createComponent$A,
+  bem: bem$z
 } =
 /*#__PURE__*/
 createNamespace('fab');
 const FAB_SIDES = ['start', 'end', 'top', 'bottom'];
 var fab = /*#__PURE__*/
-createComponent$t({
+createComponent$A({
   mixins: [
   /*#__PURE__*/
   useModel('activated'),
@@ -7317,7 +10453,6 @@ createComponent$t({
 
   beforeMount() {
     this.$on('clickoutside', () => {
-      console.log('clickoutside');
       this.activated = false;
     });
     this.activated = this.activated || isDef(this.$attrs.activated) && this.$attrs.activated !== false;
@@ -7339,7 +10474,7 @@ createComponent$t({
       activated
     } = this;
     return h("div", helper([{
-      "class": bem$s({
+      "class": bem$z({
         [`horizontal-${horizontal}`]: isDef(horizontal),
         [`vertical-${vertical}`]: isDef(vertical),
         edge
@@ -7372,13 +10507,13 @@ createComponent$t({
 
 const NAMESPACE$7 = 'FabGroup';
 const {
-  createComponent: createComponent$u,
-  bem: bem$t
+  createComponent: createComponent$B,
+  bem: bem$A
 } =
 /*#__PURE__*/
 createNamespace('fab-button');
 var fabButton = /*#__PURE__*/
-createComponent$u({
+createComponent$B({
   mixins: [
   /*#__PURE__*/
   useColor(),
@@ -7434,7 +10569,7 @@ createComponent$u({
       "attrs": {
         "aria-disabled": disabled ? 'true' : null
       },
-      "class": ['activatable', 'line-focusable', bem$t({
+      "class": ['activatable', 'line-focusable', bem$A({
         [size]: isDef(size),
         'in-list': inList,
         'translucent-in-list': inList && translucent,
@@ -7453,27 +10588,31 @@ createComponent$u({
         name: "ripple",
         value: this.ripple
       }],
-      "class": bem$t('content', {
+      "class": bem$A('content', {
         vertical
       })
     }, [h("span", {
-      "class": bem$t('indicator')
+      "class": bem$A('indicator')
     }, [this.slots('indicator')]), h("span", {
-      "class": bem$t('inner')
+      "class": bem$A('inner')
     }, [this.slots() || text])])]);
   }
 
 });
 
 const {
-  createComponent: createComponent$v,
-  bem: bem$u
+  createComponent: createComponent$C,
+  bem: bem$B
 } =
 /*#__PURE__*/
 createNamespace('footer');
 var footer = /*#__PURE__*/
-createComponent$v({
-  inject: ['App'],
+createComponent$C({
+  inject: {
+    App: {
+      default: undefined
+    }
+  },
   props: {
     translucent: Boolean
   },
@@ -7497,7 +10636,7 @@ createComponent$v({
       "attrs": {
         "role": "contentinfo"
       },
-      "class": bem$u({
+      "class": bem$B({
         translucent
       })
     }, {
@@ -7508,13 +10647,13 @@ createComponent$v({
 });
 
 const {
-  createComponent: createComponent$w,
-  bem: bem$v
+  createComponent: createComponent$D,
+  bem: bem$C
 } =
 /*#__PURE__*/
 createNamespace('grid');
 var grid = /*#__PURE__*/
-createComponent$w({
+createComponent$D({
   functional: true,
   props: {
     fixed: Boolean
@@ -7526,7 +10665,7 @@ createComponent$w({
     slots
   }) {
     return h("div", helper([{
-      "class": bem$v({
+      "class": bem$C({
         fixed: props.fixed
       })
     }, data]), [slots()]);
@@ -7535,14 +10674,18 @@ createComponent$w({
 });
 
 const {
-  createComponent: createComponent$x,
-  bem: bem$w
+  createComponent: createComponent$E,
+  bem: bem$D
 } =
 /*#__PURE__*/
 createNamespace('header');
 var header = /*#__PURE__*/
-createComponent$x({
-  inject: ['App'],
+createComponent$E({
+  inject: {
+    App: {
+      default: undefined
+    }
+  },
   props: {
     collapse: String,
     translucent: Boolean
@@ -7566,7 +10709,7 @@ createComponent$x({
       "attrs": {
         "role": "banner"
       },
-      "class": [bem$w(), `line-header-${mode}`, `line-header-collapse-${collapse}`, this.translucent && 'line-header-translucent', this.translucent && `line-header-translucent-${mode}`]
+      "class": [bem$D(), `line-header-${mode}`, `line-header-collapse-${collapse}`, this.translucent && 'line-header-translucent', this.translucent && `line-header-translucent-${mode}`]
     }, {
       "on": this.$listeners
     }]), [this.slots()]);
@@ -7575,13 +10718,13 @@ createComponent$x({
 });
 
 const {
-  createComponent: createComponent$y,
-  bem: bem$x
+  createComponent: createComponent$F,
+  bem: bem$E
 } =
 /*#__PURE__*/
 createNamespace('check-group');
 var checkGroup = /*#__PURE__*/
-createComponent$y({
+createComponent$F({
   mixins: [
   /*#__PURE__*/
   useCheckGroupWithModel('Group')],
@@ -7589,20 +10732,20 @@ createComponent$y({
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$x()
+      "class": bem$E()
     }, [this.slots()]);
   }
 
 });
 
 const {
-  createComponent: createComponent$z,
-  bem: bem$y
+  createComponent: createComponent$G,
+  bem: bem$F
 } =
 /*#__PURE__*/
 createNamespace('check-item');
 var checkItem = /*#__PURE__*/
-createComponent$z({
+createComponent$G({
   mixins: [
   /*#__PURE__*/
   useCheckItemWithModel('Group')],
@@ -7610,7 +10753,7 @@ createComponent$z({
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$y(),
+      "class": bem$F(),
       "on": {
         "click": this.toggle
       }
@@ -7620,13 +10763,13 @@ createComponent$z({
 });
 
 const {
-  createComponent: createComponent$A,
-  bem: bem$z
+  createComponent: createComponent$H,
+  bem: bem$G
 } =
 /*#__PURE__*/
 createNamespace('lazy');
 var lazy = /*#__PURE__*/
-createComponent$A({
+createComponent$H({
   mixins: [
   /*#__PURE__*/
   useLazy()],
@@ -7634,7 +10777,7 @@ createComponent$A({
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$z()
+      "class": bem$G()
     }, [this.slots()]);
   }
 
@@ -7733,13 +10876,13 @@ function useTreeItem(name) {
 }
 
 const {
-  createComponent: createComponent$B,
-  bem: bem$A
+  createComponent: createComponent$I,
+  bem: bem$H
 } =
 /*#__PURE__*/
 createNamespace('tree-item');
 var treeItem = /*#__PURE__*/
-createComponent$B({
+createComponent$I({
   mixins: [
   /*#__PURE__*/
   useTreeItem('Tree')],
@@ -7754,7 +10897,7 @@ createComponent$B({
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$A(),
+      "class": bem$H(),
       "on": {
         "click": this.onClick
       }
@@ -7764,13 +10907,13 @@ createComponent$B({
 });
 
 const {
-  createComponent: createComponent$C,
-  bem: bem$B
+  createComponent: createComponent$J,
+  bem: bem$I
 } =
 /*#__PURE__*/
 createNamespace('img');
 var image = /*#__PURE__*/
-createComponent$C({
+createComponent$J({
   props: {
     alt: String,
     src: String
@@ -7801,9 +10944,7 @@ createComponent$C({
 
   methods: {
     addIO() {
-      if (this.src === undefined) {
-        return;
-      }
+      if (!this.src) return;
 
       if ('IntersectionObserver' in window) {
         this.removeIO();
@@ -7855,7 +10996,7 @@ createComponent$C({
   render() {
     const h = arguments[0];
     return h("div", helper([{
-      "class": bem$B()
+      "class": bem$I()
     }, {
       "on": this.$listeners
     }]), [h("img", {
@@ -7874,13 +11015,13 @@ createComponent$C({
 });
 
 const {
-  createComponent: createComponent$D,
-  bem: bem$C
+  createComponent: createComponent$K,
+  bem: bem$J
 } =
 /*#__PURE__*/
 createNamespace('infinite-scroll');
 var infiniteScroll = /*#__PURE__*/
-createComponent$D({
+createComponent$K({
   inject: {
     Content: {
       default: undefined
@@ -8099,10 +11240,10 @@ createComponent$D({
       isLoading
     } = this;
     return h("div", {
-      "class": [bem$C(), {
-        'infinite-scroll-loading': isLoading,
-        'infinite-scroll-enabled': !disabled
-      }]
+      "class": [bem$J({
+        loading: isLoading,
+        enabled: !disabled
+      })]
     }, [this.slots()]);
   }
 
@@ -8221,13 +11362,13 @@ const allowedAttributes = ['class', 'id', 'href', 'src', 'name', 'slot'];
 const blockedTags = ['script', 'style', 'iframe', 'meta', 'link', 'object', 'embed'];
 
 const {
-  createComponent: createComponent$E,
-  bem: bem$D
+  createComponent: createComponent$L,
+  bem: bem$K
 } =
 /*#__PURE__*/
 createNamespace('infinite-scroll-content');
 var infiniteScrollContent = /*#__PURE__*/
-createComponent$E({
+createComponent$L({
   props: {
     loadingSpinner: {
       type: String
@@ -8257,9 +11398,9 @@ createComponent$E({
       loadingSpinner
     } = this;
     return h("div", {
-      "class": [bem$D(), {
+      "class": [bem$K(), {
         // Used internally for styling
-        [`infinite-scroll-content-${mode}`]: true
+        [`line-infinite-scroll-content-${mode}`]: true
       }]
     }, [h("div", {
       "class": "infinite-loading"
@@ -8280,8 +11421,8 @@ createComponent$E({
 });
 
 const {
-  createComponent: createComponent$F,
-  bem: bem$E
+  createComponent: createComponent$M,
+  bem: bem$L
 } =
 /*#__PURE__*/
 createNamespace('input');
@@ -8298,7 +11439,7 @@ const findItemLabel$1 = componentEl => {
 
 let inputIds = 0;
 var input = /*#__PURE__*/
-createComponent$F({
+createComponent$M({
   mixins: [
   /*#__PURE__*/
   useModel('nativeValue', {
@@ -8384,7 +11525,7 @@ createComponent$F({
 
   methods: {
     /**
-     * Sets focus on the specified `ion-input`. Use this method instead of the global
+     * Sets focus on the specified `line-input`. Use this method instead of the global
      * `input.focus()`.
      */
     setFocus() {
@@ -8566,7 +11707,7 @@ createComponent$F({
     }
 
     return h("div", helper([{
-      "class": [bem$E(), {
+      "class": [bem$L(), {
         'has-value': nativeValue && nativeValue.length,
         'has-focus': hasFocus
       }]
@@ -8616,13 +11757,13 @@ createComponent$F({
 });
 
 const {
-  createComponent: createComponent$G,
-  bem: bem$F
+  createComponent: createComponent$N,
+  bem: bem$M
 } =
 /*#__PURE__*/
 createNamespace('item');
 var item = /*#__PURE__*/
-createComponent$G({
+createComponent$N({
   mixins: [
   /*#__PURE__*/
   useColor()],
@@ -8752,7 +11893,7 @@ createComponent$G({
       "attrs": {
         "aria-disabled": disabled ? 'true' : null
       },
-      "class": [bem$F({}), { ...childStyles,
+      "class": [bem$M({}), { ...childStyles,
         item: true,
         [`item-lines-${lines}`]: isDef(lines),
         'item-disabled': disabled,
@@ -8787,13 +11928,13 @@ createComponent$G({
 });
 
 const {
-  createComponent: createComponent$H,
-  bem: bem$G
+  createComponent: createComponent$O,
+  bem: bem$N
 } =
 /*#__PURE__*/
 createNamespace('item-divider');
 var itemDivider = /*#__PURE__*/
-createComponent$H({
+createComponent$O({
   mixins: [
   /*#__PURE__*/
   useColor()],
@@ -8807,28 +11948,688 @@ createComponent$H({
       sticky = false
     } = this;
     return h("div", helper([{
-      "class": [bem$G({
+      "class": [bem$N({
         sticky
       }), 'item']
     }, {
       "on": this.$listeners
     }]), [this.slots('start'), h("div", {
-      "class": bem$G('inner')
+      "class": bem$N('inner')
     }, [h("div", {
-      "class": bem$G('wrapper')
+      "class": bem$N('wrapper')
     }, [this.slots()]), this.slots('end')])]);
   }
 
 });
 
 const {
-  createComponent: createComponent$I,
-  bem: bem$H
+  createComponent: createComponent$P,
+  bem: bem$O
+} =
+/*#__PURE__*/
+createNamespace('item-group');
+var itemGroup = /*#__PURE__*/
+createComponent$P({
+  render() {
+    const h = arguments[0];
+    const {
+      mode
+    } = this;
+    return h("div", {
+      "class": [bem$O(), {
+        // Used internally for styling
+        [`item-group-${mode}`]: true,
+        item: true
+      }]
+    }, [this.slots()]);
+  }
+
+});
+
+const {
+  createComponent: createComponent$Q,
+  bem: bem$P
+} =
+/*#__PURE__*/
+createNamespace('item-option');
+var itemOption = /*#__PURE__*/
+createComponent$Q({
+  mixins: [
+  /*#__PURE__*/
+  useColor()],
+  props: {
+    disabled: Boolean,
+    download: String,
+    expandable: {
+      type: Boolean,
+      default: false
+    },
+    href: String,
+    rel: String,
+    target: String,
+    type: {
+      type: String,
+      default: 'button'
+    }
+  },
+  methods: {
+    onClick(ev) {
+      const el = ev.target.closest('.line-item-option');
+
+      if (el) {
+        ev.preventDefault();
+      }
+    }
+
+  },
+
+  render() {
+    const h = arguments[0];
+    const {
+      disabled,
+      expandable,
+      href,
+      mode,
+      type,
+      download,
+      target
+    } = this;
+    const TagType = href === undefined ? 'button' : 'a';
+    const attrs = TagType === 'button' ? {
+      type
+    } : {
+      download,
+      href,
+      target
+    };
+    return h("div", {
+      "class": [bem$P({
+        disabled,
+        expandable
+      }), {
+        'line-activatable': true
+      }],
+      "on": {
+        "click": this.onClick
+      }
+    }, [h(TagType, helper([{}, attrs, {
+      "class": bem$P('button-native'),
+      "attrs": {
+        "disabled": disabled
+      }
+    }]), [h("span", {
+      "class": bem$P('button-inner')
+    }, [this.slots('top'), h("div", {
+      "class": "horizontal-wrapper"
+    }, [this.slots('start'), this.slots('icon-only'), this.slots(), this.slots('end')]), this.slots('bottom')]), mode === 'md' && h("line-ripple-effect")])]);
+  }
+
+});
+
+const {
+  createComponent: createComponent$R,
+  bem: bem$Q
+} =
+/*#__PURE__*/
+createNamespace('item-options');
+
+const isEndSide = side => {
+  const isRTL = document.dir === 'rtl';
+
+  switch (side) {
+    case 'start':
+      return isRTL;
+
+    case 'end':
+      return !isRTL;
+
+    default:
+      throw new Error(`"${side}" is not a valid value for [side]. Use "start" or "end" instead.`);
+  }
+};
+
+var itemOptions = /*#__PURE__*/
+createComponent$R({
+  inject: {
+    ItemSliding: {
+      default: undefined
+    }
+  },
+  props: {
+    side: {
+      type: String,
+      default: 'end'
+    }
+  },
+  methods: {
+    fireSwipeEvent() {
+      this.$emit('swipe', {
+        side: this.side
+      });
+    }
+
+  },
+
+  beforeMount() {
+    if (this.ItemSliding) {
+      this.ItemSliding.options.push(this);
+    }
+  },
+
+  render() {
+    const h = arguments[0];
+    const {
+      mode,
+      side
+    } = this;
+    const isEnd = isEndSide(side);
+    return h("div", {
+      "class": bem$Q({
+        [mode]: true,
+        start: !isEnd,
+        end: isEnd
+      })
+    }, [this.slots()]);
+  }
+
+});
+
+const {
+  createComponent: createComponent$S,
+  bem: bem$R
+} =
+/*#__PURE__*/
+createNamespace('item-sliding');
+const SWIPE_MARGIN = 30;
+const ELASTIC_FACTOR = 0.55;
+let openSlidingItem;
+
+const isEndSide$1 = side => {
+  const isRTL = document.dir === 'rtl';
+
+  switch (side) {
+    case 'start':
+      return isRTL;
+
+    case 'end':
+      return !isRTL;
+
+    default:
+      throw new Error(`"${side}" is not a valid value for [side]. Use "start" or "end" instead.`);
+  }
+};
+
+const swipeShouldReset = (isResetDirection, isMovingFast, isOnResetZone) => {
+  // The logic required to know when the sliding item should close (openAmount=0)
+  // depends on three booleans (isResetDirection, isMovingFast, isOnResetZone)
+  // and it ended up being too complicated to be written manually without errors
+  // so the truth table is attached below: (0=false, 1=true)
+  // isResetDirection | isMovingFast | isOnResetZone || shouldClose
+  //         0        |       0      |       0       ||    0
+  //         0        |       0      |       1       ||    1
+  //         0        |       1      |       0       ||    0
+  //         0        |       1      |       1       ||    0
+  //         1        |       0      |       0       ||    0
+  //         1        |       0      |       1       ||    1
+  //         1        |       1      |       0       ||    1
+  //         1        |       1      |       1       ||    1
+  // The resulting expression was generated by resolving the K-map (Karnaugh map):
+  return !isMovingFast && isOnResetZone || isResetDirection && isMovingFast;
+};
+
+var itemSliding = /*#__PURE__*/
+createComponent$S({
+  provide() {
+    return {
+      ItemSliding: this
+    };
+  },
+
+  inject: {
+    Item: {
+      default: undefined
+    }
+  },
+  props: {
+    disabled: {
+      type: Boolean,
+      default: false
+    }
+  },
+
+  data() {
+    return {
+      state: 2
+      /* Disabled */
+      ,
+      options: []
+    };
+  },
+
+  methods: {
+    disabledChanged() {
+      if (this.gesture) {
+        this.gesture.enable(!this.disabled);
+      }
+    },
+
+    /**
+     * Get the amount the item is open in pixels.
+     */
+    getOpenAmount() {
+      return Promise.resolve(this.openAmount);
+    },
+
+    /**
+     * Get the ratio of the open amount of the item compared to the width of the options.
+     * If the number returned is positive, then the options on the right side are open.
+     * If the number returned is negative, then the options on the left side are open.
+     * If the absolute value of the number is greater than 1, the item is open more than
+     * the width of the options.
+     */
+    getSlidingRatio() {
+      return Promise.resolve(this.getSlidingRatioSync());
+    },
+
+    /**
+     * Open the sliding item.
+     *
+     * @param side The side of the options to open. If a side is not provided,
+     * it will open the first set of options it finds within the item.
+     */
+    async open(side) {
+      if (this.item === null) {
+        return;
+      }
+
+      const optionsToOpen = this.getOptions(side);
+
+      if (!optionsToOpen) {
+        return;
+      }
+      /**
+       * If side is not set, we need to infer the side
+       * so we know which direction to move the options
+       */
+
+
+      if (side === undefined) {
+        side = optionsToOpen === this.leftOptions ? 'start' : 'end';
+      } // In RTL we want to switch the sides
+
+
+      side = isEndSide$1(side) ? 'end' : 'start';
+      const isStartOpen = this.openAmount < 0;
+      const isEndOpen = this.openAmount > 0;
+      /**
+       * If a side is open and a user tries to
+       * re-open the same side, we should not do anything
+       */
+
+      if (isStartOpen && optionsToOpen === this.leftOptions) {
+        return;
+      }
+
+      if (isEndOpen && optionsToOpen === this.rightOptions) {
+        return;
+      }
+
+      this.closeOpened();
+      this.state = 4
+      /* Enabled */
+      ;
+      requestAnimationFrame(() => {
+        this.calculateOptsWidth();
+        const width = side === 'end' ? this.optsWidthRightSide : -this.optsWidthLeftSide;
+        openSlidingItem = this;
+        this.setOpenAmount(width, false);
+        this.state = side === 'end' ? 8
+        /* End */
+        : 16
+        /* Start */
+        ;
+      });
+    },
+
+    /**
+     * Close the sliding item. Items can also be closed from the [List](../list).
+     */
+    async close() {
+      this.setOpenAmount(0, true);
+    },
+
+    /**
+     * Close all of the sliding items in the list. Items can also be closed from the [List](../list).
+     */
+    async closeOpened() {
+      if (openSlidingItem !== undefined) {
+        openSlidingItem.close();
+        openSlidingItem = undefined;
+        return true;
+      }
+
+      return false;
+    },
+
+    /**
+     * Given an optional side, return the line-item-options element.
+     *
+     * @param side This side of the options to get. If a side is not provided it will
+     * return the first one available.
+     */
+    getOptions(side) {
+      if (side === undefined) {
+        return this.leftOptions || this.rightOptions;
+      }
+
+      if (side === 'start') {
+        return this.leftOptions;
+      }
+
+      return this.rightOptions;
+    },
+
+    async updateOptions() {
+      const {
+        options
+      } = this;
+      let sides = 0; // Reset left and right options in case they were removed
+
+      this.leftOptions = this.rightOptions = undefined;
+
+      for (let i = 0; i < options.length; i++) {
+        const option = await options[i];
+        const side = isEndSide$1(option.side) ? 'end' : 'start';
+
+        if (side === 'start') {
+          this.leftOptions = option;
+          sides |= 1
+          /* Start */
+          ;
+        } else {
+          this.rightOptions = option;
+          sides |= 2
+          /* End */
+          ;
+        }
+      }
+
+      this.optsDirty = true;
+      this.sides = sides;
+    },
+
+    canStart(gesture) {
+      /**
+       * If very close to start of the screen
+       * do not open left side so swipe to go
+       * back will still work.
+       */
+      const rtl = document.dir === 'rtl';
+      const atEdge = rtl ? window.innerWidth - gesture.startX < 15 : gesture.startX < 15;
+
+      if (atEdge) {
+        return false;
+      }
+
+      const selected = openSlidingItem;
+
+      if (selected && selected !== this) {
+        this.closeOpened();
+        return false;
+      }
+
+      return !!(this.rightOptions || this.leftOptions);
+    },
+
+    onStart() {
+      openSlidingItem = this;
+
+      if (this.tmr !== undefined) {
+        clearTimeout(this.tmr);
+        this.tmr = undefined;
+      }
+
+      if (this.openAmount === 0) {
+        this.optsDirty = true;
+        this.state = 4
+        /* Enabled */
+        ;
+      }
+
+      this.initialOpenAmount = this.openAmount;
+
+      if (this.item) {
+        this.item.style.transition = 'none';
+      }
+    },
+
+    onMove(gesture) {
+      if (this.optsDirty) {
+        this.calculateOptsWidth();
+      }
+
+      let openAmount = this.initialOpenAmount - gesture.deltaX;
+
+      switch (this.sides) {
+        case 2
+        /* End */
+        :
+          openAmount = Math.max(0, openAmount);
+          break;
+
+        case 1
+        /* Start */
+        :
+          openAmount = Math.min(0, openAmount);
+          break;
+
+        case 3
+        /* Both */
+        :
+          break;
+
+        case 0
+        /* None */
+        :
+          return;
+
+        default:
+          console.warn('invalid ItemSideFlags value', this.sides);
+          break;
+      }
+
+      let optsWidth;
+
+      if (openAmount > this.optsWidthRightSide) {
+        optsWidth = this.optsWidthRightSide;
+        openAmount = optsWidth + (openAmount - optsWidth) * ELASTIC_FACTOR;
+      } else if (openAmount < -this.optsWidthLeftSide) {
+        optsWidth = -this.optsWidthLeftSide;
+        openAmount = optsWidth + (openAmount - optsWidth) * ELASTIC_FACTOR;
+      }
+
+      this.setOpenAmount(openAmount, false);
+    },
+
+    onEnd(gesture) {
+      const velocity = gesture.velocityX;
+      let restingPoint = this.openAmount > 0 ? this.optsWidthRightSide : -this.optsWidthLeftSide; // Check if the drag didn't clear the buttons mid-point
+      // and we aren't moving fast enough to swipe open
+
+      const isResetDirection = this.openAmount > 0 === !(velocity < 0);
+      const isMovingFast = Math.abs(velocity) > 0.3;
+      const isOnCloseZone = Math.abs(this.openAmount) < Math.abs(restingPoint / 2);
+
+      if (swipeShouldReset(isResetDirection, isMovingFast, isOnCloseZone)) {
+        restingPoint = 0;
+      }
+
+      const {
+        state
+      } = this;
+      this.setOpenAmount(restingPoint, true);
+
+      if ((state & 32
+      /* SwipeEnd */
+      ) !== 0 && this.rightOptions) {
+        this.rightOptions.fireSwipeEvent();
+      } else if ((state & 64
+      /* SwipeStart */
+      ) !== 0 && this.leftOptions) {
+        this.leftOptions.fireSwipeEvent();
+      }
+    },
+
+    calculateOptsWidth() {
+      this.optsWidthRightSide = 0;
+
+      if (this.rightOptions) {
+        this.rightOptions.$el.style.display = 'flex';
+        this.optsWidthRightSide = this.rightOptions.$el.offsetWidth;
+        this.rightOptions.$el.style.display = '';
+      }
+
+      this.optsWidthLeftSide = 0;
+
+      if (this.leftOptions) {
+        this.leftOptions.$el.style.display = 'flex';
+        this.optsWidthLeftSide = this.leftOptions.$el.offsetWidth;
+        this.leftOptions.$el.style.display = '';
+      }
+
+      this.optsDirty = false;
+    },
+
+    setOpenAmount(openAmount, isFinal) {
+      if (this.tmr !== undefined) {
+        clearTimeout(this.tmr);
+        this.tmr = undefined;
+      }
+
+      if (!this.item) {
+        return;
+      }
+
+      const {
+        style
+      } = this.item;
+      this.openAmount = openAmount;
+
+      if (isFinal) {
+        style.transition = '';
+      }
+
+      if (openAmount > 0) {
+        this.state = openAmount >= this.optsWidthRightSide + SWIPE_MARGIN ? 8
+        /* End */
+        | 32
+        /* SwipeEnd */
+        : 8
+        /* End */
+        ;
+      } else if (openAmount < 0) {
+        this.state = openAmount <= -this.optsWidthLeftSide - SWIPE_MARGIN ? 16
+        /* Start */
+        | 64
+        /* SwipeStart */
+        : 16
+        /* Start */
+        ;
+      } else {
+        this.tmr = setTimeout(() => {
+          this.state = 2
+          /* Disabled */
+          ;
+          this.tmr = undefined;
+        }, 600);
+        openSlidingItem = undefined;
+        style.transform = '';
+        return;
+      }
+
+      style.transform = `translate3d(${-openAmount}px,0,0)`;
+      this.$emit('drag', {
+        amount: openAmount,
+        ratio: this.getSlidingRatioSync()
+      });
+    },
+
+    getSlidingRatioSync() {
+      if (this.openAmount > 0) {
+        return this.openAmount / this.optsWidthRightSide;
+      }
+
+      if (this.openAmount < 0) {
+        return this.openAmount / this.optsWidthLeftSide;
+      }
+
+      return 0;
+    }
+
+  },
+
+  beforeMount() {
+    this.item = null;
+    this.openAmount = 0;
+    this.initialOpenAmount = 0;
+    this.optsWidthRightSide = 0;
+    this.optsWidthLeftSide = 0;
+    this.sides = 0
+    /* None */
+    ;
+    this.tmr = undefined;
+    this.optsDirty = true;
+  },
+
+  async mounted() {
+    this.item = this.$el.querySelector('.line-item');
+    await this.updateOptions();
+    this.gesture = createGesture({
+      el: this.$el,
+      gestureName: 'item-swipe',
+      gesturePriority: 100,
+      threshold: 5,
+      canStart: ev => this.canStart(ev),
+      onStart: () => this.onStart(),
+      onMove: ev => this.onMove(ev),
+      onEnd: ev => this.onEnd(ev)
+    });
+    this.disabledChanged();
+  },
+
+  render() {
+    const h = arguments[0];
+    return h("div", {
+      "class": bem$R({
+        'active-slide': this.state !== 2
+        /* Disabled */
+        ,
+        'active-options-end': (this.state & 8
+        /* End */
+        ) !== 0,
+        'active-options-start': (this.state & 16
+        /* Start */
+        ) !== 0,
+        'active-swipe-end': (this.state & 32
+        /* SwipeEnd */
+        ) !== 0,
+        'active-swipe-start': (this.state & 64
+        /* SwipeStart */
+        ) !== 0
+      })
+    }, [this.slots()]);
+  }
+
+});
+
+const {
+  createComponent: createComponent$T,
+  bem: bem$S
 } =
 /*#__PURE__*/
 createNamespace('label');
 var label = /*#__PURE__*/
-createComponent$I({
+createComponent$T({
   mixins: [
   /*#__PURE__*/
   useColor()],
@@ -8857,11 +12658,12 @@ createComponent$I({
 
   methods: {
     emitStyle() {
-      if (!this.Item) return;
       const {
+        Item,
         position
       } = this;
-      this.Item.itemStyle('label', {
+      if (!Item) return;
+      Item.itemStyle('label', {
         label: true,
         [`label-${position}`]: isDef(position)
       });
@@ -8876,7 +12678,7 @@ createComponent$I({
     } = this; // this.noAnimate = (position === 'floating');
 
     return h("div", helper([{
-      "class": [bem$H(), {
+      "class": [bem$S(), {
         [`label-${position}`]: isDef(position),
         'label-no-animate': this.noAnimate
       }]
@@ -8888,13 +12690,13 @@ createComponent$I({
 });
 
 const {
-  createComponent: createComponent$J,
-  bem: bem$I
+  createComponent: createComponent$U,
+  bem: bem$T
 } =
 /*#__PURE__*/
 createNamespace('list');
 var list = /*#__PURE__*/
-createComponent$J({
+createComponent$U({
   props: {
     // 'full' | 'inset' | 'none' | undefined
     lines: String,
@@ -8908,7 +12710,7 @@ createComponent$J({
       inset = false
     } = this;
     return h("div", helper([{
-      "class": bem$I({
+      "class": bem$T({
         [`lines-${lines}`]: isDef(lines),
         inset
       })
@@ -8920,13 +12722,13 @@ createComponent$J({
 });
 
 const {
-  createComponent: createComponent$K,
-  bem: bem$J
+  createComponent: createComponent$V,
+  bem: bem$U
 } =
 /*#__PURE__*/
 createNamespace('list-header');
 var listHeader = /*#__PURE__*/
-createComponent$K({
+createComponent$V({
   mixins: [
   /*#__PURE__*/
   useColor()],
@@ -8941,7 +12743,7 @@ createComponent$K({
       lines
     } = this;
     return h("div", helper([{
-      "class": bem$J({
+      "class": bem$U({
         [`lines-${lines}`]: isDef(lines)
       })
     }, {
@@ -8955,13 +12757,13 @@ createComponent$K({
 
 const NAMESPACE$8 = 'ListView';
 const {
-  createComponent: createComponent$L,
-  bem: bem$K
+  createComponent: createComponent$W,
+  bem: bem$V
 } =
 /*#__PURE__*/
 createNamespace('list-item');
 var ListItem = /*#__PURE__*/
-createComponent$L({
+createComponent$W({
   inject: [NAMESPACE$8],
   props: {
     index: {
@@ -9015,7 +12817,7 @@ createComponent$L({
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$K()
+      "class": bem$V()
     }, [this.cachedNode]);
   }
 
@@ -9599,13 +13401,13 @@ function exponentialSearch(array = [], wanted, compare, from, to, bound) {
 
 const NAMESPACE$9 = 'ListView';
 const {
-  createComponent: createComponent$M,
-  bem: bem$L
+  createComponent: createComponent$X,
+  bem: bem$W
 } =
 /*#__PURE__*/
 createNamespace('list-view');
 var listView = /*#__PURE__*/
-createComponent$M({
+createComponent$X({
   provide() {
     return {
       [NAMESPACE$9]: this
@@ -10122,13 +13924,13 @@ createComponent$M({
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$L(),
+      "class": bem$W(),
       "ref": "viewport",
       "on": {
         "scroll": this.onScroll
       }
     }, [h("div", {
-      "class": bem$L('spacer'),
+      "class": bem$W('spacer'),
       "style": {
         width: `${this.layout.geometry.width}px`,
         height: `${this.layout.geometry.height}px`
@@ -10137,7 +13939,7 @@ createComponent$M({
       "attrs": {
         "tag": 'div'
       },
-      "class": bem$L('content')
+      "class": bem$W('content')
     }, [Object.keys(this.views).map(index => {
       const view = this.views[index];
       return h(ListItem, {
@@ -10154,413 +13956,6 @@ createComponent$M({
         }
       });
     })])]);
-  }
-
-});
-
-function usePopupDuration() {
-    return createMixins({
-        props: {
-            // This property holds the timeout (milliseconds) after which the tool tip is hidden.
-            // A tooltip with a negative timeout does not hide automatically.
-            // The default value is -1.
-            duration: Number,
-        },
-        beforeMount() {
-            this.$on('opened', () => {
-                if (this.duration > 0) {
-                    this.durationTimeout = setTimeout(() => this.close('timeout'), this.duration);
-                }
-            });
-            this.$on('aboutToHide', () => {
-                if (this.durationTimeout) {
-                    clearTimeout(this.durationTimeout);
-                }
-            });
-        },
-    });
-}
-
-const spinners = {
-    bubbles: {
-        dur: 1000,
-        circles: 9,
-        fn: (dur, index, total) => {
-            const animationDelay = `${(dur * index / total) - dur}ms`;
-            const angle = 2 * Math.PI * index / total;
-            return {
-                r: 5,
-                style: {
-                    top: `${9 * Math.sin(angle)}px`,
-                    left: `${9 * Math.cos(angle)}px`,
-                    'animation-delay': animationDelay,
-                },
-            };
-        },
-    },
-    circles: {
-        dur: 1000,
-        circles: 8,
-        fn: (dur, index, total) => {
-            const step = index / total;
-            const animationDelay = `${(dur * step) - dur}ms`;
-            const angle = 2 * Math.PI * step;
-            return {
-                r: 5,
-                style: {
-                    top: `${9 * Math.sin(angle)}px`,
-                    left: `${9 * Math.cos(angle)}px`,
-                    'animation-delay': animationDelay,
-                },
-            };
-        },
-    },
-    circular: {
-        dur: 1400,
-        elmDuration: true,
-        circles: 1,
-        fn: () => {
-            return {
-                r: 20,
-                cx: 44,
-                cy: 44,
-                fill: 'none',
-                viewBox: '22 22 44 44',
-                transform: 'translate(0,0)',
-                style: {},
-            };
-        },
-    },
-    crescent: {
-        dur: 750,
-        circles: 1,
-        fn: () => {
-            return {
-                r: 26,
-                style: {},
-            };
-        },
-    },
-    dots: {
-        dur: 750,
-        circles: 3,
-        fn: (_, index) => {
-            const animationDelay = `${-(110 * index)}ms`;
-            return {
-                r: 6,
-                style: {
-                    left: `${9 - (9 * index)}px`,
-                    'animation-delay': animationDelay,
-                },
-            };
-        },
-    },
-    lines: {
-        dur: 1000,
-        lines: 12,
-        fn: (dur, index, total) => {
-            const transform = `rotate(${30 * index + (index < 6 ? 180 : -180)}deg)`;
-            const animationDelay = `${(dur * index / total) - dur}ms`;
-            return {
-                y1: 17,
-                y2: 29,
-                style: {
-                    transform,
-                    'animation-delay': animationDelay,
-                },
-            };
-        },
-    },
-    'lines-small': {
-        dur: 1000,
-        lines: 12,
-        fn: (dur, index, total) => {
-            const transform = `rotate(${30 * index + (index < 6 ? 180 : -180)}deg)`;
-            const animationDelay = `${(dur * index / total) - dur}ms`;
-            return {
-                y1: 12,
-                y2: 20,
-                style: {
-                    transform,
-                    'animation-delay': animationDelay,
-                },
-            };
-        },
-    },
-};
-const SPINNERS = spinners;
-
-const {
-  createComponent: createComponent$N,
-  bem: bem$M
-} =
-/*#__PURE__*/
-createNamespace('spinner');
-
-function getSpinnerName(name) {
-  const spinnerName = name || config.get('spinner');
-  const mode = getSkylineMode();
-
-  if (spinnerName) {
-    return spinnerName;
-  }
-
-  return mode === 'ios' ? 'lines' : 'circular';
-}
-
-function buildCircle(h, spinner, duration, index, total) {
-  const data = spinner.fn(duration, index, total);
-  data.style['animation-duration'] = `${duration}ms`;
-  return h("svg", {
-    "attrs": {
-      "viewBox": data.viewBox || '0 0 64 64'
-    },
-    "style": data.style
-  }, [h("circle", {
-    "attrs": {
-      "transform": data.transform || 'translate(32,32)',
-      "cx": data.cx,
-      "cy": data.cy,
-      "r": data.r
-    },
-    "style": spinner.elmDuration ? {
-      animationDuration: `${duration}ms`
-    } : {}
-  })]);
-}
-
-function buildLine(h, spinner, duration, index, total) {
-  const data = spinner.fn(duration, index, total);
-  data.style['animation-duration'] = `${duration}ms`;
-  return h("svg", {
-    "attrs": {
-      "viewBox": data.viewBox || '0 0 64 64'
-    },
-    "style": data.style
-  }, [h("line", {
-    "attrs": {
-      "transform": "translate(32,32)",
-      "y1": data.y1,
-      "y2": data.y2
-    }
-  })]);
-}
-
-var Spinner = /*#__PURE__*/
-createComponent$N({
-  functional: true,
-  props: {
-    color: String,
-    duration: Number,
-    type: String,
-    paused: Boolean
-  },
-
-  render(h, {
-    props,
-    data
-  }) {
-    const spinnerName = getSpinnerName(props.type);
-    const spinner = SPINNERS[spinnerName] || SPINNERS.lines;
-    const duration = props.duration > 10 ? props.duration : spinner.dur;
-    const svgs = [];
-
-    if (spinner.circles !== undefined) {
-      for (let i = 0; i < spinner.circles; i++) {
-        svgs.push(buildCircle(h, spinner, duration, i, spinner.circles));
-      }
-    } else if (spinner.lines !== undefined) {
-      for (let i = 0; i < spinner.lines; i++) {
-        svgs.push(buildLine(h, spinner, duration, i, spinner.lines));
-      }
-    }
-
-    return h("div", helper([{
-      "class": [bem$M({
-        [spinnerName]: true,
-        paused: !!props.paused || config.getBoolean('testing')
-      }), createColorClasses(props.color)],
-      "attrs": {
-        "role": "progressbar"
-      },
-      "style": spinner.elmDuration && {
-        animationDuration: `${duration}ms`
-      }
-    }, data]), [svgs]);
-  }
-
-});
-
-/**
- * iOS Loading Enter Animation
- */
-const iosEnterAnimation$3 = (baseEl) => {
-    const baseAnimation = createAnimation();
-    const backdropAnimation = createAnimation();
-    const wrapperAnimation = createAnimation();
-    backdropAnimation
-        .addElement(baseEl.querySelector('.line-overlay'))
-        .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
-    wrapperAnimation
-        .addElement(baseEl.querySelector('.line-loading__wrapper'))
-        .keyframes([
-        { offset: 0, opacity: 0.01, transform: 'scale(1.1)' },
-        { offset: 1, opacity: 1, transform: 'scale(1)' },
-    ]);
-    return baseAnimation
-        .addElement(baseEl)
-        .easing('ease-in-out')
-        .duration(200)
-        .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-/**
- * iOS Loading Leave Animation
- */
-const iosLeaveAnimation$3 = (baseEl) => {
-    const baseAnimation = createAnimation();
-    const backdropAnimation = createAnimation();
-    const wrapperAnimation = createAnimation();
-    backdropAnimation
-        .addElement(baseEl.querySelector('.line-overlay'))
-        .fromTo('opacity', 'var(--backdrop-opacity)', 0);
-    wrapperAnimation
-        .addElement(baseEl.querySelector('.line-loading__wrapper'))
-        .keyframes([
-        { offset: 0, opacity: 0.99, transform: 'scale(1)' },
-        { offset: 1, opacity: 0, transform: 'scale(0.9)' },
-    ]);
-    return baseAnimation
-        .addElement(baseEl)
-        .easing('ease-in-out')
-        .duration(200)
-        .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-/**
- * Md Loading Enter Animation
- */
-const mdEnterAnimation$2 = (baseEl) => {
-    const baseAnimation = createAnimation();
-    const backdropAnimation = createAnimation();
-    const wrapperAnimation = createAnimation();
-    backdropAnimation
-        .addElement(baseEl.querySelector('.line-overlay'))
-        .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
-    wrapperAnimation
-        .addElement(baseEl.querySelector('.line-loading__wrapper'))
-        .keyframes([
-        { offset: 0, opacity: 0.01, transform: 'scale(1.1)' },
-        { offset: 1, opacity: 1, transform: 'scale(1)' },
-    ]);
-    return baseAnimation
-        .addElement(baseEl)
-        .easing('ease-in-out')
-        .duration(200)
-        .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-/**
- * Md Loading Leave Animation
- */
-const mdLeaveAnimation$2 = (baseEl) => {
-    const baseAnimation = createAnimation();
-    const backdropAnimation = createAnimation();
-    const wrapperAnimation = createAnimation();
-    backdropAnimation
-        .addElement(baseEl.querySelector('.line-overlay'))
-        .fromTo('opacity', 'var(--backdrop-opacity)', 0);
-    wrapperAnimation
-        .addElement(baseEl.querySelector('.line-loading__wrapper'))
-        .keyframes([
-        { offset: 0, opacity: 0.99, transform: 'scale(1)' },
-        { offset: 1, opacity: 0, transform: 'scale(0.9)' },
-    ]);
-    return baseAnimation
-        .addElement(baseEl)
-        .easing('ease-in-out')
-        .duration(200)
-        .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-const {
-  createComponent: createComponent$O,
-  bem: bem$N
-} =
-/*#__PURE__*/
-createNamespace('loading');
-var loading = /*#__PURE__*/
-createComponent$O({
-  mixins: [
-  /*#__PURE__*/
-  usePopup(),
-  /*#__PURE__*/
-  usePopupDuration()],
-  props: {
-    message: String,
-    spinner: String
-  },
-
-  beforeMount() {
-    const {
-      mode
-    } = this;
-    this.$on('animation-enter', builder => {
-      builder.build = mode === 'md' ? mdEnterAnimation$2 : iosEnterAnimation$3;
-    });
-    this.$on('animation-leave', builder => {
-      builder.build = mode === 'md' ? mdLeaveAnimation$2 : iosLeaveAnimation$3;
-    });
-  },
-
-  methods: {
-    onTap() {
-      this.$emit('overlay-tap');
-    }
-
-  },
-
-  render() {
-    const h = arguments[0];
-    const {
-      message,
-      spinner
-    } = this;
-    return h("div", helper([{
-      "directives": [{
-        name: "show",
-        value: this.visible
-      }],
-      "attrs": {
-        "role": "dialog",
-        "aria-modal": "true"
-      },
-      "class": bem$N({
-        translucent: this.translucent
-      })
-    }, {
-      "on": this.$listeners
-    }]), [h(Overlay, {
-      "attrs": {
-        "visible": this.dim
-      },
-      "on": {
-        "tap": this.onTap
-      }
-    }), h("div", {
-      "attrs": {
-        "role": "dialog"
-      },
-      "class": bem$N('wrapper')
-    }, [spinner && h("div", {
-      "class": bem$N('spinner')
-    }, [h(Spinner, {
-      "attrs": {
-        "type": spinner
-      }
-    })]), message && h("div", {
-      "class": bem$N('content')
-    }, [message])])]);
   }
 
 });
@@ -10859,8 +14254,8 @@ const createMenuController = () => {
 const menuController = /* @__PURE__ */ createMenuController();
 
 const {
-  createComponent: createComponent$P,
-  bem: bem$O
+  createComponent: createComponent$Y,
+  bem: bem$X
 } =
 /*#__PURE__*/
 createNamespace('menu');
@@ -10910,9 +14305,9 @@ const isEnd = side => {
 
 const SHOW_MENU = 'show-menu';
 const SHOW_BACKDROP = 'show-overlay';
-const MENU_CONTENT_OPEN = 'menu-content-open';
+const MENU_CONTENT_OPEN = 'line-menu__content-open';
 var menu = /*#__PURE__*/
-createComponent$P({
+createComponent$Y({
   mixins: [
   /*#__PURE__*/
   useModel('actived')],
@@ -11030,10 +14425,11 @@ createComponent$P({
       } // Create new animation
 
 
-      this.animation = await menuController._createAnimation(this.type, this); // TODO global animated: false
-      // if (!config.getBoolean('animated', true)) {
-      //   this.animation.duration(0);
-      // }
+      this.animation = await menuController._createAnimation(this.type, this);
+
+      if (!config.getBoolean('animated', true)) {
+        this.animation.duration(0);
+      }
 
       this.animation.fill('both');
     },
@@ -11068,7 +14464,7 @@ createComponent$P({
     canStart(detail) {
       // Do not allow swipe gesture if a modal is open
       // TODO isModalPresented
-      // const isModalPresented = !!document.querySelector('ion-modal.show-modal');
+      // const isModalPresented = !!document.querySelector('<div className="line"></div>-modal.show-modal');
       if (!this.canSwipe()) {
         return false;
       }
@@ -11204,9 +14600,7 @@ createComponent$P({
         // add css class
         if (this.contentEl) {
           this.contentEl.classList.add(MENU_CONTENT_OPEN);
-        } // TODO
-        // emit open event
-        // this.ionDidOpen.emit();
+        } // emit open event
 
 
         this.$emit('open');
@@ -11226,9 +14620,7 @@ createComponent$P({
 
         if (this.animation) {
           this.animation.stop();
-        } // TODO
-        // emit close event
-        // this.ionDidClose.emit();
+        } // emit close event
 
 
         this.$emit('close');
@@ -11272,10 +14664,10 @@ createComponent$P({
 
       if (contentEl) {
         if (oldValue !== undefined) {
-          contentEl.classList.remove(`menu-content-${oldValue}`);
+          contentEl.classList.remove(`line-menu__content-${oldValue}`);
         }
 
-        contentEl.classList.add(`menu-content-${value}`);
+        contentEl.classList.add(`line-menu__content-${value}`);
         contentEl.removeAttribute('style');
       }
 
@@ -11347,7 +14739,7 @@ createComponent$P({
 
     this.contentEl = content; // add menu's content classes
 
-    content.classList.add('menu-content');
+    content.classList.add('line-menu__content');
 
     if (!content || !content.tagName) {
       // requires content element
@@ -11357,7 +14749,7 @@ createComponent$P({
 
     this.contentEl = content; // add menu's content classes
 
-    content.classList.add('menu-content');
+    content.classList.add('line-menu__content');
     this.typeChanged(this.type, undefined);
     this.sideChanged(); // TODO
     // register this menu with the app's menu controller
@@ -11413,22 +14805,22 @@ createComponent$P({
       visible
     } = this;
     return h("div", {
-      "class": [bem$O(), {
-        [`menu-type-${type}`]: true,
-        'show-menu': visible,
-        'menu-enabled': !disabled,
-        'menu-side-end': isEndSide,
-        'menu-side-start': !isEndSide,
-        'menu-pane-visible': isPaneVisible
+      "class": [bem$X({
+        [`type-${type}`]: true,
+        enabled: !disabled,
+        'side-end': isEndSide,
+        'side-start': !isEndSide,
+        'pane-visible': isPaneVisible
+      }), {
+        'show-menu': visible
       }]
     }, [h("div", {
-      "class": "menu-inner",
+      "class": bem$X('inner'),
       "ref": "menuInnerEl"
     }, [this.slots()]), h(Overlay, {
+      "class": bem$X('backdrop'),
       "ref": "backdropEl",
-      "class": "menu-backdrop",
       "attrs": {
-        "visible": visible,
         "tappable": false,
         "stopPropagation": false
       }
@@ -11438,13 +14830,13 @@ createComponent$P({
 });
 
 const {
-  createComponent: createComponent$Q,
-  bem: bem$P
+  createComponent: createComponent$Z,
+  bem: bem$Y
 } =
 /*#__PURE__*/
 createNamespace('note');
 var note = /*#__PURE__*/
-createComponent$Q({
+createComponent$Z({
   functional: true,
   props: {
     color: String
@@ -11455,490 +14847,19 @@ createComponent$Q({
     data,
     slots
   }) {
+    const {
+      color
+    } = props;
     return h("div", helper([{
-      "class": [bem$P(), createColorClasses(props.color)]
+      "class": [bem$Y(), createColorClasses(color)]
     }, data]), [slots()]);
   }
 
 });
 
-/**
- * iOS Popover Enter Animation
- */
-const POPOVER_IOS_BODY_PADDING = 5;
-const iosEnterAnimation$4 = (baseEl, ev) => {
-    let originY = 'top';
-    let originX = 'left';
-    const contentEl = baseEl.querySelector('.line-popover__content');
-    const contentDimentions = contentEl.getBoundingClientRect();
-    const contentWidth = contentDimentions.width;
-    const contentHeight = contentDimentions.height;
-    const bodyWidth = baseEl.ownerDocument.defaultView.innerWidth;
-    const bodyHeight = baseEl.ownerDocument.defaultView.innerHeight;
-    // If ev was passed, use that for target element
-    const targetDim = ev && ev.target && ev.target.getBoundingClientRect();
-    const targetTop = targetDim != null && 'top' in targetDim ? targetDim.top : bodyHeight / 2 - contentHeight / 2;
-    const targetLeft = targetDim != null && 'left' in targetDim ? targetDim.left : bodyWidth / 2;
-    const targetWidth = (targetDim && targetDim.width) || 0;
-    const targetHeight = (targetDim && targetDim.height) || 0;
-    const arrowEl = baseEl.querySelector('.line-popover__arrow');
-    const arrowDim = arrowEl.getBoundingClientRect();
-    const arrowWidth = arrowDim.width;
-    const arrowHeight = arrowDim.height;
-    if (targetDim == null) {
-        arrowEl.style.display = 'none';
-    }
-    const arrowCSS = {
-        top: targetTop + targetHeight,
-        left: targetLeft + targetWidth / 2 - arrowWidth / 2,
-    };
-    const popoverCSS = {
-        top: targetTop + targetHeight + (arrowHeight - 1),
-        left: targetLeft + targetWidth / 2 - contentWidth / 2,
-    };
-    // If the popover left is less than the padding it is off screen
-    // to the left so adjust it, else if the width of the popover
-    // exceeds the body width it is off screen to the right so adjust
-    //
-    let checkSafeAreaLeft = false;
-    let checkSafeAreaRight = false;
-    // If the popover left is less than the padding it is off screen
-    // to the left so adjust it, else if the width of the popover
-    // exceeds the body width it is off screen to the right so adjust
-    // 25 is a random/arbitrary number. It seems to work fine for ios11
-    // and iPhoneX. Is it perfect? No. Does it work? Yes.
-    if (popoverCSS.left < POPOVER_IOS_BODY_PADDING + 25) {
-        checkSafeAreaLeft = true;
-        popoverCSS.left = POPOVER_IOS_BODY_PADDING;
-    }
-    else if (contentWidth + POPOVER_IOS_BODY_PADDING + popoverCSS.left + 25 > bodyWidth) {
-        // Ok, so we're on the right side of the screen,
-        // but now we need to make sure we're still a bit further right
-        // cus....notchurally... Again, 25 is random. It works tho
-        checkSafeAreaRight = true;
-        popoverCSS.left = bodyWidth - contentWidth - POPOVER_IOS_BODY_PADDING;
-        originX = 'right';
-    }
-    // make it pop up if there's room above
-    if (targetTop + targetHeight + contentHeight > bodyHeight && targetTop - contentHeight > 0) {
-        arrowCSS.top = targetTop - (arrowHeight + 1);
-        popoverCSS.top = targetTop - contentHeight - (arrowHeight - 1);
-        baseEl.className += ' line-popover--bottom';
-        originY = 'bottom';
-        // If there isn't room for it to pop up above the target cut it off
-    }
-    else if (targetTop + targetHeight + contentHeight > bodyHeight) {
-        contentEl.style.bottom = `${POPOVER_IOS_BODY_PADDING}%`;
-    }
-    arrowEl.style.top = `${arrowCSS.top}px`;
-    arrowEl.style.left = `${arrowCSS.left}px`;
-    contentEl.style.top = `${popoverCSS.top}px`;
-    contentEl.style.left = `${popoverCSS.left}px`;
-    if (checkSafeAreaLeft) {
-        contentEl.style.left = `calc(${popoverCSS.left}px + var(--ion-safe-area-left, 0px))`;
-    }
-    if (checkSafeAreaRight) {
-        contentEl.style.left = `calc(${popoverCSS.left}px - var(--ion-safe-area-right, 0px))`;
-    }
-    contentEl.style.transformOrigin = `${originY} ${originX}`;
-    const baseAnimation = createAnimation();
-    const backdropAnimation = createAnimation();
-    const wrapperAnimation = createAnimation();
-    backdropAnimation
-        .addElement(baseEl.querySelector('.line-overlay'))
-        .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
-    wrapperAnimation
-        .addElement(baseEl.querySelector('.line-popover__wrapper'))
-        .fromTo('opacity', 0.01, 1);
-    return baseAnimation
-        .addElement(baseEl)
-        .easing('ease')
-        .duration(100)
-        .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-/**
- * iOS Popover Leave Animation
- */
-const iosLeaveAnimation$4 = (baseEl) => {
-    const baseAnimation = createAnimation();
-    const backdropAnimation = createAnimation();
-    const wrapperAnimation = createAnimation();
-    backdropAnimation
-        .addElement(baseEl.querySelector('.line-overlay'))
-        .fromTo('opacity', 'var(--backdrop-opacity)', 0);
-    wrapperAnimation
-        .addElement(baseEl.querySelector('.line-popover__wrapper'))
-        .fromTo('opacity', 0.99, 0);
-    return baseAnimation
-        .addElement(baseEl)
-        .easing('ease')
-        .duration(500)
-        .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-/**
- * Md Popover Enter Animation
- */
-const mdEnterAnimation$3 = (baseEl, ev) => {
-    const POPOVER_MD_BODY_PADDING = 12;
-    const doc = baseEl.ownerDocument;
-    const isRTL = doc.dir === 'rtl';
-    let originY = 'top';
-    let originX = isRTL ? 'right' : 'left';
-    const contentEl = baseEl.querySelector('.line-popover__content');
-    const contentDimentions = contentEl.getBoundingClientRect();
-    const contentWidth = contentDimentions.width;
-    const contentHeight = contentDimentions.height;
-    const bodyWidth = doc.defaultView.innerWidth;
-    const bodyHeight = doc.defaultView.innerHeight;
-    // If ev was passed, use that for target element
-    const targetDim = ev && ev.target && ev.target.getBoundingClientRect();
-    // As per MD spec, by default position the popover below the target (trigger) element
-    const targetTop = targetDim != null && 'bottom' in targetDim
-        ? targetDim.bottom
-        : bodyHeight / 2 - contentHeight / 2;
-    const targetLeft = targetDim != null && 'left' in targetDim
-        ? isRTL
-            ? targetDim.left - contentWidth + targetDim.width
-            : targetDim.left
-        : bodyWidth / 2 - contentWidth / 2;
-    const targetHeight = (targetDim && targetDim.height) || 0;
-    const popoverCSS = {
-        top: targetTop,
-        left: targetLeft,
-    };
-    // If the popover left is less than the padding it is off screen
-    // to the left so adjust it, else if the width of the popover
-    // exceeds the body width it is off screen to the right so adjust
-    if (popoverCSS.left < POPOVER_MD_BODY_PADDING) {
-        popoverCSS.left = POPOVER_MD_BODY_PADDING;
-        // Same origin in this case for both LTR & RTL
-        // Note: in LTR, originX is already 'left'
-        originX = 'left';
-    }
-    else if (contentWidth + POPOVER_MD_BODY_PADDING + popoverCSS.left
-        > bodyWidth) {
-        popoverCSS.left = bodyWidth - contentWidth - POPOVER_MD_BODY_PADDING;
-        // Same origin in this case for both LTR & RTL
-        // Note: in RTL, originX is already 'right'
-        originX = 'right';
-    }
-    // If the popover when popped down stretches past bottom of screen,
-    // make it pop up if there's room above
-    if (targetTop + targetHeight + contentHeight > bodyHeight
-        && targetTop - contentHeight > 0) {
-        popoverCSS.top = targetTop - contentHeight - targetHeight;
-        baseEl.className += ' line-popover--bottom';
-        originY = 'bottom';
-        // If there isn't room for it to pop up above the target cut it off
-    }
-    else if (targetTop + targetHeight + contentHeight > bodyHeight) {
-        contentEl.style.bottom = `${POPOVER_MD_BODY_PADDING}px`;
-    }
-    const baseAnimation = createAnimation();
-    const backdropAnimation = createAnimation();
-    const wrapperAnimation = createAnimation();
-    const contentAnimation = createAnimation();
-    const viewportAnimation = createAnimation();
-    backdropAnimation
-        .addElement(baseEl.querySelector('.line-overlay'))
-        .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
-    wrapperAnimation
-        .addElement(baseEl.querySelector('.line-popover__wrapper'))
-        .fromTo('opacity', 0.01, 1);
-    contentAnimation
-        .addElement(contentEl)
-        .beforeStyles({
-        top: `${popoverCSS.top}px`,
-        left: `${popoverCSS.left}px`,
-        'transform-origin': `${originY} ${originX}`,
-    })
-        .fromTo('transform', 'scale(0.01)', 'scale(1)');
-    viewportAnimation
-        .addElement(baseEl.querySelector('.popover-viewport'))
-        .fromTo('opacity', 0.01, 1);
-    return baseAnimation
-        .addElement(baseEl)
-        .easing('cubic-bezier(0.36,0.66,0.04,1)')
-        .duration(300)
-        .addAnimation([backdropAnimation, wrapperAnimation, contentAnimation, viewportAnimation]);
-};
-
-/**
- * Md Popover Leave Animation
- */
-const mdLeaveAnimation$3 = (baseEl) => {
-    const baseAnimation = createAnimation();
-    const backdropAnimation = createAnimation();
-    const wrapperAnimation = createAnimation();
-    backdropAnimation
-        .addElement(baseEl.querySelector('.line-overlay'))
-        .fromTo('opacity', 'var(--backdrop-opacity)', 0);
-    wrapperAnimation
-        .addElement(baseEl.querySelector('.line-popover__wrapper'))
-        .fromTo('opacity', 0.99, 0);
-    return baseAnimation
-        .addElement(baseEl)
-        .easing('ease')
-        .duration(500)
-        .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
 const {
-  createComponent: createComponent$R,
-  bem: bem$Q
-} =
-/*#__PURE__*/
-createNamespace('popover');
-var popover = /*#__PURE__*/
-createComponent$R({
-  mixins: [
-  /*#__PURE__*/
-  usePopup()],
-
-  beforeMount() {
-    const {
-      mode
-    } = this;
-    this.$on('animation-enter', builder => {
-      builder.build = mode === 'md' ? mdEnterAnimation$3 : iosEnterAnimation$4;
-      builder.options = this.event;
-    });
-    this.$on('animation-leave', builder => {
-      builder.build = mode === 'md' ? mdLeaveAnimation$3 : iosLeaveAnimation$4;
-    });
-  },
-
-  methods: {
-    onTap() {
-      this.$emit('overlay-tap');
-    }
-
-  },
-
-  render() {
-    const h = arguments[0];
-    return h("div", helper([{
-      "directives": [{
-        name: "show",
-        value: this.visible
-      }],
-      "attrs": {
-        "aria-modal": "true"
-      },
-      "class": bem$Q({
-        translucent: this.translucent
-      })
-    }, {
-      "on": this.$listeners
-    }]), [h(Overlay, {
-      "attrs": {
-        "visible": this.dim
-      },
-      "on": {
-        "tap": this.onTap
-      }
-    }), h("div", {
-      "class": bem$Q('wrapper')
-    }, [h("div", {
-      "class": bem$Q('arrow')
-    }), h("div", {
-      "class": bem$Q('content')
-    }, [this.slots()])])]);
-  }
-
-});
-
-const {
-  createComponent: createComponent$S,
-  bem: bem$R
-} =
-/*#__PURE__*/
-createNamespace('popup');
-const CONTENT_ELEMENT = 'content';
-var popupLegacy = /*#__PURE__*/
-createComponent$S({
-  mixins: [
-  /*#__PURE__*/
-  usePopup()],
-
-  render() {
-    const h = arguments[0];
-    return h("div", {
-      "directives": [{
-        name: "show",
-        value: this.visible
-      }],
-      "attrs": {
-        "aria-modal": "true",
-        "role": "dialog"
-      },
-      "class": bem$R()
-    }, [h("div", {
-      "attrs": {
-        "role": "dialog"
-      },
-      "class": bem$R(CONTENT_ELEMENT),
-      "ref": CONTENT_ELEMENT
-    }, [this.slots()])]);
-  }
-
-});
-
-/**
- * iOS Modal Enter Animation
- */
-const iosEnterAnimation$5 = (baseEl) => {
-    const baseAnimation = createAnimation();
-    const backdropAnimation = createAnimation();
-    const wrapperAnimation = createAnimation();
-    backdropAnimation
-        .addElement(baseEl.querySelector('.line-overlay'))
-        .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
-    wrapperAnimation
-        .addElement(baseEl.querySelector('.line-popup__wrapper'))
-        .beforeStyles({ opacity: 1 })
-        .fromTo('transform', 'translateY(100%)', 'translateY(0%)');
-    return baseAnimation
-        .addElement(baseEl)
-        .easing('cubic-bezier(0.36,0.66,0.04,1)')
-        .duration(400)
-        .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-/**
- * iOS Modal Leave Animation
- */
-const iosLeaveAnimation$5 = (baseEl) => {
-    const baseAnimation = createAnimation();
-    const backdropAnimation = createAnimation();
-    const wrapperAnimation = createAnimation();
-    const wrapperEl = baseEl.querySelector('.line-popup__wrapper');
-    const wrapperElRect = wrapperEl.getBoundingClientRect();
-    backdropAnimation
-        .addElement(baseEl.querySelector('.line-overlay'))
-        .fromTo('opacity', 'var(--backdrop-opacity)', 0.0);
-    wrapperAnimation
-        .addElement(wrapperEl)
-        .beforeStyles({ opacity: 1 })
-        .fromTo('transform', 'translateY(0%)', `translateY(${baseEl.ownerDocument.defaultView.innerHeight - wrapperElRect.top}px)`);
-    return baseAnimation
-        .addElement(baseEl)
-        .easing('ease-out')
-        .duration(250)
-        .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-/**
- * Md Modal Enter Animation
- */
-const mdEnterAnimation$4 = (baseEl) => {
-    const baseAnimation = createAnimation();
-    const backdropAnimation = createAnimation();
-    const wrapperAnimation = createAnimation();
-    backdropAnimation
-        .addElement(baseEl.querySelector('.line-overlay'))
-        .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
-    wrapperAnimation
-        .addElement(baseEl.querySelector('.line-popup__wrapper'))
-        .keyframes([
-        { offset: 0, opacity: 0.01, transform: 'translateY(40px)' },
-        { offset: 1, opacity: 1, transform: 'translateY(0px)' },
-    ]);
-    return baseAnimation
-        .addElement(baseEl)
-        .easing('cubic-bezier(0.36,0.66,0.04,1)')
-        .duration(280)
-        .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-/**
- * Md Modal Leave Animation
- */
-const mdLeaveAnimation$4 = (baseEl) => {
-    const baseAnimation = createAnimation();
-    const backdropAnimation = createAnimation();
-    const wrapperAnimation = createAnimation();
-    const wrapperEl = baseEl.querySelector('.line-popup__wrapper');
-    backdropAnimation
-        .addElement(baseEl.querySelector('.line-overlay'))
-        .fromTo('opacity', 'var(--backdrop-opacity)', 0.0);
-    wrapperAnimation
-        .addElement(wrapperEl)
-        .keyframes([
-        { offset: 0, opacity: 0.99, transform: 'translateY(0px)' },
-        { offset: 1, opacity: 0, transform: 'translateY(40px)' },
-    ]);
-    return baseAnimation
-        .addElement(baseEl)
-        .easing('cubic-bezier(0.47,0,0.745,0.715)')
-        .duration(200)
-        .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-const {
-  createComponent: createComponent$T,
-  bem: bem$S
-} =
-/*#__PURE__*/
-createNamespace('popup');
-var popup = /*#__PURE__*/
-createComponent$T({
-  mixins: [
-  /*#__PURE__*/
-  usePopup()],
-
-  beforeMount() {
-    const {
-      mode
-    } = this;
-    this.$on('animation-enter', builder => {
-      builder.build = mode === 'md' ? mdEnterAnimation$4 : iosEnterAnimation$5;
-    });
-    this.$on('animation-leave', builder => {
-      builder.build = mode === 'md' ? mdLeaveAnimation$4 : iosLeaveAnimation$5;
-    });
-  },
-
-  methods: {
-    onTap() {
-      this.$emit('overlay-tap');
-    }
-
-  },
-
-  render() {
-    const h = arguments[0];
-    return h("div", helper([{
-      "directives": [{
-        name: "show",
-        value: this.visible
-      }],
-      "attrs": {
-        "aria-modal": "true",
-        "role": "dialog"
-      },
-      "class": bem$S()
-    }, {
-      "on": this.$listeners
-    }]), [h(Overlay, {
-      "on": {
-        "tap": this.onTap
-      }
-    }), h("div", {
-      "attrs": {
-        "role": "dialog"
-      },
-      "class": bem$S('wrapper')
-    }, [this.slots()])]);
-  }
-
-});
-
-const {
-  createComponent: createComponent$U,
-  bem: bem$T
+  createComponent: createComponent$_,
+  bem: bem$Z
 } =
 /*#__PURE__*/
 createNamespace('progress-bar');
@@ -11978,7 +14899,7 @@ const renderProgress = (h, value, buffer) => {
 };
 
 var progressBar = /*#__PURE__*/
-createComponent$U({
+createComponent$_({
   mixins: [
   /*#__PURE__*/
   useColor()],
@@ -12003,7 +14924,6 @@ createComponent$U({
 
   render(h) {
     const {
-      mode,
       type,
       value,
       paused,
@@ -12017,8 +14937,7 @@ createComponent$U({
         "aria-valuemin": "0",
         "aria-valuemax": "1"
       },
-      "class": [bem$T(), {
-        [mode]: true,
+      "class": [bem$Z(), {
         [`progress-bar-${type}`]: true,
         'progress-paused': paused,
         'progress-bar-reversed': document.dir === 'rtl' ? !reversed : reversed
@@ -12030,13 +14949,13 @@ createComponent$U({
 
 const NAMESPACE$a = 'RadioGroup';
 const {
-  createComponent: createComponent$V,
-  bem: bem$U
+  createComponent: createComponent$$,
+  bem: bem$_
 } =
 /*#__PURE__*/
 createNamespace('radio');
 var radio = /*#__PURE__*/
-createComponent$V({
+createComponent$$({
   mixins: [
   /*#__PURE__*/
   useCheckItem(NAMESPACE$a),
@@ -12063,8 +14982,11 @@ createComponent$V({
 
   methods: {
     emitStyle() {
-      if (!this.Item) return;
-      this.Item.itemStyle('radio', {
+      const {
+        Item
+      } = this;
+      if (!Item) return;
+      Item.itemStyle('radio', {
         'radio-checked': this.checked,
         'interactive-disabled': this.disabled
       });
@@ -12094,7 +15016,7 @@ createComponent$V({
       inItem
     } = this;
     return h("div", helper([{
-      "class": [bem$U({
+      "class": [bem$_({
         checked,
         disabled
       }), {
@@ -12109,9 +15031,9 @@ createComponent$V({
     }, {
       "on": this.$listeners
     }]), [h("div", {
-      "class": bem$U('icon')
+      "class": bem$_('icon')
     }, [h("div", {
-      "class": bem$U('inner')
+      "class": bem$_('inner')
     })]), this.slots(), h("button", {
       "attrs": {
         "type": "button",
@@ -12123,8 +15045,8 @@ createComponent$V({
 });
 
 const {
-  createComponent: createComponent$W,
-  bem: bem$V
+  createComponent: createComponent$10,
+  bem: bem$$
 } =
 /*#__PURE__*/
 createNamespace('range');
@@ -12155,7 +15077,7 @@ const renderKnob = (h, isRTL, {
   };
 
   return h("div", {
-    "class": [bem$V('knob-handle', {
+    "class": [bem$$('knob-handle', {
       min: value === min,
       max: value === max
     }), {
@@ -12190,12 +15112,12 @@ const renderKnob = (h, isRTL, {
       "aria-valuenow": value
     }
   }, [pin && h("div", {
-    "class": bem$V('pin'),
+    "class": bem$$('pin'),
     "attrs": {
       "role": "presentation"
     }
   }, [Math.round(value)]), h("div", {
-    "class": bem$V('knob'),
+    "class": bem$$('knob'),
     "attrs": {
       "role": "presentation"
     }
@@ -12217,7 +15139,7 @@ const valueToRatio = (value, min, max) => {
 };
 
 var range = /*#__PURE__*/
-createComponent$W({
+createComponent$10({
   mixins: [
   /*#__PURE__*/
   useColor()],
@@ -12554,8 +15476,7 @@ createComponent$W({
       pin,
       ratioLower,
       ratioUpper
-    } = this; // const mode = getSkylineMode(this);
-
+    } = this;
     const barStart = `${ratioLower * 100}%`;
     const barEnd = `${100 - ratioUpper * 100}%`;
     const doc = document;
@@ -12589,7 +15510,7 @@ createComponent$W({
 
 
     return h("div", {
-      "class": bem$V({
+      "class": bem$$({
         disabled,
         pressed: pressedKnob !== undefined,
         'has-pin': pin
@@ -12599,23 +15520,23 @@ createComponent$W({
         "blur": this.onBlur
       }
     }, [this.slots('start'), h("div", {
-      "class": bem$V('slider'),
+      "class": bem$$('slider'),
       "ref": "rangeSlider"
     }, [ticks.map(tick => h("div", {
       "style": tickStyle(tick),
       "attrs": {
         "role": "presentation"
       },
-      "class": bem$V('tick', {
+      "class": bem$$('tick', {
         active: tick.active
       })
     })), h("div", {
-      "class": bem$V('bar'),
+      "class": bem$$('bar'),
       "attrs": {
         "role": "presentation"
       }
     }), h("div", {
-      "class": bem$V('bar', {
+      "class": bem$$('bar', {
         active: true
       }),
       "attrs": {
@@ -12650,8 +15571,8 @@ createComponent$W({
 // Utils
 // -----------------------------
 const shouldUseNativeRefresher = (referenceEl, mode) => {
-    const pullingSpinner = referenceEl.querySelector('ion-refresher-content .refresher-pulling ion-spinner');
-    const refreshingSpinner = referenceEl.querySelector('ion-refresher-content .refresher-refreshing ion-spinner');
+    const pullingSpinner = referenceEl.querySelector('.line-refresher-content .refresher-pulling .line-spinner');
+    const refreshingSpinner = referenceEl.querySelector('.line-refresher-content .refresher-refreshing .line-spinner');
     return (pullingSpinner !== null
         && refreshingSpinner !== null
         && ((mode === 'ios' && isPlatform('mobile') && referenceEl.style.webkitOverflowScrolling !== undefined)
@@ -12687,11 +15608,11 @@ const transitionEndAsync = (el) => {
     });
 };
 const createBaseAnimation = (pullingRefresherIcon) => {
-    const spinner = pullingRefresherIcon.querySelector('ion-spinner');
+    const spinner = pullingRefresherIcon.querySelector('.line-spinner');
     const circle = spinner.shadowRoot.querySelector('circle');
     const spinnerArrowContainer = pullingRefresherIcon.querySelector('.spinner-arrow-container');
     const arrowContainer = pullingRefresherIcon.querySelector('.arrow-container');
-    const arrow = (arrowContainer) ? arrowContainer.querySelector('ion-icon') : null;
+    const arrow = (arrowContainer) ? arrowContainer.querySelector('.line-icon') : null;
     const baseAnimation = createAnimation()
         .duration(1000)
         .easing('ease-out');
@@ -12770,7 +15691,7 @@ const createSnapBackAnimation = (pullingRefresherIcon) => {
     return createAnimation()
         .duration(125)
         .addElement(pullingRefresherIcon)
-        .fromTo('transform', 'translateY(var(--ion-pulling-refresher-translate, 100px))', 'translateY(0px)');
+        .fromTo('transform', 'translateY(var(--line-pulling-refresher-translate, 100px))', 'translateY(0px)');
 };
 const getRefresherAnimationType = (contentEl) => {
     const previousSibling = contentEl.previousElementSibling;
@@ -12813,8 +15734,8 @@ const translateElement = (el, value) => {
 };
 
 const {
-  createComponent: createComponent$X,
-  bem: bem$W
+  createComponent: createComponent$11,
+  bem: bem$10
 } =
 /*#__PURE__*/
 createNamespace('refresher');
@@ -12824,7 +15745,7 @@ const clamp$5 = (min, n, max) => {
 };
 
 var refresher = /*#__PURE__*/
-createComponent$X({
+createComponent$11({
   props: {
     pullMin: {
       type: Number,
@@ -12944,7 +15865,7 @@ createComponent$X({
       ;
     },
 
-    async setupiOSNativeRefresher(pullingSpinner, refreshingSpinner) {
+    async setupIOSNativeRefresher(pullingSpinner, refreshingSpinner) {
       this.elementToTransform = this.scrollEl;
       const ticks = pullingSpinner && pullingSpinner.shadowRoot.querySelectorAll('svg');
       const MAX_PULL = this.scrollEl.clientHeight * 0.16;
@@ -13148,7 +16069,7 @@ createComponent$X({
           const snapBackAnimation = createSnapBackAnimation(pullingRefresherIcon);
           this.animations.push(snapBackAnimation);
           this.$nextTick(async () => {
-            pullingRefresherIcon.style.setProperty('--ion-pulling-refresher-translate', `${progress * 100}px`);
+            pullingRefresherIcon.style.setProperty('--line-pulling-refresher-translate', `${progress * 100}px`);
             ev.data.animation.progressEnd();
             await snapBackAnimation.play();
             this.beginRefresh();
@@ -13172,7 +16093,7 @@ createComponent$X({
       } = this;
 
       if (mode === 'ios') {
-        this.setupiOSNativeRefresher(pullingSpinner, refreshingSpinner);
+        this.setupIOSNativeRefresher(pullingSpinner, refreshingSpinner);
       } else {
         this.setupMDNativeRefresher(contentEl, pullingSpinner, refreshingSpinner);
       }
@@ -13501,7 +16422,7 @@ createComponent$X({
       mode
     } = this;
     return h("div", {
-      "class": [bem$W(), {
+      "class": [bem$10(), {
         // Used internally for styling
         [`refresher-${mode}`]: true,
         'refresher-native': this.nativeRefresher,
@@ -13530,13 +16451,13 @@ createComponent$X({
 });
 
 const {
-  createComponent: createComponent$Y,
-  bem: bem$X
+  createComponent: createComponent$12,
+  bem: bem$11
 } =
 /*#__PURE__*/
 createNamespace('refresher-content');
 var refresherContent = /*#__PURE__*/
-createComponent$Y({
+createComponent$12({
   props: {
     pullingIcon: String,
     pullingText: String,
@@ -13584,7 +16505,7 @@ createComponent$Y({
     } = this;
     const hasSpinner = pullingIcon != null && SPINNERS[pullingIcon] !== undefined;
     return h("div", {
-      "class": bem$X()
+      "class": bem$11()
     }, [h("div", {
       "class": "refresher-pulling"
     }, [pullingIcon && hasSpinner && h("div", {
@@ -13633,13 +16554,13 @@ createComponent$Y({
 });
 
 const {
-  createComponent: createComponent$Z,
-  bem: bem$Y
+  createComponent: createComponent$13,
+  bem: bem$12
 } =
 /*#__PURE__*/
 createNamespace('reorder');
 var reorder = /*#__PURE__*/
-createComponent$Z({
+createComponent$13({
   data() {
     return {
       reorderIndex: -1
@@ -13650,9 +16571,9 @@ createComponent$Z({
     const h = arguments[0];
     const reorderIcon = 'menu';
     return h("div", {
-      "class": bem$Y()
+      "class": bem$12()
     }, [this.slots() || h("line-icon", {
-      "class": "reorder-icon",
+      "class": bem$12('icon'),
       "attrs": {
         "size": "small",
         "name": reorderIcon,
@@ -13664,8 +16585,8 @@ createComponent$Z({
 });
 
 const {
-  createComponent: createComponent$_,
-  bem: bem$Z
+  createComponent: createComponent$14,
+  bem: bem$13
 } =
 /*#__PURE__*/
 createNamespace('reorder-group');
@@ -13692,7 +16613,7 @@ const findReorderItem = (node, container) => {
 
 const AUTO_SCROLL_MARGIN = 60;
 const SCROLL_JUMP = 10;
-const ITEM_REORDER_SELECTED = 'reorder-selected';
+const ITEM_REORDER_SELECTED = 'line-reorder--selected';
 
 const reorderArray = (array, from, to) => {
   const element = array[from];
@@ -13702,7 +16623,7 @@ const reorderArray = (array, from, to) => {
 };
 
 var reorderGroup = /*#__PURE__*/
-createComponent$_({
+createComponent$14({
   inject: {
     Content: {
       default: undefined
@@ -13766,8 +16687,6 @@ createComponent$_({
 
   methods: {
     disabledChanged() {
-      console.log('gesture: ', this.disabled);
-
       if (this.gesture) {
         this.gesture.enable(!this.disabled);
       }
@@ -14030,25 +16949,25 @@ createComponent$_({
       state
     } = this;
     return h("div", {
-      "class": [bem$Z(), {
-        'reorder-enabled': !disabled,
-        'reorder-list-active': state !== 0
+      "class": bem$13({
+        enabled: !disabled,
+        'list-active': state !== 0
         /* Idle */
 
-      }]
+      })
     }, [this.slots()]);
   }
 
 });
 
 const {
-  createComponent: createComponent$$,
-  bem: bem$_
+  createComponent: createComponent$15,
+  bem: bem$14
 } =
 /*#__PURE__*/
 createNamespace('row');
 var row = /*#__PURE__*/
-createComponent$$({
+createComponent$15({
   functional: true,
 
   render(h, {
@@ -14056,25 +16975,503 @@ createComponent$$({
     slots
   }) {
     return h("div", helper([{
-      "class": bem$_()
+      "class": bem$14()
     }, data]), [slots()]);
   }
 
 });
 
+const NAMESPACE$b = 'Segment';
 const {
-  createComponent: createComponent$10,
-  bem: bem$$
+  createComponent: createComponent$16,
+  bem: bem$15
+} =
+/*#__PURE__*/
+createNamespace('segment');
+var segment = /*#__PURE__*/
+createComponent$16({
+  mixins: [
+  /*#__PURE__*/
+  useCheckGroupWithModel(NAMESPACE$b),
+  /*#__PURE__*/
+  useColor()],
+  inject: {
+    Item: {
+      default: undefined
+    }
+  },
+  props: {
+    disabled: Boolean,
+    scrollable: Boolean,
+    exclusive: {
+      type: Boolean,
+      default: true
+    }
+  },
+
+  data() {
+    return {
+      activated: false,
+      inToolbar: false,
+      inToolbarColor: false,
+      gesture: {},
+      didInit: false,
+      valueAfterGesture: null
+    };
+  },
+
+  async mounted() {
+    await this.$nextTick();
+    this.inToolbar = this.$el.closest('.line-toolbar') !== null;
+    this.inToolbarColor = this.$el.closest('.line-toolbar.line-color') !== null;
+    this.setCheckedClasses();
+    this.gesture = createGesture({
+      el: this.$el,
+      gestureName: 'segment',
+      gesturePriority: 100,
+      threshold: 0,
+      passive: false,
+      onStart: ev => this.onStart(ev),
+      onMove: ev => this.onMove(ev),
+      onEnd: ev => this.onEnd(ev)
+    });
+    this.gesture.enable(!this.scrollable);
+    this.gestureChanged(); // if (this.disabled) {
+    //   this.disabledChanged();
+    // }
+
+    this.didInit = true;
+  },
+
+  methods: {
+    disabledChanged() {
+      this.gestureChanged();
+      const {
+        items
+      } = this;
+
+      for (const item of items) {
+        item.disabled = this.disabled;
+      }
+    },
+
+    gestureChanged() {
+      if (this.gesture && !this.scrollable) {
+        this.gesture.enable(!this.disabled);
+      }
+    },
+
+    onStart(detail) {
+      this.activate(detail);
+    },
+
+    onMove(detail) {
+      this.setNextIndex(detail);
+    },
+
+    onEnd(detail) {
+      this.setActivated(false);
+      const checkedValidButton = this.setNextIndex(detail, true);
+      detail.event.stopImmediatePropagation();
+    },
+
+    /**
+     * The gesture blocks the segment button ripple. This
+     * function adds the ripple based on the checked segment
+     * and where the cursor ended.
+     */
+    addRipple(detail) {
+      const useRippleEffect = config.getBoolean('animated', true) && config.getBoolean('rippleEffect', true);
+
+      if (!useRippleEffect) {
+        return;
+      }
+
+      const {
+        items
+      } = this;
+      const checked = items.find(item => item.modelValue === this.value);
+      const root = checked.shadowRoot || checked;
+      const ripple = root.querySelector('.line-ripple-effect');
+
+      if (!ripple) {
+        return;
+      }
+
+      const {
+        x,
+        y
+      } = pointerCoord(detail.event);
+      ripple.addRipple(x, y).then(remove => remove());
+    },
+
+    /*
+    * Activate both the segment and the buttons
+    * due to a bug with ::slotted in Safari
+    */
+    setActivated(activated) {
+      const {
+        items
+      } = this;
+      items.forEach(item => {
+        item.activated = activated;
+      });
+      this.activated = activated;
+    },
+
+    activate(detail) {
+      const {
+        items,
+        checkedItemValue
+      } = this;
+      const targetEl = detail.event.target;
+      const clicked = items.find(item => item.$el === targetEl); // Make sure we are only checking for activation on a segment button
+      // since disabled buttons will get the click on the segment
+
+      if (clicked.$options.name !== 'line-segment-button') {
+        return;
+      } // If there are no checked buttons, set the current button to checked
+
+
+      if (isArray(checkedItemValue) && !checkedItemValue.length || !checkedItemValue) {
+        clicked.updateState();
+      } // If the gesture began on the clicked button with the indicator
+      // then we should activate the indicator
+
+
+      if (this.checkedItemValue === clicked.modelValue) {
+        this.setActivated(true);
+      }
+    },
+
+    async checkButton(previous, current) {
+      const previousIndicator = previous.indicatorEl;
+      const currentIndicator = current.indicatorEl;
+
+      if (previousIndicator === null || currentIndicator === null) {
+        return;
+      }
+
+      const previousClientRect = previousIndicator.getBoundingClientRect();
+      const currentClientRect = currentIndicator.getBoundingClientRect();
+      const widthDelta = previousClientRect.width / currentClientRect.width;
+      const xPosition = previousClientRect.left - currentClientRect.left; // Scale the indicator width to match the previous indicator width
+      // and translate it on top of the previous indicator
+
+      const transform = `translate3d(${xPosition}px, 0, 0) scaleX(${widthDelta})`;
+      this.$nextTick(() => {
+        // Remove the transition before positioning on top of the previous indicator
+        currentIndicator.classList.remove('line-segment-button__indicator--animated');
+        currentIndicator.style.setProperty('transform', transform); // Force a repaint to ensure the transform happens
+
+        currentIndicator.getBoundingClientRect(); // Add the transition to move the indicator into place
+
+        currentIndicator.classList.add('line-segment-button__indicator--animated'); // Remove the transform to slide the indicator back to the button clicked
+
+        currentIndicator.style.setProperty('transform', '');
+      });
+      current.updateState();
+      await this.$nextTick();
+      this.setCheckedClasses();
+    },
+
+    setCheckedClasses() {
+      const {
+        items,
+        checkedItem
+      } = this;
+      const index = items.findIndex(item => item === checkedItem);
+      const next = index + 1;
+
+      for (const item of items) {
+        item.afterChecked = false;
+      }
+
+      if (next < items.length) {
+        items[next].afterChecked = true;
+      }
+    },
+
+    setNextIndex(detail, isEnd = false) {
+      const isRTL = document.dir === 'rtl';
+      const {
+        activated
+      } = this;
+      const {
+        items,
+        checkedItem
+      } = this;
+      let index = 0;
+
+      if (checkedItem || isArray(checkedItem) && checkedItem.length) {
+        index = items.findIndex(item => item === checkedItem);
+      }
+
+      if (index === -1) {
+        return;
+      }
+
+      const previous = items[index];
+      let current;
+      let nextIndex; // Get the element that the touch event started on in case
+      // it was the checked button, then we will move the indicator
+
+      const rect = previous.$el.getBoundingClientRect();
+      const {
+        left
+      } = rect;
+      const {
+        width
+      } = rect; // Get the element that the gesture is on top of based on the currentX of the
+      // gesture event and the Y coordinate of the starting element, since the gesture
+      // can move up and down off of the segment
+
+      const {
+        currentX
+      } = detail;
+      const previousY = rect.top + rect.height / 2;
+      const nextEl = document.elementFromPoint(currentX, previousY);
+      const decreaseIndex = isRTL ? currentX > left + width : currentX < left;
+      const increaseIndex = isRTL ? currentX < left : currentX > left + width; // If the indicator is currently activated then we have started the gesture
+      // on top of the checked button so we need to slide the indicator
+      // by checking the button next to it as we move
+
+      if (activated && !isEnd) {
+        // Decrease index, move left in LTR & right in RTL
+        if (decreaseIndex) {
+          const newIndex = index - 1;
+
+          if (newIndex >= 0) {
+            nextIndex = newIndex;
+          } // Increase index, moves right in LTR & left in RTL
+
+        } else if (increaseIndex) {
+          if (activated && !isEnd) {
+            const newIndex = index + 1;
+
+            if (newIndex < items.length) {
+              nextIndex = newIndex;
+            }
+          }
+        }
+
+        if (nextIndex !== undefined && !items[nextIndex].disabled) {
+          current = items[nextIndex];
+        }
+      } // If the indicator is not activated then we will just set the indicator
+      // to the element where the gesture ended
+
+
+      if (!activated && isEnd) {
+        current = items.find(item => item.$el === nextEl);
+      }
+      /* tslint:disable-next-line */
+
+
+      if (current != null) {
+        /**
+         * If current element is line-segment then that means
+         * user tried to select a disabled line-segment-button,
+         * and we should not update the ripple.
+         */
+        if (current.$options.name === 'line-segment') {
+          return false;
+        }
+
+        if (previous !== current) {
+          this.checkButton(previous, current);
+        }
+      }
+
+      return true;
+    },
+
+    emitStyle() {
+      this.Item && this.Item.itemStyle('segment', {
+        segment: true
+      });
+    },
+
+    onClick(ev) {
+      const {
+        items
+      } = this;
+      const current = items.find(item => item.$el === ev.target);
+      const previous = this.checkedItem;
+      console.log(ev, current, items);
+
+      if (!current) {
+        return;
+      }
+
+      current.updateState();
+
+      if (previous && this.scrollable) {
+        this.checkButton(previous, current);
+      }
+    }
+
+  },
+
+  render() {
+    const h = arguments[0];
+    const {
+      inToolbar,
+      inToolbarColor,
+      activated,
+      disabled,
+      scrollable
+    } = this;
+    return h("div", {
+      "class": [bem$15({
+        activated,
+        disabled,
+        scrollable
+      }), {
+        'in-toolbar': inToolbar,
+        'in-toolbar-color': inToolbarColor
+      }],
+      "on": {
+        "click": this.onClick
+      }
+    }, [this.slots()]);
+  }
+
+});
+
+const NAMESPACE$c = 'Segment';
+const {
+  createComponent: createComponent$17,
+  bem: bem$16
+} =
+/*#__PURE__*/
+createNamespace('segment-button');
+var segmentButton = /*#__PURE__*/
+createComponent$17({
+  mixins: [
+  /*#__PURE__*/
+  useCheckItemWithModel(NAMESPACE$c)],
+  props: {
+    layout: {
+      type: String,
+      default: 'icon-top'
+    },
+    type: {
+      type: String,
+      default: 'button'
+    }
+  },
+
+  data() {
+    return {
+      activated: false,
+      afterChecked: false,
+      inToolbar: false,
+      inToolbarColor: false,
+      inSegment: false,
+      inSegmentColor: false,
+      hasLabel: false,
+      hasIcon: false
+    };
+  },
+
+  async mounted() {
+    const {
+      $el
+    } = this;
+    this.inToolbar = $el.closest('.line-toolbar') !== null;
+    this.inToolbarColor = $el.closest('.line-toolbar.line-color') !== null;
+    this.inSegment = $el.closest('.line-segment') !== null;
+    this.inSegmentColor = $el.closest('.line-segment.line-color') !== null;
+    this.hasLabel = $el && !!$el.querySelector('.line-label');
+    this.hasIcon = $el && !!$el.querySelector('.line-icon');
+    this.indicatorEl = this.$refs.indicatorEl;
+  },
+
+  methods: {
+    updateState() {
+      this.checked = true;
+    }
+
+  },
+
+  render() {
+    const h = arguments[0];
+    const {
+      mode,
+      checked,
+      type,
+      disabled,
+      activated,
+      afterChecked,
+      hasIcon,
+      hasLabel,
+      layout,
+      inToolbar,
+      inToolbarColor,
+      inSegment,
+      inSegmentColor
+    } = this;
+    return h("div", {
+      "attrs": {
+        "aria-disabled": disabled ? 'true' : null
+      },
+      "class": [bem$16({
+        'has-label': hasLabel,
+        'has-icon': hasIcon,
+        'has-label-only': hasLabel && !hasIcon,
+        'has-icon-only': hasIcon && !hasLabel,
+        'after-checked': afterChecked,
+        [`layout-${layout}`]: true,
+        disabled,
+        checked,
+        activated
+      }), {
+        'in-toolbar': inToolbar,
+        'in-toolbar-color': inToolbarColor,
+        'in-segment': inSegment,
+        'in-segment-color': inSegmentColor,
+        'line-activatable': true,
+        'line-activatable-instant': true,
+        'line-focusable': true
+      }]
+    }, [h("button", {
+      "attrs": {
+        "type": type,
+        "aria-pressed": checked ? 'true' : null,
+        "disabled": disabled
+      },
+      "class": bem$16('button-native')
+    }, [h("span", {
+      "class": bem$16('button-inner')
+    }, [this.slots()]), mode === 'md' && h("line-ripple-effect")]), h("div", {
+      "attrs": {
+        "part": "indicator"
+      },
+      "class": bem$16('indicator', {
+        animated: true
+      }),
+      "ref": "indicatorEl"
+    }, [h("div", {
+      "attrs": {
+        "part": "indicator-background"
+      },
+      "class": bem$16('indicator-background')
+    })])]);
+  }
+
+});
+
+const {
+  createComponent: createComponent$18,
+  bem: bem$17
 } =
 /*#__PURE__*/
 createNamespace('skeleton-text');
 var skeletonText = /*#__PURE__*/
-createComponent$10({
+createComponent$18({
   props: {
-    animated: {
-      type: Boolean,
-      default: false
-    }
+    animated: Boolean
   },
 
   render() {
@@ -14082,7 +17479,7 @@ createComponent$10({
     const animated = this.animated && config.getBoolean('animated', true);
     const inMedia = this.$el && (this.$el.closest('.line-avatar') || this.$el.closest('.line-thumbnail'));
     return h("div", {
-      "class": [bem$$(), {
+      "class": [bem$17(), {
         'skeleton-text-animated': animated,
         'in-media': inMedia
       }]
@@ -14092,21 +17489,25 @@ createComponent$10({
 });
 
 const {
-  createComponent: createComponent$11,
-  bem: bem$10
+  createComponent: createComponent$19,
+  bem: bem$18
 } =
 /*#__PURE__*/
 createNamespace('slide');
 var slide = /*#__PURE__*/
-createComponent$11({
-  render() {
-    const h = arguments[0];
-    return h("div", {
-      "class": [bem$10(), {
+createComponent$19({
+  functional: true,
+
+  render(h, {
+    data,
+    slots
+  }) {
+    return h("div", helper([{
+      "class": [bem$18(), {
         'swiper-slide': true,
         'swiper-zoom-container': true
       }]
-    }, [this.slots()]);
+    }, data]), [slots()]);
   }
 
 });
@@ -14556,7 +17957,7 @@ function outerHeight(includeMargins) {
   }
   return null;
 }
-function offset() {
+function offset$2() {
   if (this.length > 0) {
     const el = this[0];
     const box = el.getBoundingClientRect();
@@ -14913,7 +18314,7 @@ const Methods = {
   transitionEnd: transitionEnd$1,
   outerWidth,
   outerHeight,
-  offset,
+  offset: offset$2,
   css,
   each,
   html,
@@ -15872,7 +19273,7 @@ function updateClickedSlide (e) {
   }
 }
 
-var update$2 = {
+var update$3 = {
   updateSize,
   updateSlides,
   updateAutoHeight,
@@ -17901,7 +21302,7 @@ var defaults = {
 /* eslint no-param-reassign: "off" */
 
 const prototypes = {
-  update: update$2,
+  update: update$3,
   translate,
   transition: transition$1,
   slide: slide$1,
@@ -18531,6 +21932,363 @@ var Observer$1 = {
   },
 };
 
+const Virtual = {
+  update(force) {
+    const swiper = this;
+    const { slidesPerView, slidesPerGroup, centeredSlides } = swiper.params;
+    const { addSlidesBefore, addSlidesAfter } = swiper.params.virtual;
+    const {
+      from: previousFrom,
+      to: previousTo,
+      slides,
+      slidesGrid: previousSlidesGrid,
+      renderSlide,
+      offset: previousOffset,
+    } = swiper.virtual;
+    swiper.updateActiveIndex();
+    const activeIndex = swiper.activeIndex || 0;
+
+    let offsetProp;
+    if (swiper.rtlTranslate) offsetProp = 'right';
+    else offsetProp = swiper.isHorizontal() ? 'left' : 'top';
+
+    let slidesAfter;
+    let slidesBefore;
+    if (centeredSlides) {
+      slidesAfter = Math.floor(slidesPerView / 2) + slidesPerGroup + addSlidesBefore;
+      slidesBefore = Math.floor(slidesPerView / 2) + slidesPerGroup + addSlidesAfter;
+    } else {
+      slidesAfter = slidesPerView + (slidesPerGroup - 1) + addSlidesBefore;
+      slidesBefore = slidesPerGroup + addSlidesAfter;
+    }
+    const from = Math.max((activeIndex || 0) - slidesBefore, 0);
+    const to = Math.min((activeIndex || 0) + slidesAfter, slides.length - 1);
+    const offset = (swiper.slidesGrid[from] || 0) - (swiper.slidesGrid[0] || 0);
+
+    Utils.extend(swiper.virtual, {
+      from,
+      to,
+      offset,
+      slidesGrid: swiper.slidesGrid,
+    });
+
+    function onRendered() {
+      swiper.updateSlides();
+      swiper.updateProgress();
+      swiper.updateSlidesClasses();
+      if (swiper.lazy && swiper.params.lazy.enabled) {
+        swiper.lazy.load();
+      }
+    }
+
+    if (previousFrom === from && previousTo === to && !force) {
+      if (swiper.slidesGrid !== previousSlidesGrid && offset !== previousOffset) {
+        swiper.slides.css(offsetProp, `${offset}px`);
+      }
+      swiper.updateProgress();
+      return;
+    }
+    if (swiper.params.virtual.renderExternal) {
+      swiper.params.virtual.renderExternal.call(swiper, {
+        offset,
+        from,
+        to,
+        slides: (function getSlides() {
+          const slidesToRender = [];
+          for (let i = from; i <= to; i += 1) {
+            slidesToRender.push(slides[i]);
+          }
+          return slidesToRender;
+        }()),
+      });
+      onRendered();
+      return;
+    }
+    const prependIndexes = [];
+    const appendIndexes = [];
+    if (force) {
+      swiper.$wrapperEl.find(`.${swiper.params.slideClass}`).remove();
+    } else {
+      for (let i = previousFrom; i <= previousTo; i += 1) {
+        if (i < from || i > to) {
+          swiper.$wrapperEl.find(`.${swiper.params.slideClass}[data-swiper-slide-index="${i}"]`).remove();
+        }
+      }
+    }
+    for (let i = 0; i < slides.length; i += 1) {
+      if (i >= from && i <= to) {
+        if (typeof previousTo === 'undefined' || force) {
+          appendIndexes.push(i);
+        } else {
+          if (i > previousTo) appendIndexes.push(i);
+          if (i < previousFrom) prependIndexes.push(i);
+        }
+      }
+    }
+    appendIndexes.forEach((index) => {
+      swiper.$wrapperEl.append(renderSlide(slides[index], index));
+    });
+    prependIndexes.sort((a, b) => b - a).forEach((index) => {
+      swiper.$wrapperEl.prepend(renderSlide(slides[index], index));
+    });
+    swiper.$wrapperEl.children('.swiper-slide').css(offsetProp, `${offset}px`);
+    onRendered();
+  },
+  renderSlide(slide, index) {
+    const swiper = this;
+    const params = swiper.params.virtual;
+    if (params.cache && swiper.virtual.cache[index]) {
+      return swiper.virtual.cache[index];
+    }
+    const $slideEl = params.renderSlide
+      ? $(params.renderSlide.call(swiper, slide, index))
+      : $(`<div class="${swiper.params.slideClass}" data-swiper-slide-index="${index}">${slide}</div>`);
+    if (!$slideEl.attr('data-swiper-slide-index')) $slideEl.attr('data-swiper-slide-index', index);
+    if (params.cache) swiper.virtual.cache[index] = $slideEl;
+    return $slideEl;
+  },
+  appendSlide(slides) {
+    const swiper = this;
+    if (typeof slides === 'object' && 'length' in slides) {
+      for (let i = 0; i < slides.length; i += 1) {
+        if (slides[i]) swiper.virtual.slides.push(slides[i]);
+      }
+    } else {
+      swiper.virtual.slides.push(slides);
+    }
+    swiper.virtual.update(true);
+  },
+  prependSlide(slides) {
+    const swiper = this;
+    const activeIndex = swiper.activeIndex;
+    let newActiveIndex = activeIndex + 1;
+    let numberOfNewSlides = 1;
+
+    if (Array.isArray(slides)) {
+      for (let i = 0; i < slides.length; i += 1) {
+        if (slides[i]) swiper.virtual.slides.unshift(slides[i]);
+      }
+      newActiveIndex = activeIndex + slides.length;
+      numberOfNewSlides = slides.length;
+    } else {
+      swiper.virtual.slides.unshift(slides);
+    }
+    if (swiper.params.virtual.cache) {
+      const cache = swiper.virtual.cache;
+      const newCache = {};
+      Object.keys(cache).forEach((cachedIndex) => {
+        const $cachedEl = cache[cachedIndex];
+        const cachedElIndex = $cachedEl.attr('data-swiper-slide-index');
+        if (cachedElIndex) {
+          $cachedEl.attr('data-swiper-slide-index', parseInt(cachedElIndex, 10) + 1);
+        }
+        newCache[parseInt(cachedIndex, 10) + numberOfNewSlides] = $cachedEl;
+      });
+      swiper.virtual.cache = newCache;
+    }
+    swiper.virtual.update(true);
+    swiper.slideTo(newActiveIndex, 0);
+  },
+  removeSlide(slidesIndexes) {
+    const swiper = this;
+    if (typeof slidesIndexes === 'undefined' || slidesIndexes === null) return;
+    let activeIndex = swiper.activeIndex;
+    if (Array.isArray(slidesIndexes)) {
+      for (let i = slidesIndexes.length - 1; i >= 0; i -= 1) {
+        swiper.virtual.slides.splice(slidesIndexes[i], 1);
+        if (swiper.params.virtual.cache) {
+          delete swiper.virtual.cache[slidesIndexes[i]];
+        }
+        if (slidesIndexes[i] < activeIndex) activeIndex -= 1;
+        activeIndex = Math.max(activeIndex, 0);
+      }
+    } else {
+      swiper.virtual.slides.splice(slidesIndexes, 1);
+      if (swiper.params.virtual.cache) {
+        delete swiper.virtual.cache[slidesIndexes];
+      }
+      if (slidesIndexes < activeIndex) activeIndex -= 1;
+      activeIndex = Math.max(activeIndex, 0);
+    }
+    swiper.virtual.update(true);
+    swiper.slideTo(activeIndex, 0);
+  },
+  removeAllSlides() {
+    const swiper = this;
+    swiper.virtual.slides = [];
+    if (swiper.params.virtual.cache) {
+      swiper.virtual.cache = {};
+    }
+    swiper.virtual.update(true);
+    swiper.slideTo(0, 0);
+  },
+};
+
+var Virtual$1 = {
+  name: 'virtual',
+  params: {
+    virtual: {
+      enabled: false,
+      slides: [],
+      cache: true,
+      renderSlide: null,
+      renderExternal: null,
+      addSlidesBefore: 0,
+      addSlidesAfter: 0,
+    },
+  },
+  create() {
+    const swiper = this;
+    Utils.extend(swiper, {
+      virtual: {
+        update: Virtual.update.bind(swiper),
+        appendSlide: Virtual.appendSlide.bind(swiper),
+        prependSlide: Virtual.prependSlide.bind(swiper),
+        removeSlide: Virtual.removeSlide.bind(swiper),
+        removeAllSlides: Virtual.removeAllSlides.bind(swiper),
+        renderSlide: Virtual.renderSlide.bind(swiper),
+        slides: swiper.params.virtual.slides,
+        cache: {},
+      },
+    });
+  },
+  on: {
+    beforeInit() {
+      const swiper = this;
+      if (!swiper.params.virtual.enabled) return;
+      swiper.classNames.push(`${swiper.params.containerModifierClass}virtual`);
+      const overwriteParams = {
+        watchSlidesProgress: true,
+      };
+      Utils.extend(swiper.params, overwriteParams);
+      Utils.extend(swiper.originalParams, overwriteParams);
+
+      if (!swiper.params.initialSlide) {
+        swiper.virtual.update();
+      }
+    },
+    setTranslate() {
+      const swiper = this;
+      if (!swiper.params.virtual.enabled) return;
+      swiper.virtual.update();
+    },
+  },
+};
+
+const Keyboard = {
+  handle(event) {
+    const swiper = this;
+    const { rtlTranslate: rtl } = swiper;
+    let e = event;
+    if (e.originalEvent) e = e.originalEvent; // jquery fix
+    const kc = e.keyCode || e.charCode;
+    // Directions locks
+    if (!swiper.allowSlideNext && ((swiper.isHorizontal() && kc === 39) || (swiper.isVertical() && kc === 40) || kc === 34)) {
+      return false;
+    }
+    if (!swiper.allowSlidePrev && ((swiper.isHorizontal() && kc === 37) || (swiper.isVertical() && kc === 38) || kc === 33)) {
+      return false;
+    }
+    if (e.shiftKey || e.altKey || e.ctrlKey || e.metaKey) {
+      return undefined;
+    }
+    if (doc.activeElement && doc.activeElement.nodeName && (doc.activeElement.nodeName.toLowerCase() === 'input' || doc.activeElement.nodeName.toLowerCase() === 'textarea')) {
+      return undefined;
+    }
+    if (swiper.params.keyboard.onlyInViewport && (kc === 33 || kc === 34 || kc === 37 || kc === 39 || kc === 38 || kc === 40)) {
+      let inView = false;
+      // Check that swiper should be inside of visible area of window
+      if (swiper.$el.parents(`.${swiper.params.slideClass}`).length > 0 && swiper.$el.parents(`.${swiper.params.slideActiveClass}`).length === 0) {
+        return undefined;
+      }
+      const windowWidth = win.innerWidth;
+      const windowHeight = win.innerHeight;
+      const swiperOffset = swiper.$el.offset();
+      if (rtl) swiperOffset.left -= swiper.$el[0].scrollLeft;
+      const swiperCoord = [
+        [swiperOffset.left, swiperOffset.top],
+        [swiperOffset.left + swiper.width, swiperOffset.top],
+        [swiperOffset.left, swiperOffset.top + swiper.height],
+        [swiperOffset.left + swiper.width, swiperOffset.top + swiper.height],
+      ];
+      for (let i = 0; i < swiperCoord.length; i += 1) {
+        const point = swiperCoord[i];
+        if (
+          point[0] >= 0 && point[0] <= windowWidth
+          && point[1] >= 0 && point[1] <= windowHeight
+        ) {
+          inView = true;
+        }
+      }
+      if (!inView) return undefined;
+    }
+    if (swiper.isHorizontal()) {
+      if (kc === 33 || kc === 34 || kc === 37 || kc === 39) {
+        if (e.preventDefault) e.preventDefault();
+        else e.returnValue = false;
+      }
+      if (((kc === 34 || kc === 39) && !rtl) || ((kc === 33 || kc === 37) && rtl)) swiper.slideNext();
+      if (((kc === 33 || kc === 37) && !rtl) || ((kc === 34 || kc === 39) && rtl)) swiper.slidePrev();
+    } else {
+      if (kc === 33 || kc === 34 || kc === 38 || kc === 40) {
+        if (e.preventDefault) e.preventDefault();
+        else e.returnValue = false;
+      }
+      if (kc === 34 || kc === 40) swiper.slideNext();
+      if (kc === 33 || kc === 38) swiper.slidePrev();
+    }
+    swiper.emit('keyPress', kc);
+    return undefined;
+  },
+  enable() {
+    const swiper = this;
+    if (swiper.keyboard.enabled) return;
+    $(doc).on('keydown', swiper.keyboard.handle);
+    swiper.keyboard.enabled = true;
+  },
+  disable() {
+    const swiper = this;
+    if (!swiper.keyboard.enabled) return;
+    $(doc).off('keydown', swiper.keyboard.handle);
+    swiper.keyboard.enabled = false;
+  },
+};
+
+var Keyboard$1 = {
+  name: 'keyboard',
+  params: {
+    keyboard: {
+      enabled: false,
+      onlyInViewport: true,
+    },
+  },
+  create() {
+    const swiper = this;
+    Utils.extend(swiper, {
+      keyboard: {
+        enabled: false,
+        enable: Keyboard.enable.bind(swiper),
+        disable: Keyboard.disable.bind(swiper),
+        handle: Keyboard.handle.bind(swiper),
+      },
+    });
+  },
+  on: {
+    init() {
+      const swiper = this;
+      if (swiper.params.keyboard.enabled) {
+        swiper.keyboard.enable();
+      }
+    },
+    destroy() {
+      const swiper = this;
+      if (swiper.keyboard.enabled) {
+        swiper.keyboard.disable();
+      }
+    },
+  },
+};
+
 function isEventSupported() {
   const eventName = 'onwheel';
   let isSupported = eventName in doc;
@@ -18904,6 +22662,3254 @@ const Mousewheel = {
   },
 };
 
+var Mousewheel$1 = {
+  name: 'mousewheel',
+  params: {
+    mousewheel: {
+      enabled: false,
+      releaseOnEdges: false,
+      invert: false,
+      forceToAxis: false,
+      sensitivity: 1,
+      eventsTarged: 'container',
+    },
+  },
+  create() {
+    const swiper = this;
+    Utils.extend(swiper, {
+      mousewheel: {
+        enabled: false,
+        enable: Mousewheel.enable.bind(swiper),
+        disable: Mousewheel.disable.bind(swiper),
+        handle: Mousewheel.handle.bind(swiper),
+        handleMouseEnter: Mousewheel.handleMouseEnter.bind(swiper),
+        handleMouseLeave: Mousewheel.handleMouseLeave.bind(swiper),
+        animateSlider: Mousewheel.animateSlider.bind(swiper),
+        releaseScroll: Mousewheel.releaseScroll.bind(swiper),
+        lastScrollTime: Utils.now(),
+        lastEventBeforeSnap: undefined,
+        recentWheelEvents: [],
+      },
+    });
+  },
+  on: {
+    init() {
+      const swiper = this;
+      if (!swiper.params.mousewheel.enabled && swiper.params.cssMode) {
+        swiper.mousewheel.disable();
+      }
+      if (swiper.params.mousewheel.enabled) swiper.mousewheel.enable();
+    },
+    destroy() {
+      const swiper = this;
+      if (swiper.params.cssMode) {
+        swiper.mousewheel.enable();
+      }
+      if (swiper.mousewheel.enabled) swiper.mousewheel.disable();
+    },
+  },
+};
+
+const Navigation = {
+  update() {
+    // Update Navigation Buttons
+    const swiper = this;
+    const params = swiper.params.navigation;
+
+    if (swiper.params.loop) return;
+    const { $nextEl, $prevEl } = swiper.navigation;
+
+    if ($prevEl && $prevEl.length > 0) {
+      if (swiper.isBeginning) {
+        $prevEl.addClass(params.disabledClass);
+      } else {
+        $prevEl.removeClass(params.disabledClass);
+      }
+      $prevEl[swiper.params.watchOverflow && swiper.isLocked ? 'addClass' : 'removeClass'](params.lockClass);
+    }
+    if ($nextEl && $nextEl.length > 0) {
+      if (swiper.isEnd) {
+        $nextEl.addClass(params.disabledClass);
+      } else {
+        $nextEl.removeClass(params.disabledClass);
+      }
+      $nextEl[swiper.params.watchOverflow && swiper.isLocked ? 'addClass' : 'removeClass'](params.lockClass);
+    }
+  },
+  onPrevClick(e) {
+    const swiper = this;
+    e.preventDefault();
+    if (swiper.isBeginning && !swiper.params.loop) return;
+    swiper.slidePrev();
+  },
+  onNextClick(e) {
+    const swiper = this;
+    e.preventDefault();
+    if (swiper.isEnd && !swiper.params.loop) return;
+    swiper.slideNext();
+  },
+  init() {
+    const swiper = this;
+    const params = swiper.params.navigation;
+    if (!(params.nextEl || params.prevEl)) return;
+
+    let $nextEl;
+    let $prevEl;
+    if (params.nextEl) {
+      $nextEl = $(params.nextEl);
+      if (
+        swiper.params.uniqueNavElements
+        && typeof params.nextEl === 'string'
+        && $nextEl.length > 1
+        && swiper.$el.find(params.nextEl).length === 1
+      ) {
+        $nextEl = swiper.$el.find(params.nextEl);
+      }
+    }
+    if (params.prevEl) {
+      $prevEl = $(params.prevEl);
+      if (
+        swiper.params.uniqueNavElements
+        && typeof params.prevEl === 'string'
+        && $prevEl.length > 1
+        && swiper.$el.find(params.prevEl).length === 1
+      ) {
+        $prevEl = swiper.$el.find(params.prevEl);
+      }
+    }
+
+    if ($nextEl && $nextEl.length > 0) {
+      $nextEl.on('click', swiper.navigation.onNextClick);
+    }
+    if ($prevEl && $prevEl.length > 0) {
+      $prevEl.on('click', swiper.navigation.onPrevClick);
+    }
+
+    Utils.extend(swiper.navigation, {
+      $nextEl,
+      nextEl: $nextEl && $nextEl[0],
+      $prevEl,
+      prevEl: $prevEl && $prevEl[0],
+    });
+  },
+  destroy() {
+    const swiper = this;
+    const { $nextEl, $prevEl } = swiper.navigation;
+    if ($nextEl && $nextEl.length) {
+      $nextEl.off('click', swiper.navigation.onNextClick);
+      $nextEl.removeClass(swiper.params.navigation.disabledClass);
+    }
+    if ($prevEl && $prevEl.length) {
+      $prevEl.off('click', swiper.navigation.onPrevClick);
+      $prevEl.removeClass(swiper.params.navigation.disabledClass);
+    }
+  },
+};
+
+var Navigation$1 = {
+  name: 'navigation',
+  params: {
+    navigation: {
+      nextEl: null,
+      prevEl: null,
+
+      hideOnClick: false,
+      disabledClass: 'swiper-button-disabled',
+      hiddenClass: 'swiper-button-hidden',
+      lockClass: 'swiper-button-lock',
+    },
+  },
+  create() {
+    const swiper = this;
+    Utils.extend(swiper, {
+      navigation: {
+        init: Navigation.init.bind(swiper),
+        update: Navigation.update.bind(swiper),
+        destroy: Navigation.destroy.bind(swiper),
+        onNextClick: Navigation.onNextClick.bind(swiper),
+        onPrevClick: Navigation.onPrevClick.bind(swiper),
+      },
+    });
+  },
+  on: {
+    init() {
+      const swiper = this;
+      swiper.navigation.init();
+      swiper.navigation.update();
+    },
+    toEdge() {
+      const swiper = this;
+      swiper.navigation.update();
+    },
+    fromEdge() {
+      const swiper = this;
+      swiper.navigation.update();
+    },
+    destroy() {
+      const swiper = this;
+      swiper.navigation.destroy();
+    },
+    click(e) {
+      const swiper = this;
+      const { $nextEl, $prevEl } = swiper.navigation;
+      if (
+        swiper.params.navigation.hideOnClick
+        && !$(e.target).is($prevEl)
+        && !$(e.target).is($nextEl)
+      ) {
+        let isHidden;
+        if ($nextEl) {
+          isHidden = $nextEl.hasClass(swiper.params.navigation.hiddenClass);
+        } else if ($prevEl) {
+          isHidden = $prevEl.hasClass(swiper.params.navigation.hiddenClass);
+        }
+        if (isHidden === true) {
+          swiper.emit('navigationShow', swiper);
+        } else {
+          swiper.emit('navigationHide', swiper);
+        }
+        if ($nextEl) {
+          $nextEl.toggleClass(swiper.params.navigation.hiddenClass);
+        }
+        if ($prevEl) {
+          $prevEl.toggleClass(swiper.params.navigation.hiddenClass);
+        }
+      }
+    },
+  },
+};
+
+const Pagination = {
+  update() {
+    // Render || Update Pagination bullets/items
+    const swiper = this;
+    const rtl = swiper.rtl;
+    const params = swiper.params.pagination;
+    if (!params.el || !swiper.pagination.el || !swiper.pagination.$el || swiper.pagination.$el.length === 0) return;
+    const slidesLength = swiper.virtual && swiper.params.virtual.enabled ? swiper.virtual.slides.length : swiper.slides.length;
+    const $el = swiper.pagination.$el;
+    // Current/Total
+    let current;
+    const total = swiper.params.loop ? Math.ceil((slidesLength - (swiper.loopedSlides * 2)) / swiper.params.slidesPerGroup) : swiper.snapGrid.length;
+    if (swiper.params.loop) {
+      current = Math.ceil((swiper.activeIndex - swiper.loopedSlides) / swiper.params.slidesPerGroup);
+      if (current > slidesLength - 1 - (swiper.loopedSlides * 2)) {
+        current -= (slidesLength - (swiper.loopedSlides * 2));
+      }
+      if (current > total - 1) current -= total;
+      if (current < 0 && swiper.params.paginationType !== 'bullets') current = total + current;
+    } else if (typeof swiper.snapIndex !== 'undefined') {
+      current = swiper.snapIndex;
+    } else {
+      current = swiper.activeIndex || 0;
+    }
+    // Types
+    if (params.type === 'bullets' && swiper.pagination.bullets && swiper.pagination.bullets.length > 0) {
+      const bullets = swiper.pagination.bullets;
+      let firstIndex;
+      let lastIndex;
+      let midIndex;
+      if (params.dynamicBullets) {
+        swiper.pagination.bulletSize = bullets.eq(0)[swiper.isHorizontal() ? 'outerWidth' : 'outerHeight'](true);
+        $el.css(swiper.isHorizontal() ? 'width' : 'height', `${swiper.pagination.bulletSize * (params.dynamicMainBullets + 4)}px`);
+        if (params.dynamicMainBullets > 1 && swiper.previousIndex !== undefined) {
+          swiper.pagination.dynamicBulletIndex += (current - swiper.previousIndex);
+          if (swiper.pagination.dynamicBulletIndex > (params.dynamicMainBullets - 1)) {
+            swiper.pagination.dynamicBulletIndex = params.dynamicMainBullets - 1;
+          } else if (swiper.pagination.dynamicBulletIndex < 0) {
+            swiper.pagination.dynamicBulletIndex = 0;
+          }
+        }
+        firstIndex = current - swiper.pagination.dynamicBulletIndex;
+        lastIndex = firstIndex + (Math.min(bullets.length, params.dynamicMainBullets) - 1);
+        midIndex = (lastIndex + firstIndex) / 2;
+      }
+      bullets.removeClass(`${params.bulletActiveClass} ${params.bulletActiveClass}-next ${params.bulletActiveClass}-next-next ${params.bulletActiveClass}-prev ${params.bulletActiveClass}-prev-prev ${params.bulletActiveClass}-main`);
+      if ($el.length > 1) {
+        bullets.each((index, bullet) => {
+          const $bullet = $(bullet);
+          const bulletIndex = $bullet.index();
+          if (bulletIndex === current) {
+            $bullet.addClass(params.bulletActiveClass);
+          }
+          if (params.dynamicBullets) {
+            if (bulletIndex >= firstIndex && bulletIndex <= lastIndex) {
+              $bullet.addClass(`${params.bulletActiveClass}-main`);
+            }
+            if (bulletIndex === firstIndex) {
+              $bullet
+                .prev()
+                .addClass(`${params.bulletActiveClass}-prev`)
+                .prev()
+                .addClass(`${params.bulletActiveClass}-prev-prev`);
+            }
+            if (bulletIndex === lastIndex) {
+              $bullet
+                .next()
+                .addClass(`${params.bulletActiveClass}-next`)
+                .next()
+                .addClass(`${params.bulletActiveClass}-next-next`);
+            }
+          }
+        });
+      } else {
+        const $bullet = bullets.eq(current);
+        const bulletIndex = $bullet.index();
+        $bullet.addClass(params.bulletActiveClass);
+        if (params.dynamicBullets) {
+          const $firstDisplayedBullet = bullets.eq(firstIndex);
+          const $lastDisplayedBullet = bullets.eq(lastIndex);
+          for (let i = firstIndex; i <= lastIndex; i += 1) {
+            bullets.eq(i).addClass(`${params.bulletActiveClass}-main`);
+          }
+          if (swiper.params.loop) {
+            if (bulletIndex >= bullets.length - params.dynamicMainBullets) {
+              for (let i = params.dynamicMainBullets; i >= 0; i -= 1) {
+                bullets.eq(bullets.length - i).addClass(`${params.bulletActiveClass}-main`);
+              }
+              bullets.eq(bullets.length - params.dynamicMainBullets - 1).addClass(`${params.bulletActiveClass}-prev`);
+            } else {
+              $firstDisplayedBullet
+                .prev()
+                .addClass(`${params.bulletActiveClass}-prev`)
+                .prev()
+                .addClass(`${params.bulletActiveClass}-prev-prev`);
+              $lastDisplayedBullet
+                .next()
+                .addClass(`${params.bulletActiveClass}-next`)
+                .next()
+                .addClass(`${params.bulletActiveClass}-next-next`);
+            }
+          } else {
+            $firstDisplayedBullet
+              .prev()
+              .addClass(`${params.bulletActiveClass}-prev`)
+              .prev()
+              .addClass(`${params.bulletActiveClass}-prev-prev`);
+            $lastDisplayedBullet
+              .next()
+              .addClass(`${params.bulletActiveClass}-next`)
+              .next()
+              .addClass(`${params.bulletActiveClass}-next-next`);
+          }
+        }
+      }
+      if (params.dynamicBullets) {
+        const dynamicBulletsLength = Math.min(bullets.length, params.dynamicMainBullets + 4);
+        const bulletsOffset = (((swiper.pagination.bulletSize * dynamicBulletsLength) - (swiper.pagination.bulletSize)) / 2) - (midIndex * swiper.pagination.bulletSize);
+        const offsetProp = rtl ? 'right' : 'left';
+        bullets.css(swiper.isHorizontal() ? offsetProp : 'top', `${bulletsOffset}px`);
+      }
+    }
+    if (params.type === 'fraction') {
+      $el.find(`.${params.currentClass}`).text(params.formatFractionCurrent(current + 1));
+      $el.find(`.${params.totalClass}`).text(params.formatFractionTotal(total));
+    }
+    if (params.type === 'progressbar') {
+      let progressbarDirection;
+      if (params.progressbarOpposite) {
+        progressbarDirection = swiper.isHorizontal() ? 'vertical' : 'horizontal';
+      } else {
+        progressbarDirection = swiper.isHorizontal() ? 'horizontal' : 'vertical';
+      }
+      const scale = (current + 1) / total;
+      let scaleX = 1;
+      let scaleY = 1;
+      if (progressbarDirection === 'horizontal') {
+        scaleX = scale;
+      } else {
+        scaleY = scale;
+      }
+      $el.find(`.${params.progressbarFillClass}`).transform(`translate3d(0,0,0) scaleX(${scaleX}) scaleY(${scaleY})`).transition(swiper.params.speed);
+    }
+    if (params.type === 'custom' && params.renderCustom) {
+      $el.html(params.renderCustom(swiper, current + 1, total));
+      swiper.emit('paginationRender', swiper, $el[0]);
+    } else {
+      swiper.emit('paginationUpdate', swiper, $el[0]);
+    }
+    $el[swiper.params.watchOverflow && swiper.isLocked ? 'addClass' : 'removeClass'](params.lockClass);
+  },
+  render() {
+    // Render Container
+    const swiper = this;
+    const params = swiper.params.pagination;
+    if (!params.el || !swiper.pagination.el || !swiper.pagination.$el || swiper.pagination.$el.length === 0) return;
+    const slidesLength = swiper.virtual && swiper.params.virtual.enabled ? swiper.virtual.slides.length : swiper.slides.length;
+
+    const $el = swiper.pagination.$el;
+    let paginationHTML = '';
+    if (params.type === 'bullets') {
+      const numberOfBullets = swiper.params.loop ? Math.ceil((slidesLength - (swiper.loopedSlides * 2)) / swiper.params.slidesPerGroup) : swiper.snapGrid.length;
+      for (let i = 0; i < numberOfBullets; i += 1) {
+        if (params.renderBullet) {
+          paginationHTML += params.renderBullet.call(swiper, i, params.bulletClass);
+        } else {
+          paginationHTML += `<${params.bulletElement} class="${params.bulletClass}"></${params.bulletElement}>`;
+        }
+      }
+      $el.html(paginationHTML);
+      swiper.pagination.bullets = $el.find(`.${params.bulletClass}`);
+    }
+    if (params.type === 'fraction') {
+      if (params.renderFraction) {
+        paginationHTML = params.renderFraction.call(swiper, params.currentClass, params.totalClass);
+      } else {
+        paginationHTML = `<span class="${params.currentClass}"></span>`
+        + ' / '
+        + `<span class="${params.totalClass}"></span>`;
+      }
+      $el.html(paginationHTML);
+    }
+    if (params.type === 'progressbar') {
+      if (params.renderProgressbar) {
+        paginationHTML = params.renderProgressbar.call(swiper, params.progressbarFillClass);
+      } else {
+        paginationHTML = `<span class="${params.progressbarFillClass}"></span>`;
+      }
+      $el.html(paginationHTML);
+    }
+    if (params.type !== 'custom') {
+      swiper.emit('paginationRender', swiper.pagination.$el[0]);
+    }
+  },
+  init() {
+    const swiper = this;
+    const params = swiper.params.pagination;
+    if (!params.el) return;
+
+    let $el = $(params.el);
+    if ($el.length === 0) return;
+
+    if (
+      swiper.params.uniqueNavElements
+      && typeof params.el === 'string'
+      && $el.length > 1
+      && swiper.$el.find(params.el).length === 1
+    ) {
+      $el = swiper.$el.find(params.el);
+    }
+
+    if (params.type === 'bullets' && params.clickable) {
+      $el.addClass(params.clickableClass);
+    }
+
+    $el.addClass(params.modifierClass + params.type);
+
+    if (params.type === 'bullets' && params.dynamicBullets) {
+      $el.addClass(`${params.modifierClass}${params.type}-dynamic`);
+      swiper.pagination.dynamicBulletIndex = 0;
+      if (params.dynamicMainBullets < 1) {
+        params.dynamicMainBullets = 1;
+      }
+    }
+    if (params.type === 'progressbar' && params.progressbarOpposite) {
+      $el.addClass(params.progressbarOppositeClass);
+    }
+
+    if (params.clickable) {
+      $el.on('click', `.${params.bulletClass}`, function onClick(e) {
+        e.preventDefault();
+        let index = $(this).index() * swiper.params.slidesPerGroup;
+        if (swiper.params.loop) index += swiper.loopedSlides;
+        swiper.slideTo(index);
+      });
+    }
+
+    Utils.extend(swiper.pagination, {
+      $el,
+      el: $el[0],
+    });
+  },
+  destroy() {
+    const swiper = this;
+    const params = swiper.params.pagination;
+    if (!params.el || !swiper.pagination.el || !swiper.pagination.$el || swiper.pagination.$el.length === 0) return;
+    const $el = swiper.pagination.$el;
+
+    $el.removeClass(params.hiddenClass);
+    $el.removeClass(params.modifierClass + params.type);
+    if (swiper.pagination.bullets) swiper.pagination.bullets.removeClass(params.bulletActiveClass);
+    if (params.clickable) {
+      $el.off('click', `.${params.bulletClass}`);
+    }
+  },
+};
+
+var Pagination$1 = {
+  name: 'pagination',
+  params: {
+    pagination: {
+      el: null,
+      bulletElement: 'span',
+      clickable: false,
+      hideOnClick: false,
+      renderBullet: null,
+      renderProgressbar: null,
+      renderFraction: null,
+      renderCustom: null,
+      progressbarOpposite: false,
+      type: 'bullets', // 'bullets' or 'progressbar' or 'fraction' or 'custom'
+      dynamicBullets: false,
+      dynamicMainBullets: 1,
+      formatFractionCurrent: (number) => number,
+      formatFractionTotal: (number) => number,
+      bulletClass: 'swiper-pagination-bullet',
+      bulletActiveClass: 'swiper-pagination-bullet-active',
+      modifierClass: 'swiper-pagination-', // NEW
+      currentClass: 'swiper-pagination-current',
+      totalClass: 'swiper-pagination-total',
+      hiddenClass: 'swiper-pagination-hidden',
+      progressbarFillClass: 'swiper-pagination-progressbar-fill',
+      progressbarOppositeClass: 'swiper-pagination-progressbar-opposite',
+      clickableClass: 'swiper-pagination-clickable', // NEW
+      lockClass: 'swiper-pagination-lock',
+    },
+  },
+  create() {
+    const swiper = this;
+    Utils.extend(swiper, {
+      pagination: {
+        init: Pagination.init.bind(swiper),
+        render: Pagination.render.bind(swiper),
+        update: Pagination.update.bind(swiper),
+        destroy: Pagination.destroy.bind(swiper),
+        dynamicBulletIndex: 0,
+      },
+    });
+  },
+  on: {
+    init() {
+      const swiper = this;
+      swiper.pagination.init();
+      swiper.pagination.render();
+      swiper.pagination.update();
+    },
+    activeIndexChange() {
+      const swiper = this;
+      if (swiper.params.loop) {
+        swiper.pagination.update();
+      } else if (typeof swiper.snapIndex === 'undefined') {
+        swiper.pagination.update();
+      }
+    },
+    snapIndexChange() {
+      const swiper = this;
+      if (!swiper.params.loop) {
+        swiper.pagination.update();
+      }
+    },
+    slidesLengthChange() {
+      const swiper = this;
+      if (swiper.params.loop) {
+        swiper.pagination.render();
+        swiper.pagination.update();
+      }
+    },
+    snapGridLengthChange() {
+      const swiper = this;
+      if (!swiper.params.loop) {
+        swiper.pagination.render();
+        swiper.pagination.update();
+      }
+    },
+    destroy() {
+      const swiper = this;
+      swiper.pagination.destroy();
+    },
+    click(e) {
+      const swiper = this;
+      if (
+        swiper.params.pagination.el
+        && swiper.params.pagination.hideOnClick
+        && swiper.pagination.$el.length > 0
+        && !$(e.target).hasClass(swiper.params.pagination.bulletClass)
+      ) {
+        const isHidden = swiper.pagination.$el.hasClass(swiper.params.pagination.hiddenClass);
+        if (isHidden === true) {
+          swiper.emit('paginationShow', swiper);
+        } else {
+          swiper.emit('paginationHide', swiper);
+        }
+        swiper.pagination.$el.toggleClass(swiper.params.pagination.hiddenClass);
+      }
+    },
+  },
+};
+
+const Scrollbar = {
+  setTranslate() {
+    const swiper = this;
+    if (!swiper.params.scrollbar.el || !swiper.scrollbar.el) return;
+    const { scrollbar, rtlTranslate: rtl, progress } = swiper;
+    const {
+      dragSize, trackSize, $dragEl, $el,
+    } = scrollbar;
+    const params = swiper.params.scrollbar;
+
+    let newSize = dragSize;
+    let newPos = (trackSize - dragSize) * progress;
+    if (rtl) {
+      newPos = -newPos;
+      if (newPos > 0) {
+        newSize = dragSize - newPos;
+        newPos = 0;
+      } else if (-newPos + dragSize > trackSize) {
+        newSize = trackSize + newPos;
+      }
+    } else if (newPos < 0) {
+      newSize = dragSize + newPos;
+      newPos = 0;
+    } else if (newPos + dragSize > trackSize) {
+      newSize = trackSize - newPos;
+    }
+    if (swiper.isHorizontal()) {
+      $dragEl.transform(`translate3d(${newPos}px, 0, 0)`);
+      $dragEl[0].style.width = `${newSize}px`;
+    } else {
+      $dragEl.transform(`translate3d(0px, ${newPos}px, 0)`);
+      $dragEl[0].style.height = `${newSize}px`;
+    }
+    if (params.hide) {
+      clearTimeout(swiper.scrollbar.timeout);
+      $el[0].style.opacity = 1;
+      swiper.scrollbar.timeout = setTimeout(() => {
+        $el[0].style.opacity = 0;
+        $el.transition(400);
+      }, 1000);
+    }
+  },
+  setTransition(duration) {
+    const swiper = this;
+    if (!swiper.params.scrollbar.el || !swiper.scrollbar.el) return;
+    swiper.scrollbar.$dragEl.transition(duration);
+  },
+  updateSize() {
+    const swiper = this;
+    if (!swiper.params.scrollbar.el || !swiper.scrollbar.el) return;
+
+    const { scrollbar } = swiper;
+    const { $dragEl, $el } = scrollbar;
+
+    $dragEl[0].style.width = '';
+    $dragEl[0].style.height = '';
+    const trackSize = swiper.isHorizontal() ? $el[0].offsetWidth : $el[0].offsetHeight;
+
+    const divider = swiper.size / swiper.virtualSize;
+    const moveDivider = divider * (trackSize / swiper.size);
+    let dragSize;
+    if (swiper.params.scrollbar.dragSize === 'auto') {
+      dragSize = trackSize * divider;
+    } else {
+      dragSize = parseInt(swiper.params.scrollbar.dragSize, 10);
+    }
+
+    if (swiper.isHorizontal()) {
+      $dragEl[0].style.width = `${dragSize}px`;
+    } else {
+      $dragEl[0].style.height = `${dragSize}px`;
+    }
+
+    if (divider >= 1) {
+      $el[0].style.display = 'none';
+    } else {
+      $el[0].style.display = '';
+    }
+    if (swiper.params.scrollbar.hide) {
+      $el[0].style.opacity = 0;
+    }
+    Utils.extend(scrollbar, {
+      trackSize,
+      divider,
+      moveDivider,
+      dragSize,
+    });
+    scrollbar.$el[swiper.params.watchOverflow && swiper.isLocked ? 'addClass' : 'removeClass'](swiper.params.scrollbar.lockClass);
+  },
+  getPointerPosition(e) {
+    const swiper = this;
+    if (swiper.isHorizontal()) {
+      return ((e.type === 'touchstart' || e.type === 'touchmove') ? e.targetTouches[0].clientX : e.clientX);
+    }
+    return ((e.type === 'touchstart' || e.type === 'touchmove') ? e.targetTouches[0].clientY : e.clientY);
+  },
+  setDragPosition(e) {
+    const swiper = this;
+    const { scrollbar, rtlTranslate: rtl } = swiper;
+    const {
+      $el,
+      dragSize,
+      trackSize,
+      dragStartPos,
+    } = scrollbar;
+
+    let positionRatio;
+    positionRatio = ((scrollbar.getPointerPosition(e)) - $el.offset()[swiper.isHorizontal() ? 'left' : 'top']
+      - (dragStartPos !== null ? dragStartPos : dragSize / 2)) / (trackSize - dragSize);
+    positionRatio = Math.max(Math.min(positionRatio, 1), 0);
+    if (rtl) {
+      positionRatio = 1 - positionRatio;
+    }
+
+    const position = swiper.minTranslate() + ((swiper.maxTranslate() - swiper.minTranslate()) * positionRatio);
+
+    swiper.updateProgress(position);
+    swiper.setTranslate(position);
+    swiper.updateActiveIndex();
+    swiper.updateSlidesClasses();
+  },
+  onDragStart(e) {
+    const swiper = this;
+    const params = swiper.params.scrollbar;
+    const { scrollbar, $wrapperEl } = swiper;
+    const { $el, $dragEl } = scrollbar;
+    swiper.scrollbar.isTouched = true;
+    swiper.scrollbar.dragStartPos = (e.target === $dragEl[0] || e.target === $dragEl)
+      ? scrollbar.getPointerPosition(e) - e.target.getBoundingClientRect()[swiper.isHorizontal() ? 'left' : 'top'] : null;
+    e.preventDefault();
+    e.stopPropagation();
+
+    $wrapperEl.transition(100);
+    $dragEl.transition(100);
+    scrollbar.setDragPosition(e);
+
+    clearTimeout(swiper.scrollbar.dragTimeout);
+
+    $el.transition(0);
+    if (params.hide) {
+      $el.css('opacity', 1);
+    }
+    if (swiper.params.cssMode) {
+      swiper.$wrapperEl.css('scroll-snap-type', 'none');
+    }
+    swiper.emit('scrollbarDragStart', e);
+  },
+  onDragMove(e) {
+    const swiper = this;
+    const { scrollbar, $wrapperEl } = swiper;
+    const { $el, $dragEl } = scrollbar;
+
+    if (!swiper.scrollbar.isTouched) return;
+    if (e.preventDefault) e.preventDefault();
+    else e.returnValue = false;
+    scrollbar.setDragPosition(e);
+    $wrapperEl.transition(0);
+    $el.transition(0);
+    $dragEl.transition(0);
+    swiper.emit('scrollbarDragMove', e);
+  },
+  onDragEnd(e) {
+    const swiper = this;
+
+    const params = swiper.params.scrollbar;
+    const { scrollbar, $wrapperEl } = swiper;
+    const { $el } = scrollbar;
+
+    if (!swiper.scrollbar.isTouched) return;
+    swiper.scrollbar.isTouched = false;
+    if (swiper.params.cssMode) {
+      swiper.$wrapperEl.css('scroll-snap-type', '');
+      $wrapperEl.transition('');
+    }
+    if (params.hide) {
+      clearTimeout(swiper.scrollbar.dragTimeout);
+      swiper.scrollbar.dragTimeout = Utils.nextTick(() => {
+        $el.css('opacity', 0);
+        $el.transition(400);
+      }, 1000);
+    }
+    swiper.emit('scrollbarDragEnd', e);
+    if (params.snapOnRelease) {
+      swiper.slideToClosest();
+    }
+  },
+  enableDraggable() {
+    const swiper = this;
+    if (!swiper.params.scrollbar.el) return;
+    const {
+      scrollbar, touchEventsTouch, touchEventsDesktop, params,
+    } = swiper;
+    const $el = scrollbar.$el;
+    const target = $el[0];
+    const activeListener = Support.passiveListener && params.passiveListeners ? { passive: false, capture: false } : false;
+    const passiveListener = Support.passiveListener && params.passiveListeners ? { passive: true, capture: false } : false;
+    if (!Support.touch) {
+      target.addEventListener(touchEventsDesktop.start, swiper.scrollbar.onDragStart, activeListener);
+      doc.addEventListener(touchEventsDesktop.move, swiper.scrollbar.onDragMove, activeListener);
+      doc.addEventListener(touchEventsDesktop.end, swiper.scrollbar.onDragEnd, passiveListener);
+    } else {
+      target.addEventListener(touchEventsTouch.start, swiper.scrollbar.onDragStart, activeListener);
+      target.addEventListener(touchEventsTouch.move, swiper.scrollbar.onDragMove, activeListener);
+      target.addEventListener(touchEventsTouch.end, swiper.scrollbar.onDragEnd, passiveListener);
+    }
+  },
+  disableDraggable() {
+    const swiper = this;
+    if (!swiper.params.scrollbar.el) return;
+    const {
+      scrollbar, touchEventsTouch, touchEventsDesktop, params,
+    } = swiper;
+    const $el = scrollbar.$el;
+    const target = $el[0];
+    const activeListener = Support.passiveListener && params.passiveListeners ? { passive: false, capture: false } : false;
+    const passiveListener = Support.passiveListener && params.passiveListeners ? { passive: true, capture: false } : false;
+    if (!Support.touch) {
+      target.removeEventListener(touchEventsDesktop.start, swiper.scrollbar.onDragStart, activeListener);
+      doc.removeEventListener(touchEventsDesktop.move, swiper.scrollbar.onDragMove, activeListener);
+      doc.removeEventListener(touchEventsDesktop.end, swiper.scrollbar.onDragEnd, passiveListener);
+    } else {
+      target.removeEventListener(touchEventsTouch.start, swiper.scrollbar.onDragStart, activeListener);
+      target.removeEventListener(touchEventsTouch.move, swiper.scrollbar.onDragMove, activeListener);
+      target.removeEventListener(touchEventsTouch.end, swiper.scrollbar.onDragEnd, passiveListener);
+    }
+  },
+  init() {
+    const swiper = this;
+    if (!swiper.params.scrollbar.el) return;
+    const { scrollbar, $el: $swiperEl } = swiper;
+    const params = swiper.params.scrollbar;
+
+    let $el = $(params.el);
+    if (swiper.params.uniqueNavElements && typeof params.el === 'string' && $el.length > 1 && $swiperEl.find(params.el).length === 1) {
+      $el = $swiperEl.find(params.el);
+    }
+
+    let $dragEl = $el.find(`.${swiper.params.scrollbar.dragClass}`);
+    if ($dragEl.length === 0) {
+      $dragEl = $(`<div class="${swiper.params.scrollbar.dragClass}"></div>`);
+      $el.append($dragEl);
+    }
+
+    Utils.extend(scrollbar, {
+      $el,
+      el: $el[0],
+      $dragEl,
+      dragEl: $dragEl[0],
+    });
+
+    if (params.draggable) {
+      scrollbar.enableDraggable();
+    }
+  },
+  destroy() {
+    const swiper = this;
+    swiper.scrollbar.disableDraggable();
+  },
+};
+
+var Scrollbar$1 = {
+  name: 'scrollbar',
+  params: {
+    scrollbar: {
+      el: null,
+      dragSize: 'auto',
+      hide: false,
+      draggable: false,
+      snapOnRelease: true,
+      lockClass: 'swiper-scrollbar-lock',
+      dragClass: 'swiper-scrollbar-drag',
+    },
+  },
+  create() {
+    const swiper = this;
+    Utils.extend(swiper, {
+      scrollbar: {
+        init: Scrollbar.init.bind(swiper),
+        destroy: Scrollbar.destroy.bind(swiper),
+        updateSize: Scrollbar.updateSize.bind(swiper),
+        setTranslate: Scrollbar.setTranslate.bind(swiper),
+        setTransition: Scrollbar.setTransition.bind(swiper),
+        enableDraggable: Scrollbar.enableDraggable.bind(swiper),
+        disableDraggable: Scrollbar.disableDraggable.bind(swiper),
+        setDragPosition: Scrollbar.setDragPosition.bind(swiper),
+        getPointerPosition: Scrollbar.getPointerPosition.bind(swiper),
+        onDragStart: Scrollbar.onDragStart.bind(swiper),
+        onDragMove: Scrollbar.onDragMove.bind(swiper),
+        onDragEnd: Scrollbar.onDragEnd.bind(swiper),
+        isTouched: false,
+        timeout: null,
+        dragTimeout: null,
+      },
+    });
+  },
+  on: {
+    init() {
+      const swiper = this;
+      swiper.scrollbar.init();
+      swiper.scrollbar.updateSize();
+      swiper.scrollbar.setTranslate();
+    },
+    update() {
+      const swiper = this;
+      swiper.scrollbar.updateSize();
+    },
+    resize() {
+      const swiper = this;
+      swiper.scrollbar.updateSize();
+    },
+    observerUpdate() {
+      const swiper = this;
+      swiper.scrollbar.updateSize();
+    },
+    setTranslate() {
+      const swiper = this;
+      swiper.scrollbar.setTranslate();
+    },
+    setTransition(duration) {
+      const swiper = this;
+      swiper.scrollbar.setTransition(duration);
+    },
+    destroy() {
+      const swiper = this;
+      swiper.scrollbar.destroy();
+    },
+  },
+};
+
+const Parallax = {
+  setTransform(el, progress) {
+    const swiper = this;
+    const { rtl } = swiper;
+
+    const $el = $(el);
+    const rtlFactor = rtl ? -1 : 1;
+
+    const p = $el.attr('data-swiper-parallax') || '0';
+    let x = $el.attr('data-swiper-parallax-x');
+    let y = $el.attr('data-swiper-parallax-y');
+    const scale = $el.attr('data-swiper-parallax-scale');
+    const opacity = $el.attr('data-swiper-parallax-opacity');
+
+    if (x || y) {
+      x = x || '0';
+      y = y || '0';
+    } else if (swiper.isHorizontal()) {
+      x = p;
+      y = '0';
+    } else {
+      y = p;
+      x = '0';
+    }
+
+    if ((x).indexOf('%') >= 0) {
+      x = `${parseInt(x, 10) * progress * rtlFactor}%`;
+    } else {
+      x = `${x * progress * rtlFactor}px`;
+    }
+    if ((y).indexOf('%') >= 0) {
+      y = `${parseInt(y, 10) * progress}%`;
+    } else {
+      y = `${y * progress}px`;
+    }
+
+    if (typeof opacity !== 'undefined' && opacity !== null) {
+      const currentOpacity = opacity - ((opacity - 1) * (1 - Math.abs(progress)));
+      $el[0].style.opacity = currentOpacity;
+    }
+    if (typeof scale === 'undefined' || scale === null) {
+      $el.transform(`translate3d(${x}, ${y}, 0px)`);
+    } else {
+      const currentScale = scale - ((scale - 1) * (1 - Math.abs(progress)));
+      $el.transform(`translate3d(${x}, ${y}, 0px) scale(${currentScale})`);
+    }
+  },
+  setTranslate() {
+    const swiper = this;
+    const {
+      $el, slides, progress, snapGrid,
+    } = swiper;
+    $el.children('[data-swiper-parallax], [data-swiper-parallax-x], [data-swiper-parallax-y], [data-swiper-parallax-opacity], [data-swiper-parallax-scale]')
+      .each((index, el) => {
+        swiper.parallax.setTransform(el, progress);
+      });
+    slides.each((slideIndex, slideEl) => {
+      let slideProgress = slideEl.progress;
+      if (swiper.params.slidesPerGroup > 1 && swiper.params.slidesPerView !== 'auto') {
+        slideProgress += Math.ceil(slideIndex / 2) - (progress * (snapGrid.length - 1));
+      }
+      slideProgress = Math.min(Math.max(slideProgress, -1), 1);
+      $(slideEl).find('[data-swiper-parallax], [data-swiper-parallax-x], [data-swiper-parallax-y], [data-swiper-parallax-opacity], [data-swiper-parallax-scale]')
+        .each((index, el) => {
+          swiper.parallax.setTransform(el, slideProgress);
+        });
+    });
+  },
+  setTransition(duration = this.params.speed) {
+    const swiper = this;
+    const { $el } = swiper;
+    $el.find('[data-swiper-parallax], [data-swiper-parallax-x], [data-swiper-parallax-y], [data-swiper-parallax-opacity], [data-swiper-parallax-scale]')
+      .each((index, parallaxEl) => {
+        const $parallaxEl = $(parallaxEl);
+        let parallaxDuration = parseInt($parallaxEl.attr('data-swiper-parallax-duration'), 10) || duration;
+        if (duration === 0) parallaxDuration = 0;
+        $parallaxEl.transition(parallaxDuration);
+      });
+  },
+};
+
+var Parallax$1 = {
+  name: 'parallax',
+  params: {
+    parallax: {
+      enabled: false,
+    },
+  },
+  create() {
+    const swiper = this;
+    Utils.extend(swiper, {
+      parallax: {
+        setTransform: Parallax.setTransform.bind(swiper),
+        setTranslate: Parallax.setTranslate.bind(swiper),
+        setTransition: Parallax.setTransition.bind(swiper),
+      },
+    });
+  },
+  on: {
+    beforeInit() {
+      const swiper = this;
+      if (!swiper.params.parallax.enabled) return;
+      swiper.params.watchSlidesProgress = true;
+      swiper.originalParams.watchSlidesProgress = true;
+    },
+    init() {
+      const swiper = this;
+      if (!swiper.params.parallax.enabled) return;
+      swiper.parallax.setTranslate();
+    },
+    setTranslate() {
+      const swiper = this;
+      if (!swiper.params.parallax.enabled) return;
+      swiper.parallax.setTranslate();
+    },
+    setTransition(duration) {
+      const swiper = this;
+      if (!swiper.params.parallax.enabled) return;
+      swiper.parallax.setTransition(duration);
+    },
+  },
+};
+
+const Zoom = {
+  // Calc Scale From Multi-touches
+  getDistanceBetweenTouches(e) {
+    if (e.targetTouches.length < 2) return 1;
+    const x1 = e.targetTouches[0].pageX;
+    const y1 = e.targetTouches[0].pageY;
+    const x2 = e.targetTouches[1].pageX;
+    const y2 = e.targetTouches[1].pageY;
+    const distance = Math.sqrt(((x2 - x1) ** 2) + ((y2 - y1) ** 2));
+    return distance;
+  },
+  // Events
+  onGestureStart(e) {
+    const swiper = this;
+    const params = swiper.params.zoom;
+    const zoom = swiper.zoom;
+    const { gesture } = zoom;
+    zoom.fakeGestureTouched = false;
+    zoom.fakeGestureMoved = false;
+    if (!Support.gestures) {
+      if (e.type !== 'touchstart' || (e.type === 'touchstart' && e.targetTouches.length < 2)) {
+        return;
+      }
+      zoom.fakeGestureTouched = true;
+      gesture.scaleStart = Zoom.getDistanceBetweenTouches(e);
+    }
+    if (!gesture.$slideEl || !gesture.$slideEl.length) {
+      gesture.$slideEl = $(e.target).closest('.swiper-slide');
+      if (gesture.$slideEl.length === 0) gesture.$slideEl = swiper.slides.eq(swiper.activeIndex);
+      gesture.$imageEl = gesture.$slideEl.find('img, svg, canvas');
+      gesture.$imageWrapEl = gesture.$imageEl.parent(`.${params.containerClass}`);
+      gesture.maxRatio = gesture.$imageWrapEl.attr('data-swiper-zoom') || params.maxRatio;
+      if (gesture.$imageWrapEl.length === 0) {
+        gesture.$imageEl = undefined;
+        return;
+      }
+    }
+    gesture.$imageEl.transition(0);
+    swiper.zoom.isScaling = true;
+  },
+  onGestureChange(e) {
+    const swiper = this;
+    const params = swiper.params.zoom;
+    const zoom = swiper.zoom;
+    const { gesture } = zoom;
+    if (!Support.gestures) {
+      if (e.type !== 'touchmove' || (e.type === 'touchmove' && e.targetTouches.length < 2)) {
+        return;
+      }
+      zoom.fakeGestureMoved = true;
+      gesture.scaleMove = Zoom.getDistanceBetweenTouches(e);
+    }
+    if (!gesture.$imageEl || gesture.$imageEl.length === 0) return;
+    if (Support.gestures) {
+      zoom.scale = e.scale * zoom.currentScale;
+    } else {
+      zoom.scale = (gesture.scaleMove / gesture.scaleStart) * zoom.currentScale;
+    }
+    if (zoom.scale > gesture.maxRatio) {
+      zoom.scale = (gesture.maxRatio - 1) + (((zoom.scale - gesture.maxRatio) + 1) ** 0.5);
+    }
+    if (zoom.scale < params.minRatio) {
+      zoom.scale = (params.minRatio + 1) - (((params.minRatio - zoom.scale) + 1) ** 0.5);
+    }
+    gesture.$imageEl.transform(`translate3d(0,0,0) scale(${zoom.scale})`);
+  },
+  onGestureEnd(e) {
+    const swiper = this;
+    const params = swiper.params.zoom;
+    const zoom = swiper.zoom;
+    const { gesture } = zoom;
+    if (!Support.gestures) {
+      if (!zoom.fakeGestureTouched || !zoom.fakeGestureMoved) {
+        return;
+      }
+      if (e.type !== 'touchend' || (e.type === 'touchend' && e.changedTouches.length < 2 && !Device.android)) {
+        return;
+      }
+      zoom.fakeGestureTouched = false;
+      zoom.fakeGestureMoved = false;
+    }
+    if (!gesture.$imageEl || gesture.$imageEl.length === 0) return;
+    zoom.scale = Math.max(Math.min(zoom.scale, gesture.maxRatio), params.minRatio);
+    gesture.$imageEl.transition(swiper.params.speed).transform(`translate3d(0,0,0) scale(${zoom.scale})`);
+    zoom.currentScale = zoom.scale;
+    zoom.isScaling = false;
+    if (zoom.scale === 1) gesture.$slideEl = undefined;
+  },
+  onTouchStart(e) {
+    const swiper = this;
+    const zoom = swiper.zoom;
+    const { gesture, image } = zoom;
+    if (!gesture.$imageEl || gesture.$imageEl.length === 0) return;
+    if (image.isTouched) return;
+    if (Device.android) e.preventDefault();
+    image.isTouched = true;
+    image.touchesStart.x = e.type === 'touchstart' ? e.targetTouches[0].pageX : e.pageX;
+    image.touchesStart.y = e.type === 'touchstart' ? e.targetTouches[0].pageY : e.pageY;
+  },
+  onTouchMove(e) {
+    const swiper = this;
+    const zoom = swiper.zoom;
+    const { gesture, image, velocity } = zoom;
+    if (!gesture.$imageEl || gesture.$imageEl.length === 0) return;
+    swiper.allowClick = false;
+    if (!image.isTouched || !gesture.$slideEl) return;
+
+    if (!image.isMoved) {
+      image.width = gesture.$imageEl[0].offsetWidth;
+      image.height = gesture.$imageEl[0].offsetHeight;
+      image.startX = Utils.getTranslate(gesture.$imageWrapEl[0], 'x') || 0;
+      image.startY = Utils.getTranslate(gesture.$imageWrapEl[0], 'y') || 0;
+      gesture.slideWidth = gesture.$slideEl[0].offsetWidth;
+      gesture.slideHeight = gesture.$slideEl[0].offsetHeight;
+      gesture.$imageWrapEl.transition(0);
+      if (swiper.rtl) {
+        image.startX = -image.startX;
+        image.startY = -image.startY;
+      }
+    }
+    // Define if we need image drag
+    const scaledWidth = image.width * zoom.scale;
+    const scaledHeight = image.height * zoom.scale;
+
+    if (scaledWidth < gesture.slideWidth && scaledHeight < gesture.slideHeight) return;
+
+    image.minX = Math.min(((gesture.slideWidth / 2) - (scaledWidth / 2)), 0);
+    image.maxX = -image.minX;
+    image.minY = Math.min(((gesture.slideHeight / 2) - (scaledHeight / 2)), 0);
+    image.maxY = -image.minY;
+
+    image.touchesCurrent.x = e.type === 'touchmove' ? e.targetTouches[0].pageX : e.pageX;
+    image.touchesCurrent.y = e.type === 'touchmove' ? e.targetTouches[0].pageY : e.pageY;
+
+    if (!image.isMoved && !zoom.isScaling) {
+      if (
+        swiper.isHorizontal()
+        && (
+          (Math.floor(image.minX) === Math.floor(image.startX) && image.touchesCurrent.x < image.touchesStart.x)
+          || (Math.floor(image.maxX) === Math.floor(image.startX) && image.touchesCurrent.x > image.touchesStart.x)
+        )
+      ) {
+        image.isTouched = false;
+        return;
+      } if (
+        !swiper.isHorizontal()
+        && (
+          (Math.floor(image.minY) === Math.floor(image.startY) && image.touchesCurrent.y < image.touchesStart.y)
+          || (Math.floor(image.maxY) === Math.floor(image.startY) && image.touchesCurrent.y > image.touchesStart.y)
+        )
+      ) {
+        image.isTouched = false;
+        return;
+      }
+    }
+    e.preventDefault();
+    e.stopPropagation();
+
+    image.isMoved = true;
+    image.currentX = (image.touchesCurrent.x - image.touchesStart.x) + image.startX;
+    image.currentY = (image.touchesCurrent.y - image.touchesStart.y) + image.startY;
+
+    if (image.currentX < image.minX) {
+      image.currentX = (image.minX + 1) - (((image.minX - image.currentX) + 1) ** 0.8);
+    }
+    if (image.currentX > image.maxX) {
+      image.currentX = (image.maxX - 1) + (((image.currentX - image.maxX) + 1) ** 0.8);
+    }
+
+    if (image.currentY < image.minY) {
+      image.currentY = (image.minY + 1) - (((image.minY - image.currentY) + 1) ** 0.8);
+    }
+    if (image.currentY > image.maxY) {
+      image.currentY = (image.maxY - 1) + (((image.currentY - image.maxY) + 1) ** 0.8);
+    }
+
+    // Velocity
+    if (!velocity.prevPositionX) velocity.prevPositionX = image.touchesCurrent.x;
+    if (!velocity.prevPositionY) velocity.prevPositionY = image.touchesCurrent.y;
+    if (!velocity.prevTime) velocity.prevTime = Date.now();
+    velocity.x = (image.touchesCurrent.x - velocity.prevPositionX) / (Date.now() - velocity.prevTime) / 2;
+    velocity.y = (image.touchesCurrent.y - velocity.prevPositionY) / (Date.now() - velocity.prevTime) / 2;
+    if (Math.abs(image.touchesCurrent.x - velocity.prevPositionX) < 2) velocity.x = 0;
+    if (Math.abs(image.touchesCurrent.y - velocity.prevPositionY) < 2) velocity.y = 0;
+    velocity.prevPositionX = image.touchesCurrent.x;
+    velocity.prevPositionY = image.touchesCurrent.y;
+    velocity.prevTime = Date.now();
+
+    gesture.$imageWrapEl.transform(`translate3d(${image.currentX}px, ${image.currentY}px,0)`);
+  },
+  onTouchEnd() {
+    const swiper = this;
+    const zoom = swiper.zoom;
+    const { gesture, image, velocity } = zoom;
+    if (!gesture.$imageEl || gesture.$imageEl.length === 0) return;
+    if (!image.isTouched || !image.isMoved) {
+      image.isTouched = false;
+      image.isMoved = false;
+      return;
+    }
+    image.isTouched = false;
+    image.isMoved = false;
+    let momentumDurationX = 300;
+    let momentumDurationY = 300;
+    const momentumDistanceX = velocity.x * momentumDurationX;
+    const newPositionX = image.currentX + momentumDistanceX;
+    const momentumDistanceY = velocity.y * momentumDurationY;
+    const newPositionY = image.currentY + momentumDistanceY;
+
+    // Fix duration
+    if (velocity.x !== 0) momentumDurationX = Math.abs((newPositionX - image.currentX) / velocity.x);
+    if (velocity.y !== 0) momentumDurationY = Math.abs((newPositionY - image.currentY) / velocity.y);
+    const momentumDuration = Math.max(momentumDurationX, momentumDurationY);
+
+    image.currentX = newPositionX;
+    image.currentY = newPositionY;
+
+    // Define if we need image drag
+    const scaledWidth = image.width * zoom.scale;
+    const scaledHeight = image.height * zoom.scale;
+    image.minX = Math.min(((gesture.slideWidth / 2) - (scaledWidth / 2)), 0);
+    image.maxX = -image.minX;
+    image.minY = Math.min(((gesture.slideHeight / 2) - (scaledHeight / 2)), 0);
+    image.maxY = -image.minY;
+    image.currentX = Math.max(Math.min(image.currentX, image.maxX), image.minX);
+    image.currentY = Math.max(Math.min(image.currentY, image.maxY), image.minY);
+
+    gesture.$imageWrapEl.transition(momentumDuration).transform(`translate3d(${image.currentX}px, ${image.currentY}px,0)`);
+  },
+  onTransitionEnd() {
+    const swiper = this;
+    const zoom = swiper.zoom;
+    const { gesture } = zoom;
+    if (gesture.$slideEl && swiper.previousIndex !== swiper.activeIndex) {
+      gesture.$imageEl.transform('translate3d(0,0,0) scale(1)');
+      gesture.$imageWrapEl.transform('translate3d(0,0,0)');
+
+      zoom.scale = 1;
+      zoom.currentScale = 1;
+
+      gesture.$slideEl = undefined;
+      gesture.$imageEl = undefined;
+      gesture.$imageWrapEl = undefined;
+    }
+  },
+  // Toggle Zoom
+  toggle(e) {
+    const swiper = this;
+    const zoom = swiper.zoom;
+
+    if (zoom.scale && zoom.scale !== 1) {
+      // Zoom Out
+      zoom.out();
+    } else {
+      // Zoom In
+      zoom.in(e);
+    }
+  },
+  in(e) {
+    const swiper = this;
+
+    const zoom = swiper.zoom;
+    const params = swiper.params.zoom;
+    const { gesture, image } = zoom;
+
+    if (!gesture.$slideEl) {
+      gesture.$slideEl = swiper.clickedSlide ? $(swiper.clickedSlide) : swiper.slides.eq(swiper.activeIndex);
+      gesture.$imageEl = gesture.$slideEl.find('img, svg, canvas');
+      gesture.$imageWrapEl = gesture.$imageEl.parent(`.${params.containerClass}`);
+    }
+    if (!gesture.$imageEl || gesture.$imageEl.length === 0) return;
+
+    gesture.$slideEl.addClass(`${params.zoomedSlideClass}`);
+
+    let touchX;
+    let touchY;
+    let offsetX;
+    let offsetY;
+    let diffX;
+    let diffY;
+    let translateX;
+    let translateY;
+    let imageWidth;
+    let imageHeight;
+    let scaledWidth;
+    let scaledHeight;
+    let translateMinX;
+    let translateMinY;
+    let translateMaxX;
+    let translateMaxY;
+    let slideWidth;
+    let slideHeight;
+
+    if (typeof image.touchesStart.x === 'undefined' && e) {
+      touchX = e.type === 'touchend' ? e.changedTouches[0].pageX : e.pageX;
+      touchY = e.type === 'touchend' ? e.changedTouches[0].pageY : e.pageY;
+    } else {
+      touchX = image.touchesStart.x;
+      touchY = image.touchesStart.y;
+    }
+
+    zoom.scale = gesture.$imageWrapEl.attr('data-swiper-zoom') || params.maxRatio;
+    zoom.currentScale = gesture.$imageWrapEl.attr('data-swiper-zoom') || params.maxRatio;
+    if (e) {
+      slideWidth = gesture.$slideEl[0].offsetWidth;
+      slideHeight = gesture.$slideEl[0].offsetHeight;
+      offsetX = gesture.$slideEl.offset().left;
+      offsetY = gesture.$slideEl.offset().top;
+      diffX = (offsetX + (slideWidth / 2)) - touchX;
+      diffY = (offsetY + (slideHeight / 2)) - touchY;
+
+      imageWidth = gesture.$imageEl[0].offsetWidth;
+      imageHeight = gesture.$imageEl[0].offsetHeight;
+      scaledWidth = imageWidth * zoom.scale;
+      scaledHeight = imageHeight * zoom.scale;
+
+      translateMinX = Math.min(((slideWidth / 2) - (scaledWidth / 2)), 0);
+      translateMinY = Math.min(((slideHeight / 2) - (scaledHeight / 2)), 0);
+      translateMaxX = -translateMinX;
+      translateMaxY = -translateMinY;
+
+      translateX = diffX * zoom.scale;
+      translateY = diffY * zoom.scale;
+
+      if (translateX < translateMinX) {
+        translateX = translateMinX;
+      }
+      if (translateX > translateMaxX) {
+        translateX = translateMaxX;
+      }
+
+      if (translateY < translateMinY) {
+        translateY = translateMinY;
+      }
+      if (translateY > translateMaxY) {
+        translateY = translateMaxY;
+      }
+    } else {
+      translateX = 0;
+      translateY = 0;
+    }
+    gesture.$imageWrapEl.transition(300).transform(`translate3d(${translateX}px, ${translateY}px,0)`);
+    gesture.$imageEl.transition(300).transform(`translate3d(0,0,0) scale(${zoom.scale})`);
+  },
+  out() {
+    const swiper = this;
+
+    const zoom = swiper.zoom;
+    const params = swiper.params.zoom;
+    const { gesture } = zoom;
+
+    if (!gesture.$slideEl) {
+      gesture.$slideEl = swiper.clickedSlide ? $(swiper.clickedSlide) : swiper.slides.eq(swiper.activeIndex);
+      gesture.$imageEl = gesture.$slideEl.find('img, svg, canvas');
+      gesture.$imageWrapEl = gesture.$imageEl.parent(`.${params.containerClass}`);
+    }
+    if (!gesture.$imageEl || gesture.$imageEl.length === 0) return;
+
+    zoom.scale = 1;
+    zoom.currentScale = 1;
+    gesture.$imageWrapEl.transition(300).transform('translate3d(0,0,0)');
+    gesture.$imageEl.transition(300).transform('translate3d(0,0,0) scale(1)');
+    gesture.$slideEl.removeClass(`${params.zoomedSlideClass}`);
+    gesture.$slideEl = undefined;
+  },
+  // Attach/Detach Events
+  enable() {
+    const swiper = this;
+    const zoom = swiper.zoom;
+    if (zoom.enabled) return;
+    zoom.enabled = true;
+
+    const passiveListener = swiper.touchEvents.start === 'touchstart' && Support.passiveListener && swiper.params.passiveListeners ? { passive: true, capture: false } : false;
+    const activeListenerWithCapture = Support.passiveListener ? { passive: false, capture: true } : true;
+
+    // Scale image
+    if (Support.gestures) {
+      swiper.$wrapperEl.on('gesturestart', '.swiper-slide', zoom.onGestureStart, passiveListener);
+      swiper.$wrapperEl.on('gesturechange', '.swiper-slide', zoom.onGestureChange, passiveListener);
+      swiper.$wrapperEl.on('gestureend', '.swiper-slide', zoom.onGestureEnd, passiveListener);
+    } else if (swiper.touchEvents.start === 'touchstart') {
+      swiper.$wrapperEl.on(swiper.touchEvents.start, '.swiper-slide', zoom.onGestureStart, passiveListener);
+      swiper.$wrapperEl.on(swiper.touchEvents.move, '.swiper-slide', zoom.onGestureChange, activeListenerWithCapture);
+      swiper.$wrapperEl.on(swiper.touchEvents.end, '.swiper-slide', zoom.onGestureEnd, passiveListener);
+      if (swiper.touchEvents.cancel) {
+        swiper.$wrapperEl.on(swiper.touchEvents.cancel, '.swiper-slide', zoom.onGestureEnd, passiveListener);
+      }
+    }
+
+    // Move image
+    swiper.$wrapperEl.on(swiper.touchEvents.move, `.${swiper.params.zoom.containerClass}`, zoom.onTouchMove, activeListenerWithCapture);
+  },
+  disable() {
+    const swiper = this;
+    const zoom = swiper.zoom;
+    if (!zoom.enabled) return;
+
+    swiper.zoom.enabled = false;
+
+    const passiveListener = swiper.touchEvents.start === 'touchstart' && Support.passiveListener && swiper.params.passiveListeners ? { passive: true, capture: false } : false;
+    const activeListenerWithCapture = Support.passiveListener ? { passive: false, capture: true } : true;
+
+    // Scale image
+    if (Support.gestures) {
+      swiper.$wrapperEl.off('gesturestart', '.swiper-slide', zoom.onGestureStart, passiveListener);
+      swiper.$wrapperEl.off('gesturechange', '.swiper-slide', zoom.onGestureChange, passiveListener);
+      swiper.$wrapperEl.off('gestureend', '.swiper-slide', zoom.onGestureEnd, passiveListener);
+    } else if (swiper.touchEvents.start === 'touchstart') {
+      swiper.$wrapperEl.off(swiper.touchEvents.start, '.swiper-slide', zoom.onGestureStart, passiveListener);
+      swiper.$wrapperEl.off(swiper.touchEvents.move, '.swiper-slide', zoom.onGestureChange, activeListenerWithCapture);
+      swiper.$wrapperEl.off(swiper.touchEvents.end, '.swiper-slide', zoom.onGestureEnd, passiveListener);
+      if (swiper.touchEvents.cancel) {
+        swiper.$wrapperEl.off(swiper.touchEvents.cancel, '.swiper-slide', zoom.onGestureEnd, passiveListener);
+      }
+    }
+
+    // Move image
+    swiper.$wrapperEl.off(swiper.touchEvents.move, `.${swiper.params.zoom.containerClass}`, zoom.onTouchMove, activeListenerWithCapture);
+  },
+};
+
+var Zoom$1 = {
+  name: 'zoom',
+  params: {
+    zoom: {
+      enabled: false,
+      maxRatio: 3,
+      minRatio: 1,
+      toggle: true,
+      containerClass: 'swiper-zoom-container',
+      zoomedSlideClass: 'swiper-slide-zoomed',
+    },
+  },
+  create() {
+    const swiper = this;
+    const zoom = {
+      enabled: false,
+      scale: 1,
+      currentScale: 1,
+      isScaling: false,
+      gesture: {
+        $slideEl: undefined,
+        slideWidth: undefined,
+        slideHeight: undefined,
+        $imageEl: undefined,
+        $imageWrapEl: undefined,
+        maxRatio: 3,
+      },
+      image: {
+        isTouched: undefined,
+        isMoved: undefined,
+        currentX: undefined,
+        currentY: undefined,
+        minX: undefined,
+        minY: undefined,
+        maxX: undefined,
+        maxY: undefined,
+        width: undefined,
+        height: undefined,
+        startX: undefined,
+        startY: undefined,
+        touchesStart: {},
+        touchesCurrent: {},
+      },
+      velocity: {
+        x: undefined,
+        y: undefined,
+        prevPositionX: undefined,
+        prevPositionY: undefined,
+        prevTime: undefined,
+      },
+    };
+
+    ('onGestureStart onGestureChange onGestureEnd onTouchStart onTouchMove onTouchEnd onTransitionEnd toggle enable disable in out').split(' ').forEach((methodName) => {
+      zoom[methodName] = Zoom[methodName].bind(swiper);
+    });
+    Utils.extend(swiper, {
+      zoom,
+    });
+
+    let scale = 1;
+    Object.defineProperty(swiper.zoom, 'scale', {
+      get() {
+        return scale;
+      },
+      set(value) {
+        if (scale !== value) {
+          const imageEl = swiper.zoom.gesture.$imageEl ? swiper.zoom.gesture.$imageEl[0] : undefined;
+          const slideEl = swiper.zoom.gesture.$slideEl ? swiper.zoom.gesture.$slideEl[0] : undefined;
+          swiper.emit('zoomChange', value, imageEl, slideEl);
+        }
+        scale = value;
+      },
+    });
+  },
+  on: {
+    init() {
+      const swiper = this;
+      if (swiper.params.zoom.enabled) {
+        swiper.zoom.enable();
+      }
+    },
+    destroy() {
+      const swiper = this;
+      swiper.zoom.disable();
+    },
+    touchStart(e) {
+      const swiper = this;
+      if (!swiper.zoom.enabled) return;
+      swiper.zoom.onTouchStart(e);
+    },
+    touchEnd(e) {
+      const swiper = this;
+      if (!swiper.zoom.enabled) return;
+      swiper.zoom.onTouchEnd(e);
+    },
+    doubleTap(e) {
+      const swiper = this;
+      if (swiper.params.zoom.enabled && swiper.zoom.enabled && swiper.params.zoom.toggle) {
+        swiper.zoom.toggle(e);
+      }
+    },
+    transitionEnd() {
+      const swiper = this;
+      if (swiper.zoom.enabled && swiper.params.zoom.enabled) {
+        swiper.zoom.onTransitionEnd();
+      }
+    },
+    slideChange() {
+      const swiper = this;
+      if (swiper.zoom.enabled && swiper.params.zoom.enabled && swiper.params.cssMode) {
+        swiper.zoom.onTransitionEnd();
+      }
+    },
+  },
+};
+
+const Lazy = {
+  loadInSlide(index, loadInDuplicate = true) {
+    const swiper = this;
+    const params = swiper.params.lazy;
+    if (typeof index === 'undefined') return;
+    if (swiper.slides.length === 0) return;
+    const isVirtual = swiper.virtual && swiper.params.virtual.enabled;
+
+    const $slideEl = isVirtual
+      ? swiper.$wrapperEl.children(`.${swiper.params.slideClass}[data-swiper-slide-index="${index}"]`)
+      : swiper.slides.eq(index);
+
+    let $images = $slideEl.find(`.${params.elementClass}:not(.${params.loadedClass}):not(.${params.loadingClass})`);
+    if ($slideEl.hasClass(params.elementClass) && !$slideEl.hasClass(params.loadedClass) && !$slideEl.hasClass(params.loadingClass)) {
+      $images = $images.add($slideEl[0]);
+    }
+    if ($images.length === 0) return;
+
+    $images.each((imageIndex, imageEl) => {
+      const $imageEl = $(imageEl);
+      $imageEl.addClass(params.loadingClass);
+
+      const background = $imageEl.attr('data-background');
+      const src = $imageEl.attr('data-src');
+      const srcset = $imageEl.attr('data-srcset');
+      const sizes = $imageEl.attr('data-sizes');
+
+      swiper.loadImage($imageEl[0], (src || background), srcset, sizes, false, () => {
+        if (typeof swiper === 'undefined' || swiper === null || !swiper || (swiper && !swiper.params) || swiper.destroyed) return;
+        if (background) {
+          $imageEl.css('background-image', `url("${background}")`);
+          $imageEl.removeAttr('data-background');
+        } else {
+          if (srcset) {
+            $imageEl.attr('srcset', srcset);
+            $imageEl.removeAttr('data-srcset');
+          }
+          if (sizes) {
+            $imageEl.attr('sizes', sizes);
+            $imageEl.removeAttr('data-sizes');
+          }
+          if (src) {
+            $imageEl.attr('src', src);
+            $imageEl.removeAttr('data-src');
+          }
+        }
+
+        $imageEl.addClass(params.loadedClass).removeClass(params.loadingClass);
+        $slideEl.find(`.${params.preloaderClass}`).remove();
+        if (swiper.params.loop && loadInDuplicate) {
+          const slideOriginalIndex = $slideEl.attr('data-swiper-slide-index');
+          if ($slideEl.hasClass(swiper.params.slideDuplicateClass)) {
+            const originalSlide = swiper.$wrapperEl.children(`[data-swiper-slide-index="${slideOriginalIndex}"]:not(.${swiper.params.slideDuplicateClass})`);
+            swiper.lazy.loadInSlide(originalSlide.index(), false);
+          } else {
+            const duplicatedSlide = swiper.$wrapperEl.children(`.${swiper.params.slideDuplicateClass}[data-swiper-slide-index="${slideOriginalIndex}"]`);
+            swiper.lazy.loadInSlide(duplicatedSlide.index(), false);
+          }
+        }
+        swiper.emit('lazyImageReady', $slideEl[0], $imageEl[0]);
+      });
+
+      swiper.emit('lazyImageLoad', $slideEl[0], $imageEl[0]);
+    });
+  },
+  load() {
+    const swiper = this;
+    const {
+      $wrapperEl, params: swiperParams, slides, activeIndex,
+    } = swiper;
+    const isVirtual = swiper.virtual && swiperParams.virtual.enabled;
+    const params = swiperParams.lazy;
+
+    let slidesPerView = swiperParams.slidesPerView;
+    if (slidesPerView === 'auto') {
+      slidesPerView = 0;
+    }
+
+    function slideExist(index) {
+      if (isVirtual) {
+        if ($wrapperEl.children(`.${swiperParams.slideClass}[data-swiper-slide-index="${index}"]`).length) {
+          return true;
+        }
+      } else if (slides[index]) return true;
+      return false;
+    }
+    function slideIndex(slideEl) {
+      if (isVirtual) {
+        return $(slideEl).attr('data-swiper-slide-index');
+      }
+      return $(slideEl).index();
+    }
+
+    if (!swiper.lazy.initialImageLoaded) swiper.lazy.initialImageLoaded = true;
+    if (swiper.params.watchSlidesVisibility) {
+      $wrapperEl.children(`.${swiperParams.slideVisibleClass}`).each((elIndex, slideEl) => {
+        const index = isVirtual ? $(slideEl).attr('data-swiper-slide-index') : $(slideEl).index();
+        swiper.lazy.loadInSlide(index);
+      });
+    } else if (slidesPerView > 1) {
+      for (let i = activeIndex; i < activeIndex + slidesPerView; i += 1) {
+        if (slideExist(i)) swiper.lazy.loadInSlide(i);
+      }
+    } else {
+      swiper.lazy.loadInSlide(activeIndex);
+    }
+    if (params.loadPrevNext) {
+      if (slidesPerView > 1 || (params.loadPrevNextAmount && params.loadPrevNextAmount > 1)) {
+        const amount = params.loadPrevNextAmount;
+        const spv = slidesPerView;
+        const maxIndex = Math.min(activeIndex + spv + Math.max(amount, spv), slides.length);
+        const minIndex = Math.max(activeIndex - Math.max(spv, amount), 0);
+        // Next Slides
+        for (let i = activeIndex + slidesPerView; i < maxIndex; i += 1) {
+          if (slideExist(i)) swiper.lazy.loadInSlide(i);
+        }
+        // Prev Slides
+        for (let i = minIndex; i < activeIndex; i += 1) {
+          if (slideExist(i)) swiper.lazy.loadInSlide(i);
+        }
+      } else {
+        const nextSlide = $wrapperEl.children(`.${swiperParams.slideNextClass}`);
+        if (nextSlide.length > 0) swiper.lazy.loadInSlide(slideIndex(nextSlide));
+
+        const prevSlide = $wrapperEl.children(`.${swiperParams.slidePrevClass}`);
+        if (prevSlide.length > 0) swiper.lazy.loadInSlide(slideIndex(prevSlide));
+      }
+    }
+  },
+};
+
+var Lazy$1 = {
+  name: 'lazy',
+  params: {
+    lazy: {
+      enabled: false,
+      loadPrevNext: false,
+      loadPrevNextAmount: 1,
+      loadOnTransitionStart: false,
+
+      elementClass: 'swiper-lazy',
+      loadingClass: 'swiper-lazy-loading',
+      loadedClass: 'swiper-lazy-loaded',
+      preloaderClass: 'swiper-lazy-preloader',
+    },
+  },
+  create() {
+    const swiper = this;
+    Utils.extend(swiper, {
+      lazy: {
+        initialImageLoaded: false,
+        load: Lazy.load.bind(swiper),
+        loadInSlide: Lazy.loadInSlide.bind(swiper),
+      },
+    });
+  },
+  on: {
+    beforeInit() {
+      const swiper = this;
+      if (swiper.params.lazy.enabled && swiper.params.preloadImages) {
+        swiper.params.preloadImages = false;
+      }
+    },
+    init() {
+      const swiper = this;
+      if (swiper.params.lazy.enabled && !swiper.params.loop && swiper.params.initialSlide === 0) {
+        swiper.lazy.load();
+      }
+    },
+    scroll() {
+      const swiper = this;
+      if (swiper.params.freeMode && !swiper.params.freeModeSticky) {
+        swiper.lazy.load();
+      }
+    },
+    resize() {
+      const swiper = this;
+      if (swiper.params.lazy.enabled) {
+        swiper.lazy.load();
+      }
+    },
+    scrollbarDragMove() {
+      const swiper = this;
+      if (swiper.params.lazy.enabled) {
+        swiper.lazy.load();
+      }
+    },
+    transitionStart() {
+      const swiper = this;
+      if (swiper.params.lazy.enabled) {
+        if (swiper.params.lazy.loadOnTransitionStart || (!swiper.params.lazy.loadOnTransitionStart && !swiper.lazy.initialImageLoaded)) {
+          swiper.lazy.load();
+        }
+      }
+    },
+    transitionEnd() {
+      const swiper = this;
+      if (swiper.params.lazy.enabled && !swiper.params.lazy.loadOnTransitionStart) {
+        swiper.lazy.load();
+      }
+    },
+    slideChange() {
+      const swiper = this;
+      if (swiper.params.lazy.enabled && swiper.params.cssMode) {
+        swiper.lazy.load();
+      }
+    },
+  },
+};
+
+/* eslint no-bitwise: ["error", { "allow": [">>"] }] */
+
+const Controller = {
+  LinearSpline: function LinearSpline(x, y) {
+    const binarySearch = (function search() {
+      let maxIndex;
+      let minIndex;
+      let guess;
+      return (array, val) => {
+        minIndex = -1;
+        maxIndex = array.length;
+        while (maxIndex - minIndex > 1) {
+          guess = maxIndex + minIndex >> 1;
+          if (array[guess] <= val) {
+            minIndex = guess;
+          } else {
+            maxIndex = guess;
+          }
+        }
+        return maxIndex;
+      };
+    }());
+    this.x = x;
+    this.y = y;
+    this.lastIndex = x.length - 1;
+    // Given an x value (x2), return the expected y2 value:
+    // (x1,y1) is the known point before given value,
+    // (x3,y3) is the known point after given value.
+    let i1;
+    let i3;
+
+    this.interpolate = function interpolate(x2) {
+      if (!x2) return 0;
+
+      // Get the indexes of x1 and x3 (the array indexes before and after given x2):
+      i3 = binarySearch(this.x, x2);
+      i1 = i3 - 1;
+
+      // We have our indexes i1 & i3, so we can calculate already:
+      // y2 := ((x2−x1) × (y3−y1)) ÷ (x3−x1) + y1
+      return (((x2 - this.x[i1]) * (this.y[i3] - this.y[i1])) / (this.x[i3] - this.x[i1])) + this.y[i1];
+    };
+    return this;
+  },
+  // xxx: for now i will just save one spline function to to
+  getInterpolateFunction(c) {
+    const swiper = this;
+    if (!swiper.controller.spline) {
+      swiper.controller.spline = swiper.params.loop
+        ? new Controller.LinearSpline(swiper.slidesGrid, c.slidesGrid)
+        : new Controller.LinearSpline(swiper.snapGrid, c.snapGrid);
+    }
+  },
+  setTranslate(setTranslate, byController) {
+    const swiper = this;
+    const controlled = swiper.controller.control;
+    let multiplier;
+    let controlledTranslate;
+    function setControlledTranslate(c) {
+      // this will create an Interpolate function based on the snapGrids
+      // x is the Grid of the scrolled scroller and y will be the controlled scroller
+      // it makes sense to create this only once and recall it for the interpolation
+      // the function does a lot of value caching for performance
+      const translate = swiper.rtlTranslate ? -swiper.translate : swiper.translate;
+      if (swiper.params.controller.by === 'slide') {
+        swiper.controller.getInterpolateFunction(c);
+        // i am not sure why the values have to be multiplicated this way, tried to invert the snapGrid
+        // but it did not work out
+        controlledTranslate = -swiper.controller.spline.interpolate(-translate);
+      }
+
+      if (!controlledTranslate || swiper.params.controller.by === 'container') {
+        multiplier = (c.maxTranslate() - c.minTranslate()) / (swiper.maxTranslate() - swiper.minTranslate());
+        controlledTranslate = ((translate - swiper.minTranslate()) * multiplier) + c.minTranslate();
+      }
+
+      if (swiper.params.controller.inverse) {
+        controlledTranslate = c.maxTranslate() - controlledTranslate;
+      }
+      c.updateProgress(controlledTranslate);
+      c.setTranslate(controlledTranslate, swiper);
+      c.updateActiveIndex();
+      c.updateSlidesClasses();
+    }
+    if (Array.isArray(controlled)) {
+      for (let i = 0; i < controlled.length; i += 1) {
+        if (controlled[i] !== byController && controlled[i] instanceof Swiper) {
+          setControlledTranslate(controlled[i]);
+        }
+      }
+    } else if (controlled instanceof Swiper && byController !== controlled) {
+      setControlledTranslate(controlled);
+    }
+  },
+  setTransition(duration, byController) {
+    const swiper = this;
+    const controlled = swiper.controller.control;
+    let i;
+    function setControlledTransition(c) {
+      c.setTransition(duration, swiper);
+      if (duration !== 0) {
+        c.transitionStart();
+        if (c.params.autoHeight) {
+          Utils.nextTick(() => {
+            c.updateAutoHeight();
+          });
+        }
+        c.$wrapperEl.transitionEnd(() => {
+          if (!controlled) return;
+          if (c.params.loop && swiper.params.controller.by === 'slide') {
+            c.loopFix();
+          }
+          c.transitionEnd();
+        });
+      }
+    }
+    if (Array.isArray(controlled)) {
+      for (i = 0; i < controlled.length; i += 1) {
+        if (controlled[i] !== byController && controlled[i] instanceof Swiper) {
+          setControlledTransition(controlled[i]);
+        }
+      }
+    } else if (controlled instanceof Swiper && byController !== controlled) {
+      setControlledTransition(controlled);
+    }
+  },
+};
+var Controller$1 = {
+  name: 'controller',
+  params: {
+    controller: {
+      control: undefined,
+      inverse: false,
+      by: 'slide', // or 'container'
+    },
+  },
+  create() {
+    const swiper = this;
+    Utils.extend(swiper, {
+      controller: {
+        control: swiper.params.controller.control,
+        getInterpolateFunction: Controller.getInterpolateFunction.bind(swiper),
+        setTranslate: Controller.setTranslate.bind(swiper),
+        setTransition: Controller.setTransition.bind(swiper),
+      },
+    });
+  },
+  on: {
+    update() {
+      const swiper = this;
+      if (!swiper.controller.control) return;
+      if (swiper.controller.spline) {
+        swiper.controller.spline = undefined;
+        delete swiper.controller.spline;
+      }
+    },
+    resize() {
+      const swiper = this;
+      if (!swiper.controller.control) return;
+      if (swiper.controller.spline) {
+        swiper.controller.spline = undefined;
+        delete swiper.controller.spline;
+      }
+    },
+    observerUpdate() {
+      const swiper = this;
+      if (!swiper.controller.control) return;
+      if (swiper.controller.spline) {
+        swiper.controller.spline = undefined;
+        delete swiper.controller.spline;
+      }
+    },
+    setTranslate(translate, byController) {
+      const swiper = this;
+      if (!swiper.controller.control) return;
+      swiper.controller.setTranslate(translate, byController);
+    },
+    setTransition(duration, byController) {
+      const swiper = this;
+      if (!swiper.controller.control) return;
+      swiper.controller.setTransition(duration, byController);
+    },
+  },
+};
+
+const a11y = {
+  makeElFocusable($el) {
+    $el.attr('tabIndex', '0');
+    return $el;
+  },
+  addElRole($el, role) {
+    $el.attr('role', role);
+    return $el;
+  },
+  addElLabel($el, label) {
+    $el.attr('aria-label', label);
+    return $el;
+  },
+  disableEl($el) {
+    $el.attr('aria-disabled', true);
+    return $el;
+  },
+  enableEl($el) {
+    $el.attr('aria-disabled', false);
+    return $el;
+  },
+  onEnterKey(e) {
+    const swiper = this;
+    const params = swiper.params.a11y;
+    if (e.keyCode !== 13) return;
+    const $targetEl = $(e.target);
+    if (swiper.navigation && swiper.navigation.$nextEl && $targetEl.is(swiper.navigation.$nextEl)) {
+      if (!(swiper.isEnd && !swiper.params.loop)) {
+        swiper.slideNext();
+      }
+      if (swiper.isEnd) {
+        swiper.a11y.notify(params.lastSlideMessage);
+      } else {
+        swiper.a11y.notify(params.nextSlideMessage);
+      }
+    }
+    if (swiper.navigation && swiper.navigation.$prevEl && $targetEl.is(swiper.navigation.$prevEl)) {
+      if (!(swiper.isBeginning && !swiper.params.loop)) {
+        swiper.slidePrev();
+      }
+      if (swiper.isBeginning) {
+        swiper.a11y.notify(params.firstSlideMessage);
+      } else {
+        swiper.a11y.notify(params.prevSlideMessage);
+      }
+    }
+    if (swiper.pagination && $targetEl.is(`.${swiper.params.pagination.bulletClass}`)) {
+      $targetEl[0].click();
+    }
+  },
+  notify(message) {
+    const swiper = this;
+    const notification = swiper.a11y.liveRegion;
+    if (notification.length === 0) return;
+    notification.html('');
+    notification.html(message);
+  },
+  updateNavigation() {
+    const swiper = this;
+
+    if (swiper.params.loop || !swiper.navigation) return;
+    const { $nextEl, $prevEl } = swiper.navigation;
+
+    if ($prevEl && $prevEl.length > 0) {
+      if (swiper.isBeginning) {
+        swiper.a11y.disableEl($prevEl);
+      } else {
+        swiper.a11y.enableEl($prevEl);
+      }
+    }
+    if ($nextEl && $nextEl.length > 0) {
+      if (swiper.isEnd) {
+        swiper.a11y.disableEl($nextEl);
+      } else {
+        swiper.a11y.enableEl($nextEl);
+      }
+    }
+  },
+  updatePagination() {
+    const swiper = this;
+    const params = swiper.params.a11y;
+    if (swiper.pagination && swiper.params.pagination.clickable && swiper.pagination.bullets && swiper.pagination.bullets.length) {
+      swiper.pagination.bullets.each((bulletIndex, bulletEl) => {
+        const $bulletEl = $(bulletEl);
+        swiper.a11y.makeElFocusable($bulletEl);
+        swiper.a11y.addElRole($bulletEl, 'button');
+        swiper.a11y.addElLabel($bulletEl, params.paginationBulletMessage.replace(/{{index}}/, $bulletEl.index() + 1));
+      });
+    }
+  },
+  init() {
+    const swiper = this;
+
+    swiper.$el.append(swiper.a11y.liveRegion);
+
+    // Navigation
+    const params = swiper.params.a11y;
+    let $nextEl;
+    let $prevEl;
+    if (swiper.navigation && swiper.navigation.$nextEl) {
+      $nextEl = swiper.navigation.$nextEl;
+    }
+    if (swiper.navigation && swiper.navigation.$prevEl) {
+      $prevEl = swiper.navigation.$prevEl;
+    }
+    if ($nextEl) {
+      swiper.a11y.makeElFocusable($nextEl);
+      swiper.a11y.addElRole($nextEl, 'button');
+      swiper.a11y.addElLabel($nextEl, params.nextSlideMessage);
+      $nextEl.on('keydown', swiper.a11y.onEnterKey);
+    }
+    if ($prevEl) {
+      swiper.a11y.makeElFocusable($prevEl);
+      swiper.a11y.addElRole($prevEl, 'button');
+      swiper.a11y.addElLabel($prevEl, params.prevSlideMessage);
+      $prevEl.on('keydown', swiper.a11y.onEnterKey);
+    }
+
+    // Pagination
+    if (swiper.pagination && swiper.params.pagination.clickable && swiper.pagination.bullets && swiper.pagination.bullets.length) {
+      swiper.pagination.$el.on('keydown', `.${swiper.params.pagination.bulletClass}`, swiper.a11y.onEnterKey);
+    }
+  },
+  destroy() {
+    const swiper = this;
+    if (swiper.a11y.liveRegion && swiper.a11y.liveRegion.length > 0) swiper.a11y.liveRegion.remove();
+
+    let $nextEl;
+    let $prevEl;
+    if (swiper.navigation && swiper.navigation.$nextEl) {
+      $nextEl = swiper.navigation.$nextEl;
+    }
+    if (swiper.navigation && swiper.navigation.$prevEl) {
+      $prevEl = swiper.navigation.$prevEl;
+    }
+    if ($nextEl) {
+      $nextEl.off('keydown', swiper.a11y.onEnterKey);
+    }
+    if ($prevEl) {
+      $prevEl.off('keydown', swiper.a11y.onEnterKey);
+    }
+
+    // Pagination
+    if (swiper.pagination && swiper.params.pagination.clickable && swiper.pagination.bullets && swiper.pagination.bullets.length) {
+      swiper.pagination.$el.off('keydown', `.${swiper.params.pagination.bulletClass}`, swiper.a11y.onEnterKey);
+    }
+  },
+};
+var A11y = {
+  name: 'a11y',
+  params: {
+    a11y: {
+      enabled: true,
+      notificationClass: 'swiper-notification',
+      prevSlideMessage: 'Previous slide',
+      nextSlideMessage: 'Next slide',
+      firstSlideMessage: 'This is the first slide',
+      lastSlideMessage: 'This is the last slide',
+      paginationBulletMessage: 'Go to slide {{index}}',
+    },
+  },
+  create() {
+    const swiper = this;
+    Utils.extend(swiper, {
+      a11y: {
+        liveRegion: $(`<span class="${swiper.params.a11y.notificationClass}" aria-live="assertive" aria-atomic="true"></span>`),
+      },
+    });
+    Object.keys(a11y).forEach((methodName) => {
+      swiper.a11y[methodName] = a11y[methodName].bind(swiper);
+    });
+  },
+  on: {
+    init() {
+      const swiper = this;
+      if (!swiper.params.a11y.enabled) return;
+      swiper.a11y.init();
+      swiper.a11y.updateNavigation();
+    },
+    toEdge() {
+      const swiper = this;
+      if (!swiper.params.a11y.enabled) return;
+      swiper.a11y.updateNavigation();
+    },
+    fromEdge() {
+      const swiper = this;
+      if (!swiper.params.a11y.enabled) return;
+      swiper.a11y.updateNavigation();
+    },
+    paginationUpdate() {
+      const swiper = this;
+      if (!swiper.params.a11y.enabled) return;
+      swiper.a11y.updatePagination();
+    },
+    destroy() {
+      const swiper = this;
+      if (!swiper.params.a11y.enabled) return;
+      swiper.a11y.destroy();
+    },
+  },
+};
+
+const History = {
+  init() {
+    const swiper = this;
+    if (!swiper.params.history) return;
+    if (!win.history || !win.history.pushState) {
+      swiper.params.history.enabled = false;
+      swiper.params.hashNavigation.enabled = true;
+      return;
+    }
+    const history = swiper.history;
+    history.initialized = true;
+    history.paths = History.getPathValues();
+    if (!history.paths.key && !history.paths.value) return;
+    history.scrollToSlide(0, history.paths.value, swiper.params.runCallbacksOnInit);
+    if (!swiper.params.history.replaceState) {
+      win.addEventListener('popstate', swiper.history.setHistoryPopState);
+    }
+  },
+  destroy() {
+    const swiper = this;
+    if (!swiper.params.history.replaceState) {
+      win.removeEventListener('popstate', swiper.history.setHistoryPopState);
+    }
+  },
+  setHistoryPopState() {
+    const swiper = this;
+    swiper.history.paths = History.getPathValues();
+    swiper.history.scrollToSlide(swiper.params.speed, swiper.history.paths.value, false);
+  },
+  getPathValues() {
+    const pathArray = win.location.pathname.slice(1).split('/').filter((part) => part !== '');
+    const total = pathArray.length;
+    const key = pathArray[total - 2];
+    const value = pathArray[total - 1];
+    return { key, value };
+  },
+  setHistory(key, index) {
+    const swiper = this;
+    if (!swiper.history.initialized || !swiper.params.history.enabled) return;
+    const slide = swiper.slides.eq(index);
+    let value = History.slugify(slide.attr('data-history'));
+    if (!win.location.pathname.includes(key)) {
+      value = `${key}/${value}`;
+    }
+    const currentState = win.history.state;
+    if (currentState && currentState.value === value) {
+      return;
+    }
+    if (swiper.params.history.replaceState) {
+      win.history.replaceState({ value }, null, value);
+    } else {
+      win.history.pushState({ value }, null, value);
+    }
+  },
+  slugify(text) {
+    return text.toString()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w-]+/g, '')
+      .replace(/--+/g, '-')
+      .replace(/^-+/, '')
+      .replace(/-+$/, '');
+  },
+  scrollToSlide(speed, value, runCallbacks) {
+    const swiper = this;
+    if (value) {
+      for (let i = 0, length = swiper.slides.length; i < length; i += 1) {
+        const slide = swiper.slides.eq(i);
+        const slideHistory = History.slugify(slide.attr('data-history'));
+        if (slideHistory === value && !slide.hasClass(swiper.params.slideDuplicateClass)) {
+          const index = slide.index();
+          swiper.slideTo(index, speed, runCallbacks);
+        }
+      }
+    } else {
+      swiper.slideTo(0, speed, runCallbacks);
+    }
+  },
+};
+
+var History$1 = {
+  name: 'history',
+  params: {
+    history: {
+      enabled: false,
+      replaceState: false,
+      key: 'slides',
+    },
+  },
+  create() {
+    const swiper = this;
+    Utils.extend(swiper, {
+      history: {
+        init: History.init.bind(swiper),
+        setHistory: History.setHistory.bind(swiper),
+        setHistoryPopState: History.setHistoryPopState.bind(swiper),
+        scrollToSlide: History.scrollToSlide.bind(swiper),
+        destroy: History.destroy.bind(swiper),
+      },
+    });
+  },
+  on: {
+    init() {
+      const swiper = this;
+      if (swiper.params.history.enabled) {
+        swiper.history.init();
+      }
+    },
+    destroy() {
+      const swiper = this;
+      if (swiper.params.history.enabled) {
+        swiper.history.destroy();
+      }
+    },
+    transitionEnd() {
+      const swiper = this;
+      if (swiper.history.initialized) {
+        swiper.history.setHistory(swiper.params.history.key, swiper.activeIndex);
+      }
+    },
+    slideChange() {
+      const swiper = this;
+      if (swiper.history.initialized && swiper.params.cssMode) {
+        swiper.history.setHistory(swiper.params.history.key, swiper.activeIndex);
+      }
+    },
+  },
+};
+
+const HashNavigation = {
+  onHashCange() {
+    const swiper = this;
+    const newHash = doc.location.hash.replace('#', '');
+    const activeSlideHash = swiper.slides.eq(swiper.activeIndex).attr('data-hash');
+    if (newHash !== activeSlideHash) {
+      const newIndex = swiper.$wrapperEl.children(`.${swiper.params.slideClass}[data-hash="${newHash}"]`).index();
+      if (typeof newIndex === 'undefined') return;
+      swiper.slideTo(newIndex);
+    }
+  },
+  setHash() {
+    const swiper = this;
+    if (!swiper.hashNavigation.initialized || !swiper.params.hashNavigation.enabled) return;
+    if (swiper.params.hashNavigation.replaceState && win.history && win.history.replaceState) {
+      win.history.replaceState(null, null, (`#${swiper.slides.eq(swiper.activeIndex).attr('data-hash')}` || ''));
+    } else {
+      const slide = swiper.slides.eq(swiper.activeIndex);
+      const hash = slide.attr('data-hash') || slide.attr('data-history');
+      doc.location.hash = hash || '';
+    }
+  },
+  init() {
+    const swiper = this;
+    if (!swiper.params.hashNavigation.enabled || (swiper.params.history && swiper.params.history.enabled)) return;
+    swiper.hashNavigation.initialized = true;
+    const hash = doc.location.hash.replace('#', '');
+    if (hash) {
+      const speed = 0;
+      for (let i = 0, length = swiper.slides.length; i < length; i += 1) {
+        const slide = swiper.slides.eq(i);
+        const slideHash = slide.attr('data-hash') || slide.attr('data-history');
+        if (slideHash === hash && !slide.hasClass(swiper.params.slideDuplicateClass)) {
+          const index = slide.index();
+          swiper.slideTo(index, speed, swiper.params.runCallbacksOnInit, true);
+        }
+      }
+    }
+    if (swiper.params.hashNavigation.watchState) {
+      $(win).on('hashchange', swiper.hashNavigation.onHashCange);
+    }
+  },
+  destroy() {
+    const swiper = this;
+    if (swiper.params.hashNavigation.watchState) {
+      $(win).off('hashchange', swiper.hashNavigation.onHashCange);
+    }
+  },
+};
+var HashNavigation$1 = {
+  name: 'hash-navigation',
+  params: {
+    hashNavigation: {
+      enabled: false,
+      replaceState: false,
+      watchState: false,
+    },
+  },
+  create() {
+    const swiper = this;
+    Utils.extend(swiper, {
+      hashNavigation: {
+        initialized: false,
+        init: HashNavigation.init.bind(swiper),
+        destroy: HashNavigation.destroy.bind(swiper),
+        setHash: HashNavigation.setHash.bind(swiper),
+        onHashCange: HashNavigation.onHashCange.bind(swiper),
+      },
+    });
+  },
+  on: {
+    init() {
+      const swiper = this;
+      if (swiper.params.hashNavigation.enabled) {
+        swiper.hashNavigation.init();
+      }
+    },
+    destroy() {
+      const swiper = this;
+      if (swiper.params.hashNavigation.enabled) {
+        swiper.hashNavigation.destroy();
+      }
+    },
+    transitionEnd() {
+      const swiper = this;
+      if (swiper.hashNavigation.initialized) {
+        swiper.hashNavigation.setHash();
+      }
+    },
+    slideChange() {
+      const swiper = this;
+      if (swiper.hashNavigation.initialized && swiper.params.cssMode) {
+        swiper.hashNavigation.setHash();
+      }
+    },
+  },
+};
+
+/* eslint no-underscore-dangle: "off" */
+
+const Autoplay = {
+  run() {
+    const swiper = this;
+    const $activeSlideEl = swiper.slides.eq(swiper.activeIndex);
+    let delay = swiper.params.autoplay.delay;
+    if ($activeSlideEl.attr('data-swiper-autoplay')) {
+      delay = $activeSlideEl.attr('data-swiper-autoplay') || swiper.params.autoplay.delay;
+    }
+    clearTimeout(swiper.autoplay.timeout);
+    swiper.autoplay.timeout = Utils.nextTick(() => {
+      if (swiper.params.autoplay.reverseDirection) {
+        if (swiper.params.loop) {
+          swiper.loopFix();
+          swiper.slidePrev(swiper.params.speed, true, true);
+          swiper.emit('autoplay');
+        } else if (!swiper.isBeginning) {
+          swiper.slidePrev(swiper.params.speed, true, true);
+          swiper.emit('autoplay');
+        } else if (!swiper.params.autoplay.stopOnLastSlide) {
+          swiper.slideTo(swiper.slides.length - 1, swiper.params.speed, true, true);
+          swiper.emit('autoplay');
+        } else {
+          swiper.autoplay.stop();
+        }
+      } else if (swiper.params.loop) {
+        swiper.loopFix();
+        swiper.slideNext(swiper.params.speed, true, true);
+        swiper.emit('autoplay');
+      } else if (!swiper.isEnd) {
+        swiper.slideNext(swiper.params.speed, true, true);
+        swiper.emit('autoplay');
+      } else if (!swiper.params.autoplay.stopOnLastSlide) {
+        swiper.slideTo(0, swiper.params.speed, true, true);
+        swiper.emit('autoplay');
+      } else {
+        swiper.autoplay.stop();
+      }
+      if (swiper.params.cssMode && swiper.autoplay.running) swiper.autoplay.run();
+    }, delay);
+  },
+  start() {
+    const swiper = this;
+    if (typeof swiper.autoplay.timeout !== 'undefined') return false;
+    if (swiper.autoplay.running) return false;
+    swiper.autoplay.running = true;
+    swiper.emit('autoplayStart');
+    swiper.autoplay.run();
+    return true;
+  },
+  stop() {
+    const swiper = this;
+    if (!swiper.autoplay.running) return false;
+    if (typeof swiper.autoplay.timeout === 'undefined') return false;
+
+    if (swiper.autoplay.timeout) {
+      clearTimeout(swiper.autoplay.timeout);
+      swiper.autoplay.timeout = undefined;
+    }
+    swiper.autoplay.running = false;
+    swiper.emit('autoplayStop');
+    return true;
+  },
+  pause(speed) {
+    const swiper = this;
+    if (!swiper.autoplay.running) return;
+    if (swiper.autoplay.paused) return;
+    if (swiper.autoplay.timeout) clearTimeout(swiper.autoplay.timeout);
+    swiper.autoplay.paused = true;
+    if (speed === 0 || !swiper.params.autoplay.waitForTransition) {
+      swiper.autoplay.paused = false;
+      swiper.autoplay.run();
+    } else {
+      swiper.$wrapperEl[0].addEventListener('transitionend', swiper.autoplay.onTransitionEnd);
+      swiper.$wrapperEl[0].addEventListener('webkitTransitionEnd', swiper.autoplay.onTransitionEnd);
+    }
+  },
+};
+
+var Autoplay$1 = {
+  name: 'autoplay',
+  params: {
+    autoplay: {
+      enabled: false,
+      delay: 3000,
+      waitForTransition: true,
+      disableOnInteraction: true,
+      stopOnLastSlide: false,
+      reverseDirection: false,
+    },
+  },
+  create() {
+    const swiper = this;
+    Utils.extend(swiper, {
+      autoplay: {
+        running: false,
+        paused: false,
+        run: Autoplay.run.bind(swiper),
+        start: Autoplay.start.bind(swiper),
+        stop: Autoplay.stop.bind(swiper),
+        pause: Autoplay.pause.bind(swiper),
+        onVisibilityChange() {
+          if (document.visibilityState === 'hidden' && swiper.autoplay.running) {
+            swiper.autoplay.pause();
+          }
+          if (document.visibilityState === 'visible' && swiper.autoplay.paused) {
+            swiper.autoplay.run();
+            swiper.autoplay.paused = false;
+          }
+        },
+        onTransitionEnd(e) {
+          if (!swiper || swiper.destroyed || !swiper.$wrapperEl) return;
+          if (e.target !== this) return;
+          swiper.$wrapperEl[0].removeEventListener('transitionend', swiper.autoplay.onTransitionEnd);
+          swiper.$wrapperEl[0].removeEventListener('webkitTransitionEnd', swiper.autoplay.onTransitionEnd);
+          swiper.autoplay.paused = false;
+          if (!swiper.autoplay.running) {
+            swiper.autoplay.stop();
+          } else {
+            swiper.autoplay.run();
+          }
+        },
+      },
+    });
+  },
+  on: {
+    init() {
+      const swiper = this;
+      if (swiper.params.autoplay.enabled) {
+        swiper.autoplay.start();
+        document.addEventListener('visibilitychange', swiper.autoplay.onVisibilityChange);
+      }
+    },
+    beforeTransitionStart(speed, internal) {
+      const swiper = this;
+      if (swiper.autoplay.running) {
+        if (internal || !swiper.params.autoplay.disableOnInteraction) {
+          swiper.autoplay.pause(speed);
+        } else {
+          swiper.autoplay.stop();
+        }
+      }
+    },
+    sliderFirstMove() {
+      const swiper = this;
+      if (swiper.autoplay.running) {
+        if (swiper.params.autoplay.disableOnInteraction) {
+          swiper.autoplay.stop();
+        } else {
+          swiper.autoplay.pause();
+        }
+      }
+    },
+    touchEnd() {
+      const swiper = this;
+      if (swiper.params.cssMode && swiper.autoplay.paused && !swiper.params.autoplay.disableOnInteraction) {
+        swiper.autoplay.run();
+      }
+    },
+    destroy() {
+      const swiper = this;
+      if (swiper.autoplay.running) {
+        swiper.autoplay.stop();
+      }
+      document.removeEventListener('visibilitychange', swiper.autoplay.onVisibilityChange);
+    },
+  },
+};
+
+const Fade = {
+  setTranslate() {
+    const swiper = this;
+    const { slides } = swiper;
+    for (let i = 0; i < slides.length; i += 1) {
+      const $slideEl = swiper.slides.eq(i);
+      const offset = $slideEl[0].swiperSlideOffset;
+      let tx = -offset;
+      if (!swiper.params.virtualTranslate) tx -= swiper.translate;
+      let ty = 0;
+      if (!swiper.isHorizontal()) {
+        ty = tx;
+        tx = 0;
+      }
+      const slideOpacity = swiper.params.fadeEffect.crossFade
+        ? Math.max(1 - Math.abs($slideEl[0].progress), 0)
+        : 1 + Math.min(Math.max($slideEl[0].progress, -1), 0);
+      $slideEl
+        .css({
+          opacity: slideOpacity,
+        })
+        .transform(`translate3d(${tx}px, ${ty}px, 0px)`);
+    }
+  },
+  setTransition(duration) {
+    const swiper = this;
+    const { slides, $wrapperEl } = swiper;
+    slides.transition(duration);
+    if (swiper.params.virtualTranslate && duration !== 0) {
+      let eventTriggered = false;
+      slides.transitionEnd(() => {
+        if (eventTriggered) return;
+        if (!swiper || swiper.destroyed) return;
+        eventTriggered = true;
+        swiper.animating = false;
+        const triggerEvents = ['webkitTransitionEnd', 'transitionend'];
+        for (let i = 0; i < triggerEvents.length; i += 1) {
+          $wrapperEl.trigger(triggerEvents[i]);
+        }
+      });
+    }
+  },
+};
+
+var EffectFade = {
+  name: 'effect-fade',
+  params: {
+    fadeEffect: {
+      crossFade: false,
+    },
+  },
+  create() {
+    const swiper = this;
+    Utils.extend(swiper, {
+      fadeEffect: {
+        setTranslate: Fade.setTranslate.bind(swiper),
+        setTransition: Fade.setTransition.bind(swiper),
+      },
+    });
+  },
+  on: {
+    beforeInit() {
+      const swiper = this;
+      if (swiper.params.effect !== 'fade') return;
+      swiper.classNames.push(`${swiper.params.containerModifierClass}fade`);
+      const overwriteParams = {
+        slidesPerView: 1,
+        slidesPerColumn: 1,
+        slidesPerGroup: 1,
+        watchSlidesProgress: true,
+        spaceBetween: 0,
+        virtualTranslate: true,
+      };
+      Utils.extend(swiper.params, overwriteParams);
+      Utils.extend(swiper.originalParams, overwriteParams);
+    },
+    setTranslate() {
+      const swiper = this;
+      if (swiper.params.effect !== 'fade') return;
+      swiper.fadeEffect.setTranslate();
+    },
+    setTransition(duration) {
+      const swiper = this;
+      if (swiper.params.effect !== 'fade') return;
+      swiper.fadeEffect.setTransition(duration);
+    },
+  },
+};
+
+const Cube = {
+  setTranslate() {
+    const swiper = this;
+    const {
+      $el, $wrapperEl, slides, width: swiperWidth, height: swiperHeight, rtlTranslate: rtl, size: swiperSize,
+    } = swiper;
+    const params = swiper.params.cubeEffect;
+    const isHorizontal = swiper.isHorizontal();
+    const isVirtual = swiper.virtual && swiper.params.virtual.enabled;
+    let wrapperRotate = 0;
+    let $cubeShadowEl;
+    if (params.shadow) {
+      if (isHorizontal) {
+        $cubeShadowEl = $wrapperEl.find('.swiper-cube-shadow');
+        if ($cubeShadowEl.length === 0) {
+          $cubeShadowEl = $('<div class="swiper-cube-shadow"></div>');
+          $wrapperEl.append($cubeShadowEl);
+        }
+        $cubeShadowEl.css({ height: `${swiperWidth}px` });
+      } else {
+        $cubeShadowEl = $el.find('.swiper-cube-shadow');
+        if ($cubeShadowEl.length === 0) {
+          $cubeShadowEl = $('<div class="swiper-cube-shadow"></div>');
+          $el.append($cubeShadowEl);
+        }
+      }
+    }
+    for (let i = 0; i < slides.length; i += 1) {
+      const $slideEl = slides.eq(i);
+      let slideIndex = i;
+      if (isVirtual) {
+        slideIndex = parseInt($slideEl.attr('data-swiper-slide-index'), 10);
+      }
+      let slideAngle = slideIndex * 90;
+      let round = Math.floor(slideAngle / 360);
+      if (rtl) {
+        slideAngle = -slideAngle;
+        round = Math.floor(-slideAngle / 360);
+      }
+      const progress = Math.max(Math.min($slideEl[0].progress, 1), -1);
+      let tx = 0;
+      let ty = 0;
+      let tz = 0;
+      if (slideIndex % 4 === 0) {
+        tx = -round * 4 * swiperSize;
+        tz = 0;
+      } else if ((slideIndex - 1) % 4 === 0) {
+        tx = 0;
+        tz = -round * 4 * swiperSize;
+      } else if ((slideIndex - 2) % 4 === 0) {
+        tx = swiperSize + (round * 4 * swiperSize);
+        tz = swiperSize;
+      } else if ((slideIndex - 3) % 4 === 0) {
+        tx = -swiperSize;
+        tz = (3 * swiperSize) + (swiperSize * 4 * round);
+      }
+      if (rtl) {
+        tx = -tx;
+      }
+
+      if (!isHorizontal) {
+        ty = tx;
+        tx = 0;
+      }
+
+      const transform = `rotateX(${isHorizontal ? 0 : -slideAngle}deg) rotateY(${isHorizontal ? slideAngle : 0}deg) translate3d(${tx}px, ${ty}px, ${tz}px)`;
+      if (progress <= 1 && progress > -1) {
+        wrapperRotate = (slideIndex * 90) + (progress * 90);
+        if (rtl) wrapperRotate = (-slideIndex * 90) - (progress * 90);
+      }
+      $slideEl.transform(transform);
+      if (params.slideShadows) {
+        // Set shadows
+        let shadowBefore = isHorizontal ? $slideEl.find('.swiper-slide-shadow-left') : $slideEl.find('.swiper-slide-shadow-top');
+        let shadowAfter = isHorizontal ? $slideEl.find('.swiper-slide-shadow-right') : $slideEl.find('.swiper-slide-shadow-bottom');
+        if (shadowBefore.length === 0) {
+          shadowBefore = $(`<div class="swiper-slide-shadow-${isHorizontal ? 'left' : 'top'}"></div>`);
+          $slideEl.append(shadowBefore);
+        }
+        if (shadowAfter.length === 0) {
+          shadowAfter = $(`<div class="swiper-slide-shadow-${isHorizontal ? 'right' : 'bottom'}"></div>`);
+          $slideEl.append(shadowAfter);
+        }
+        if (shadowBefore.length) shadowBefore[0].style.opacity = Math.max(-progress, 0);
+        if (shadowAfter.length) shadowAfter[0].style.opacity = Math.max(progress, 0);
+      }
+    }
+    $wrapperEl.css({
+      '-webkit-transform-origin': `50% 50% -${swiperSize / 2}px`,
+      '-moz-transform-origin': `50% 50% -${swiperSize / 2}px`,
+      '-ms-transform-origin': `50% 50% -${swiperSize / 2}px`,
+      'transform-origin': `50% 50% -${swiperSize / 2}px`,
+    });
+
+    if (params.shadow) {
+      if (isHorizontal) {
+        $cubeShadowEl.transform(`translate3d(0px, ${(swiperWidth / 2) + params.shadowOffset}px, ${-swiperWidth / 2}px) rotateX(90deg) rotateZ(0deg) scale(${params.shadowScale})`);
+      } else {
+        const shadowAngle = Math.abs(wrapperRotate) - (Math.floor(Math.abs(wrapperRotate) / 90) * 90);
+        const multiplier = 1.5 - (
+          (Math.sin((shadowAngle * 2 * Math.PI) / 360) / 2)
+          + (Math.cos((shadowAngle * 2 * Math.PI) / 360) / 2)
+        );
+        const scale1 = params.shadowScale;
+        const scale2 = params.shadowScale / multiplier;
+        const offset = params.shadowOffset;
+        $cubeShadowEl.transform(`scale3d(${scale1}, 1, ${scale2}) translate3d(0px, ${(swiperHeight / 2) + offset}px, ${-swiperHeight / 2 / scale2}px) rotateX(-90deg)`);
+      }
+    }
+    const zFactor = (Browser.isSafari || Browser.isUiWebView) ? (-swiperSize / 2) : 0;
+    $wrapperEl
+      .transform(`translate3d(0px,0,${zFactor}px) rotateX(${swiper.isHorizontal() ? 0 : wrapperRotate}deg) rotateY(${swiper.isHorizontal() ? -wrapperRotate : 0}deg)`);
+  },
+  setTransition(duration) {
+    const swiper = this;
+    const { $el, slides } = swiper;
+    slides
+      .transition(duration)
+      .find('.swiper-slide-shadow-top, .swiper-slide-shadow-right, .swiper-slide-shadow-bottom, .swiper-slide-shadow-left')
+      .transition(duration);
+    if (swiper.params.cubeEffect.shadow && !swiper.isHorizontal()) {
+      $el.find('.swiper-cube-shadow').transition(duration);
+    }
+  },
+};
+
+var EffectCube = {
+  name: 'effect-cube',
+  params: {
+    cubeEffect: {
+      slideShadows: true,
+      shadow: true,
+      shadowOffset: 20,
+      shadowScale: 0.94,
+    },
+  },
+  create() {
+    const swiper = this;
+    Utils.extend(swiper, {
+      cubeEffect: {
+        setTranslate: Cube.setTranslate.bind(swiper),
+        setTransition: Cube.setTransition.bind(swiper),
+      },
+    });
+  },
+  on: {
+    beforeInit() {
+      const swiper = this;
+      if (swiper.params.effect !== 'cube') return;
+      swiper.classNames.push(`${swiper.params.containerModifierClass}cube`);
+      swiper.classNames.push(`${swiper.params.containerModifierClass}3d`);
+      const overwriteParams = {
+        slidesPerView: 1,
+        slidesPerColumn: 1,
+        slidesPerGroup: 1,
+        watchSlidesProgress: true,
+        resistanceRatio: 0,
+        spaceBetween: 0,
+        centeredSlides: false,
+        virtualTranslate: true,
+      };
+      Utils.extend(swiper.params, overwriteParams);
+      Utils.extend(swiper.originalParams, overwriteParams);
+    },
+    setTranslate() {
+      const swiper = this;
+      if (swiper.params.effect !== 'cube') return;
+      swiper.cubeEffect.setTranslate();
+    },
+    setTransition(duration) {
+      const swiper = this;
+      if (swiper.params.effect !== 'cube') return;
+      swiper.cubeEffect.setTransition(duration);
+    },
+  },
+};
+
+const Flip = {
+  setTranslate() {
+    const swiper = this;
+    const { slides, rtlTranslate: rtl } = swiper;
+    for (let i = 0; i < slides.length; i += 1) {
+      const $slideEl = slides.eq(i);
+      let progress = $slideEl[0].progress;
+      if (swiper.params.flipEffect.limitRotation) {
+        progress = Math.max(Math.min($slideEl[0].progress, 1), -1);
+      }
+      const offset = $slideEl[0].swiperSlideOffset;
+      const rotate = -180 * progress;
+      let rotateY = rotate;
+      let rotateX = 0;
+      let tx = -offset;
+      let ty = 0;
+      if (!swiper.isHorizontal()) {
+        ty = tx;
+        tx = 0;
+        rotateX = -rotateY;
+        rotateY = 0;
+      } else if (rtl) {
+        rotateY = -rotateY;
+      }
+
+      $slideEl[0].style.zIndex = -Math.abs(Math.round(progress)) + slides.length;
+
+      if (swiper.params.flipEffect.slideShadows) {
+        // Set shadows
+        let shadowBefore = swiper.isHorizontal() ? $slideEl.find('.swiper-slide-shadow-left') : $slideEl.find('.swiper-slide-shadow-top');
+        let shadowAfter = swiper.isHorizontal() ? $slideEl.find('.swiper-slide-shadow-right') : $slideEl.find('.swiper-slide-shadow-bottom');
+        if (shadowBefore.length === 0) {
+          shadowBefore = $(`<div class="swiper-slide-shadow-${swiper.isHorizontal() ? 'left' : 'top'}"></div>`);
+          $slideEl.append(shadowBefore);
+        }
+        if (shadowAfter.length === 0) {
+          shadowAfter = $(`<div class="swiper-slide-shadow-${swiper.isHorizontal() ? 'right' : 'bottom'}"></div>`);
+          $slideEl.append(shadowAfter);
+        }
+        if (shadowBefore.length) shadowBefore[0].style.opacity = Math.max(-progress, 0);
+        if (shadowAfter.length) shadowAfter[0].style.opacity = Math.max(progress, 0);
+      }
+      $slideEl
+        .transform(`translate3d(${tx}px, ${ty}px, 0px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`);
+    }
+  },
+  setTransition(duration) {
+    const swiper = this;
+    const { slides, activeIndex, $wrapperEl } = swiper;
+    slides
+      .transition(duration)
+      .find('.swiper-slide-shadow-top, .swiper-slide-shadow-right, .swiper-slide-shadow-bottom, .swiper-slide-shadow-left')
+      .transition(duration);
+    if (swiper.params.virtualTranslate && duration !== 0) {
+      let eventTriggered = false;
+      // eslint-disable-next-line
+      slides.eq(activeIndex).transitionEnd(function onTransitionEnd() {
+        if (eventTriggered) return;
+        if (!swiper || swiper.destroyed) return;
+        // if (!$(this).hasClass(swiper.params.slideActiveClass)) return;
+        eventTriggered = true;
+        swiper.animating = false;
+        const triggerEvents = ['webkitTransitionEnd', 'transitionend'];
+        for (let i = 0; i < triggerEvents.length; i += 1) {
+          $wrapperEl.trigger(triggerEvents[i]);
+        }
+      });
+    }
+  },
+};
+
+var EffectFlip = {
+  name: 'effect-flip',
+  params: {
+    flipEffect: {
+      slideShadows: true,
+      limitRotation: true,
+    },
+  },
+  create() {
+    const swiper = this;
+    Utils.extend(swiper, {
+      flipEffect: {
+        setTranslate: Flip.setTranslate.bind(swiper),
+        setTransition: Flip.setTransition.bind(swiper),
+      },
+    });
+  },
+  on: {
+    beforeInit() {
+      const swiper = this;
+      if (swiper.params.effect !== 'flip') return;
+      swiper.classNames.push(`${swiper.params.containerModifierClass}flip`);
+      swiper.classNames.push(`${swiper.params.containerModifierClass}3d`);
+      const overwriteParams = {
+        slidesPerView: 1,
+        slidesPerColumn: 1,
+        slidesPerGroup: 1,
+        watchSlidesProgress: true,
+        spaceBetween: 0,
+        virtualTranslate: true,
+      };
+      Utils.extend(swiper.params, overwriteParams);
+      Utils.extend(swiper.originalParams, overwriteParams);
+    },
+    setTranslate() {
+      const swiper = this;
+      if (swiper.params.effect !== 'flip') return;
+      swiper.flipEffect.setTranslate();
+    },
+    setTransition(duration) {
+      const swiper = this;
+      if (swiper.params.effect !== 'flip') return;
+      swiper.flipEffect.setTransition(duration);
+    },
+  },
+};
+
+const Coverflow = {
+  setTranslate() {
+    const swiper = this;
+    const {
+      width: swiperWidth, height: swiperHeight, slides, $wrapperEl, slidesSizesGrid,
+    } = swiper;
+    const params = swiper.params.coverflowEffect;
+    const isHorizontal = swiper.isHorizontal();
+    const transform = swiper.translate;
+    const center = isHorizontal ? -transform + (swiperWidth / 2) : -transform + (swiperHeight / 2);
+    const rotate = isHorizontal ? params.rotate : -params.rotate;
+    const translate = params.depth;
+    // Each slide offset from center
+    for (let i = 0, length = slides.length; i < length; i += 1) {
+      const $slideEl = slides.eq(i);
+      const slideSize = slidesSizesGrid[i];
+      const slideOffset = $slideEl[0].swiperSlideOffset;
+      const offsetMultiplier = ((center - slideOffset - (slideSize / 2)) / slideSize) * params.modifier;
+
+      let rotateY = isHorizontal ? rotate * offsetMultiplier : 0;
+      let rotateX = isHorizontal ? 0 : rotate * offsetMultiplier;
+      // var rotateZ = 0
+      let translateZ = -translate * Math.abs(offsetMultiplier);
+
+      let translateY = isHorizontal ? 0 : params.stretch * (offsetMultiplier);
+      let translateX = isHorizontal ? params.stretch * (offsetMultiplier) : 0;
+
+      // Fix for ultra small values
+      if (Math.abs(translateX) < 0.001) translateX = 0;
+      if (Math.abs(translateY) < 0.001) translateY = 0;
+      if (Math.abs(translateZ) < 0.001) translateZ = 0;
+      if (Math.abs(rotateY) < 0.001) rotateY = 0;
+      if (Math.abs(rotateX) < 0.001) rotateX = 0;
+
+      const slideTransform = `translate3d(${translateX}px,${translateY}px,${translateZ}px)  rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+
+      $slideEl.transform(slideTransform);
+      $slideEl[0].style.zIndex = -Math.abs(Math.round(offsetMultiplier)) + 1;
+      if (params.slideShadows) {
+        // Set shadows
+        let $shadowBeforeEl = isHorizontal ? $slideEl.find('.swiper-slide-shadow-left') : $slideEl.find('.swiper-slide-shadow-top');
+        let $shadowAfterEl = isHorizontal ? $slideEl.find('.swiper-slide-shadow-right') : $slideEl.find('.swiper-slide-shadow-bottom');
+        if ($shadowBeforeEl.length === 0) {
+          $shadowBeforeEl = $(`<div class="swiper-slide-shadow-${isHorizontal ? 'left' : 'top'}"></div>`);
+          $slideEl.append($shadowBeforeEl);
+        }
+        if ($shadowAfterEl.length === 0) {
+          $shadowAfterEl = $(`<div class="swiper-slide-shadow-${isHorizontal ? 'right' : 'bottom'}"></div>`);
+          $slideEl.append($shadowAfterEl);
+        }
+        if ($shadowBeforeEl.length) $shadowBeforeEl[0].style.opacity = offsetMultiplier > 0 ? offsetMultiplier : 0;
+        if ($shadowAfterEl.length) $shadowAfterEl[0].style.opacity = (-offsetMultiplier) > 0 ? -offsetMultiplier : 0;
+      }
+    }
+
+    // Set correct perspective for IE10
+    if (Support.pointerEvents || Support.prefixedPointerEvents) {
+      const ws = $wrapperEl[0].style;
+      ws.perspectiveOrigin = `${center}px 50%`;
+    }
+  },
+  setTransition(duration) {
+    const swiper = this;
+    swiper.slides
+      .transition(duration)
+      .find('.swiper-slide-shadow-top, .swiper-slide-shadow-right, .swiper-slide-shadow-bottom, .swiper-slide-shadow-left')
+      .transition(duration);
+  },
+};
+
+var EffectCoverflow = {
+  name: 'effect-coverflow',
+  params: {
+    coverflowEffect: {
+      rotate: 50,
+      stretch: 0,
+      depth: 100,
+      modifier: 1,
+      slideShadows: true,
+    },
+  },
+  create() {
+    const swiper = this;
+    Utils.extend(swiper, {
+      coverflowEffect: {
+        setTranslate: Coverflow.setTranslate.bind(swiper),
+        setTransition: Coverflow.setTransition.bind(swiper),
+      },
+    });
+  },
+  on: {
+    beforeInit() {
+      const swiper = this;
+      if (swiper.params.effect !== 'coverflow') return;
+
+      swiper.classNames.push(`${swiper.params.containerModifierClass}coverflow`);
+      swiper.classNames.push(`${swiper.params.containerModifierClass}3d`);
+
+      swiper.params.watchSlidesProgress = true;
+      swiper.originalParams.watchSlidesProgress = true;
+    },
+    setTranslate() {
+      const swiper = this;
+      if (swiper.params.effect !== 'coverflow') return;
+      swiper.coverflowEffect.setTranslate();
+    },
+    setTransition(duration) {
+      const swiper = this;
+      if (swiper.params.effect !== 'coverflow') return;
+      swiper.coverflowEffect.setTransition(duration);
+    },
+  },
+};
+
+const Thumbs = {
+  init() {
+    const swiper = this;
+    const { thumbs: thumbsParams } = swiper.params;
+    const SwiperClass = swiper.constructor;
+    if (thumbsParams.swiper instanceof SwiperClass) {
+      swiper.thumbs.swiper = thumbsParams.swiper;
+      Utils.extend(swiper.thumbs.swiper.originalParams, {
+        watchSlidesProgress: true,
+        slideToClickedSlide: false,
+      });
+      Utils.extend(swiper.thumbs.swiper.params, {
+        watchSlidesProgress: true,
+        slideToClickedSlide: false,
+      });
+    } else if (Utils.isObject(thumbsParams.swiper)) {
+      swiper.thumbs.swiper = new SwiperClass(Utils.extend({}, thumbsParams.swiper, {
+        watchSlidesVisibility: true,
+        watchSlidesProgress: true,
+        slideToClickedSlide: false,
+      }));
+      swiper.thumbs.swiperCreated = true;
+    }
+    swiper.thumbs.swiper.$el.addClass(swiper.params.thumbs.thumbsContainerClass);
+    swiper.thumbs.swiper.on('tap', swiper.thumbs.onThumbClick);
+  },
+  onThumbClick() {
+    const swiper = this;
+    const thumbsSwiper = swiper.thumbs.swiper;
+    if (!thumbsSwiper) return;
+    const clickedIndex = thumbsSwiper.clickedIndex;
+    const clickedSlide = thumbsSwiper.clickedSlide;
+    if (clickedSlide && $(clickedSlide).hasClass(swiper.params.thumbs.slideThumbActiveClass)) return;
+    if (typeof clickedIndex === 'undefined' || clickedIndex === null) return;
+    let slideToIndex;
+    if (thumbsSwiper.params.loop) {
+      slideToIndex = parseInt($(thumbsSwiper.clickedSlide).attr('data-swiper-slide-index'), 10);
+    } else {
+      slideToIndex = clickedIndex;
+    }
+    if (swiper.params.loop) {
+      let currentIndex = swiper.activeIndex;
+      if (swiper.slides.eq(currentIndex).hasClass(swiper.params.slideDuplicateClass)) {
+        swiper.loopFix();
+        // eslint-disable-next-line
+        swiper._clientLeft = swiper.$wrapperEl[0].clientLeft;
+        currentIndex = swiper.activeIndex;
+      }
+      const prevIndex = swiper.slides.eq(currentIndex).prevAll(`[data-swiper-slide-index="${slideToIndex}"]`).eq(0).index();
+      const nextIndex = swiper.slides.eq(currentIndex).nextAll(`[data-swiper-slide-index="${slideToIndex}"]`).eq(0).index();
+      if (typeof prevIndex === 'undefined') slideToIndex = nextIndex;
+      else if (typeof nextIndex === 'undefined') slideToIndex = prevIndex;
+      else if (nextIndex - currentIndex < currentIndex - prevIndex) slideToIndex = nextIndex;
+      else slideToIndex = prevIndex;
+    }
+    swiper.slideTo(slideToIndex);
+  },
+  update(initial) {
+    const swiper = this;
+    const thumbsSwiper = swiper.thumbs.swiper;
+    if (!thumbsSwiper) return;
+
+    const slidesPerView = thumbsSwiper.params.slidesPerView === 'auto'
+      ? thumbsSwiper.slidesPerViewDynamic()
+      : thumbsSwiper.params.slidesPerView;
+
+    if (swiper.realIndex !== thumbsSwiper.realIndex) {
+      let currentThumbsIndex = thumbsSwiper.activeIndex;
+      let newThumbsIndex;
+      if (thumbsSwiper.params.loop) {
+        if (thumbsSwiper.slides.eq(currentThumbsIndex).hasClass(thumbsSwiper.params.slideDuplicateClass)) {
+          thumbsSwiper.loopFix();
+          // eslint-disable-next-line
+          thumbsSwiper._clientLeft = thumbsSwiper.$wrapperEl[0].clientLeft;
+          currentThumbsIndex = thumbsSwiper.activeIndex;
+        }
+        // Find actual thumbs index to slide to
+        const prevThumbsIndex = thumbsSwiper.slides.eq(currentThumbsIndex).prevAll(`[data-swiper-slide-index="${swiper.realIndex}"]`).eq(0).index();
+        const nextThumbsIndex = thumbsSwiper.slides.eq(currentThumbsIndex).nextAll(`[data-swiper-slide-index="${swiper.realIndex}"]`).eq(0).index();
+        if (typeof prevThumbsIndex === 'undefined') newThumbsIndex = nextThumbsIndex;
+        else if (typeof nextThumbsIndex === 'undefined') newThumbsIndex = prevThumbsIndex;
+        else if (nextThumbsIndex - currentThumbsIndex === currentThumbsIndex - prevThumbsIndex) newThumbsIndex = currentThumbsIndex;
+        else if (nextThumbsIndex - currentThumbsIndex < currentThumbsIndex - prevThumbsIndex) newThumbsIndex = nextThumbsIndex;
+        else newThumbsIndex = prevThumbsIndex;
+      } else {
+        newThumbsIndex = swiper.realIndex;
+      }
+      if (thumbsSwiper.visibleSlidesIndexes && thumbsSwiper.visibleSlidesIndexes.indexOf(newThumbsIndex) < 0) {
+        if (thumbsSwiper.params.centeredSlides) {
+          if (newThumbsIndex > currentThumbsIndex) {
+            newThumbsIndex = newThumbsIndex - Math.floor(slidesPerView / 2) + 1;
+          } else {
+            newThumbsIndex = newThumbsIndex + Math.floor(slidesPerView / 2) - 1;
+          }
+        } else if (newThumbsIndex > currentThumbsIndex) {
+          newThumbsIndex = newThumbsIndex - slidesPerView + 1;
+        }
+        thumbsSwiper.slideTo(newThumbsIndex, initial ? 0 : undefined);
+      }
+    }
+
+    // Activate thumbs
+    let thumbsToActivate = 1;
+    const thumbActiveClass = swiper.params.thumbs.slideThumbActiveClass;
+
+    if (swiper.params.slidesPerView > 1 && !swiper.params.centeredSlides) {
+      thumbsToActivate = swiper.params.slidesPerView;
+    }
+
+    if (!swiper.params.thumbs.multipleActiveThumbs) {
+      thumbsToActivate = 1;
+    }
+
+    thumbsToActivate = Math.floor(thumbsToActivate);
+
+    thumbsSwiper.slides.removeClass(thumbActiveClass);
+    if (thumbsSwiper.params.loop || (thumbsSwiper.params.virtual && thumbsSwiper.params.virtual.enabled)) {
+      for (let i = 0; i < thumbsToActivate; i += 1) {
+        thumbsSwiper.$wrapperEl.children(`[data-swiper-slide-index="${swiper.realIndex + i}"]`).addClass(thumbActiveClass);
+      }
+    } else {
+      for (let i = 0; i < thumbsToActivate; i += 1) {
+        thumbsSwiper.slides.eq(swiper.realIndex + i).addClass(thumbActiveClass);
+      }
+    }
+  },
+};
+var Thumbs$1 = {
+  name: 'thumbs',
+  params: {
+    thumbs: {
+      multipleActiveThumbs: true,
+      swiper: null,
+      slideThumbActiveClass: 'swiper-slide-thumb-active',
+      thumbsContainerClass: 'swiper-container-thumbs',
+    },
+  },
+  create() {
+    const swiper = this;
+    Utils.extend(swiper, {
+      thumbs: {
+        swiper: null,
+        init: Thumbs.init.bind(swiper),
+        update: Thumbs.update.bind(swiper),
+        onThumbClick: Thumbs.onThumbClick.bind(swiper),
+      },
+    });
+  },
+  on: {
+    beforeInit() {
+      const swiper = this;
+      const { thumbs } = swiper.params;
+      if (!thumbs || !thumbs.swiper) return;
+      swiper.thumbs.init();
+      swiper.thumbs.update(true);
+    },
+    slideChange() {
+      const swiper = this;
+      if (!swiper.thumbs.swiper) return;
+      swiper.thumbs.update();
+    },
+    update() {
+      const swiper = this;
+      if (!swiper.thumbs.swiper) return;
+      swiper.thumbs.update();
+    },
+    resize() {
+      const swiper = this;
+      if (!swiper.thumbs.swiper) return;
+      swiper.thumbs.update();
+    },
+    observerUpdate() {
+      const swiper = this;
+      if (!swiper.thumbs.swiper) return;
+      swiper.thumbs.update();
+    },
+    setTransition(duration) {
+      const swiper = this;
+      const thumbsSwiper = swiper.thumbs.swiper;
+      if (!thumbsSwiper) return;
+      thumbsSwiper.setTransition(duration);
+    },
+    beforeDestroy() {
+      const swiper = this;
+      const thumbsSwiper = swiper.thumbs.swiper;
+      if (!thumbsSwiper) return;
+      if (swiper.thumbs.swiperCreated && thumbsSwiper) {
+        thumbsSwiper.destroy();
+      }
+    },
+  },
+};
+
 // Swiper Class
 
 const components = [
@@ -18912,7 +25918,25 @@ const components = [
   Browser$1,
   Resize,
   Observer$1,
-  
+  Virtual$1,
+  Keyboard$1,
+  Mousewheel$1,
+  Navigation$1,
+  Pagination$1,
+  Scrollbar$1,
+  Parallax$1,
+  Zoom$1,
+  Lazy$1,
+  Controller$1,
+  A11y,
+  History$1,
+  HashNavigation$1,
+  Autoplay$1,
+  EffectFade,
+  EffectCube,
+  EffectFlip,
+  EffectCoverflow,
+  Thumbs$1
 ];
 
 if (typeof Swiper.use === 'undefined') {
@@ -18923,25 +25947,17 @@ if (typeof Swiper.use === 'undefined') {
 Swiper.use(components);
 
 const {
-  createComponent: createComponent$12,
-  bem: bem$11
+  createComponent: createComponent$1a,
+  bem: bem$19
 } =
 /*#__PURE__*/
 createNamespace('slides');
 var slides = /*#__PURE__*/
-createComponent$12({
+createComponent$1a({
   props: {
-    options: {
-      type: Object
-    },
-    pager: {
-      type: Boolean,
-      default: false
-    },
-    scrollbar: {
-      type: Boolean,
-      default: false
-    }
+    options: Object,
+    pager: Boolean,
+    scrollbar: Boolean
   },
 
   data() {
@@ -19330,7 +26346,7 @@ createComponent$12({
       mode
     } = this;
     return h("div", {
-      "class": [bem$11(), {
+      "class": [bem$19(), {
         // Used internally for styling
         [`slides-${mode}`]: true,
         'swiper-container': true
@@ -19348,36 +26364,36 @@ createComponent$12({
 
 });
 
-const NAMESPACE$b = 'SwitchGroup';
+const NAMESPACE$d = 'SwitchGroup';
 const {
-  createComponent: createComponent$13,
-  bem: bem$12
+  createComponent: createComponent$1b,
+  bem: bem$1a
 } =
 /*#__PURE__*/
 createNamespace('switch-group');
 var switchGroup = /*#__PURE__*/
-createComponent$13({
+createComponent$1b({
   mixins: [
   /*#__PURE__*/
-  useGroup(NAMESPACE$b)],
+  useGroup(NAMESPACE$d)],
 
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$12()
+      "class": bem$1a()
     }, [this.slots()]);
   }
 
 });
 
 const {
-  createComponent: createComponent$14,
-  bem: bem$13
+  createComponent: createComponent$1c,
+  bem: bem$1b
 } =
 /*#__PURE__*/
 createNamespace('switch-indicator');
 var switchIndicator = /*#__PURE__*/
-createComponent$14({
+createComponent$1c({
   functional: true,
   props: {
     checked: {
@@ -19397,30 +26413,30 @@ createComponent$14({
   }) {
     const Tag = 'div';
     return h(Tag, helper([{
-      "class": bem$13({
+      "class": bem$1b({
         'is-checked': props.checked,
         'is-disabled': props.disabled
       })
     }, data]), [h("div", {
-      "class": bem$13('thumb')
+      "class": bem$1b('thumb')
     }, [slots()])]);
   }
 
 });
 
-const NAMESPACE$c = 'SwitchGroup';
+const NAMESPACE$e = 'SwitchGroup';
 const {
-  createComponent: createComponent$15,
-  bem: bem$14
+  createComponent: createComponent$1d,
+  bem: bem$1c
 } =
 /*#__PURE__*/
 createNamespace('switch');
 let gesture;
 var _switch = /*#__PURE__*/
-createComponent$15({
+createComponent$1d({
   mixins: [
   /*#__PURE__*/
-  useCheckItem(NAMESPACE$c),
+  useCheckItem(NAMESPACE$e),
   /*#__PURE__*/
   useColor()],
 
@@ -19441,12 +26457,14 @@ createComponent$15({
 
     onStart() {
       this.activated = true; // touch-action does not work in iOS
-      // this.setFocus();
+
+      this.setFocus();
     },
 
     onMove(detail) {
       if (this.shouldToggle(document, this.checked, detail.deltaX, -10)) {
-        this.checked = !this.checked; // hapticSelection();
+        this.checked = !this.checked; // TODO
+        // hapticSelection();
       }
     },
 
@@ -19474,6 +26492,12 @@ createComponent$15({
       });
     },
 
+    setFocus() {
+      if (this.buttonEl) {
+        this.buttonEl.focus();
+      }
+    },
+
     disabledChanged() {
       if (this.gesture) {
         this.gesture.enable(!this.disabled);
@@ -19483,6 +26507,7 @@ createComponent$15({
   },
 
   async mounted() {
+    this.buttonEl = this.$refs.buttonEl;
     this.gesture = createGesture({
       el: this.$el,
       gestureName: 'toggle',
@@ -19527,7 +26552,7 @@ createComponent$15({
       "attrs": {
         "role": "checkbox"
       },
-      "class": [bem$14({
+      "class": [bem$1c({
         disabled,
         checked,
         activated
@@ -19538,31 +26563,32 @@ createComponent$15({
     }, {
       "on": this.$listeners
     }]), [h("div", {
-      "class": bem$14('icon')
+      "class": bem$1c('icon')
     }, [h("div", {
-      "class": bem$14('inner')
+      "class": bem$1c('inner')
     })]), h("button", {
       "attrs": {
         "type": "button",
         "disabled": disabled
-      }
+      },
+      "ref": "buttonEl"
     })]);
   }
 
 });
 
-const NAMESPACE$d = 'TabBar';
+const NAMESPACE$f = 'TabBar';
 const {
-  createComponent: createComponent$16,
-  bem: bem$15
+  createComponent: createComponent$1e,
+  bem: bem$1d
 } =
 /*#__PURE__*/
 createNamespace('tab-bar');
 var tabBar = /*#__PURE__*/
-createComponent$16({
+createComponent$1e({
   mixins: [
   /*#__PURE__*/
-  useCheckGroupWithModel(NAMESPACE$d),
+  useCheckGroupWithModel(NAMESPACE$f),
   /*#__PURE__*/
   useColor()],
   props: {
@@ -19614,7 +26640,7 @@ createComponent$16({
       keyboardVisible
     } = this;
     return h("div", helper([{
-      "class": [bem$15({
+      "class": [bem$1d({
         translucent,
         hidden: keyboardVisible
       })]
@@ -19625,18 +26651,18 @@ createComponent$16({
 
 });
 
-const NAMESPACE$e = 'TabBar';
+const NAMESPACE$g = 'TabBar';
 const {
-  createComponent: createComponent$17,
-  bem: bem$16
+  createComponent: createComponent$1f,
+  bem: bem$1e
 } =
 /*#__PURE__*/
 createNamespace('tab-button');
 var tabButton = /*#__PURE__*/
-createComponent$17({
+createComponent$1f({
   mixins: [
   /*#__PURE__*/
-  useCheckItemWithModel(NAMESPACE$e),
+  useCheckItemWithModel(NAMESPACE$g),
   /*#__PURE__*/
   useRipple()],
   props: {
@@ -19686,16 +26712,17 @@ createComponent$17({
       mode
     } = this;
     return h("div", helper([{
-      "class": [bem$16({}), {
+      "class": [bem$1e({
+        'has-label': hasLabel,
+        'has-icon': hasIcon,
+        'has-label-only': hasLabel && !hasIcon,
+        'has-icon-only': hasIcon && !hasLabel
+      }), {
         'tab-selected': this.checked,
         'tab-disabled': this.disabled,
         'line-activatable': true,
         'line-selectable': true,
-        'line-focusable': true,
-        'tab-has-label': hasLabel,
-        'tab-has-icon': hasIcon,
-        'tab-has-label-only': hasLabel && !hasIcon,
-        'tab-has-icon-only': hasIcon && !hasLabel
+        'line-focusable': true
       }],
       "on": {
         "click": this.onClick
@@ -19718,18 +26745,18 @@ createComponent$17({
 
 });
 
-const NAMESPACE$f = 'Tabs';
+const NAMESPACE$h = 'Tabs';
 const {
-  createComponent: createComponent$18,
-  bem: bem$17
+  createComponent: createComponent$1g,
+  bem: bem$1f
 } =
 /*#__PURE__*/
 createNamespace('tab');
 var tab = /*#__PURE__*/
-createComponent$18({
+createComponent$1g({
   mixins: [
   /*#__PURE__*/
-  useCheckItemWithModel(NAMESPACE$f)],
+  useCheckItemWithModel(NAMESPACE$h)],
   props: {
     title: {
       type: String,
@@ -19762,7 +26789,7 @@ createComponent$18({
       tab
     } = this;
     return h("div", helper([{
-      "class": [bem$17({
+      "class": [bem$1f({
         hidden: !checked
       })],
       "attrs": {
@@ -19777,18 +26804,18 @@ createComponent$18({
 
 });
 
-const NAMESPACE$g = 'Tabs';
+const NAMESPACE$i = 'Tabs';
 const {
-  createComponent: createComponent$19,
-  bem: bem$18
+  createComponent: createComponent$1h,
+  bem: bem$1g
 } =
 /*#__PURE__*/
 createNamespace('tabs');
 var tabs = /*#__PURE__*/
-createComponent$19({
+createComponent$1h({
   mixins: [
   /*#__PURE__*/
-  useCheckGroupWithModel(NAMESPACE$g)],
+  useCheckGroupWithModel(NAMESPACE$i)],
   props: {
     exclusive: {
       type: Boolean,
@@ -19799,19 +26826,19 @@ createComponent$19({
   render() {
     const h = arguments[0];
     return h("div", helper([{
-      "class": bem$18()
+      "class": bem$1g()
     }, {
       "on": this.$listeners
     }]), [this.slots('top'), h("div", {
-      "class": bem$18('inner')
+      "class": bem$1g('inner')
     }, [this.slots()]), this.slots('bottom')]);
   }
 
 });
 
 const {
-  createComponent: createComponent$1a,
-  bem: bem$19
+  createComponent: createComponent$1i,
+  bem: bem$1h
 } =
 /*#__PURE__*/
 createNamespace('textarea');
@@ -19828,7 +26855,7 @@ const findItemLabel$2 = componentEl => {
 
 let textareaIds = 0;
 var textarea = /*#__PURE__*/
-createComponent$1a({
+createComponent$1i({
   mixins: [
   /*#__PURE__*/
   useModel('nativeValue', {
@@ -19902,7 +26929,7 @@ createComponent$1a({
   },
 
   beforeMount() {
-    this.inputId = `ion-input-${textareaIds++}`;
+    this.inputId = `line-input-${textareaIds++}`;
   },
 
   mounted() {
@@ -19934,7 +26961,7 @@ createComponent$1a({
     },
 
     /**
-     * Sets focus on the specified `ion-textarea`. Use this method instead of the global
+     * Sets focus on the specified `line-textarea`. Use this method instead of the global
      * `input.focus()`.
      */
     async setFocus() {
@@ -20062,7 +27089,7 @@ createComponent$1a({
     }
 
     return h("div", helper([{
-      "class": [bem$19()]
+      "class": [bem$1h()]
     }, {
       "on": this.$listeners
     }]), [h("textarea", {
@@ -20093,13 +27120,13 @@ createComponent$1a({
 });
 
 const {
-  createComponent: createComponent$1b,
-  bem: bem$1a
+  createComponent: createComponent$1j,
+  bem: bem$1i
 } =
 /*#__PURE__*/
 createNamespace('thumbnail');
 var thumbnail = /*#__PURE__*/
-createComponent$1b({
+createComponent$1j({
   functional: true,
 
   render(h, {
@@ -20107,235 +27134,54 @@ createComponent$1b({
     slots
   }) {
     return h("div", helper([{
-      "class": bem$1a()
+      "class": bem$1i()
     }, data]), [slots()]);
   }
 
 });
 
-/**
- * iOS Toast Enter Animation
- */
-const iosEnterAnimation$6 = (baseEl, position) => {
-    const baseAnimation = createAnimation();
-    const wrapperAnimation = createAnimation();
-    const wrapperEl = baseEl.querySelector('.line-toast__wrapper');
-    const bottom = 'calc(-10px - var(--ion-safe-area-bottom, 0px))';
-    const top = 'calc(10px + var(--ion-safe-area-top, 0px))';
-    wrapperAnimation.addElement(wrapperEl);
-    switch (position) {
-        case 'top':
-            wrapperAnimation.fromTo('transform', 'translateY(-100%)', `translateY(${top})`);
-            break;
-        case 'middle':
-            /* eslint-disable-next-line */
-            const topPosition = Math.floor(baseEl.clientHeight / 2 - wrapperEl.clientHeight / 2);
-            wrapperEl.style.top = `${topPosition}px`;
-            wrapperAnimation.fromTo('opacity', 0.01, 1);
-            break;
-        default:
-            wrapperAnimation.fromTo('transform', 'translateY(100%)', `translateY(${bottom})`);
-            break;
-    }
-    return baseAnimation
-        .addElement(baseEl)
-        .easing('cubic-bezier(.155,1.105,.295,1.12)')
-        .duration(400)
-        .addAnimation(wrapperAnimation);
-};
-
-/**
- * iOS Toast Leave Animation
- */
-const iosLeaveAnimation$6 = (baseEl, position) => {
-    const baseAnimation = createAnimation();
-    const wrapperAnimation = createAnimation();
-    const wrapperEl = baseEl.querySelector('.line-toast__wrapper');
-    const bottom = 'calc(-10px - var(--ion-safe-area-bottom, 0px))';
-    const top = 'calc(10px + var(--ion-safe-area-top, 0px))';
-    wrapperAnimation.addElement(wrapperEl);
-    switch (position) {
-        case 'top':
-            wrapperAnimation.fromTo('transform', `translateY(${top})`, 'translateY(-100%)');
-            break;
-        case 'middle':
-            wrapperAnimation.fromTo('opacity', 0.99, 0);
-            break;
-        default:
-            wrapperAnimation.fromTo('transform', `translateY(${bottom})`, 'translateY(100%)');
-            break;
-    }
-    return baseAnimation
-        .addElement(baseEl)
-        .easing('cubic-bezier(.36,.66,.04,1)')
-        .duration(300)
-        .addAnimation(wrapperAnimation);
-};
-
-/**
- * MD Toast Enter Animation
- */
-const mdEnterAnimation$5 = (baseEl, position) => {
-    const baseAnimation = createAnimation();
-    const wrapperAnimation = createAnimation();
-    const wrapperEl = baseEl.querySelector('.line-toast__wrapper');
-    const bottom = 'calc(8px + var(--ion-safe-area-bottom, 0px))';
-    const top = 'calc(8px + var(--ion-safe-area-top, 0px))';
-    wrapperAnimation.addElement(wrapperEl);
-    switch (position) {
-        case 'top':
-            wrapperEl.style.top = top;
-            wrapperAnimation.fromTo('opacity', 0.01, 1);
-            break;
-        case 'middle':
-            /* eslint-disable-next-line */
-            const topPosition = Math.floor(baseEl.clientHeight / 2 - wrapperEl.clientHeight / 2);
-            wrapperEl.style.top = `${topPosition}px`;
-            wrapperAnimation.fromTo('opacity', 0.01, 1);
-            break;
-        default:
-            wrapperEl.style.bottom = bottom;
-            wrapperAnimation.fromTo('opacity', 0.01, 1);
-            break;
-    }
-    return baseAnimation
-        .addElement(baseEl)
-        .easing('cubic-bezier(.36,.66,.04,1)')
-        .duration(400)
-        .addAnimation(wrapperAnimation);
-};
-
-/**
- * md Toast Leave Animation
- */
-const mdLeaveAnimation$5 = (baseEl) => {
-    const baseAnimation = createAnimation();
-    const wrapperAnimation = createAnimation();
-    const wrapperEl = baseEl.querySelector('.line-toast__wrapper');
-    wrapperAnimation
-        .addElement(wrapperEl)
-        .fromTo('opacity', 0.99, 0);
-    return baseAnimation
-        .addElement(baseEl)
-        .easing('cubic-bezier(.36,.66,.04,1)')
-        .duration(300)
-        .addAnimation(wrapperAnimation);
-};
-
 const {
-  createComponent: createComponent$1c,
-  bem: bem$1b
-} =
-/*#__PURE__*/
-createNamespace('toast');
-var toast = /*#__PURE__*/
-createComponent$1c({
-  mixins: [
-  /*#__PURE__*/
-  usePopup(),
-  /*#__PURE__*/
-  usePopupDuration(),
-  /*#__PURE__*/
-  useColor()],
-  props: {
-    /**
-     * The position of the toast on the screen.
-     */
-    // top | bottom | middle
-    position: String,
-    message: String
-  },
-
-  beforeMount() {
-    const {
-      mode
-    } = this;
-    this.$on('animation-enter', builder => {
-      builder.build = mode === 'md' ? mdEnterAnimation$5 : iosEnterAnimation$6;
-      builder.options = this.position;
-    });
-    this.$on('animation-leave', builder => {
-      builder.build = mode === 'md' ? mdLeaveAnimation$5 : iosLeaveAnimation$6;
-      builder.options = this.position;
-    });
-    this.$on('opened', () => {
-      if (this.duration > 0) {
-        this.durationTimeout = setTimeout(() => this.close('timeout'), this.duration);
-      }
-    });
-    this.$on('aboutToHide', () => {
-      if (this.durationTimeout) {
-        clearTimeout(this.durationTimeout);
-      }
-    });
-  },
-
-  render() {
-    const h = arguments[0];
-    const {
-      position = 'bottom'
-    } = this;
-    return h("div", helper([{
-      "directives": [{
-        name: "show",
-        value: this.visible
-      }],
-      "class": [bem$1b()]
-    }, {
-      "on": this.$listeners
-    }]), [h("div", {
-      "class": bem$1b('wrapper', {
-        [position]: true
-      })
-    }, [h("div", {
-      "class": bem$1b('container')
-    }, [h("div", {
-      "class": bem$1b('content')
-    }, [h("div", {
-      "class": bem$1b('message')
-    }, [this.message]), h("div")])])])]);
-  }
-
-});
-
-const {
-  createComponent: createComponent$1d,
-  bem: bem$1c
+  createComponent: createComponent$1k,
+  bem: bem$1j
 } =
 /*#__PURE__*/
 createNamespace('toolbar');
 var toolbar = /*#__PURE__*/
-createComponent$1d({
-  mixins: [
-  /*#__PURE__*/
-  useColor()],
-  props: {},
+createComponent$1k({
+  functional: true,
+  props: {
+    color: String
+  },
 
-  render() {
-    const h = arguments[0];
+  render(h, {
+    props,
+    data,
+    slots
+  }) {
+    const {
+      color
+    } = props;
     return h("div", helper([{
-      "class": bem$1c()
-    }, {
-      "on": this.$listeners
-    }]), [h("div", {
-      "class": bem$1c('background')
+      "class": [bem$1j(), createColorClasses(color)]
+    }, data]), [h("div", {
+      "class": bem$1j('background')
     }), h("div", {
-      "class": bem$1c('container')
-    }, [this.slots('start'), this.slots('secondary'), h("div", {
-      "class": bem$1c('content')
-    }, [this.slots()]), this.slots('primary'), this.slots('end')])]);
+      "class": bem$1j('container')
+    }, [slots('start'), slots('secondary'), h("div", {
+      "class": bem$1j('content')
+    }, [slots()]), slots('primary'), slots('end')])]);
   }
 
 });
 
 const {
-  createComponent: createComponent$1e,
-  bem: bem$1d
+  createComponent: createComponent$1l,
+  bem: bem$1k
 } =
 /*#__PURE__*/
 createNamespace('title');
 var title = /*#__PURE__*/
-createComponent$1e({
+createComponent$1l({
   mixins: [
   /*#__PURE__*/
   useColor()],
@@ -20350,1323 +27196,14 @@ createComponent$1e({
       size
     } = this;
     return h("div", helper([{
-      "class": bem$1d({
+      "class": bem$1k({
         [size]: isDef(size)
       })
     }, {
       "on": this.$listeners
     }]), [h("div", {
-      "class": bem$1d('inner')
+      "class": bem$1k('inner')
     }, [this.slots()])]);
-  }
-
-});
-
-function usePopupDelay() {
-    return createMixins({
-        props: {
-            // This property holds the delay (milliseconds) after which the tool tip is shown.
-            // A tooltip with a negative delay is shown immediately.
-            // The default value is 0.
-            delay: {
-                type: Number,
-                default: 0,
-            },
-        },
-        data() {
-            return {
-                delayedVisible: this.visible,
-            };
-        },
-        watch: {
-            visible(val) {
-                if (this.appearTimer) {
-                    clearTimeout(this.appearTimer);
-                }
-                if (val === this.delayedVisible)
-                    return;
-                if (!val) {
-                    this.delayedVisible = val;
-                    return;
-                }
-                const delay = Math.max(this.delay, 0);
-                this.appearTimer = setTimeout(() => this.delayedVisible = val, delay);
-            },
-        },
-    });
-}
-
-const isVue = (val) => val && val._isVue;
-function useTrigger() {
-    return createMixins({
-        props: {
-            // string or Element
-            trigger: null,
-        },
-        computed: {
-            // TODO
-            // Evaluate before mounted may resolve $refs uncorrectly
-            $trigger() {
-                const { trigger, $vnode } = this;
-                if (!trigger)
-                    return undefined;
-                const baseEl = (($vnode && $vnode.context.$el) || document);
-                if (!$vnode) {
-                    return isString(trigger)
-                        ? baseEl.querySelector(trigger)
-                        : trigger;
-                }
-                const refs = $vnode.context.$refs;
-                const resolved = isString(trigger)
-                    ? refs[trigger] || baseEl.querySelector(trigger)
-                    : trigger;
-                if (isArray(resolved)) {
-                    console.warn(`
-            There are more than one triggers in the context.
-            Trigger element should be only one.
-          `);
-                }
-                return isArray(resolved)
-                    ? resolved[0]
-                    : resolved;
-            },
-            $triggerEl() {
-                const trigger = this.$trigger;
-                return isVue(trigger)
-                    ? trigger.$el
-                    : trigger;
-            },
-        },
-    });
-}
-
-/**
- * iOS Tooltip Enter Animation
- */
-const iosEnterAnimation$7 = (baseEl) => {
-    const baseAnimation = createAnimation();
-    return baseAnimation
-        .addElement(baseEl)
-        .easing('ease')
-        .duration(100)
-        .fromTo('opacity', 0.01, 1);
-};
-
-/**
- * iOS Popover Leave Animation
- */
-const iosLeaveAnimation$7 = (baseEl) => {
-    const baseAnimation = createAnimation();
-    return baseAnimation
-        .addElement(baseEl)
-        .easing('ease')
-        .duration(500)
-        .fromTo('opacity', 0.99, 0);
-};
-
-function getBoundingClientRect(element) {
-  var rect = element.getBoundingClientRect();
-  return {
-    width: rect.width,
-    height: rect.height,
-    top: rect.top,
-    right: rect.right,
-    bottom: rect.bottom,
-    left: rect.left,
-    x: rect.left,
-    y: rect.top
-  };
-}
-
-/*:: import type { Window } from '../types'; */
-
-/*:: declare function getWindow(node: Node | Window): Window; */
-function getWindow(node) {
-  if (node.toString() !== '[object Window]') {
-    var ownerDocument = node.ownerDocument;
-    return ownerDocument ? ownerDocument.defaultView : window;
-  }
-
-  return node;
-}
-
-function getWindowScroll(node) {
-  var win = getWindow(node);
-  var scrollLeft = win.pageXOffset;
-  var scrollTop = win.pageYOffset;
-  return {
-    scrollLeft: scrollLeft,
-    scrollTop: scrollTop
-  };
-}
-
-/*:: declare function isElement(node: mixed): boolean %checks(node instanceof
-  Element); */
-
-function isElement(node) {
-  var OwnElement = getWindow(node).Element;
-  return node instanceof OwnElement;
-}
-/*:: declare function isHTMLElement(node: mixed): boolean %checks(node instanceof
-  HTMLElement); */
-
-
-function isHTMLElement(node) {
-  var OwnElement = getWindow(node).HTMLElement;
-  return node instanceof OwnElement;
-}
-
-function getHTMLElementScroll(element) {
-  return {
-    scrollLeft: element.scrollLeft,
-    scrollTop: element.scrollTop
-  };
-}
-
-function getNodeScroll(node) {
-  if (node === getWindow(node) || !isHTMLElement(node)) {
-    return getWindowScroll(node);
-  } else {
-    return getHTMLElementScroll(node);
-  }
-}
-
-function getNodeName(element) {
-  return element ? (element.nodeName || '').toLowerCase() : null;
-}
-
-function getDocumentElement(element) {
-  // $FlowFixMe: assume body is always available
-  return (isElement(element) ? element.ownerDocument : element.document).documentElement;
-}
-
-function getWindowScrollBarX(element) {
-  // If <html> has a CSS width greater than the viewport, then this will be
-  // incorrect for RTL.
-  // Popper 1 is broken in this case and never had a bug report so let's assume
-  // it's not an issue. I don't think anyone ever specifies width on <html>
-  // anyway.
-  // Browsers where the left scrollbar doesn't cause an issue report `0` for
-  // this (e.g. Edge 2019, IE11, Safari)
-  return getBoundingClientRect(getDocumentElement(element)).left + getWindowScroll(element).scrollLeft;
-}
-
-// Composite means it takes into account transforms as well as layout.
-
-function getCompositeRect(elementOrVirtualElement, offsetParent, isFixed) {
-  if (isFixed === void 0) {
-    isFixed = false;
-  }
-
-  var documentElement;
-  var rect = getBoundingClientRect(elementOrVirtualElement);
-  var scroll = {
-    scrollLeft: 0,
-    scrollTop: 0
-  };
-  var offsets = {
-    x: 0,
-    y: 0
-  };
-
-  if (!isFixed) {
-    if (getNodeName(offsetParent) !== 'body') {
-      scroll = getNodeScroll(offsetParent);
-    }
-
-    if (isHTMLElement(offsetParent)) {
-      offsets = getBoundingClientRect(offsetParent);
-      offsets.x += offsetParent.clientLeft;
-      offsets.y += offsetParent.clientTop;
-    } else if (documentElement = getDocumentElement(offsetParent)) {
-      offsets.x = getWindowScrollBarX(documentElement);
-    }
-  }
-
-  return {
-    x: rect.left + scroll.scrollLeft - offsets.x,
-    y: rect.top + scroll.scrollTop - offsets.y,
-    width: rect.width,
-    height: rect.height
-  };
-}
-
-// Returns the layout rect of an element relative to its offsetParent. Layout
-// means it doesn't take into account transforms.
-function getLayoutRect(element) {
-  return {
-    x: element.offsetLeft,
-    y: element.offsetTop,
-    width: element.offsetWidth,
-    height: element.offsetHeight
-  };
-}
-
-function getParentNode(element) {
-  if (getNodeName(element) === 'html') {
-    return element;
-  }
-
-  return element.parentNode || // DOM Element detected
-  // $FlowFixMe: need a better way to handle this...
-  element.host || // ShadowRoot detected
-  document.ownerDocument || // Fallback to ownerDocument if available
-  document.documentElement // Or to documentElement if everything else fails
-  ;
-}
-
-function getComputedStyle(element) {
-  return getWindow(element).getComputedStyle(element);
-}
-
-function getScrollParent(node) {
-  if (['html', 'body', '#document'].indexOf(getNodeName(node)) >= 0) {
-    // $FlowFixMe: assume body is always available
-    return node.ownerDocument.body;
-  }
-
-  if (isHTMLElement(node)) {
-    // Firefox wants us to check `-x` and `-y` variations as well
-    var _getComputedStyle = getComputedStyle(node),
-        overflow = _getComputedStyle.overflow,
-        overflowX = _getComputedStyle.overflowX,
-        overflowY = _getComputedStyle.overflowY;
-
-    if (/auto|scroll|overlay|hidden/.test(overflow + overflowY + overflowX)) {
-      return node;
-    }
-  }
-
-  return getScrollParent(getParentNode(node));
-}
-
-function listScrollParents(element, list) {
-  if (list === void 0) {
-    list = [];
-  }
-
-  var scrollParent = getScrollParent(element);
-  var isBody = getNodeName(scrollParent) === 'body';
-  var target = isBody ? getWindow(scrollParent) : scrollParent;
-  var updatedList = list.concat(target);
-  return isBody ? updatedList : // $FlowFixMe: isBody tells us target will be an HTMLElement here
-  updatedList.concat(listScrollParents(getParentNode(target)));
-}
-
-function isTableElement(element) {
-  return ['table', 'td', 'th'].indexOf(getNodeName(element)) >= 0;
-}
-
-var isFirefox = function isFirefox() {
-  return typeof window.InstallTrigger !== 'undefined';
-};
-
-function getTrueOffsetParent(element) {
-  var offsetParent;
-
-  if (!isHTMLElement(element) || !(offsetParent = element.offsetParent) || // https://github.com/popperjs/popper-core/issues/837
-  isFirefox() && getComputedStyle(offsetParent).position === 'fixed') {
-    return null;
-  }
-
-  return offsetParent;
-}
-
-function getOffsetParent(element) {
-  var window = getWindow(element);
-  var offsetParent = getTrueOffsetParent(element); // Find the nearest non-table offsetParent
-
-  while (offsetParent && isTableElement(offsetParent)) {
-    offsetParent = getTrueOffsetParent(offsetParent);
-  }
-
-  if (offsetParent && getNodeName(offsetParent) === 'body' && getComputedStyle(offsetParent).position === 'static') {
-    return window;
-  }
-
-  return offsetParent || window;
-}
-
-var top = 'top';
-var bottom = 'bottom';
-var right = 'right';
-var left = 'left';
-var auto = 'auto';
-var start = 'start';
-var end = 'end';
-
-var beforeRead = 'beforeRead';
-var read = 'read';
-var afterRead = 'afterRead'; // pure-logic modifiers
-
-var beforeMain = 'beforeMain';
-var main = 'main';
-var afterMain = 'afterMain'; // modifier with the purpose to write to the DOM (or write into a framework state)
-
-var beforeWrite = 'beforeWrite';
-var write = 'write';
-var afterWrite = 'afterWrite';
-var modifierPhases = [beforeRead, read, afterRead, beforeMain, main, afterMain, beforeWrite, write, afterWrite];
-
-function order(modifiers) {
-  var map = new Map();
-  var visited = new Set();
-  var result = [];
-  modifiers.forEach(function (modifier) {
-    map.set(modifier.name, modifier);
-  }); // On visiting object, check for its dependencies and visit them recursively
-
-  function sort(modifier) {
-    visited.add(modifier.name);
-    var requires = [].concat(modifier.requires || [], modifier.requiresIfExists || []);
-    requires.forEach(function (dep) {
-      if (!visited.has(dep)) {
-        var depModifier = map.get(dep);
-
-        if (depModifier) {
-          sort(depModifier);
-        }
-      }
-    });
-    result.push(modifier);
-  }
-
-  modifiers.forEach(function (modifier) {
-    if (!visited.has(modifier.name)) {
-      // check for visited object
-      sort(modifier);
-    }
-  });
-  return result;
-}
-
-function orderModifiers(modifiers) {
-  // order based on dependencies
-  var orderedModifiers = order(modifiers); // order based on phase
-
-  return modifierPhases.reduce(function (acc, phase) {
-    return acc.concat(orderedModifiers.filter(function (modifier) {
-      return modifier.phase === phase;
-    }));
-  }, []);
-}
-
-function debounce$1(fn) {
-  var pending;
-  return function () {
-    if (!pending) {
-      pending = new Promise(function (resolve) {
-        Promise.resolve().then(function () {
-          pending = undefined;
-          resolve(fn());
-        });
-      });
-    }
-
-    return pending;
-  };
-}
-
-function format(str) {
-  for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-    args[_key - 1] = arguments[_key];
-  }
-
-  return [].concat(args).reduce(function (p, c) {
-    return p.replace(/%s/, c);
-  }, str);
-}
-
-var INVALID_MODIFIER_ERROR = 'Popper: modifier "%s" provided an invalid %s property, expected %s but got %s';
-var MISSING_DEPENDENCY_ERROR = 'Popper: modifier "%s" requires "%s", but "%s" modifier is not available';
-var VALID_PROPERTIES = ['name', 'enabled', 'phase', 'fn', 'effect', 'requires', 'options'];
-function validateModifiers(modifiers) {
-  modifiers.forEach(function (modifier) {
-    Object.keys(modifier).forEach(function (key) {
-      switch (key) {
-        case 'name':
-          if (typeof modifier.name !== 'string') {
-            console.error(format(INVALID_MODIFIER_ERROR, String(modifier.name), '"name"', '"string"', "\"" + String(modifier.name) + "\""));
-          }
-
-          break;
-
-        case 'enabled':
-          if (typeof modifier.enabled !== 'boolean') {
-            console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"enabled"', '"boolean"', "\"" + String(modifier.enabled) + "\""));
-          }
-
-        case 'phase':
-          if (modifierPhases.indexOf(modifier.phase) < 0) {
-            console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"phase"', "either " + modifierPhases.join(', '), "\"" + String(modifier.phase) + "\""));
-          }
-
-          break;
-
-        case 'fn':
-          if (typeof modifier.fn !== 'function') {
-            console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"fn"', '"function"', "\"" + String(modifier.fn) + "\""));
-          }
-
-          break;
-
-        case 'effect':
-          if (typeof modifier.effect !== 'function') {
-            console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"effect"', '"function"', "\"" + String(modifier.fn) + "\""));
-          }
-
-          break;
-
-        case 'requires':
-          if (!Array.isArray(modifier.requires)) {
-            console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"requires"', '"array"', "\"" + String(modifier.requires) + "\""));
-          }
-
-          break;
-
-        case 'requiresIfExists':
-          if (!Array.isArray(modifier.requiresIfExists)) {
-            console.error(format(INVALID_MODIFIER_ERROR, modifier.name, '"requiresIfExists"', '"array"', "\"" + String(modifier.requiresIfExists) + "\""));
-          }
-
-          break;
-
-        case 'options':
-        case 'data':
-          break;
-
-        default:
-          console.error("PopperJS: an invalid property has been provided to the \"" + modifier.name + "\" modifier, valid properties are " + VALID_PROPERTIES.map(function (s) {
-            return "\"" + s + "\"";
-          }).join(', ') + "; but \"" + key + "\" was provided.");
-      }
-
-      modifier.requires && modifier.requires.forEach(function (requirement) {
-        if (modifiers.find(function (mod) {
-          return mod.name === requirement;
-        }) == null) {
-          console.error(format(MISSING_DEPENDENCY_ERROR, String(modifier.name), requirement, requirement));
-        }
-      });
-    });
-  });
-}
-
-function uniqueBy(arr, fn) {
-  var identifiers = new Set();
-  return arr.filter(function (item) {
-    var identifier = fn(item);
-
-    if (!identifiers.has(identifier)) {
-      identifiers.add(identifier);
-      return true;
-    }
-  });
-}
-
-function getBasePlacement(placement) {
-  return placement.split('-')[0];
-}
-
-function mergeByName(modifiers) {
-  var merged = modifiers.reduce(function (merged, current) {
-    var existing = merged[current.name];
-    merged[current.name] = existing ? Object.assign({}, existing, {}, current, {
-      options: Object.assign({}, existing.options, {}, current.options),
-      data: Object.assign({}, existing.data, {}, current.data)
-    }) : current;
-    return merged;
-  }, {}); // IE11 does not support Object.values
-
-  return Object.keys(merged).map(function (key) {
-    return merged[key];
-  });
-}
-
-var INVALID_ELEMENT_ERROR = 'Popper: Invalid reference or popper argument provided. They must be either a DOM element or virtual element.';
-var INFINITE_LOOP_ERROR = 'Popper: An infinite loop in the modifiers cycle has been detected! The cycle has been interrupted to prevent a browser crash.';
-var DEFAULT_OPTIONS = {
-  placement: 'bottom',
-  modifiers: [],
-  strategy: 'absolute'
-};
-
-function areValidElements() {
-  for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-    args[_key] = arguments[_key];
-  }
-
-  return !args.some(function (element) {
-    return !(element && typeof element.getBoundingClientRect === 'function');
-  });
-}
-
-function popperGenerator(generatorOptions) {
-  if (generatorOptions === void 0) {
-    generatorOptions = {};
-  }
-
-  var _generatorOptions = generatorOptions,
-      _generatorOptions$def = _generatorOptions.defaultModifiers,
-      defaultModifiers = _generatorOptions$def === void 0 ? [] : _generatorOptions$def,
-      _generatorOptions$def2 = _generatorOptions.defaultOptions,
-      defaultOptions = _generatorOptions$def2 === void 0 ? DEFAULT_OPTIONS : _generatorOptions$def2;
-  return function createPopper(reference, popper, options) {
-    if (options === void 0) {
-      options = defaultOptions;
-    }
-
-    var state = {
-      placement: 'bottom',
-      orderedModifiers: [],
-      options: Object.assign({}, DEFAULT_OPTIONS, {}, defaultOptions),
-      modifiersData: {},
-      elements: {
-        reference: reference,
-        popper: popper
-      },
-      attributes: {},
-      styles: {}
-    };
-    var effectCleanupFns = [];
-    var isDestroyed = false;
-    var instance = {
-      state: state,
-      setOptions: function setOptions(options) {
-        cleanupModifierEffects();
-        state.options = Object.assign({}, defaultOptions, {}, state.options, {}, options);
-        state.scrollParents = {
-          reference: isElement(reference) ? listScrollParents(reference) : [],
-          popper: listScrollParents(popper)
-        }; // Orders the modifiers based on their dependencies and `phase`
-        // properties
-
-        var orderedModifiers = orderModifiers(mergeByName([].concat(defaultModifiers, state.options.modifiers))); // Strip out disabled modifiers
-
-        state.orderedModifiers = orderedModifiers.filter(function (m) {
-          return m.enabled;
-        }); // Validate the provided modifiers so that the consumer will get warned
-        // if one of the modifiers is invalid for any reason
-
-        if (process.env.NODE_ENV !== "production") {
-          var modifiers = uniqueBy([].concat(orderedModifiers, state.options.modifiers), function (_ref) {
-            var name = _ref.name;
-            return name;
-          });
-          validateModifiers(modifiers);
-
-          if (getBasePlacement(state.options.placement) === auto) {
-            var flipModifier = state.orderedModifiers.find(function (_ref2) {
-              var name = _ref2.name;
-              return name === 'flip';
-            });
-
-            if (!flipModifier) {
-              console.error(['Popper: "auto" placements require the "flip" modifier be', 'present and enabled to work.'].join(' '));
-            }
-          }
-
-          var _getComputedStyle = getComputedStyle(popper),
-              marginTop = _getComputedStyle.marginTop,
-              marginRight = _getComputedStyle.marginRight,
-              marginBottom = _getComputedStyle.marginBottom,
-              marginLeft = _getComputedStyle.marginLeft; // We no longer take into account `margins` on the popper, and it can
-          // cause bugs with positioning, so we'll warn the consumer
-
-
-          if ([marginTop, marginRight, marginBottom, marginLeft].some(function (margin) {
-            return parseFloat(margin);
-          })) {
-            console.warn(['Popper: CSS "margin" styles cannot be used to apply padding', 'between the popper and its reference element or boundary.', 'To replicate margin, use the `offset` modifier, as well as', 'the `padding` option in the `preventOverflow` and `flip`', 'modifiers.'].join(' '));
-          }
-        }
-
-        runModifierEffects();
-        return instance.update();
-      },
-      // Sync update – it will always be executed, even if not necessary. This
-      // is useful for low frequency updates where sync behavior simplifies the
-      // logic.
-      // For high frequency updates (e.g. `resize` and `scroll` events), always
-      // prefer the async Popper#update method
-      forceUpdate: function forceUpdate() {
-        if (isDestroyed) {
-          return;
-        }
-
-        var _state$elements = state.elements,
-            reference = _state$elements.reference,
-            popper = _state$elements.popper; // Don't proceed if `reference` or `popper` are not valid elements
-        // anymore
-
-        if (!areValidElements(reference, popper)) {
-          if (process.env.NODE_ENV !== "production") {
-            console.error(INVALID_ELEMENT_ERROR);
-          }
-
-          return;
-        } // Store the reference and popper rects to be read by modifiers
-
-
-        state.rects = {
-          reference: getCompositeRect(reference, getOffsetParent(popper), state.options.strategy === 'fixed'),
-          popper: getLayoutRect(popper)
-        }; // Modifiers have the ability to reset the current update cycle. The
-        // most common use case for this is the `flip` modifier changing the
-        // placement, which then needs to re-run all the modifiers, because the
-        // logic was previously ran for the previous placement and is therefore
-        // stale/incorrect
-
-        state.reset = false;
-        state.placement = state.options.placement; // On each update cycle, the `modifiersData` property for each modifier
-        // is filled with the initial data specified by the modifier. This means
-        // it doesn't persist and is fresh on each update.
-        // To ensure persistent data, use `${name}#persistent`
-
-        state.orderedModifiers.forEach(function (modifier) {
-          return state.modifiersData[modifier.name] = Object.assign({}, modifier.data);
-        });
-        var __debug_loops__ = 0;
-
-        for (var index = 0; index < state.orderedModifiers.length; index++) {
-          if (process.env.NODE_ENV !== "production") {
-            __debug_loops__ += 1;
-
-            if (__debug_loops__ > 100) {
-              console.error(INFINITE_LOOP_ERROR);
-              break;
-            }
-          }
-
-          if (state.reset === true) {
-            state.reset = false;
-            index = -1;
-            continue;
-          }
-
-          var _state$orderedModifie = state.orderedModifiers[index],
-              fn = _state$orderedModifie.fn,
-              _state$orderedModifie2 = _state$orderedModifie.options,
-              _options = _state$orderedModifie2 === void 0 ? {} : _state$orderedModifie2,
-              name = _state$orderedModifie.name;
-
-          if (typeof fn === 'function') {
-            state = fn({
-              state: state,
-              options: _options,
-              name: name,
-              instance: instance
-            }) || state;
-          }
-        }
-      },
-      // Async and optimistically optimized update – it will not be executed if
-      // not necessary (debounced to run at most once-per-tick)
-      update: debounce$1(function () {
-        return new Promise(function (resolve) {
-          instance.forceUpdate();
-          resolve(state);
-        });
-      }),
-      destroy: function destroy() {
-        cleanupModifierEffects();
-        isDestroyed = true;
-      }
-    };
-
-    if (!areValidElements(reference, popper)) {
-      if (process.env.NODE_ENV !== "production") {
-        console.error(INVALID_ELEMENT_ERROR);
-      }
-
-      return instance;
-    }
-
-    instance.setOptions(options).then(function (state) {
-      if (!isDestroyed && options.onFirstUpdate) {
-        options.onFirstUpdate(state);
-      }
-    }); // Modifiers have the ability to execute arbitrary code before the first
-    // update cycle runs. They will be executed in the same order as the update
-    // cycle. This is useful when a modifier adds some persistent data that
-    // other modifiers need to use, but the modifier is run after the dependent
-    // one.
-
-    function runModifierEffects() {
-      state.orderedModifiers.forEach(function (_ref3) {
-        var name = _ref3.name,
-            _ref3$options = _ref3.options,
-            options = _ref3$options === void 0 ? {} : _ref3$options,
-            effect = _ref3.effect;
-
-        if (typeof effect === 'function') {
-          var cleanupFn = effect({
-            state: state,
-            name: name,
-            instance: instance,
-            options: options
-          });
-
-          var noopFn = function noopFn() {};
-
-          effectCleanupFns.push(cleanupFn || noopFn);
-        }
-      });
-    }
-
-    function cleanupModifierEffects() {
-      effectCleanupFns.forEach(function (fn) {
-        return fn();
-      });
-      effectCleanupFns = [];
-    }
-
-    return instance;
-  };
-}
-
-var passive = {
-  passive: true
-};
-
-function effect(_ref) {
-  var state = _ref.state,
-      instance = _ref.instance,
-      options = _ref.options;
-  var _options$scroll = options.scroll,
-      scroll = _options$scroll === void 0 ? true : _options$scroll,
-      _options$resize = options.resize,
-      resize = _options$resize === void 0 ? true : _options$resize;
-  var window = getWindow(state.elements.popper);
-  var scrollParents = [].concat(state.scrollParents.reference, state.scrollParents.popper);
-
-  if (scroll) {
-    scrollParents.forEach(function (scrollParent) {
-      scrollParent.addEventListener('scroll', instance.update, passive);
-    });
-  }
-
-  if (resize) {
-    window.addEventListener('resize', instance.update, passive);
-  }
-
-  return function () {
-    if (scroll) {
-      scrollParents.forEach(function (scrollParent) {
-        scrollParent.removeEventListener('scroll', instance.update, passive);
-      });
-    }
-
-    if (resize) {
-      window.removeEventListener('resize', instance.update, passive);
-    }
-  };
-}
-
-var eventListeners = {
-  name: 'eventListeners',
-  enabled: true,
-  phase: 'write',
-  fn: function fn() {},
-  effect: effect,
-  data: {}
-};
-
-function getVariation(placement) {
-  return placement.split('-')[1];
-}
-
-function getMainAxisFromPlacement(placement) {
-  return ['top', 'bottom'].indexOf(placement) >= 0 ? 'x' : 'y';
-}
-
-function computeOffsets(_ref) {
-  var reference = _ref.reference,
-      element = _ref.element,
-      placement = _ref.placement;
-  var basePlacement = placement ? getBasePlacement(placement) : null;
-  var variation = placement ? getVariation(placement) : null;
-  var commonX = reference.x + reference.width / 2 - element.width / 2;
-  var commonY = reference.y + reference.height / 2 - element.height / 2;
-  var offsets;
-
-  switch (basePlacement) {
-    case top:
-      offsets = {
-        x: commonX,
-        y: reference.y - element.height
-      };
-      break;
-
-    case bottom:
-      offsets = {
-        x: commonX,
-        y: reference.y + reference.height
-      };
-      break;
-
-    case right:
-      offsets = {
-        x: reference.x + reference.width,
-        y: commonY
-      };
-      break;
-
-    case left:
-      offsets = {
-        x: reference.x - element.width,
-        y: commonY
-      };
-      break;
-
-    default:
-      offsets = {
-        x: reference.x,
-        y: reference.y
-      };
-  }
-
-  var mainAxis = basePlacement ? getMainAxisFromPlacement(basePlacement) : null;
-
-  if (mainAxis != null) {
-    var len = mainAxis === 'y' ? 'height' : 'width';
-
-    switch (variation) {
-      case start:
-        offsets[mainAxis] = Math.floor(offsets[mainAxis]) - Math.floor(reference[len] / 2 - element[len] / 2);
-        break;
-
-      case end:
-        offsets[mainAxis] = Math.floor(offsets[mainAxis]) + Math.ceil(reference[len] / 2 - element[len] / 2);
-        break;
-    }
-  }
-
-  return offsets;
-}
-
-function popperOffsets(_ref) {
-  var state = _ref.state,
-      name = _ref.name;
-  // Offsets are the actual position the popper needs to have to be
-  // properly positioned near its reference element
-  // This is the most basic placement, and will be adjusted by
-  // the modifiers in the next step
-  state.modifiersData[name] = computeOffsets({
-    reference: state.rects.reference,
-    element: state.rects.popper,
-    strategy: 'absolute',
-    placement: state.placement
-  });
-}
-
-var popperOffsets$1 = {
-  name: 'popperOffsets',
-  enabled: true,
-  phase: 'read',
-  fn: popperOffsets,
-  data: {}
-};
-
-var unsetSides = {
-  top: 'auto',
-  right: 'auto',
-  bottom: 'auto',
-  left: 'auto'
-}; // Round the offsets to the nearest suitable subpixel based on the DPR.
-// Zooming can change the DPR, but it seems to report a value that will
-// cleanly divide the values into the appropriate subpixels.
-
-function roundOffsets(_ref) {
-  var x = _ref.x,
-      y = _ref.y;
-  var win = window;
-  var dpr = win.devicePixelRatio || 1;
-  return {
-    x: Math.round(x * dpr) / dpr || 0,
-    y: Math.round(y * dpr) / dpr || 0
-  };
-}
-
-function mapToStyles(_ref2) {
-  var _Object$assign2;
-
-  var popper = _ref2.popper,
-      popperRect = _ref2.popperRect,
-      placement = _ref2.placement,
-      offsets = _ref2.offsets,
-      position = _ref2.position,
-      gpuAcceleration = _ref2.gpuAcceleration,
-      adaptive = _ref2.adaptive;
-
-  var _roundOffsets = roundOffsets(offsets),
-      x = _roundOffsets.x,
-      y = _roundOffsets.y;
-
-  var hasX = offsets.hasOwnProperty('x');
-  var hasY = offsets.hasOwnProperty('y');
-  var sideX = left;
-  var sideY = top;
-  var win = window;
-
-  if (adaptive) {
-    var offsetParent = getOffsetParent(popper);
-
-    if (offsetParent === getWindow(popper)) {
-      offsetParent = getDocumentElement(popper);
-    } // $FlowFixMe: force type refinement, we compare offsetParent with window above, but Flow doesn't detect it
-
-    /*:: offsetParent = (offsetParent: Element); */
-
-
-    if (placement === top) {
-      sideY = bottom;
-      y -= offsetParent.clientHeight - popperRect.height;
-      y *= gpuAcceleration ? 1 : -1;
-    }
-
-    if (placement === left) {
-      sideX = right;
-      x -= offsetParent.clientWidth - popperRect.width;
-      x *= gpuAcceleration ? 1 : -1;
-    }
-  }
-
-  var commonStyles = Object.assign({
-    position: position
-  }, adaptive && unsetSides);
-
-  if (gpuAcceleration) {
-    var _Object$assign;
-
-    return Object.assign({}, commonStyles, (_Object$assign = {}, _Object$assign[sideY] = hasY ? '0' : '', _Object$assign[sideX] = hasX ? '0' : '', _Object$assign.transform = (win.devicePixelRatio || 1) < 2 ? "translate(" + x + "px, " + y + "px)" : "translate3d(" + x + "px, " + y + "px, 0)", _Object$assign));
-  }
-
-  return Object.assign({}, commonStyles, (_Object$assign2 = {}, _Object$assign2[sideY] = hasY ? y + "px" : '', _Object$assign2[sideX] = hasX ? x + "px" : '', _Object$assign2.transform = '', _Object$assign2));
-}
-
-function computeStyles(_ref3) {
-  var state = _ref3.state,
-      options = _ref3.options;
-  var _options$gpuAccelerat = options.gpuAcceleration,
-      gpuAcceleration = _options$gpuAccelerat === void 0 ? true : _options$gpuAccelerat,
-      _options$adaptive = options.adaptive,
-      adaptive = _options$adaptive === void 0 ? true : _options$adaptive;
-
-  if (process.env.NODE_ENV !== "production") {
-    var _getComputedStyle = getComputedStyle(state.elements.popper),
-        transitionProperty = _getComputedStyle.transitionProperty;
-
-    if (adaptive && ['transform', 'top', 'right', 'bottom', 'left'].some(function (property) {
-      return transitionProperty.indexOf(property) >= 0;
-    })) {
-      console.warn(['Popper: Detected CSS transitions on at least one of the following', 'CSS properties: "transform", "top", "right", "bottom", "left".', '\n\n', 'Disable the "computeStyles" modifier\'s `adaptive` option to allow', 'for smooth transitions, or remove these properties from the CSS', 'transition declaration on the popper element if only transitioning', 'opacity or background-color for example.', '\n\n', 'We recommend using the popper element as a wrapper around an inner', 'element that can have any CSS property transitioned for animations.'].join(' '));
-    }
-  }
-
-  var commonStyles = {
-    placement: getBasePlacement(state.placement),
-    popper: state.elements.popper,
-    popperRect: state.rects.popper,
-    gpuAcceleration: gpuAcceleration
-  }; // popper offsets are always available
-
-  state.styles.popper = Object.assign({}, state.styles.popper, {}, mapToStyles(Object.assign({}, commonStyles, {
-    offsets: state.modifiersData.popperOffsets,
-    position: state.options.strategy,
-    adaptive: adaptive
-  }))); // arrow offsets may not be available
-
-  if (state.modifiersData.arrow != null) {
-    state.styles.arrow = Object.assign({}, state.styles.arrow, {}, mapToStyles(Object.assign({}, commonStyles, {
-      offsets: state.modifiersData.arrow,
-      position: 'absolute',
-      adaptive: false
-    })));
-  }
-
-  state.attributes.popper = Object.assign({}, state.attributes.popper, {
-    'data-popper-placement': state.placement
-  });
-}
-
-var computeStyles$1 = {
-  name: 'computeStyles',
-  enabled: true,
-  phase: 'beforeWrite',
-  fn: computeStyles,
-  data: {}
-};
-
-// and applies them to the HTMLElements such as popper and arrow
-
-function applyStyles(_ref) {
-  var state = _ref.state;
-  Object.keys(state.elements).forEach(function (name) {
-    var style = state.styles[name] || {};
-    var attributes = state.attributes[name] || {};
-    var element = state.elements[name]; // arrow is optional + virtual elements
-
-    if (!isHTMLElement(element) || !getNodeName(element)) {
-      return;
-    } // Flow doesn't support to extend this property, but it's the most
-    // effective way to apply styles to an HTMLElement
-    // $FlowFixMe
-
-
-    Object.assign(element.style, style);
-    Object.keys(attributes).forEach(function (name) {
-      var value = attributes[name];
-
-      if (value === false) {
-        element.removeAttribute(name);
-      } else {
-        element.setAttribute(name, value === true ? '' : value);
-      }
-    });
-  });
-}
-
-function effect$1(_ref2) {
-  var state = _ref2.state;
-  var initialStyles = {
-    popper: {
-      position: 'absolute',
-      left: '0',
-      top: '0',
-      margin: '0'
-    },
-    arrow: {
-      position: 'absolute'
-    },
-    reference: {}
-  };
-  Object.assign(state.elements.popper.style, initialStyles.popper);
-
-  if (state.elements.arrow) {
-    Object.assign(state.elements.arrow.style, initialStyles.arrow);
-  }
-
-  return function () {
-    Object.keys(state.elements).forEach(function (name) {
-      var element = state.elements[name];
-      var attributes = state.attributes[name] || {};
-      var styleProperties = Object.keys(state.styles.hasOwnProperty(name) ? state.styles[name] : initialStyles[name]); // Set all values to an empty string to unset them
-
-      var style = styleProperties.reduce(function (style, property) {
-        style[property] = '';
-        return style;
-      }, {}); // arrow is optional + virtual elements
-
-      if (!isHTMLElement(element) || !getNodeName(element)) {
-        return;
-      } // Flow doesn't support to extend this property, but it's the most
-      // effective way to apply styles to an HTMLElement
-      // $FlowFixMe
-
-
-      Object.assign(element.style, style);
-      Object.keys(attributes).forEach(function (attribute) {
-        element.removeAttribute(attribute);
-      });
-    });
-  };
-}
-
-var applyStyles$1 = {
-  name: 'applyStyles',
-  enabled: true,
-  phase: 'write',
-  fn: applyStyles,
-  effect: effect$1,
-  requires: ['computeStyles']
-};
-
-var defaultModifiers = [eventListeners, popperOffsets$1, computeStyles$1, applyStyles$1];
-var createPopper =
-/*#__PURE__*/
-popperGenerator({
-  defaultModifiers: defaultModifiers
-}); // eslint-disable-next-line import/no-unused-modules
-
-function createHover(el, options) {
-    const { callback } = options;
-    const enter = (ev) => callback(true, ev);
-    const leave = (ev) => callback(false, ev);
-    const mouseenterOff = on(el, 'mouseenter', enter, options);
-    const mouseleaveOff = on(el, 'mouseleave', leave, options);
-    const focusOff = on(el, 'focus', enter, options);
-    const blurOff = on(el, 'blur', leave, options);
-    const destroy = () => {
-        mouseenterOff();
-        mouseleaveOff();
-        focusOff();
-        blurOff();
-    };
-    return {
-        options,
-        enter,
-        leave,
-        destroy,
-    };
-}
-function inserted$2(el, binding) {
-    const { value: callback, modifiers: options, } = binding;
-    if (!callback)
-        return;
-    el.vHover = createHover(el, {
-        callback,
-        passive: true,
-        ...options,
-    });
-}
-function unbind$2(el) {
-    const { vHover } = el;
-    if (!vHover)
-        return;
-    vHover.destroy();
-    delete el.vHover;
-}
-function update$3(el, binding) {
-    const { value, oldValue } = binding;
-    if (value === oldValue) {
-        return;
-    }
-    if (oldValue) {
-        unbind$2(el);
-    }
-    inserted$2(el, binding);
-}
-const vHover = defineDirective({
-    name: 'hover',
-    inserted: inserted$2,
-    unbind: unbind$2,
-    update: update$3,
-});
-
-const {
-  createComponent: createComponent$1f,
-  bem: bem$1e
-} =
-/*#__PURE__*/
-createNamespace('tooltip');
-var tooltip = /*#__PURE__*/
-createComponent$1f({
-  mixins: [
-  /*#__PURE__*/
-  useColor(),
-  /*#__PURE__*/
-  usePopup({
-    disableScroll: false
-  }),
-  /*#__PURE__*/
-  usePopupDuration(),
-  /*#__PURE__*/
-  usePopupDelay(),
-  /*#__PURE__*/
-  useTrigger()],
-  props: {
-    // This property holds the text shown on the tool tip.
-    text: String,
-    placement: {
-      type: String,
-      default: 'top'
-    },
-    activeFocus: Boolean,
-    openOnHover: Boolean,
-    openOnClick: Boolean
-  },
-  watch: {
-    openOnHover(val) {
-      this.vHover.update(val && this.onHover);
-    }
-
-  },
-
-  beforeMount() {
-    this.$on('animation-enter', builder => {
-      builder.build = baseEl => {
-        const {
-          $triggerEl = this.event && this.event.target || document.body,
-          $el,
-          placement
-        } = this;
-        this.popper = createPopper($triggerEl, $el, {
-          placement: placement,
-          strategy: 'fixed'
-        });
-        return iosEnterAnimation$7(baseEl);
-      };
-    });
-    this.$on('animation-leave', builder => {
-      builder.build = iosLeaveAnimation$7;
-    });
-  },
-
-  async mounted() {
-    await this.$nextTick();
-    if (!this.$triggerEl) return;
-    this.vHover = createDirective(vHover, this.$triggerEl, {
-      name: 'hover'
-    });
-    this.vHover.inserted();
-
-    if (this.openOnHover) {
-      this.vHover.update(this.onHover);
-    }
-  },
-
-  updated() {
-    if (this.popper) {
-      this.popper.scheduleUpdate();
-    }
-  },
-
-  beforeDestroy() {
-    if (this.popper) {
-      this.popper.destroy();
-    }
-
-    if (this.vHover) {
-      this.vHover.unbind();
-    }
-  },
-
-  methods: {
-    onHover(hover) {
-      if (!this.openOnHover) return;
-      this.visible = hover;
-    }
-
-  },
-
-  render() {
-    const h = arguments[0];
-    const {
-      delayedVisible,
-      text
-    } = this;
-    return h("div", helper([{
-      "directives": [{
-        name: "show",
-        value: delayedVisible
-      }],
-      "attrs": {
-        "role": "tooltip"
-      },
-      "class": bem$1e({
-        translucent: this.translucent
-      })
-    }, {
-      "on": this.$listeners
-    }]), [h("div", {
-      "class": bem$1e('arrow'),
-      "attrs": {
-        "x-arrow": true
-      }
-    }), h("div", {
-      "class": bem$1e('content')
-    }, [this.slots() || text])]);
   }
 
 });
@@ -21677,8 +27214,8 @@ var components$1 = /*#__PURE__*/Object.freeze({
   __proto__: null,
   ActionGroup: actionGroup,
   Action: action,
-  ActionSheet: actionSheet,
-  Alert: alert,
+  ActionSheet: ActionSheet,
+  Alert: Alert,
   App: app,
   Avatar: avatar,
   Badge: badge,
@@ -21716,20 +27253,24 @@ var components$1 = /*#__PURE__*/Object.freeze({
   Input: input,
   Item: item,
   ItemDivider: itemDivider,
+  ItemGroup: itemGroup,
+  ItemOption: itemOption,
+  ItemOptions: itemOptions,
+  ItemSliding: itemSliding,
   Label: label,
   List: list,
   ListHeader: listHeader,
   ListItem: ListItem,
   ListView: listView,
-  Loading: loading,
+  Loading: Loading,
   Menu: menu,
   Note: note,
   Overlay: Overlay,
   Picker: Picker,
   PickerColumn: PickerColumn,
-  Popover: popover,
+  Popover: Popover,
   PopupLegacy: popupLegacy,
-  Popup: popup,
+  Popup: Popup,
   ProgressBar: progressBar,
   Radio: radio,
   Range: range,
@@ -21738,6 +27279,8 @@ var components$1 = /*#__PURE__*/Object.freeze({
   Reorder: reorder,
   ReorderGroup: reorderGroup,
   Row: row,
+  Segment: segment,
+  SegmentButton: segmentButton,
   SkeletonText: skeletonText,
   Slide: slide,
   Slides: slides,
@@ -21751,10 +27294,10 @@ var components$1 = /*#__PURE__*/Object.freeze({
   Tabs: tabs,
   Textarea: textarea,
   Thumbnail: thumbnail,
-  Toast: toast,
+  Toast: Toast,
   Toolbar: toolbar,
   Title: title,
-  Tooltip: tooltip
+  Tooltip: Tooltip
 });
 
 function createActivatable(el, options) {
@@ -21992,7 +27535,7 @@ function update$7(el, binding) {
     }
     inserted$6(el, binding);
 }
-const vGesture = defineDirective({
+const vGesture = /*#__PURE__*/ defineDirective({
     name: 'gesture',
     inserted: inserted$6,
     unbind: unbind$6,
@@ -22063,7 +27606,7 @@ function update$8(el, binding) {
     }
     inserted$7(el, binding);
 }
-const vIntersect = defineDirective({
+const vIntersect = /*#__PURE__*/ defineDirective({
     name: 'intersect',
     inserted: inserted$7,
     update: update$8,
@@ -22131,7 +27674,7 @@ function update$9(el, binding) {
     }
     inserted$8(el, binding);
 }
-const vMutate = defineDirective({
+const vMutate = /*#__PURE__*/ defineDirective({
     name: 'mutate',
     inserted: inserted$8,
     unbind: unbind$8,
@@ -22179,7 +27722,7 @@ function update$a(el, binding) {
     }
     inserted$9(el, binding);
 }
-const vResize = defineDirective({
+const vResize = /*#__PURE__*/ defineDirective({
     name: 'resize',
     inserted: inserted$9,
     unbind: unbind$9,
@@ -22230,7 +27773,7 @@ function update$b(el, binding) {
     }
     inserted$a(el, binding);
 }
-const vScroll = defineDirective({
+const vScroll = /*#__PURE__*/ defineDirective({
     name: 'scroll',
     inserted: inserted$a,
     unbind: unbind$a,
@@ -22311,7 +27854,7 @@ function update$c(el, binding) {
     }
     inserted$b(el, binding);
 }
-const vSwipeBack = defineDirective({
+const vSwipeBack = /*#__PURE__*/ defineDirective({
     name: 'swipe-back',
     inserted: inserted$b,
     unbind: unbind$b,
@@ -22417,7 +27960,7 @@ function update$d(el, binding) {
     }
     inserted$c(el, binding);
 }
-const vTouch = defineDirective({
+const vTouch = /*#__PURE__*/ defineDirective({
     name: 'touch',
     inserted: inserted$c,
     unbind: unbind$c,
@@ -22677,6 +28220,7 @@ function defaulExport() {
         },
         components: components$1,
         directives,
+        controllers,
         mixins,
         version: "1.0.0-alpha",
     };
@@ -22684,4 +28228,4 @@ function defaulExport() {
 var index$1 = /*#__PURE__*/ defaulExport();
 
 export default index$1;
-export { action as Action, actionGroup as ActionGroup, actionSheet as ActionSheet, alert as Alert, app as App, avatar as Avatar, badge as Badge, busyIndicator as BusyIndicator, button as Button, buttonGroup as ButtonGroup, card as Card, cardContent as CardContent, cardHeader as CardHeader, cardSubtitle as CardSubtitle, cardTitle as CardTitle, checkBox as CheckBox, checkBoxGroup as CheckBoxGroup, checkGroup as CheckGroup, CheckIndicator, checkItem as CheckItem, chip as Chip, col as Col, content as Content, datetime as Datetime, fab as Fab, fabButton as FabButton, FabGroup, FontIcon, footer as Footer, grid as Grid, header as Header, Icon, image as Image, infiniteScroll as InfiniteScroll, infiniteScrollContent as InfiniteScrollContent, input as Input, item as Item, itemDivider as ItemDivider, label as Label, lazy as Lazy, list as List, listHeader as ListHeader, ListItem, listView as ListView, loading as Loading, menu as Menu, note as Note, Overlay, Picker, PickerColumn, popover as Popover, popup as Popup, popupLegacy as PopupLegacy, progressBar as ProgressBar, radio as Radio, range as Range, refresher as Refresher, refresherContent as RefresherContent, reorder as Reorder, reorderGroup as ReorderGroup, row as Row, skeletonText as SkeletonText, Skyline, slide as Slide, slides as Slides, Spinner, SvgIcon, _switch as Switch, switchGroup as SwitchGroup, switchIndicator as SwitchIndicator, tab as Tab, tabBar as TabBar, tabButton as TabButton, tabs as Tabs, textarea as Textarea, thumbnail as Thumbnail, title as Title, toast as Toast, toolbar as Toolbar, tooltip as Tooltip, treeItem as TreeItem, createActivatable, createAutoRepeat, createClickOutside, createColorClasses, createHover, createIntersect, createModeClasses, createMutate, createRemote, createResize, createRippleEffect, createScroll, createTouch, getItemValue, invoke, isVue, useAsyncRender, useBreakPoint, useCheckGroup, useCheckGroupWithModel, useCheckItem, useCheckItemWithModel, useClickOutside, useColor, useEvent, useGroup, useGroupItem, useLazy, useMode, useModel, useOptions, usePopstateClose, usePopup, usePopupDelay, usePopupDuration, useRemote, useRender, useRipple, useSlots, useTransition, useTreeItem, useTrigger, vActivatable, vAutoRepeat, vClickOutside, vGesture, vHover, vIntersect, vMutate, vRemote, vResize, vRipple, vScroll, vSwipeBack, vTouch };
+export { action as Action, actionGroup as ActionGroup, ActionSheet, ActionSheetController, Alert, AlertController, app as App, avatar as Avatar, badge as Badge, busyIndicator as BusyIndicator, button as Button, buttonGroup as ButtonGroup, card as Card, cardContent as CardContent, cardHeader as CardHeader, cardSubtitle as CardSubtitle, cardTitle as CardTitle, checkBox as CheckBox, checkBoxGroup as CheckBoxGroup, checkGroup as CheckGroup, CheckIndicator, checkItem as CheckItem, chip as Chip, col as Col, content as Content, datetime as Datetime, fab as Fab, fabButton as FabButton, FabGroup, FontIcon, footer as Footer, grid as Grid, header as Header, Icon, image as Image, infiniteScroll as InfiniteScroll, infiniteScrollContent as InfiniteScrollContent, input as Input, item as Item, itemDivider as ItemDivider, itemGroup as ItemGroup, itemOption as ItemOption, itemOptions as ItemOptions, itemSliding as ItemSliding, label as Label, lazy as Lazy, list as List, listHeader as ListHeader, ListItem, listView as ListView, Loading, LoadingController, menu as Menu, note as Note, Overlay, Picker, PickerColumn, PickerController, Popover, PopoverController, Popup, PopupController, popupLegacy as PopupLegacy, progressBar as ProgressBar, radio as Radio, range as Range, refresher as Refresher, refresherContent as RefresherContent, reorder as Reorder, reorderGroup as ReorderGroup, row as Row, segment as Segment, segmentButton as SegmentButton, skeletonText as SkeletonText, Skyline, slide as Slide, slides as Slides, Spinner, SvgIcon, _switch as Switch, switchGroup as SwitchGroup, switchIndicator as SwitchIndicator, tab as Tab, tabBar as TabBar, tabButton as TabButton, tabs as Tabs, textarea as Textarea, thumbnail as Thumbnail, title as Title, Toast, ToastController, toolbar as Toolbar, Tooltip, TooltipController, treeItem as TreeItem, createActivatable, createAutoRepeat, createClickOutside, createColorClasses, createHover, createIntersect, createModeClasses, createMutate, createRemote, createResize, createRippleEffect, createScroll, createTouch, getItemValue, invoke, isVue, useAsyncRender, useBreakPoint, useCheckGroup, useCheckGroupWithModel, useCheckItem, useCheckItemWithModel, useClickOutside, useColor, useEvent, useGroup, useGroupItem, useLazy, useMode, useModel, useOptions, usePopstateClose, usePopup, usePopupDelay, usePopupDuration, useRemote, useRender, useRipple, useSlots, useTransition, useTreeItem, useTrigger, vActivatable, vAutoRepeat, vClickOutside, vGesture, vHover, vIntersect, vMutate, vRemote, vResize, vRipple, vScroll, vSwipeBack, vTouch };

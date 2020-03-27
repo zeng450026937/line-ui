@@ -34,16 +34,16 @@
   position: static;
 }
 
-.line-datetime.datetime-placeholder {
+.line-datetime.line-datetime--placeholder {
   color: var(--placeholder-color);
 }
 
-.line-datetime.datetime-disabled {
+.line-datetime.line-datetime--disabled {
   opacity: 0.3;
   pointer-events: none;
 }
 
-.line-datetime.datetime-readonly {
+.line-datetime.line-datetime--readonly {
   pointer-events: none;
 }
 
@@ -75,7 +75,7 @@
   border: 0;
 }
 
-.line-datetime .datetime-text {
+.line-datetime .line-datetime__text {
   color: inherit;
   font-family: inherit;
   font-size: inherit;
@@ -92,6 +92,6 @@
   direction: ltr;
   overflow: inherit;
 }
-[dir=rtl] .line-datetime .datetime-text {
+[dir=rtl] .line-datetime .line-datetime__text {
   direction: rtl;
 }

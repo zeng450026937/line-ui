@@ -48,7 +48,7 @@
   display: none;
 }
 
-.picker-wrapper {
+.line-picker .line-picker__wrapper {
   border-radius: var(--border-radius);
   right: 0;
   left: 0;
@@ -76,7 +76,7 @@
   z-index: 10;
 }
 @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
-  .picker-wrapper {
+  .line-picker .line-picker__wrapper {
     margin-left: unset;
     margin-right: unset;
     margin-inline-start: auto;
@@ -84,34 +84,34 @@
   }
 }
 
-.picker-toolbar {
+.line-picker .line-picker__toolbar {
   width: 100%;
   background: transparent;
   contain: strict;
   z-index: 1;
 }
 
-.picker-button {
+.line-picker .line-picker__button {
   border: 0;
   font-family: inherit;
 }
 
-.picker-button:active, .picker-button:focus {
+.line-picker .line-picker__button:active, .line-picker .line-picker__button:focus {
   outline: none;
 }
 
-.picker-columns {
+.line-picker .line-picker__columns {
   display: flex;
   position: relative;
   justify-content: center;
-  margin-bottom: var(--ion-safe-area-bottom, 0);
+  margin-bottom: var(--line-safe-area-bottom, 0);
   contain: strict;
   direction: ltr;
   overflow: hidden;
 }
 
-.picker-above-highlight,
-.picker-below-highlight {
+.line-picker .line-picker__above-highlight,
+.line-picker .line-picker__below-highlight {
   display: none;
   pointer-events: none;
 }
@@ -121,18 +121,18 @@
   --border-width: 0.55px 0 0;
   --border-color: var(--line-item-border-color, var(--line-border-color, var(--line-color-step-150, rgba(0, 0, 0, 0.13))));
   --height: 260px;
-  --backdrop-opacity: var(--ion-backdrop-opacity, 0.26);
+  --backdrop-opacity: var(--line-backdrop-opacity, 0.26);
   color: var(--line-item-color, var(--line-text-color, #000));
 }
 
-.picker-toolbar {
+.line-picker .line-picker__toolbar {
   display: flex;
   justify-content: flex-end;
   height: 44px;
 }
 
-.picker-button,
-.picker-button.ion-activated {
+.line-picker .line-picker__button,
+.line-picker .line-picker__button.line-activated {
   margin-left: 0;
   margin-right: 0;
   margin-top: 0;
@@ -150,8 +150,8 @@
   box-shadow: none;
 }
 @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
-  .picker-button,
-.picker-button.ion-activated {
+  .line-picker .line-picker__button,
+.line-picker .line-picker__button.line-activated {
     padding-left: unset;
     padding-right: unset;
     padding-inline-start: 1.1em;
@@ -159,12 +159,12 @@
   }
 }
 
-.picker-columns {
+.line-picker .line-picker__columns {
   height: 216px;
   perspective: 1800px;
 }
 
-.picker-above-highlight {
+.line-picker .line-picker__above-highlight {
   left: 0;
   top: 0;
   transform: translate3d(0,  0,  90px);
@@ -175,13 +175,13 @@
   background: linear-gradient(to bottom, var(--line-background-color, #fff) 20%, rgba(var(--line-background-color-rgb, 255, 255, 255), 0.8) 100%);
   z-index: 10;
 }
-[dir=rtl] .picker-above-highlight {
+[dir=rtl] .line-picker .line-picker__above-highlight {
   right: unset;
   right: 0;
   left: unset;
 }
 
-.picker-below-highlight {
+.line-picker .line-picker__below-highlight {
   left: 0;
   top: 115px;
   transform: translate3d(0,  0,  90px);
@@ -192,7 +192,7 @@
   background: linear-gradient(to top, var(--line-background-color, #fff) 30%, rgba(var(--line-background-color-rgb, 255, 255, 255), 0.8) 100%);
   z-index: 11;
 }
-[dir=rtl] .picker-below-highlight {
+[dir=rtl] .line-picker .line-picker__below-highlight {
   right: unset;
   right: 0;
   left: unset;

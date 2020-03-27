@@ -12,7 +12,7 @@
   z-index: 0;
 }
 
-.line-tabs__inner {
+.line-tabs .line-tabs__inner {
   position: relative;
   flex: 1;
   contain: layout size style;

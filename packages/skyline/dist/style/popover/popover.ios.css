@@ -52,17 +52,17 @@
 }
 
 .line-popover__viewport {
-  --ion-safe-area-top: 0px;
-  --ion-safe-area-right: 0px;
-  --ion-safe-area-bottom: 0px;
-  --ion-safe-area-left: 0px;
+  --line-safe-area-top: 0px;
+  --line-safe-area-right: 0px;
+  --line-safe-area-bottom: 0px;
+  --line-safe-area-left: 0px;
 }
 
 .line-popover {
   --width: 200px;
   --max-height: 90%;
   --box-shadow: none;
-  --backdrop-opacity: var(--ion-backdrop-opacity, 0.08);
+  --backdrop-opacity: var(--line-backdrop-opacity, 0.08);
 }
 
 .line-popover__content {

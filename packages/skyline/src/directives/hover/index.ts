@@ -75,7 +75,7 @@ function update(el: HTMLElement, binding: HoverVNodeDirective) {
   inserted(el, binding);
 }
 
-export const vHover = defineDirective({
+export const vHover = /*#__PURE__*/ defineDirective({
   name : 'hover',
   inserted,
   unbind,
