@@ -38,16 +38,16 @@
 // iOS Action Sheet Group
 // ---------------------------------------------------
 
-.line-action-sheet .line-action-sheet__group {
+.line-action-sheet .line-action-sheet-group {
   @include border-radius($action-sheet-ios-border-radius);
   @include margin(null, null, $action-sheet-ios-group-margin-bottom - 2, null);
 }
 
-.line-action-sheet .line-action-sheet__group:first-child {
+.line-action-sheet .line-action-sheet-group:first-child {
   @include margin($action-sheet-ios-group-margin-top, null, null, null);
 }
 
-.line-action-sheet .line-action-sheet__group:last-child {
+.line-action-sheet .line-action-sheet-group:last-child {
   @include margin(null, null, $action-sheet-ios-group-margin-bottom, null);
 }
 
@@ -56,13 +56,13 @@
 // ---------------------------------------------------
 
 @supports (backdrop-filter: blur(0)) {
-  .line-action-sheet.line-action-sheet--translucent .line-action-sheet__group {
+  .line-action-sheet.line-action-sheet--translucent .line-action-sheet-group {
     background-color: transparent;
     backdrop-filter: $action-sheet-ios-group-translucent-filter;
   }
 
-  .line-action-sheet.line-action-sheet--translucent .line-action-sheet__title,
-  .line-action-sheet.line-action-sheet--translucent .line-action-sheet__button {
+  .line-action-sheet.line-action-sheet--translucent .line-action-sheet-title,
+  .line-action-sheet.line-action-sheet--translucent .line-action-sheet-button {
     background-color: transparent;
     background-image:
       linear-gradient(0deg, $action-sheet-ios-translucent-background-color, $action-sheet-ios-translucent-background-color 100%),
@@ -76,12 +76,12 @@
     backdrop-filter: $action-sheet-ios-button-translucent-filter;
   }
 
-  .line-action-sheet.line-action-sheet--translucent .line-action-sheet__button.line-activated {
+  .line-action-sheet.line-action-sheet--translucent .line-action-sheet-button.line-activated {
     background-color: $action-sheet-ios-translucent-background-color-activated;
     background-image: none;
   }
 
-  .line-action-sheet.line-action-sheet--translucent .line-action-sheet__cancel {
+  .line-action-sheet.line-action-sheet--translucent .line-action-sheet-button--cancel {
     background: var(--button-background-selected);
   }
 }
@@ -91,7 +91,7 @@
 // Border is made with a linear gradient in order
 // to get the proper color and iOS blur effect
 
-.line-action-sheet .line-action-sheet__title {
+.line-action-sheet .line-action-sheet-title {
   background: $action-sheet-ios-button-background;
 }
 
@@ -99,7 +99,7 @@
 // iOS Action Sheet Title
 // ---------------------------------------------------
 
-.line-action-sheet .line-action-sheet__title {
+.line-action-sheet .line-action-sheet-title {
   @include padding($action-sheet-ios-title-padding-top, $action-sheet-ios-title-padding-end, $action-sheet-ios-title-padding-bottom, $action-sheet-ios-title-padding-start);
 
   color: var(--color, $action-sheet-ios-title-color);
@@ -110,7 +110,7 @@
   text-align: $action-sheet-ios-text-align;
 }
 
-.line-action-sheet .line-action-sheet__sub-title {
+.line-action-sheet .line-action-sheet-title__sub-title {
   @include padding($action-sheet-ios-sub-title-padding-top, $action-sheet-ios-sub-title-padding-end, $action-sheet-ios-sub-title-padding-bottom, $action-sheet-ios-sub-title-padding-start);
 
   font-size: $action-sheet-ios-sub-title-font-size;
@@ -120,7 +120,7 @@
 // iOS Action Sheet Buttons
 // ---------------------------------------------------
 
-.line-action-sheet .line-action-sheet__button {
+.line-action-sheet .line-action-sheet-button {
   @include padding($action-sheet-ios-button-padding);
 
   height: $action-sheet-ios-button-height;
@@ -130,21 +130,22 @@
   contain: strict;
 }
 
-.line-action-sheet .line-action-sheet__button .line-action-sheet__icon {
+// TODO
+.line-action-sheet .line-action-sheet-button .line-action-sheet__icon {
   @include margin-horizontal(null, $action-sheet-ios-button-icon-padding-right);
 
   font-size: $action-sheet-ios-button-icon-font-size;
 }
 
-.line-action-sheet .line-action-sheet__button:last-child {
+.line-action-sheet .line-action-sheet-button:last-child {
   background-image: none;
 }
 
-.line-action-sheet .line-action-sheet__button--selected {
+.line-action-sheet .line-action-sheet-button--selected {
   font-weight: bold;
 }
 
-.line-action-sheet .line-action-sheet__cancel {
+.line-action-sheet .line-action-sheet-button--cancel {
   font-weight: $action-sheet-ios-button-cancel-font-weight;
 
   &::after {
@@ -157,14 +158,14 @@
 // iOS Action Sheet Button: Destructive
 // ---------------------------------------------------
 
-.line-action-sheet .line-action-sheet__button--destructive,
-.line-action-sheet .line-action-sheet__button--destructive.line-activated,
-.line-action-sheet .line-action-sheet__button--destructive.line-focused {
+.line-action-sheet .line-action-sheet-button--destructive,
+.line-action-sheet .line-action-sheet-button--destructive.line-activated,
+.line-action-sheet .line-action-sheet-button--destructive.line-focused {
   color: $action-sheet-ios-button-destructive-text-color;
 }
 
 @media (any-hover: hover) {
-  .line-action-sheet .line-action-sheet__button--destructive:hover {
+  .line-action-sheet .line-action-sheet-button--destructive:hover {
     color: $action-sheet-ios-button-destructive-text-color;
   }
 }

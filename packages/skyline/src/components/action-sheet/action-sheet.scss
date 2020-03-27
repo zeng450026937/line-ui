@@ -83,7 +83,7 @@
   pointer-events: none;
 }
 
-.line-action-sheet .line-action-sheet__button {
+.line-action-sheet .line-action-sheet-button {
   display: block;
   position: relative;
 
@@ -101,7 +101,7 @@
   overflow: hidden;
 }
 
-.line-action-sheet .line-action-sheet__button-inner {
+.line-action-sheet .line-action-sheet-button__inner {
   display: flex;
 
   position: relative;
@@ -127,7 +127,7 @@
   max-height: 100%;
 }
 
-.line-action-sheet .line-action-sheet__group {
+.line-action-sheet .line-action-sheet-group {
   flex-shrink: 2;
   overscroll-behavior-y: contain;
   overflow-y: auto;
@@ -137,11 +137,11 @@
   background: var(--background);
 }
 
-.line-action-sheet .line-action-sheet__group::-webkit-scrollbar {
+.line-action-sheet .line-action-sheet-group::-webkit-scrollbar {
   display: none;
 }
 
-.line-action-sheet .line-action-sheet__group--cancel {
+.line-action-sheet .line-action-sheet-group--cancel {
   flex-shrink: 0;
 
   overflow: hidden;
@@ -151,7 +151,7 @@
 // Action Sheet: States
 // --------------------------------------------------
 
-.line-action-sheet .line-action-sheet__button::after {
+.line-action-sheet .line-action-sheet-button::after {
   @include button-state();
 }
 
@@ -159,7 +159,7 @@
 // Action Sheet: Selected
 // --------------------------------------------------
 
-.line-action-sheet .line-action-sheet__button--selected {
+.line-action-sheet .line-action-sheet-button--selected {
   color: var(--button-color-selected);
 
   &::after {
@@ -173,7 +173,7 @@
 // Action Sheet: Activated
 // --------------------------------------------------
 
-.line-action-sheet .line-action-sheet__button.line-activated {
+.line-action-sheet .line-action-sheet-button.line-activated {
   color: var(--button-color-activated);
 
   &::after {
@@ -187,7 +187,7 @@
 // Action Sheet: Focused
 // --------------------------------------------------
 
-.line-action-sheet .line-action-sheet__button.line-focused {
+.line-action-sheet .line-action-sheet-button.line-focused {
   color: var(--button-color-focused);
 
   &::after {
@@ -201,7 +201,7 @@
 // --------------------------------------------------
 
 @media (any-hover: hover) {
-  .line-action-sheet .line-action-sheet__button:hover {
+  .line-action-sheet .line-action-sheet-button:hover {
     color: var(--button-color-hover);
 
     &::after {

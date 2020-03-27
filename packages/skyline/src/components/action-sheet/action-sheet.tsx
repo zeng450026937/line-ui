@@ -1,44 +1,38 @@
 import { createNamespace } from 'skyline/src/utils/namespace';
 import { usePopup } from 'skyline/src/mixins/use-popup';
 import { Overlay } from 'skyline/src/components/overlay';
+import ActionSheetButton from 'skyline/src/components/action-sheet/action-sheet-button';
+import ActionSheetTitle from 'skyline/src/components/action-sheet/action-sheet-title';
+import ActionSheetGroup from 'skyline/src/components/action-sheet/action-sheet-group';
+
 import { iosEnterAnimation } from 'skyline/src/components/action-sheet/animations/ios.enter';
 import { iosLeaveAnimation } from 'skyline/src/components/action-sheet/animations/ios.leave';
 import { mdEnterAnimation } from 'skyline/src/components/action-sheet/animations/md.enter';
 import { mdLeaveAnimation } from 'skyline/src/components/action-sheet/animations/md.leave';
-import { ActionSheetButton } from 'skyline/src/components/action-sheet/action-sheet-interface';
+import { ActionSheetButtonOption } from 'skyline/src/components/action-sheet/action-sheet-interface';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('action-sheet');
-
-// TODO
-const safeCall = (handler: any, arg?: any) => {
-  if (typeof handler === 'function') {
-    try {
-      return handler(arg);
-    } catch (e) {
-      __DEV__ && console.error(e);
-    }
-  }
-
-  return undefined;
-};
 
 export default /*#__PURE__*/ createComponent({
   mixins : [
     /*#__PURE__*/ usePopup(),
   ],
 
+  provide(): any {
+    return {
+      Item : this,
+    };
+  },
+
   props : {
     header    : String,
     subHeader : String,
-    actions   : {
-      type    : Array,
-      default : [],
-    },
+    actions   : Array,
   },
 
   computed : {
-    normalizedActions(): ActionSheetButton[] {
-      const { actions } = this as { actions: (ActionSheetButton | string)[] };
+    normalizedActions(): ActionSheetButtonOption[] {
+      const { actions } = this as { actions: (ActionSheetButtonOption | string)[] };
       return actions.map(action => {
         return (typeof action === 'string')
           ? { text: action }
@@ -46,11 +40,11 @@ export default /*#__PURE__*/ createComponent({
       });
     },
 
-    optionActions(): ActionSheetButton[] {
+    optionActions(): ActionSheetButtonOption[] {
       return this.normalizedActions.filter(action => action.role !== 'cancel');
     },
 
-    cancelAction(): ActionSheetButton | undefined {
+    cancelAction(): ActionSheetButtonOption | undefined {
       return this.normalizedActions.find(action => action.role === 'cancel');
     },
   },
@@ -70,34 +64,6 @@ export default /*#__PURE__*/ createComponent({
   methods : {
     onTap() {
       this.$emit('overlay-tap');
-    },
-
-    async buttonClick(button: any) {
-      const { role } = button;
-      if (role === 'cancel') {
-        return this.close(role);
-      }
-
-      const shouldClose = await this.callButtonHandler(button);
-      if (shouldClose) {
-        return this.close(button.role);
-      }
-
-      return Promise.resolve();
-    },
-
-    async callButtonHandler(button: ActionSheetButton | undefined) {
-      if (button) {
-        // a handler has been provided, execute it
-        // pass the handler the values from the inputs
-        const rtn = await safeCall(button.handler);
-        if (rtn === false) {
-          // if the return value of the handler is false then do not dismiss
-          return false;
-        }
-      }
-
-      return true;
     },
   },
 
@@ -121,60 +87,34 @@ export default /*#__PURE__*/ createComponent({
           role="dialog"
           class={bem('wrapper')}
         >
-          <div class={bem('container')}>
-            <div class={bem('group')}>
-              {
-                this.header && (
-                  <div class={bem('title')}>
-                    {this.header}
-                    {
-                      this.subHeader && (
-                        <div class={bem('sub-title')}>
-                          {this.subHeader}
-                        </div>
-                      )
-                    }
-                  </div>
-                )
-              }
+          { this.slots()
+            ? <div class={bem('container')}>{this.slots()}</div>
+            : <div class={bem('container')}>
+                <ActionSheetGroup>
+                  {
+                    this.header && (
+                      <ActionSheetTitle
+                        header={this.header}
+                        subHeader={this.subHeader}
+                      ></ActionSheetTitle>
+                    )
+                  }
 
-              {
-                optionActions.map((action) => (
-                  <button
-                    type="button"
-                    class={[
-                      bem('button', { [`${ action.role }`]: !!action.role }),
-                      'line-activatable',
-                    ]}
-                    onClick={() => this.buttonClick(action)}
-                  >
-                    <span class={bem('button-inner')}>
-                      {action.text}
-                    </span>
-                  </button>
-                ))
-              }
+                  {
+                    optionActions.map((action) => (
+                      <ActionSheetButton option={action}></ActionSheetButton>
+                    ))
+                  }
+                </ActionSheetGroup>
+                {
+                  cancelAction && (
+                    <ActionSheetGroup cancel={true}>
+                      <ActionSheetButton option={cancelAction}></ActionSheetButton>
+                    </ActionSheetGroup>
+                  )
+                }
             </div>
-
-            {
-              cancelAction && (
-                <div class={bem('group', { cancel: true })}>
-                  <button
-                    type="button"
-                    class={[
-                      bem('button', { [`${ cancelAction.role }`]: !!cancelAction.role }),
-                      'line-activatable',
-                    ]}
-                    onClick={() => this.buttonClick(cancelAction)}
-                  >
-                    <span class={bem('button-inner')}>
-                      {cancelAction.text}
-                    </span>
-                  </button>
-                </div>
-              )
-            }
-          </div>
+          }
         </div>
       </div>
     );
