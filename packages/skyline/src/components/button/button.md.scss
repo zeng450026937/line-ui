@@ -113,7 +113,7 @@
   font-weight: #{$button-md-strong-font-weight};
 }
 
-::slotted(.line-icon[slot="icon-only"]) {
+.line-button .slotted.line-icon.slot-icon-only {
   @include padding(0);
 }
 

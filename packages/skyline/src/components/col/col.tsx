@@ -138,6 +138,7 @@ export default /*#__PURE__*/ createComponent({
 
   render() {
     const isRTL = document.dir === 'rtl';
+
     return (
       <div
         class={bem()}

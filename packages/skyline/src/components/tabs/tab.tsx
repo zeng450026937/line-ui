@@ -10,11 +10,8 @@ export default /*#__PURE__*/ createComponent({
   ],
 
   props : {
-    title : {
-      type    : String,
-      default : '',
-    },
-    tab : String,
+    title : String,
+    tab   : String,
   },
 
   data() {

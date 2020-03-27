@@ -67,9 +67,9 @@ export default /*#__PURE__*/ createComponent({
     this.gesture.enable(!this.scrollable);
     this.gestureChanged();
 
-    // if (this.disabled) {
-    //   this.disabledChanged();
-    // }
+    if (this.disabled) {
+      this.disabledChanged();
+    }
     this.didInit = true;
   },
 
@@ -132,10 +132,10 @@ export default /*#__PURE__*/ createComponent({
       ripple.addRipple(x, y).then((remove: any) => remove());
     },
 
-    /*
-    * Activate both the segment and the buttons
-    * due to a bug with ::slotted in Safari
-    */
+    /**
+     * Activate both the segment and the buttons
+     * due to a bug with ::slotted in Safari
+     */
     setActivated(activated: boolean) {
       const { items } = this;
 
@@ -331,6 +331,12 @@ export default /*#__PURE__*/ createComponent({
       if (previous && this.scrollable) {
         this.checkButton(previous, current);
       }
+    },
+  },
+
+  watch : {
+    disabled() {
+      this.disabledChanged();
     },
   },
 

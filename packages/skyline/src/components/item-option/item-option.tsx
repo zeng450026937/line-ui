@@ -12,14 +12,11 @@ export default /*#__PURE__*/ createComponent({
   props : {
     disabled   : Boolean,
     download   : String,
-    expandable : {
-      type    : Boolean,
-      default : false,
-    },
-    href   : String,
-    rel    : String,
-    target : String,
-    type   : {
+    expandable : Boolean,
+    href       : String,
+    rel        : String,
+    target     : String,
+    type       : {
       type    : String,
       default : 'button',
     },
@@ -50,13 +47,8 @@ export default /*#__PURE__*/ createComponent({
     return (
       <div
         class={[
-          bem({
-            disabled,
-            expandable,
-          }),
-          {
-            'line-activatable' : true,
-          },
+          bem({ disabled, expandable }),
+          'line-activatable',
         ]}
         onClick={this.onClick}
       >
@@ -67,12 +59,17 @@ export default /*#__PURE__*/ createComponent({
         >
           <span class={bem('button-inner')}>
             {this.slots('top')}
+
             <div class="horizontal-wrapper">
               {this.slots('start')}
+
               {this.slots('icon-only')}
+
               {this.slots()}
+
               {this.slots('end')}
             </div>
+
             {this.slots('bottom')}
           </span>
           {mode === 'md' && <line-ripple-effect></line-ripple-effect>}

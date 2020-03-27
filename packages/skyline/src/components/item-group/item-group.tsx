@@ -9,12 +9,10 @@ export default /*#__PURE__*/ createComponent({
     return (
       <div
         class={[
-          bem(),
-          {
+          bem({
             // Used internally for styling
-            [`item-group-${ mode }`] : true,
-            item                     : true,
-          },
+            [`${ mode }`] : true,
+          }),
         ]}
       >
         {this.slots()}

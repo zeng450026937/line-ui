@@ -89,3 +89,15 @@ export const hasChanged = (value: any, oldValue: any): boolean =>
 export const arrayify = (val: any): any[] => {
   return isArray(val) ? val : [val];
 };
+
+// TODO
+export const safeCall = (handler: any, arg?: any) => {
+  if (typeof handler === 'function') {
+    try {
+      return handler(arg);
+    } catch (e) {
+      __DEV__ && console.error(e);
+    }
+  }
+  return undefined;
+};

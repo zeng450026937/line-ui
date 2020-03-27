@@ -32,5 +32,4 @@ export default /*#__PURE__*/ createComponent({
       </div>
     );
   },
-
 });

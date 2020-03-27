@@ -47,7 +47,9 @@
 // Material Design No Lines List
 // --------------------------------------------------
 
-.line-list--lines-none .item {
+.line-list--lines-none .line-item,
+.line-list--lines-none .line-item-divider,
+.line-list--lines-none .line-item-group {
   --border-width: 0;
   --inner-border-width: 0;
 }
@@ -55,12 +57,16 @@
 // Material Design Full Lines List
 // --------------------------------------------------
 
-.line-list--lines-full .item,
+.line-list--lines-full .line-item,
+.line-list--lines-full .line-item-divider,
+.line-list--lines-full .line-item-group,
 .line-list .item-lines-full {
   --border-width: #{0 0 $list-md-item-border-bottom-width 0};
 }
 
-.line-list--lines-full .item {
+.line-list--lines-full .line-item,
+.line-list--lines-full .line-item-divider,
+.line-list--lines-full .line-item-group {
   --inner-border-width: 0;
 }
 
@@ -68,7 +74,9 @@
 // Material Design Inset Lines List
 // --------------------------------------------------
 
-.line-list--lines-inset .item,
+.line-list--lines-inset .line-item,
+.line-list--lines-inset .line-item-divider,
+.line-list--lines-inset .line-item-group,
 .line-list .item-lines-inset {
   --inner-border-width: #{0 0 $list-md-item-border-bottom-width 0};
 }

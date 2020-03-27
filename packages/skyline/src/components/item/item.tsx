@@ -131,13 +131,11 @@ export default /*#__PURE__*/ createComponent({
         aria-disabled={disabled ? 'true' : null}
         class={[
           bem({
-
+            disabled,
           }),
           {
             ...childStyles,
-            item                      : true,
             [`item-lines-${ lines }`] : isDef(lines),
-            'item-disabled'           : disabled,
             'line-activatable'        : canActivate,
             'line-focusable'          : true,
           },

@@ -58,10 +58,7 @@ export default /*#__PURE__*/ createComponent({
       type    : Number,
       default : 1,
     },
-    disabled : {
-      type    : Boolean,
-      default : false,
-    },
+    disabled : Boolean,
   },
 
   data() {

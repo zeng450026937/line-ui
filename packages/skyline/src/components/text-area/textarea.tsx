@@ -30,52 +30,19 @@ export default /*#__PURE__*/ createComponent({
       type    : String,
       default : 'none',
     },
-    autofocus : {
-      type    : Boolean,
-      default : false,
-    },
-    clearOnEdit : {
-      type    : Boolean,
-      default : false,
-    },
-    disabled : {
-      type    : Boolean,
-      default : false,
-    },
-    maxlength : {
-      type : Number,
-    },
-    minlength : {
-      type : Number,
-    },
-    placeholder : {
-      type : String,
-    },
-    readonly : {
-      type    : Boolean,
-      default : false,
-    },
-    required : {
-      type    : Boolean,
-      default : false,
-    },
-    spellcheck : {
-      type    : Boolean,
-      default : false,
-    },
-    cols : {
-      type : Number,
-    },
-    rows : {
-      type : Number,
-    },
-    wrap : {
-      type : String,
-    },
-    autoGrow : {
-      type    : Boolean,
-      default : false,
-    },
+    autofocus   : Boolean,
+    clearOnEdit : Boolean,
+    disabled    : Boolean,
+    maxlength   : Number,
+    minlength   : Number,
+    placeholder : String,
+    readonly    : Boolean,
+    required    : Boolean,
+    spellcheck  : Boolean,
+    cols        : Number,
+    rows        : Number,
+    wrap        : String,
+    autoGrow    : Boolean,
   },
 
   data() {

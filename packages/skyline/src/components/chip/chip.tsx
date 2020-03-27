@@ -24,12 +24,13 @@ export default /*#__PURE__*/ createComponent({
 
   render() {
     const { ripple, outline } = this;
+
     return (
       <div
         vRipple={ripple}
         class={[
           bem({ outline }),
-          { 'line-activatable': true },
+          'line-activatable',
         ]}
         on={this.$listeners}
       >

@@ -16,21 +16,10 @@ export default /*#__PURE__*/ createComponent({
       type    : Boolean,
       default : true,
     },
-    value : {
-      type    : String,
-      default : '',
-    },
-    translucent : {
-      type    : Boolean,
-      default : false,
-    },
-    keyboardVisible : {
-      type    : Boolean,
-      default : false,
-    },
-    selectedTab : {
-      type : String,
-    },
+    value           : String,
+    translucent     : Boolean,
+    keyboardVisible : Boolean,
+    selectedTab     : String,
   },
 
   methods : {
@@ -59,12 +48,12 @@ export default /*#__PURE__*/ createComponent({
 
     return (
       <div
-        class={[
+        class={
           bem({
             translucent,
             hidden : keyboardVisible,
-          }),
-        ]}
+          })
+        }
         on={this.$listeners}
       >
         {this.slots()}

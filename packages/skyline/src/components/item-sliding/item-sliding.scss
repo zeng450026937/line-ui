@@ -14,11 +14,15 @@
   user-select: none;
 }
 
-.line-item-sliding .item {
+.line-item-sliding .line-item,
+.line-item-sliding .line-item-divider,
+.line-item-sliding .line-item-group {
   user-select: none;
 }
 
-.line-item-sliding--active-slide .item {
+.line-item-sliding--active-slide .line-item,
+.line-item-sliding--active-slide .line-item-divider,
+.line-item-sliding--active-slide .line-item-group {
   position: relative;
 
   transition: transform 500ms cubic-bezier(.36, .66, .04, 1);

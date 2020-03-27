@@ -36,11 +36,8 @@ export default /*#__PURE__*/ createComponent({
       type    : String,
       default : 'determinate',
     },
-    reversed : {
-      type    : Boolean,
-      default : false,
-    },
-    value : {
+    reversed : Boolean,
+    value    : {
       type    : Number,
       default : 0,
     },

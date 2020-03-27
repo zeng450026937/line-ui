@@ -13,14 +13,14 @@
 // Material Design Stacked & Floating Labels
 // --------------------------------------------------
 
-.line-label.label-stacked {
+.line-label.line-label--stacked {
   @include transform-origin(start, top);
   @include transform(translate3d(0, 50%, 0), scale(.75));
 
   transition: color 150ms $label-md-transition-timing-function;
 }
 
-.line-label.label-floating {
+.line-label.line-label--floating {
   @include transform(translate3d(0, 96%, 0));
   @include transform-origin(start, top);
 
@@ -29,23 +29,23 @@
     transform 150ms $label-md-transition-timing-function;
 }
 
-.line-label.label-stacked,
-.line-label.label-floating {
+.line-label.line-label--stacked,
+.line-label.line-label--floating {
   @include margin(0, 0, 0, 0);
 }
 
-.item-select .line-label.label-floating {
+.item-select .line-label.line-label--floating {
   @include transform(translate3d(0, 130%, 0));
 }
 
-.item-has-focus .line-label.label-floating,
-.item-has-placeholder .line-label.label-floating,
-.item-has-value .line-label.label-floating {
+.item-has-focus .line-label.line-label--floating,
+.item-has-placeholder .line-label.line-label--floating,
+.item-has-value .line-label.line-label--floating {
   @include transform(translate3d(0, 50%, 0), scale(.75));
 }
 
-.item-has-focus .line-label.label-stacked,
-.item-has-focus .line-label.label-floating {
+.item-has-focus .line-label.line-label--stacked,
+.item-has-focus .line-label.line-label--floating {
   color: $label-md-text-color-focused;
 }
 

@@ -38,54 +38,26 @@ export default /*#__PURE__*/ createComponent({
       type    : String,
       default : 'off',
     },
-    autofocus : {
-      type    : Boolean,
-      default : false,
-    },
-    clearInput : {
-      type    : Boolean,
-      default : false,
-    },
-    clearOnEdit : {
-      type : Boolean,
-    },
-    inputmode : {
+    autofocus   : Boolean,
+    clearInput  : Boolean,
+    clearOnEdit : Boolean,
+    inputmode   : {
       type    : String,
       default : 'text',
     },
-    max : {
-      type : String,
-    },
-    maxlength : {
-      type : Number,
-    },
-    min : {
-      type : String,
-    },
-    multiple : {
-      type : Boolean,
-    },
-    pattern : {
-      type : String,
-    },
-    placeholder : {
-      type : String,
-    },
-    readonly : {
-      type    : Boolean,
-      default : false,
-    },
-    size : {
-      type : Number,
-    },
-    type : {
+    max         : String,
+    maxlength   : Number,
+    min         : String,
+    multiple    : Boolean,
+    pattern     : String,
+    placeholder : String,
+    readonly    : Boolean,
+    size        : Number,
+    type        : {
       type    : String,
       default : 'text',
     },
-    disabled : {
-      type    : Boolean,
-      default : false,
-    },
+    disabled : Boolean,
   },
 
   data() {
@@ -197,6 +169,7 @@ export default /*#__PURE__*/ createComponent({
       }
       // TODO
       // this.value = '';
+
       this.nativeValue = '';
 
       /**
@@ -255,8 +228,9 @@ export default /*#__PURE__*/ createComponent({
     const label = findItemLabel(this.$el as HTMLElement);
 
     const {
-      nativeValue, hasFocus, accept, type, maxlength, readonly, placeholder, autocomplete, disabled,
-      max, min, size, autoFocus, pattern, required,
+      nativeValue, hasFocus, accept, type, maxlength, readonly,
+      placeholder, autocomplete, disabled, max, min,
+      size, autoFocus, pattern, required,
     } = this;
 
     if (label) {

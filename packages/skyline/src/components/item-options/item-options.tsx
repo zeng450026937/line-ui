@@ -45,7 +45,11 @@ export default /*#__PURE__*/ createComponent({
 
     return (
       <div
-        class={bem({ [mode]: true, start: !isEnd, end: isEnd })}
+        class={bem({
+          [mode] : true,
+          start  : !isEnd,
+          end    : isEnd,
+        })}
       >
         {this.slots()}
       </div>

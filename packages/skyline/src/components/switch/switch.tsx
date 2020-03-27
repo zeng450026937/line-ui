@@ -130,13 +130,13 @@ export default /*#__PURE__*/ createComponent({
     return (
       <div
         role="checkbox"
-        class={[
+        class={
           bem({
             disabled,
             checked,
             activated,
-          }),
-        ]}
+          })
+        }
         onClick={this.onClick}
         on={this.$listeners}
       >

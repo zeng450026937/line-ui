@@ -397,8 +397,19 @@ export default /*#__PURE__*/ createComponent({
       <div class="swiper-wrapper">
         {this.slots()}
       </div>
-      {this.pager && <div class="swiper-pagination" ref="paginationEl"></div>}
-      {this.scrollbar && <div class="swiper-scrollbar" ref="scrollbarEl"></div>}
+      {this.pager && (
+        <div
+          class="swiper-pagination"
+          ref="paginationEl"
+        >
+        </div>
+      )}
+      {this.scrollbar && (
+        <div
+          class="swiper-scrollbar"
+          ref="scrollbarEl"
+        ></div>
+      )}
       </div>
     );
   },

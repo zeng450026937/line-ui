@@ -14,14 +14,10 @@ export default /*#__PURE__*/ createComponent({
 
   render() {
     const { sticky = false } = this;
+
     return (
       <div
-        class={[
-          bem({
-            sticky,
-          }),
-          'item',
-        ]}
+        class={bem({ sticky })}
         on={this.$listeners}
       >
         {this.slots('start')}

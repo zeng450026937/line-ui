@@ -43,7 +43,6 @@
   }
 }
 
-
 .line-check-indicator {
   @include border-radius(var(--border-radius));
 
@@ -72,7 +71,6 @@
   opacity: 0;
 }
 
-
 // Checked / Indeterminate Checkbox
 // ---------------------------------------------
 
@@ -88,10 +86,36 @@
   opacity: 1;
 }
 
-
 // Disabled Checkbox
 // ---------------------------------------------
 
 .line-check-box--disabled {
   pointer-events: none;
+}
+
+.line-check-box .line-check-indicator {
+  margin-right: 4px;
+
+  transition: none;
+
+  cursor: pointer;
+
+  path {
+    fill: none;
+
+    stroke-width: 3;
+
+    transform: scale(0, 0);
+    transform-origin: center;
+  }
+
+  &--checked {
+
+    path {
+      transform: scale(0.8, 0.8);
+
+      transition: transform 60ms linear 40ms;
+      transition-timing-function: cubic-bezier(0.4, 0, 1, 1), cubic-bezier(0.18, 0.89, 0.32, 1.28);
+    }
+  }
 }

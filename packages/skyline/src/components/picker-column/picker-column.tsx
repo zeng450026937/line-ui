@@ -357,7 +357,10 @@ export default /*#__PURE__*/ createComponent({
         }}
       >
         {col.prefix && (
-          <div class={bem('prefix')} style={{ width: col.prefixWidth }}>
+          <div
+            class={bem('prefix')}
+            style={{ width: col.prefixWidth }}
+          >
             {/* "picker-prefix" */}
             {col.prefix}
           </div>
@@ -376,7 +379,10 @@ export default /*#__PURE__*/ createComponent({
             </button>)}
         </div>
         {col.suffix && (
-          <div class={bem('suffix')} style={{ width: col.suffixWidth }}>
+          <div
+            class={bem('suffix')}
+            style={{ width: col.suffixWidth }}
+          >
             {col.suffix}
           </div>
         )}

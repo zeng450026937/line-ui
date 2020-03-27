@@ -5,7 +5,9 @@
 // iOS Item Group
 // --------------------------------------------------
 
-.item-group-ios .line-item:last-child,
-.item-group-ios .line-item-sliding:last-child .item {
+.line-item-group--ios .line-item:last-child,
+.line-item-group--ios .line-item-sliding:last-child .line-item
+.line-item-group--ios .line-item-sliding:last-child .line-item-divider
+.line-item-group--ios .line-item-sliding:last-child .line-item-group {
   --border-width: 0;
 }

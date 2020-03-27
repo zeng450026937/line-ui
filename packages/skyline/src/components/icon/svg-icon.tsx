@@ -20,14 +20,13 @@ export default /*#__PURE__*/ createComponent({
   },
 
   render(h, { props, data, slots }) {
-    const {
-      attrs = {},
-    } = data;
+    const { attrs = {} } = data;
     const {
       name, source, size, color,
     } = props;
     const text = name || getDefaultText(slots);
     const href = `${ source || '' }#${ text }`;
+
     return (
       <div
         class={[

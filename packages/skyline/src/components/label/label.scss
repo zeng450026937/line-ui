@@ -55,7 +55,7 @@
 // Fixed Inputs
 // --------------------------------------------------
 
-.line-label.label-fixed {
+.line-label.line-label--fixed {
   flex: 0 0 100px;
 
   width: 100px;
@@ -66,8 +66,8 @@
 // Stacked & Floating Inputs
 // --------------------------------------------------
 
-.line-label.label-stacked,
-.line-label.label-floating {
+.line-label.line-label--stacked,
+.line-label.line-label--floating {
   @include margin(null, null, 0, null);
 
   align-self: stretch;
@@ -76,6 +76,6 @@
   max-width: 100%;
 }
 
-.line-label.label-no-animate.label-floating {
+.line-label.line-label--no-animate.line-label--floating {
   transition: none;
 }

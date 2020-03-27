@@ -276,7 +276,7 @@
   --padding-start: 0;
 }
 
-.line-item.item-has-focus:not(.line-color) .slotted.label-stacked,
-.line-item.item-has-focus:not(.line-color) .slotted.label-floating {
+.line-item.item-has-focus:not(.line-color) .slotted.line-label--stacked,
+.line-item.item-has-focus:not(.line-color) .slotted.line-label--floating {
   color: $label-md-text-color-focused;
 }
