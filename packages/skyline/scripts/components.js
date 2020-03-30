@@ -27,7 +27,7 @@ async function run() {
   let code = `${ warning }\n`;
 
   for (const folder of folders) {
-    if (matchWIP(`${ root }/${ folder }`)) {
+    if (matchWIP(`${ root }/${ folder }/`)) {
       skipped.push(folder);
       logger.log(`${ folder } (skipped)`, 'WIP');
       continue;

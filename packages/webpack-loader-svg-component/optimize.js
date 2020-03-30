@@ -13,7 +13,11 @@ const plugins = [
 ];
 
 const optimize = async (svg, config) => {
-  const svgo = new SVGO({ plugins, ...config });
+  const svgo = new SVGO({
+    multipass : true,
+    plugins,
+    ...config,
+  });
   svg = await svgo.optimize(svg);
   return svg.data;
 };

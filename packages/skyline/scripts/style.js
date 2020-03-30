@@ -89,7 +89,7 @@ async function run() {
     const filename = path.basename(component, '.tsx');
     const name = camelize(`-${ filename }`);
 
-    if (matchWIP(`${ componentsDir }/${ dirname }`)) {
+    if (matchWIP(`${ componentsDir }/${ dirname }/`)) {
       skipped.push(component);
       logger.log(`component: ${ filename } (skipped)`, 'WIP');
       continue;
@@ -133,9 +133,9 @@ async function run() {
     const dirname = path.dirname(directive);
     const name = camelize(`v-${ dirname }`);
 
-    if (matchWIP(`${ directivesDir }/${ dirname }`)) {
+    if (matchWIP(`${ directivesDir }/${ dirname }/`)) {
       skipped.push(dirname);
-      logger.log(`directive: ${ name } (skipped)`, 'WIP');
+      logger.log(`directive: v-${ dirname } (skipped)`, 'WIP');
       continue;
     }
 
@@ -148,7 +148,7 @@ async function run() {
         const stylename = `${ dirname }${ ext }`;
         const stylefile = `${ directivesDir }/${ dirname }/${ stylename }`;
         const exsit = fs.existsSync(stylefile);
-        const distdir = `${ distDir }/${ dirname }`;
+        const distdir = `${ distDir }/v-${ dirname }`;
 
         if (!exsit) return;
 

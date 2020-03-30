@@ -6,10 +6,13 @@
   "module": "dist/skyline.esm-bundler.js",
   "unpkg": "dist/skyline.global.js",
   "files": [
-    "index.js",
     "dist",
+    "scripts/utils.js",
     "src",
-    "style"
+    ".wip",
+    "import.config.js",
+    "index.js",
+    "inspect.js"
   ],
   "types": "dist/skyline.d.ts",
   "keywords": [

@@ -13,7 +13,7 @@ const matchWIP = exports.matchWIP = (target) => {
   target = path.normalize(target).split('\\').join('/');
   let matched = false;
   for (const wip of wips) {
-    if (globRE(`*${ wip }`).test(target)) {
+    if (globRE(`**/${ wip }${ wip.endsWith('/') ? '*' : '' }`).test(target)) {
       matched = true;
       break;
     }
@@ -30,6 +30,12 @@ exports.camelize = (str) => {
   return str.replace(camelizeRE, (_, c) => (c ? c.toUpperCase() : ''));
 };
 
+const hyphenateRE = /\B([A-Z])/g;
+// camel => hyphenate
+exports.hyphenate = (str) => {
+  return str.replace(hyphenateRE, '-$1').toLowerCase();
+};
+
 // stable stringify with alphabetically
 exports.stringifyJSON = (obj, ...args) => {
   const keys = [];
@@ -44,4 +50,17 @@ exports.stringifyJSON = (obj, ...args) => {
     newObj[key] = obj[key];
   }
   return JSON.stringify(newObj, ...args);
+};
+
+exports.debounce = (fn, delay = 1000) => {
+  let prevTimer = null;
+  return ((...args) => {
+    if (prevTimer) {
+      clearTimeout(prevTimer);
+    }
+    prevTimer = setTimeout(() => {
+      fn(...args);
+      prevTimer = null;
+    }, delay);
+  });
 };

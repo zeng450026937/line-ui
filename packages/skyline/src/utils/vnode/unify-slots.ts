@@ -8,7 +8,10 @@ import {
 } from 'vue/types/vnode';
 
 import { mergeData } from 'skyline/src/utils/vnode/merge-data';
-import { hasOwn, isFunction } from 'skyline/src/utils/helpers';
+import {
+  hasOwn,
+  isFunction,
+} from 'skyline/src/utils/helpers';
 
 type UnifyContext = RenderContext | Vue;
 

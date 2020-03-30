@@ -28,27 +28,62 @@ module.exports = (api, options) => {
 
         if (api.hasPlugin('typescript')) {
           tapBabel('ts');
+          tapBabel('tsx');
         }
       }
+
+      // skyline config
+      const skyline = {
+        autoimport   : true,
+        svgsprite    : true,
+        svgcomponent : false,
+        i18n         : true,
+      };
+
+      if (skyline.autoimport) {
+        config.module.rule('vue')
+          .use('skyline-auto-import')
+          .loader(require.resolve('@skyline/webpack-loader-auto-import'))
+          .options(require('skyline/import.config'))
+          .after('vue-loader');
+      }
+
+      if (skyline.svgsprite) {
+        config.module.rules.delete('svg');
+
+        config.module
+          .rule('svg')
+          .test(/\.(svg)(\?.*)?$/)
+          .use('svg-sprite')
+          .loader(require.resolve('@skyline/webpack-plugin-svg-sprite/lib/loader'));
+
+        config
+          .plugin('svg-sprite')
+          .use(require('@skyline/webpack-plugin-svg-sprite'));
+      } else if (skyline.svgcomponent) {
+        if (api.hasPlugin('babel')) {
+          config.module.rules.delete('svg');
+
+          config.module
+            .rule('svg')
+            .test(/\.(svg)(\?.*)?$/)
+            // .use('babel-loader')
+            // .loader(require.resolve('babel-loader'))
+            // .end()
+            .use('svg-component')
+            .loader(require.resolve('@skyline/webpack-loader-svg-component'));
+        } else {
+          console.log(
+            'svg-component require babel-loader with jsx support.',
+          );
+        }
+      }
+
+      if (skyline.i18n) {
+        config
+          .plugin('i18n')
+          .use(require('@skyline/webpack-plugin-i18n'));
+      }
     }
-
-    // for development, set "skyline" alias to source code
-    // config.resolve.alias
-    //   .set('skyline', api.resolve('packages/skyline'));
-
-    // auto import
-    // config.module.rule('vue')
-    //   .use('skyline-auto-import')
-    //   .loader(api.resolve('packages/webpack-loader-auto-import/src/index.js'))
-    //   // check kebab case
-    //   .options('kebab')
-    //   .after('vue-loader');
-
-    // config.module.rule('import')
-    //   .resourceQuery('blockType=import')
-    //   .use('skyline-auto-import')
-    //   .loader(api.resolve('packages/webpack-loader-auto-import/src/import.js'))
-    //   .after('babel-loader')
-    //   .end();
   });
 };

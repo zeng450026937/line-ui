@@ -1,42 +1,45 @@
 module.exports = (_, options) => {
-  const sideEffectPlugin = require('@skyline/babel-plugin-effect');
-  const sideEffect = require('skyline/dist/style/effects.json');
-
   const {
     theme = 'ios',
     fullImport = true,
     memberImport = true,
   } = options;
 
-  const isDev = process.env.SKYLINE_ENV === 'development';
+  const plugin = require('@skyline/babel-plugin-effect');
+  const inspect = require('skyline/inspect');
 
   const effect = (importName, isFullImport) => {
-    importName = isFullImport ? 'default' : importName;
-
-    const effect = sideEffect[importName];
-    const effects = [
-      effect && (effect[theme] || effect.base),
-      sideEffect.bundle,
-    ];
-
-    return effects;
+    importName = isFullImport ? 'skyline' : importName;
+    const effect = inspect.effects.get(`${ importName }.${ theme }`) || inspect.effects.get(`${ importName }`);
+    return [
+      effect && effect,
+      effect && inspect.effects.get('bundle'),
+    ].filter(Boolean);
   };
 
-  const config = {
-    effect : !isDev && effect,
-    fullImport,
-    memberImport,
-  };
+  const config = new Proxy({}, {
+    get(target, key, receiver) {
+      if (key === inspect.name) {
+        return {
+          fullImport,
+          memberImport,
+          effect,
+        };
+      }
+      if (inspect.effects.has(key)) {
+        return {
+          fullImport,
+          memberImport,
+          effect : () => effect(key, false),
+        };
+      }
+      return Reflect.get(target, key, receiver);
+    },
+  });
 
   return {
     plugins : [
-      [
-        sideEffectPlugin,
-        {
-          skyline       : config,
-          'skyline/src' : config,
-        },
-      ],
+      [plugin, config],
     ],
   };
 };

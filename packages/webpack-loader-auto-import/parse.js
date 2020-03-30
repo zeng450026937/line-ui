@@ -26,20 +26,21 @@ module.exports = (content, options) => {
   const shouldParseDir = hasDirectives && dir;
 
   const matched = {
+    tags       : new Set(),
+    dirs       : new Set(),
     components : new Set(),
     directives : new Set(),
   };
 
   const cached = gCached[name] || (gCached[name] = {});
+  let { tagToName, dirToName } = cached;
 
   if (shouldParseTag) {
-    let { tagToName } = cached;
-
     if (!tagToName) {
       tagToName = cached.tagToName = makeTagToName(components, prefix);
     }
 
-    const tags = parseTag(content);
+    const tags = matched.tags = parseTag(content);
 
     tags.forEach(tag => {
       const name = tagToName(tag);
@@ -48,13 +49,11 @@ module.exports = (content, options) => {
     });
   }
   if (shouldParseDir) {
-    let { dirToName } = cached;
-
     if (!dirToName) {
       dirToName = cached.dirToName = makeDirToName(directives);
     }
 
-    const tags = parseDir(content);
+    const tags = matched.dirs = parseDir(content);
 
     tags.forEach(tag => {
       const name = dirToName(tag);
@@ -64,6 +63,10 @@ module.exports = (content, options) => {
   }
 
   return {
+    tagToName,
+    dirToName,
+    tags       : Array.from(matched.tags),
+    dirs       : Array.from(matched.dirs),
     components : Array.from(matched.components),
     directives : Array.from(matched.directives),
   };

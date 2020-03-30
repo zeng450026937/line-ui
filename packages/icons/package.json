@@ -10,6 +10,7 @@
     "skyline"
   ],
   "sideEffects": false,
+  "private": true,
   "author": "Yealink Inc",
   "license": "MIT",
   "devDependencies": {

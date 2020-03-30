@@ -24,14 +24,17 @@ export const renderClass = (
   dynamicClass?: any,
 ): string => {
   if (!isDef(staticClass) && !isDef(dynamicClass)) return '';
+  /* eslint-disable-next-line @typescript-eslint/no-use-before-define */
   return mergeStaticClass(staticClass, stringifyClass(dynamicClass));
 };
 
 export const stringifyClass = (value: any): string => {
   if (isArray(value)) {
+    /* eslint-disable-next-line @typescript-eslint/no-use-before-define */
     return stringifyArray(value);
   }
   if (isObject(value)) {
+    /* eslint-disable-next-line @typescript-eslint/no-use-before-define */
     return stringifyObject(value);
   }
   if (isString(value)) {

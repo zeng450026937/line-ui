@@ -355,7 +355,7 @@
   "vRemote": {},
   "vResize": {},
   "vRipple": {
-    "base": "skyline/dist/style/ripple/ripple.css"
+    "base": "skyline/dist/style/v-ripple/ripple.css"
   },
   "vScroll": {},
   "vSwipeBack": {},

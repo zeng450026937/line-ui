@@ -26,6 +26,7 @@ export const EMPTY_OBJ: { readonly [key: string]: any } = __DEV__
   : {};
 export const EMPTY_ARR: [] = [];
 
+/* eslint-disable-next-line @typescript-eslint/no-empty-function */
 export const NOOP = () => {};
 
 /**

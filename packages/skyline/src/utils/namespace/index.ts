@@ -1,5 +1,11 @@
-import { BEM, createBEM } from 'skyline/src/utils/bem';
-import { CreateComponent, defineComponent } from 'skyline/src/utils/component';
+import {
+  BEM,
+  createBEM,
+} from 'skyline/src/utils/bem';
+import {
+  CreateComponent,
+  defineComponent,
+} from 'skyline/src/utils/component';
 
 type CreateNamespaceReturn = {
   createComponent: CreateComponent;

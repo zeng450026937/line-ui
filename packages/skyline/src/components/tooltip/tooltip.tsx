@@ -36,12 +36,6 @@ export default /*#__PURE__*/ createComponent({
     openOnClick : Boolean,
   },
 
-  watch : {
-    openOnHover(val) {
-      this.vHover.update(val && this.onHover);
-    },
-  },
-
   beforeMount() {
     this.$on('animation-enter', (baseEl: HTMLElement, animate: Function) => {
       const {

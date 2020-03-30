@@ -2,6 +2,8 @@ module.exports = (parsed, options) => {
   const {
     // package name
     name,
+    importgen: customImportGen,
+    exportgen: customExportGen,
   } = options;
   const {
     components, // Array
@@ -15,10 +17,17 @@ module.exports = (parsed, options) => {
     return '';
   }
 
-  const imports = [].concat(components, directives);
+  const importgen = customImportGen || (() => {
+    const imports = [].concat(components, directives);
 
-  const componentPart = hasComponents
-    ? `
+    return `
+  import { ${ imports.join(',') } } from '${ name }';
+    `.trim();
+  });
+
+  const exportgen = customExportGen || (() => {
+    const componentPart = hasComponents
+      ? `
   const components = {
     ${ components.map(component => `[${ component }.name]: ${ component },`).join('\n    ') }
   };
@@ -27,10 +36,10 @@ module.exports = (parsed, options) => {
     options.components,
   );  
       `.trim()
-    : '';
+      : '';
 
-  const directivePart = hasDirectives
-    ? `
+    const directivePart = hasDirectives
+      ? `
   const directives = {
     ${ directives.map(directive => `[${ directive }.name]: ${ directive },`).join('\n    ') }
   };
@@ -39,17 +48,22 @@ module.exports = (parsed, options) => {
     options.directives,
   );  
       `.trim()
-    : '';
+      : '';
 
-  const code = `
-<import lang="js">
-import { ${ imports.join(',') } } from '${ name }';
-
+    return `
 export default function (component) {
   const { options } = component;
   ${ componentPart }
   ${ directivePart }
 }
+    `.trim();
+  });
+
+  const code = `
+<import lang="js">
+${ importgen(parsed, options) }
+
+${ exportgen(parsed, options) }
 </import>
   `.trim();
 

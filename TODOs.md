@@ -1,7 +1,5 @@
 # Issues
 
-- ripple effect检测与activatable检测冲突，当两者属于同一个Component但不是同一个元素，即 拥有ripple effect的元素不是activatable，会造成外层元素的activatable类无法正常添加
-
 - Popup类组件应该是基于App范围内，而不是body
 
 - props声明应该尽可能简短，所有的default应该都可以去掉，以优化最后编译的大小
@@ -16,8 +14,6 @@
 - 如果可以，代码中使用到 tag/lifecycle 名应该有统一的地方定义，以优化最后编译的大小
 
 - 鉴于当前指令的实现机制（在el上挂在对应的指令名称变量），在组件的根节点上直接使用指令可能会与用户的指令存在冲突，需要考虑使用 createDirective() 的方式代理指令，虽然一定程度上会增加代码的维护成本，优先级较低
-
-- ripple的样式当前并没有编译到全体样式中
 
 - 更容易让压缩插件优化的代码
 

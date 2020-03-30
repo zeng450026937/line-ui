@@ -1,4 +1,6 @@
-import Vue, { VNode } from 'vue';
+import Vue, {
+  VNode,
+} from 'vue';
 import { createMixins } from 'skyline/src/utils/mixins';
 
 type BeforeRenderHook = () => void;

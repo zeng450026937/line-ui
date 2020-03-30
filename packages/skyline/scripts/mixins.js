@@ -25,7 +25,7 @@ async function run() {
   let code = `${ warning }\n`;
 
   for (const file of files) {
-    if (matchWIP(`${ root }/${ file }`)) {
+    if (matchWIP(`${ root }/${ file }/`)) {
       skipped.push(file);
       logger.log(`${ file } (skipped)`, 'WIP');
       continue;
