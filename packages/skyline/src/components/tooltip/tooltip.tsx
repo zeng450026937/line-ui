@@ -28,45 +28,25 @@ export default /*#__PURE__*/ createComponent({
       type    : String,
       default : 'top',
     },
-    activeFocus : Boolean,
     openOnHover : {
       type    : Boolean,
-      default : false,
+      default : true,
     },
-    openOnClick : Boolean,
+  },
+
+  watch : {
+    trigger : 'createDirective',
+    placement(val) {
+      if (this.popper) {
+        this.popper.setOptions({ placement: val });
+      }
+    },
   },
 
   beforeMount() {
     this.$on('animation-enter', (baseEl: HTMLElement, animate: Function) => {
-      const {
-        $triggerEl = (this.event && this.event.target) || document.body,
-        $el,
-        placement,
-      } = this;
-
-      this.popper = this.popper || createPopper(
-        $triggerEl,
-        $el as HTMLElement,
-        {
-          placement : placement as any,
-          strategy  : 'fixed',
-          modifiers : [
-            {
-              name    : 'offset',
-              options : {
-                offset : [0, 10],
-              },
-            },
-            {
-              name    : 'flip',
-              options : {
-                rootBoundary : 'body',
-              },
-            },
-          ],
-        },
-      );
-
+      this.createPopper();
+      this.popper.update();
       animate(iosEnterAnimation(baseEl));
     });
 
@@ -77,18 +57,7 @@ export default /*#__PURE__*/ createComponent({
 
   async mounted() {
     await this.$nextTick();
-    if (!this.$triggerEl) return;
-    this.vHover = createDirective(vHover, this.$triggerEl, { name: 'hover' });
-    this.vHover.inserted();
-    if (this.openOnHover) {
-      this.vHover.update(this.onHover);
-    }
-  },
-
-  updated() {
-    // if (this.popper) {
-    //   this.popper.update();
-    // }
+    this.createDirective();
   },
 
   beforeDestroy() {
@@ -101,6 +70,59 @@ export default /*#__PURE__*/ createComponent({
   },
 
   methods : {
+    createDirective() {
+      if (this.vHover) {
+        this.vHover.unbind();
+      }
+
+      if (!this.$triggerEl) return;
+
+      this.vHover = createDirective(
+        vHover,
+        this.$triggerEl,
+        { name: 'hover' },
+      );
+      this.vHover.inserted(this.onHover);
+    },
+    createPopper() {
+      if (this.popper) return;
+
+      const getBoundingClientRect = () => this.$triggerEl.getBoundingClientRect();
+      const $trigger = { getBoundingClientRect };
+      const { $el, placement } = this as any;
+      const offset = 10;
+
+      this.popper = createPopper(
+        $trigger,
+        $el,
+        {
+          placement,
+          strategy  : 'fixed',
+          modifiers : [
+            {
+              name    : 'offset',
+              options : {
+                offset : [0, offset],
+              },
+            },
+            {
+              name    : 'preventOverflow',
+              options : {
+                altAxis : true, // false by default
+                padding : offset,
+              },
+            },
+            {
+              name    : 'flip',
+              options : {
+                padding : offset,
+              },
+            },
+          ],
+        },
+      );
+    },
+
     onHover(hover: boolean) {
       if (!this.openOnHover) return;
       this.visible = hover;
@@ -116,7 +138,7 @@ export default /*#__PURE__*/ createComponent({
         class={bem({ translucent: this.translucent })}
         on={this.$listeners}
       >
-        <div class={bem('arrow')} x-arrow></div>
+        <div class={bem('arrow')} data-popper-arrow></div>
         <div class={bem('content')}>
           { this.slots() || text }
         </div>

@@ -236,11 +236,11 @@ async function run() {
   // BUNDLE EFFECTS
   sideEffects.bundle = effectPath(distDir, defaultBundle);
 
-  logger.log('effects.json', 'GEN');
-  await fs.writeFile(
-    `${ distDir }/effects.json`,
-    stringifyJSON(sideEffects, null, 2),
-  );
+  // logger.log('effects.json', 'GEN');
+  // await fs.writeFile(
+  //   `${ distDir }/effects.json`,
+  //   stringifyJSON(sideEffects, null, 2),
+  // );
 
   logger.log(`total :  ${ count } styles`, 'DONE');
 }

@@ -13,6 +13,10 @@ export * from 'skyline/src/directives';
 export * from 'skyline/src/controllers';
 export * from 'skyline/src/mixins';
 
+export * from 'skyline/src/utils/bem';
+export * from 'skyline/src/utils/component';
+export * from 'skyline/src/utils/namespace';
+
 
 export const Skyline = {
   install,

@@ -23,5 +23,4 @@ components/table-view/
 components/tool-button/
 components/tool-separator/
 components/tree-view/
-directives/tooltip/
 directives/trigger/

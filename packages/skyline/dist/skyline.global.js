@@ -12,6 +12,7 @@ var Skyline = (function (exports, Vue) {
   };
   const EMPTY_OBJ =  Object.freeze({})
       ;
+  /* eslint-disable-next-line @typescript-eslint/no-empty-function */
   const NOOP = () => { };
   /**
    * Always return false.
@@ -99,13 +100,16 @@ var Skyline = (function (exports, Vue) {
   const renderClass = (staticClass, dynamicClass) => {
       if (!isDef(staticClass) && !isDef(dynamicClass))
           return '';
+      /* eslint-disable-next-line @typescript-eslint/no-use-before-define */
       return mergeStaticClass(staticClass, stringifyClass(dynamicClass));
   };
   const stringifyClass = (value) => {
       if (isArray(value)) {
+          /* eslint-disable-next-line @typescript-eslint/no-use-before-define */
           return stringifyArray(value);
       }
       if (isObject(value)) {
+          /* eslint-disable-next-line @typescript-eslint/no-use-before-define */
           return stringifyObject(value);
       }
       if (isString(value)) {
@@ -570,6 +574,7 @@ var Skyline = (function (exports, Vue) {
               }, 225 + 100);
           });
       };
+      el.classList.add('line-ripple-effect');
       return {
           addRipple,
           options,
@@ -581,7 +586,7 @@ var Skyline = (function (exports, Vue) {
           return;
       el.vRipple = createRippleEffect(el, modifiers);
   }
-  function unbind(el, binding) {
+  function unbind(el) {
       const { vRipple } = el;
       if (!vRipple)
           return;
@@ -3644,7 +3649,26 @@ var Skyline = (function (exports, Vue) {
       return { x: 0, y: 0 };
   };
 
+  const getScrollParent = (element) => {
+      if (!element) {
+          return document.body;
+      }
+      const { nodeName } = element;
+      if (nodeName === 'HTML' || nodeName === 'BODY') {
+          return element.ownerDocument.body;
+      }
+      if (nodeName === '#document') {
+          return element.body;
+      }
+      const { overflowY } = window.getComputedStyle(element);
+      if (overflowY === 'scroll' || overflowY === 'auto') {
+          return element;
+      }
+      return getScrollParent(element.parentNode);
+  };
+
   const hasWindow = typeof window !== 'undefined';
+  const isWindow = (el) => el === window;
   let supportsVars;
   const isSupportsVars = () => {
       if (supportsVars === undefined) {
@@ -3661,6 +3685,7 @@ var Skyline = (function (exports, Vue) {
   const ADD_ACTIVATED_DEFERS = 200;
   const CLEAR_STATE_DEFERS = 200;
   const MOUSE_WAIT$1 = 2500;
+  /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
   const setupTapClick = (config) => {
       let lastTouch = -MOUSE_WAIT$1 * 10;
       let lastActivated = 0;
@@ -3800,22 +3825,22 @@ var Skyline = (function (exports, Vue) {
           const path = ev.composedPath();
           for (let i = 0; i < path.length - 2; i++) {
               const el = path[i];
-              if (el.vRipple) {
-                  return el;
-              }
               if (el.classList && el.classList.contains(ACTIVATABLE)) {
                   return el;
               }
           }
           return undefined;
       }
-      return ev.target.closest('.activatable');
+      return ev.target.closest(ACTIVATABLE);
   };
   const isInstant = (el) => {
       return el.classList.contains(ACTIVATABLE_INSTANT);
   };
   const getRippleEffect = (el) => {
-      return el.vRipple;
+      const ripple = el.querySelector('.line-ripple-effect');
+      if (ripple) {
+          return ripple.vRipple;
+      }
   };
 
   const LINE_FOCUSED = 'line-focused';
@@ -7380,7 +7405,7 @@ var Skyline = (function (exports, Vue) {
     return getWindow(element).getComputedStyle(element);
   }
 
-  function getScrollParent(node) {
+  function getScrollParent$1(node) {
     if (['html', 'body', '#document'].indexOf(getNodeName(node)) >= 0) {
       // $FlowFixMe: assume body is always available
       return node.ownerDocument.body;
@@ -7398,7 +7423,7 @@ var Skyline = (function (exports, Vue) {
       }
     }
 
-    return getScrollParent(getParentNode(node));
+    return getScrollParent$1(getParentNode(node));
   }
 
   function listScrollParents(element, list) {
@@ -7406,7 +7431,7 @@ var Skyline = (function (exports, Vue) {
       list = [];
     }
 
-    var scrollParent = getScrollParent(element);
+    var scrollParent = getScrollParent$1(element);
     var isBody = getNodeName(scrollParent) === 'body';
     var target = isBody ? getWindow(scrollParent) : scrollParent;
     var updatedList = list.concat(target);
@@ -9024,42 +9049,28 @@ var Skyline = (function (exports, Vue) {
         type: String,
         default: 'top'
       },
-      activeFocus: Boolean,
       openOnHover: {
         type: Boolean,
-        default: false
-      },
-      openOnClick: Boolean
+        default: true
+      }
     },
     watch: {
-      openOnHover(val) {
-        this.vHover.update(val && this.onHover);
+      trigger: 'createDirective',
+
+      placement(val) {
+        if (this.popper) {
+          this.popper.setOptions({
+            placement: val
+          });
+        }
       }
 
     },
 
     beforeMount() {
       this.$on('animation-enter', (baseEl, animate) => {
-        const {
-          $triggerEl = this.event && this.event.target || document.body,
-          $el,
-          placement
-        } = this;
-        this.popper = this.popper || createPopper($triggerEl, $el, {
-          placement: placement,
-          strategy: 'fixed',
-          modifiers: [{
-            name: 'offset',
-            options: {
-              offset: [0, 10]
-            }
-          }, {
-            name: 'flip',
-            options: {
-              rootBoundary: 'body'
-            }
-          }]
-        });
+        this.createPopper();
+        this.popper.update();
         animate(iosEnterAnimation$7(baseEl));
       });
       this.$on('animation-leave', (baseEl, animate) => {
@@ -9069,20 +9080,7 @@ var Skyline = (function (exports, Vue) {
 
     async mounted() {
       await this.$nextTick();
-      if (!this.$triggerEl) return;
-      this.vHover = createDirective(vHover, this.$triggerEl, {
-        name: 'hover'
-      });
-      this.vHover.inserted();
-
-      if (this.openOnHover) {
-        this.vHover.update(this.onHover);
-      }
-    },
-
-    updated() {// if (this.popper) {
-      //   this.popper.update();
-      // }
+      this.createDirective();
     },
 
     beforeDestroy() {
@@ -9096,6 +9094,54 @@ var Skyline = (function (exports, Vue) {
     },
 
     methods: {
+      createDirective() {
+        if (this.vHover) {
+          this.vHover.unbind();
+        }
+
+        if (!this.$triggerEl) return;
+        this.vHover = createDirective(vHover, this.$triggerEl, {
+          name: 'hover'
+        });
+        this.vHover.inserted(this.onHover);
+      },
+
+      createPopper() {
+        if (this.popper) return;
+
+        const getBoundingClientRect = () => this.$triggerEl.getBoundingClientRect();
+
+        const $trigger = {
+          getBoundingClientRect
+        };
+        const {
+          $el,
+          placement
+        } = this;
+        const offset = 10;
+        this.popper = createPopper($trigger, $el, {
+          placement,
+          strategy: 'fixed',
+          modifiers: [{
+            name: 'offset',
+            options: {
+              offset: [0, offset]
+            }
+          }, {
+            name: 'preventOverflow',
+            options: {
+              altAxis: true,
+              padding: offset
+            }
+          }, {
+            name: 'flip',
+            options: {
+              padding: offset
+            }
+          }]
+        });
+      },
+
       onHover(hover) {
         if (!this.openOnHover) return;
         this.visible = hover;
@@ -9125,7 +9171,7 @@ var Skyline = (function (exports, Vue) {
       }]), [h("div", {
         "class": bem$w('arrow'),
         "attrs": {
-          "x-arrow": true
+          "data-popper-arrow": true
         }
       }), h("div", {
         "class": bem$w('content')
@@ -18290,7 +18336,7 @@ var Skyline = (function (exports, Vue) {
   }
 
   /**
-   * Swiper 5.3.1
+   * Swiper 5.3.6
    * Most modern mobile touch slider and framework with hardware accelerated transitions
    * http://swiperjs.com
    *
@@ -18298,7 +18344,7 @@ var Skyline = (function (exports, Vue) {
    *
    * Released under the MIT License
    *
-   * Released on: February 8, 2020
+   * Released on: February 29, 2020
    */
 
   const Methods = {
@@ -19011,10 +19057,13 @@ var Skyline = (function (exports, Vue) {
     }
     // Find slides currently in view
     if (swiper.params.slidesPerView !== 'auto' && swiper.params.slidesPerView > 1) {
-      for (i = 0; i < Math.ceil(swiper.params.slidesPerView); i += 1) {
-        const index = swiper.activeIndex + i;
-        if (index > swiper.slides.length) break;
-        activeSlides.push(swiper.slides.eq(index)[0]);
+      if (swiper.params.centeredSlides) activeSlides.push(...swiper.visibleSlides);
+      else {
+        for (i = 0; i < Math.ceil(swiper.params.slidesPerView); i += 1) {
+          const index = swiper.activeIndex + i;
+          if (index > swiper.slides.length) break;
+          activeSlides.push(swiper.slides.eq(index)[0]);
+        }
       }
     } else {
       activeSlides.push(swiper.slides.eq(swiper.activeIndex)[0]);
@@ -19063,7 +19112,7 @@ var Skyline = (function (exports, Vue) {
       const slideProgress = (
         (offsetCenter + (params.centeredSlides ? swiper.minTranslate() : 0)) - slide.swiperSlideOffset
       ) / (slide.swiperSlideSize + params.spaceBetween);
-      if (params.watchSlidesVisibility) {
+      if (params.watchSlidesVisibility || (params.centeredSlides && params.autoHeight)) {
         const slideBefore = -(offsetCenter - slide.swiperSlideOffset);
         const slideAfter = slideBefore + swiper.slidesSizesGrid[i];
         const isVisible = (slideBefore >= 0 && slideBefore < swiper.size - 1)
@@ -19107,7 +19156,7 @@ var Skyline = (function (exports, Vue) {
       isEnd,
     });
 
-    if (params.watchSlidesProgress || params.watchSlidesVisibility) swiper.updateSlidesProgress(translate);
+    if (params.watchSlidesProgress || params.watchSlidesVisibility || (params.centeredSlides && params.autoHeight)) swiper.updateSlidesProgress(translate);
 
     if (isBeginning && !wasBeginning) {
       swiper.emit('reachBeginning toEdge');
@@ -21013,7 +21062,7 @@ var Skyline = (function (exports, Vue) {
     let breakpoint = false;
 
     const points = Object.keys(breakpoints).map((point) => {
-      if (typeof point === 'string' && point.startsWith('@')) {
+      if (typeof point === 'string' && point.indexOf('@') === 0) {
         const minRatio = parseFloat(point.substr(1));
         const value = win.innerHeight * minRatio;
         return { value, point };
@@ -23719,9 +23768,9 @@ var Skyline = (function (exports, Vue) {
         gesture.scaleStart = Zoom.getDistanceBetweenTouches(e);
       }
       if (!gesture.$slideEl || !gesture.$slideEl.length) {
-        gesture.$slideEl = $(e.target).closest('.swiper-slide');
+        gesture.$slideEl = $(e.target).closest(`.${swiper.params.slideClass}`);
         if (gesture.$slideEl.length === 0) gesture.$slideEl = swiper.slides.eq(swiper.activeIndex);
-        gesture.$imageEl = gesture.$slideEl.find('img, svg, canvas');
+        gesture.$imageEl = gesture.$slideEl.find('img, svg, canvas, picture, .swiper-zoom-target');
         gesture.$imageWrapEl = gesture.$imageEl.parent(`.${params.containerClass}`);
         gesture.maxRatio = gesture.$imageWrapEl.attr('data-swiper-zoom') || params.maxRatio;
         if (gesture.$imageWrapEl.length === 0) {
@@ -23958,8 +24007,8 @@ var Skyline = (function (exports, Vue) {
       const { gesture, image } = zoom;
 
       if (!gesture.$slideEl) {
-        gesture.$slideEl = swiper.clickedSlide ? $(swiper.clickedSlide) : swiper.slides.eq(swiper.activeIndex);
-        gesture.$imageEl = gesture.$slideEl.find('img, svg, canvas');
+        gesture.$slideEl = swiper.slides.eq(swiper.activeIndex);
+        gesture.$imageEl = gesture.$slideEl.find('img, svg, canvas, picture, .swiper-zoom-target');
         gesture.$imageWrapEl = gesture.$imageEl.parent(`.${params.containerClass}`);
       }
       if (!gesture.$imageEl || gesture.$imageEl.length === 0) return;
@@ -24044,8 +24093,8 @@ var Skyline = (function (exports, Vue) {
       const { gesture } = zoom;
 
       if (!gesture.$slideEl) {
-        gesture.$slideEl = swiper.clickedSlide ? $(swiper.clickedSlide) : swiper.slides.eq(swiper.activeIndex);
-        gesture.$imageEl = gesture.$slideEl.find('img, svg, canvas');
+        gesture.$slideEl = swiper.slides.eq(swiper.activeIndex);
+        gesture.$imageEl = gesture.$slideEl.find('img, svg, canvas, picture, .swiper-zoom-target');
         gesture.$imageWrapEl = gesture.$imageEl.parent(`.${params.containerClass}`);
       }
       if (!gesture.$imageEl || gesture.$imageEl.length === 0) return;
@@ -24067,17 +24116,19 @@ var Skyline = (function (exports, Vue) {
       const passiveListener = swiper.touchEvents.start === 'touchstart' && Support.passiveListener && swiper.params.passiveListeners ? { passive: true, capture: false } : false;
       const activeListenerWithCapture = Support.passiveListener ? { passive: false, capture: true } : true;
 
+      const slideSelector = `.${swiper.params.slideClass}`;
+
       // Scale image
       if (Support.gestures) {
-        swiper.$wrapperEl.on('gesturestart', '.swiper-slide', zoom.onGestureStart, passiveListener);
-        swiper.$wrapperEl.on('gesturechange', '.swiper-slide', zoom.onGestureChange, passiveListener);
-        swiper.$wrapperEl.on('gestureend', '.swiper-slide', zoom.onGestureEnd, passiveListener);
+        swiper.$wrapperEl.on('gesturestart', slideSelector, zoom.onGestureStart, passiveListener);
+        swiper.$wrapperEl.on('gesturechange', slideSelector, zoom.onGestureChange, passiveListener);
+        swiper.$wrapperEl.on('gestureend', slideSelector, zoom.onGestureEnd, passiveListener);
       } else if (swiper.touchEvents.start === 'touchstart') {
-        swiper.$wrapperEl.on(swiper.touchEvents.start, '.swiper-slide', zoom.onGestureStart, passiveListener);
-        swiper.$wrapperEl.on(swiper.touchEvents.move, '.swiper-slide', zoom.onGestureChange, activeListenerWithCapture);
-        swiper.$wrapperEl.on(swiper.touchEvents.end, '.swiper-slide', zoom.onGestureEnd, passiveListener);
+        swiper.$wrapperEl.on(swiper.touchEvents.start, slideSelector, zoom.onGestureStart, passiveListener);
+        swiper.$wrapperEl.on(swiper.touchEvents.move, slideSelector, zoom.onGestureChange, activeListenerWithCapture);
+        swiper.$wrapperEl.on(swiper.touchEvents.end, slideSelector, zoom.onGestureEnd, passiveListener);
         if (swiper.touchEvents.cancel) {
-          swiper.$wrapperEl.on(swiper.touchEvents.cancel, '.swiper-slide', zoom.onGestureEnd, passiveListener);
+          swiper.$wrapperEl.on(swiper.touchEvents.cancel, slideSelector, zoom.onGestureEnd, passiveListener);
         }
       }
 
@@ -24094,17 +24145,19 @@ var Skyline = (function (exports, Vue) {
       const passiveListener = swiper.touchEvents.start === 'touchstart' && Support.passiveListener && swiper.params.passiveListeners ? { passive: true, capture: false } : false;
       const activeListenerWithCapture = Support.passiveListener ? { passive: false, capture: true } : true;
 
+      const slideSelector = `.${swiper.params.slideClass}`;
+
       // Scale image
       if (Support.gestures) {
-        swiper.$wrapperEl.off('gesturestart', '.swiper-slide', zoom.onGestureStart, passiveListener);
-        swiper.$wrapperEl.off('gesturechange', '.swiper-slide', zoom.onGestureChange, passiveListener);
-        swiper.$wrapperEl.off('gestureend', '.swiper-slide', zoom.onGestureEnd, passiveListener);
+        swiper.$wrapperEl.off('gesturestart', slideSelector, zoom.onGestureStart, passiveListener);
+        swiper.$wrapperEl.off('gesturechange', slideSelector, zoom.onGestureChange, passiveListener);
+        swiper.$wrapperEl.off('gestureend', slideSelector, zoom.onGestureEnd, passiveListener);
       } else if (swiper.touchEvents.start === 'touchstart') {
-        swiper.$wrapperEl.off(swiper.touchEvents.start, '.swiper-slide', zoom.onGestureStart, passiveListener);
-        swiper.$wrapperEl.off(swiper.touchEvents.move, '.swiper-slide', zoom.onGestureChange, activeListenerWithCapture);
-        swiper.$wrapperEl.off(swiper.touchEvents.end, '.swiper-slide', zoom.onGestureEnd, passiveListener);
+        swiper.$wrapperEl.off(swiper.touchEvents.start, slideSelector, zoom.onGestureStart, passiveListener);
+        swiper.$wrapperEl.off(swiper.touchEvents.move, slideSelector, zoom.onGestureChange, activeListenerWithCapture);
+        swiper.$wrapperEl.off(swiper.touchEvents.end, slideSelector, zoom.onGestureEnd, passiveListener);
         if (swiper.touchEvents.cancel) {
-          swiper.$wrapperEl.off(swiper.touchEvents.cancel, '.swiper-slide', zoom.onGestureEnd, passiveListener);
+          swiper.$wrapperEl.off(swiper.touchEvents.cancel, slideSelector, zoom.onGestureEnd, passiveListener);
         }
       }
 
@@ -24289,6 +24342,9 @@ var Skyline = (function (exports, Vue) {
             }
           }
           swiper.emit('lazyImageReady', $slideEl[0], $imageEl[0]);
+          if (swiper.params.autoHeight) {
+            swiper.updateAutoHeight();
+          }
         });
 
         swiper.emit('lazyImageLoad', $slideEl[0], $imageEl[0]);
@@ -25630,8 +25686,13 @@ var Skyline = (function (exports, Vue) {
         // var rotateZ = 0
         let translateZ = -translate * Math.abs(offsetMultiplier);
 
-        let translateY = isHorizontal ? 0 : params.stretch * (offsetMultiplier);
-        let translateX = isHorizontal ? params.stretch * (offsetMultiplier) : 0;
+        let stretch = params.stretch;
+        // Allow percentage to make a relative stretch for responsive sliders
+        if (typeof stretch === 'string' && stretch.indexOf('%') !== -1) {
+          stretch = ((parseFloat(params.stretch) / 100) * slideSize);
+        }
+        let translateY = isHorizontal ? 0 : stretch * (offsetMultiplier);
+        let translateX = isHorizontal ? stretch * (offsetMultiplier) : 0;
 
         // Fix for ultra small values
         if (Math.abs(translateX) < 0.001) translateX = 0;
@@ -27305,14 +27366,14 @@ var Skyline = (function (exports, Vue) {
 
   function createActivatable(el, options) {
       const { instant } = options;
-      el.classList.add('line-activatable');
+      el.classList.add(ACTIVATABLE);
       if (instant) {
-          el.classList.add('line-activatable-instant');
+          el.classList.add(ACTIVATABLE_INSTANT);
       }
       const destroy = () => {
-          el.classList.remove('line-activatable');
+          el.classList.remove(ACTIVATABLE);
           if (instant) {
-              el.classList.add('line-activatable-instant');
+              el.classList.add(ACTIVATABLE_INSTANT);
           }
       };
       return {
@@ -27864,6 +27925,66 @@ var Skyline = (function (exports, Vue) {
       update: update$c,
   });
 
+  function createTooltip(el, options) {
+      const { text, delay = 300, placement, // top
+      hover: openOnHover = true, click: openOnClick, active: activeFocus, } = options;
+      const tooltip = TooltipController.create({
+          trigger: el,
+          text,
+          delay,
+          placement,
+          openOnHover,
+          openOnClick,
+          activeFocus,
+      });
+      tooltip.destroyWhenClose = false;
+      const destroy = () => {
+          tooltip.destroyWhenClose = true;
+          tooltip.close() || tooltip.$destroy();
+      };
+      return {
+          tooltip,
+          destroy,
+      };
+  }
+  function inserted$c(el, binding) {
+      const { value = '', modifiers } = binding;
+      if (value === false)
+          return;
+      const options = isObject(value)
+          ? value
+          : { text: value };
+      el.vTooltip = createTooltip(el, {
+          ...modifiers,
+          ...options,
+      });
+  }
+  function unbind$c(el) {
+      const { vTooltip } = el;
+      if (!vTooltip)
+          return;
+      vTooltip.destroy();
+      delete el.vTooltip;
+  }
+  function update$d(el, binding) {
+      const { value, oldValue } = binding;
+      if (value === oldValue) {
+          return;
+      }
+      if (value === false) {
+          unbind$c(el);
+          return;
+      }
+      const { vTooltip } = el;
+      vTooltip.tooltip.text = binding.value;
+  }
+  const vTooltip = /*#__PURE__*/ defineDirective({
+      name: 'tooltip',
+      inserted: inserted$c,
+      unbind: unbind$c,
+      update: update$d,
+  });
+
   const DIR_RATIO = 0.5;
   const MIN_DISTANCE = 16;
   const handleGesture = (wrapper) => {
@@ -27940,34 +28061,136 @@ var Skyline = (function (exports, Vue) {
           destroy,
       };
   }
-  function inserted$c(el, binding) {
+  function inserted$d(el, binding) {
       const { value } = binding;
       if (!value)
           return;
       el.vTouch = createTouch(el, value);
   }
-  function unbind$c(el) {
+  function unbind$d(el) {
       const { vTouch } = el;
       if (!vTouch)
           return;
       vTouch.destroy();
       delete el.vTouch;
   }
-  function update$d(el, binding) {
+  function update$e(el, binding) {
       const { value, oldValue } = binding;
       if (value === oldValue) {
           return;
       }
       if (oldValue) {
-          unbind$c(el);
+          unbind$d(el);
       }
-      inserted$c(el, binding);
+      inserted$d(el, binding);
   }
   const vTouch = /*#__PURE__*/ defineDirective({
       name: 'touch',
-      inserted: inserted$c,
-      unbind: unbind$c,
-      update: update$d,
+      inserted: inserted$d,
+      unbind: unbind$d,
+      update: update$e,
+  });
+
+  function getScrollTop(el) {
+      return isWindow(el)
+          ? el.pageYOffset
+          : el.scrollTop;
+  }
+  // get distance from el top to page top
+  function getElementTop(el) {
+      const elementTop = isWindow(el) ? 0 : el.getBoundingClientRect().top;
+      const scrollTop = getScrollTop(window);
+      return elementTop + scrollTop;
+  }
+  function getVisibleHeight(el) {
+      return isWindow(el)
+          ? el.innerHeight
+          : el.getBoundingClientRect().height;
+  }
+  const DEFAULT_OFFSET = 300;
+  function createWaterfall(el, options) {
+      const { handler, offset = DEFAULT_OFFSET, up = true, down = true, } = options;
+      const target = getScrollParent(el);
+      const scroll = () => {
+          const scrollTop = getScrollTop(target);
+          const visibleHeight = getVisibleHeight(target);
+          const validHeight = scrollTop + visibleHeight;
+          // hidden element
+          if (!visibleHeight)
+              return;
+          let hitDown = false;
+          let hitUp = false;
+          if (down) {
+              if (el === target) {
+                  hitDown = target.scrollHeight - validHeight < offset;
+              }
+              else {
+                  const elementBottom = getElementTop(el) - getElementTop(target) + getVisibleHeight(el);
+                  hitDown = elementBottom - visibleHeight < offset;
+              }
+          }
+          if (up) {
+              if (el === target) {
+                  hitUp = scrollTop < offset;
+              }
+              else {
+                  const elementTop = getElementTop(el) - getElementTop(target);
+                  hitUp = elementTop + offset > 0;
+              }
+          }
+          if ((hitDown && down) || (hitUp && up)) {
+              handler && handler({
+                  down: hitDown,
+                  up: hitUp,
+                  target,
+                  scrollTop,
+              });
+          }
+      };
+      const scrollOff = on(target, 'scroll', scroll, options);
+      const destroy = () => {
+          scrollOff();
+      };
+      return {
+          scroll,
+          destroy,
+      };
+  }
+  function inserted$e(el, binding) {
+      const { value, modifiers } = binding;
+      if (!value)
+          return;
+      const options = isObject(value)
+          ? value
+          : { handler: value };
+      const vWaterfall = createWaterfall(el, {
+          ...modifiers,
+          ...options,
+      });
+      el.vWaterfall = vWaterfall;
+  }
+  function unbind$e(el) {
+      const { vWaterfall } = el;
+      if (!vWaterfall)
+          return;
+      vWaterfall.destroy();
+      delete el.vWaterfall;
+  }
+  function update$f(el, binding) {
+      const { value, oldValue } = binding;
+      if (value === oldValue) {
+          return;
+      }
+      if (oldValue) {
+          unbind$e(el);
+      }
+      inserted$e(el, binding);
+  }
+  const vWaterfall = /*#__PURE__*/ defineDirective({
+      name: 'waterfall',
+      inserted: inserted$e,
+      unbind: unbind$e,
+      update: update$f,
   });
 
   // Auto Generated
@@ -27996,8 +28219,12 @@ var Skyline = (function (exports, Vue) {
     createScroll: createScroll,
     vScroll: vScroll,
     vSwipeBack: vSwipeBack,
+    createTooltip: createTooltip,
+    vTooltip: vTooltip,
     createTouch: createTouch,
-    vTouch: vTouch
+    vTouch: vTouch,
+    createWaterfall: createWaterfall,
+    vWaterfall: vWaterfall
   });
 
   function useAsyncRender() {
@@ -28327,18 +28554,23 @@ var Skyline = (function (exports, Vue) {
   exports.TreeItem = treeItem;
   exports.createActivatable = createActivatable;
   exports.createAutoRepeat = createAutoRepeat;
+  exports.createBEM = createBEM;
   exports.createClickOutside = createClickOutside;
   exports.createColorClasses = createColorClasses;
   exports.createHover = createHover;
   exports.createIntersect = createIntersect;
   exports.createModeClasses = createModeClasses;
   exports.createMutate = createMutate;
+  exports.createNamespace = createNamespace;
   exports.createRemote = createRemote;
   exports.createResize = createResize;
   exports.createRippleEffect = createRippleEffect;
   exports.createScroll = createScroll;
+  exports.createTooltip = createTooltip;
   exports.createTouch = createTouch;
+  exports.createWaterfall = createWaterfall;
   exports.default = index$1;
+  exports.defineComponent = defineComponent;
   exports.getItemValue = getItemValue;
   exports.invoke = invoke;
   exports.isVue = isVue;
@@ -28380,7 +28612,9 @@ var Skyline = (function (exports, Vue) {
   exports.vRipple = vRipple;
   exports.vScroll = vScroll;
   exports.vSwipeBack = vSwipeBack;
+  exports.vTooltip = vTooltip;
   exports.vTouch = vTouch;
+  exports.vWaterfall = vWaterfall;
 
   return exports;
 

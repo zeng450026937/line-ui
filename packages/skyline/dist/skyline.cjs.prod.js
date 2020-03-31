@@ -14,6 +14,7 @@ const debounce = (fn, delay = 300) => {
         timer = setTimeout(() => fn(...args), delay);
     });
 };
+/* eslint-disable-next-line @typescript-eslint/no-empty-function */
 const NOOP = () => { };
 /**
  * Always return false.
@@ -101,13 +102,16 @@ const mergeStaticClass = (exist, value) => {
 const renderClass = (staticClass, dynamicClass) => {
     if (!isDef(staticClass) && !isDef(dynamicClass))
         return '';
+    /* eslint-disable-next-line @typescript-eslint/no-use-before-define */
     return mergeStaticClass(staticClass, stringifyClass(dynamicClass));
 };
 const stringifyClass = (value) => {
     if (isArray(value)) {
+        /* eslint-disable-next-line @typescript-eslint/no-use-before-define */
         return stringifyArray(value);
     }
     if (isObject(value)) {
+        /* eslint-disable-next-line @typescript-eslint/no-use-before-define */
         return stringifyObject(value);
     }
     if (isString(value)) {
@@ -572,6 +576,7 @@ function createRippleEffect(el, options) {
             }, 225 + 100);
         });
     };
+    el.classList.add('line-ripple-effect');
     return {
         addRipple,
         options,
@@ -583,7 +588,7 @@ function inserted(el, binding) {
         return;
     el.vRipple = createRippleEffect(el, modifiers);
 }
-function unbind(el, binding) {
+function unbind(el) {
     const { vRipple } = el;
     if (!vRipple)
         return;
@@ -3646,7 +3651,26 @@ const pointerCoord = (ev) => {
     return { x: 0, y: 0 };
 };
 
+const getScrollParent = (element) => {
+    if (!element) {
+        return document.body;
+    }
+    const { nodeName } = element;
+    if (nodeName === 'HTML' || nodeName === 'BODY') {
+        return element.ownerDocument.body;
+    }
+    if (nodeName === '#document') {
+        return element.body;
+    }
+    const { overflowY } = window.getComputedStyle(element);
+    if (overflowY === 'scroll' || overflowY === 'auto') {
+        return element;
+    }
+    return getScrollParent(element.parentNode);
+};
+
 const hasWindow = typeof window !== 'undefined';
+const isWindow = (el) => el === window;
 let supportsVars;
 const isSupportsVars = () => {
     if (supportsVars === undefined) {
@@ -3663,6 +3687,7 @@ const ACTIVATABLE_INSTANT = 'line-activatable-instant';
 const ADD_ACTIVATED_DEFERS = 200;
 const CLEAR_STATE_DEFERS = 200;
 const MOUSE_WAIT$1 = 2500;
+/* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 const setupTapClick = (config) => {
     let lastTouch = -MOUSE_WAIT$1 * 10;
     let lastActivated = 0;
@@ -3802,22 +3827,22 @@ const getActivatableTarget = (ev) => {
         const path = ev.composedPath();
         for (let i = 0; i < path.length - 2; i++) {
             const el = path[i];
-            if (el.vRipple) {
-                return el;
-            }
             if (el.classList && el.classList.contains(ACTIVATABLE)) {
                 return el;
             }
         }
         return undefined;
     }
-    return ev.target.closest('.activatable');
+    return ev.target.closest(ACTIVATABLE);
 };
 const isInstant = (el) => {
     return el.classList.contains(ACTIVATABLE_INSTANT);
 };
 const getRippleEffect = (el) => {
-    return el.vRipple;
+    const ripple = el.querySelector('.line-ripple-effect');
+    if (ripple) {
+        return ripple.vRipple;
+    }
 };
 
 const LINE_FOCUSED = 'line-focused';
@@ -7376,7 +7401,7 @@ function getComputedStyle(element) {
   return getWindow(element).getComputedStyle(element);
 }
 
-function getScrollParent(node) {
+function getScrollParent$1(node) {
   if (['html', 'body', '#document'].indexOf(getNodeName(node)) >= 0) {
     // $FlowFixMe: assume body is always available
     return node.ownerDocument.body;
@@ -7394,7 +7419,7 @@ function getScrollParent(node) {
     }
   }
 
-  return getScrollParent(getParentNode(node));
+  return getScrollParent$1(getParentNode(node));
 }
 
 function listScrollParents(element, list) {
@@ -7402,7 +7427,7 @@ function listScrollParents(element, list) {
     list = [];
   }
 
-  var scrollParent = getScrollParent(element);
+  var scrollParent = getScrollParent$1(element);
   var isBody = getNodeName(scrollParent) === 'body';
   var target = isBody ? getWindow(scrollParent) : scrollParent;
   var updatedList = list.concat(target);
@@ -9020,42 +9045,28 @@ createComponent$x({
       type: String,
       default: 'top'
     },
-    activeFocus: Boolean,
     openOnHover: {
       type: Boolean,
-      default: false
-    },
-    openOnClick: Boolean
+      default: true
+    }
   },
   watch: {
-    openOnHover(val) {
-      this.vHover.update(val && this.onHover);
+    trigger: 'createDirective',
+
+    placement(val) {
+      if (this.popper) {
+        this.popper.setOptions({
+          placement: val
+        });
+      }
     }
 
   },
 
   beforeMount() {
     this.$on('animation-enter', (baseEl, animate) => {
-      const {
-        $triggerEl = this.event && this.event.target || document.body,
-        $el,
-        placement
-      } = this;
-      this.popper = this.popper || createPopper($triggerEl, $el, {
-        placement: placement,
-        strategy: 'fixed',
-        modifiers: [{
-          name: 'offset',
-          options: {
-            offset: [0, 10]
-          }
-        }, {
-          name: 'flip',
-          options: {
-            rootBoundary: 'body'
-          }
-        }]
-      });
+      this.createPopper();
+      this.popper.update();
       animate(iosEnterAnimation$7(baseEl));
     });
     this.$on('animation-leave', (baseEl, animate) => {
@@ -9065,20 +9076,7 @@ createComponent$x({
 
   async mounted() {
     await this.$nextTick();
-    if (!this.$triggerEl) return;
-    this.vHover = createDirective(vHover, this.$triggerEl, {
-      name: 'hover'
-    });
-    this.vHover.inserted();
-
-    if (this.openOnHover) {
-      this.vHover.update(this.onHover);
-    }
-  },
-
-  updated() {// if (this.popper) {
-    //   this.popper.update();
-    // }
+    this.createDirective();
   },
 
   beforeDestroy() {
@@ -9092,6 +9090,54 @@ createComponent$x({
   },
 
   methods: {
+    createDirective() {
+      if (this.vHover) {
+        this.vHover.unbind();
+      }
+
+      if (!this.$triggerEl) return;
+      this.vHover = createDirective(vHover, this.$triggerEl, {
+        name: 'hover'
+      });
+      this.vHover.inserted(this.onHover);
+    },
+
+    createPopper() {
+      if (this.popper) return;
+
+      const getBoundingClientRect = () => this.$triggerEl.getBoundingClientRect();
+
+      const $trigger = {
+        getBoundingClientRect
+      };
+      const {
+        $el,
+        placement
+      } = this;
+      const offset = 10;
+      this.popper = createPopper($trigger, $el, {
+        placement,
+        strategy: 'fixed',
+        modifiers: [{
+          name: 'offset',
+          options: {
+            offset: [0, offset]
+          }
+        }, {
+          name: 'preventOverflow',
+          options: {
+            altAxis: true,
+            padding: offset
+          }
+        }, {
+          name: 'flip',
+          options: {
+            padding: offset
+          }
+        }]
+      });
+    },
+
     onHover(hover) {
       if (!this.openOnHover) return;
       this.visible = hover;
@@ -9121,7 +9167,7 @@ createComponent$x({
     }]), [h("div", {
       "class": bem$w('arrow'),
       "attrs": {
-        "x-arrow": true
+        "data-popper-arrow": true
       }
     }), h("div", {
       "class": bem$w('content')
@@ -18867,14 +18913,14 @@ var components = /*#__PURE__*/Object.freeze({
 
 function createActivatable(el, options) {
     const { instant } = options;
-    el.classList.add('line-activatable');
+    el.classList.add(ACTIVATABLE);
     if (instant) {
-        el.classList.add('line-activatable-instant');
+        el.classList.add(ACTIVATABLE_INSTANT);
     }
     const destroy = () => {
-        el.classList.remove('line-activatable');
+        el.classList.remove(ACTIVATABLE);
         if (instant) {
-            el.classList.add('line-activatable-instant');
+            el.classList.add(ACTIVATABLE_INSTANT);
         }
     };
     return {
@@ -19426,6 +19472,66 @@ const vSwipeBack = /*#__PURE__*/ defineDirective({
     update: update$b,
 });
 
+function createTooltip(el, options) {
+    const { text, delay = 300, placement, // top
+    hover: openOnHover = true, click: openOnClick, active: activeFocus, } = options;
+    const tooltip = TooltipController.create({
+        trigger: el,
+        text,
+        delay,
+        placement,
+        openOnHover,
+        openOnClick,
+        activeFocus,
+    });
+    tooltip.destroyWhenClose = false;
+    const destroy = () => {
+        tooltip.destroyWhenClose = true;
+        tooltip.close() || tooltip.$destroy();
+    };
+    return {
+        tooltip,
+        destroy,
+    };
+}
+function inserted$c(el, binding) {
+    const { value = '', modifiers } = binding;
+    if (value === false)
+        return;
+    const options = isObject(value)
+        ? value
+        : { text: value };
+    el.vTooltip = createTooltip(el, {
+        ...modifiers,
+        ...options,
+    });
+}
+function unbind$c(el) {
+    const { vTooltip } = el;
+    if (!vTooltip)
+        return;
+    vTooltip.destroy();
+    delete el.vTooltip;
+}
+function update$c(el, binding) {
+    const { value, oldValue } = binding;
+    if (value === oldValue) {
+        return;
+    }
+    if (value === false) {
+        unbind$c(el);
+        return;
+    }
+    const { vTooltip } = el;
+    vTooltip.tooltip.text = binding.value;
+}
+const vTooltip = /*#__PURE__*/ defineDirective({
+    name: 'tooltip',
+    inserted: inserted$c,
+    unbind: unbind$c,
+    update: update$c,
+});
+
 const DIR_RATIO = 0.5;
 const MIN_DISTANCE = 16;
 const handleGesture = (wrapper) => {
@@ -19502,34 +19608,136 @@ function createTouch(el, options) {
         destroy,
     };
 }
-function inserted$c(el, binding) {
+function inserted$d(el, binding) {
     const { value } = binding;
     if (!value)
         return;
     el.vTouch = createTouch(el, value);
 }
-function unbind$c(el) {
+function unbind$d(el) {
     const { vTouch } = el;
     if (!vTouch)
         return;
     vTouch.destroy();
     delete el.vTouch;
 }
-function update$c(el, binding) {
+function update$d(el, binding) {
     const { value, oldValue } = binding;
     if (value === oldValue) {
         return;
     }
     if (oldValue) {
-        unbind$c(el);
+        unbind$d(el);
     }
-    inserted$c(el, binding);
+    inserted$d(el, binding);
 }
 const vTouch = /*#__PURE__*/ defineDirective({
     name: 'touch',
-    inserted: inserted$c,
-    unbind: unbind$c,
-    update: update$c,
+    inserted: inserted$d,
+    unbind: unbind$d,
+    update: update$d,
+});
+
+function getScrollTop(el) {
+    return isWindow(el)
+        ? el.pageYOffset
+        : el.scrollTop;
+}
+// get distance from el top to page top
+function getElementTop(el) {
+    const elementTop = isWindow(el) ? 0 : el.getBoundingClientRect().top;
+    const scrollTop = getScrollTop(window);
+    return elementTop + scrollTop;
+}
+function getVisibleHeight(el) {
+    return isWindow(el)
+        ? el.innerHeight
+        : el.getBoundingClientRect().height;
+}
+const DEFAULT_OFFSET = 300;
+function createWaterfall(el, options) {
+    const { handler, offset = DEFAULT_OFFSET, up = true, down = true, } = options;
+    const target = getScrollParent(el);
+    const scroll = () => {
+        const scrollTop = getScrollTop(target);
+        const visibleHeight = getVisibleHeight(target);
+        const validHeight = scrollTop + visibleHeight;
+        // hidden element
+        if (!visibleHeight)
+            return;
+        let hitDown = false;
+        let hitUp = false;
+        if (down) {
+            if (el === target) {
+                hitDown = target.scrollHeight - validHeight < offset;
+            }
+            else {
+                const elementBottom = getElementTop(el) - getElementTop(target) + getVisibleHeight(el);
+                hitDown = elementBottom - visibleHeight < offset;
+            }
+        }
+        if (up) {
+            if (el === target) {
+                hitUp = scrollTop < offset;
+            }
+            else {
+                const elementTop = getElementTop(el) - getElementTop(target);
+                hitUp = elementTop + offset > 0;
+            }
+        }
+        if ((hitDown && down) || (hitUp && up)) {
+            handler && handler({
+                down: hitDown,
+                up: hitUp,
+                target,
+                scrollTop,
+            });
+        }
+    };
+    const scrollOff = on(target, 'scroll', scroll, options);
+    const destroy = () => {
+        scrollOff();
+    };
+    return {
+        scroll,
+        destroy,
+    };
+}
+function inserted$e(el, binding) {
+    const { value, modifiers } = binding;
+    if (!value)
+        return;
+    const options = isObject(value)
+        ? value
+        : { handler: value };
+    const vWaterfall = createWaterfall(el, {
+        ...modifiers,
+        ...options,
+    });
+    el.vWaterfall = vWaterfall;
+}
+function unbind$e(el) {
+    const { vWaterfall } = el;
+    if (!vWaterfall)
+        return;
+    vWaterfall.destroy();
+    delete el.vWaterfall;
+}
+function update$e(el, binding) {
+    const { value, oldValue } = binding;
+    if (value === oldValue) {
+        return;
+    }
+    if (oldValue) {
+        unbind$e(el);
+    }
+    inserted$e(el, binding);
+}
+const vWaterfall = /*#__PURE__*/ defineDirective({
+    name: 'waterfall',
+    inserted: inserted$e,
+    unbind: unbind$e,
+    update: update$e,
 });
 
 // Auto Generated
@@ -19558,8 +19766,12 @@ var directives = /*#__PURE__*/Object.freeze({
   createScroll: createScroll,
   vScroll: vScroll,
   vSwipeBack: vSwipeBack,
+  createTooltip: createTooltip,
+  vTooltip: vTooltip,
   createTouch: createTouch,
-  vTouch: vTouch
+  vTouch: vTouch,
+  createWaterfall: createWaterfall,
+  vWaterfall: vWaterfall
 });
 
 function useAsyncRender() {
@@ -19889,18 +20101,23 @@ exports.TooltipController = TooltipController;
 exports.TreeItem = treeItem;
 exports.createActivatable = createActivatable;
 exports.createAutoRepeat = createAutoRepeat;
+exports.createBEM = createBEM;
 exports.createClickOutside = createClickOutside;
 exports.createColorClasses = createColorClasses;
 exports.createHover = createHover;
 exports.createIntersect = createIntersect;
 exports.createModeClasses = createModeClasses;
 exports.createMutate = createMutate;
+exports.createNamespace = createNamespace;
 exports.createRemote = createRemote;
 exports.createResize = createResize;
 exports.createRippleEffect = createRippleEffect;
 exports.createScroll = createScroll;
+exports.createTooltip = createTooltip;
 exports.createTouch = createTouch;
+exports.createWaterfall = createWaterfall;
 exports.default = index;
+exports.defineComponent = defineComponent;
 exports.getItemValue = getItemValue;
 exports.invoke = invoke;
 exports.isVue = isVue;
@@ -19942,4 +20159,6 @@ exports.vResize = vResize;
 exports.vRipple = vRipple;
 exports.vScroll = vScroll;
 exports.vSwipeBack = vSwipeBack;
+exports.vTooltip = vTooltip;
 exports.vTouch = vTouch;
+exports.vWaterfall = vWaterfall;

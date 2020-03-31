@@ -13,5 +13,6 @@ export * from 'skyline/src/directives/resize';
 export * from 'skyline/src/directives/ripple';
 export * from 'skyline/src/directives/scroll';
 export * from 'skyline/src/directives/swipe-back';
+export * from 'skyline/src/directives/tooltip';
 export * from 'skyline/src/directives/touch';
 export * from 'skyline/src/directives/waterfall';

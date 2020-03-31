@@ -8580,64 +8580,35 @@ html.plt-mobile .line-app {
   z-index: 10;
 }
 
-.line-tooltip[x-placement^=top] {
-  margin-bottom: 5px;
+.line-tooltip__arrow,
+.line-tooltip__arrow::before {
+  position: absolute;
+  width: 8px;
+  height: 8px;
 }
 
-.line-tooltip[x-placement^=top] .line-tooltip__arrow {
-  bottom: -5px;
-  left: calc(50% - 5px);
-  margin-top: 0;
-  margin-bottom: 0;
-  border-width: 5px 5px 0 5px;
-  border-right-color: transparent;
-  border-bottom-color: transparent;
-  border-left-color: transparent;
+.line-tooltip__arrow::before {
+  top: 0px;
+  left: 0px;
+  transform: rotate(45deg);
+  background: var(--background);
+  content: "";
 }
 
-.line-tooltip[x-placement^=bottom] {
-  margin-top: 5px;
+.line-tooltip[data-popper-placement^=top] > .line-tooltip__arrow {
+  bottom: -4px;
 }
 
-.line-tooltip[x-placement^=bottom] .line-tooltip__arrow {
-  top: -5px;
-  left: calc(50% - 5px);
-  margin-top: 0;
-  margin-bottom: 0;
-  border-width: 0 5px 5px 5px;
-  border-top-color: transparent;
-  border-right-color: transparent;
-  border-left-color: transparent;
+.line-tooltip[data-popper-placement^=bottom] > .line-tooltip__arrow {
+  top: -4px;
 }
 
-.line-tooltip[x-placement^=right] {
-  margin-left: 5px;
+.line-tooltip[data-popper-placement^=right] > .line-tooltip__arrow {
+  left: -4px;
 }
 
-.line-tooltip[x-placement^=right] .line-tooltip__arrow {
-  top: calc(50% - 5px);
-  left: -5px;
-  margin-right: 0;
-  margin-left: 0;
-  border-width: 5px 5px 5px 0;
-  border-top-color: transparent;
-  border-bottom-color: transparent;
-  border-left-color: transparent;
-}
-
-.line-tooltip[x-placement^=left] {
-  margin-right: 5px;
-}
-
-.line-tooltip[x-placement^=left] .line-tooltip__arrow {
-  top: calc(50% - 5px);
-  right: -5px;
-  margin-right: 0;
-  margin-left: 0;
-  border-width: 5px 0 5px 5px;
-  border-top-color: transparent;
-  border-right-color: transparent;
-  border-bottom-color: transparent;
+.line-tooltip[data-popper-placement^=left] > .line-tooltip__arrow {
+  right: -4px;
 }
 
 .line-tooltip__content {
@@ -8648,16 +8619,20 @@ html.plt-mobile .line-app {
   justify-content: center;
   padding: 5px 16px;
   border-radius: 4px;
+  background: var(--background);
+  color: var(--color);
   font-size: 14px;
   line-height: 22px;
   text-transform: none;
-  background: var(--background);
-  color: var(--color);
 }
 
 .line-tooltip.line-color .line-tooltip__content {
   background: var(--line-color-base);
   color: var(--line-color-contrast);
+}
+
+.line-tooltip.line-color .line-tooltip__arrow::before {
+  background: var(--line-color-base);
 }
 
 .ripple-effect {
