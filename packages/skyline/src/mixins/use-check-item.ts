@@ -2,7 +2,10 @@
 import { Vue } from 'vue/types/vue';
 import { createMixins } from 'skyline/src/utils/mixins';
 import { useGroupItem } from 'skyline/src/mixins/use-group-item';
-import { ModelOptions, useModel } from 'skyline/src/mixins/use-model';
+import {
+  ModelOptions,
+  useModel,
+} from 'skyline/src/mixins/use-model';
 import { isDef } from 'skyline/src/utils/helpers';
 
 export type CheckItemProps = {

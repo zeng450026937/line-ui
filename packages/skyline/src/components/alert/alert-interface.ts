@@ -1,8 +1,8 @@
 import {
-  AnimationBuilder,
   Mode,
   TextFieldTypes,
-} from 'skyline/src/types/interface';
+} from 'skyline/src/types';
+import { AnimationBuilder } from 'skyline/src/utils/animation';
 
 export interface AlertOptions {
   header?: string;

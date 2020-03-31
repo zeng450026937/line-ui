@@ -374,7 +374,7 @@ export const createAnimation = (animationId?: string): Animation => {
           elements.push((el as any)[i]);
         }
       } else {
-        console.error('Invalid addElement value');
+        __DEV__ && console.error('Invalid addElement value');
       }
     }
 

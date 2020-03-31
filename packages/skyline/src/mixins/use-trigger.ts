@@ -1,7 +1,10 @@
 /* eslint-disable-next-line */
 import { Vue } from 'vue/types/vue';
 import { createMixins } from 'skyline/src/utils/mixins';
-import { isArray, isString } from 'skyline/src/utils/helpers';
+import {
+  isArray,
+  isString,
+} from 'skyline/src/utils/helpers';
 
 export const isVue = (val: any): val is Vue => val && val._isVue;
 

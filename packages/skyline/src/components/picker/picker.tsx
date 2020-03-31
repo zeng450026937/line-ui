@@ -1,15 +1,14 @@
 import { createNamespace } from 'skyline/src/utils/namespace';
-import { CssClassMap } from 'skyline/src/types/interface';
 import { usePopup } from 'skyline/src/mixins/use-popup';
 import { Overlay } from 'skyline/src/components/overlay';
 import { PickerColumn } from 'skyline/src/components/picker-column';
+import { PickerButton } from 'skyline/src/components/picker/picker-interface';
 import { iosEnterAnimation } from 'skyline/src/components/picker/animations/ios.enter';
 import { iosLeaveAnimation } from 'skyline/src/components/picker/animations/ios.leave';
-import { PickerButton } from 'skyline/src/components/picker/picker-interface';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('picker');
 
-const buttonWrapperClass = (button: PickerButton): CssClassMap => {
+const buttonWrapperClass = (button: PickerButton) => {
   return {
     [`line-picker__toolbar-${ button.role }`] : button.role !== undefined,
     'line-picker__toolbar-button'             : true,
@@ -22,7 +21,7 @@ const safeCall = (handler: any, arg?: any) => {
     try {
       return handler(arg);
     } catch (e) {
-      console.error(e);
+      __DEV__ && console.error(e);
     }
   }
   return undefined;

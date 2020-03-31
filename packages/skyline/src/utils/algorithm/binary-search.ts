@@ -40,7 +40,7 @@ export function binarySearch<T = any>(
     try {
       result = compare(array[mid], wanted, mid);
     } catch (e) {
-      console.log(initFrom, initTo, mid, to);
+      __DEV__ && console.log(initFrom, initTo, mid, to);
       throw e;
     }
     if (result < 0) {
@@ -63,7 +63,7 @@ export function binarySearch<T = any>(
     return mid;
   }
   if (found < 0) {
-    console.log(initFrom, initTo, mid, to);
+    __DEV__ && console.log(initFrom, initTo, mid, to);
     debugger;
   }
 

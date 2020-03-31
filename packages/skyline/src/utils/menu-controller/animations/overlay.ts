@@ -1,8 +1,9 @@
-import { Animation } from 'skyline/src/types/interface';
-import { MenuI } from '../menu-interface';
-import { createAnimation } from 'skyline/src/utils/animation/animation';
-
-import { baseAnimation } from './base';
+import {
+  Animation,
+  createAnimation,
+} from 'skyline/src/utils/animation';
+import { MenuI } from 'skyline/src/utils/menu-controller/menu-interface';
+import { baseAnimation } from 'skyline/src/utils/menu-controller/animations/base';
 
 /**
  * Menu Overlay Type

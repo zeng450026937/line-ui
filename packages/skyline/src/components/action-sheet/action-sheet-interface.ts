@@ -1,7 +1,5 @@
-import {
-  AnimationBuilder,
-  Mode,
-} from 'skyline/src/types/interface';
+import { Mode } from 'skyline/src/types';
+import { AnimationBuilder } from 'skyline/src/utils/animation';
 
 export interface ActionSheetOptions {
   header?: string;

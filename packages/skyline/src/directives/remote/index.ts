@@ -1,17 +1,16 @@
 import { VNodeDirective } from 'vue';
 import { defineDirective } from 'skyline/src/utils/directive';
 import { isString } from 'skyline/src/utils/helpers';
-
-const CONTAINER = '[skyline-app]';
+import { getApp } from 'skyline/src/utils/dom';
 
 export interface RemoteOptions {
   container?: string | Element;
 }
 
 export function createRemote(el: HTMLElement, options: RemoteOptions) {
-  const { container = CONTAINER } = options;
+  const { container = '' } = options;
   const containerEl = isString(container)
-    ? el.closest(container) || document.querySelector(container) || document.body
+    ? getApp(el, container)
     : container;
 
   const {

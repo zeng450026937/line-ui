@@ -38,7 +38,7 @@ export default /*#__PURE__*/ createComponent({
     const contentEl = this.$parent.$options.name === 'line-content' ? this.$parent.$el : null;
 
     if (!contentEl) {
-      console.error('<line-infinite-scroll> must be used inside an <line-content>');
+      __DEV__ && console.error('<line-infinite-scroll> must be used inside an <line-content>');
       return;
     }
 

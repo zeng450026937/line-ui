@@ -448,15 +448,15 @@ export default /*#__PURE__*/ createComponent({
 
       // Ensure min/max constraints
       if (min.year > max.year) {
-        console.error('min.year > max.year');
+        __DEV__ && console.error('min.year > max.year');
         min.year = max.year - 100;
       }
       if (min.year === max.year) {
         if (min.month > max.month) {
-          console.error('min.month > max.month');
+          __DEV__ && console.error('min.month > max.month');
           min.month = 1;
         } else if (min.month === max.month && min.day > max.day) {
-          console.error('min.day > max.day');
+          __DEV__ && console.error('min.day > max.day');
           min.day = 1;
         }
       }

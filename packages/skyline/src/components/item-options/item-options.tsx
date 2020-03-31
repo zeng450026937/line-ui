@@ -1,5 +1,5 @@
 import { createNamespace } from 'skyline/src/utils/namespace';
-import { Side } from 'skyline/src/types/interface';
+import { Side } from 'skyline/src/types';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('item-options');
 

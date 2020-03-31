@@ -3,14 +3,12 @@ import { getTimeGivenProgression } from 'skyline/src/utils/animation/cubic-bezie
 import { useModel } from 'skyline/src/mixins/use-model';
 import { config } from 'skyline/src/utils/config';
 import { createNamespace } from 'skyline/src/utils/namespace';
-import {
-  Animation,
-  GestureDetail,
-  Side,
-} from 'skyline/src/types/interface';
+import { Side } from 'skyline/src/types';
+import { Animation } from 'skyline/src/utils/animation';
 import {
   createGesture,
   GESTURE_CONTROLLER,
+  GestureDetail,
 } from 'skyline/src/utils/gesture';
 
 import { Overlay } from 'skyline/src/components/overlay';
@@ -50,7 +48,7 @@ const clamp = (min: number, n: number, max: number) => {
 const assert = (actual: any, reason: string) => {
   if (!actual) {
     const message = `ASSERT: ${ reason }`;
-    console.error(message);
+    __DEV__ && console.error(message);
     debugger; // tslint:disable-line
     throw new Error(message);
   }
@@ -493,7 +491,7 @@ export default /*#__PURE__*/ createComponent({
     this.backdropEl = (backdropEl as any).$el;
 
     if (this.contentId === undefined) {
-      console.warn(`[DEPRECATED][line-menu] Using the [main] attribute is deprecated, please use the "contentId" property instead:
+      __DEV__ && console.warn(`[DEPRECATED][line-menu] Using the [main] attribute is deprecated, please use the "contentId" property instead:
       BEFORE:
         <line-menu>...</line-menu>
         <div main>...</div>
@@ -509,7 +507,7 @@ export default /*#__PURE__*/ createComponent({
 
     if (!content || !content.tagName) {
       // requires content element
-      console.error('Menu: must have a "content" element to listen for drag events on.');
+      __DEV__ && console.error('Menu: must have a "content" element to listen for drag events on.');
       return;
     }
     this.contentEl = content as HTMLElement;
@@ -520,7 +518,7 @@ export default /*#__PURE__*/ createComponent({
 
     if (!content || !(content as HTMLElement).tagName) {
       // requires content element
-      console.error('Menu: must have a "content" element to listen for drag events on.');
+      __DEV__ && console.error('Menu: must have a "content" element to listen for drag events on.');
       return;
     }
     this.contentEl = content as HTMLElement;

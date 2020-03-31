@@ -2,8 +2,14 @@
 import { Vue } from 'vue/types/vue';
 import { createMixins } from 'skyline/src/utils/mixins';
 import { useGroup } from 'skyline/src/mixins/use-group';
-import { ModelOptions, useModel } from 'skyline/src/mixins/use-model';
-import { isArray, isDef } from 'skyline/src/utils/helpers';
+import {
+  ModelOptions,
+  useModel,
+} from 'skyline/src/mixins/use-model';
+import {
+  isArray,
+  isDef,
+} from 'skyline/src/utils/helpers';
 
 export type CheckGroupProps = {
   exclusive: boolean;

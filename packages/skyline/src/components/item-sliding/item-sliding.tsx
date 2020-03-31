@@ -1,9 +1,9 @@
 import { createNamespace } from 'skyline/src/utils/namespace';
+import { Side } from 'skyline/src/types';
 import {
+  createGesture,
   GestureDetail,
-  Side,
-} from 'skyline/src/types/interface';
-import { createGesture } from 'skyline/src/utils/gesture';
+} from 'skyline/src/utils/gesture';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('item-sliding');
 
@@ -264,7 +264,7 @@ export default /*#__PURE__*/ createComponent({
         case ItemSide.Start: openAmount = Math.min(0, openAmount); break;
         case ItemSide.Both: break;
         case ItemSide.None: return;
-        default: console.warn('invalid ItemSideFlags value', this.sides); break;
+        default: __DEV__ && console.warn('invalid ItemSideFlags value', this.sides); break;
       }
 
       let optsWidth;

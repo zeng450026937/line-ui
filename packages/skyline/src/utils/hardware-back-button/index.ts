@@ -20,7 +20,7 @@ const executeAction = async (handler: Handler | undefined) => {
       }
     }
   } catch (e) {
-    console.error(e);
+    __DEV__ && console.error(e);
   }
 };
 

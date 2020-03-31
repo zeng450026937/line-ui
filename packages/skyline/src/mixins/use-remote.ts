@@ -1,7 +1,10 @@
 /* eslint-disable-next-line import/extensions */
 import { VNode } from 'vue/types/vnode';
 import { createMixins } from 'skyline/src/utils/mixins';
-import { isDef, isFunction } from 'skyline/src/utils/helpers';
+import {
+  isDef,
+  isFunction,
+} from 'skyline/src/utils/helpers';
 import remote from 'skyline/src/directives/remote';
 
 export function useRemote() {

@@ -1,8 +1,8 @@
-import { AnimationBuilder } from 'skyline/src/types/interface';
-import { MenuI } from './menu-interface';
-import { menuOverlayAnimation } from './animations/overlay';
-import { menuPushAnimation } from './animations/push';
-import { menuRevealAnimation } from './animations/reveal';
+import { AnimationBuilder } from 'skyline/src/utils/animation';
+import { MenuI } from 'skyline/src/utils/menu-controller/menu-interface';
+import { menuOverlayAnimation } from 'skyline/src/utils/menu-controller/animations/overlay';
+import { menuPushAnimation } from 'skyline/src/utils/menu-controller/animations/push';
+import { menuRevealAnimation } from 'skyline/src/utils/menu-controller/animations/reveal';
 
 const createMenuController = () => {
   const menuAnimations = new Map<string, AnimationBuilder>();

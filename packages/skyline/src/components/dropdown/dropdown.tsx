@@ -15,11 +15,7 @@ export default /*#__PURE__*/ createComponent({
     /*#__PURE__*/ useColor(),
     /*#__PURE__*/ usePopup({ disableScroll: false }),
     /*#__PURE__*/ useTrigger(),
-    /*#__PURE__*/ useClickOutside({
-      includes(this: any) {
-        return [this.$triggerEl].filter(Boolean);
-      },
-    }),
+    /*#__PURE__*/ useClickOutside(),
   ],
 
   props : {
@@ -82,6 +78,8 @@ export default /*#__PURE__*/ createComponent({
     this.$on('animation-leave', (baseEl: HTMLElement, animate: Function) => {
       animate(iosLeaveAnimation(baseEl));
     });
+
+    this.$on('event-include', (include: Function) => include(this.$triggerEl));
   },
 
   async mounted() {

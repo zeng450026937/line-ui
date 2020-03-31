@@ -1,4 +1,7 @@
-import { CreateElement, VNode } from 'vue';
+import {
+  CreateElement,
+  VNode,
+} from 'vue';
 import { createMixins } from 'skyline/src/utils/mixins';
 
 export function useAsyncRender() {

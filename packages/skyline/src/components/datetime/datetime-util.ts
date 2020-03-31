@@ -342,7 +342,7 @@ export const updateDate = (existingData: DatetimeData, newData: any, displayTime
     }
 
     // eww, invalid data
-    console.warn(`Error parsing date: "${ newData }". Please provide a valid ISO 8601 datetime format: https://www.w3.org/TR/NOTE-datetime`);
+    __DEV__ && console.warn(`Error parsing date: "${ newData }". Please provide a valid ISO 8601 datetime format: https://www.w3.org/TR/NOTE-datetime`);
   } else {
     // blank data, clear everything out
     for (const k in existingData) {
@@ -351,7 +351,6 @@ export const updateDate = (existingData: DatetimeData, newData: any, displayTime
       }
     }
   }
-  console.log(existingData);
   return existingData;
 };
 
@@ -481,7 +480,7 @@ export const convertToArrayOfStrings = (input: string | string[] | undefined | n
   }
 
   if (values === undefined || values.length === 0) {
-    console.warn(`Invalid "${ type }Names". Must be an array of strings, or a comma separated string.`);
+    __DEV__ && console.warn(`Invalid "${ type }Names". Must be an array of strings, or a comma separated string.`);
   }
 
   return values;
@@ -509,7 +508,7 @@ export const convertToArrayOfNumbers = (input: any[] | string | number, type: st
   }
 
   if (values.length === 0) {
-    console.warn(`Invalid "${ type }Values". Must be an array of numbers, or a comma separated string of numbers.`);
+    __DEV__ && console.warn(`Invalid "${ type }Values". Must be an array of numbers, or a comma separated string of numbers.`);
   }
 
   return values;

@@ -1,61 +1,53 @@
 import { createMixins } from 'skyline/src/utils/mixins';
-import { off, on } from 'skyline/src/utils/dom';
-import { isArray, isFunction } from 'skyline/src/utils/helpers';
-/* eslint-disable-next-line */
-import { Vue } from 'vue/types/vue';
+import { arrayify } from 'skyline/src/utils/helpers';
+import {
+  getApp,
+  on,
+} from 'skyline/src/utils/dom';
 
-export type RestAny = {[K: string]: any};
-export type VueInstance<T = RestAny> = Vue & T;
-
-export type EventHandler<T = RestAny> = (this: VueInstance<T>, ev: Event, options: EventOptions) => void;
-export type ConditionHandler<T = RestAny> = (this: VueInstance<T>, ev: Event, options: EventOptions) => boolean;
-
-export interface EventOptions {
+export interface EventOptions extends AddEventListenerOptions {
   event: string | Array<string>;
-  handler: string | EventHandler;
-  condition?: string | ConditionHandler;
-  passive?: boolean;
-  capture?: boolean;
   global?: boolean;
 }
 
-export function invoke(vm: any, name: string | Function, ...args: any[]) {
-  return isFunction(name) ? name.call(vm, ...args) : vm[name] && vm[name](...args);
+export interface EventCondition {
+  ev: Event;
+  name: string;
+  prevent: () => void;
 }
 
-export function useEvent<T extends EventOptions = EventOptions>(options: T) {
-  let app: HTMLElement;
-  const { global = false } = options;
-
-  function eventHandler(this: VueInstance, ev: Event) {
-    const { condition, handler } = options;
-    if (condition && !invoke(this, condition, ev, options)) return;
-    invoke(this, handler, ev, options);
-  }
-
-  function bind(this: VueInstance) {
-    const { useEvent = {} } = this;
-    if (useEvent.binded) return;
-    app = document.querySelector('[skyline-app]') || document.body;
-    const handler = useEvent.handler = eventHandler.bind(this);
-    const { event, passive = false, capture = false } = options;
-    const events = isArray(event) ? event : [event];
-    events.forEach(event => on(global ? app : this.$el, event, handler, { passive, capture }));
-    useEvent.binded = true;
-  }
-
-  function unbind(this: VueInstance) {
-    const { useEvent = {} } = this;
-    if (!useEvent.binded) return;
-    const events = isArray(options.event) ? options.event : [options.event];
-    events.forEach(event => off(global ? app : this.$el, event, useEvent.handler));
-    useEvent.binded = false;
-  }
+export function useEvent(options: EventOptions) {
+  const {
+    event,
+    global = false,
+  } = options;
 
   return createMixins({
-    mounted       : bind,
-    activated     : bind,
-    deactivated   : unbind,
-    beforeDestroy : unbind,
+    mounted() {
+      const { $el } = this;
+      const target = global ? getApp($el) : $el;
+
+      const offs = arrayify(event).map(name => {
+        let dismiss = false;
+
+        const prevent = () => dismiss = true;
+
+        const maybe = (ev: Event) => {
+          this.$emit('event-condition', { ev, name, prevent });
+          if (!dismiss) return;
+          this.$emit('event-handler', ev, name);
+        };
+
+        return on(target, name, maybe, options);
+      });
+
+      const teardown = () => offs.forEach(off => off());
+
+      this.useEvent = { teardown };
+    },
+
+    beforeDestroy() {
+      this.useEvent.teardown();
+    },
   });
 }

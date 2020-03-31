@@ -3,7 +3,7 @@ import { createNamespace } from 'skyline/src/utils/namespace';
 import { createColorClasses } from 'skyline/src/mixins/use-color';
 import {
   config,
-  getSkylineMode,
+  getMode,
 } from 'skyline/src/utils/config';
 import {
   SpinnerConfig,
@@ -15,7 +15,7 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('spinner');
 
 function getSpinnerName(name?: string): SpinnerTypes {
   const spinnerName = name || config.get('spinner');
-  const mode = getSkylineMode();
+  const mode = getMode();
   if (spinnerName) {
     return spinnerName;
   }

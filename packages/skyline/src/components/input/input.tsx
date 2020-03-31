@@ -195,7 +195,6 @@ export default /*#__PURE__*/ createComponent({
         ev.preventDefault();
         ev.stopPropagation();
       }
-      console.log('object');
       // TODO
       // this.value = '';
       this.nativeValue = '';

@@ -6,6 +6,8 @@ import { createMixins } from 'skyline/src/utils/mixins';
 type BeforeRenderHook = () => void;
 type AfterRenderHook = (vnode: VNode) => VNode | void;
 
+let hasStrategies: boolean | undefined;
+
 function setupStrategies() {
   const strategies = Vue.config.optionMergeStrategies;
   strategies.shouldRender; // default strategy
@@ -14,10 +16,10 @@ function setupStrategies() {
 }
 
 export function useRender(keep = true) {
-  // TODO
-  // setupStrategies() should only called once
-  // find some way to prevent calling multiple times
-  setupStrategies();
+  if (!hasStrategies) {
+    setupStrategies();
+    hasStrategies = true;
+  }
 
   return createMixins({
     beforeCreate() {

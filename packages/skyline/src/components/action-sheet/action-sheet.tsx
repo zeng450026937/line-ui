@@ -15,7 +15,7 @@ const safeCall = (handler: any, arg?: any) => {
     try {
       return handler(arg);
     } catch (e) {
-      console.error(e);
+      __DEV__ && console.error(e);
     }
   }
 

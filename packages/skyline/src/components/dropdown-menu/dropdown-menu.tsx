@@ -13,11 +13,7 @@ export default /*#__PURE__*/ createComponent({
   mixins : [
     /*#__PURE__*/ usePopup(),
     /*#__PURE__*/ useTrigger(),
-    /*#__PURE__*/ useClickOutside({
-      includes(this: any) {
-        return [this.$triggerEl, this.$el].filter(Boolean);
-      },
-    }),
+    /*#__PURE__*/ useClickOutside(),
   ],
 
   props : {
@@ -47,6 +43,8 @@ export default /*#__PURE__*/ createComponent({
     this.$on('animation-leave', (baseEl: HTMLElement, animate: Function) => {
       animate(iosLeaveAnimation(baseEl));
     });
+
+    this.$on('event-include', (include: Function) => include(this.$triggerEl));
   },
 
   mounted() {

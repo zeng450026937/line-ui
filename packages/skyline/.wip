@@ -24,3 +24,4 @@ components/tool-button/
 components/tool-separator/
 components/tree-view/
 directives/trigger/
+mixins/use-i18n*

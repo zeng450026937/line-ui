@@ -1,7 +1,5 @@
-import {
-  Animation,
-  Side,
-} from 'skyline/src/types/interface';
+import { Side } from 'skyline/src/types';
+import { Animation } from 'skyline/src/utils/animation';
 
 export interface MenuI {
   el: Element;

@@ -9,10 +9,11 @@ var Swiper = _interopDefault(require('swiper'));
 
 const debounce = (fn, delay = 300) => {
     let timer;
-    return ((...args) => {
+    function delegate(...args) {
         clearTimeout(timer);
-        timer = setTimeout(() => fn(...args), delay);
-    });
+        timer = setTimeout(() => fn.call(this, ...args), delay);
+    }
+    return delegate;
 };
 /* eslint-disable-next-line @typescript-eslint/no-empty-function */
 const NOOP = () => { };
@@ -30,6 +31,9 @@ const isFunction = (val) => typeof val === 'function';
 const isString = (val) => typeof val === 'string';
 const isObject = (val) => typeof val === 'object' && val !== null;
 const isDef = (val) => val !== undefined && val !== null;
+const arrayify = (val) => {
+    return isArray(val) ? val : [val];
+};
 
 function install(Vue, opts = {}) {
     const { components, directives, } = opts;
@@ -279,6 +283,7 @@ function createMixins(options) {
     return Vue.extend(options);
 }
 
+let hasStrategies;
 function setupStrategies() {
     const strategies = Vue.config.optionMergeStrategies;
     strategies.shouldRender; // default strategy
@@ -286,10 +291,10 @@ function setupStrategies() {
     strategies.afterRender = strategies.created;
 }
 function useRender(keep = true) {
-    // TODO
-    // setupStrategies() should only called once
-    // find some way to prevent calling multiple times
-    setupStrategies();
+    if (!hasStrategies) {
+        setupStrategies();
+        hasStrategies = true;
+    }
     return createMixins({
         beforeCreate() {
             const { $options: options, } = this;
@@ -744,11 +749,117 @@ function useModel(proxy, options = {}, defined = false) {
     });
 }
 
-const CONTAINER = '[skyline-app]';
+// Cross-browser support as described in:
+// https://stackoverflow.com/questions/1248081
+const getClientWidth = () => {
+    if (typeof document === 'undefined')
+        return 0; // SSR
+    return Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+};
+const getClientHeight = () => {
+    if (typeof document === 'undefined')
+        return 0; // SSR
+    return Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+};
+
+// eslint-disable-next-line import/no-mutable-exports
+let supportsPassive;
+const isSupportsPassive = (node) => {
+    if (supportsPassive === undefined) {
+        try {
+            const opts = Object.defineProperty({}, 'passive', {
+                get: () => {
+                    supportsPassive = true;
+                },
+            });
+            node.addEventListener('passive-tester', null, opts);
+        }
+        catch (e) {
+            supportsPassive = false;
+        }
+    }
+    return !!supportsPassive;
+};
+const off = (el, event, listener, opts) => {
+    el.removeEventListener(event, listener, opts);
+};
+const on = (el, event, listener, opts = { passive: false, capture: false }) => {
+    // use event listener options when supported
+    // otherwise it's just a boolean for the "capture" arg
+    const listenerOpts = isSupportsPassive(el) ? opts : !!opts.capture;
+    el.addEventListener(event, listener, listenerOpts);
+    return () => off(el, event, listener, listenerOpts);
+};
+
+/* eslint-disable consistent-return */
+function stop(fn) {
+    return (event, ...args) => {
+        event.stopPropagation();
+        return fn(event, ...args);
+    };
+}
+
+const pointerCoord = (ev) => {
+    // get X coordinates for either a mouse click
+    // or a touch depending on the given event
+    if (ev) {
+        const { changedTouches } = ev;
+        if (changedTouches && changedTouches.length > 0) {
+            const touch = changedTouches[0];
+            return { x: touch.clientX, y: touch.clientY };
+        }
+        if (ev.pageX !== undefined) {
+            return { x: ev.pageX, y: ev.pageY };
+        }
+    }
+    return { x: 0, y: 0 };
+};
+
+const raf = (h) => {
+    if (typeof requestAnimationFrame === 'function') {
+        return requestAnimationFrame(h);
+    }
+    return setTimeout(h);
+};
+
+const getScrollParent = (element) => {
+    if (!element) {
+        return document.body;
+    }
+    const { nodeName } = element;
+    if (nodeName === 'HTML' || nodeName === 'BODY') {
+        return element.ownerDocument.body;
+    }
+    if (nodeName === '#document') {
+        return element.body;
+    }
+    const { overflowY } = window.getComputedStyle(element);
+    if (overflowY === 'scroll' || overflowY === 'auto') {
+        return element;
+    }
+    return getScrollParent(element.parentNode);
+};
+
+const hasDocument = typeof document !== 'undefined';
+const hasWindow = typeof window !== 'undefined';
+const isWindow = (el) => el === window;
+let supportsVars;
+const isSupportsVars = () => {
+    if (supportsVars === undefined) {
+        supportsVars = !!(window.CSS && window.CSS.supports && window.CSS.supports('--a: 0'));
+    }
+    return supportsVars;
+};
+const now = (ev) => ev.timeStamp || Date.now();
+const APP_SELECTOR = '[skyline-app]';
+const getApp = (el, selector = APP_SELECTOR) => {
+    return el.closest(selector) || document.querySelector(selector) || document.body;
+};
+
 function createRemote(el, options) {
-    const { container = CONTAINER } = options;
+    const { container = '' } = options;
     const containerEl = isString(container)
-        ? el.closest(container) || document.querySelector(container) || document.body
+        ? getApp(el, container)
         : container;
     const { parentElement: originParent, nextElementSibling: originSibling, } = el;
     const destroy = () => {
@@ -1136,35 +1247,6 @@ class BlockerDelegate {
 const BACKDROP_NO_SCROLL = 'backdrop-no-scroll';
 const GESTURE_CONTROLLER = new GestureController();
 
-// eslint-disable-next-line import/no-mutable-exports
-let supportsPassive;
-const isSupportsPassive = (node) => {
-    if (supportsPassive === undefined) {
-        try {
-            const opts = Object.defineProperty({}, 'passive', {
-                get: () => {
-                    supportsPassive = true;
-                },
-            });
-            node.addEventListener('passive-tester', null, opts);
-        }
-        catch (e) {
-            supportsPassive = false;
-        }
-    }
-    return !!supportsPassive;
-};
-const off = (el, event, listener, opts) => {
-    el.removeEventListener(event, listener, opts);
-};
-const on = (el, event, listener, opts = { passive: false, capture: false }) => {
-    // use event listener options when supported
-    // otherwise it's just a boolean for the "capture" arg
-    const listenerOpts = isSupportsPassive(el) ? opts : !!opts.capture;
-    el.addEventListener(event, listener, listenerOpts);
-    return () => off(el, event, listener, listenerOpts);
-};
-
 /* eslint-disable */
 const MOUSE_WAIT = 2000;
 const createPointerEvents = (el, pointerDown, pointerMove, pointerUp, options) => {
@@ -1370,7 +1452,7 @@ const createGesture = (config) => {
         disableScroll: config.disableScroll
     });
     const pointerDown = (ev) => {
-        const timeStamp = now(ev);
+        const timeStamp = now$1(ev);
         if (hasStartedPan || !hasFiredStart) {
             return false;
         }
@@ -1520,7 +1602,7 @@ const calcGestureData = (detail, ev) => {
     updateDetail(ev, detail);
     const currentX = detail.currentX;
     const currentY = detail.currentY;
-    const timestamp = detail.currentTime = now(ev);
+    const timestamp = detail.currentTime = now$1(ev);
     const timeDelta = timestamp - prevT;
     if (timeDelta > 0 && timeDelta < 100) {
         const velocityX = (currentX - prevX) / timeDelta;
@@ -1552,7 +1634,7 @@ const updateDetail = (ev, detail) => {
     detail.currentX = x;
     detail.currentY = y;
 };
-const now = (ev) => {
+const now$1 = (ev) => {
     return ev.timeStamp || Date.now();
 };
 
@@ -1689,28 +1771,30 @@ const saveConfig = (win, c) => {
         win.sessionStorage.setItem(SKYLINE_SESSION_KEY, JSON.stringify(c));
     }
     catch (e) {
-        /* eslint-disable-next-line */
-        return;
     }
 };
 const configFromURL = (win) => {
     const configObj = {};
-    win.location.search.slice(1)
-        .split('&')
-        .map(entry => entry.split('='))
-        .map(([key, value]) => [decodeURIComponent(key), decodeURIComponent(value)])
-        .filter(([key]) => startsWith(key, SKYLINE_PREFIX))
-        .map(([key, value]) => [key.slice(SKYLINE_PREFIX.length), value])
-        .forEach(([key, value]) => {
-        configObj[key] = value;
-    });
+    try {
+        win.location.search.slice(1)
+            .split('&')
+            .map(entry => entry.split('='))
+            .map(([key, value]) => [decodeURIComponent(key), decodeURIComponent(value)])
+            .filter(([key]) => startsWith(key, SKYLINE_PREFIX))
+            .map(([key, value]) => [key.slice(SKYLINE_PREFIX.length), value])
+            .forEach(([key, value]) => {
+            configObj[key] = value;
+        });
+    }
+    catch (e) {
+    }
     return configObj;
 };
 
 let defaultMode;
 const getMode = (elm) => {
     while (elm) {
-        const elmMode = elm.mode || elm.getAttribute('mode');
+        const elmMode = elm.getAttribute('mode');
         if (elmMode) {
             return elmMode;
         }
@@ -1718,44 +1802,47 @@ const getMode = (elm) => {
     }
     return defaultMode;
 };
-const getSkylineMode = (ref) => {
-    return (ref && getMode(ref)) || defaultMode;
-};
-function setupConfig() {
-    const doc = document;
-    const win = window;
-    const Skyline = win.Skyline = win.Skyline || {};
+function setupConfig(configObj) {
+    const win = (hasWindow && window);
+    const doc = (hasDocument && document);
+    let Skyline = {};
+    if (hasWindow) {
+        Skyline = win.Skyline || Skyline;
+    }
     // create the Skyline.config from raw config object (if it exists)
     // and convert Skyline.config into a ConfigApi that has a get() fn
-    const configObj = {
-        ...configFromSession(win),
+    configObj = {
+        ...configObj,
+        ...(hasWindow && configFromSession(win)),
         persistConfig: false,
         ...Skyline.config,
-        ...configFromURL(win),
+        ...(hasWindow && configFromURL(win)),
     };
     config.reset(configObj);
-    if (config.getBoolean('persistConfig')) {
+    if (hasWindow && config.getBoolean('persistConfig')) {
         saveConfig(win, configObj);
     }
+    const getModeFallback = () => {
+        let fallback = 'ios';
+        if (hasDocument && hasWindow) {
+            fallback = (doc.documentElement.getAttribute('mode')) || (isPlatform(win, 'android') ? 'md' : 'ios');
+        }
+        return fallback;
+    };
     // first see if the mode was set as an attribute on <html>
     // which could have been set by the user, or by pre-rendering
     // otherwise get the mode via config settings, and fallback to ios
     Skyline.config = config;
-    Skyline.mode = defaultMode = config.get('mode', (doc.documentElement.getAttribute('mode')) || (isPlatform(win, 'android') ? 'md' : 'ios'));
+    Skyline.mode = defaultMode = config.get('mode', getModeFallback());
     config.set('mode', defaultMode);
-    doc.documentElement.setAttribute('mode', defaultMode);
-    doc.documentElement.classList.add(defaultMode);
+    if (hasDocument) {
+        doc.documentElement.setAttribute('mode', defaultMode);
+        doc.documentElement.classList.add(defaultMode);
+    }
     if (config.getBoolean('testing')) {
         config.set('animated', false);
     }
 }
-
-const raf = (h) => {
-    if (typeof requestAnimationFrame === 'function') {
-        return requestAnimationFrame(h);
-    }
-    return setTimeout(h);
-};
 
 /* eslint-disable */
 /**
@@ -2180,9 +2267,6 @@ const createAnimation = (animationId) => {
                 for (let i = 0; i < el.length; i++) {
                     elements.push(el[i]);
                 }
-            }
-            else {
-                console.error('Invalid addElement value');
             }
         }
         return ani;
@@ -3025,7 +3109,7 @@ const {
 /*#__PURE__*/
 createNamespace('overlay');
 
-const now$1 = ev => ev.timeStamp || Date.now();
+const now$2 = ev => ev.timeStamp || Date.now();
 
 var Overlay = /*#__PURE__*/
 createComponent$2({
@@ -3054,13 +3138,13 @@ createComponent$2({
     },
 
     onMouseDown(ev) {
-      if (this.lastClick < now$1(ev) - 1500) {
+      if (this.lastClick < now$2(ev) - 1500) {
         this.emitTap(ev);
       }
     },
 
     emitTap(ev) {
-      this.lastClick = now$1(ev);
+      this.lastClick = now$2(ev);
 
       if (this.stopPropagation) {
         ev.preventDefault();
@@ -3187,7 +3271,6 @@ const safeCall = (handler, arg) => {
     try {
       return handler(arg);
     } catch (e) {
-      console.error(e);
     }
   }
 
@@ -3501,9 +3584,7 @@ createComponent$4({
 
       const inputTypes = new Set(inputs.map(i => i.type));
 
-      if (inputTypes.has('checkbox') && inputTypes.has('radio')) {
-        console.warn(`Alert cannot mix input types: ${Array.from(inputTypes.values()).join('/')}. Please see alert docs for more info.`);
-      }
+      if (inputTypes.has('checkbox') && inputTypes.has('radio')) ;
 
       return inputs.map((i, index) => ({
         type: i.type || 'text',
@@ -3563,7 +3644,6 @@ createComponent$4({
         try {
           returnData = button.handler(role);
         } catch (error) {
-          console.error(error);
         }
       }
 
@@ -3614,71 +3694,107 @@ createComponent$4({
 
 });
 
-// Cross-browser support as described in:
-// https://stackoverflow.com/questions/1248081
-const getClientWidth = () => {
-    if (typeof document === 'undefined')
-        return 0; // SSR
-    return Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
-};
-const getClientHeight = () => {
-    if (typeof document === 'undefined')
-        return 0; // SSR
-    return Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
-};
-
-/* eslint-disable consistent-return */
-function stop(fn) {
-    return (event, ...args) => {
-        event.stopPropagation();
-        return fn(event, ...args);
-    };
+function useBreakPoint() {
+    return createMixins({
+        data() {
+            return {
+                clientWidth: getClientWidth(),
+                clientHeight: getClientHeight(),
+                thresholds: {
+                    xs: 600,
+                    sm: 960,
+                    md: 1280,
+                    lg: 1920,
+                },
+                scrollbarWidth: 16,
+            };
+        },
+        computed: {
+            breakpoint() {
+                const xs = this.clientWidth < this.thresholds.xs;
+                const sm = this.clientWidth < this.thresholds.sm && !xs;
+                const md = this.clientWidth < (this.thresholds.md - this.scrollbarWidth) && !(sm || xs);
+                const lg = this.clientWidth < (this.thresholds.lg - this.scrollbarWidth) && !(md || sm || xs);
+                const xl = this.clientWidth >= (this.thresholds.lg - this.scrollbarWidth);
+                const xsOnly = xs;
+                const smOnly = sm;
+                const smAndDown = (xs || sm) && !(md || lg || xl);
+                const smAndUp = !xs && (sm || md || lg || xl);
+                const mdOnly = md;
+                const mdAndDown = (xs || sm || md) && !(lg || xl);
+                const mdAndUp = !(xs || sm) && (md || lg || xl);
+                const lgOnly = lg;
+                const lgAndDown = (xs || sm || md || lg) && !xl;
+                const lgAndUp = !(xs || sm || md) && (lg || xl);
+                const xlOnly = xl;
+                let name;
+                switch (true) {
+                    case (xs):
+                        name = 'xs';
+                        break;
+                    case (sm):
+                        name = 'sm';
+                        break;
+                    case (md):
+                        name = 'md';
+                        break;
+                    case (lg):
+                        name = 'lg';
+                        break;
+                    default:
+                        name = 'xl';
+                        break;
+                }
+                return {
+                    // Definite breakpoint.
+                    xs,
+                    sm,
+                    md,
+                    lg,
+                    xl,
+                    // Useful e.g. to construct CSS class names dynamically.
+                    name,
+                    // Breakpoint ranges.
+                    xsOnly,
+                    smOnly,
+                    smAndDown,
+                    smAndUp,
+                    mdOnly,
+                    mdAndDown,
+                    mdAndUp,
+                    lgOnly,
+                    lgAndDown,
+                    lgAndUp,
+                    xlOnly,
+                    // For custom breakpoint logic.
+                    width: this.clientWidth,
+                    height: this.clientHeight,
+                    thresholds: this.thresholds,
+                    scrollbarWidth: this.scrollbarWidth,
+                };
+            },
+        },
+        methods: {
+            onResize: debounce(function onResize() {
+                this.setDimensions();
+            }, 200),
+            setDimensions() {
+                this.clientHeight = getClientHeight();
+                this.clientWidth = getClientWidth();
+            },
+        },
+        beforeMount() {
+            if (!hasWindow)
+                return;
+            on(window, 'resize', this.onResize, { passive: true });
+        },
+        beforeDestroy() {
+            if (!hasWindow)
+                return;
+            off(window, 'resize', this.onResize);
+        },
+    });
 }
-
-const pointerCoord = (ev) => {
-    // get X coordinates for either a mouse click
-    // or a touch depending on the given event
-    if (ev) {
-        const { changedTouches } = ev;
-        if (changedTouches && changedTouches.length > 0) {
-            const touch = changedTouches[0];
-            return { x: touch.clientX, y: touch.clientY };
-        }
-        if (ev.pageX !== undefined) {
-            return { x: ev.pageX, y: ev.pageY };
-        }
-    }
-    return { x: 0, y: 0 };
-};
-
-const getScrollParent = (element) => {
-    if (!element) {
-        return document.body;
-    }
-    const { nodeName } = element;
-    if (nodeName === 'HTML' || nodeName === 'BODY') {
-        return element.ownerDocument.body;
-    }
-    if (nodeName === '#document') {
-        return element.body;
-    }
-    const { overflowY } = window.getComputedStyle(element);
-    if (overflowY === 'scroll' || overflowY === 'auto') {
-        return element;
-    }
-    return getScrollParent(element.parentNode);
-};
-
-const hasWindow = typeof window !== 'undefined';
-const isWindow = (el) => el === window;
-let supportsVars;
-const isSupportsVars = () => {
-    if (supportsVars === undefined) {
-        supportsVars = !!(window.CSS && window.CSS.supports && window.CSS.supports('--a: 0'));
-    }
-    return supportsVars;
-};
-const now$2 = (ev) => ev.timeStamp || Date.now();
 
 /* eslint-disable @typescript-eslint/no-use-before-define */
 const ACTIVATED = 'line-activated';
@@ -3701,21 +3817,21 @@ const setupTapClick = (config) => {
     };
     // Touch Events
     const onTouchStart = (ev) => {
-        lastTouch = now$2(ev);
+        lastTouch = now(ev);
         pointerDown(ev);
     };
     const onTouchEnd = (ev) => {
-        lastTouch = now$2(ev);
+        lastTouch = now(ev);
         pointerUp(ev);
     };
     const onMouseDown = (ev) => {
-        const t = now$2(ev) - MOUSE_WAIT$1;
+        const t = now(ev) - MOUSE_WAIT$1;
         if (lastTouch < t) {
             pointerDown(ev);
         }
     };
     const onMouseUp = (ev) => {
-        const t = now$2(ev) - MOUSE_WAIT$1;
+        const t = now(ev) - MOUSE_WAIT$1;
         if (lastTouch < t) {
             pointerUp(ev);
         }
@@ -3896,6 +4012,9 @@ createNamespace('app');
 let initialized;
 var app = /*#__PURE__*/
 createComponent$5({
+  mixins: [
+  /*#__PURE__*/
+  useBreakPoint()],
   props: {
     id: String
   },
@@ -3906,13 +4025,15 @@ createComponent$5({
     };
   },
 
-  beforeMount() {
-    // Avoid multiple initialization
-    if (initialized) return; // TODO:
+  beforeCreate() {
     // config must be setup before using
     // while child content is rendered before created
-
     setupConfig();
+  },
+
+  beforeMount() {
+    // Avoid multiple initialization
+    if (initialized) return;
     setupPlatforms();
     setupTapClick();
     setupFocusVisible();
@@ -4578,6 +4699,17 @@ function getDefaultText(slots) {
   return text.trim();
 }
 
+function getIconClass() {
+  const mode = getMode();
+  const iconClass = config.get('iconFontClass');
+
+  if (iconClass) {
+    return iconClass;
+  }
+
+  return mode === 'md' ? 'material-icons' : '';
+}
+
 var FontIcon = /*#__PURE__*/
 createComponent$h({
   functional: true,
@@ -4602,8 +4734,9 @@ createComponent$h({
       color
     } = props;
     const text = name || getDefaultText(slots);
+    const iconClass = getIconClass();
     return h("i", helper([{
-      "class": ['line-icon', bem$h({
+      "class": ['line-icon', iconClass && iconClass, bem$h({
         [`${size}`]: !!size
       }), createColorClasses(color)],
       "attrs": {
@@ -5573,7 +5706,7 @@ createNamespace('spinner');
 
 function getSpinnerName(name) {
   const spinnerName = name || config.get('spinner');
-  const mode = getSkylineMode();
+  const mode = getMode();
 
   if (spinnerName) {
     return spinnerName;
@@ -6298,7 +6431,6 @@ const safeCall$1 = (handler, arg) => {
     try {
       return handler(arg);
     } catch (e) {
-      console.error(e);
     }
   }
 
@@ -9176,23 +9308,21 @@ createComponent$x({
 
 });
 
-const getAppRoot = (doc = document) => {
-    return doc.querySelector('[skyline-app]') || doc.body;
-};
 function createFactory(sfc) {
     const Component = Vue.extend(sfc);
-    function create(props, destroyWhenClose = true) {
+    const create = (props, destroyWhenClose = true) => {
         return new Component({
             propsData: props,
             mounted() {
                 this.destroyWhenClose = destroyWhenClose;
-                getAppRoot().appendChild(this.$el);
+                const { $el } = this;
+                getApp($el).appendChild($el);
             },
             beforeDestroy() {
                 this.$el.remove();
             },
         }).$mount();
-    }
+    };
     return {
         create,
     };
@@ -9535,8 +9665,6 @@ const updateDate = (existingData, newData, displayTimezone) => {
             existingData.hour = newData.hour.value;
             return true;
         }
-        // eww, invalid data
-        console.warn(`Error parsing date: "${newData}". Please provide a valid ISO 8601 datetime format: https://www.w3.org/TR/NOTE-datetime`);
     }
     else {
         // blank data, clear everything out
@@ -9546,7 +9674,6 @@ const updateDate = (existingData, newData, displayTimezone) => {
             }
         }
     }
-    console.log(existingData);
     return existingData;
 };
 const parseTemplate = (template) => {
@@ -9657,9 +9784,7 @@ const convertToArrayOfStrings = (input, type) => {
         // trim up each string value
         values = input.map(val => val.toString().trim());
     }
-    if (values === undefined || values.length === 0) {
-        console.warn(`Invalid "${type}Names". Must be an array of strings, or a comma separated string.`);
-    }
+    if (values === undefined || values.length === 0) ;
     return values;
 };
 /**
@@ -9682,9 +9807,7 @@ const convertToArrayOfNumbers = (input, type) => {
     else {
         values = [input];
     }
-    if (values.length === 0) {
-        console.warn(`Invalid "${type}Values". Must be an array of numbers, or a comma separated string of numbers.`);
-    }
+    if (values.length === 0) ;
     return values;
 };
 const twoDigit = (val) => {
@@ -9938,10 +10061,10 @@ createComponent$y({
 
     this.locale = {
       // this.locale[type] = convertToArrayOfStrings((this[type] ? this[type] : this.config.get(type), type);
-      monthNames: convertToArrayOfStrings(monthNames, 'monthNames'),
-      monthShortNames: convertToArrayOfStrings(monthShortNames, 'monthShortNames'),
-      dayNames: convertToArrayOfStrings(dayNames, 'dayNames'),
-      dayShortNames: convertToArrayOfStrings(dayShortNames, 'dayShortNames')
+      monthNames: convertToArrayOfStrings(monthNames),
+      monthShortNames: convertToArrayOfStrings(monthShortNames),
+      dayNames: convertToArrayOfStrings(dayNames),
+      dayShortNames: convertToArrayOfStrings(dayShortNames)
     };
     this.updateDatetimeValue(this.dateValue); // TODO
 
@@ -10087,7 +10210,7 @@ createComponent$y({
         const self = this;
         /* eslint-disable-next-line */
 
-        values = self[`${key}Values`] ? convertToArrayOfNumbers(self[`${key}Values`], key) : dateValueRange(format, this.datetimeMin, this.datetimeMax);
+        values = self[`${key}Values`] ? convertToArrayOfNumbers(self[`${key}Values`]) : dateValueRange(format, this.datetimeMin, this.datetimeMax);
         const colOptions = values.map(val => {
           return {
             value: val,
@@ -10153,7 +10276,7 @@ createComponent$y({
       const todaysYear = new Date().getFullYear();
 
       if (this.yearValues !== undefined) {
-        const years = convertToArrayOfNumbers(this.yearValues, 'year');
+        const years = convertToArrayOfNumbers(this.yearValues);
 
         if (this.dateMin === undefined) {
           this.dateMin = Math.min(...years).toString();
@@ -10188,16 +10311,13 @@ createComponent$y({
       max.second = max.second === undefined ? 59 : max.second; // Ensure min/max constraints
 
       if (min.year > max.year) {
-        console.error('min.year > max.year');
         min.year = max.year - 100;
       }
 
       if (min.year === max.year) {
         if (min.month > max.month) {
-          console.error('min.month > max.month');
           min.month = 1;
         } else if (min.month === max.month && min.day > max.day) {
-          console.error('min.day > max.day');
           min.day = 1;
         }
       }
@@ -10338,68 +10458,60 @@ createComponent$y({
 
 });
 
-function invoke(vm, name, ...args) {
-    return isFunction(name) ? name.call(vm, ...args) : vm[name] && vm[name](...args);
-}
 function useEvent(options) {
-    let app;
-    const { global = false } = options;
-    function eventHandler(ev) {
-        const { condition, handler } = options;
-        if (condition && !invoke(this, condition, ev, options))
-            return;
-        invoke(this, handler, ev, options);
-    }
-    function bind() {
-        const { useEvent = {} } = this;
-        if (useEvent.binded)
-            return;
-        app = document.querySelector('[skyline-app]') || document.body;
-        const handler = useEvent.handler = eventHandler.bind(this);
-        const { event, passive = false, capture = false } = options;
-        const events = isArray(event) ? event : [event];
-        events.forEach(event => on(global ? app : this.$el, event, handler, { passive, capture }));
-        useEvent.binded = true;
-    }
-    function unbind() {
-        const { useEvent = {} } = this;
-        if (!useEvent.binded)
-            return;
-        const events = isArray(options.event) ? options.event : [options.event];
-        events.forEach(event => off(global ? app : this.$el, event, useEvent.handler));
-        useEvent.binded = false;
-    }
+    const { event, global = false, } = options;
     return createMixins({
-        mounted: bind,
-        activated: bind,
-        deactivated: unbind,
-        beforeDestroy: unbind,
+        mounted() {
+            const { $el } = this;
+            const target = global ? getApp($el) : $el;
+            const offs = arrayify(event).map(name => {
+                let dismiss = false;
+                const prevent = () => dismiss = true;
+                const maybe = (ev) => {
+                    this.$emit('event-condition', { ev, name, prevent });
+                    if (!dismiss)
+                        return;
+                    this.$emit('event-handler', ev, name);
+                };
+                return on(target, name, maybe, options);
+            });
+            const teardown = () => offs.forEach(off => off());
+            this.useEvent = { teardown };
+        },
+        beforeDestroy() {
+            this.useEvent.teardown();
+        },
     });
 }
 
-function useClickOutside(options = {}) {
-    const { global = true, event = ['mouseup', 'touchend'], handler = function () {
-        this.$emit('clickoutside');
-    }, condition = function (ev) {
-        // If click was triggered programmaticaly (domEl.click()) then
-        // it shouldn't be treated as click-outside
-        // Chrome/Firefox support isTrusted property
-        // IE/Edge support pointerType property (empty if not triggered
-        // by pointing device)
-        if (('isTrusted' in ev && !ev.isTrusted)
-            || ('pointerType' in ev && !ev.pointerType))
-            return false;
-        const elements = options.includes
-            ? invoke(this, options.includes)
-            : [this.$el];
-        return !elements.some(element => element.contains(ev.target));
-    }, } = options;
+function useClickOutside(options) {
+    const { global = true, event = ['mouseup', 'touchend'], } = options || {};
     return createMixins({
         mixins: [
-            useEvent({
-                event, handler, condition, global,
-            }),
+            useEvent({ global, event }),
         ],
+        mounted() {
+            this.$on('event-condition', (condition) => {
+                const { ev, prevent } = condition;
+                // If click was triggered programmaticaly (domEl.click()) then
+                // it shouldn't be treated as click-outside
+                // Chrome/Firefox support isTrusted property
+                // IE/Edge support pointerType property (empty if not triggered
+                // by pointing device)
+                if (('isTrusted' in ev && !ev.isTrusted)
+                    || ('pointerType' in ev && !ev.pointerType))
+                    return false;
+                let elements = [this.$el];
+                const include = (el) => {
+                    elements = elements.concat(el);
+                };
+                this.$emit('event-include', include);
+                if (elements.some(el => el && el.contains(ev.target))) {
+                    prevent();
+                }
+            });
+            this.$on('event-handler', () => this.$emit('clickoutside'));
+        },
     });
 }
 
@@ -10868,7 +10980,6 @@ function useTreeItem(name) {
                     // all checked
                     if (hasChecked)
                         return 1 /* Checked */;
-                    console.error('internal error');
                     return -1 /* Unchecked */;
                 },
                 set(val) {
@@ -10877,7 +10988,6 @@ function useTreeItem(name) {
                         return;
                     }
                     if (val === 0 /* PartiallyChecked */) {
-                        console.error('unexpect value');
                         return;
                     }
                     this.items.forEach((item) => item.checkState = val);
@@ -11104,7 +11214,6 @@ createComponent$K({
     const contentEl = this.$parent.$options.name === 'line-content' ? this.$parent.$el : null;
 
     if (!contentEl) {
-      console.error('<line-infinite-scroll> must be used inside an <line-content>');
       return;
     }
 
@@ -11357,7 +11466,6 @@ const sanitizeDOMString = (untrustedString) => {
         return (getInnerDiv !== null) ? getInnerDiv.innerHTML : fragmentDiv.innerHTML;
     }
     catch (err) {
-        console.error(err);
         return '';
     }
 };
@@ -11665,10 +11773,9 @@ createComponent$M({
       if (this.clearInput && !this.readonly && !this.disabled && ev) {
         ev.preventDefault();
         ev.stopPropagation();
-      }
-
-      console.log('object'); // TODO
+      } // TODO
       // this.value = '';
+
 
       this.nativeValue = '';
       /**
@@ -12477,10 +12584,6 @@ createComponent$S({
         /* None */
         :
           return;
-
-        default:
-          console.warn('invalid ItemSideFlags value', this.sides);
-          break;
       }
 
       let optsWidth;
@@ -13391,8 +13494,6 @@ const DefaultCompare = (val, wanted) => (val < wanted
 function binarySearch(array = [], wanted, compare = DefaultCompare, from = 0, to = array.length - 1, bound = 0) {
     if (from >= to)
         return to;
-    const initFrom = from;
-    const initTo = to;
     let mid = 0;
     let result = 0;
     let found = -1;
@@ -13404,7 +13505,6 @@ function binarySearch(array = [], wanted, compare = DefaultCompare, from = 0, to
             result = compare(array[mid], wanted, mid);
         }
         catch (e) {
-            console.log(initFrom, initTo, mid, to);
             throw e;
         }
         if (result < 0) {
@@ -13427,7 +13527,6 @@ function binarySearch(array = [], wanted, compare = DefaultCompare, from = 0, to
         return mid;
     }
     if (found < 0) {
-        console.log(initFrom, initTo, mid, to);
         debugger;
     }
     return found >= 0 ? found : to;
@@ -14326,7 +14425,6 @@ const clamp$2 = (min, n, max) => {
 const assert = (actual, reason) => {
   if (!actual) {
     const message = `ASSERT: ${reason}`;
-    console.error(message);
     debugger; // tslint:disable-line
 
     throw new Error(message);
@@ -14762,23 +14860,11 @@ createComponent$Y({
     this.menuInnerEl = menuInnerEl;
     this.backdropEl = backdropEl.$el;
 
-    if (this.contentId === undefined) {
-      console.warn(`[DEPRECATED][line-menu] Using the [main] attribute is deprecated, please use the "contentId" property instead:
-      BEFORE:
-        <line-menu>...</line-menu>
-        <div main>...</div>
-
-      AFTER:
-        <line-menu contentId="main-content"></line-menu>
-        <div id="main-content">...</div>
-      `);
-    }
+    if (this.contentId === undefined) ;
 
     const content = this.contentId !== undefined ? document.getElementById(this.contentId) : parent && parent.querySelector && parent.querySelector('[main]');
 
     if (!content || !content.tagName) {
-      // requires content element
-      console.error('Menu: must have a "content" element to listen for drag events on.');
       return;
     }
 
@@ -14787,8 +14873,6 @@ createComponent$Y({
     content.classList.add('line-menu__content');
 
     if (!content || !content.tagName) {
-      // requires content element
-      console.error('Menu: must have a "content" element to listen for drag events on.');
       return;
     }
 
@@ -16432,7 +16516,6 @@ createComponent$11({
     const contentEl = this.$parent.$options.name === 'line-content' ? this.$parent.$el : null;
 
     if (!contentEl) {
-      console.error('<line-refresher> must be used inside an <line-content>');
       return;
     }
 
@@ -17343,7 +17426,6 @@ createComponent$16({
       } = this;
       const current = items.find(item => item.$el === ev.target);
       const previous = this.checkedItem;
-      console.log(ev, current, items);
 
       if (!current) {
         return;
@@ -18967,7 +19049,6 @@ function createAutoRepeat(el, options) {
         if (enableRepeat) {
             repeatDelayTimer = setTimeout(() => {
                 repeatTimer = setInterval(() => {
-                    console.log('dispatch event');
                     const repeatEvent = new MouseEvent('click', ev);
                     repeatEvent.repeat = true;
                     el.dispatchEvent(repeatEvent);
@@ -19077,12 +19158,14 @@ function createClickOutside(el, options) {
             return;
         const elements = include();
         elements.push(el);
-        !elements.some(element => element.contains(ev.target)) && setTimeout(() => { enabled(ev) && callback(ev); }, 0);
+        if (!elements.some(element => element.contains(ev.target))) {
+            callback(ev);
+        }
     };
-    const doc = document;
+    const app = getApp(el);
     const opts = { passive: true };
-    const mouseupOff = on(doc, 'mouseup', maybe, opts);
-    const touchendOff = on(doc, 'touchend', maybe, opts);
+    const mouseupOff = on(app, 'mouseup', maybe, opts);
+    const touchendOff = on(app, 'touchend', maybe, opts);
     const destroy = () => {
         mouseupOff();
         touchendOff();
@@ -19801,108 +19884,6 @@ function useAsyncRender() {
     });
 }
 
-function useBreakPoint() {
-    return createMixins({
-        data() {
-            return {
-                clientWidth: getClientWidth(),
-                clientHeight: getClientHeight(),
-                thresholds: {
-                    xs: 600,
-                    sm: 960,
-                    md: 1280,
-                    lg: 1920,
-                },
-                scrollbarWidth: 16,
-            };
-        },
-        computed: {
-            breakpoint() {
-                const xs = this.clientWidth < this.thresholds.xs;
-                const sm = this.clientWidth < this.thresholds.sm && !xs;
-                const md = this.clientWidth < (this.thresholds.md - this.scrollbarWidth) && !(sm || xs);
-                const lg = this.clientWidth < (this.thresholds.lg - this.scrollbarWidth) && !(md || sm || xs);
-                const xl = this.clientWidth >= (this.thresholds.lg - this.scrollbarWidth);
-                const xsOnly = xs;
-                const smOnly = sm;
-                const smAndDown = (xs || sm) && !(md || lg || xl);
-                const smAndUp = !xs && (sm || md || lg || xl);
-                const mdOnly = md;
-                const mdAndDown = (xs || sm || md) && !(lg || xl);
-                const mdAndUp = !(xs || sm) && (md || lg || xl);
-                const lgOnly = lg;
-                const lgAndDown = (xs || sm || md || lg) && !xl;
-                const lgAndUp = !(xs || sm || md) && (lg || xl);
-                const xlOnly = xl;
-                let name;
-                switch (true) {
-                    case (xs):
-                        name = 'xs';
-                        break;
-                    case (sm):
-                        name = 'sm';
-                        break;
-                    case (md):
-                        name = 'md';
-                        break;
-                    case (lg):
-                        name = 'lg';
-                        break;
-                    default:
-                        name = 'xl';
-                        break;
-                }
-                return {
-                    // Definite breakpoint.
-                    xs,
-                    sm,
-                    md,
-                    lg,
-                    xl,
-                    // Useful e.g. to construct CSS class names dynamically.
-                    name,
-                    // Breakpoint ranges.
-                    xsOnly,
-                    smOnly,
-                    smAndDown,
-                    smAndUp,
-                    mdOnly,
-                    mdAndDown,
-                    mdAndUp,
-                    lgOnly,
-                    lgAndDown,
-                    lgAndUp,
-                    xlOnly,
-                    // For custom breakpoint logic.
-                    width: this.clientWidth,
-                    height: this.clientHeight,
-                    thresholds: this.thresholds,
-                    scrollbarWidth: this.scrollbarWidth,
-                };
-            },
-        },
-        methods: {
-            onResize: debounce(function onResize() {
-                this.setDimensions();
-            }, 200),
-            setDimensions() {
-                this.clientHeight = getClientHeight();
-                this.clientWidth = getClientWidth();
-            },
-        },
-        beforeMount() {
-            if (!hasWindow)
-                return;
-            on(window, 'resize', this.onResize, { passive: true });
-        },
-        beforeDestroy() {
-            if (!hasWindow)
-                return;
-            off(window, 'resize', this.onResize);
-        },
-    });
-}
-
 function useOptions(options, namsespace = 'options') {
     return createMixins({
         props: options.reduce((prev, val) => {
@@ -19930,11 +19911,17 @@ function useOptions(options, namsespace = 'options') {
 }
 
 function usePopstateClose(options) {
-    const { event = 'popstate', handler = 'close', global = true, } = options || {};
+    const { event = 'popstate', global = true, } = options || {};
     return createMixins({
         mixins: [
-            useEvent({ event, handler, global }),
+            useEvent({ global, event }),
         ],
+        mounted() {
+            this.$on('event-handler', (ev) => {
+                this.$emit('popstate', ev);
+                this.close();
+            });
+        },
     });
 }
 
@@ -19952,7 +19939,6 @@ var mixins = /*#__PURE__*/Object.freeze({
   useClickOutside: useClickOutside,
   createColorClasses: createColorClasses,
   useColor: useColor,
-  invoke: invoke,
   useEvent: useEvent,
   useGroupItem: useGroupItem,
   useGroup: useGroup,
@@ -20119,7 +20105,6 @@ exports.createWaterfall = createWaterfall;
 exports.default = index;
 exports.defineComponent = defineComponent;
 exports.getItemValue = getItemValue;
-exports.invoke = invoke;
 exports.isVue = isVue;
 exports.useAsyncRender = useAsyncRender;
 exports.useBreakPoint = useBreakPoint;

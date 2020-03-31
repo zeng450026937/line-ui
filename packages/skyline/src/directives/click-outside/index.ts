@@ -1,6 +1,9 @@
 import { VNodeDirective } from 'vue';
 import { defineDirective } from 'skyline/src/utils/directive';
-import { on } from 'skyline/src/utils/dom';
+import {
+  getApp,
+  on,
+} from 'skyline/src/utils/dom';
 
 export interface ClickOutsideOptions {
   enabled?: (ev?: Event) => boolean;
@@ -26,17 +29,16 @@ export function createClickOutside(el: HTMLElement, options: ClickOutsideOptions
     const elements = include();
     elements.push(el);
 
-    !elements.some(element => element.contains(ev.target as Node)) && setTimeout(
-      () => { enabled(ev) && callback(ev); },
-      0,
-    );
+    if (!elements.some(element => element.contains(ev.target as Node))) {
+      callback(ev);
+    }
   };
 
-  const doc = document;
+  const app = getApp(el);
   const opts = { passive: true };
 
-  const mouseupOff = on(doc, 'mouseup', maybe, opts);
-  const touchendOff = on(doc, 'touchend', maybe, opts);
+  const mouseupOff = on(app, 'mouseup', maybe, opts);
+  const touchendOff = on(app, 'touchend', maybe, opts);
 
   const destroy = () => {
     mouseupOff();

@@ -55,7 +55,9 @@ export function useTreeItem(name: string) {
           // all checked
           if (hasChecked) return CheckState.Checked;
 
-          console.error('internal error');
+          if (__DEV__) {
+            console.warn('Internal error, unreachable condition.');
+          }
 
           return CheckState.Unchecked;
         },
@@ -65,7 +67,7 @@ export function useTreeItem(name: string) {
             return;
           }
           if (val === CheckState.PartiallyChecked) {
-            console.error('unexpect value');
+            __DEV__ && console.error('Unexpect value');
             return;
           }
           this.items.forEach((item: any) => item.checkState = val);

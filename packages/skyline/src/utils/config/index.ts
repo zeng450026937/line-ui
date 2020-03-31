@@ -1,23 +1,28 @@
-/* eslint-disable-next-line */
-import { Mode } from 'skyline/src/types/interface';
+import { Mode } from 'skyline/src/types';
 import { isPlatform } from 'skyline/src/utils/platform';
+import {
+  hasDocument,
+  hasWindow,
+} from 'skyline/src/utils/dom';
 import {
   config,
   configFromSession,
   configFromURL,
   saveConfig,
+  SkylinConfig,
 } from 'skyline/src/utils/config/config';
+
 // export config
 export * from 'skyline/src/utils/config/config';
 
 let defaultMode: Mode;
 
-export const getMode = (elm: any) => {
+export const getMode = (elm?: HTMLElement | null): Mode => {
   while (elm) {
-    const elmMode = (elm as any).mode || elm.getAttribute('mode');
+    const elmMode = elm.getAttribute('mode');
 
     if (elmMode) {
-      return elmMode;
+      return elmMode as Mode;
     }
 
     elm = elm.parentElement;
@@ -25,41 +30,56 @@ export const getMode = (elm: any) => {
   return defaultMode;
 };
 
-export const getSkylineMode = (ref?: any): Mode => {
-  return (ref && getMode(ref)) || defaultMode;
-};
+export function setupConfig(configObj?: SkylinConfig) {
+  const win = (hasWindow && window) as Window;
+  const doc = (hasDocument && document) as Document;
 
-export function setupConfig() {
-  const doc = document;
-  const win = window;
-  const Skyline = (win as any).Skyline = (win as any).Skyline || {};
+  let Skyline = {} as any;
+
+  if (hasWindow) {
+    Skyline = (win as any).Skyline || Skyline;
+  }
 
   // create the Skyline.config from raw config object (if it exists)
   // and convert Skyline.config into a ConfigApi that has a get() fn
-  const configObj = {
-    ...configFromSession(win),
+  configObj = {
+    ...configObj,
+    ...(hasWindow && configFromSession(win)),
     persistConfig : false,
     ...Skyline.config,
-    ...configFromURL(win),
+    ...(hasWindow && configFromURL(win)),
   };
 
-  config.reset(configObj);
+  config.reset(configObj!);
 
-  if (config.getBoolean('persistConfig')) {
+  if (hasWindow && config.getBoolean('persistConfig')) {
     saveConfig(win, configObj);
   }
+
+  const getModeFallback = () => {
+    let fallback = 'ios';
+    if (hasDocument && hasWindow) {
+      fallback = (
+        doc.documentElement.getAttribute('mode')
+      ) || (
+        isPlatform(win, 'android') ? 'md' : 'ios'
+      );
+    }
+    return fallback;
+  };
 
   // first see if the mode was set as an attribute on <html>
   // which could have been set by the user, or by pre-rendering
   // otherwise get the mode via config settings, and fallback to ios
   Skyline.config = config;
-  Skyline.mode = defaultMode = config.get(
-    'mode',
-    (doc.documentElement.getAttribute('mode')) || (isPlatform(win, 'android') ? 'md' : 'ios'),
-  );
+  Skyline.mode = defaultMode = config.get('mode', getModeFallback());
+
   config.set('mode', defaultMode);
-  doc.documentElement.setAttribute('mode', defaultMode);
-  doc.documentElement.classList.add(defaultMode);
+
+  if (hasDocument) {
+    doc.documentElement.setAttribute('mode', defaultMode);
+    doc.documentElement.classList.add(defaultMode);
+  }
 
   if (config.getBoolean('testing')) {
     config.set('animated', false);

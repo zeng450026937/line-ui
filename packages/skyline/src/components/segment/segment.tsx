@@ -322,7 +322,6 @@ export default /*#__PURE__*/ createComponent({
       const current = items.find((item: any) => item.$el === ev.target);
       const previous = this.checkedItem;
 
-      console.log(ev, current, items);
       if (!current) {
         return;
       }

@@ -1,5 +1,4 @@
-/* eslint-disable-next-line */
-import { Mode } from 'skyline/src/types/interface';
+import { Mode } from 'skyline/src/types';
 
 export interface SkylinConfig {
   /**
@@ -19,6 +18,8 @@ export interface SkylinConfig {
   rippleEffect?: boolean;
 
   spinner?: string;
+
+  iconFontClass?: string;
 
   refreshingIcon?: string;
   refreshingSpinner?: string;
@@ -79,11 +80,12 @@ export class Config {
 
 export const config = new Config();
 
-export const configFromSession = (win: Window): any => {
+export const configFromSession = (win: Window): SkylinConfig => {
   try {
     const configStr = win.sessionStorage.getItem(SKYLINE_SESSION_KEY);
     return configStr !== null ? JSON.parse(configStr) : {};
   } catch (e) {
+    __DEV__ && console.warn(e);
     return {};
   }
 };
@@ -92,22 +94,24 @@ export const saveConfig = (win: Window, c: any) => {
   try {
     win.sessionStorage.setItem(SKYLINE_SESSION_KEY, JSON.stringify(c));
   } catch (e) {
-    /* eslint-disable-next-line */
-    return;
+    __DEV__ && console.warn(e);
   }
 };
 
-export const configFromURL = (win: Window) => {
+export const configFromURL = (win: Window): SkylinConfig => {
   const configObj: any = {};
-  win.location.search.slice(1)
-    .split('&')
-    .map(entry => entry.split('='))
-    .map(([key, value]) => [decodeURIComponent(key), decodeURIComponent(value)])
-    .filter(([key]) => startsWith(key, SKYLINE_PREFIX))
-    .map(([key, value]) => [key.slice(SKYLINE_PREFIX.length), value])
-    .forEach(([key, value]) => {
-      configObj[key] = value;
-    });
-
+  try {
+    win.location.search.slice(1)
+      .split('&')
+      .map(entry => entry.split('='))
+      .map(([key, value]) => [decodeURIComponent(key), decodeURIComponent(value)])
+      .filter(([key]) => startsWith(key, SKYLINE_PREFIX))
+      .map(([key, value]) => [key.slice(SKYLINE_PREFIX.length), value])
+      .forEach(([key, value]) => {
+        configObj[key] = value;
+      });
+  } catch (e) {
+    __DEV__ && console.warn(e);
+  }
   return configObj;
 };

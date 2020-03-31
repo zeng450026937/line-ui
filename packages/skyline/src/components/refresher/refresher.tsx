@@ -1,10 +1,10 @@
 import { createNamespace } from 'skyline/src/utils/namespace';
-import { createGesture } from 'skyline/src/utils/gesture';
-import { getTimeGivenProgression } from 'skyline/src/utils/animation/cubic-bezier';
 import {
-  Animation,
+  createGesture,
   GestureDetail,
-} from 'skyline/src/types/interface';
+} from 'skyline/src/utils/gesture';
+import { Animation } from 'skyline/src/utils/animation';
+import { getTimeGivenProgression } from 'skyline/src/utils/animation/cubic-bezier';
 import {
   createPullingAnimation,
   createSnapBackAnimation,
@@ -624,7 +624,7 @@ export default /*#__PURE__*/ createComponent({
     const contentEl = this.$parent.$options.name === 'line-content' ? this.$parent.$el : null;
 
     if (!contentEl) {
-      console.error('<line-refresher> must be used inside an <line-content>');
+      __DEV__ && console.error('<line-refresher> must be used inside an <line-content>');
       return;
     }
 

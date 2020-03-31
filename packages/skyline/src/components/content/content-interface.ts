@@ -1,4 +1,4 @@
-import { GestureDetail } from 'skyline/src/types/interface';
+import { GestureDetail } from 'skyline/src/utils/gesture';
 
 export interface ScrollBaseDetail {
   isScrolling: boolean;

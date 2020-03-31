@@ -83,10 +83,8 @@ export default /*#__PURE__*/ createComponent({
       const { to, from } = this;
       if (bufferValue > to) {
         bufferValue = to;
-        console.warn('bufferValue', this.bufferValue);
       } else if (bufferValue < from) {
         bufferValue = from;
-        console.warn('bufferValue', this.bufferValue);
       }
       const position = (bufferValue - from) / (to - from);
 
@@ -101,10 +99,8 @@ export default /*#__PURE__*/ createComponent({
       let { value } = this;
       if (value > to) {
         value = to;
-        console.warn('value', this.value);
       } else if (value < from) {
         value = from;
-        console.warn('value', this.value);
       }
       const position = (value - from) / (to - from);
 

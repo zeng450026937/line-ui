@@ -3,10 +3,13 @@ export const debounce = <T extends (...args: any[]) => any>(
   delay: number = 300,
 ): T => {
   let timer: number | undefined;
-  return ((...args: any[]) => {
+
+  function delegate(this: any, ...args: any[]) {
     clearTimeout(timer);
-    timer = setTimeout(() => fn(...args), delay);
-  }) as any;
+    timer = setTimeout(() => fn.call(this, ...args), delay);
+  }
+
+  return delegate as any;
 };
 
 export const once = <T extends () => any>(
@@ -82,3 +85,7 @@ export const isDate = (val: unknown): val is Date => toTypeString(val) === '[obj
 // compare whether a value has changed, accounting for NaN.
 export const hasChanged = (value: any, oldValue: any): boolean =>
   value !== oldValue && (value === value || oldValue === oldValue);
+
+export const arrayify = (val: any): any[] => {
+  return isArray(val) ? val : [val];
+};

@@ -57,7 +57,7 @@ export default /*#__PURE__*/ createComponent({
       // checkboxes and inputs are all accepted, but they cannot be mixed.
       const inputTypes = new Set(inputs.map(i => i.type));
       if (inputTypes.has('checkbox') && inputTypes.has('radio')) {
-        console.warn(`Alert cannot mix input types: ${ (Array.from(inputTypes.values()).join('/')) }. Please see alert docs for more info.`);
+        __DEV__ && console.warn(`Alert cannot mix input types: ${ (Array.from(inputTypes.values()).join('/')) }. Please see alert docs for more info.`);
       }
       return inputs.map((i, index) => ({
         type        : i.type || 'text',
@@ -120,7 +120,7 @@ export default /*#__PURE__*/ createComponent({
         try {
           returnData = button.handler(role);
         } catch (error) {
-          console.error(error);
+          __DEV__ && console.error(error);
         }
       }
       if (returnData !== false) {

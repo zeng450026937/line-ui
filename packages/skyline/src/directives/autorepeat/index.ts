@@ -24,7 +24,6 @@ export function createAutoRepeat(el: HTMLElement, options: AutoRepeatOptions) {
     if (enableRepeat) {
       repeatDelayTimer = setTimeout(() => {
         repeatTimer = setInterval(() => {
-          console.log('dispatch event');
           const repeatEvent = new MouseEvent('click', ev);
           (repeatEvent as any).repeat = true;
           el.dispatchEvent(repeatEvent);

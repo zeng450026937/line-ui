@@ -70,8 +70,7 @@ export const sanitizeDOMString = (untrustedString: string | undefined): string |
     return (getInnerDiv !== null) ? getInnerDiv.innerHTML : fragmentDiv.innerHTML;
 
   } catch (err) {
-    console.error(err);
-
+    __DEV__ && console.error(err);
     return '';
   }
 };
