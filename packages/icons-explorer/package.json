@@ -1,0 +1,15 @@
+{
+  "name": "@skyline/icons-explorer",
+  "version": "1.0.0-alpha",
+  "description": "@skyline/icons-explorer",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "keywords": [
+    "skyline"
+  ],
+  "author": "Yealink Inc",
+  "license": "MIT"
+}

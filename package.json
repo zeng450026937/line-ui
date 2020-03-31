@@ -20,6 +20,7 @@
     "spa": "vue-cli-service spa",
     "ssr": "vue-cli-service ssr",
     "quickstart": "vue-cli-service quickstart",
+    "iconsexplorer": "vue-cli-service icons-explorer",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "playground": "yarn serve:playground",
