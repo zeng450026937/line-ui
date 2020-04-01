@@ -34,7 +34,7 @@ module.exports = {
       },
     },
     {
-      files : ['*.ts', '*.tsx'],
+      files : ['*.ts', '*.tsx', '*.vue'],
       rules : {
         'consistent-return'                        : 0,
         '@typescript-eslint/no-explicit-any'       : 0,

@@ -16,6 +16,7 @@
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.12.1",
     "@mdi/svg": "^4.9.95",
+    "cheerio": "^1.0.0-rc.3",
     "eva-icons": "^1.1.2",
     "find-up": "^4.1.0",
     "gulp": "^4.0.2",

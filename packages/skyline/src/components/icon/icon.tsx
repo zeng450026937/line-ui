@@ -9,8 +9,8 @@ export default /*#__PURE__*/createComponent({
 
   render(h, { data, children }) {
     const { attrs } = data;
-    const hasSource = attrs && 'source' in attrs;
-    if (hasSource) {
+    const hasSrc = attrs && ('src' in attrs || 'href' in attrs);
+    if (hasSrc) {
       return h(SvgIcon, data, children);
     }
     return h(FontIcon, data, children);

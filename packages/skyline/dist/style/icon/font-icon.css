@@ -1,13 +1,23 @@
-.line-icon.line-font-icon {
+.line-font-icon {
   font-size: 24px;
   user-select: none;
 }
-.line-icon.line-font-icon.line-color {
+
+.line-font-icon.line-color {
   color: var(--line-color-base);
 }
-.line-icon.line-font-icon.line-font-icon--small {
+
+.line-font-icon.line-font-icon--small {
+  /* stylelint-disable-next-line declaration-no-important */
   font-size: 18px !important;
 }
-.line-icon.line-font-icon.line-font-icon--large {
+
+.line-font-icon.line-font-icon--large {
+  /* stylelint-disable-next-line declaration-no-important */
   font-size: 32px !important;
+}
+
+.line-font-icon.line-font-icon--xlarge {
+  /* stylelint-disable-next-line declaration-no-important */
+  font-size: 48px !important;
 }

@@ -33,6 +33,9 @@ module.exports = (config) => {
         dest(resolve(`packages/${ pkg }`)),
       )
       .pipe(
+        modify(onData),
+      )
+      .pipe(
         svgo({
           plugins : [
             { removeXMLNS: true },
@@ -47,9 +50,9 @@ module.exports = (config) => {
           multipass : true,
         }),
       )
-      .pipe(
-        modify(onData),
-      )
+      // .pipe(
+      //   modify(onData),
+      // )
       .pipe(
         mixer({
           sprite : { filename: `${ pkg }.svg`, usages: false },

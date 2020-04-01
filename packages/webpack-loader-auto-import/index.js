@@ -4,7 +4,7 @@ const parse = require('./parse');
 const codegen = require('./codegen');
 
 const templateRE = /<template[\s\S]+<\/template>/g;
-const commentRE = /<!--+[\S\s]+--+>/g;
+const commentRE = /<!--+[\S\s]+?--+>/g;
 
 module.exports = function autoImport(content) {
   const loaderContext = this;

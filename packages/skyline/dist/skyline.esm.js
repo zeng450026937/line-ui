@@ -4059,7 +4059,7 @@ createComponent$5({
       "class": [bem$5(), 'line-page']
     }, {
       "on": this.$listeners
-    }]), [this.slots()]);
+    }]), [this.slots('header'), this.slots(), this.slots('footer')]);
   }
 
 });
@@ -4704,17 +4704,6 @@ function getDefaultText(slots) {
   return text.trim();
 }
 
-function getIconClass() {
-  const mode = getMode();
-  const iconClass = config.get('iconFontClass');
-
-  if (iconClass) {
-    return iconClass;
-  }
-
-  return mode === 'md' ? 'material-icons' : '';
-}
-
 var FontIcon = /*#__PURE__*/
 createComponent$h({
   functional: true,
@@ -4739,9 +4728,8 @@ createComponent$h({
       color
     } = props;
     const text = name || getDefaultText(slots);
-    const iconClass = getIconClass();
     return h("i", helper([{
-      "class": ['line-icon', iconClass && iconClass, bem$h({
+      "class": ['line-icon', bem$h({
         [`${size}`]: !!size
       }), createColorClasses(color)],
       "attrs": {
@@ -4760,20 +4748,26 @@ const {
 /*#__PURE__*/
 createNamespace('svg-icon');
 
-function getDefaultText$1(slots) {
+const getDefaultText$1 = slots => {
   const nodes = slots();
   const text = nodes && nodes[0].text || '';
   return text.trim();
-}
+};
 
 var SvgIcon = /*#__PURE__*/
 createComponent$i({
   functional: true,
   props: {
     name: String,
-    source: String,
+    href: String,
+    src: String,
     size: String,
-    color: String
+    color: String,
+    fill: {
+      type: Boolean,
+      default: true
+    },
+    stroke: Boolean
   },
 
   render(h, {
@@ -4786,27 +4780,30 @@ createComponent$i({
     } = data;
     const {
       name,
-      source,
+      href,
+      src,
       size,
-      color
+      color,
+      fill,
+      stroke
     } = props;
     const text = name || getDefaultText$1(slots);
-    const href = `${source || ''}#${text}`;
+    const finalHref = href || `${src || ''}#${text}`;
     return h("div", {
-      "class": ['line-icon', bem$i({
-        [`${size}`]: !!size
+      "class": [bem$i({
+        [`${size}`]: !!size,
+        'fill-none': !fill,
+        'stroke-width': stroke
       }), createColorClasses(color)]
     }, [h("svg", helper([{
       "attrs": {
-        "xmlns": "http://www.w3.org/2000/svg",
         "role": "img",
         "aria-hidden": !attrs['aria-label'],
         "aria-label": attrs['aria-label'] || text
       }
     }, data]), [text ? h("use", {
       "attrs": {
-        "href": href,
-        "xlink:href": href
+        "xlink:href": finalHref
       }
     }) : slots('content')])]);
   }
@@ -4829,9 +4826,9 @@ createComponent$j({
     const {
       attrs
     } = data;
-    const hasSource = attrs && 'source' in attrs;
+    const hasSrc = attrs && ('src' in attrs || 'href' in attrs);
 
-    if (hasSource) {
+    if (hasSrc) {
       return h(SvgIcon, data, children);
     }
 

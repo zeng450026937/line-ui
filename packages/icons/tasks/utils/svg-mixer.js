@@ -8,7 +8,6 @@ const postcss = require('postcss');
 const postcssSprite = require('postcss-svg-mixer');
 const postcssAspectRatio = require('postcss-aspect-ratio-from-bg-image');
 const postcssPrettify = require('postcss-prettify');
-const cheerio = require('cheerio');
 
 const basename = p => path.basename(p, path.extname(p));
 

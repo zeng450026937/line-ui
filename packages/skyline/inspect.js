@@ -25,14 +25,15 @@ const lookup = {
     glob.sync('*/*.tsx', { cwd: root })
       .filter(p => !matchWIP(`${ root }/${ p }`))
       .forEach(p => {
-        const name = camelize(`-${ basename(p) }`);
+        const shortname = basename(p);
+        const name = camelize(`-${ shortname }`);
         const file = `${ pkgName }/${ relative(pkgDir, `${ root }/${ p.replace('.tsx', '') }`) }`;
 
         imports.set(name, file);
 
         const dir = path.dirname(p);
         const cwd = resolve(isDev ? `src/components/${ dir }` : `dist/style/${ dir }`);
-        const pattern = isDev ? '*.scss' : '*.css';
+        const pattern = isDev ? `${ shortname }*.scss` : `${ shortname }*.css`;
         const ignore = ['*.vars.scss', '*.min.css'];
 
         glob.sync(pattern, { cwd, ignore })
@@ -54,13 +55,14 @@ const lookup = {
     glob.sync('*', { cwd: root })
       .filter(p => !matchWIP(`${ root }/${ p }`))
       .forEach(p => {
-        const name = camelize(`v-${ basename(p) }`);
+        const shortname = basename(p);
+        const name = camelize(`v-${ shortname }`);
         const file = `${ pkgName }/${ relative(pkgDir, `${ root }/${ p }`) }`;
 
         imports.set(name, file);
 
         const cwd = resolve(isDev ? `src/directives/${ p }` : `dist/style/v-${ p }`);
-        const pattern = isDev ? '*.scss' : '*.css';
+        const pattern = isDev ? `${ shortname }*.scss` : `${ shortname }*.css`;
         const ignore = ['*.vars.scss', '*.min.css'];
 
         glob.sync(pattern, { cwd, ignore })

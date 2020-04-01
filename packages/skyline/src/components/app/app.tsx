@@ -51,8 +51,10 @@ export default /*#__PURE__*/ createComponent({
         skyline-app
         class={[bem(), 'line-page']}
         on={this.$listeners}
-       >
+      >
+        {this.slots('header')}
         {this.slots()}
+        {this.slots('footer')}
       </div>
     );
   },

@@ -11,5 +11,8 @@
     "skyline"
   ],
   "author": "Yealink Inc",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "@skyline/icons": "^1.0.0-alpha"
+  }
 }

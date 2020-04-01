@@ -25,6 +25,9 @@ module.exports = (api, options) => {
       }
 
       log(
+        `${ chalk.bold(chalk.bgBlue(' SSR ')) }${ chalk.bgGray(' PREPARE ') }`,
+      );
+      log(
         'Preparing SSR...',
         `${ chalk.green('☕️') }`,
       );
@@ -110,6 +113,9 @@ module.exports = (api, options) => {
 
 
         await new Promise((resolve, reject) => {
+          log(
+            `${ chalk.bold(chalk.bgBlue(' SSR ')) }${ chalk.bgGray(' BUILD ') }`,
+          );
           log(
             'Starting SSR...',
             `${ chalk.green('🚀') }`,
@@ -273,6 +279,9 @@ module.exports = (api, options) => {
         ssrClient(),
       ]);
 
+      log(
+        `${ chalk.bold(chalk.bgBlue(' SSR ')) }${ chalk.bgGray(' DONE ') }`,
+      );
       log(
         `Running SSR with SKYLINE ${ require('skyline/package.json').version }`,
         `${ chalk.green('🍺') }`,

@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 module.exports = (api, options) => {
   api.chainWebpack(config => {
     // disable typescipt checker if you think it's ignoring
@@ -30,6 +32,28 @@ module.exports = (api, options) => {
           tapBabel('ts');
           tapBabel('tsx');
         }
+      }
+
+      const outputDir = api.resolve(options.outputDir);
+      const publicDir = `${ packageDir }/public/`;
+      const tapCopy = () => {
+        config.plugin('copy')
+          .tap(options => {
+            return [
+              [
+                ...options[0],
+                {
+                  from   : publicDir,
+                  to     : outputDir,
+                  toType : 'dir',
+                },
+              ],
+            ];
+          });
+      };
+
+      if (fs.existsSync(publicDir)) {
+        tapCopy();
       }
 
       // skyline config
