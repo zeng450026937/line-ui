@@ -105,6 +105,23 @@
   font-size: #{$button-md-small-font-size};
 }
 
+.line-button--vertical {
+  --padding-top: #{$button-md-padding-start};
+  --padding-bottom: #{$button-md-padding-end};
+
+  height: unset;
+}
+
+.line-button--vertical.line-button--large {
+  --padding-top: #{$button-md-large-padding-start};
+  --padding-bottom: #{$button-md-large-padding-end};
+}
+
+.line-button--vertical.line-button--small {
+  --padding-top: #{$button-md-small-padding-start};
+  --padding-bottom: #{$button-md-small-padding-end};
+}
+
 
 // MD strong Button
 // --------------------------------------------------

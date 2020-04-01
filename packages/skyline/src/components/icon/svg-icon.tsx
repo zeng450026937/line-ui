@@ -53,7 +53,7 @@ export default /*#__PURE__*/ createComponent({
           {...data}
         >
           {
-            text
+            text || href
               ? <use xlinkHref={finalHref}></use>
               : slots('content')
           }

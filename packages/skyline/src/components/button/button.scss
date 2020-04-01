@@ -202,6 +202,14 @@
   border-left-width: 0;
 }
 
+.line-button--vertical {
+  height: auto;
+}
+
+.line-button--vertical .line-button__content {
+  flex-flow: column nowrap;
+}
+
 .line-button__content::-moz-focus-inner {
   border: 0;
 }

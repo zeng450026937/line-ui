@@ -56,12 +56,12 @@ export default /*#__PURE__*/ createComponent({
   render() {
     const {
       text, strong, disabled, ripple, vertical,
-      expand, fill = 'solid', shape, size,
+      expand, fill, shape, size,
       type = 'button', download, href, rel, target,
       inItem, inToolbar, inListHeader,
     } = this;
     const finalSize = !isDef(size) && inItem ? 'small' : size;
-    const finalFill = !isDef(fill) && (inToolbar || inListHeader) ? 'clear' : fill;
+    const finalFill = !isDef(fill) && (inToolbar || inListHeader) ? 'clear' : (fill || 'solid');
     const TagType = isDef(href) ? 'a' : 'button' as any;
     const attrs = (TagType === 'button')
       ? { type }
@@ -82,6 +82,7 @@ export default /*#__PURE__*/ createComponent({
             [shape]     : isDef(shape),
             [finalFill] : true,
             strong,
+            vertical,
             disabled,
           }),
         ]}
@@ -91,7 +92,7 @@ export default /*#__PURE__*/ createComponent({
           {...{ attrs }}
           vRipple={ripple}
           disabled={disabled}
-          class={bem('content', { vertical })}
+          class={bem('content')}
         >
           {this.slots('icon-only')}
           {this.slots('start')}

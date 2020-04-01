@@ -104,6 +104,24 @@
 }
 
 
+.line-button--vertical {
+  --padding-top: #{$button-ios-padding-start};
+  --padding-bottom: #{$button-ios-padding-end};
+
+  height: unset;
+}
+
+.line-button--vertical.line-button--large {
+  --padding-top: #{$button-ios-large-padding-start};
+  --padding-bottom: #{$button-ios-large-padding-end};
+}
+
+.line-button--vertical.line-button--small {
+  --padding-top: #{$button-ios-small-padding-start};
+  --padding-bottom: #{$button-ios-small-padding-end};
+}
+
+
 // iOS Round Button
 // --------------------------------------------------
 
