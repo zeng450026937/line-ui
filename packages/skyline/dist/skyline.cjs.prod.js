@@ -4245,7 +4245,7 @@ createComponent$a({
       ripple,
       vertical,
       expand,
-      fill,
+      fill = 'solid',
       shape,
       size,
       type = 'button',
@@ -4258,7 +4258,7 @@ createComponent$a({
       inListHeader
     } = this;
     const finalSize = !isDef(size) && inItem ? 'small' : size;
-    const finalFill = !isDef(fill) && (inToolbar || inListHeader) ? 'clear' : 'solid';
+    const finalFill = !isDef(fill) && (inToolbar || inListHeader) ? 'clear' : fill;
     const TagType = isDef(href) ? 'a' : 'button';
     const attrs = TagType === 'button' ? {
       type

@@ -7,13 +7,7 @@
         </template>
         <template #default>
           <div class="input-area">
-            <line-input
-              clear-input
-              auto-focus
-              placeholder="search"
-              v-model="keyword"
-            >
-            </line-input>
+            <line-input clear-input auto-focus placeholder="search" v-model="keyword"></line-input>
           </div>
         </template>
         <template #end>
@@ -23,39 +17,33 @@
     </line-header>
 
     <line-content>
-      <div>
+      <template #default>
         <template v-for="sprite in results">
           <line-card v-if="sprite.symbols.length" :key="sprite.name">
             <line-card-header>
-              <line-card-subtitle>
-                {{sprite.name}} ( {{sprite.matched}} / {{sprite.total}} )
-              </line-card-subtitle>
+              <line-card-subtitle>{{ sprite.name }} ( {{ sprite.matched }} / {{ sprite.total }} )</line-card-subtitle>
+              <div class="icon-more">
+                <line-button size="small" fill="clear">More</line-button>
+              </div>
             </line-card-header>
             <line-card-content>
               <div class="icon-area">
                 <template v-for="(symbol, index) in sprite.symbols">
-                  <div
-                    :key="index"
-                    :title="symbol.id"
-                    class="icon-symbol"
-                  >
+                  <div :key="index" :title="symbol.id" class="icon-symbol">
                     <line-svg-icon
                       :src="getSource(sprite.name)"
                       :name="symbol.id"
                       size="large"
                       color="dark"
-                    >
-                    </line-svg-icon>
-                    <div class="label">
-                      {{symbol.id}}
-                    </div>
+                    ></line-svg-icon>
+                    <div class="label">{{ symbol.id }}</div>
                   </div>
                 </template>
               </div>
             </line-card-content>
           </line-card>
         </template>
-      </div>
+      </template>
     </line-content>
   </line-app>
 </template>
@@ -66,12 +54,12 @@ import Vue from 'vue';
 type Sprite = {
   name: string;
   symbols: SpriteSymbol[];
-}
+};
 type SpriteSymbol = {
   id: string;
   width: number;
   height: number;
-}
+};
 
 export default Vue.extend({
   data() {
@@ -93,9 +81,7 @@ export default Vue.extend({
       return iconsprites.map((sprite: Sprite) => {
         const { name, symbols } = sprite;
         const hasKeyword = !!keyword;
-        const matched = hasKeyword
-          ? symbols.filter(s => new RegExp(keyword, 'i').test(s.id))
-          : symbols.slice();
+        const matched = hasKeyword ? symbols.filter(s => new RegExp(keyword, 'i').test(s.id)) : symbols.slice();
         const count = matched.length;
         const overhead = count > max;
         matched.length = overhead ? max : count;
@@ -118,7 +104,6 @@ export default Vue.extend({
 </script>
 
 <style lang="scss">
-
 .skeleton {
   border: 1px solid #1a1a1a;
 }
@@ -153,6 +138,12 @@ export default Vue.extend({
   flex-wrap: wrap;
 }
 
+.icon-more {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
 .icon-symbol {
   display: flex;
 
@@ -170,7 +161,7 @@ export default Vue.extend({
   > .label {
     width: 100%;
 
-    color: rgba(0,0,0,.6);
+    color: rgba(0, 0, 0, 0.6);
 
     font-size: 12px;
 
@@ -183,9 +174,8 @@ export default Vue.extend({
   }
 
   &:hover {
-    border: 2px solid #4177F6;
+    border: 2px solid #4177f6;
     border-radius: 2px;
   }
 }
-
 </style>

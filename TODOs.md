@@ -1,5 +1,8 @@
 # Issues
 
+- 重命名skyline
+- Release脚本和NPM发布
+
 - Popup类组件应该是基于App范围内，而不是body
 
 - props声明应该尽可能简短，所有的default应该都可以去掉，以优化最后编译的大小

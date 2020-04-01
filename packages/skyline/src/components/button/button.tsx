@@ -56,12 +56,12 @@ export default /*#__PURE__*/ createComponent({
   render() {
     const {
       text, strong, disabled, ripple, vertical,
-      expand, fill, shape, size,
+      expand, fill = 'solid', shape, size,
       type = 'button', download, href, rel, target,
       inItem, inToolbar, inListHeader,
     } = this;
     const finalSize = !isDef(size) && inItem ? 'small' : size;
-    const finalFill = !isDef(fill) && (inToolbar || inListHeader) ? 'clear' : 'solid';
+    const finalFill = !isDef(fill) && (inToolbar || inListHeader) ? 'clear' : fill;
     const TagType = isDef(href) ? 'a' : 'button' as any;
     const attrs = (TagType === 'button')
       ? { type }

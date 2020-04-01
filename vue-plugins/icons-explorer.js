@@ -14,7 +14,7 @@ module.exports = (api, options) => {
       const packageDir = `${ packagesDir }/${ target }`;
 
       process.env.TARGET = target;
-      process.env.SKYLINE_DEV = false;
+      process.env.SKYLINE_DEV = true;
 
       api.chainWebpack(config => {
         config.entry('app')
