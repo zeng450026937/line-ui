@@ -1,13 +1,13 @@
 {
-  "name": "@skyline/demo",
-  "version": "1.0.0",
-  "description": "skyline demo",
+  "name": "@line-ui/quick-start",
+  "version": "1.0.0-alpha.0",
+  "description": "line-ui quick-start",
   "publishConfig": {
     "access": "public"
   },
   "private": true,
   "license": "MIT",
   "dependencies": {
-    "skyline": "^1.0.0-alpha"
+    "@line-ui/line": "1.0.0-alpha.0"
   }
 }

@@ -1,0 +1,18 @@
+{
+  "name": "@line-ui/i18n-runtime",
+  "version": "1.0.0-alpha.0",
+  "description": "@line-ui/i18n-runtime",
+  "main": "index.js",
+  "module": "dist/i18n-runtime.esm-bundler.js",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "private": true,
+  "types": "dist/i18n-runtime.d.ts",
+  "keywords": [
+    "line-ui"
+  ],
+  "author": "Yealink Inc",
+  "license": "MIT"
+}

@@ -17,7 +17,7 @@ module.exports = {
   },
 
   transpileDependencies : [
-    'skyline',
+    '@line-ui',
   ],
   /*
   chainWebpack : (config) => {
@@ -27,7 +27,7 @@ module.exports = {
       mdRule.use(loader).loader(loader).options(options);
     };
     addLoader({ loader: 'vue-loader' });
-    addLoader({ loader: '@skyline/markdown-loader' });
+    addLoader({ loader: '@line-ui/markdown-loader' });
   },
   */
 };

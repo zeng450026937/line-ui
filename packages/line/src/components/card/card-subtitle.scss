@@ -1,0 +1,19 @@
+@import "../../themes/line.globals";
+
+// Card Subtitle
+// --------------------------------------------------
+
+.line-card-subtitle {
+  /**
+   * @prop --color: Color of the card subtitle
+   */
+
+  display: block;
+  position: relative;
+
+  color: var(--color);
+}
+
+.line-card-title.line-color {
+  color: current-color(base);
+}

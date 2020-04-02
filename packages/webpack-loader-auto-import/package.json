@@ -1,13 +1,13 @@
 {
-  "name": "@skyline/webpack-loader-auto-import",
-  "version": "1.0.0-alpha",
-  "description": "@skyline/webpack-loader-auto-import",
+  "name": "@line-ui/webpack-loader-auto-import",
+  "version": "1.0.0-alpha.0",
+  "description": "@line-ui/webpack-loader-auto-import",
   "main": "index.js",
   "files": [
     "index.js"
   ],
   "keywords": [
-    "skyline"
+    "line-ui"
   ],
   "private": true,
   "author": "Yealink Inc",

@@ -4,10 +4,10 @@ const booleanify = (value) => value && value !== 'false';
 
 module.exports = (api, options) => {
   api.registerCommand(
-    'build:skyline',
+    'build:line-ui',
     {
-      description : 'build skyline(library)',
-      usage       : 'vue-cli-service build:skyline [options] [target]',
+      description : 'build line-ui(library)',
+      usage       : 'vue-cli-service build:line-ui [options] [target]',
       options     : {
         '--gen'        : 'force regenerate file',
         '--style'      : 'build style sheet',
@@ -27,19 +27,19 @@ module.exports = (api, options) => {
       // generate files
       if (booleanify(gen)) {
         await execa.node(
-          api.resolve('scripts/skyline/components'),
+          api.resolve('scripts/line-ui/components'),
           { stdio: 'inherit' },
         );
         await execa.node(
-          api.resolve('scripts/skyline/directives'),
+          api.resolve('scripts/line-ui/directives'),
           { stdio: 'inherit' },
         );
         await execa.node(
-          api.resolve('scripts/skyline/mixins'),
+          api.resolve('scripts/line-ui/mixins'),
           { stdio: 'inherit' },
         );
         await execa.node(
-          api.resolve('scripts/skyline/style'),
+          api.resolve('scripts/line-ui/style'),
           { stdio: 'inherit' },
         );
       }
@@ -48,7 +48,7 @@ module.exports = (api, options) => {
       // build javascript
       if (booleanify(javascript)) {
         await execa.node(
-          api.resolve('scripts/skyline/build.javascript'),
+          api.resolve('scripts/line-ui/build.javascript'),
           { stdio: 'inherit' },
         );
       }
@@ -57,7 +57,7 @@ module.exports = (api, options) => {
       // build style sheet
       if (booleanify(style)) {
         await execa.node(
-          api.resolve('scripts/skyline/build.style'),
+          api.resolve('scripts/line-ui/build.style'),
           { stdio: 'inherit' },
         );
       }
@@ -66,5 +66,5 @@ module.exports = (api, options) => {
 };
 
 module.exports.defaultModes = {
-  'build:skyline' : 'production',
+  'build:line-ui' : 'production',
 };

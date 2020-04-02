@@ -1,3 +1,3 @@
-# @skyline/webpack-plugin-svg-sprite
+# @line-ui/webpack-plugin-svg-sprite
 
 Forked from extract-svg-sprite-webpack-plugin

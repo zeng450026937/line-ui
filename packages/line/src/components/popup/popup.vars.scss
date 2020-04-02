@@ -1,0 +1,22 @@
+@import "../../themes/line.globals";
+
+// Modals
+// --------------------------------------------------
+
+/// @prop - Min width of the popup inset
+$popup-inset-min-width:         768px !default;
+
+/// @prop - Minimum height of the small popup inset
+$popup-inset-min-height-small:  600px !default;
+
+/// @prop - Minimum height of the large popup inset
+$popup-inset-min-height-large:  768px !default;
+
+/// @prop - Width of the large popup inset
+$popup-inset-width:             600px !default;
+
+/// @prop - Height of the small popup inset
+$popup-inset-height-small:      500px !default;
+
+/// @prop - Height of the large popup inset
+$popup-inset-height-large:      600px !default;

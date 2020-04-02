@@ -1,13 +1,13 @@
 {
-  "name": "@skyline/icons",
-  "version": "1.0.0-alpha",
-  "description": "@skyline/icons",
+  "name": "@line-ui/icons",
+  "version": "1.0.0-alpha.0",
+  "description": "@line-ui/icons",
   "main": "index.js",
   "files": [
     "dist"
   ],
   "keywords": [
-    "skyline"
+    "line-ui"
   ],
   "sideEffects": false,
   "private": true,

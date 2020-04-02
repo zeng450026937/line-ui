@@ -1,14 +1,14 @@
 {
-  "name": "@skyline/webpack-plugin-i18n",
-  "version": "1.0.0-alpha",
-  "description": "@skyline/webpack-plugin-i18n",
+  "name": "@line-ui/webpack-plugin-i18n",
+  "version": "1.0.0-alpha.0",
+  "description": "@line-ui/webpack-plugin-i18n",
   "main": "lib/plugin.js",
   "files": [
     "index.js",
     "dist"
   ],
   "keywords": [
-    "skyline"
+    "line-ui"
   ],
   "private": true,
   "author": "Yealink Inc",

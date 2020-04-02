@@ -1,0 +1,19 @@
+@import "../../themes/line.globals";
+
+// Header
+// --------------------------------------------------
+
+.line-header {
+  display: block;
+  position: relative;
+
+  order: -1;
+
+  width: 100%;
+
+  z-index: $z-index-toolbar;
+}
+
+.line-header .line-toolbar:first-child {
+  padding-top: var(--line-safe-area-top, 0);
+}

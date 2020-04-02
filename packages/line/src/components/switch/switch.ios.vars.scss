@@ -1,0 +1,74 @@
+@import "../../themes/line.globals.ios";
+// @import "../item/item.ios.vars";
+
+$item-ios-padding-start:                    0;
+$item-ios-padding-end:                      0;
+
+// iOS Switch
+// --------------------------------------------------
+
+/// @prop - Width of the switch
+$switch-ios-width:                     51px !default;
+
+/// @prop - Height of the switch
+$switch-ios-height:                    32px !default;
+
+/// @prop - Border width of the switch
+$switch-ios-border-width:              2px !default;
+
+/// @prop - Border radius of the switch
+$switch-ios-border-radius:             $switch-ios-height / 2 !default;
+
+/// @prop - Background color of the unchecked switch
+$switch-ios-background-color-off:      rgba($text-color-rgb, .088) !default;
+
+/// @prop - Background color of the checked switch
+$switch-ios-background-color-on:       line-color(primary, base) !default;
+
+/// @prop - Width of the switch handle
+$switch-ios-handle-width:              $switch-ios-height - ($switch-ios-border-width * 2) !default;
+
+/// @prop - Height of the switch handle
+$switch-ios-handle-height:             $switch-ios-handle-width !default;
+
+/// @prop - Border radius of the switch handle
+$switch-ios-handle-border-radius:      $switch-ios-handle-height / 2 !default;
+
+/// @prop - Box shadow of the switch handle
+$switch-ios-handle-box-shadow:         0 3px 12px rgba(0, 0, 0, .16), 0 3px 1px rgba(0, 0, 0, .1) !default;
+
+/// @prop - Background color of the switch handle
+$switch-ios-handle-background-color:   #ffffff !default;
+
+/// @prop - Margin of the switch handle
+$switch-ios-media-margin:              0 !default;
+
+/// @prop - Transition duration of the switch icon
+$switch-ios-transition-duration:       300ms !default;
+
+/// @prop - Opacity of the disabled switch
+$switch-ios-disabled-opacity:          .3 !default;
+
+/// @prop - Padding top of the switch positioned on the start in an item
+$switch-ios-item-start-padding-top:    6px !default;
+
+/// @prop - Padding end of the switch positioned on the start in an item
+$switch-ios-item-start-padding-end:    16px !default;
+
+/// @prop - Padding bottom of the switch positioned on the start in an item
+$switch-ios-item-start-padding-bottom: 5px !default;
+
+/// @prop - Padding start of the switch positioned on the start in an item
+$switch-ios-item-start-padding-start:  0 !default;
+
+/// @prop - Padding top of the switch positioned on the end in an item
+$switch-ios-item-end-padding-top:      6px !default;
+
+/// @prop - Padding end of the switch positioned on the end in an item
+$switch-ios-item-end-padding-end:      ($item-ios-padding-end / 2) !default;
+
+/// @prop - Padding bottom of the switch positioned on the end in an item
+$switch-ios-item-end-padding-bottom:   5px !default;
+
+/// @prop - Padding start of the switch positioned on the end in an item
+$switch-ios-item-end-padding-start:    $item-ios-padding-start !default;

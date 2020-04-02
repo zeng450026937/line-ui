@@ -1,0 +1,32 @@
+@import "../../themes/line.globals";
+
+// Button
+// --------------------------------------------------
+
+/// @prop - Padding top of the round button
+$button-round-padding-top:        0 !default;
+
+/// @prop - Padding end of the round button
+$button-round-padding-end:        26px !default;
+
+/// @prop - Padding bottom of the round button
+$button-round-padding-bottom:     $button-round-padding-top !default;
+
+/// @prop - Padding start of the round button
+$button-round-padding-start:      $button-round-padding-end !default;
+
+/// @prop - Border radius of the round button
+$button-round-border-radius:      64px !default;
+
+
+// Floating Action Buttons
+// --------------------------------------------------
+
+/// @prop - Width and height of the FAB button
+$fab-size:                              56px !default;
+
+/// @prop - Width and height of the mini FAB button
+$fab-small-size:                         40px !default;
+
+/// @prop - Border radius of the FAB button
+$fab-border-radius:                     50% !default;

@@ -1,0 +1,148 @@
+.line-label {
+  /**
+   * @prop --color: Color of the label
+   */
+  --color: initial;
+  display: block;
+  color: var(--color);
+  font-family: var(--line-font-family, inherit);
+  font-size: inherit;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.line-label.line-color {
+  color: var(--line-color-base);
+}
+
+.line-label.line-text-wrap,
+.line-label[text-wrap] {
+  white-space: normal;
+}
+
+.item-interactive-disabled:not(.item-multiple-inputs) .line-label {
+  cursor: default;
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.item-input .line-label {
+  flex: initial;
+  max-width: 200px;
+  pointer-events: none;
+}
+
+.item-textarea .line-label {
+  align-self: baseline;
+}
+
+.line-label.line-label--fixed {
+  flex: 0 0 100px;
+  width: 100px;
+  min-width: 100px;
+  max-width: 200px;
+}
+
+.line-label.line-label--stacked,
+.line-label.line-label--floating {
+  margin-bottom: 0;
+  align-self: stretch;
+  width: auto;
+  max-width: 100%;
+}
+.line-label.line-label--no-animate.line-label--floating {
+  transition: none;
+}
+
+.line-label.line-text-wrap,
+.line-label[text-wrap] {
+  line-height: 1.5;
+}
+
+.line-label.line-label--stacked {
+  transform-origin: left top;
+  transform: translate3d(0,  50%,  0) scale(0.75);
+  transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+[dir=rtl] .line-label.line-label--stacked {
+  transform-origin: right top;
+}
+
+.line-label.line-label--floating {
+  transform: translate3d(0,  96%,  0);
+  transform-origin: left top;
+  transition: color 150ms cubic-bezier(0.4, 0, 0.2, 1), transform 150ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+[dir=rtl] .line-label.line-label--floating {
+  transform-origin: right top;
+}
+
+.line-label.line-label--stacked,
+.line-label.line-label--floating {
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.item-select .line-label.line-label--floating {
+  transform: translate3d(0,  130%,  0);
+}
+
+.item-has-focus .line-label.line-label--floating,
+.item-has-placeholder .line-label.line-label--floating,
+.item-has-value .line-label.line-label--floating {
+  transform: translate3d(0,  50%,  0) scale(0.75);
+}
+
+.item-has-focus .line-label.line-label--stacked,
+.item-has-focus .line-label.line-label--floating {
+  color: var(--line-color-primary, #3880ff);
+}
+
+.line-label .slotted h1 {
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 2px;
+  font-size: 24px;
+  font-weight: normal;
+}
+.line-label .slotted h2 {
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  font-size: 16px;
+  font-weight: normal;
+}
+.line-label .slotted h3,
+.line-label .slotted h4,
+.line-label .slotted h5,
+.line-label .slotted h6 {
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 2px;
+  margin-bottom: 2px;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: normal;
+}
+.line-label .slotted p {
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 2px;
+  font-size: 14px;
+  line-height: 20px;
+  text-overflow: inherit;
+  overflow: inherit;
+}
+.line-label > .slotted p {
+  color: var(--line-color-step-600, #666666);
+}
+.line-label.line-color > .slotted p {
+  color: inherit;
+}

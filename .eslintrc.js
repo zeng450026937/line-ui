@@ -2,7 +2,7 @@ module.exports = {
   root : true,
 
   extends : [
-    '@skyline',
+    '@line-ui',
   ],
 
   rules : {

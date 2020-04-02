@@ -1,7 +1,7 @@
 {
-  "name": "@skyline/parallel",
-  "version": "1.0.0-alpha",
-  "description": "@skyline/parallel",
+  "name": "@line-ui/parallel",
+  "version": "1.0.0-alpha.0",
+  "description": "@line-ui/parallel",
   "main": "index.js",
   "module": "dist/parallel.esm-bundler.js",
   "files": [
@@ -10,7 +10,7 @@
   ],
   "types": "dist/parallel.d.ts",
   "keywords": [
-    "skyline"
+    "line-ui"
   ],
   "private": true,
   "author": "Yealink Inc",

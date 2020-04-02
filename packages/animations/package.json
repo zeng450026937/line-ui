@@ -1,14 +1,14 @@
 {
-  "name": "@skyline/animations",
-  "version": "1.0.0-alpha",
-  "description": "@skyline/animations",
+  "name": "@line-ui/animations",
+  "version": "1.0.0-alpha.0",
+  "description": "@line-ui/animations",
   "files": [
     "css",
     "gen",
     "src"
   ],
   "keywords": [
-    "skyline"
+    "line-ui"
   ],
   "private": true,
   "author": "Yealink Inc",

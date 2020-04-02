@@ -1,0 +1,5 @@
+$LINE: true !default;
+
+@if not $LINE {
+  @warn "[DEPRECATED] SCSS within SKYLINE should not be imported. Next major release will remove all scss support.";
+}

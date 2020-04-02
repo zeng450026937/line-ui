@@ -1,0 +1,18 @@
+{
+  "name": "@line-ui/ts-auto-import",
+  "version": "1.0.0-alpha.0",
+  "description": "@line-ui/ts-auto-import",
+  "main": "index.js",
+  "module": "dist/ts-auto-import.esm-bundler.js",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "types": "dist/ts-auto-import.d.ts",
+  "keywords": [
+    "line-ui"
+  ],
+  "private": true,
+  "author": "Yealink Inc",
+  "license": "MIT"
+}

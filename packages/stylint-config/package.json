@@ -1,7 +1,7 @@
 {
-  "name": "@skyline/stylelint-config",
-  "version": "1.0.0",
-  "description": "stylelint config of skyline.",
+  "name": "@line-ui/stylelint-config",
+  "version": "1.0.0-alpha.0",
+  "description": "stylelint config of line-ui.",
   "main": "index.yml",
   "publishConfig": {
     "access": "public"

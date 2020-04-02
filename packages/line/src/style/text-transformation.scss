@@ -1,0 +1,29 @@
+@import "../themes/line.globals";
+@import "../themes/line.mixins";
+
+// Text Transformation
+// --------------------------------------------------
+// Creates text transform attributes based on screen size
+
+@each $breakpoint in map-keys($screen-breakpoints) {
+  $infix: breakpoint-infix($breakpoint, $screen-breakpoints);
+
+  @include media-breakpoint-up($breakpoint, $screen-breakpoints) {
+    // Provide `[text-{bp}]` attributes for transforming the text based
+    // on the breakpoint
+    .line-text#{$infix}-uppercase {
+      /* stylelint-disable-next-line declaratline-no-important */
+      text-transform: uppercase !important;
+    }
+
+    .line-text#{$infix}-lowercase {
+      /* stylelint-disable-next-line declaratline-no-important */
+      text-transform: lowercase !important;
+    }
+
+    .line-text#{$infix}-capitalize {
+      /* stylelint-disable-next-line declaratline-no-important */
+      text-transform: capitalize !important;
+    }
+  }
+}

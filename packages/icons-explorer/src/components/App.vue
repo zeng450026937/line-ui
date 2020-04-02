@@ -63,7 +63,7 @@ type SpriteSymbol = {
 
 export default Vue.extend({
   data() {
-    const icons = require.context('@skyline/icons-explorer/public/', true, /.json$/);
+    const icons = require.context('@line-ui/icons-explorer/public/', true, /.json$/);
     const iconsprites: Sprite[] = icons.keys().map(key => icons(key));
 
     Object.freeze(iconsprites);

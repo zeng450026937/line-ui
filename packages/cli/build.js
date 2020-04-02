@@ -1,14 +1,14 @@
 module.exports = (api, options) => {
   api.registerCommand(
-    'build:skyline',
+    'build:line-ui',
     {
-      description : 'build skyline(library)',
-      usage       : 'vue-cli-service build:skyline',
+      description : 'build line-ui(library)',
+      usage       : 'vue-cli-service build:line-ui',
       details     : 'TBD',
     },
     (args, rawArgs) => {
       args.name = 'Skyline';
-      args.filename = 'skyline';
+      args.filename = 'line-ui';
       args.target = 'lib';
       args.entry = './src/main.ts';
       args.dest = './dist/library';
@@ -20,12 +20,12 @@ module.exports = (api, options) => {
   api.registerCommand(
     'build:website',
     {
-      description : 'build skyline website(homepage)',
+      description : 'build line-ui website(homepage)',
       usage       : 'vue-cli-service build:website',
       details     : 'TBD',
     },
     (args, rawArgs) => {
-      options.publicPath = '/skyline/';
+      options.publicPath = '/line-ui/';
       // options.pages = {
       //   mobile : {
       //     entry    : 'packages/website/mobile/main.ts',
@@ -52,6 +52,6 @@ module.exports = (api, options) => {
 };
 
 module.exports.defaultModes = {
-  'build:skyline' : 'production',
+  'build:line-ui' : 'production',
   'build:website' : 'production',
 };

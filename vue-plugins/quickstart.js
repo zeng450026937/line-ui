@@ -2,10 +2,10 @@ const qs = require('querystring');
 
 module.exports = (api, options) => {
   api.registerCommand(
-    'quickstart',
+    'quick-start',
     {
-      description : 'serve quickstart',
-      usage       : 'vue-cli-service quickstart',
+      description : 'serve quick-start',
+      usage       : 'vue-cli-service quick-start',
       details     : 'TBD',
     },
     (args, rawArgs) => {

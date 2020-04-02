@@ -1,8 +1,0 @@
-.line-item-group {
-  display: block;
-}
-
-.item-group-ios .line-item:last-child,
-.item-group-ios .line-item-sliding:last-child .item {
-  --border-width: 0;
-}

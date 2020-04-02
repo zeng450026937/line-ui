@@ -1,0 +1,15 @@
+{
+  "name": "@line-ui/vue-cli-plugin-line",
+  "version": "1.0.0-alpha.0",
+  "description": "@line-ui/vue-cli-plugin-line",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "line-ui"
+  ],
+  "private": true,
+  "author": "Yealink Inc",
+  "license": "MIT"
+}

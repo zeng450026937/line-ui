@@ -1,1 +1,1 @@
-# @skyline/ie-compat
+# @line-ui/ie-compat

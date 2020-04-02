@@ -1,0 +1,18 @@
+{
+  "name": "@line-ui/swiper",
+  "version": "1.0.0-alpha.0",
+  "description": "@line-ui/swiper",
+  "main": "index.js",
+  "module": "dist/swiper.esm-bundler.js",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "types": "dist/swiper.d.ts",
+  "keywords": [
+    "line-ui"
+  ],
+  "private": true,
+  "author": "Yealink Inc",
+  "license": "MIT"
+}

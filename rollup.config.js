@@ -27,7 +27,7 @@ const pkg = require(resolve('package.json'));
 const packageOptions = pkg.buildOptions || {};
 
 const knownExternals = fs.readdirSync(packagesDir).filter(p => {
-  return p !== '@skyline/utils';
+  return p !== '@line-ui/utils';
 });
 
 // ensure TS checks only once for each build

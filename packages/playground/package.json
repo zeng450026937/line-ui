@@ -1,9 +1,9 @@
 {
-  "name": "@skyline/playground",
-  "version": "1.0.0-alpha",
-  "description": "@skyline/playground",
+  "name": "@line-ui/playground",
+  "version": "1.0.0-alpha.0",
+  "description": "@line-ui/playground",
   "keywords": [
-    "skyline",
+    "line-ui",
     "playgroun"
   ],
   "author": "Yealink Inc",

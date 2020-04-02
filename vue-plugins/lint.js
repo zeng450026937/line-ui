@@ -4,7 +4,7 @@ module.exports = (api, options) => {
   api.registerCommand(
     'lint:style',
     {
-      description : 'lint skyline style',
+      description : 'lint line style',
       usage       : 'vue-cli-service lint:style',
       details     : 'TBD',
     },

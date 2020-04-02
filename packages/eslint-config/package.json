@@ -1,7 +1,7 @@
 {
-  "name": "@skyline/eslint-config",
-  "version": "1.0.0",
-  "description": "eslint config of skyline.",
+  "name": "@line-ui/eslint-config",
+  "version": "1.0.0-alpha.0",
+  "description": "eslint config of line-ui.",
   "main": "index.js",
   "publishConfig": {
     "access": "public"

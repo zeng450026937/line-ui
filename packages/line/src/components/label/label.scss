@@ -1,0 +1,81 @@
+@import "../../themes/line.globals";
+
+
+// Label
+// --------------------------------------------------
+
+.line-label {
+  /**
+   * @prop --color: Color of the label
+   */
+  --color: initial;
+
+  display: block;
+
+  color: var(--color);
+
+  font-family: $font-family-base;
+  font-size: inherit;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.line-label.line-color {
+  color: current-color(base);
+}
+
+.line-label.line-text-wrap,
+.line-label[text-wrap] {
+  white-space: normal;
+}
+
+.item-interactive-disabled:not(.item-multiple-inputs) .line-label {
+  cursor: default;
+  opacity: .3;
+  pointer-events: none;
+}
+
+.item-input .line-label {
+  flex: initial;
+
+  max-width: 200px;
+  pointer-events: none;
+}
+
+.item-textarea .line-label {
+  align-self: baseline;
+}
+
+
+// Fixed Inputs
+// --------------------------------------------------
+
+.line-label.line-label--fixed {
+  flex: 0 0 100px;
+
+  width: 100px;
+  min-width: 100px;
+  max-width: 200px;
+}
+
+// Stacked & Floating Inputs
+// --------------------------------------------------
+
+.line-label.line-label--stacked,
+.line-label.line-label--floating {
+  @include margin(null, null, 0, null);
+
+  align-self: stretch;
+
+  width: auto;
+  max-width: 100%;
+}
+
+.line-label.line-label--no-animate.line-label--floating {
+  transition: none;
+}

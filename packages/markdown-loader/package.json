@@ -1,6 +1,6 @@
 {
-  "name": "@skyline/markdown-loader",
-  "version": "2.2.0",
+  "name": "@line-ui/markdown-loader",
+  "version": "1.0.0-alpha.0",
   "description": "Simple and fast vue markdown loader",
   "main": "src/index.js",
   "publishConfig": {

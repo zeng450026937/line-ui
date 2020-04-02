@@ -12,9 +12,9 @@ module.exports = (api, options) => {
           .clear()
           .add(api.resolve('packages/website/app.ts'));
 
-        // for development, set 'skyline' alias to source code
+        // for development, set 'line-ui' alias to source code
         config.resolve.alias
-          .set('skyline', api.resolve('packages/skyline'));
+          .set('line-ui', api.resolve('packages/line-ui'));
       });
 
       api.service.run('serve', args, rawArgs);
@@ -34,12 +34,12 @@ module.exports = (api, options) => {
           .clear()
           .add(api.resolve('packages/website/app.ts'));
 
-        // for production, 'skyline' is external
+        // for production, 'line-ui' is external
         config.externals({
-          skyline : {
-            commonjs : 'skyline',
-            amd      : 'skyline',
-            root     : 'Skyline',
+          '@line-ui/line' : {
+            commonjs : '@line-ui/line',
+            amd      : '@line-ui/line',
+            root     : 'Line',
           },
         });
       });

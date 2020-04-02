@@ -6,10 +6,10 @@ const nodemodulesDir = path.resolve(cwd, 'node_modules');
 const packageDir = path.resolve(__dirname, '../../');
 const resolve = p => path.resolve(packageDir, p);
 
-const pkgName = '@skyline/themify-icons';
+const pkgName = '@line-ui/themify-icons';
 const pkg = require(`${ nodemodulesDir }/${ pkgName }/package.json`);
 const prefix = 'ti';
-const name = pkgName.replace('@skyline/', '');
+const name = pkgName.replace('@line-ui/', '');
 
 const distDir = resolve('src/components');
 const dist = `${ distDir }/${ name }.tsx`;

@@ -1,1 +1,1 @@
-# @skyline/stylint-config
+# @line-ui/stylint-config

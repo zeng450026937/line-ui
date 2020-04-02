@@ -1,1 +1,1 @@
-# @skyline/animations
+# @line-ui/animations

@@ -7,7 +7,7 @@ module.exports = (api, options) => {
       description : 'start SSR development server',
       usage       : 'vue-cli-service SSR [options]',
       options     : {
-        '--dev' : 'compile skyline from source',
+        '--dev' : 'compile line-ui from source',
         // any other options supported in 'server' command
       },
     },
@@ -75,7 +75,7 @@ module.exports = (api, options) => {
         config.externals(require('webpack-node-externals')({
           whitelist : [
             /\.css$/,
-            dev ? /^skyline/ : '',
+            dev ? /^@line-ui\/line/ : '',
             dev ? /^swiper/ : '',
             dev ? /^dom7/ : '',
             dev ? /^ssr-window/ : '',
@@ -268,7 +268,7 @@ module.exports = (api, options) => {
       if (dev) {
         api.chainWebpack(config => {
           config.resolve.alias
-            .set('skyline', api.resolve('packages/skyline'));
+            .set('@line-ui/line', api.resolve('packages/line'));
         });
       }
 
@@ -283,7 +283,7 @@ module.exports = (api, options) => {
         `${ chalk.bold(chalk.bgBlue(' SSR ')) }${ chalk.bgGray(' DONE ') }`,
       );
       log(
-        `Running SSR with SKYLINE ${ require('skyline/package.json').version }`,
+        `Running SSR with SKYLINE ${ require('@line-ui/line/package.json').version }`,
         `${ chalk.green('🍺') }`,
       );
     },

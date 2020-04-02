@@ -1,0 +1,89 @@
+@import "../../themes/line.globals";
+
+// Picker Column
+// --------------------------------------------------
+
+.line-picker-column {
+  display: flex;
+  position: relative;
+
+  flex: 1;
+  justify-content: center;
+
+  height: 100%;
+  box-sizing: content-box;
+
+  contain: content;
+}
+
+.line-picker-column .line-picker-column__opts {
+  position: relative;
+
+  flex: 1;
+
+  max-width: 100%;
+}
+
+// contain property is supported by Chrome
+.line-picker-column .line-picker-column__opt {
+  @include position(0, null, null, 0);
+
+  display: block;
+  position: absolute;
+
+  width: 100%;
+
+  border: 0;
+
+  text-align: center;
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  contain: strict;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.line-picker-column .line-picker-column__opt.line-picker-column__opt--disabled {
+  pointer-events: none;
+}
+
+.line-picker-column .line-picker-column__opt--disabled {
+  opacity: 0;
+}
+
+.line-picker-column.line-picker-column--opts-left {
+  justify-content: flex-start;
+}
+
+.line-picker-column.line-picker-column--opts-right {
+  justify-content: flex-end;
+}
+
+.line-picker-column .line-picker-column__opt {
+  &:active,
+  &:focus {
+    outline: none;
+  }
+}
+
+.line-picker-column .line-picker-column__prefix {
+  position: relative;
+
+  flex: 1;
+
+  text-align: end;
+
+  white-space: nowrap;
+}
+
+.line-picker-column .line-picker-column__suffix {
+  position: relative;
+
+  flex: 1;
+
+  text-align: start;
+
+  white-space: nowrap;
+}

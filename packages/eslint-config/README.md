@@ -1,1 +1,1 @@
-# @skyline/eslint-config
+# @line-ui/eslint-config

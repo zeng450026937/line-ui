@@ -1,0 +1,158 @@
+@import "../../themes/line.globals";
+
+.line-chip {
+  /**
+   * @prop --background: Background of the chip
+   * @prop --color: Color of the chip
+   */
+  --background: #{rgba($text-color-rgb, .12)};
+  --color: #{rgba($text-color-rgb, .87)};
+
+  @include border-radius(16px);
+  @include font-smoothing();
+  @include margin(4px);
+  @include padding(7px, 12px);
+
+  display: inline-flex;
+
+  position: relative;
+
+  align-items: center;
+
+  height: 32px;
+
+  background: var(--background);
+  color: var(--color);
+
+  font-family: $font-family-base;
+  font-size: 14px;
+
+  line-height: 1;
+
+  cursor: pointer;
+
+  overflow: hidden;
+
+  vertical-align: middle;
+  box-sizing: border-box;
+}
+
+
+// Chip Colors
+// ---------------------------------------------
+
+.line-chip.line-color {
+  background: current-color(base, .08);
+  color: current-color(shade);
+}
+
+.line-chip.line-color:focus {
+  background: current-color(base, .12);
+}
+
+.line-chip.line-color.line-activated {
+  background: current-color(base, .16);
+}
+
+
+// Outline Chip
+// ---------------------------------------------
+
+.line-chip.line-chip--outline {
+  border-width: 1px;
+  border-style: solid;
+}
+
+.line-chip.line-chip--outline {
+
+  border-color: rgba(0, 0, 0, .32);
+
+  background: transparent;
+}
+
+.line-chip.line-chip--outline.line-color {
+  border-color: current-color(base, .32);
+}
+
+.line-chip.line-chip--outline:not(.line-color):focus {
+  background: rgba(0, 0, 0, .04);
+}
+
+.line-chip.line-chip--outline.line-activated:not(.line-color) {
+  background: rgba(0, 0, 0, .08);
+}
+
+
+// Chip Icon
+// ---------------------------------------------
+
+.line-chip .slotted.line-icon {
+  font-size: 20px;
+}
+
+.line-chip:not(.line-color) .slotted.line-icon {
+  color: rgba(0, 0, 0, .54);
+}
+
+.line-chip .slotted.line-icon:first-child {
+  @include margin(-4px, 8px, -4px, -4px);
+}
+
+.line-chip .slotted.line-icon:last-child {
+  @include margin(-4px, -4px, -4px, 8px);
+}
+
+
+// Chip Avatar
+// ---------------------------------------------
+
+.line-chip .slotted.line-avatar {
+  width: 24px;
+  height: 24px;
+}
+
+.line-chip .slotted.line-avatar:first-child {
+  @include margin(-4px, 8px, -4px, -8px);
+}
+
+.line-chip .slotted.line-avatar:last-child {
+  @include margin(-4px, -8px, -4px, 8px);
+}
+
+
+// Chip: Focus
+// ---------------------------------------------
+
+.line-chip:focus {
+  outline: none;
+}
+
+.line-chip:focus {
+  --background: #{rgba($text-color-rgb, .16)};
+}
+
+
+// Chip: Activated
+// ---------------------------------------------
+
+.line-chip.line-activated {
+  --background: #{rgba($text-color-rgb, .20)};
+}
+
+
+// Chip: Hover
+// ---------------------------------------------
+
+@media (any-hover: hover) {
+  .line-chip:hover {
+    --background: #{rgba($text-color-rgb, .16)};
+  }
+
+  .line-chip.line-color:hover {
+    background: current-color(base, .12);
+  }
+
+  .line-chip.line-chip--outline:not(.line-color):hover {
+    background: rgba($text-color-rgb, .04);
+  }
+}

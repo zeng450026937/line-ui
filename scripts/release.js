@@ -9,13 +9,14 @@ const execa = require('execa');
 
 const preId = args.preid || semver.prerelease(currentVersion)[0] || 'alpha';
 const isDryRun = args.dry;
-const { skipTests } = args;
+const { skipTests = true } = args;
 const { skipBuild } = args;
+const { skipTsd = true } = args;
 const packages = fs
   .readdirSync(path.resolve(__dirname, '../packages'))
   .filter(p => !p.endsWith('.ts') && !p.startsWith('.'));
 
-const skippedPackages = ['server-renderer', 'compiler-ssr'];
+const skippedPackages = [];
 
 const versionIncrements = [
   'patch',
@@ -90,9 +91,12 @@ async function main() {
   step('\nBuilding all packages...');
   if (!skipBuild && !isDryRun) {
     await run('yarn', ['build', '--release']);
+
     // test generated dts files
-    step('\nVerifying type declarations...');
-    await run(bin('tsd'));
+    if (!skipTsd && !isDryRun) {
+      step('\nVerifying type declarations...');
+      await run(bin('tsd'));
+    }
   } else {
     console.log('(skipped)');
   }
@@ -158,8 +162,8 @@ function updateDeps(pkg, depType, version) {
   if (!deps) return;
   Object.keys(deps).forEach(dep => {
     if (
-      dep === 'skyline'
-      || (dep.startsWith('@skyline') && packages.includes(dep.replace(/^@skyline\//, '')))
+      dep === '@line-ui/line'
+      || (dep.startsWith('@line-ui') && packages.includes(dep.replace(/^@line-ui\//, '')))
     ) {
       console.log(
         chalk.yellow(`${ pkg.name } -> ${ depType } -> ${ dep }@${ version }`),
@@ -180,12 +184,7 @@ async function publishPackage(pkgName, version, runIfNotDry) {
     return;
   }
 
-  // for now (alpha/beta phase), every package except "skyline" can be published as
-  // `latest`, whereas "skyline" will be published under the "next" tag.
-  const releaseTag = pkgName === 'skyline' ? 'next' : null;
-
-  // TODO use inferred release channel after official 3.0 release
-  // const releaseTag = semver.prerelease(version)[0] || null
+  const releaseTag = semver.prerelease(version)[0] || null;
 
   step(`Publishing ${ pkgName }...`);
   try {

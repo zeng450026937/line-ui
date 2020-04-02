@@ -1,0 +1,24 @@
+@import "../../themes/line.globals";
+
+.line-font-icon {
+  font-size: 24px;
+
+  user-select: none;
+}
+
+.line-font-icon.line-color {
+  color: current-color(base);
+}
+
+.line-font-icon.line-font-icon--small {
+  /* stylelint-disable-next-line declaration-no-important */
+  font-size: 18px !important;
+}
+.line-font-icon.line-font-icon--large {
+  /* stylelint-disable-next-line declaration-no-important */
+  font-size: 32px !important;
+}
+.line-font-icon.line-font-icon--xlarge {
+  /* stylelint-disable-next-line declaration-no-important */
+  font-size: 48px !important;
+}

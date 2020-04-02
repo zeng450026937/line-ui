@@ -1,12 +1,11 @@
 {
-  "name": "@skyline/website",
-  "version": "1.0.0",
+  "name": "@line-ui/website",
+  "version": "1.0.0-alpha.0",
   "description": "skyline website",
   "publishConfig": {
     "access": "public"
   },
   "private": true,
   "license": "MIT",
-  "dependencies": {
-  }
+  "dependencies": {}
 }

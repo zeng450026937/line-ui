@@ -98,12 +98,12 @@ window.init = () => {
   new Vue({
     render(h) {
       return h('div', { domProps: { id: 'header' } }, [
-        h('h1', 'Skyline Template Explorer'),
+        h('h1', 'LINE-UI Template Explorer'),
         h(
           'a',
           {
             domProps : {
-              href   : `http://gitcode.yealink.com/server/client/web_app/skyline/tree/${ __COMMIT__ }`,
+              href   : `http://gitcode.yealink.com/server/client/web_app/line-ui/tree/${ __COMMIT__ }`,
               target : '_blank',
             },
           },
@@ -118,7 +118,7 @@ window.init = () => {
             },
           },
           [
-            h('div', { domProps: { id: 'options-label' } }, `Skyline ${ __VERSION__ } ↘`),
+            h('div', { domProps: { id: 'options-label' } }, `Line ${ __VERSION__ } ↘`),
           ],
         ),
       ]);

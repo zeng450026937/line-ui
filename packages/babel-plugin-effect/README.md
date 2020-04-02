@@ -1,1 +1,1 @@
-# @skyline/babel-plugin-effect
+# @line-ui/babel-plugin-effect

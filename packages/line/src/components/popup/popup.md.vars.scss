@@ -1,0 +1,13 @@
+@import "../../themes/line.globals.md";
+
+// Material Design Modals
+// --------------------------------------------------
+
+/// @prop - Background color for the popup
+$popup-md-background-color:       $background-color !default;
+
+/// @prop - Box shadow color of the alert
+$popup-inset-box-shadow-color:    rgba(0, 0, 0, .4) !default;
+
+/// @prop - Box shadow of the alert
+$popup-inset-box-shadow:          0 28px 48px $popup-inset-box-shadow-color !default;

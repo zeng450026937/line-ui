@@ -1,28 +1,25 @@
 {
-  "name": "skyline-ui",
-  "version": "1.0.0-alpha",
-  "author": "Yealink",
+  "name": "line-ui",
+  "version": "1.0.0-alpha.0",
+  "author": "line-ui team",
   "license": "MIT",
   "keywords": [
-    "vue",
-    "component"
+    "framework"
   ],
   "private": true,
   "workspaces": [
-    "apps/*",
     "packages/*"
   ],
   "scripts": {
     "bootstrap": "node scripts/bootstrap.js",
-    "rollup": "node scripts/rollup.js",
+    "build": "node scripts/build.js",
     "release": "node scripts/release.js",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "serve": "vue-cli-service serve",
     "spa": "vue-cli-service spa",
     "ssr": "vue-cli-service ssr",
-    "quickstart": "vue-cli-service quickstart",
-    "iconsexplorer": "vue-cli-service icons-explorer",
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
+    "quick-start": "vue-cli-service quick-start",
+    "icons-explorer": "vue-cli-service icons-explorer",
     "playground": "yarn serve:playground",
     "serve:playground": "vue-cli-service serve:playground",
     "build:playground": "vue-cli-service build:playground",
@@ -52,6 +49,7 @@
     "core-js": "^3.6.4"
   },
   "devDependencies": {
+    "@ls-lint/ls-lint": "^1.8.0",
     "@microsoft/api-extractor": "^7.7.8",
     "@rollup/plugin-alias": "^3.0.1",
     "@rollup/plugin-buble": "^0.21.1",
@@ -79,6 +77,7 @@
     "commander": "^4.1.1",
     "conventional-changelog-cli": "^2.0.31",
     "cssnano": "^4.1.10",
+    "enquirer": "^2.3.4",
     "eslint": "^6.7.2",
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-vue": "^6.1.2",

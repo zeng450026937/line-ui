@@ -1,1 +1,1 @@
-# @skyline/webpack-loader-svg-component
+# @line-ui/webpack-loader-svg-component

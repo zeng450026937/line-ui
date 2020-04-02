@@ -2,7 +2,7 @@ module.exports = (api, options) => {
   api.registerCommand(
     'serve:playground',
     {
-      description : 'serve skyline playground',
+      description : 'serve line-ui playground',
       usage       : 'vue-cli-service serve:playground',
       details     : 'TBD',
     },
@@ -20,7 +20,7 @@ module.exports = (api, options) => {
   api.registerCommand(
     'serve:website',
     {
-      description : 'serve skyline website(homepage)',
+      description : 'serve line-ui website(homepage)',
       usage       : 'vue-cli-service serve:website',
       details     : 'TBD',
     },

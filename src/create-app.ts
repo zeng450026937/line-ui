@@ -1,5 +1,5 @@
 import Vue from 'vue';
-import Skyline from 'skyline';
+import Skyline from '@line-ui/line';
 import { createRouter } from './router';
 
 Vue.use(Skyline);

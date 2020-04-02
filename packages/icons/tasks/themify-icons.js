@@ -1,7 +1,7 @@
 const task = require('./utils/task');
 const resolvePkg = require('./utils/resolvePkg');
 
-const pkgName = '@skyline/themify-icons';
+const pkgName = '@line-ui/themify-icons';
 const pkgDir = resolvePkg.sync(`${ pkgName }`);
 const svgFolder = `${ pkgDir }/SVG`;
 

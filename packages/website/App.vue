@@ -1,7 +1,7 @@
 <template>
   <line-app>
     <line-content color="dark">
-      <div class="logo">skyline</div>
+      <div class="logo">line-ui</div>
     </line-content>
   </line-app>
 </template>

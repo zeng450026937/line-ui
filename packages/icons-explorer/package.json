@@ -1,18 +1,19 @@
 {
-  "name": "@skyline/icons-explorer",
-  "version": "1.0.0-alpha",
-  "description": "@skyline/icons-explorer",
+  "name": "@line-ui/icons-explorer",
+  "version": "1.0.0-alpha.0",
+  "description": "@line-ui/icons-explorer",
   "main": "index.js",
   "files": [
     "index.js",
     "dist"
   ],
   "keywords": [
-    "skyline"
+    "line-ui"
   ],
+  "private": true,
   "author": "Yealink Inc",
   "license": "MIT",
   "devDependencies": {
-    "@skyline/icons": "^1.0.0-alpha"
+    "@line-ui/icons": "^1.0.0-alpha"
   }
 }

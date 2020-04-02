@@ -7,13 +7,13 @@
 #### NPM
 
 ```shell
-npm i @skyline/markdown-vetur -D
+npm i @line-ui/markdown-vetur -D
 ```
 
 #### YARN
 
 ```shell
-yarn add @skyline/markdown-vetur --dev
+yarn add @line-ui/markdown-vetur --dev
 ```
 
 ## API

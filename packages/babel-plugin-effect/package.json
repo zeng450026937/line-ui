@@ -1,13 +1,13 @@
 {
-  "name": "@skyline/babel-plugin-effect",
-  "version": "1.0.0-alpha",
-  "description": "@skyline/babel-plugin-effect",
+  "name": "@line-ui/babel-plugin-effect",
+  "version": "1.0.0-alpha.0",
+  "description": "@line-ui/babel-plugin-effect",
   "main": "index.js",
   "files": [
     "index.js"
   ],
   "keywords": [
-    "skyline"
+    "line-ui"
   ],
   "private": true,
   "author": "Yealink Inc",

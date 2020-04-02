@@ -1,0 +1,48 @@
+{
+  "name": "@line-ui/line",
+  "version": "1.0.0-alpha.0",
+  "description": "@line-ui/line",
+  "main": "index.js",
+  "module": "dist/line.esm-bundler.js",
+  "unpkg": "dist/line.global.js",
+  "files": [
+    "dist",
+    "scripts/utils.js",
+    "src",
+    ".wip",
+    "import.config.js",
+    "index.js",
+    "inspect.js"
+  ],
+  "types": "dist/line.d.ts",
+  "keywords": [
+    "line"
+  ],
+  "sideEffects": false,
+  "buildOptions": {
+    "name": "Line",
+    "formats": [
+      "esm-bundler",
+      "cjs",
+      "global",
+      "esm"
+    ],
+    "prepare": [
+      "scripts/components.js",
+      "scripts/directives.js",
+      "scripts/mixins.js"
+    ],
+    "scripts": [
+      "scripts/style.js"
+    ],
+    "babel": true
+  },
+  "private": false,
+  "author": "Yealink Inc",
+  "license": "MIT",
+  "devDependencies": {
+    "@popperjs/core": "^2.0.6",
+    "@types/swiper": "^5.2.1",
+    "swiper": "^5.3.6"
+  }
+}

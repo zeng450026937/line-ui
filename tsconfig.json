@@ -27,9 +27,7 @@
     ],
     "paths": {
       "@/*": ["src/*"],
-      "@skyline/*": ["packages/*/src"],
-      "skyline": ["packages/skyline"],
-      "skyline/*": ["packages/skyline/*"],
+      "@line-ui/*": ["packages/*/src"],
     },
     "lib": [
       "esnext",

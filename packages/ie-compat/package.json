@@ -1,7 +1,7 @@
 {
-  "name": "@skyline/ie-compat",
-  "version": "1.0.0-alpha",
-  "description": "@skyline/ie-compat",
+  "name": "@line-ui/ie-compat",
+  "version": "1.0.0-alpha.0",
+  "description": "@line-ui/ie-compat",
   "main": "index.js",
   "module": "dist/ie-compat.esm-bundler.js",
   "files": [
@@ -10,7 +10,7 @@
   ],
   "types": "dist/ie-compat.d.ts",
   "keywords": [
-    "skyline"
+    "line-ui"
   ],
   "sideEffects": false,
   "buildOptions": {
@@ -23,6 +23,7 @@
     "typescript": false,
     "buble": true
   },
+  "private": true,
   "author": "Yealink Inc",
   "license": "MIT"
 }

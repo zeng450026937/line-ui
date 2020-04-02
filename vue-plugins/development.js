@@ -56,35 +56,35 @@ module.exports = (api, options) => {
         tapCopy();
       }
 
-      // skyline config
-      const skyline = {
+      // line config
+      const line = {
         autoimport   : true,
         svgsprite    : true,
         svgcomponent : false,
         i18n         : true,
       };
 
-      if (skyline.autoimport) {
+      if (line.autoimport) {
         config.module.rule('vue')
-          .use('skyline-auto-import')
-          .loader(require.resolve('@skyline/webpack-loader-auto-import'))
-          .options(require('skyline/import.config'))
+          .use('line-auto-import')
+          .loader(require.resolve('@line-ui/webpack-loader-auto-import'))
+          .options(require('@line-ui/line/import.config'))
           .after('vue-loader');
       }
 
-      if (skyline.svgsprite) {
+      if (line.svgsprite) {
         config.module.rules.delete('svg');
 
         config.module
           .rule('svg')
           .test(/\.(svg)(\?.*)?$/)
           .use('svg-sprite')
-          .loader(require.resolve('@skyline/webpack-plugin-svg-sprite/lib/loader'));
+          .loader(require.resolve('@line-ui/webpack-plugin-svg-sprite/lib/loader'));
 
         config
           .plugin('svg-sprite')
-          .use(require('@skyline/webpack-plugin-svg-sprite'));
-      } else if (skyline.svgcomponent) {
+          .use(require('@line-ui/webpack-plugin-svg-sprite'));
+      } else if (line.svgcomponent) {
         if (api.hasPlugin('babel')) {
           config.module.rules.delete('svg');
 
@@ -95,7 +95,7 @@ module.exports = (api, options) => {
             // .loader(require.resolve('babel-loader'))
             // .end()
             .use('svg-component')
-            .loader(require.resolve('@skyline/webpack-loader-svg-component'));
+            .loader(require.resolve('@line-ui/webpack-loader-svg-component'));
         } else {
           console.log(
             'svg-component require babel-loader with jsx support.',
@@ -103,10 +103,10 @@ module.exports = (api, options) => {
         }
       }
 
-      if (skyline.i18n) {
+      if (line.i18n) {
         config
           .plugin('i18n')
-          .use(require('@skyline/webpack-plugin-i18n'));
+          .use(require('@line-ui/webpack-plugin-i18n'));
       }
     }
   });

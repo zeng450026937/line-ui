@@ -24,7 +24,7 @@ files.forEach(shortName => {
     return;
   }
 
-  const name = shortName === 'skyline' ? shortName : `@skyline/${ shortName }`;
+  const name = shortName === 'line' ? shortName : `@line-ui/${ shortName }`;
   const pkgPath = path.join(packagesDir, shortName, 'package.json');
   const pkgExists = fs.existsSync(pkgPath);
   if (pkgExists) {
@@ -43,8 +43,8 @@ files.forEach(shortName => {
       module      : `dist/${ shortName }.esm-bundler.js`,
       files       : ['index.js', 'dist'],
       types       : `dist/${ shortName }.d.ts`,
-      keywords    : ['skyline'],
-      author      : 'Yealink Inc',
+      keywords    : ['line-ui'],
+      author      : 'line-ui team',
       license     : 'MIT',
     };
     fs.writeFileSync(pkgPath, JSON.stringify(json, null, 2));
@@ -93,9 +93,9 @@ files.forEach(shortName => {
 'use strict'
 
 if (process.env.NODE_ENV === 'production') {
-  module.exports = require('./dist/${ shortName }.cjs.prod.js')
+  module.exports = require('./dist/${ shortName }.cjs.prod.js');
 } else {
-  module.exports = require('./dist/${ shortName }.cjs.js')
+  module.exports = require('./dist/${ shortName }.cjs.js');
 }
     `.trim() }\n`,
     );

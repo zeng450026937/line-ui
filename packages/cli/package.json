@@ -1,10 +1,10 @@
 {
-  "name": "@skyline/cli",
-  "version": "1.0.0",
-  "description": "skyline cli tools",
+  "name": "@line-ui/cli",
+  "version": "1.0.0-alpha.0",
+  "description": "line-ui cli tools",
   "main": "./src/index.js",
   "bin": {
-    "skyline": "./src/index.js"
+    "line-ui": "./src/index.js"
   },
   "publishConfig": {
     "access": "public"

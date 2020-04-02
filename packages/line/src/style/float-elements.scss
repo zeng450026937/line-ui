@@ -1,0 +1,30 @@
+@import "../themes/line.globals";
+@import "../themes/line.mixins";
+
+// Float Elements
+// --------------------------------------------------
+// Creates float classes based on screen size
+
+@each $breakpoint in map-keys($screen-breakpoints) {
+  $infix: breakpoint-infix($breakpoint, $screen-breakpoints);
+
+  @include media-breakpoint-up($breakpoint, $screen-breakpoints) {
+    // Provide `.line-float-{bp}-{side}` classes for floating the element based
+    // on the breakpoint and side
+    .line-float#{$infix}-left {
+      @include float(left, !important);
+    }
+
+    .line-float#{$infix}-right {
+      @include float(right, !important);
+    }
+
+    .line-float#{$infix}-start {
+      @include float(start, !important);
+    }
+
+    .line-float#{$infix}-end {
+      @include float(end, !important);
+    }
+  }
+}

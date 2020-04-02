@@ -1,17 +1,17 @@
 {
-  "name": "@skyline/template-explorer",
-  "version": "1.0.0-alpha",
-  "description": "@skyline/template-explorer",
+  "name": "@line-ui/template-explorer",
+  "version": "1.0.0-alpha.0",
+  "description": "@line-ui/template-explorer",
   "files": [
     "index.js",
     "dist"
   ],
   "keywords": [
-    "skyline"
+    "line-ui"
   ],
+  "private": true,
   "author": "Yealink Inc",
   "license": "MIT",
-  "private": true,
   "buildOptions": {
     "formats": [
       "global"

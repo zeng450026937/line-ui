@@ -1,6 +1,5 @@
 # Issues
 
-- 重命名skyline
 - Release脚本和NPM发布
 
 - Popup类组件应该是基于App范围内，而不是body

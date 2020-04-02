@@ -1,1 +1,1 @@
-# @skyline/webpack-plugin-i18n
+# @line-ui/webpack-plugin-i18n

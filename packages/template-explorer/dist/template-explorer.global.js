@@ -77,10 +77,10 @@
       new Vue({
           render(h) {
               return h('div', { domProps: { id: 'header' } }, [
-                  h('h1', 'Skyline Template Explorer'),
+                  h('h1', 'LINE-UI Template Explorer'),
                   h('a', {
                       domProps: {
-                          href: `http://gitcode.yealink.com/server/client/web_app/skyline/tree/${"2c78e28"}`,
+                          href: `http://gitcode.yealink.com/server/client/web_app/line-ui/tree/${"2c78e28"}`,
                           target: '_blank',
                       },
                   }, `@${"2c78e28"}`),
@@ -89,7 +89,7 @@
                           id: 'options-wrapper',
                       },
                   }, [
-                      h('div', { domProps: { id: 'options-label' } }, `Skyline ${"1.0.0-alpha"} ↘`),
+                      h('div', { domProps: { id: 'options-label' } }, `LINE ${"1.0.0-alpha"} ↘`),
                   ]),
               ]);
           },

@@ -1,12 +1,11 @@
 {
-  "name": "@skyline/docs",
-  "version": "1.0.0",
-  "description": "skyline docs",
+  "name": "@line-ui/docs",
+  "version": "1.0.0-alpha.0",
+  "description": "line-ui docs",
   "publishConfig": {
     "access": "public"
   },
   "private": true,
   "license": "MIT",
-  "dependencies": {
-  }
+  "dependencies": {}
 }
