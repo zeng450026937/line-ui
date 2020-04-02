@@ -83,15 +83,9 @@ export default /*#__PURE__*/ createComponent({
   },
 
   props : {
-    name     : String,
-    disabled : {
-      type    : Boolean,
-      default : false,
-    },
-    readonly : {
-      type    : Boolean,
-      default : false,
-    },
+    name          : String,
+    disabled      : Boolean,
+    readonly      : Boolean,
     min           : String,
     max           : String,
     displayFormat : {
@@ -172,7 +166,6 @@ export default /*#__PURE__*/ createComponent({
 
     this.updateDatetimeValue(this.dateValue);
 
-    // TODO
     this.emitStyle();
   },
 
@@ -224,7 +217,7 @@ export default /*#__PURE__*/ createComponent({
 
     emitStyle(): void {
       this.Item && this.Item.itemStyle(
-        'datatime',
+        'datetime',
         {
           interactive            : true,
           datetime               : true,
@@ -257,7 +250,6 @@ export default /*#__PURE__*/ createComponent({
             role    : 'cancel',
             handler : () => {
               this.updateDatetimeValue(this.dateValue);
-              // this.ionCancel.emit();
               this.$emit('cancel');
             },
           },
@@ -267,14 +259,14 @@ export default /*#__PURE__*/ createComponent({
               this.updateDatetimeValue(data);
 
               /**
-             * Prevent convertDataToISO from doing any
-             * kind of transformation based on timezone
-             * This cancels out any change it attempts to make
-             *
-             * Important: Take the timezone offset based on
-             * the date that is currently selected, otherwise
-             * there can be 1 hr difference when dealing w/ DST
-             */
+               * Prevent convertDataToISO from doing any
+               * kind of transformation based on timezone
+               * This cancels out any change it attempts to make
+               *
+               * Important: Take the timezone offset based on
+               * the date that is currently selected, otherwise
+               * there can be 1 hr difference when dealing w/ DST
+               */
               const date = new Date(convertDataToISO(this.datetimeValue));
 
               // If a custom display timezone is provided, use that tzOffset value instead

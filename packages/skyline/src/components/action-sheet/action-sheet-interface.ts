@@ -5,7 +5,7 @@ export interface ActionSheetOptions {
   header?: string;
   subHeader?: string;
   cssClass?: string | string[];
-  buttons: (ActionSheetButton | string)[];
+  buttons: (ActionSheetButtonOption | string)[];
   backdropDismiss?: boolean;
   translucent?: boolean;
   animated?: boolean;
@@ -17,7 +17,7 @@ export interface ActionSheetOptions {
   leaveAnimation?: AnimationBuilder;
 }
 
-export interface ActionSheetButton {
+export interface ActionSheetButtonOption {
   text?: string;
   role?: 'cancel' | 'destructive' | 'selected' | string;
   icon?: string;

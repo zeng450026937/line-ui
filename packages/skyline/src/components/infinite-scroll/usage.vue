@@ -20,10 +20,7 @@
         :disabled="disabled"
         @infinite="onInfinite"
       >
-        <line-infinite-scroll-content
-          loading-spinner="bubbles"
-          loading-text="Loading more data..."
-        >
+        <line-infinite-scroll-content loadingText="Loading more data...">
         </line-infinite-scroll-content>
       </line-infinite-scroll>
     </line-content>

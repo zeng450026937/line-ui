@@ -5,7 +5,7 @@
 // Material Design Item Group
 // --------------------------------------------------
 
-.item-group-md .line-item:last-child,
-.item-group-md .line-item-sliding:last-child .line-item {
+.line-item-group--md .line-item:last-child,
+.line-item-group--md .line-item-sliding:last-child .line-item {
   --border-width: 0;
 }

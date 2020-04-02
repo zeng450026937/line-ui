@@ -87,11 +87,8 @@ export default /*#__PURE__*/ createComponent({
       type    : Number,
       default : 50,
     },
-    disabled : {
-      type    : Boolean,
-      default : false,
-    },
-    side : {
+    disabled : Boolean,
+    side     : {
       type    : String,
       default : 'start',
     },
@@ -140,17 +137,17 @@ export default /*#__PURE__*/ createComponent({
     },
 
     /**
-   * Opens the menu. If the menu is already open or it can't be opened,
-   * it returns `false`.
-   */
+     * Opens the menu. If the menu is already open or it can't be opened,
+     * it returns `false`.
+     */
     open(animated = true): Promise<boolean> {
       return this.setOpen(true, animated);
     },
 
     /**
-   * Closes the menu. If the menu is already closed or it can't be closed,
-   * it returns `false`.
-   */
+     * Closes the menu. If the menu is already closed or it can't be closed,
+     * it returns `false`.
+     */
     close(animated = true): Promise<boolean> {
       return this.setOpen(false, animated);
     },

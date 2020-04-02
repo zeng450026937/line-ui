@@ -20,69 +20,77 @@
           <line-label>Jon Snow</line-label>
         </line-item>
         <line-item>
-          <line-check-box
-            slot="start"
-            color="secondary"
-            checked
-          ></line-check-box>
+          <template #start>
+            <line-check-box
+              color="secondary"
+              checked
+            ></line-check-box>
+          </template>
           <line-label>Daenerys Targaryen</line-label>
         </line-item>
         <line-item>
-          <line-check-box
-            checked
-            color="tertiary"
-            slot="start"
-            disabled
-          ></line-check-box>
+          <template #start>
+            <line-check-box
+              checked
+              color="tertiary"
+              disabled
+            ></line-check-box>
+          </template>
           <line-label>Arya Stark</line-label>
         </line-item>
         <line-item>
-          <line-check-box
-            slot="start"
-            color="success"
-            :checked="value"
-          ></line-check-box>
+          <template #start>
+            <line-check-box
+              color="success"
+              :checked="value"
+            ></line-check-box>
+          </template>
           <line-label>Tyrion Lannister</line-label>
         </line-item>
         <line-item>
-          <line-check-box
-            slot="start"
-            color="danger"
-            checked
-          ></line-check-box>
+          <template #start>
+            <line-check-box
+              color="danger"
+              checked
+            ></line-check-box>
+          </template>
           <line-label>Sansa Stark</line-label>
         </line-item>
         <line-item>
-          <line-check-box
-            slot="start"
-            color="warning"
-            checked
-          ></line-check-box>
+          <template #start>
+            <line-check-box
+              color="warning"
+              checked
+            ></line-check-box>
+          </template>
           <line-label>Khal Drogo</line-label>
         </line-item>
         <line-item>
-          <line-check-box
-            slot="start"
-            color="medium"
-            checked
-            disabled
-          ></line-check-box>
+          <template #start>
+            <line-check-box
+              color="medium"
+              checked
+              disabled
+            ></line-check-box>
+          </template>
           <line-label>Cersei Lannister</line-label>
         </line-item>
         <line-item>
-          <line-check-box
-            slot="start"
-            color="medium"
-            checked
-          ></line-check-box>
+          <template #start>
+            <line-check-box
+              color="medium"
+              checked
+            ></line-check-box>
+          </template>
           <line-label>Stannis Baratheon</line-label>
         </line-item>
         <line-item>
-          <line-check-box
-            slot="start"
-            color="dark"
-            checked
-          ></line-check-box>
+          <template #start>
+            <line-check-box
+              color="dark"
+              checked
+            ></line-check-box>
+          </template>
           <line-label>Petyr Baelish</line-label>
         </line-item>
       </line-list>
@@ -117,10 +125,4 @@ export default Vue.extend({
 </script>
 
 <style lang="scss" scoped>
-.badge-usage {
-  width: 100%;
-  height: 100%;
-
-  // padding: 16px;
-}
 </style>

@@ -12,9 +12,11 @@
       <line-list v-if="displayData">
         <line-list-header>Albums</line-list-header>
         <line-item>
-          <line-thumbnail slot="start">
-            <img src="/avatar-finn.png">
-          </line-thumbnail>
+          <template #start>
+            <line-thumbnail>
+              <img src="/avatar-finn.png">
+            </line-thumbnail>
+          </template>
           <line-label>
             <h3>Abbey Road</h3>
             <p>The Beatles</p>
@@ -22,9 +24,11 @@
           </line-label>
         </line-item>
         <line-item>
-          <line-thumbnail slot="start">
-            <img src="/avatar-han.png">
-          </line-thumbnail>
+          <template #start>
+            <line-thumbnail>
+              <img src="/avatar-han.png">
+            </line-thumbnail>
+          </template>
           <line-label>
             <h3>The Dark Side of the Moon</h3>
             <p>Pink Floyd</p>
@@ -32,9 +36,11 @@
           </line-label>
         </line-item>
         <line-item>
-          <line-thumbnail slot="start">
-            <img src="/avatar-rey.png">
-          </line-thumbnail>
+          <template #start>
+            <line-thumbnail>
+              <img src="/avatar-rey.png">
+            </line-thumbnail>
+          </template>
           <line-label>
             <h3>For Emma, Forever Ago</h3>
             <p>Bon Iver</p>
@@ -42,9 +48,11 @@
           </line-label>
         </line-item>
         <line-item>
-          <line-thumbnail slot="start">
-            <img src="/avatar-luke.png">
-          </line-thumbnail>
+          <template #start>
+            <line-thumbnail>
+              <img src="/avatar-luke.png">
+            </line-thumbnail>
+          </template>
           <line-label>
             <h3>Beast Epic</h3>
             <p>Iron & Wine</p>
@@ -52,9 +60,11 @@
           </line-label>
         </line-item>
         <line-item>
-          <line-thumbnail slot="start">
-            <img src="/avatar-poe.png">
-          </line-thumbnail>
+          <template #start>
+            <line-thumbnail>
+              <img src="/avatar-poe.png">
+            </line-thumbnail>
+          </template>
           <line-label>
             <h3>Worlds</h3>
             <p>Porter Robinson</p>
@@ -62,9 +72,11 @@
           </line-label>
         </line-item>
         <line-item>
-          <line-thumbnail slot="start">
-            <img src="/avatar-ben.png">
-          </line-thumbnail>
+          <template #start>
+            <line-thumbnail>
+              <img src="/avatar-ben.png">
+            </line-thumbnail>
+          </template>
           <line-label>
             <h3>Worlds</h3>
             <p>Awaken, My Love!</p>

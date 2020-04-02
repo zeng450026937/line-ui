@@ -10,60 +10,57 @@
       <line-list>
         <line-list-header>Fruit</line-list-header>
         <line-item>
-          <line-radio
-            slot="start"
-            :checked="value"
-            color="primary"
-            @toggled="toggled"
-          ></line-radio>
+          <template #start>
+            <line-radio
+              :checked="value"
+              color="primary"
+              @toggled="toggled"
+            ></line-radio>
+          </template>
           <line-label>Apple</line-label>
         </line-item>
         <line-item>
-          <line-radio
-            slot="start"
-            color="dark"
-          ></line-radio>
+          <template #start>
+            <line-radio color="dark"></line-radio>
+          </template>
           <line-label>Grape</line-label>
         </line-item>
         <line-item disabled>
-          <line-radio slot="start"></line-radio>
+          <template #start>
+            <line-radio></line-radio>
+          </template>
           <line-label>Cherry</line-label>
         </line-item>
         <line-list-header>Pizza Topping</line-list-header>
         <line-item>
-          <line-radio
-            slot="end"
-            color="secondary"
-          ></line-radio>
+          <template #start>
+            <line-radio color="secondary"></line-radio>
+          </template>
           <line-label>Beef</line-label>
         </line-item>
         <line-item>
-          <line-radio
-            slot="end"
-            color="danger"
-          ></line-radio>
+          <template #end>
+            <line-radio color="danger"></line-radio>
+          </template>
           <line-label>Anchovies</line-label>
         </line-item>
         <line-item>
-          <line-radio
-            slot="end"
-            color="primary"
-          ></line-radio>
+          <template #end>
+            <line-radio color="primary"></line-radio>
+          </template>
           <line-label>Sausage</line-label>
         </line-item>
         <line-item>
-          <line-radio
-            slot="end"
-            color="tertiary"
-          ></line-radio>
+          <template #end>
+            <line-radio color="tertiary"></line-radio>
+          </template>
           <line-label>Bellpepper</line-label>
         </line-item>
         <line-item>
           <line-label>Tomato</line-label>
-          <line-radio
-            slot="end"
-            color="medium"
-          ></line-radio>
+          <template #end>
+            <line-radio color="medium"></line-radio>
+          </template>
         </line-item>
       </line-list>
     </line-content>

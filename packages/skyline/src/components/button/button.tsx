@@ -95,9 +95,13 @@ export default /*#__PURE__*/ createComponent({
           class={bem('content')}
         >
           {this.slots('icon-only')}
+
           {this.slots('start')}
+
           {this.slots('indicator')}
+
           {this.slots() || text}
+
           {this.slots('end')}
         </TagType>
       </div>

@@ -6,6 +6,11 @@
       </line-toolbar>
     </line-header>
     <line-content class="line-padding">
+      <line-loading
+        message="loading..."
+        :spinner="spinner"
+        v-model="visible"
+      ></line-loading>
       <line-button
         expand="block"
         @click="open"
@@ -18,22 +23,17 @@
 
 <script>
 import Vue from 'vue';
-import { LoadingController } from 'skyline/src/controller/loading';
-
-const controller = new LoadingController();
 
 export default Vue.extend({
   data() {
     return {
-
+      visible : false,
+      spinner : 'lines-small', // bubbles circles circular crescent dots lines lines-small
     };
   },
   methods : {
     open() {
-      controller.create({
-        message : 'loading...',
-        spinner : 'lines-small', // bubbles circles circular crescent dots lines lines-small
-      }).open();
+      this.visible = !this.visible;
     },
   },
 });

@@ -7,6 +7,13 @@
     </line-header>
 
     <line-content class="line-padding">
+      <line-picker
+        :columns="columns"
+        :buttons="buttons"
+        v-model="visible"
+      >
+
+      </line-picker>
       <line-button
         expand="block"
         @click="onClick()"
@@ -22,9 +29,6 @@
 <script>
 import Vue from 'vue';
 
-import { PickerController } from 'skyline/src/controller/picker';
-
-const controller = new PickerController();
 const defaultColumnOptions = [
   [
     'Dog',
@@ -56,6 +60,20 @@ export default Vue.extend({
   data() {
     return {
       visible : false,
+      columns : [],
+      buttons : [
+        {
+          text : 'Cancel',
+          role : 'cancel',
+        },
+        {
+          text    : 'Confirm',
+          handler : (value) => {
+            this.value = value;
+            console.log('Got Value:', this.value);
+          },
+        },
+      ],
     };
   },
 
@@ -67,22 +85,8 @@ export default Vue.extend({
 
   methods : {
     onClick(numColumns = 1, numOptions = 5, columnOptions = defaultColumnOptions) {
-      controller.create({
-        columns : this.getColumns(numColumns, numOptions, columnOptions),
-        buttons : [
-          {
-            text : 'Cancel',
-            role : 'cancel',
-          },
-          {
-            text    : 'Confirm',
-            handler : (value) => {
-              this.value = value;
-              console.log('Got Value:', this.value);
-            },
-          },
-        ],
-      }).open();
+      this.columns = this.getColumns(numColumns, numOptions, columnOptions);
+      this.visible = !this.visible;
     },
 
     getColumns(numColumns, numOptions, columnOptions) {

@@ -2,7 +2,7 @@
   <line-app>
     <line-header translucent>
       <line-toolbar>
-        <line-title>Loading</line-title>
+        <line-title>Menu</line-title>
       </line-toolbar>
     </line-header>
 

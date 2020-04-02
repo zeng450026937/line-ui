@@ -12,10 +12,7 @@ export default /*#__PURE__*/ createComponent({
       type    : String,
       default : '15%',
     },
-    disabled : {
-      type    : Boolean,
-      default : false,
-    },
+    disabled : Boolean,
     position : {
       type    : String,
       default : 'bottom',
@@ -200,6 +197,7 @@ export default /*#__PURE__*/ createComponent({
 
   render() {
     const { disabled, isLoading } = this;
+
     return (
       <div
         class={[

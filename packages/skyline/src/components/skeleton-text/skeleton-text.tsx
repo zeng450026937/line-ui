@@ -15,10 +15,9 @@ export default /*#__PURE__*/ createComponent({
     return (
       <div
         class={[
-          bem(),
+          bem({ animated }),
           {
-            'skeleton-text-animated' : animated,
-            'in-media'               : inMedia,
+            'in-media' : inMedia,
           },
         ]}
       >

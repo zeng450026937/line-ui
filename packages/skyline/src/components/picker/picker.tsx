@@ -1,6 +1,8 @@
 import { createNamespace } from 'skyline/src/utils/namespace';
 import { usePopup } from 'skyline/src/mixins/use-popup';
 import { Overlay } from 'skyline/src/components/overlay';
+// TODO
+import { safeCall } from 'skyline/src/utils/helpers';
 import { PickerColumn } from 'skyline/src/components/picker-column';
 import { PickerButton } from 'skyline/src/components/picker/picker-interface';
 import { iosEnterAnimation } from 'skyline/src/components/picker/animations/ios.enter';
@@ -15,17 +17,6 @@ const buttonWrapperClass = (button: PickerButton) => {
   };
 };
 
-// TODO
-const safeCall = (handler: any, arg?: any) => {
-  if (typeof handler === 'function') {
-    try {
-      return handler(arg);
-    } catch (e) {
-      __DEV__ && console.error(e);
-    }
-  }
-  return undefined;
-};
 
 export default /*#__PURE__*/ createComponent({
   mixins : [
@@ -38,18 +29,9 @@ export default /*#__PURE__*/ createComponent({
       type    : Boolean,
       default : true,
     },
-    buttons : {
-      type    : Array,
-      default : () => [],
-    },
-    columns : {
-      type    : Array,
-      default : () => [],
-    },
-    cssClass : {
-      type    : Array,
-      default : () => [],
-    },
+    buttons  : Array,
+    columns  : Array,
+    cssClass : Array,
     duration : {
       type    : Number,
       default : 0,
@@ -147,7 +129,9 @@ export default /*#__PURE__*/ createComponent({
         aria-modal="true"
         v-show={visible}
         class={[
-          bem(),
+          bem({
+            mode : true,
+          }),
           {
             // Used internally for styling
             [`picker-${ mode }`] : true,

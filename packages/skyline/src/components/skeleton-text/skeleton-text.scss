@@ -44,7 +44,7 @@
 // Animated Skeleton Text
 // -----------------------------------------------------------
 
-.line-skeleton-text.skeleton-text-animated {
+.line-skeleton-text.line-skeleton-text--animated {
   position: relative;
 
   background: linear-gradient(to right, $skeleton-text-background 8%, $skeleton-text-background-animated 18%, $skeleton-text-background 33%);

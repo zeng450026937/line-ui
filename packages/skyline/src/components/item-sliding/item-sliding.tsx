@@ -69,10 +69,7 @@ export default /*#__PURE__*/ createComponent({
   },
 
   props : {
-    disabled : {
-      type    : Boolean,
-      default : false,
-    },
+    disabled : Boolean,
   },
 
   data() {

@@ -23,6 +23,7 @@ export default /*#__PURE__*/ createComponent({
 
   render() {
     const { translucent } = this;
+
     return (
       <div
         role="contentinfo"

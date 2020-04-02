@@ -51,13 +51,12 @@ export default /*#__PURE__*/ createComponent({
 
     return (
       <div
-        class={[
-          bem(),
-          {
-            [`label-${ position }`] : isDef(position),
-            'label-no-animate'      : (this.noAnimate),
-          },
-        ]}
+        class={
+          bem({
+            [position]   : isDef(position),
+            'no-animate' : this.noAnimate,
+          })
+        }
         on={this.$listeners}
       >
         {this.slots()}

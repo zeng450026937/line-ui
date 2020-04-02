@@ -10,58 +10,55 @@
       <line-list>
         <line-item>
           <line-label>Blueberry</line-label>
-          <line-switch
-            slot="start"
-            :checked="value"
-            color="primary"
-            @toggled="toggled"
-          ></line-switch>
+          <template #start>
+            <line-switch
+              :checked="value"
+              color="primary"
+              @toggled="toggled"
+            ></line-switch>
+          </template>
         </line-item>
         <line-item>
-          <line-switch
-            slot="start"
-            color="dark"
-          ></line-switch>
+          <template #start>
+            <line-switch color="dark"></line-switch>
+          </template>
           <line-label>Apple</line-label>
         </line-item>
         <line-item disabled>
-          <line-switch slot="start"></line-switch>
+          <template #start>
+            <line-switch></line-switch>
+          </template>
           <line-label>Grape</line-label>
         </line-item>
         <line-item>
-          <line-switch
-            slot="start"
-            color="secondary"
-          ></line-switch>
+          <template #start>
+            <line-switch color="secondary"></line-switch>
+          </template>
           <line-label>Kiwi</line-label>
         </line-item>
         <line-item>
-          <line-switch
-            slot="start"
-            color="danger"
-          ></line-switch>
+          <template #start>
+            <line-switch color="danger"></line-switch>
+          </template>
           <line-label>Orange</line-label>
         </line-item>
         <line-item>
-          <line-switch
-            slot="end"
-            color="primary"
-          ></line-switch>
+          <template #end>
+            <line-switch color="primary"></line-switch>
+          </template>
           <line-label>Cherry</line-label>
         </line-item>
         <line-item>
-          <line-switch
-            slot="end"
-            color="tertiary"
-          ></line-switch>
+          <template #end>
+            <line-switch color="tertiary"></line-switch>
+          </template>
           <line-label>Banana</line-label>
         </line-item>
         <line-item>
           <line-label>Tomato</line-label>
-          <line-switch
-            slot="end"
-            color="medium"
-          ></line-switch>
+          <template #end>
+            <line-switch color="medium"></line-switch>
+          </template>
         </line-item>
       </line-list>
     </line-content>

@@ -13,19 +13,10 @@ export default /*#__PURE__*/ createComponent({
 
   props : {
     // This property holds a textual description of the button.
-    text   : String,
-    layout : {
-      type    : String,
-      default : '',
-    },
-    tab : {
-      type    : String,
-      default : '',
-    },
-    disabled : {
-      type    : Boolean,
-      default : false,
-    },
+    text     : String,
+    layout   : String,
+    tab      : String,
+    disabled : Boolean,
   },
 
   computed : {

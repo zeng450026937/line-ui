@@ -20,7 +20,7 @@
   --color: #{$action-sheet-md-title-color};
 }
 
-.line-action-sheet .line-action-sheet__title {
+.line-action-sheet .line-action-sheet-title {
   @include padding($action-sheet-md-title-padding-top, $action-sheet-md-title-padding-end, $action-sheet-md-title-padding-bottom, $action-sheet-md-title-padding-start);
 
   height: $action-sheet-md-title-height;
@@ -32,7 +32,7 @@
   text-align: $action-sheet-md-text-align;
 }
 
-.line-action-sheet .line-action-sheet__sub-title {
+.line-action-sheet .line-action-sheet-title__sub-title {
   @include padding($action-sheet-md-sub-title-padding-top, $action-sheet-md-sub-title-padding-end, $action-sheet-md-sub-title-padding-bottom, $action-sheet-md-sub-title-padding-start);
 
   font-size: $action-sheet-md-sub-title-font-size;
@@ -42,11 +42,11 @@
 // Material Design Action Sheet Group
 // -----------------------------------------
 
-.line-action-sheet .line-action-sheet__group:first-child {
+.line-action-sheet .line-action-sheet-group:first-child {
   @include padding($action-sheet-md-padding-top, null, null, null);
 }
 
-.line-action-sheet .line-action-sheet__group:last-child {
+.line-action-sheet .line-action-sheet-group:last-child {
   @include padding(null, null, $action-sheet-md-padding-bottom, null);
 }
 
@@ -54,7 +54,7 @@
 // Material Design Action Sheet Buttons
 // -----------------------------------------
 
-.line-action-sheet .line-action-sheet__button {
+.line-action-sheet .line-action-sheet-button {
   @include padding($action-sheet-md-button-padding-top, $action-sheet-md-button-padding-end, $action-sheet-md-button-padding-bottom, $action-sheet-md-button-padding-start);
 
   position: relative;
@@ -78,10 +78,10 @@
   font-size: $action-sheet-md-icon-font-size;
 }
 
-.line-action-sheet .line-action-sheet__button-inner {
+.line-action-sheet .line-action-sheet-button-inner {
   justify-content: flex-start;
 }
 
-.line-action-sheet .line-action-sheet__button--selected {
+.line-action-sheet .line-action-sheet-button--selected {
   font-weight: bold;
 }

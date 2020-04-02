@@ -25,6 +25,7 @@ export default /*#__PURE__*/ createComponent({
   render() {
     const mode = 'ios';
     const collapse = this.collapse || 'none';
+
     return (
       <div
         role="banner"

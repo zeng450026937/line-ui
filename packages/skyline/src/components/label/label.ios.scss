@@ -15,13 +15,13 @@
 // iOS Stacked & Floating Labels
 // --------------------------------------------------
 
-.line-label.label-stacked.slotted {
+.line-label.line-label--stacked.slotted {
   @include margin(null, null, 4px, null);
 
   font-size: 13.6px;
 }
 
-.line-label.label-floating {
+.line-label.line-label--floating {
   @include margin(null, null, 0, null);
   @include transform(translate3d(0, 27px, 0));
   @include transform-origin(start, top);
@@ -29,14 +29,14 @@
   transition: transform 150ms ease-in-out;
 }
 
-.item-has-focus .line-label.label-stacked,
-.item-has-focus .line-label.label-floating {
+.item-has-focus .line-label.line-label--stacked,
+.item-has-focus .line-label.line-label--floating {
   color: $label-ios-text-color-focused;
 }
 
-.item-has-focus .line-label.label-floating,
-.item-has-placeholder .line-label.label-floating,
-.item-has-value .line-label.label-floating {
+.item-has-focus .line-label.line-label--floating,
+.item-has-placeholder .line-label.line-label--floating,
+.item-has-value .line-label.line-label--floating {
   @include transform(translate3d(0, 0, 0), scale(.8));
 }
 

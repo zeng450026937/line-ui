@@ -151,13 +151,17 @@
 // Range in Item
 // ----------------------------
 
-// .item .line-range .item-inner {
+// .line-item .line-range .item-inner,
+// .line-item-divider .line-range .item-inner,
+// .line-item-group .line-range .item-inner {
 //   overflow: visible;
 
 //   width: 100%;
 // }
 
-// .item .line-range .input-wrapper {
+// .line-item .line-range .input-wrapper,
+// .line-item-divider .line-range .input-wrapper,
+// .line-item-group .line-range .input-wrapper {
 //   overflow: visible;
 
 //   flex-direction: column;

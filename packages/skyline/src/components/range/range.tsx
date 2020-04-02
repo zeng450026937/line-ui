@@ -120,20 +120,13 @@ export default /*#__PURE__*/ createComponent({
   },
 
   props : {
-    text  : String,
-    color : {
-      type    : String,
-      default : '',
-    },
+    text     : String,
     debounce : {
       type    : Number,
       default : 0,
     },
-    dualKnobs : {
-      type    : Boolean,
-      default : false,
-    },
-    min : {
+    dualKnobs : Boolean,
+    min       : {
       type    : Number,
       default : 0,
     },
@@ -141,27 +134,15 @@ export default /*#__PURE__*/ createComponent({
       type    : Number,
       default : 100,
     },
-    pin : {
-      type    : Boolean,
-      default : false,
-    },
-    snaps : {
-      type    : Boolean,
-      default : false,
-    },
-    step : {
+    pin   : Boolean,
+    snaps : Boolean,
+    step  : {
       type    : Number,
       default : 1,
     },
-    ticks : {
-      type    : Boolean,
-      default : false,
-    },
-    disabled : {
-      type    : Boolean,
-      default : false,
-    },
-    value : {
+    ticks    : Boolean,
+    disabled : Boolean,
+    value    : {
       type    : [Number, Object],
       default : 0,
     },
@@ -209,7 +190,7 @@ export default /*#__PURE__*/ createComponent({
 
   watch : {
     disabled() {
-      //
+      this.disabledChanged();
     },
   },
 
@@ -409,7 +390,7 @@ export default /*#__PURE__*/ createComponent({
     onBlur() {
       if (this.hasFocus) {
         this.hasFocus = false;
-        // this.ionBlur.emit();
+        this.$emit('blur');
         this.emitStyle();
       }
     },
@@ -417,7 +398,7 @@ export default /*#__PURE__*/ createComponent({
     onFocus() {
       if (!this.hasFocus) {
         this.hasFocus = true;
-        // this.ionFocus.emit();
+        this.$emit('focus');
         this.emitStyle();
       }
     },

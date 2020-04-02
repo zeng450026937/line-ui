@@ -7,6 +7,13 @@
     </line-header>
 
     <line-content class="line-padding">
+      <line-toast
+        color="dark"
+        :duration="2000"
+        message="Paired successfully"
+        v-model="visible"
+      >
+      </line-toast>
       <line-button
         expand="block"
         @click="open"
@@ -25,20 +32,17 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import { ToastController } from 'skyline/src/controller/toast';
-
-const controller = new ToastController();
 
 export default Vue.extend({
+  data() {
+    return {
+      visible : false,
+    };
+  },
+
   methods : {
     open() {
-      controller
-        .create({
-          color    : 'dark',
-          duration : 2000,
-          message  : 'Paired successfully',
-        })
-        .open();
+      this.visible = !this.visible;
     },
   },
 });

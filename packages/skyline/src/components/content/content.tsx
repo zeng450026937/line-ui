@@ -51,11 +51,8 @@ export default /*#__PURE__*/ createComponent({
   props : {
     forceOverscroll : Boolean,
     fullscreen      : Boolean,
-    scrollX         : {
-      type    : Boolean,
-      default : false,
-    },
-    scrollY : {
+    scrollX         : Boolean,
+    scrollY         : {
       type    : Boolean,
       default : true,
     },

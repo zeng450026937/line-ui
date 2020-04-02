@@ -44,63 +44,58 @@
         <line-list-header>List Notes</line-list-header>
         <line-item>
           <line-label>Default</line-label>
-          <line-note slot="end">11</line-note>
+          <template #end>
+            <line-note>11</line-note>
+          </template>
         </line-item>
 
         <line-item>
           <line-label>Primary</line-label>
-          <line-note
-            slot="end"
-            color="primary"
-          >22</line-note>
+          <template #end>
+            <line-note color="primary">22</line-note>
+          </template>
         </line-item>
 
         <line-item>
           <line-label>Secondary</line-label>
-          <line-note
-            slot="end"
-            color="secondary"
-          >33</line-note>
+          <template #end>
+            <line-note color="secondary">33</line-note>
+          </template>
         </line-item>
 
         <line-item>
           <line-label>Tertiary</line-label>
-          <line-note
-            slot="end"
-            color="tertiary"
-          >44</line-note>
+          <template #end>
+            <line-note color="tertiary">44</line-note>
+          </template>
         </line-item>
 
         <line-item>
           <line-label>Success</line-label>
-          <line-note
-            slot="start"
-            color="success"
-          >55</line-note>
+          <template #start>
+            <line-note color="success">55</line-note>
+          </template>
         </line-item>
 
         <line-item>
           <line-label>Warning</line-label>
-          <line-note
-            slot="start"
-            color="warning"
-          >66</line-note>
+          <template #start>
+            <line-note color="warning">66</line-note>
+          </template>
         </line-item>
 
         <line-item>
           <line-label>Danger</line-label>
-          <line-note
-            slot="start"
-            color="danger"
-          >77</line-note>
+          <template #start>
+            <line-note color="danger">77</line-note>
+          </template>
         </line-item>
 
         <line-item>
           <line-label>Dark</line-label>
-          <line-note
-            slot="start"
-            color="dark"
-          >88</line-note>
+          <template #start>
+            <line-note color="dark">88</line-note>
+          </template>
         </line-item>
       </line-list>
     </line-content>
