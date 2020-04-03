@@ -1,7 +1,4 @@
-import {
-  BEM,
-  createBEM,
-} from '@line-ui/line/src/utils/bem';
+import { BEM, createBEM } from '@line-ui/line/src/utils/bem';
 import {
   CreateComponent,
   defineComponent,
@@ -12,10 +9,13 @@ type CreateNamespaceReturn = {
   bem: BEM;
 };
 
-export function createNamespace(name: string, prefix = 'line'): CreateNamespaceReturn {
-  name = `${ prefix }-${ name }`;
+export function createNamespace(
+  name: string,
+  prefix = 'line'
+): CreateNamespaceReturn {
+  name = `${prefix}-${name}`;
   return {
-    createComponent : defineComponent(name),
-    bem             : createBEM(name),
+    createComponent: defineComponent(name),
+    bem: createBEM(name),
   };
 }

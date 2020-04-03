@@ -1,8 +1,8 @@
 {
   "name": "@line-ui/eslint-config",
   "version": "1.0.0-alpha.0",
-  "description": "eslint config of line-ui.",
-  "main": "index.js",
+  "description": "eslint config of line-ui",
+  "main": "index.prettier.js",
   "publishConfig": {
     "access": "public"
   },
@@ -11,6 +11,8 @@
   "peerDependencies": {
     "@vue/cli-plugin-eslint": ">4.2.0",
     "@vue/cli-plugin-typescript": ">4.2.0",
+    "@vue/eslint-config-airbnb": ">5.0.2",
+    "@vue/eslint-config-prettier": ">6.0.0",
     "eslint": "^6.7.2"
   },
   "dependencies": {

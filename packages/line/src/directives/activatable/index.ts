@@ -9,7 +9,10 @@ export interface ActivatableOptions {
   instant?: boolean;
 }
 
-export function createActivatable(el: HTMLElement, options: ActivatableOptions) {
+export function createActivatable(
+  el: HTMLElement,
+  options: ActivatableOptions
+) {
   const { instant } = options;
 
   el.classList.add(ACTIVATABLE);
@@ -34,7 +37,10 @@ function inserted(el: HTMLElement, binding: VNodeDirective) {
 
   if (value === false) return;
 
-  (el as any).vActivatable = createActivatable(el, modifiers as ActivatableOptions);
+  (el as any).vActivatable = createActivatable(
+    el,
+    modifiers as ActivatableOptions
+  );
 }
 
 function unbind(el: HTMLElement) {
@@ -62,7 +68,7 @@ function update(el: HTMLElement, binding: VNodeDirective) {
 }
 
 export const vActivatable = /*#__PURE__*/ defineDirective({
-  name : 'activatable',
+  name: 'activatable',
   inserted,
   unbind,
   update,

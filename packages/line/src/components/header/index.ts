@@ -3,6 +3,4 @@
 
 import Header from '@line-ui/line/src/components/header/header';
 
-export {
-  Header,
-};
+export { Header };

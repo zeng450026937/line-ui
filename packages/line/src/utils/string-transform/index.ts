@@ -5,7 +5,7 @@ export const camelize = (str: string): string => {
 };
 
 // hyphenate => pascal
-export const pascalize = (str: string): string => camelize(`-${ str }`);
+export const pascalize = (str: string): string => camelize(`-${str}`);
 
 const hyphenateRE = /\B([A-Z])/g;
 // camel => hyphenate

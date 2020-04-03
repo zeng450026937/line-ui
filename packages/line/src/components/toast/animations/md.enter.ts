@@ -1,12 +1,12 @@
-import {
-  Animation,
-  createAnimation,
-} from '@line-ui/line/src/utils/animation';
+import { Animation, createAnimation } from '@line-ui/line/src/utils/animation';
 
 /**
  * MD Toast Enter Animation
  */
-export const mdEnterAnimation = (baseEl: HTMLElement, position: string): Animation => {
+export const mdEnterAnimation = (
+  baseEl: HTMLElement,
+  position: string
+): Animation => {
   const baseAnimation = createAnimation();
   const wrapperAnimation = createAnimation();
 
@@ -25,9 +25,9 @@ export const mdEnterAnimation = (baseEl: HTMLElement, position: string): Animati
     case 'middle':
       /* eslint-disable-next-line */
       const topPosition = Math.floor(
-        baseEl.clientHeight / 2 - wrapperEl.clientHeight / 2,
+        baseEl.clientHeight / 2 - wrapperEl.clientHeight / 2
       );
-      wrapperEl.style.top = `${ topPosition }px`;
+      wrapperEl.style.top = `${topPosition}px`;
       wrapperAnimation.fromTo('opacity', 0.01, 1);
       break;
     default:

@@ -3,6 +3,4 @@
 
 import Radio from '@line-ui/line/src/components/radio/radio';
 
-export {
-  Radio,
-};
+export { Radio };

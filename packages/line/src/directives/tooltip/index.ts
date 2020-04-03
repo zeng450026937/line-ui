@@ -23,7 +23,7 @@ export function createTooltip(el: HTMLElement, options: TooltipOptions) {
   } = options;
 
   const tooltip = TooltipController.create({
-    trigger : el,
+    trigger: el,
     text,
     delay,
     placement,
@@ -54,9 +54,7 @@ function inserted(el: HTMLElement, binding: TooltipVNodeDirective) {
 
   if (value === false) return;
 
-  const options = isObject(value)
-    ? value as TooltipOptions
-    : { text: value };
+  const options = isObject(value) ? (value as TooltipOptions) : { text: value };
 
   (el as any).vTooltip = createTooltip(el, {
     ...modifiers,
@@ -85,13 +83,13 @@ function update(el: HTMLElement, binding: TooltipVNodeDirective) {
     return;
   }
 
-  const { vTooltip } = (el as any);
+  const { vTooltip } = el as any;
 
   vTooltip.tooltip.text = binding.value;
 }
 
 export const vTooltip = /*#__PURE__*/ defineDirective({
-  name : 'tooltip',
+  name: 'tooltip',
   inserted,
   unbind,
   update,

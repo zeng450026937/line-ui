@@ -1,33 +1,30 @@
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
-import {
-  Swiper,
-  SwiperOptions,
-} from '@line-ui/line/src/utils/swiper';
+import { Swiper, SwiperOptions } from '@line-ui/line/src/utils/swiper';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('slides');
 
 export default /*#__PURE__*/ createComponent({
-  props : {
-    options   : Object,
-    pager     : Boolean,
-    scrollbar : Boolean,
+  props: {
+    options: Object,
+    pager: Boolean,
+    scrollbar: Boolean,
   },
 
   data() {
     return {
-      swiperReady : false,
+      swiperReady: false,
     };
   },
 
   async mounted() {
-    const mut = this.mutationO = new MutationObserver(() => {
+    const mut = (this.mutationO = new MutationObserver(() => {
       if (this.swiperReady) {
         this.update();
       }
-    });
+    }));
     mut.observe(this.$el, {
-      childList : true,
-      subtree   : true,
+      childList: true,
+      subtree: true,
     });
     this.initSwiper();
 
@@ -45,7 +42,7 @@ export default /*#__PURE__*/ createComponent({
     this.swiperReady = false;
   },
 
-  methods : {
+  methods: {
     async optionsChanged() {
       if (this.swiperReady) {
         const swiper = await this.getSwiper();
@@ -59,9 +56,7 @@ export default /*#__PURE__*/ createComponent({
      * child slides.
      */
     async update() {
-      const [swiper] = await Promise.all([
-        this.getSwiper(),
-      ]);
+      const [swiper] = await Promise.all([this.getSwiper()]);
       if (swiper) {
         swiper.update();
       }
@@ -229,102 +224,102 @@ export default /*#__PURE__*/ createComponent({
       // Base options, can be changed
       // TODO Add interface SwiperOptions
       const swiperOptions: SwiperOptions = {
-        effect                        : undefined,
-        direction                     : 'horizontal',
-        initialSlide                  : 0,
-        loop                          : false,
-        parallax                      : false,
-        slidesPerView                 : 1,
-        spaceBetween                  : 0,
-        speed                         : 300,
-        slidesPerColumn               : 1,
-        slidesPerColumnFill           : 'column',
-        slidesPerGroup                : 1,
-        centeredSlides                : false,
-        slidesOffsetBefore            : 0,
-        slidesOffsetAfter             : 0,
-        touchEventsTarget             : 'container',
-        autoplay                      : false,
-        freeMode                      : false,
-        freeModeMomentum              : true,
-        freeModeMomentumRatio         : 1,
-        freeModeMomentumBounce        : true,
-        freeModeMomentumBounceRatio   : 1,
-        freeModeMomentumVelocityRatio : 1,
-        freeModeSticky                : false,
-        freeModeMinimumVelocity       : 0.02,
-        autoHeight                    : false,
-        setWrapperSize                : false,
-        zoom                          : {
-          maxRatio : 3,
-          minRatio : 1,
-          toggle   : false,
+        effect: undefined,
+        direction: 'horizontal',
+        initialSlide: 0,
+        loop: false,
+        parallax: false,
+        slidesPerView: 1,
+        spaceBetween: 0,
+        speed: 300,
+        slidesPerColumn: 1,
+        slidesPerColumnFill: 'column',
+        slidesPerGroup: 1,
+        centeredSlides: false,
+        slidesOffsetBefore: 0,
+        slidesOffsetAfter: 0,
+        touchEventsTarget: 'container',
+        autoplay: false,
+        freeMode: false,
+        freeModeMomentum: true,
+        freeModeMomentumRatio: 1,
+        freeModeMomentumBounce: true,
+        freeModeMomentumBounceRatio: 1,
+        freeModeMomentumVelocityRatio: 1,
+        freeModeSticky: false,
+        freeModeMinimumVelocity: 0.02,
+        autoHeight: false,
+        setWrapperSize: false,
+        zoom: {
+          maxRatio: 3,
+          minRatio: 1,
+          toggle: false,
         },
-        touchRatio               : 1,
-        touchAngle               : 45,
-        simulateTouch            : true,
-        touchStartPreventDefault : false,
-        shortSwipes              : true,
-        longSwipes               : true,
-        longSwipesRatio          : 0.5,
-        longSwipesMs             : 300,
-        followFinger             : true,
-        threshold                : 0,
-        touchMoveStopPropagation : true,
-        touchReleaseOnEdges      : false,
-        iOSEdgeSwipeDetection    : false,
-        iOSEdgeSwipeThreshold    : 20,
-        resistance               : true,
-        resistanceRatio          : 0.85,
-        watchSlidesProgress      : false,
-        watchSlidesVisibility    : false,
-        preventClicks            : true,
-        preventClicksPropagation : true,
-        slideToClickedSlide      : false,
-        loopAdditionalSlides     : 0,
-        noSwiping                : true,
-        runCallbacksOnInit       : true,
-        coverflowEffect          : {
-          rotate       : 50,
-          stretch      : 0,
-          depth        : 100,
-          modifier     : 1,
-          slideShadows : true,
+        touchRatio: 1,
+        touchAngle: 45,
+        simulateTouch: true,
+        touchStartPreventDefault: false,
+        shortSwipes: true,
+        longSwipes: true,
+        longSwipesRatio: 0.5,
+        longSwipesMs: 300,
+        followFinger: true,
+        threshold: 0,
+        touchMoveStopPropagation: true,
+        touchReleaseOnEdges: false,
+        iOSEdgeSwipeDetection: false,
+        iOSEdgeSwipeThreshold: 20,
+        resistance: true,
+        resistanceRatio: 0.85,
+        watchSlidesProgress: false,
+        watchSlidesVisibility: false,
+        preventClicks: true,
+        preventClicksPropagation: true,
+        slideToClickedSlide: false,
+        loopAdditionalSlides: 0,
+        noSwiping: true,
+        runCallbacksOnInit: true,
+        coverflowEffect: {
+          rotate: 50,
+          stretch: 0,
+          depth: 100,
+          modifier: 1,
+          slideShadows: true,
         },
-        flipEffect : {
-          slideShadows  : true,
-          limitRotation : true,
+        flipEffect: {
+          slideShadows: true,
+          limitRotation: true,
         },
-        cubeEffect : {
-          slideShadows : true,
-          shadow       : true,
-          shadowOffset : 20,
-          shadowScale  : 0.94,
+        cubeEffect: {
+          slideShadows: true,
+          shadow: true,
+          shadowOffset: 20,
+          shadowScale: 0.94,
         },
-        fadeEffect : {
-          crossFade : false,
+        fadeEffect: {
+          crossFade: false,
         },
-        a11y : {
-          prevSlideMessage  : 'Previous slide',
-          nextSlideMessage  : 'Next slide',
-          firstSlideMessage : 'This is the first slide',
-          lastSlideMessage  : 'This is the last slide',
+        a11y: {
+          prevSlideMessage: 'Previous slide',
+          nextSlideMessage: 'Next slide',
+          firstSlideMessage: 'This is the first slide',
+          lastSlideMessage: 'This is the last slide',
         },
       };
 
       if (this.pager) {
         swiperOptions.pagination = {
-          el          : this.paginationEl,
-          type        : 'bullets',
-          clickable   : false,
-          hideOnClick : false,
+          el: this.paginationEl,
+          type: 'bullets',
+          clickable: false,
+          hideOnClick: false,
         };
       }
 
       if (this.scrollbar) {
         swiperOptions.scrollbar = {
-          el   : this.scrollbarEl,
-          hide : true,
+          el: this.scrollbarEl,
+          hide: true,
         };
       }
       const emit = (eventName: string, data: any) => {
@@ -333,8 +328,8 @@ export default /*#__PURE__*/ createComponent({
       // Keep the event options separate, we dont want users
       // overwriting these
       const eventOptions: SwiperOptions = {
-        on : {
-          init : () => {
+        on: {
+          init: () => {
             setTimeout(() => {
               this.$emit('slidesDidLoad');
             }, 20);
@@ -347,34 +342,36 @@ export default /*#__PURE__*/ createComponent({
             const { activeIndex } = this as any;
             emit('slideChangeTransitionEnd', activeIndex);
           },
-          slideNextTransitionStart : this.$emit('slideNextTransitionStart'),
-          slidePrevTransitionStart : this.$emit('slidePrevTransitionStart'),
-          slideNextTransitionEnd   : this.$emit('slideNextTransitionEnd'),
-          slidePrevTransitionEnd   : this.$emit('slidePrevTransitionEnd'),
-          transitionStart          : this.$emit('transitionStart'),
-          transitionEnd            : this.$emit('transitionEnd'),
-          sliderMove               : this.$emit('slideDrag'),
-          reachBeginning           : this.$emit('slideReachStart'),
-          reachEnd                 : this.$emit('slideReachEnd'),
-          touchStart               : this.$emit('slideTouchStart'),
-          touchEnd                 : this.$emit('slideTouchEnd'),
-          tap                      : this.$emit('slideTap'),
-          doubleTap                : this.$emit('slideDoubleTap'),
+          slideNextTransitionStart: this.$emit('slideNextTransitionStart'),
+          slidePrevTransitionStart: this.$emit('slidePrevTransitionStart'),
+          slideNextTransitionEnd: this.$emit('slideNextTransitionEnd'),
+          slidePrevTransitionEnd: this.$emit('slidePrevTransitionEnd'),
+          transitionStart: this.$emit('transitionStart'),
+          transitionEnd: this.$emit('transitionEnd'),
+          sliderMove: this.$emit('slideDrag'),
+          reachBeginning: this.$emit('slideReachStart'),
+          reachEnd: this.$emit('slideReachEnd'),
+          touchStart: this.$emit('slideTouchStart'),
+          touchEnd: this.$emit('slideTouchEnd'),
+          tap: this.$emit('slideTap'),
+          doubleTap: this.$emit('slideDoubleTap'),
         },
       };
 
-      const customEvents = (!!this.options && !!this.options.on) ? this.options.on : {};
+      const customEvents =
+        !!this.options && !!this.options.on ? this.options.on : {};
 
       // merge "on" event listeners, while giving our event listeners priority
-      const mergedEventOptions = { on: { ...customEvents, ...eventOptions.on } };
+      const mergedEventOptions = {
+        on: { ...customEvents, ...eventOptions.on },
+      };
 
       // Merge the base, user options, and events together then pas to swiper
       return { ...swiperOptions, ...this.options, ...mergedEventOptions };
     },
-
   },
 
-  watch : {
+  watch: {
     options() {
       this.optionsChanged();
     },
@@ -389,29 +386,17 @@ export default /*#__PURE__*/ createComponent({
           bem(),
           {
             // Used internally for styling
-            [`slides-${ mode }`] : true,
-            'swiper-container'   : true,
+            [`slides-${mode}`]: true,
+            'swiper-container': true,
           },
         ]}
       >
-      <div class="swiper-wrapper">
-        {this.slots()}
-      </div>
-      {this.pager && (
-        <div
-          class="swiper-pagination"
-          ref="paginationEl"
-        >
-        </div>
-      )}
-      {this.scrollbar && (
-        <div
-          class="swiper-scrollbar"
-          ref="scrollbarEl"
-        ></div>
-      )}
+        <div class="swiper-wrapper">{this.slots()}</div>
+        {this.pager && <div class="swiper-pagination" ref="paginationEl"></div>}
+        {this.scrollbar && (
+          <div class="swiper-scrollbar" ref="scrollbarEl"></div>
+        )}
       </div>
     );
   },
-
 });

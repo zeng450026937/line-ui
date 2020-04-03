@@ -3,19 +3,20 @@ import { createNamespace } from '@line-ui/line/src/utils/namespace';
 import { safeCall } from '@line-ui/line/src/utils/helpers';
 import { ActionSheetButtonOption } from '@line-ui/line/src/components/action-sheet/action-sheet-interface';
 
-const { createComponent, bem } = /*#__PURE__*/ createNamespace('action-sheet-button');
-
+const { createComponent, bem } = /*#__PURE__*/ createNamespace(
+  'action-sheet-button'
+);
 
 export default /*#__PURE__*/ createComponent({
-  inject : {
-    Item : { default: undefined },
+  inject: {
+    Item: { default: undefined },
   },
 
-  props : {
-    option : Object,
+  props: {
+    option: Object,
   },
 
-  methods : {
+  methods: {
     async buttonClick(button: any) {
       const { role } = button;
       if (role === 'cancel') {
@@ -51,15 +52,10 @@ export default /*#__PURE__*/ createComponent({
     return (
       <button
         type="button"
-        class={[
-          bem({ [`${ option.role }`]: !!option.role }),
-          'line-activatable',
-        ]}
+        class={[bem({ [`${option.role}`]: !!option.role }), 'line-activatable']}
         onClick={() => this.buttonClick(option)}
       >
-        <span class={bem('inner')}>
-          {this.slots() || option.text}
-        </span>
+        <span class={bem('inner')}>{this.slots() || option.text}</span>
       </button>
     );
   },

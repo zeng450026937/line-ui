@@ -6,13 +6,9 @@
       </line-toolbar>
     </line-header>
     <line-content>
-      <line-list
-        lines="full"
-        class="line-no-margin line-no-padding"
-      >
+      <line-list lines="full" class="line-no-margin line-no-padding">
         <line-item>
-          <line-label position="stacked">First Name
-          </line-label>
+          <line-label position="stacked">First Name </line-label>
           <line-input
             required
             type="text"
@@ -22,13 +18,8 @@
         </line-item>
 
         <line-item>
-          <line-label position="stacked">Last Name
-          </line-label>
-          <line-input
-            required
-            type="text"
-            v-model="lastName"
-          ></line-input>
+          <line-label position="stacked">Last Name </line-label>
+          <line-input required type="text" v-model="lastName"></line-input>
         </line-item>
 
         <line-item>
@@ -52,11 +43,9 @@
       </line-list>
 
       <div class="line-padding">
-        <line-button
-          expand="block"
-          type="submit"
-          class="line-no-margin"
-        >Create account</line-button>
+        <line-button expand="block" type="submit" class="line-no-margin"
+          >Create account</line-button
+        >
       </div>
     </line-content>
   </line-app>
@@ -68,15 +57,13 @@ import Vue from 'vue';
 export default Vue.extend({
   data() {
     return {
-      value     : 'input',
-      firstName : '',
-      lastName  : '',
+      value: 'input',
+      firstName: '',
+      lastName: '',
     };
   },
 
-  methods : {
-
-  },
+  methods: {},
 });
 </script>
 

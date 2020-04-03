@@ -6,7 +6,7 @@ export class LayoutItem {
   minHeight: number | undefined;
   maxHeight: number | undefined;
   geometry: Rect;
-  layout: unknown | null
+  layout: unknown | null;
   valid: boolean;
   previous: LayoutItem | null;
   next: LayoutItem | null;

@@ -3,6 +3,4 @@
 
 import TabBar from '@line-ui/line/src/components/tab-bar/tab-bar';
 
-export {
-  TabBar,
-};
+export { TabBar };

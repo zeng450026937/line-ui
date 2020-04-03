@@ -6,17 +6,17 @@ export function useGroup(name: string) {
   return createMixins({
     provide(): any {
       return {
-        [name] : this,
+        [name]: this,
       };
     },
 
     data() {
       return {
-        items : [] as Array<any>,
+        items: [] as Array<any>,
       };
     },
 
-    methods : {
+    methods: {
       registerItem(item: Vue) {
         this.$nextTick().then(() => this.$emit('item:register', item));
         return this.items.push(item);

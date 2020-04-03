@@ -2,14 +2,8 @@
 import { Vue } from 'vue/types/vue';
 import { createMixins } from '@line-ui/line/src/utils/mixins';
 import { useGroup } from '@line-ui/line/src/mixins/use-group';
-import {
-  ModelOptions,
-  useModel,
-} from '@line-ui/line/src/mixins/use-model';
-import {
-  isArray,
-  isDef,
-} from '@line-ui/line/src/utils/helpers';
+import { ModelOptions, useModel } from '@line-ui/line/src/mixins/use-model';
+import { isArray, isDef } from '@line-ui/line/src/utils/helpers';
 
 export type CheckGroupProps = {
   exclusive: boolean;
@@ -20,12 +14,10 @@ export type CheckGroupMixin = Vue & CheckGroupProps;
 
 export function useCheckGroup(name: string) {
   return createMixins({
-    mixins : [
-      useGroup(name),
-    ],
+    mixins: [useGroup(name)],
 
-    props : {
-      exclusive : Boolean,
+    props: {
+      exclusive: Boolean,
     },
 
     data() {
@@ -33,11 +25,11 @@ export function useCheckGroup(name: string) {
         // TODO:
         // Vue 3
         // Use Set() instead of Array()
-        checkedItem : [] as any,
+        checkedItem: [] as any,
       };
     },
 
-    watch : {
+    watch: {
       exclusive(val) {
         if (!val) return;
         if (this.checkedItem.length > 1) {
@@ -86,7 +78,7 @@ export function useCheckGroup(name: string) {
             }
             onItemChecked(item, val);
           },
-          { immediate: true },
+          { immediate: true }
         );
       });
     },
@@ -100,17 +92,14 @@ export function getItemValue(item: any) {
 
 export function useCheckGroupWithModel(name: string, options?: ModelOptions) {
   return createMixins({
-    mixins : [
-      useCheckGroup(name),
-      useModel('checkedItemValue', options, true),
-    ],
+    mixins: [useCheckGroup(name), useModel('checkedItemValue', options, true)],
 
-    computed : {
-      checkedItemValue : {
+    computed: {
+      checkedItemValue: {
         get() {
           const { checkedItem } = this;
           return isArray(checkedItem)
-            ? checkedItem.map(item => getItemValue(item))
+            ? checkedItem.map((item) => getItemValue(item))
             : checkedItem && getItemValue(checkedItem);
         },
         async set(val) {

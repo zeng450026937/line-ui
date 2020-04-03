@@ -45,8 +45,8 @@ class RuntimeGenerator {
     const symbolUrl = generator.symbolUrl(symbol, config).token;
 
     return config.filename && config.emit
-      ? `${ this.publicPath() } + ${ stringify(symbolUrl) }`
-      : `${ stringify(symbolUrl) }`;
+      ? `${this.publicPath()} + ${stringify(symbolUrl)}`
+      : `${stringify(symbolUrl)}`;
   }
 
   /**
@@ -76,10 +76,12 @@ class RuntimeGenerator {
    */
   backgroundPosition() {
     if (this.isClassicSprite) {
-      return stringify([
-        generator.bgPosLeft(this.symbol.request).token,
-        generator.bgPosTop(this.symbol.request).token,
-      ].join(' '));
+      return stringify(
+        [
+          generator.bgPosLeft(this.symbol.request).token,
+          generator.bgPosTop(this.symbol.request).token,
+        ].join(' ')
+      );
     }
 
     return null;
@@ -91,10 +93,12 @@ class RuntimeGenerator {
    */
   backgroundSize() {
     if (this.isClassicSprite) {
-      return stringify([
-        generator.bgSizeWidth(this.symbol.request).token,
-        generator.bgSizeHeight(this.symbol.request).token,
-      ].join(' '));
+      return stringify(
+        [
+          generator.bgSizeWidth(this.symbol.request).token,
+          generator.bgSizeHeight(this.symbol.request).token,
+        ].join(' ')
+      );
     }
 
     return null;
@@ -115,11 +119,11 @@ class RuntimeGenerator {
   // eslint-disable-next-line class-methods-use-this
   generateWrapper(fields) {
     const body = Object.keys(fields)
-      .filter(field => !!fields[field])
-      .map(field => `${ field }: ${ fields[field] }`)
+      .filter((field) => !!fields[field])
+      .map((field) => `${field}: ${fields[field]}`)
       .join(',\n  ');
 
-    return `{\n  ${ body }\n}`;
+    return `{\n  ${body}\n}`;
   }
 
   /**
@@ -127,17 +131,17 @@ class RuntimeGenerator {
    */
   generate() {
     const runtime = this.generateWrapper({
-      id       : this.id(),
-      url      : this.url(),
-      width    : this.width(),
-      height   : this.height(),
-      viewBox  : this.viewBox(),
-      toString : this.toString(),
+      id: this.id(),
+      url: this.url(),
+      width: this.width(),
+      height: this.height(),
+      viewBox: this.viewBox(),
+      toString: this.toString(),
       // backgroundSize     : this.backgroundSize(),
       // backgroundPosition : this.backgroundPosition(),
     });
 
-    return `module.exports = ${ runtime }`;
+    return `module.exports = ${runtime}`;
   }
 }
 

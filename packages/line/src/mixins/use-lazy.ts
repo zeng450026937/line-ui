@@ -4,20 +4,20 @@ const DEFAULT_VALUE = 'value';
 
 export function useLazy(value: string = DEFAULT_VALUE) {
   return createMixins({
-    props : {
-      lazy : {
-        type    : Boolean,
-        default : true,
+    props: {
+      lazy: {
+        type: Boolean,
+        default: true,
       },
     },
 
     data() {
       return {
-        inited : !!this[value],
+        inited: !!this[value],
       };
     },
 
-    watch : {
+    watch: {
       [value]() {
         this.inited = this.inited || !!this[value];
       },

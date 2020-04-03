@@ -3,6 +3,4 @@
 
 import Overlay from '@line-ui/line/src/components/overlay/overlay';
 
-export {
-  Overlay,
-};
+export { Overlay };

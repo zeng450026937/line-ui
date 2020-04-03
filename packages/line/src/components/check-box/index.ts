@@ -5,8 +5,4 @@ import CheckBoxGroup from '@line-ui/line/src/components/check-box/check-box-grou
 import CheckBox from '@line-ui/line/src/components/check-box/check-box';
 import CheckIndicator from '@line-ui/line/src/components/check-box/check-indicator';
 
-export {
-  CheckBoxGroup,
-  CheckBox,
-  CheckIndicator,
-};
+export { CheckBoxGroup, CheckBox, CheckIndicator };

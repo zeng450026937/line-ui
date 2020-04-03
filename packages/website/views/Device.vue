@@ -13,51 +13,42 @@
 </template>
 
 <script>
-import Device from '../components/mobile/mobile.vue';
 import { Icon as LineIcon } from '@/components/icon';
+import Device from '../components/mobile/mobile.vue';
 
 export default {
-  name : 'MainDevice',
+  name: 'MainDevice',
 
-  components : {
+  components: {
     Device,
     LineIcon,
   },
 
-  props : {
-
-  },
+  props: {},
 
   data() {
-    return {
-
-    };
+    return {};
   },
 
-  computed : {
+  computed: {
     title() {
       return this.$route.meta.title;
     },
   },
 
-  created() {
-  },
+  created() {},
 
-  mounted() {
+  mounted() {},
 
-  },
-
-  methods : {
+  methods: {
     goBack() {
       this.$router.push({
-        name : 'mobile',
+        name: 'mobile',
       });
     },
   },
 
-  watch : {
-
-  },
+  watch: {},
 };
 </script>
 

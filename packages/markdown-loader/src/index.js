@@ -18,7 +18,7 @@ function wrapper(content) {
 <script>
 export default {
   created() {
-    this.content = unescape(\`${ content }\`);
+    this.content = unescape(\`${content}\`);
   },
 
   mounted() {
@@ -45,10 +45,10 @@ export default {
 }
 
 const parser = new MarkdownIt({
-  html : true,
+  html: true,
   highlight,
 }).use(markdownItAnchor, {
-  level : 2,
+  level: 2,
   slugify,
 });
 

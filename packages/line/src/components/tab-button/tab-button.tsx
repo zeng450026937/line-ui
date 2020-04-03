@@ -6,20 +6,20 @@ const NAMESPACE = 'TabBar';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('tab-button');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
+  mixins: [
     /*#__PURE__*/ useCheckItemWithModel(NAMESPACE),
     /*#__PURE__*/ useRipple(),
   ],
 
-  props : {
+  props: {
     // This property holds a textual description of the button.
-    text     : String,
-    layout   : String,
-    tab      : String,
-    disabled : Boolean,
+    text: String,
+    layout: String,
+    tab: String,
+    disabled: Boolean,
   },
 
-  computed : {
+  computed: {
     hasLabel(): boolean {
       return this.$el && !!this.$el.querySelector('.line-label');
     },
@@ -28,7 +28,7 @@ export default /*#__PURE__*/ createComponent({
     },
   },
 
-  methods : {
+  methods: {
     onClick() {
       if (this.checked) {
         return;
@@ -46,30 +46,27 @@ export default /*#__PURE__*/ createComponent({
       <div
         class={[
           bem({
-            'has-label'      : hasLabel,
-            'has-icon'       : hasIcon,
-            'has-label-only' : hasLabel && !hasIcon,
-            'has-icon-only'  : hasIcon && !hasLabel,
+            'has-label': hasLabel,
+            'has-icon': hasIcon,
+            'has-label-only': hasLabel && !hasIcon,
+            'has-icon-only': hasIcon && !hasLabel,
           }),
           {
-            'tab-selected'     : this.checked,
-            'tab-disabled'     : this.disabled,
-            'line-activatable' : true,
-            'line-selectable'  : true,
-            'line-focusable'   : true,
+            'tab-selected': this.checked,
+            'tab-disabled': this.disabled,
+            'line-activatable': true,
+            'line-selectable': true,
+            'line-focusable': true,
           },
         ]}
-        onClick={ this.onClick }
+        onClick={this.onClick}
         on={this.$listeners}
       >
-        <div
-          class="button-native"
-          tabIndex={-1}
-        >
-          <span class="button-inner">
-            { this.slots() || this.text }
-          </span>
-          {mode === 'md' && <line-ripple-effect type="unbounded"></line-ripple-effect>}
+        <div class="button-native" tabIndex={-1}>
+          <span class="button-inner">{this.slots() || this.text}</span>
+          {mode === 'md' && (
+            <line-ripple-effect type="unbounded"></line-ripple-effect>
+          )}
         </div>
       </div>
     );

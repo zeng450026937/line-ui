@@ -3,6 +3,4 @@
 
 import Image from '@line-ui/line/src/components/image/image';
 
-export {
-  Image,
-};
+export { Image };

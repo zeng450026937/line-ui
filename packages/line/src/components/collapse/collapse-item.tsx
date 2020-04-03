@@ -6,16 +6,14 @@ const NAMESPACE = 'Collapse';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('collapse-item');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ useCheckItem(NAMESPACE),
-  ],
+  mixins: [/*#__PURE__*/ useCheckItem(NAMESPACE)],
 
-  props : {
-    title    : String,
-    disabled : Boolean,
+  props: {
+    title: String,
+    disabled: Boolean,
   },
 
-  methods : {
+  methods: {
     onClick() {
       if (this.checkable && !this.disabled) {
         this.checked = !this.checked;
@@ -26,29 +24,19 @@ export default /*#__PURE__*/ createComponent({
   render() {
     const { checked, disabled, title } = this;
     return (
-      <div
-        class={ bem({ active: checked }) }
-      >
-        <div
-          class={ bem('title', { disabled }) }
-          onClick={ this.onClick }
-        >
-          { this.slots('title') || title }
-          { this.slots('icon') || (
+      <div class={bem({ active: checked })}>
+        <div class={bem('title', { disabled })} onClick={this.onClick}>
+          {this.slots('title') || title}
+          {this.slots('icon') || (
             <Icon
-              class={ bem('title-icon', { rotate: checked }) }
+              class={bem('title-icon', { rotate: checked })}
               name="expand_more"
               width="18"
               height="18"
-            >
-            </Icon>
+            ></Icon>
           )}
-
         </div>
-        {checked && (
-          <div class={bem('content')}>
-            {this.slots()}
-          </div>)}
+        {checked && <div class={bem('content')}>{this.slots()}</div>}
       </div>
     );
   },

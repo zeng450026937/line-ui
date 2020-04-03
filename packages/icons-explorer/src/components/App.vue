@@ -7,7 +7,12 @@
         </template>
         <template #default>
           <div class="input-area">
-            <line-input clear-input auto-focus placeholder="search" v-model="keyword"></line-input>
+            <line-input
+              clear-input
+              auto-focus
+              placeholder="search"
+              v-model="keyword"
+            ></line-input>
           </div>
         </template>
         <template #end>
@@ -21,7 +26,9 @@
         <template v-for="sprite in results">
           <line-card v-if="sprite.symbols.length" :key="sprite.name">
             <line-card-header>
-              <line-card-subtitle>{{ sprite.name }} ( {{ sprite.matched }} / {{ sprite.total }} )</line-card-subtitle>
+              <line-card-subtitle>
+                {{ sprite.name }} ( {{ sprite.matched }} / {{ sprite.total }} )
+              </line-card-subtitle>
               <div class="icon-more">
                 <line-button size="small" fill="clear">More</line-button>
               </div>
@@ -63,41 +70,47 @@ type SpriteSymbol = {
 
 export default Vue.extend({
   data() {
-    const icons = require.context('@line-ui/icons-explorer/public/', true, /.json$/);
-    const iconsprites: Sprite[] = icons.keys().map(key => icons(key));
+    const icons = require.context(
+      '@line-ui/icons-explorer/public/',
+      true,
+      /.json$/
+    );
+    const iconsprites: Sprite[] = icons.keys().map((key) => icons(key));
 
     Object.freeze(iconsprites);
 
     return {
       iconsprites,
-      keyword : '',
-      max     : 20,
+      keyword: '',
+      max: 20,
     };
   },
 
-  computed : {
+  computed: {
     results() {
       const { iconsprites, keyword, max } = this;
       return iconsprites.map((sprite: Sprite) => {
         const { name, symbols } = sprite;
         const hasKeyword = !!keyword;
-        const matched = hasKeyword ? symbols.filter(s => new RegExp(keyword, 'i').test(s.id)) : symbols.slice();
+        const matched = hasKeyword
+          ? symbols.filter((s) => new RegExp(keyword, 'i').test(s.id))
+          : symbols.slice();
         const count = matched.length;
         const overhead = count > max;
         matched.length = overhead ? max : count;
         return {
           name,
-          symbols : matched,
-          matched : matched.length,
-          total   : symbols.length,
+          symbols: matched,
+          matched: matched.length,
+          total: symbols.length,
         };
       });
     },
   },
 
-  methods : {
+  methods: {
     getSource(name: string) {
-      return `/${ name }.svg`;
+      return `/${name}.svg`;
     },
   },
 });

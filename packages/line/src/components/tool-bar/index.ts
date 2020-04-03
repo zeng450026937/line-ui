@@ -3,6 +3,4 @@
 
 import Toolbar from '@line-ui/line/src/components/tool-bar/toolbar';
 
-export {
-  Toolbar,
-};
+export { Toolbar };

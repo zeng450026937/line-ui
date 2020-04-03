@@ -2,56 +2,58 @@ import { isObject } from '@line-ui/line/src/utils/helpers';
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
 import { Icon } from '@line-ui/line/src/components/icon';
 
-const { createComponent, bem } = /*#__PURE__*/ createNamespace('page-indicator');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace(
+  'page-indicator'
+);
 
 export default /*#__PURE__*/ createComponent({
-  props : {
-    count : {
-      type      : Number,
-      default   : 0,
-      validator : val => val % 1 === 0,
+  props: {
+    count: {
+      type: Number,
+      default: 0,
+      validator: (val) => val % 1 === 0,
     },
-    value : {
-      type    : Number,
-      default : 1,
+    value: {
+      type: Number,
+      default: 1,
     },
-    delegate : {
-      type    : Object,
-      default : () => ({}),
+    delegate: {
+      type: Object,
+      default: () => ({}),
     },
-    interactive : {
-      type    : Boolean,
-      default : true,
+    interactive: {
+      type: Boolean,
+      default: true,
     },
 
-    nextIcon : {
-      type    : [String, Object],
-      default : 'chevron_right',
+    nextIcon: {
+      type: [String, Object],
+      default: 'chevron_right',
     },
-    prevIcon : {
-      type    : [String, Object],
-      default : 'chevron_left',
+    prevIcon: {
+      type: [String, Object],
+      default: 'chevron_left',
     },
-    countVisible : {
-      type    : [Number, String],
-      default : 6,
+    countVisible: {
+      type: [Number, String],
+      default: 6,
     },
   },
 
   data() {
     return {
-      length : 0,
+      length: 0,
     };
   },
 
-  computed : {
+  computed: {
     list(): (string | number)[] {
-      const countVisible = parseInt((this.countVisible as string), 10);
+      const countVisible = parseInt(this.countVisible as string, 10);
 
       const maxLength = Math.min(
         Math.max(0, countVisible) || this.count,
         Math.max(0, this.length) || this.count,
-        this.count,
+        this.count
       );
 
       if (this.count <= maxLength) {
@@ -67,18 +69,16 @@ export default /*#__PURE__*/ createComponent({
         const end = this.value + left - 2 - even;
 
         return [1, '...', ...this.range(start, end), '...', this.count];
-      } if (this.value === left) {
+      }
+      if (this.value === left) {
         const end = this.value + left - 1 - even;
         return [...this.range(1, end), '...', this.count];
-      } if (this.value === right) {
+      }
+      if (this.value === right) {
         const start = this.value - left + 1;
         return [1, '...', ...this.range(start, this.count)];
       }
-      return [
-        ...this.range(1, left),
-        '...',
-        ...this.range(right, this.count),
-      ];
+      return [...this.range(1, left), '...', ...this.range(right, this.count)];
     },
   },
 
@@ -91,7 +91,7 @@ export default /*#__PURE__*/ createComponent({
     window.removeEventListener('resize', this.onResize);
   },
 
-  methods : {
+  methods: {
     onResize(): void {
       const width = (this.$refs.indicator as Element).clientWidth;
 
@@ -110,7 +110,7 @@ export default /*#__PURE__*/ createComponent({
     },
 
     onClick(value: string | number): void {
-      value = Number.parseInt((value as string), 10);
+      value = Number.parseInt(value as string, 10);
       if (Number.isNaN(value)) {
         return;
       }
@@ -140,24 +140,37 @@ export default /*#__PURE__*/ createComponent({
     const { value, list } = this;
 
     return (
-      <ul class={bem()}
-          ref="indicator">
-        <li class={bem('item')}
-            onClick={() => this.previous()}>
-          <Icon {...{ props: isObject(this.prevIcon) ? this.prevIcon : { name: this.prevIcon } }}></Icon>
+      <ul class={bem()} ref="indicator">
+        <li class={bem('item')} onClick={() => this.previous()}>
+          <Icon
+            {...{
+              props: isObject(this.prevIcon)
+                ? this.prevIcon
+                : { name: this.prevIcon },
+            }}
+          ></Icon>
         </li>
         {list.map((item, index) => {
           return (
-            <li key={index}
-                class={bem('item', { active: value === item })}
-                onClick={() => this.onClick(item)}>
+            <li
+              key={index}
+              class={bem('item', { active: value === item })}
+              onClick={() => this.onClick(item)}
+            >
               {item}
-            </li>);
+            </li>
+          );
         })}
-        <li class={bem('item')}
-            onClick={() => this.next()}>
-          <Icon {...{ props: isObject(this.nextIcon) ? this.nextIcon : { name: this.nextIcon } }}></Icon>
+        <li class={bem('item')} onClick={() => this.next()}>
+          <Icon
+            {...{
+              props: isObject(this.nextIcon)
+                ? this.nextIcon
+                : { name: this.nextIcon },
+            }}
+          ></Icon>
         </li>
-      </ul>);
+      </ul>
+    );
   },
 });

@@ -1,4 +1,4 @@
-type Listener = { [key: string]: Function | Function[] }
+type Listener = { [key: string]: Function | Function[] };
 
 export function mergeListener(exist?: Listener, value?: Listener) {
   if (!value) return exist;

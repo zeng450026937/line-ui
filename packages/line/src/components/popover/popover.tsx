@@ -9,9 +9,7 @@ import { mdLeaveAnimation } from '@line-ui/line/src/components/popover/animation
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('popover');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ usePopup(),
-  ],
+  mixins: [/*#__PURE__*/ usePopup()],
 
   beforeMount() {
     const { mode } = this;
@@ -25,7 +23,7 @@ export default /*#__PURE__*/ createComponent({
     });
   },
 
-  methods : {
+  methods: {
     onTap() {
       this.$emit('overlay-tap');
     },
@@ -39,17 +37,11 @@ export default /*#__PURE__*/ createComponent({
         class={bem({ translucent: this.translucent })}
         on={this.$listeners}
       >
-        <Overlay
-          visible={this.dim}
-          onTap={this.onTap}
-        >
-        </Overlay>
+        <Overlay visible={this.dim} onTap={this.onTap}></Overlay>
 
         <div class={bem('wrapper')}>
           <div class={bem('arrow')}></div>
-          <div class={bem('content')}>
-            {this.slots()}
-          </div>
+          <div class={bem('content')}>{this.slots()}</div>
         </div>
       </div>
     );

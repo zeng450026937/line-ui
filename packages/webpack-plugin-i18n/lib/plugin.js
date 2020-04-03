@@ -7,13 +7,9 @@ const { getHashDigest } = require('loader-utils');
 const NS = 'i18n-plugin';
 
 function generateToken(text, disambiguation) {
-  const value = [
-    NS,
-    text,
-    disambiguation,
-  ].filter(Boolean).join('');
+  const value = [NS, text, disambiguation].filter(Boolean).join('');
 
-  return `${ getHashDigest(value) }`;
+  return `${getHashDigest(value)}`;
 }
 
 // Collect tr call from js/ts
@@ -24,122 +20,105 @@ class I18nPlugin {
   }
 
   apply(compiler) {
-    compiler.hooks
-      .thisCompilation
-      .tap(NS, compilation => {
-        compilation.hooks
-          .additionalAssets
-          .tapPromise(NS, () => this.hookAdditionalAssets(compilation));
-      });
+    compiler.hooks.thisCompilation.tap(NS, (compilation) => {
+      compilation.hooks.additionalAssets.tapPromise(NS, () =>
+        this.hookAdditionalAssets(compilation)
+      );
+    });
 
-    compiler.hooks
-      .normalModuleFactory
-      .tap(NS, factory => {
-        const handler = parser => {
-          const hookCall = expression => {
-            const { arguments: args } = expression;
+    compiler.hooks.normalModuleFactory.tap(NS, (factory) => {
+      const handler = (parser) => {
+        const hookCall = (expression) => {
+          const { arguments: args } = expression;
 
-            if (!args.length) return;
+          if (!args.length) return;
 
-            const arg = args[0];
-            const evaluated = parser.evaluateExpression(arg);
+          const arg = args[0];
+          const evaluated = parser.evaluateExpression(arg);
 
-            if (!evaluated.isString()) return;
+          if (!evaluated.isString()) return;
 
-            const text = evaluated.string;
-            const { resource } = parser.state.current;
-            const disambiguation = resource.replace(/\\/g, '/');
+          const text = evaluated.string;
+          const { resource } = parser.state.current;
+          const disambiguation = resource.replace(/\\/g, '/');
 
-            const index = this.translations.push({
-              id : generateToken(text, disambiguation),
-              text,
-              disambiguation,
-              toString() {
-                return this.text;
-              },
-            });
+          const index = this.translations.push({
+            id: generateToken(text, disambiguation),
+            text,
+            disambiguation,
+            toString() {
+              return this.text;
+            },
+          });
 
-            // replace arg with index
-            ParserHelpers.toConstantDependency(
-              parser,
-              JSON.stringify(index - 1),
-            )(arg);
-          };
-          parser.hooks
-            .call.for('tr')
-            .tap(NS, hookCall);
-
-          parser.hooks
-            .call.for('_vm.tr')
-            .tap(NS, hookCall);
-
-          parser.hooks
-            .evaluate.for('MemberExpression')
-            .tap(NS, expression => {
-              const res = parser.state.current.resource;
-
-              if (!/\.vue/.test(res)) return;
-
-              const { object, property } = expression;
-
-              if (!object || !property) return;
-              if (object.name !== '_vm') return;
-              if (property.name !== 'tr') return;
-
-              const exprName = parser.getNameForExpression(expression);
-              const identifier = exprName.name;
-              /* eslint-disable-next-line */
-              return new BasicEvaluatedExpression()
-                .setRange(expression.range)
-                .setIdentifier(identifier)
-                .setExpression(expression);
-            });
-
-          parser.hooks
-            .evaluate.for('MemberExpression')
-            .tap(NS, expression => {
-              const res = parser.state.current.resource;
-
-              if (!/\.vue/.test(res)) return;
-
-              const { object, property } = expression;
-
-              if (!object || !property) return;
-              if (property.name !== 'tr') return;
-
-              const exprName = parser.getNameForExpression(expression);
-              const identifier = exprName.name;
-              /* eslint-disable-next-line */
-              return new BasicEvaluatedExpression()
-                .setRange(expression.range)
-                .setIdentifier(identifier)
-                .setExpression(expression);
-            });
+          // replace arg with index
+          ParserHelpers.toConstantDependency(
+            parser,
+            JSON.stringify(index - 1)
+          )(arg);
         };
+        parser.hooks.call.for('tr').tap(NS, hookCall);
 
-        factory.hooks
-          .parser.for('javascript/auto')
-          .tap(NS, handler);
+        parser.hooks.call.for('_vm.tr').tap(NS, hookCall);
 
-        factory.hooks
-          .parser.for('javascript/dynamic')
-          .tap(NS, handler);
+        parser.hooks.evaluate.for('MemberExpression').tap(NS, (expression) => {
+          const res = parser.state.current.resource;
 
-        factory.hooks
-          .parser.for('javascript/esm')
-          .tap(NS, handler);
-      });
+          if (!/\.vue/.test(res)) return;
 
-    compiler.hooks
-      .compilation
-      .tap(NS, compilation => {
-        compilation.hooks
-          .normalModuleLoader
-          .tap(NS, loaderCtx => this.hookNormalModuleLoader(loaderCtx));
+          const { object, property } = expression;
 
-        compilation.dependencyFactories.set(ConstDependency, new NullFactory());
-        compilation.dependencyTemplates.set(ConstDependency, new ConstDependency.Template());
-      });
+          if (!object || !property) return;
+          if (object.name !== '_vm') return;
+          if (property.name !== 'tr') return;
+
+          const exprName = parser.getNameForExpression(expression);
+          const identifier = exprName.name;
+          /* eslint-disable-next-line */
+          return new BasicEvaluatedExpression()
+            .setRange(expression.range)
+            .setIdentifier(identifier)
+            .setExpression(expression);
+        });
+
+        parser.hooks.evaluate.for('MemberExpression').tap(NS, (expression) => {
+          const res = parser.state.current.resource;
+
+          if (!/\.vue/.test(res)) return;
+
+          const { object, property } = expression;
+
+          if (!object || !property) return;
+          if (property.name !== 'tr') return;
+
+          const exprName = parser.getNameForExpression(expression);
+          const identifier = exprName.name;
+          /* eslint-disable-next-line */
+          return new BasicEvaluatedExpression()
+            .setRange(expression.range)
+            .setIdentifier(identifier)
+            .setExpression(expression);
+        });
+      };
+
+      factory.hooks.parser.for('javascript/auto').tap(NS, handler);
+
+      factory.hooks.parser.for('javascript/dynamic').tap(NS, handler);
+
+      factory.hooks.parser.for('javascript/esm').tap(NS, handler);
+    });
+
+    compiler.hooks.compilation.tap(NS, (compilation) => {
+      compilation.hooks.normalModuleLoader.tap(NS, (loaderCtx) =>
+        this.hookNormalModuleLoader(loaderCtx)
+      );
+
+      compilation.dependencyFactories.set(ConstDependency, new NullFactory());
+      compilation.dependencyTemplates.set(
+        ConstDependency,
+        new ConstDependency.Template()
+      );
+    });
   }
 
   hookNormalModuleLoader(loaderContext) {
@@ -149,8 +128,8 @@ class I18nPlugin {
   async hookAdditionalAssets(compilation) {
     const content = JSON.stringify(this.translations, null, 2);
     compilation.assets['translation.json'] = {
-      source : () => content,
-      size   : () => content.length,
+      source: () => content,
+      size: () => content.length,
     };
   }
 }

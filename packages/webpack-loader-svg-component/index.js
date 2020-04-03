@@ -6,8 +6,10 @@ const optimize = require('./optimize');
 module.exports = async function svgLoader(content) {
   const loaderContext = this;
 
-  const stringifyRequest = r => loaderUtils.stringifyRequest(loaderContext, r);
-  const interpolateName = (n, o) => loaderUtils.interpolateName(loaderContext, n, o);
+  const stringifyRequest = (r) =>
+    loaderUtils.stringifyRequest(loaderContext, r);
+  const interpolateName = (n, o) =>
+    loaderUtils.interpolateName(loaderContext, n, o);
 
   const genRequest = (loaders, url) => {
     // Important: dedupe since both the original rule
@@ -21,10 +23,9 @@ module.exports = async function svgLoader(content) {
     const seen = new Map();
     const loaderStrings = [];
 
-    loaders.forEach(loader => {
-      const identifier = typeof loader === 'string'
-        ? loader
-        : (loader.path + loader.query);
+    loaders.forEach((loader) => {
+      const identifier =
+        typeof loader === 'string' ? loader : loader.path + loader.query;
       const request = typeof loader === 'string' ? loader : loader.request;
       if (!seen.has(identifier)) {
         seen.set(identifier, true);
@@ -34,10 +35,9 @@ module.exports = async function svgLoader(content) {
       }
     });
 
-    return stringifyRequest(`-!${ [
-      ...loaderStrings,
-      url || resourcePath + resourceQuery,
-    ].join('!') }`);
+    return stringifyRequest(
+      `-!${[...loaderStrings, url || resourcePath + resourceQuery].join('!')}`
+    );
   };
 
   const {
@@ -52,7 +52,7 @@ module.exports = async function svgLoader(content) {
   } = loaderContext;
 
   const rawQuery = resourceQuery.slice(1);
-  const inheritQuery = `&${ rawQuery }`;
+  const inheritQuery = `&${rawQuery}`;
   const incomingQuery = qs.parse(rawQuery);
 
   const filename = path.basename(resourcePath);
@@ -65,7 +65,7 @@ module.exports = async function svgLoader(content) {
 
   if (incomingQuery.component != null) {
     const {
-      factory = (data) => `export default () => (${ data });`,
+      factory = (data) => `export default () => (${data});`,
       optimize: shouldOptimize = true,
       svgo,
     } = options;
@@ -85,17 +85,14 @@ module.exports = async function svgLoader(content) {
 
   if (!transpileRE || (transpileRE && transpileRE.test(resourcePath))) {
     const src = resourcePath;
-    const query = `?component&type=script&lang=jsx${ inheritQuery }`;
+    const query = `?component&type=script&lang=jsx${inheritQuery}`;
 
     const jsxRequest = genRequest(
-      [
-        `${ require.resolve('babel-loader') }`,
-        ...loaders,
-      ],
-      src + query,
+      [`${require.resolve('babel-loader')}`, ...loaders],
+      src + query
     );
 
-    callback(null, `export { default } from ${ jsxRequest }`);
+    callback(null, `export { default } from ${jsxRequest}`);
 
     return;
   }
@@ -106,7 +103,7 @@ module.exports = async function svgLoader(content) {
 const isWindows = process.platform === 'win32';
 
 function genTranspileRegex(transpile = []) {
-  const deps = transpile.map(dep => {
+  const deps = transpile.map((dep) => {
     if (dep instanceof RegExp) {
       return dep.source;
     }

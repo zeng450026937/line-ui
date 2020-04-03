@@ -4,10 +4,7 @@
       <line-tab modelValue="1">1</line-tab>
       <line-tab modelValue="2">2</line-tab>
       <line-tab modelValue="3">3</line-tab>
-      <line-tab-bar
-        v-model="value"
-        slot="bottom"
-      >
+      <line-tab-bar v-model="value" slot="bottom">
         <line-tab-button modelValue="1">
           <line-icon name="backup"></line-icon>
           button - 1
@@ -26,15 +23,18 @@
 </template>
 
 <script>
-import { Tab as LineTab, Tabs as LineTabs } from '@line-ui/skyline/components/tabs';
+import {
+  Tab as LineTab,
+  Tabs as LineTabs,
+} from '@line-ui/skyline/components/tabs';
 import { TabBar as LineTabBar } from '@line-ui/skyline/components/tab-bar';
 import { TabButton as LineTabButton } from '@line-ui/skyline/components/tab-button';
 import { Icon as LineIcon } from '@line-ui/skyline/components/icon';
 
 export default {
-  name : 'TabsDemo',
+  name: 'TabsDemo',
 
-  components : {
+  components: {
     LineTabs,
     LineTab,
     LineTabBar,
@@ -42,35 +42,23 @@ export default {
     LineIcon,
   },
 
-  props : {
-
-  },
+  props: {},
 
   data() {
     return {
-      value : '1',
+      value: '1',
     };
   },
 
-  computed : {
+  computed: {},
 
-  },
+  created() {},
 
-  created() {
+  mounted() {},
 
-  },
+  methods: {},
 
-  mounted() {
-
-  },
-
-  methods : {
-
-  },
-
-  watch : {
-
-  },
+  watch: {},
 };
 </script>
 

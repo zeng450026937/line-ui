@@ -2,17 +2,19 @@ import { createNamespace } from '@line-ui/line/src/utils/namespace';
 import { config } from '@line-ui/line/src/utils/config';
 import { SpinnerTypes } from '@line-ui/line/src/components/spinner/spinner-configs';
 
-const { createComponent, bem } = /*#__PURE__*/ createNamespace('infinite-scroll-content');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace(
+  'infinite-scroll-content'
+);
 
 export default /*#__PURE__*/ createComponent({
-  props : {
-    loadingSpinner : String,
-    loadingText    : String,
+  props: {
+    loadingSpinner: String,
+    loadingText: String,
   },
 
   data() {
     return {
-      spinner : '',
+      spinner: '',
     };
   },
 
@@ -23,10 +25,7 @@ export default /*#__PURE__*/ createComponent({
       const { mode } = this;
       spinner = config.get(
         'infiniteLoadingSpinner',
-        config.get(
-          'spinner',
-          mode === 'ios' ? 'lines' : 'crescent',
-        ),
+        config.get('spinner', mode === 'ios' ? 'lines' : 'crescent')
       );
     }
 
@@ -41,7 +40,7 @@ export default /*#__PURE__*/ createComponent({
         class={[
           bem(),
           // Used internally for styling
-          `line-infinite-scroll-content-${ mode }`,
+          `line-infinite-scroll-content-${mode}`,
         ]}
       >
         <div class="infinite-loading">
@@ -51,9 +50,7 @@ export default /*#__PURE__*/ createComponent({
             </div>
           )}
           {loadingText && (
-            <div class="infinite-loading-text">
-              {loadingText}
-            </div>
+            <div class="infinite-loading-text">{loadingText}</div>
           )}
         </div>
       </div>

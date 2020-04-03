@@ -18,23 +18,23 @@ const RuntimeGenerator = require('./utils/runtime-generator');
  */
 
 module.exports = {
-  CSS_LOADER_PATH : require.resolve('./css-loader'),
-  LOADER_PATH     : require.resolve('./loader'),
-  NAMESPACE       : fs.realpathSync(__dirname),
+  CSS_LOADER_PATH: require.resolve('./css-loader'),
+  LOADER_PATH: require.resolve('./loader'),
+  NAMESPACE: fs.realpathSync(__dirname),
 
   /**
    * @return {ExtractSvgSpritePluginConfig}
    */
-  plugin : {
-    emit             : true,
-    filename         : 'sprite.svg',
-    publicPath       : undefined,
-    runtimeGenerator : RuntimeGenerator,
-    selector         : '',
-    spriteClass      : mixer.Sprite,
-    spriteConfig     : {},
-    spriteType       : mixer.Sprite.TYPE,
-    symbolClass      : mixer.SpriteSymbol,
-    symbolId         : '[name]',
+  plugin: {
+    emit: true,
+    filename: 'sprite.svg',
+    publicPath: undefined,
+    runtimeGenerator: RuntimeGenerator,
+    selector: '',
+    spriteClass: mixer.Sprite,
+    spriteConfig: {},
+    spriteType: mixer.Sprite.TYPE,
+    symbolClass: mixer.SpriteSymbol,
+    symbolId: '[name]',
   },
 };

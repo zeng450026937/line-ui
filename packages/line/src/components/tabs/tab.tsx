@@ -5,22 +5,18 @@ const NAMESPACE = 'Tabs';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('tab');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ useCheckItemWithModel(NAMESPACE),
-  ],
+  mixins: [/*#__PURE__*/ useCheckItemWithModel(NAMESPACE)],
 
-  props : {
-    title : String,
-    tab   : String,
+  props: {
+    title: String,
+    tab: String,
   },
 
   data() {
-    return {
-
-    };
+    return {};
   },
 
-  methods : {
+  methods: {
     onClick() {
       if (this.checked) {
         return;
@@ -38,16 +34,15 @@ export default /*#__PURE__*/ createComponent({
       <div
         class={[
           bem({ hidden: !checked }),
-        // { 'line-page': component === undefined },
+          // { 'line-page': component === undefined },
         ]}
         role="tabpanel"
         aria-hidden={!checked ? 'true' : null}
-        aria-labelledby={`tab-button-${ tab }`}
+        aria-labelledby={`tab-button-${tab}`}
         on={this.$listeners}
       >
         {this.slots()}
       </div>
     );
   },
-
 });

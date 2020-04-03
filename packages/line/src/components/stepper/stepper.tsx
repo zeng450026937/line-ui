@@ -4,40 +4,40 @@ import { Icon } from '@line-ui/line/src/components/icon';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('stepper');
 
 export default /*#__PURE__*/ createComponent({
-  components : {
+  components: {
     Icon,
   },
 
-  props : {
-    min : {
-      type    : Number,
-      default : -Infinity,
+  props: {
+    min: {
+      type: Number,
+      default: -Infinity,
     },
-    max : {
-      type    : Number,
-      default : Infinity,
+    max: {
+      type: Number,
+      default: Infinity,
     },
-    step : {
-      type    : Number,
-      default : 1,
+    step: {
+      type: Number,
+      default: 1,
     },
-    value : {
-      type : Number,
+    value: {
+      type: Number,
     },
-    readonly : {
-      type    : Boolean,
-      default : false,
+    readonly: {
+      type: Boolean,
+      default: false,
     },
-    disabled : {
-      type    : Boolean,
-      default : false,
+    disabled: {
+      type: Boolean,
+      default: false,
     },
-    placeholder : {
-      type    : String,
-      default : '',
+    placeholder: {
+      type: String,
+      default: '',
     },
-    precision : {
-      type : Number,
+    precision: {
+      type: Number,
       validator(value) {
         return value >= 0;
       },
@@ -46,11 +46,11 @@ export default /*#__PURE__*/ createComponent({
 
   data() {
     return {
-      nativeValue : '',
+      nativeValue: '',
     };
   },
 
-  computed : {
+  computed: {
     inputValue(): number {
       const { min } = this;
       let { value } = this;
@@ -65,11 +65,9 @@ export default /*#__PURE__*/ createComponent({
     this.$nextTick(this.setInputValue);
   },
 
-  methods : {
+  methods: {
     onChange(type: string) {
-      const {
-        step, max, min,
-      } = this;
+      const { step, max, min } = this;
       let { value } = this;
 
       if (type === 'add') {
@@ -87,7 +85,10 @@ export default /*#__PURE__*/ createComponent({
 
     setInputValue() {
       const { input } = this.$refs;
-      if ((input as HTMLInputElement).value === String(this.inputValue) || !input) {
+      if (
+        (input as HTMLInputElement).value === String(this.inputValue) ||
+        !input
+      ) {
         return;
       }
 
@@ -101,11 +102,11 @@ export default /*#__PURE__*/ createComponent({
       this.$emit('focus', event);
     },
     onInput(event: InputEvent) {
-      let { value }: {value: number | string} = (event.target! as HTMLInputElement);
+      let {
+        value,
+      }: { value: number | string } = event.target! as HTMLInputElement;
       value = Number.parseFloat(value);
-      const {
-        max, min,
-      } = this;
+      const { max, min } = this;
       value = Math.max(value, min);
       value = Math.min(value, max);
       value = value === -Infinity || value === Infinity ? 1 : value;
@@ -116,12 +117,12 @@ export default /*#__PURE__*/ createComponent({
     },
   },
 
-  watch : {
-    value : {
+  watch: {
+    value: {
       handler() {
         this.onChange('init');
       },
-      immediate : true,
+      immediate: true,
     },
 
     inputValue() {
@@ -130,17 +131,17 @@ export default /*#__PURE__*/ createComponent({
   },
 
   render() {
-    const {
-      placeholder, disabled, max, min, step, number, value,
-    } = this;
+    const { placeholder, disabled, max, min, step, number, value } = this;
     return (
       <div class={bem()}>
-        <span class={bem('button', { disabled: value <= min })}
-              onClick={() => this.onChange('reduce')}>
-          <icon name='remove' width='24' height='24'></icon>
+        <span
+          class={bem('button', { disabled: value <= min })}
+          onClick={() => this.onChange('reduce')}
+        >
+          <icon name="remove" width="24" height="24"></icon>
         </span>
         <input
-          ref='input'
+          ref="input"
           placeholder={placeholder}
           disabled={disabled}
           max={max}
@@ -148,13 +149,16 @@ export default /*#__PURE__*/ createComponent({
           step={step}
           type={number}
           on={{
-            '!blur'  : this.onBlur,
-            '!input' : this.onInput,
-            '!focus' : this.onFocus,
-          }}></input>
-        <span class={bem('button', { disabled: value >= max })}
-              onClick={() => this.onChange('add')}>
-          <icon name='add' width='24' height='24'></icon>
+            '!blur': this.onBlur,
+            '!input': this.onInput,
+            '!focus': this.onFocus,
+          }}
+        ></input>
+        <span
+          class={bem('button', { disabled: value >= max })}
+          onClick={() => this.onChange('add')}
+        >
+          <icon name="add" width="24" height="24"></icon>
         </span>
       </div>
     );

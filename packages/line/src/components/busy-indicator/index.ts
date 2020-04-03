@@ -3,6 +3,4 @@
 
 import BusyIndicator from '@line-ui/line/src/components/busy-indicator/busy-indicator';
 
-export {
-  BusyIndicator,
-};
+export { BusyIndicator };

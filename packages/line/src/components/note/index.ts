@@ -3,6 +3,4 @@
 
 import Note from '@line-ui/line/src/components/note/note';
 
-export {
-  Note,
-};
+export { Note };

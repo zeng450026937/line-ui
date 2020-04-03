@@ -1,14 +1,11 @@
 <template>
-  <div class="scroll-view">
-  </div>
+  <div class="scroll-view"></div>
 </template>
 
 <script>
 export default {
-  name : 'ScrollView',
+  name: 'ScrollView',
 };
 </script>
 
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>

@@ -10,28 +10,19 @@
       <line-tabs v-model="value">
         <line-tab modelValue="1">
           <div class="content">
-            <line-icon
-              name="class"
-              size="large"
-            ></line-icon>
+            <line-icon name="class" size="large"></line-icon>
             Class
           </div>
         </line-tab>
         <line-tab modelValue="2">
           <div class="content">
-            <line-icon
-              name="account_box"
-              size="large"
-            ></line-icon>
+            <line-icon name="account_box" size="large"></line-icon>
             Account
           </div>
         </line-tab>
         <line-tab modelValue="3">
           <div class="content">
-            <line-icon
-              name="dashboard"
-              size="large"
-            ></line-icon>
+            <line-icon name="dashboard" size="large"></line-icon>
             Dashboard
           </div>
         </line-tab>
@@ -62,11 +53,11 @@ import Vue from 'vue';
 export default Vue.extend({
   data() {
     return {
-      value : '1',
+      value: '1',
     };
   },
 
-  methods : {
+  methods: {
     toggled(value) {
       this.value = value;
     },

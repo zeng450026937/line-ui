@@ -1,45 +1,44 @@
 <template>
-  <div class="tree-view">
-  </div>
+  <div class="tree-view"></div>
 </template>
 
 <script>
 export default {
-  name : 'TreeView',
+  name: 'TreeView',
 
-  props : {
-    currentIndex : {
-      type    : Object,
-      default : () => ({}),
+  props: {
+    currentIndex: {
+      type: Object,
+      default: () => ({}),
     },
-    delegate : {
-      type    : Object,
-      default : () => ({}),
+    delegate: {
+      type: Object,
+      default: () => ({}),
     },
-    model : {
-      type    : Object,
-      default : () => ({}),
+    model: {
+      type: Object,
+      default: () => ({}),
     },
-    rootIndex : {
-      type    : Object,
-      default : () => ({}),
+    rootIndex: {
+      type: Object,
+      default: () => ({}),
     },
-    section : {
-      type    : Object,
-      default : () => ({
-        property         : '',
-        criteria         : 0,
-        delegate         : null,
-        labelPositioning : 0,
+    section: {
+      type: Object,
+      default: () => ({
+        property: '',
+        criteria: 0,
+        delegate: null,
+        labelPositioning: 0,
       }),
     },
-    selection : {
-      type    : Object,
-      default : () => ({}),
+    selection: {
+      type: Object,
+      default: () => ({}),
     },
   },
 
-  methods : {
+  methods: {
     collapse() {},
     expand() {},
     indexAt() {},
@@ -57,6 +56,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>

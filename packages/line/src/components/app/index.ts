@@ -3,6 +3,4 @@
 
 import App from '@line-ui/line/src/components/app/app';
 
-export {
-  App,
-};
+export { App };

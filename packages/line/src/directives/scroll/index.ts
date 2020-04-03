@@ -39,10 +39,10 @@ function inserted(el: HTMLElement, binding: ScrollVNodeDirective) {
   if (!value) return;
 
   (el as any).vScroll = createScroll({
-    passive  : true,
+    passive: true,
     ...modifiers,
-    target   : arg,
-    callback : value,
+    target: arg,
+    callback: value,
   });
 }
 
@@ -70,7 +70,7 @@ function update(el: HTMLElement, binding: ScrollVNodeDirective) {
 }
 
 export const vScroll = /*#__PURE__*/ defineDirective({
-  name : 'scroll',
+  name: 'scroll',
   inserted,
   unbind,
   update,

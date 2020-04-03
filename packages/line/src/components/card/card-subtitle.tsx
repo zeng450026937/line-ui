@@ -4,10 +4,10 @@ import { createColorClasses } from '@line-ui/line/src/mixins/use-color';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('card-subtitle');
 
 export default /*#__PURE__*/ createComponent({
-  functional : true,
+  functional: true,
 
-  props : {
-    color : String,
+  props: {
+    color: String,
   },
 
   render(h, { props, data, slots }) {
@@ -16,11 +16,7 @@ export default /*#__PURE__*/ createComponent({
       <div
         role="heading"
         aria-level="3"
-        class={[
-          bem(),
-          createColorClasses(color),
-          'line-inherit-color',
-        ]}
+        class={[bem(), createColorClasses(color), 'line-inherit-color']}
         {...data}
       >
         {slots()}

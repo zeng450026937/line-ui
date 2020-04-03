@@ -11,56 +11,23 @@
 
       <section class="line-margin-start">
         <header>Small Size</header>
-        <line-icon
-          name="add"
-          size="small"
-          color="primary"
-        ></line-icon>
-        <line-icon
-          name="add"
-          size="small"
-          color="secondary"
-        ></line-icon>
-        <line-icon
-          name="add"
-          size="small"
-          color="tertiary"
-        ></line-icon>
+        <line-icon name="add" size="small" color="primary"></line-icon>
+        <line-icon name="add" size="small" color="secondary"></line-icon>
+        <line-icon name="add" size="small" color="tertiary"></line-icon>
       </section>
 
       <section class="line-margin-start">
         <header>Default Size</header>
-        <line-icon
-          name="add"
-          color="success"
-        ></line-icon>
-        <line-icon
-          name="add"
-          color="warning"
-        ></line-icon>
-        <line-icon
-          name="add"
-          color="danger"
-        ></line-icon>
+        <line-icon name="add" color="success"></line-icon>
+        <line-icon name="add" color="warning"></line-icon>
+        <line-icon name="add" color="danger"></line-icon>
       </section>
 
       <section class="line-margin-start">
         <header>Large Size</header>
-        <line-icon
-          name="add"
-          size="large"
-          color="light"
-        ></line-icon>
-        <line-icon
-          name="add"
-          size="large"
-          color="medium"
-        ></line-icon>
-        <line-icon
-          name="add"
-          size="large"
-          color="dark"
-        ></line-icon>
+        <line-icon name="add" size="large" color="light"></line-icon>
+        <line-icon name="add" size="large" color="medium"></line-icon>
+        <line-icon name="add" size="large" color="dark"></line-icon>
       </section>
 
       <line-list-header>SVG ICON</line-list-header>

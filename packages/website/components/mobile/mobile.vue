@@ -6,41 +6,25 @@
 
 <script>
 export default {
-  name : 'Device',
+  name: 'Device',
 
-  components : {
+  components: {},
 
-  },
-
-  props : {
-
-  },
+  props: {},
 
   data() {
-    return {
-
-    };
+    return {};
   },
 
-  computed : {
+  computed: {},
 
-  },
+  created() {},
 
-  created() {
+  mounted() {},
 
-  },
+  methods: {},
 
-  mounted() {
-
-  },
-
-  methods : {
-
-  },
-
-  watch : {
-
-  },
+  watch: {},
 };
 </script>
 

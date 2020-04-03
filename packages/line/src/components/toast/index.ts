@@ -3,6 +3,4 @@
 
 import Toast from '@line-ui/line/src/components/toast/toast';
 
-export {
-  Toast,
-};
+export { Toast };

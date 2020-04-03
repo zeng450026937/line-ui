@@ -30,26 +30,40 @@ export class ModelIndex {
   }
 
   toString() {
-    return `${ this.row }:${ this.column }`;
+    return `${this.row}:${this.column}`;
   }
 }
 
 export class ItemModel extends EventEmitter {
-  rowCount(parent = null) { return 0; }
+  rowCount(parent = null) {
+    return 0;
+  }
 
-  columnCount(parent = null) { return 0; }
+  columnCount(parent = null) {
+    return 0;
+  }
 
-  data(index) { return null; }
+  data(index) {
+    return null;
+  }
 
   setData(index, val) {}
 
-  parent(index) { return null; }
+  parent(index) {
+    return null;
+  }
 
-  hasChildren(index) { return false; }
+  hasChildren(index) {
+    return false;
+  }
 
-  hasIndex(row, column, parent = null) { return false; }
+  hasIndex(row, column, parent = null) {
+    return false;
+  }
 
-  index(row, column, parent = null) { return new ModelIndex(); }
+  index(row, column, parent = null) {
+    return new ModelIndex();
+  }
 
   insertColum(column, parent) {}
 
@@ -69,7 +83,9 @@ export class ItemModel extends EventEmitter {
 
   sort(column, order) {}
 
-  canFetchMore() { return false; }
+  canFetchMore() {
+    return false;
+  }
 
   fetchMore() {}
 

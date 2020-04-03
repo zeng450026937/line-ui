@@ -2,22 +2,22 @@
 import wormhole from './wormhole';
 
 export default {
-  name : 'portal-remote',
+  name: 'portal-remote',
 
-  props : {
-    name : String,
+  props: {
+    name: String,
 
-    disabled : Boolean,
+    disabled: Boolean,
 
-    multi : {
-      type    : Boolean,
-      default : true,
+    multi: {
+      type: Boolean,
+      default: true,
     },
 
-    transition : [String, Object, Function],
+    transition: [String, Object, Function],
   },
 
-  computed : {
+  computed: {
     computedTransports() {
       const transports = wormhole.transports(this.name);
 
@@ -27,7 +27,7 @@ export default {
     },
 
     computedPayloads() {
-      return this.computedTransports.map(transport => transport.payload());
+      return this.computedTransports.map((transport) => transport.payload());
     },
   },
 
@@ -43,6 +43,4 @@ export default {
 };
 </script>
 
-<style lang="stylus">
-
-</style>
+<style lang="stylus"></style>

@@ -1,8 +1,5 @@
 import { Config } from '@line-ui/line/src/utils/config';
-import {
-  now,
-  pointerCoord,
-} from '@line-ui/line/src/utils/dom';
+import { now, pointerCoord } from '@line-ui/line/src/utils/dom';
 
 /* eslint-disable @typescript-eslint/no-use-before-define */
 
@@ -132,7 +129,7 @@ export const setupTapClick = (config?: Config) => {
 
   const removeRipple = () => {
     if (activeRipple !== undefined) {
-      activeRipple.then(remove => remove());
+      activeRipple.then((remove) => remove());
       activeRipple = undefined;
     }
   };

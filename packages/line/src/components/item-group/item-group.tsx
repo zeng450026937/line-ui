@@ -11,7 +11,7 @@ export default /*#__PURE__*/ createComponent({
         class={[
           bem({
             // Used internally for styling
-            [`${ mode }`] : true,
+            [`${mode}`]: true,
           }),
         ]}
       >

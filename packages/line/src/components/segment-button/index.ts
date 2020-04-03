@@ -3,6 +3,4 @@
 
 import SegmentButton from '@line-ui/line/src/components/segment-button/segment-button';
 
-export {
-  SegmentButton,
-};
+export { SegmentButton };

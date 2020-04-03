@@ -4,7 +4,4 @@
 import ProgressBar from '@line-ui/line/src/components/progress/progress-bar';
 import ProgressCircular from '@line-ui/line/src/components/progress/progress-circular';
 
-export {
-  ProgressBar,
-  ProgressCircular,
-};
+export { ProgressBar, ProgressCircular };

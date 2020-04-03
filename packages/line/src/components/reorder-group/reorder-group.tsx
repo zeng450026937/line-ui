@@ -1,22 +1,22 @@
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
-import {
-  createGesture,
-  GestureDetail,
-} from '@line-ui/line/src/utils/gesture';
+import { createGesture, GestureDetail } from '@line-ui/line/src/utils/gesture';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('reorder-group');
 
 const enum ReorderGroupState {
   Idle = 0,
   Active = 1,
-  Complete = 2
+  Complete = 2,
 }
 
 const indexForItem = (element: any): number => {
   return element.$lineIndex;
 };
 
-const findReorderItem = (node: HTMLElement | null, container: HTMLElement): HTMLElement | undefined => {
+const findReorderItem = (
+  node: HTMLElement | null,
+  container: HTMLElement
+): HTMLElement | undefined => {
   let parent: HTMLElement | null;
   while (node) {
     parent = node.parentElement;
@@ -40,20 +40,20 @@ const reorderArray = (array: any[], from: number, to: number): any[] => {
 };
 
 export default /*#__PURE__*/ createComponent({
-  inject : {
-    Content : { default: undefined },
+  inject: {
+    Content: { default: undefined },
   },
 
-  props : {
-    disabled : {
-      type    : Boolean,
-      default : true,
+  props: {
+    disabled: {
+      type: Boolean,
+      default: true,
     },
   },
 
   data() {
     return {
-      state : ReorderGroupState.Idle,
+      state: ReorderGroupState.Idle,
     };
   },
 
@@ -74,16 +74,16 @@ export default /*#__PURE__*/ createComponent({
     }
 
     this.gesture = createGesture({
-      el              : this.$el,
-      gestureName     : 'reorder',
-      gesturePriority : 110,
-      threshold       : 0,
-      direction       : 'y',
-      passive         : false,
-      canStart        : detail => this.canStart(detail),
-      onStart         : ev => this.onStart(ev),
-      onMove          : ev => this.onMove(ev),
-      onEnd           : () => this.onEnd(),
+      el: this.$el,
+      gestureName: 'reorder',
+      gesturePriority: 110,
+      threshold: 0,
+      direction: 'y',
+      passive: false,
+      canStart: (detail) => this.canStart(detail),
+      onStart: (ev) => this.onStart(ev),
+      onMove: (ev) => this.onMove(ev),
+      onEnd: () => this.onEnd(),
     });
 
     this.disabledChanged();
@@ -97,7 +97,7 @@ export default /*#__PURE__*/ createComponent({
     }
   },
 
-  methods : {
+  methods: {
     disabledChanged() {
       if (this.gesture) {
         this.gesture.enable(!this.disabled);
@@ -130,7 +130,10 @@ export default /*#__PURE__*/ createComponent({
       if (!reorderEl) {
         return false;
       }
-      const item = findReorderItem(reorderEl as HTMLElement, this.$el as HTMLElement);
+      const item = findReorderItem(
+        reorderEl as HTMLElement,
+        this.$el as HTMLElement
+      );
       if (!item) {
         return false;
       }
@@ -141,7 +144,7 @@ export default /*#__PURE__*/ createComponent({
     onStart(ev: GestureDetail) {
       ev.event.preventDefault();
 
-      const item = this.selectedItemEl = ev.data;
+      const item = (this.selectedItemEl = ev.data);
       const heights = this.cachedHeights;
       heights.length = 0;
       const { $el } = this;
@@ -206,7 +209,7 @@ export default /*#__PURE__*/ createComponent({
       }
 
       // Update selected item position
-      selectedItem.style.transform = `translateY(${ deltaY }px)`;
+      selectedItem.style.transform = `translateY(${deltaY}px)`;
     },
 
     onEnd() {
@@ -224,9 +227,9 @@ export default /*#__PURE__*/ createComponent({
         this.completeSync();
       } else {
         this.$emit('itemReorder', {
-          from     : fromIndex,
-          to       : toIndex,
-          complete : this.completeSync.bind(this),
+          from: fromIndex,
+          to: toIndex,
+          complete: this.completeSync.bind(this),
         });
       }
 
@@ -241,10 +244,12 @@ export default /*#__PURE__*/ createComponent({
         const toIndex = this.lastToIndex;
         const fromIndex = indexForItem(selectedItemEl);
 
-        if (toIndex !== fromIndex && (!listOrReorder || listOrReorder === true)) {
-          const ref = (fromIndex < toIndex)
-            ? children[toIndex + 1]
-            : children[toIndex];
+        if (
+          toIndex !== fromIndex &&
+          (!listOrReorder || listOrReorder === true)
+        ) {
+          const ref =
+            fromIndex < toIndex ? children[toIndex + 1] : children[toIndex];
 
           this.$el.insertBefore(selectedItemEl, ref);
         }
@@ -288,14 +293,13 @@ export default /*#__PURE__*/ createComponent({
         const { style } = children[i] as any;
         let value = '';
         if (i > fromIndex && i <= toIndex) {
-          value = `translateY(${ -itemHeight }px)`;
+          value = `translateY(${-itemHeight}px)`;
         } else if (i < fromIndex && i >= toIndex) {
-          value = `translateY(${ itemHeight }px)`;
+          value = `translateY(${itemHeight}px)`;
         }
         style.transform = value;
       }
     },
-
 
     autoscroll(posY: number): number {
       if (!this.scrollEl) {
@@ -315,7 +319,7 @@ export default /*#__PURE__*/ createComponent({
     },
   },
 
-  watch : {
+  watch: {
     disabled() {
       this.disabledChanged();
     },
@@ -326,16 +330,13 @@ export default /*#__PURE__*/ createComponent({
 
     return (
       <div
-        class={
-          bem({
-            enabled       : !disabled,
-            'list-active' : state !== ReorderGroupState.Idle,
-          })
-        }
+        class={bem({
+          enabled: !disabled,
+          'list-active': state !== ReorderGroupState.Idle,
+        })}
       >
         {this.slots()}
       </div>
     );
   },
-
 });

@@ -3,6 +3,4 @@
 
 import FabButton from '@line-ui/line/src/components/fab-button/fab-button';
 
-export {
-  FabButton,
-};
+export { FabButton };

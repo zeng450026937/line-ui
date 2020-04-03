@@ -6,6 +6,4 @@ function importAll(map: any, r: any): object {
   return map;
 }
 
-export {
-  importAll,
-};
+export { importAll };

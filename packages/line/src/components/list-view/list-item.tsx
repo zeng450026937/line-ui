@@ -4,23 +4,23 @@ const NAMESPACE = 'ListView';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('list-item');
 
 export default /*#__PURE__*/ createComponent({
-  inject : [NAMESPACE],
+  inject: [NAMESPACE],
 
-  props : {
-    index : {
-      type     : Number,
-      required : true,
+  props: {
+    index: {
+      type: Number,
+      required: true,
     },
-    item : null as any,
+    item: null as any,
   },
 
-  computed : {
+  computed: {
     cachedNode() {
       return this.slots('default', this.item);
     },
   },
 
-  methods : {
+  methods: {
     onLayoutChanged() {
       const { itemLayoutAtIndex } = this[NAMESPACE];
       const item = itemLayoutAtIndex(this.index);
@@ -32,8 +32,10 @@ export default /*#__PURE__*/ createComponent({
 
       if (!offsetWidth || !offsetHeight) return;
 
-      if ((this.offsetWidth !== offsetWidth && horizontal)
-      || (this.offsetHeight !== offsetHeight && vertical)) {
+      if (
+        (this.offsetWidth !== offsetWidth && horizontal) ||
+        (this.offsetHeight !== offsetHeight && vertical)
+      ) {
         this.offsetWidth = offsetWidth;
         this.offsetHeight = offsetHeight;
         onLayout(this.index, this.offsetWidth, this.offsetHeight);
@@ -52,10 +54,6 @@ export default /*#__PURE__*/ createComponent({
   },
 
   render() {
-    return (
-      <div class={bem()}>
-        { this.cachedNode }
-      </div>
-    );
+    return <div class={bem()}>{this.cachedNode}</div>;
   },
 });

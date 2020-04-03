@@ -8,7 +8,6 @@
 
     <line-content>
       <line-card>
-
         <img src="/madison.jpg" />
 
         <line-card-header>
@@ -20,7 +19,6 @@
           Founded in 1829 on an isthmus between Lake Monona and Lake Mendota,
           Madison was named the capital of the Wisconsin Territory in 1836.
         </line-card-content>
-
       </line-card>
     </line-content>
   </line-app>
@@ -32,5 +30,4 @@ import Vue from 'vue';
 export default Vue.extend({});
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

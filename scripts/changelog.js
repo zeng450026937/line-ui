@@ -6,7 +6,7 @@ function changelog(dist, cmd) {
   const tag = cmd.tag || 'v1.0.0';
 
   execa(`
-    basepath=${ basepath }
+    basepath=${basepath}
 
     github_changelog_generator \
       --header-label "# 更新日志" \
@@ -17,8 +17,8 @@ function changelog(dist, cmd) {
       --max-issues 0 \
       --no-author \
       --no-unreleased \
-      --since-tag ${ tag } \
-      -o ${ path.join(basepath, dist) }
+      --since-tag ${tag} \
+      -o ${path.join(basepath, dist)}
     `);
 }
 

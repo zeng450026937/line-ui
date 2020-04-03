@@ -3,6 +3,4 @@
 
 import Loading from '@line-ui/line/src/components/loading/loading';
 
-export {
-  Loading,
-};
+export { Loading };

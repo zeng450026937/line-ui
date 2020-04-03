@@ -1,10 +1,7 @@
 import { VNodeDirective } from 'vue';
 import { defineDirective } from '@line-ui/line/src/utils/directive';
 import { createSwipeBackGesture } from '@line-ui/line/src/utils/gesture/swipe-back';
-import {
-  NO,
-  NOOP,
-} from '@line-ui/line/src/utils/helpers';
+import { NO, NOOP } from '@line-ui/line/src/utils/helpers';
 
 export interface SwipeBackVNodeDirective extends VNodeDirective {
   value?: {
@@ -32,7 +29,7 @@ function inserted(el: HTMLElement, binding: SwipeBackVNodeDirective) {
     canStartHandler,
     onStartHandler,
     onMoveHandler,
-    onEndHandler,
+    onEndHandler
   );
 }
 
@@ -60,7 +57,7 @@ function update(el: HTMLElement, binding: SwipeBackVNodeDirective) {
 }
 
 export const vSwipeBack = /*#__PURE__*/ defineDirective({
-  name : 'swipe-back',
+  name: 'swipe-back',
   inserted,
   unbind,
   update,

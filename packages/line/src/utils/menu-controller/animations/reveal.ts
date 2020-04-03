@@ -1,7 +1,4 @@
-import {
-  Animation,
-  createAnimation,
-} from '@line-ui/line/src/utils/animation';
+import { Animation, createAnimation } from '@line-ui/line/src/utils/animation';
 import { MenuI } from '@line-ui/line/src/utils/menu-controller/menu-interface';
 import { baseAnimation } from '@line-ui/line/src/utils/menu-controller/animations/base';
 
@@ -11,11 +8,11 @@ import { baseAnimation } from '@line-ui/line/src/utils/menu-controller/animation
  * The menu itself, which is under the content, does not move.
  */
 export const menuRevealAnimation = (menu: MenuI): Animation => {
-  const openedX = `${ menu.width * (menu.isEndSide ? -1 : 1) }px`;
+  const openedX = `${menu.width * (menu.isEndSide ? -1 : 1)}px`;
 
   const contentOpen = createAnimation()
     .addElement(menu.contentEl!) // REVIEW
-    .fromTo('transform', 'translateX(0px)', `translateX(${ openedX })`);
+    .fromTo('transform', 'translateX(0px)', `translateX(${openedX})`);
 
   return baseAnimation(menu.mode === 'ios').addAnimation(contentOpen);
 };

@@ -42,8 +42,8 @@ export type ParseResult = {
 };
 
 const defaultOptions = {
-  maxDeep   : Infinity,
-  tagPrefix : '',
+  maxDeep: Infinity,
+  tagPrefix: '',
 };
 
 export function parse(options: Options) {
@@ -53,21 +53,21 @@ export function parse(options: Options) {
   };
 
   const result: ParseResult = {
-    tags       : {},
-    attributes : {},
+    tags: {},
+    attributes: {},
   };
 
   function putResult(componentName: string, component: Tag) {
     componentName = options.tagPrefix + componentName;
     const attributes = Object.keys(component.attributes);
     const tag = {
-      description : component.description,
+      description: component.description,
       attributes,
     };
 
     result.tags[componentName] = tag;
     attributes.forEach((key) => {
-      result.attributes[`${ componentName }/${ key }`] = component.attributes[key];
+      result.attributes[`${componentName}/${key}`] = component.attributes[key];
     });
   }
 
@@ -85,9 +85,9 @@ export function parse(options: Options) {
         recursiveParse(
           {
             ...options,
-            path : currentPath,
+            path: currentPath,
           },
-          deep,
+          deep
         );
       } else if (stats.isFile() && options.test.test(item)) {
         const file = readFileSync(currentPath);
@@ -123,10 +123,13 @@ export function parseAndWrite(options: Options) {
     mkdirSync(options.outputDir);
   }
 
-  writeFileSync(join(options.outputDir, 'tags.json'), JSON.stringify(tags, null, 2));
+  writeFileSync(
+    join(options.outputDir, 'tags.json'),
+    JSON.stringify(tags, null, 2)
+  );
   writeFileSync(
     join(options.outputDir, 'attributes.json'),
-    JSON.stringify(attributes, null, 2),
+    JSON.stringify(attributes, null, 2)
   );
 }
 

@@ -25,14 +25,8 @@
         </line-list-header>
 
         <!-- Progress Bar with Color -->
-        <line-progress-bar
-          color="secondary"
-          :value="0.5"
-        ></line-progress-bar>
-        <line-progress-bar
-          color="tertiary"
-          :value="0.8"
-        ></line-progress-bar>
+        <line-progress-bar color="secondary" :value="0.5"></line-progress-bar>
+        <line-progress-bar color="tertiary" :value="0.8"></line-progress-bar>
 
         <line-list-header>
           <line-label>
@@ -56,10 +50,7 @@
             Buffer
           </line-label>
         </line-list-header>
-        <line-progress-bar
-          :value="0.25"
-          :buffer="0.5"
-        ></line-progress-bar>
+        <line-progress-bar :value="0.25" :buffer="0.5"></line-progress-bar>
       </line-list>
     </line-content>
   </line-app>
@@ -71,20 +62,17 @@ import Vue from 'vue';
 export default Vue.extend({
   data() {
     return {
-      value : 0,
+      value: 0,
     };
   },
 
-  methods : {
-
-  },
+  methods: {},
 
   mounted() {
     setInterval(() => {
       this.value = this.value >= 1 ? 0 : this.value + 0.1;
     }, 1000);
   },
-
 });
 </script>
 

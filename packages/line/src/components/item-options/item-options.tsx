@@ -6,29 +6,33 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('item-options');
 const isEndSide = (side: Side): boolean => {
   const isRTL = document.dir === 'rtl';
   switch (side) {
-    case 'start': return isRTL;
-    case 'end': return !isRTL;
+    case 'start':
+      return isRTL;
+    case 'end':
+      return !isRTL;
     default:
-      throw new Error(`"${ side }" is not a valid value for [side]. Use "start" or "end" instead.`);
+      throw new Error(
+        `"${side}" is not a valid value for [side]. Use "start" or "end" instead.`
+      );
   }
 };
 
 export default /*#__PURE__*/ createComponent({
-  inject : {
-    ItemSliding : { default: undefined },
+  inject: {
+    ItemSliding: { default: undefined },
   },
 
-  props : {
-    side : {
-      type    : String,
-      default : 'end',
+  props: {
+    side: {
+      type: String,
+      default: 'end',
     },
   },
 
-  methods : {
+  methods: {
     fireSwipeEvent() {
       this.$emit('swipe', {
-        side : this.side,
+        side: this.side,
       });
     },
   },
@@ -46,9 +50,9 @@ export default /*#__PURE__*/ createComponent({
     return (
       <div
         class={bem({
-          [mode] : true,
-          start  : !isEnd,
-          end    : isEnd,
+          [mode]: true,
+          start: !isEnd,
+          end: isEnd,
         })}
       >
         {this.slots()}

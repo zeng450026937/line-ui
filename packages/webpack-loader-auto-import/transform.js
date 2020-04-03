@@ -3,31 +3,19 @@ exports.makeTagToName = (components, prefix) => {
   const pascalTagToName = new Map();
 
   const nameWithPrefix = (name) => {
-    return prefix
-      ? `${ prefix }-${ name }`
-      : name;
+    return prefix ? `${prefix}-${name}` : name;
   };
 
   const nameToKebabTag = (name) => {
-    return hyphenate(
-      nameWithPrefix(name),
-    );
+    return hyphenate(nameWithPrefix(name));
   };
   const nameToPascalTag = (name) => {
-    return pascalize(
-      nameWithPrefix(name),
-    );
+    return pascalize(nameWithPrefix(name));
   };
 
-  components.forEach(name => {
-    kebabTagToName.set(
-      nameToKebabTag(name),
-      name,
-    );
-    pascalTagToName.set(
-      nameToPascalTag(name),
-      name,
-    );
+  components.forEach((name) => {
+    kebabTagToName.set(nameToKebabTag(name), name);
+    pascalTagToName.set(nameToPascalTag(name), name);
   });
 
   return (tag) => {
@@ -39,16 +27,11 @@ exports.makeDirToName = (directives) => {
   const dirTagToName = new Map();
 
   const nameToDirTag = (name) => {
-    return hyphenate(
-      camelize(name),
-    );
+    return hyphenate(camelize(name));
   };
 
-  directives.forEach(name => {
-    dirTagToName.set(
-      nameToDirTag(name),
-      name,
-    );
+  directives.forEach((name) => {
+    dirTagToName.set(nameToDirTag(name), name);
   });
 
   return (tag) => {
@@ -69,7 +52,7 @@ const hyphenate = (str) => {
 };
 
 const pascalize = (str) => {
-  return camelize(`-${ str }`);
+  return camelize(`-${str}`);
 };
 
 const uncapitalize = (str) => {

@@ -4,8 +4,8 @@ import router from '../router';
 import App from './app.vue';
 
 /*
-* import either one of below but never both
-*/
+ * import either one of below but never both
+ */
 
 // import 'skyline/style/skyline.scss';
 import 'skyline/src/style/skyline.ios.scss';
@@ -24,13 +24,11 @@ import 'skyline/src/style/core.scss';
 // import 'skyline/src/themes/css-variables/css/toolbar.css';
 // import 'skyline/src/themes/css-variables/css/vibrant.css';
 
-
 Vue.use(Skyline);
-
 
 Object.assign(window, { router }); // router 对象注入 window
 
 new Vue({
   router,
-  render : h => h(App),
+  render: (h) => h(App),
 }).$mount('#app');

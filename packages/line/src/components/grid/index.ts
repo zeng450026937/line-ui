@@ -3,6 +3,4 @@
 
 import Grid from '@line-ui/line/src/components/grid/grid';
 
-export {
-  Grid,
-};
+export { Grid };

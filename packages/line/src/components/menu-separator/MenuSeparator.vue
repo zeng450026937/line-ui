@@ -1,14 +1,11 @@
 <template>
-  <div class="menu-separator">
-  </div>
+  <div class="menu-separator"></div>
 </template>
 
 <script>
 export default {
-  name : 'MenuSeparator',
+  name: 'MenuSeparator',
 };
 </script>
 
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>

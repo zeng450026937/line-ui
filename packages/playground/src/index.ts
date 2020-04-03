@@ -4,8 +4,8 @@ import router from './router';
 import App from './app.vue';
 
 /*
-* import either one of below but never both
-*/
+ * import either one of below but never both
+ */
 
 // import 'skyline/style/skyline.scss';
 import 'skyline/src/style/skyline.ios.scss';
@@ -24,7 +24,7 @@ Vue.use(Skyline);
 export function createApp(context?: any /* ssr context */) {
   const app = new Vue({
     router,
-    render : h => h(App),
+    render: (h) => h(App),
   });
 
   return {

@@ -9,9 +9,7 @@ commander
   .option('--tag [tag]', 'Since tag')
   .action(changelog);
 
-commander
-  .command('commit-lint')
-  .action(commitLint);
+commander.command('commit-lint').action(commitLint);
 
 commander.arguments('<action>');
 commander.parse(process.argv);

@@ -9,9 +9,7 @@ import { mdLeaveAnimation } from '@line-ui/line/src/components/popup/animations/
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('popup');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ usePopup(),
-  ],
+  mixins: [/*#__PURE__*/ usePopup()],
 
   beforeMount() {
     const { mode } = this;
@@ -25,7 +23,7 @@ export default /*#__PURE__*/ createComponent({
     });
   },
 
-  methods : {
+  methods: {
     onTap() {
       this.$emit('overlay-tap');
     },
@@ -40,15 +38,9 @@ export default /*#__PURE__*/ createComponent({
         class={bem()}
         on={this.$listeners}
       >
-        <Overlay
-          onTap={this.onTap}
-        >
-        </Overlay>
+        <Overlay onTap={this.onTap}></Overlay>
 
-        <div
-          role="dialog"
-          class={bem('wrapper')}
-        >
+        <div role="dialog" class={bem('wrapper')}>
           {this.slots()}
         </div>
       </div>

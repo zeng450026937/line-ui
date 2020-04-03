@@ -1,7 +1,4 @@
-import {
-  Animation,
-  createAnimation,
-} from '@line-ui/line/src/utils/animation';
+import { Animation, createAnimation } from '@line-ui/line/src/utils/animation';
 
 /**
  * Md Alert Enter Animation

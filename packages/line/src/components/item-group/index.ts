@@ -3,6 +3,4 @@
 
 import ItemGroup from '@line-ui/line/src/components/item-group/item-group';
 
-export {
-  ItemGroup,
-};
+export { ItemGroup };

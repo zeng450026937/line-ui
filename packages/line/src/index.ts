@@ -1,8 +1,5 @@
 import { VueConstructor } from 'vue';
-import {
-  install,
-  LineOptions,
-} from '@line-ui/line/src/install';
+import { install, LineOptions } from '@line-ui/line/src/install';
 import * as components from '@line-ui/line/src/components';
 import * as directives from '@line-ui/line/src/directives';
 import * as controllers from '@line-ui/line/src/controllers';
@@ -17,10 +14,9 @@ export * from '@line-ui/line/src/utils/bem';
 export * from '@line-ui/line/src/utils/component';
 export * from '@line-ui/line/src/utils/namespace';
 
-
 export const Line = {
   install,
-  version : __VERSION__,
+  version: __VERSION__,
 };
 
 function defaulExport() {
@@ -46,7 +42,7 @@ function defaulExport() {
     controllers,
     mixins,
 
-    version : __VERSION__,
+    version: __VERSION__,
   };
 }
 

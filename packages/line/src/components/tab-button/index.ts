@@ -3,6 +3,4 @@
 
 import TabButton from '@line-ui/line/src/components/tab-button/tab-button';
 
-export {
-  TabButton,
-};
+export { TabButton };

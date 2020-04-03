@@ -3,6 +3,4 @@
 
 import PickerColumn from '@line-ui/line/src/components/picker-column/picker-column';
 
-export {
-  PickerColumn,
-};
+export { PickerColumn };

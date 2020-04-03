@@ -3,6 +3,4 @@
 
 import PageIndicator from '@line-ui/line/src/components/page-indicator/page-indicator';
 
-export {
-  PageIndicator,
-};
+export { PageIndicator };

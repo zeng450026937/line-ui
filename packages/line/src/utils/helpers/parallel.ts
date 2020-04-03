@@ -1,7 +1,11 @@
 export type LazyCallback<T = any> = (flushed?: T) => Promise<T>;
 export type LazyCallbacks<T = any> = LazyCallback<T>[];
 
-export async function parallel<T = any>(pool: LazyCallbacks<T> = [], concurrency = 8, pipe = false) {
+export async function parallel<T = any>(
+  pool: LazyCallbacks<T> = [],
+  concurrency = 8,
+  pipe = false
+) {
   if (pool.length === 0) return [];
 
   const result: any[] = [];
@@ -11,7 +15,11 @@ export async function parallel<T = any>(pool: LazyCallbacks<T> = [], concurrency
 
   concurrency = Math.min(concurrency, pool.length);
 
-  async function maybeNext(resolve: (value: T | T[]) => void, reject: (error: any) => void, flushed?: T) {
+  async function maybeNext(
+    resolve: (value: T | T[]) => void,
+    reject: (error: any) => void,
+    flushed?: T
+  ) {
     const cusor = index;
     const next = pool.length < index ? null : pool[index];
 

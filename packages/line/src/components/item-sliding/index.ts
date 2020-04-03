@@ -3,6 +3,4 @@
 
 import ItemSliding from '@line-ui/line/src/components/item-sliding/item-sliding';
 
-export {
-  ItemSliding,
-};
+export { ItemSliding };

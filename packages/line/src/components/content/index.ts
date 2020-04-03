@@ -3,6 +3,4 @@
 
 import Content from '@line-ui/line/src/components/content/content';
 
-export {
-  Content,
-};
+export { Content };

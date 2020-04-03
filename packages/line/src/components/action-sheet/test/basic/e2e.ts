@@ -1,4 +1,8 @@
-import { testActionSheet, testActionSheetAlert, testActionSheetBackdrop } from '../test.utils';
+import {
+  testActionSheet,
+  testActionSheetAlert,
+  testActionSheetBackdrop,
+} from '../test.utils';
 
 const DIRECTORY = 'basic';
 
@@ -7,7 +11,12 @@ test('action-sheet: basic', async () => {
 });
 
 test('action-sheet: basic, alert from action sheet', async () => {
-  await testActionSheet(DIRECTORY, '#alertFromActionSheet', false, testActionSheetAlert);
+  await testActionSheet(
+    DIRECTORY,
+    '#alertFromActionSheet',
+    false,
+    testActionSheetAlert
+  );
 });
 
 test('action-sheet: basic, cancel only', async () => {
@@ -23,7 +32,12 @@ test('action-sheet: basic, icons', async () => {
 });
 
 test('action-sheet: basic, no backdrop dismiss', async () => {
-  await testActionSheet(DIRECTORY, '#noBackdropDismiss', false, testActionSheetBackdrop);
+  await testActionSheet(
+    DIRECTORY,
+    '#noBackdropDismiss',
+    false,
+    testActionSheetBackdrop
+  );
 });
 
 test('action-sheet: basic, scrollable options', async () => {
@@ -47,7 +61,12 @@ test('action-sheet:rtl: basic', async () => {
 });
 
 test('action-sheet:rtl: basic, alert from action sheet', async () => {
-  await testActionSheet(DIRECTORY, '#alertFromActionSheet', true, testActionSheetAlert);
+  await testActionSheet(
+    DIRECTORY,
+    '#alertFromActionSheet',
+    true,
+    testActionSheetAlert
+  );
 });
 
 test('action-sheet:rtl: basic, cancel only', async () => {
@@ -63,7 +82,12 @@ test('action-sheet:rtl: basic, icons', async () => {
 });
 
 test('action-sheet:rtl: basic, no backdrop dismiss', async () => {
-  await testActionSheet(DIRECTORY, '#noBackdropDismiss', true, testActionSheetBackdrop);
+  await testActionSheet(
+    DIRECTORY,
+    '#noBackdropDismiss',
+    true,
+    testActionSheetBackdrop
+  );
 });
 
 test('action-sheet:rtl: basic, scrollable options', async () => {

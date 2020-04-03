@@ -5,13 +5,13 @@ import { generateE2EUrl } from '../../../utils/test/utils';
 export const testPopover = async (
   type: string,
   selector: string,
-  rtl = false,
+  rtl = false
 ) => {
   try {
     const pageUrl = generateE2EUrl('popover', type, rtl);
 
     const page = await newE2EPage({
-      url : pageUrl,
+      url: pageUrl,
     });
 
     const screenshotCompares = [];

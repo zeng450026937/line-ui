@@ -1,8 +1,5 @@
 /* eslint-disable import/extensions, max-len */
-import {
-  CombinedVueInstance,
-  Vue,
-} from 'vue/types/vue';
+import { CombinedVueInstance, Vue } from 'vue/types/vue';
 import {
   ComponentOptions,
   FunctionalComponentOptions,
@@ -10,10 +7,7 @@ import {
   ThisTypedComponentOptionsWithArrayProps,
   ThisTypedComponentOptionsWithRecordProps,
 } from 'vue/types/options';
-import {
-  ScopedSlot,
-  VNode,
-} from 'vue/types/vnode';
+import { ScopedSlot, VNode } from 'vue/types/vnode';
 
 import { Mods } from '@line-ui/line/src/utils/bem';
 import { unifySlots } from '@line-ui/line/src/utils/vnode';
@@ -47,27 +41,38 @@ export type LineComponent<
   Data = any,
   Methods = any,
   Computed = any,
-  Props = any,
+  Props = any
 > = (
-  FunctionalComponentOptions<Props> |
-  ComponentOptions<Vue, Data, Methods, Computed, Props>
-) &
-  {
-    name: string;
-    install: typeof install;
+  | FunctionalComponentOptions<Props>
+  | ComponentOptions<Vue, Data, Methods, Computed, Props>
+) & {
+  name: string;
+  install: typeof install;
 
-    new (): CombinedVueInstance<Vue, Data, Methods, Computed, Props>;
-  } &
-  TsxComponent<Props, Slots>;
+  new (): CombinedVueInstance<Vue, Data, Methods, Computed, Props>;
+} & TsxComponent<Props, Slots>;
 
-
-export function defineComponent<V extends Vue = Vue>(name: string): {
+export function defineComponent<V extends Vue = Vue>(
+  name: string
+): {
   <Slots, Data, Computed, Methods, PropNames extends string = never>(
-    sfc: ThisTypedComponentOptionsWithArrayProps<V, Data, Methods, Computed, PropNames>
+    sfc: ThisTypedComponentOptionsWithArrayProps<
+      V,
+      Data,
+      Methods,
+      Computed,
+      PropNames
+    >
   ): LineComponent<Slots, Data, Methods, Computed, Record<PropNames, any>>;
 
   <Slots, Data, Methods, Computed, Props>(
-    sfc: ThisTypedComponentOptionsWithRecordProps<V, Data, Methods, Computed, Props>
+    sfc: ThisTypedComponentOptionsWithRecordProps<
+      V,
+      Data,
+      Methods,
+      Computed,
+      Props
+    >
   ): LineComponent<Slots, Data, Methods, Computed, Props>;
 
   <Slots, PropNames extends string = never>(
@@ -78,22 +83,21 @@ export function defineComponent<V extends Vue = Vue>(name: string): {
     sfc: FunctionalComponentOptions<Props, RecordPropsDefinition<Props>>
   ): LineComponent<Slots, {}, {}, {}, Props>;
 
-  (sfc: ComponentOptions<V >): LineComponent<{}, {}, {}, {}>;
+  (sfc: ComponentOptions<V>): LineComponent<{}, {}, {}, {}>;
 
   createComponent: any;
   bem: any;
-}
+};
 
 export function defineComponent(name: string) {
-  return function (
-    sfc: any,
-  ) {
+  return function (sfc: any) {
     sfc.name = name;
     sfc.install = install;
 
     if (sfc.functional) {
       const { render } = sfc;
-      sfc.render = (h: any, ctx: any) => render.call(undefined, h, unifySlots(ctx));
+      sfc.render = (h: any, ctx: any) =>
+        render.call(undefined, h, unifySlots(ctx));
     } else {
       sfc.mixins = sfc.mixins || [];
       sfc.mixins.push(
@@ -104,7 +108,7 @@ export function defineComponent(name: string) {
         // inject special slot class for slots
         useSlots(),
         // inherit mode property from root component
-        useMode(),
+        useMode()
       );
     }
 

@@ -12,24 +12,22 @@
       </div>
       <div class="content__demo">
         <div class="demo__top">
-          <line-icon name="alarm"
-                     width="16"
-                     height="16"></line-icon>
-          <line-icon name="signal_wifi_off"
-                     width="16"
-                     height="16"></line-icon>
-          <line-icon name="signal_cellular_connected_no_internet_4_bar"
-                     width="16"
-                     height="16"></line-icon>
-          <line-icon name="battery_full"
-                     width="16"
-                     height="16"></line-icon>
+          <line-icon name="alarm" width="16" height="16"></line-icon>
+          <line-icon name="signal_wifi_off" width="16" height="16"></line-icon>
+          <line-icon
+            name="signal_cellular_connected_no_internet_4_bar"
+            width="16"
+            height="16"
+          ></line-icon>
+          <line-icon name="battery_full" width="16" height="16"></line-icon>
           17:37
         </div>
-        <iframe ref="device"
-                src="/mobile.html"
-                frameborder="0"
-                style="width: 340px; height: 680px"></iframe>
+        <iframe
+          ref="device"
+          src="/mobile.html"
+          frameborder="0"
+          style="width: 340px; height: 680px;"
+        ></iframe>
         <div class="demo__bottom"></div>
       </div>
     </div>
@@ -37,38 +35,32 @@
 </template>
 
 <script>
+import { Icon as LineIcon } from '@/components/icon';
 import HomeHeader from '../components/main/main-header.vue';
 import Navigation from '../components/main/main-navigation.vue';
-import { Icon as LineIcon } from '@/components/icon';
 import { navList } from '../utils/navigation.mobile';
 
 export default {
-  name       : 'Home',
-  components : {
+  name: 'Home',
+  components: {
     Navigation,
     HomeHeader,
     LineIcon,
   },
 
-  props : {
-
-  },
+  props: {},
 
   data() {
-    return {
-
-    };
+    return {};
   },
 
-  computed : {
+  computed: {
     list() {
       return navList;
     },
   },
 
-  created() {
-
-  },
+  created() {},
 
   mounted() {
     const { device } = this.$refs;
@@ -77,17 +69,17 @@ export default {
     };
   },
 
-  methods : {
+  methods: {
     changePath(route) {
       const { name } = route;
       const { device } = this.$refs;
       if (this.$route.meta.displayDemo && device) {
-        device.contentWindow.router.push({ name: `demo-${ name }` });
+        device.contentWindow.router.push({ name: `demo-${name}` });
       }
     },
   },
 
-  watch : {
+  watch: {
     $route(value) {
       this.changePath(value);
     },
@@ -174,7 +166,7 @@ export default {
 
         background-color: #ffffff;
 
-        content: "";
+        content: '';
         z-index: -1;
       }
 
@@ -227,7 +219,7 @@ export default {
 
           background-color: rgba(0, 0, 0, 0.5);
 
-          content: "";
+          content: '';
           z-index: 1;
         }
       }

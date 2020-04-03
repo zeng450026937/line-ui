@@ -3,57 +3,56 @@ import { createNamespace } from '@line-ui/line/src/utils/namespace';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('progress');
 
 export default /*#__PURE__*/ createComponent({
-  props : {
-    from : {
-      type    : Number,
-      default : 0,
+  props: {
+    from: {
+      type: Number,
+      default: 0,
     },
-    to : {
-      type    : Number,
-      default : 100,
+    to: {
+      type: Number,
+      default: 100,
     },
-    value : {
-      type    : Number,
-      default : 0,
+    value: {
+      type: Number,
+      default: 0,
     },
-    bufferValue : {
-      type    : Number,
-      default : 0,
+    bufferValue: {
+      type: Number,
+      default: 0,
     },
-    stream : {
-      type    : Boolean,
-      default : false,
+    stream: {
+      type: Boolean,
+      default: false,
     },
-    indeterminate : {
-      type    : Boolean,
-      default : false,
+    indeterminate: {
+      type: Boolean,
+      default: false,
     },
-    height : {
-      type    : [Number, String],
-      default : 4,
+    height: {
+      type: [Number, String],
+      default: 4,
     },
-    color : {
-      type    : String,
-      default : '#10c29b',
+    color: {
+      type: String,
+      default: '#10c29b',
     },
   },
 
-
-  computed : {
+  computed: {
     style(): object {
       const style = { height: '4px' };
-      style.height = `${ this.height }px`;
+      style.height = `${this.height}px`;
       return style;
     },
 
     bufferBarStyle(): object {
       const { color, bufferPosition } = this;
       const style = {
-        backgroundColor : `${ color }20`,
-        transform       : `scaleX(${ bufferPosition })`,
+        backgroundColor: `${color}20`,
+        transform: `scaleX(${bufferPosition})`,
       };
       if (this.bufferValue) {
-        style.backgroundColor = `${ color }60`;
+        style.backgroundColor = `${color}60`;
       }
       return style;
     },
@@ -64,12 +63,12 @@ export default /*#__PURE__*/ createComponent({
       }
       const { color, position, bufferPosition } = this;
       const style = {
-        borderColor : `${ color }80`,
-        width       : `${ (1 - position) * 100 }%`,
+        borderColor: `${color}80`,
+        width: `${(1 - position) * 100}%`,
       };
 
       if (this.bufferValue) {
-        style.width = `${ (1 - bufferPosition) * 100 }%`;
+        style.width = `${(1 - bufferPosition) * 100}%`;
       }
 
       return style;
@@ -111,7 +110,13 @@ export default /*#__PURE__*/ createComponent({
   render() {
     let children: any[] = [];
     const {
-      color, indeterminate, stream, bufferBarStyle, position, streamBarStyle, style,
+      color,
+      indeterminate,
+      stream,
+      bufferBarStyle,
+      position,
+      streamBarStyle,
+      style,
     } = this;
     const bufferBar = (
       <div class="line-progress__buffer-bar" style={bufferBarStyle}></div>
@@ -120,8 +125,10 @@ export default /*#__PURE__*/ createComponent({
       [1, 2].forEach(() => {
         const indeterminateBar = (
           <div class="line-progress__bar-wrap">
-            <div class="line-progress__indeterminate-bar" style={{ 'background-color': color }}>
-            </div>
+            <div
+              class="line-progress__indeterminate-bar"
+              style={{ 'background-color': color }}
+            ></div>
           </div>
         );
         children.push(indeterminateBar);
@@ -131,10 +138,10 @@ export default /*#__PURE__*/ createComponent({
         <div
           class="line-progress__bar"
           style={{
-            backgroundColor : color,
-            transform       : `scaleX(${ position })`,
-          }}>
-        </div>
+            backgroundColor: color,
+            transform: `scaleX(${position})`,
+          }}
+        ></div>
       );
       children = [progressBar];
     }

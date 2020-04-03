@@ -8,25 +8,25 @@ const NAMESPACE = 'CheckBoxGroup';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('check-box');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
+  mixins: [
     /*#__PURE__*/ useCheckItem(NAMESPACE),
     /*#__PURE__*/ useRipple(),
     /*#__PURE__*/ useColor(),
   ],
 
-  inject : {
-    Item : { default: undefined },
+  inject: {
+    Item: { default: undefined },
   },
 
-  props : {
-    text          : String,
-    color         : String,
-    indeterminate : Boolean,
+  props: {
+    text: String,
+    color: String,
+    indeterminate: Boolean,
   },
 
   data() {
     return {
-      inItem : false,
+      inItem: false,
     };
   },
 
@@ -35,23 +35,20 @@ export default /*#__PURE__*/ createComponent({
     this.emitStyle();
   },
 
-  methods : {
+  methods: {
     emitStyle() {
       const { Item } = this;
 
       if (!Item) return;
 
-      Item.itemStyle(
-        'check-box',
-        {
-          'checkbox-checked'     : this.checked,
-          'interactive-disabled' : this.disabled,
-        },
-      );
+      Item.itemStyle('check-box', {
+        'checkbox-checked': this.checked,
+        'interactive-disabled': this.disabled,
+      });
     },
   },
 
-  watch : {
+  watch: {
     checked() {
       this.emitStyle();
     },
@@ -62,9 +59,7 @@ export default /*#__PURE__*/ createComponent({
   },
 
   render() {
-    const {
-      checked, indeterminate, disabled, text, inItem,
-    } = this;
+    const { checked, indeterminate, disabled, text, inItem } = this;
 
     return (
       <div
@@ -79,27 +74,17 @@ export default /*#__PURE__*/ createComponent({
         role="checkbox"
         onClick={this.toggle}
       >
-        {
-          this.slots(
-            'indicator',
-            { checked, indeterminate, disabled },
-          ) || (
-            <CheckIndicator
-              checked={checked}
-              indeterminate={indeterminate}
-              disabled={disabled}
-              width={26}
-              height={26}
-            >
-            </CheckIndicator>
-          )
-        }
-        { this.slots() || text }
-        <button
-          type="button"
-          disabled={disabled}
-        >
-        </button>
+        {this.slots('indicator', { checked, indeterminate, disabled }) || (
+          <CheckIndicator
+            checked={checked}
+            indeterminate={indeterminate}
+            disabled={disabled}
+            width={26}
+            height={26}
+          ></CheckIndicator>
+        )}
+        {this.slots() || text}
+        <button type="button" disabled={disabled}></button>
       </div>
     );
   },

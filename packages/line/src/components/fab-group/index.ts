@@ -3,6 +3,4 @@
 
 import FabGroup from '@line-ui/line/src/components/fab-group/fab-group';
 
-export {
-  FabGroup,
-};
+export { FabGroup };

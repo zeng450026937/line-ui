@@ -1,10 +1,10 @@
 export async function scrollToPoint(
-  scrollEl: HTMLElement = (document.scrollingElement as HTMLElement | null)
-    || document.body
-    || document.documentElement,
+  scrollEl: HTMLElement = (document.scrollingElement as HTMLElement | null) ||
+    document.body ||
+    document.documentElement,
   x: number | undefined | null,
   y: number | undefined | null,
-  duration = 0,
+  duration = 0
 ) {
   if (duration < 32) {
     if (y != null) {
@@ -18,7 +18,7 @@ export async function scrollToPoint(
 
   let resolve!: () => void;
   let startTime = 0;
-  const promise = new Promise<void>(r => resolve = r);
+  const promise = new Promise<void>((r) => (resolve = r));
   const fromY = scrollEl.scrollTop;
   const fromX = scrollEl.scrollLeft;
 
@@ -27,15 +27,15 @@ export async function scrollToPoint(
 
   // scroll loop
   const step = (timeStamp: number) => {
-    const linearTime = Math.min(1, ((timeStamp - startTime) / duration)) - 1;
+    const linearTime = Math.min(1, (timeStamp - startTime) / duration) - 1;
     /* eslint-disable-next-line */
     const easedT = Math.pow(linearTime, 3) + 1;
 
     if (deltaY !== 0) {
-      scrollEl.scrollTop = Math.floor((easedT * deltaY) + fromY);
+      scrollEl.scrollTop = Math.floor(easedT * deltaY + fromY);
     }
     if (deltaX !== 0) {
-      scrollEl.scrollLeft = Math.floor((easedT * deltaX) + fromX);
+      scrollEl.scrollLeft = Math.floor(easedT * deltaX + fromX);
     }
 
     if (easedT < 1) {
@@ -48,7 +48,7 @@ export async function scrollToPoint(
     }
   };
   // chill out for a frame first
-  requestAnimationFrame(ts => {
+  requestAnimationFrame((ts) => {
     startTime = ts;
     step(ts);
   });
@@ -65,8 +65,18 @@ export async function scrollToBottom(scrollEl: HTMLElement, duration?: number) {
   await scrollToPoint(scrollEl, undefined, y, duration);
 }
 
-export async function scrollByPoint(scrollEl: HTMLElement, x: number, y: number, duration?: number) {
-  await scrollToPoint(scrollEl, x + scrollEl.scrollLeft, y + scrollEl.scrollTop, duration);
+export async function scrollByPoint(
+  scrollEl: HTMLElement,
+  x: number,
+  y: number,
+  duration?: number
+) {
+  await scrollToPoint(
+    scrollEl,
+    x + scrollEl.scrollLeft,
+    y + scrollEl.scrollTop,
+    duration
+  );
 }
 
 const getOffsetX = (el: HTMLElement) => {
@@ -86,7 +96,11 @@ const getOffsetY = (el: HTMLElement) => {
   return offset;
 };
 
-export async function scrollToElement(scrollEl: HTMLElement, el?: HTMLElement | null, duration?: number) {
+export async function scrollToElement(
+  scrollEl: HTMLElement,
+  el?: HTMLElement | null,
+  duration?: number
+) {
   if (!el) return;
   const x = getOffsetX(el) - getOffsetX(scrollEl);
   const y = getOffsetY(el) - getOffsetY(scrollEl);

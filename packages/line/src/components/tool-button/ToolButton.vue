@@ -1,18 +1,15 @@
 <template>
-  <div class="tool-button">
-  </div>
+  <div class="tool-button"></div>
 </template>
 
 <script>
 import { Button } from '@line-ui/skyline/src/components/button';
 
 export default {
-  name : 'ToolButton',
+  name: 'ToolButton',
 
-  extends : Button,
+  extends: Button,
 };
 </script>
 
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>

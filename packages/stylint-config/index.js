@@ -1,40 +1,33 @@
 module.exports = {
-  indentation : 2,
+  indentation: 2,
 
-  plugins : ['stylelint-order'],
+  plugins: ['stylelint-order'],
 
-  rules : {
-    'at-rule-empty-line-before' : [
+  rules: {
+    'at-rule-empty-line-before': [
       'always',
       {
-        except : [
-          'blockless-after-blockless',
-          'first-nested',
-        ],
-        ignore : ['after-comment'],
+        except: ['blockless-after-blockless', 'first-nested'],
+        ignore: ['after-comment'],
       },
     ],
 
-    'block-closing-brace-newline-before' : 'always',
+    'block-closing-brace-newline-before': 'always',
 
-    'block-no-empty' : true,
+    'block-no-empty': true,
 
-    'block-opening-brace-newline-after' : 'always',
+    'block-opening-brace-newline-after': 'always',
 
-    'custom-property-empty-line-before' : [
+    'custom-property-empty-line-before': [
       'always',
       {
-        except : [
-          'after-comment',
-          'after-custom-property',
-          'first-nested',
-        ],
+        except: ['after-comment', 'after-custom-property', 'first-nested'],
       },
     ],
 
-    'declaration-no-important' : true,
+    'declaration-no-important': true,
 
-    'order/order' : [
+    'order/order': [
       'custom-properties',
       'dollar-variables',
       'at-rules',
@@ -43,23 +36,16 @@ module.exports = {
     ],
 
     // https://github.com/sasstools/sass-lint/blob/develop/lib/config/property-sort-orders/smacss.yml
-    'order/properties-order' : [
+    'order/properties-order': [
       // Box
       {
-        emptyLineBefore : 'always',
-        properties      : [
-          'display',
-          'position',
-          'top',
-          'right',
-          'bottom',
-          'left',
-        ],
+        emptyLineBefore: 'always',
+        properties: ['display', 'position', 'top', 'right', 'bottom', 'left'],
       },
 
       {
-        emptyLineBefore : 'always',
-        properties      : [
+        emptyLineBefore: 'always',
+        properties: [
           'flex',
           'flex-basis',
           'flex-direction',
@@ -76,8 +62,8 @@ module.exports = {
       },
 
       {
-        emptyLineBefore : 'always',
-        properties      : [
+        emptyLineBefore: 'always',
+        properties: [
           'width',
           'min-width',
           'max-width',
@@ -88,8 +74,8 @@ module.exports = {
       },
 
       {
-        emptyLineBefore : 'always',
-        properties      : [
+        emptyLineBefore: 'always',
+        properties: [
           'margin',
           'margin-top',
           'margin-right',
@@ -99,8 +85,8 @@ module.exports = {
       },
 
       {
-        emptyLineBefore : 'always',
-        properties      : [
+        emptyLineBefore: 'always',
+        properties: [
           'padding',
           'padding-top',
           'padding-right',
@@ -110,16 +96,13 @@ module.exports = {
       },
 
       {
-        emptyLineBefore : 'always',
-        properties      : [
-          'float',
-          'clear',
-        ],
+        emptyLineBefore: 'always',
+        properties: ['float', 'clear'],
       },
 
       {
-        emptyLineBefore : 'always',
-        properties      : [
+        emptyLineBefore: 'always',
+        properties: [
           'columns',
           'column-gap',
           'column-fill',
@@ -131,8 +114,8 @@ module.exports = {
       },
 
       {
-        emptyLineBefore : 'always',
-        properties      : [
+        emptyLineBefore: 'always',
+        properties: [
           'transform',
           'transform-box',
           'transform-origin',
@@ -141,8 +124,8 @@ module.exports = {
       },
 
       {
-        emptyLineBefore : 'always',
-        properties      : [
+        emptyLineBefore: 'always',
+        properties: [
           'transition',
           'transition-delay',
           'transition-duration',
@@ -152,8 +135,8 @@ module.exports = {
       },
       // Border
       {
-        emptyLineBefore : 'always',
-        properties      : [
+        emptyLineBefore: 'always',
+        properties: [
           'border',
           'border-top',
           'border-right',
@@ -186,8 +169,8 @@ module.exports = {
       },
 
       {
-        emptyLineBefore : 'always',
-        properties      : [
+        emptyLineBefore: 'always',
+        properties: [
           'outline',
           'outline-color',
           'outline-offset',
@@ -197,8 +180,8 @@ module.exports = {
       },
       // Background
       {
-        emptyLineBefore : 'always',
-        properties      : [
+        emptyLineBefore: 'always',
+        properties: [
           'background',
           'background-attachment',
           'background-clip',
@@ -213,8 +196,8 @@ module.exports = {
       },
 
       {
-        emptyLineBefore : 'always',
-        properties      : [
+        emptyLineBefore: 'always',
+        properties: [
           'font',
           'font-family',
           'font-size',
@@ -226,17 +209,13 @@ module.exports = {
       },
 
       {
-        emptyLineBefore : 'always',
-        properties      : [
-          'letter-spacing',
-          'line-height',
-          'list-style',
-        ],
+        emptyLineBefore: 'always',
+        properties: ['letter-spacing', 'line-height', 'list-style'],
       },
 
       {
-        emptyLineBefore : 'always',
-        properties      : [
+        emptyLineBefore: 'always',
+        properties: [
           'text-align',
           'text-decoration',
           'text-indent',
@@ -249,16 +228,13 @@ module.exports = {
       },
 
       {
-        emptyLineBefore : 'always',
-        properties      : [
-          'white-space',
-          'word-spacing',
-        ],
+        emptyLineBefore: 'always',
+        properties: ['white-space', 'word-spacing'],
       },
       // Other
       {
-        emptyLineBefore : 'always',
-        properties      : [
+        emptyLineBefore: 'always',
+        properties: [
           'border-collapse',
           'border-spacing',
           'box-shadow',
@@ -283,7 +259,7 @@ module.exports = {
       },
     ],
 
-    'property-blacklist' : [
+    'property-blacklist': [
       // 'background-position',
       // 'right',
       // 'left',
@@ -302,6 +278,6 @@ module.exports = {
       // 'transform-origin',
     ],
 
-    'string-quotes' : 'double',
+    'string-quotes': 'double',
   },
 };

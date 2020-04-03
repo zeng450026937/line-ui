@@ -73,19 +73,17 @@ import Vue from 'vue';
 export default Vue.extend({
   data() {
     return {
-      checked : true,
-      value   : true,
+      checked: true,
+      value: true,
     };
   },
 
-  methods : {
+  methods: {
     toggled(value) {
       this.value = value;
     },
   },
-
 });
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

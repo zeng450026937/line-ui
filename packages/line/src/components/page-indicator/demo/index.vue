@@ -6,43 +6,26 @@
 
 <script>
 export default {
-  name : 'PageIndicatorDemo',
+  name: 'PageIndicatorDemo',
 
-  components : {
+  components: {},
 
-  },
-
-  props : {
-
-  },
+  props: {},
 
   data() {
-    return {
-
-    };
+    return {};
   },
 
-  computed : {
+  computed: {},
 
-  },
+  created() {},
 
-  created() {
+  mounted() {},
 
-  },
+  methods: {},
 
-  mounted() {
-
-  },
-
-  methods : {
-
-  },
-
-  watch : {
-
-  },
+  watch: {},
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

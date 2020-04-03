@@ -7,7 +7,7 @@ export const enableScrollAssist = (
   componentEl: HTMLElement,
   inputEl: HTMLInputElement | HTMLTextAreaElement,
   contentEl: HTMLIonContentElement,
-  keyboardHeight: number,
+  keyboardHeight: number
 ) => {
   let coord: any;
   const touchStart = (ev: Event) => {
@@ -45,7 +45,7 @@ const jsSetFocus = (
   componentEl: HTMLElement,
   inputEl: HTMLInputElement | HTMLTextAreaElement,
   contentEl: HTMLIonContentElement,
-  keyboardHeight: number,
+  keyboardHeight: number
 ) => {
   const scrollData = getScrollData(componentEl, contentEl, keyboardHeight);
   if (Math.abs(scrollData.scrollAmount) < 4) {
@@ -62,22 +62,28 @@ const jsSetFocus = (
   inputEl.focus();
 
   // scroll the input into place
-  contentEl.scrollByPoint(0, scrollData.scrollAmount, scrollData.scrollDuration).then(() => {
-    // the scroll view is in the correct position now
-    // give the native text input focus
-    relocateInput(componentEl, inputEl, false, scrollData.inputSafeY);
+  contentEl
+    .scrollByPoint(0, scrollData.scrollAmount, scrollData.scrollDuration)
+    .then(() => {
+      // the scroll view is in the correct position now
+      // give the native text input focus
+      relocateInput(componentEl, inputEl, false, scrollData.inputSafeY);
 
-    // ensure this is the focused input
-    inputEl.focus();
-  });
+      // ensure this is the focused input
+      inputEl.focus();
+    });
 };
 
-const hasPointerMoved = (threshold: number, startCoord: PointerCoordinates | undefined, endCoord: PointerCoordinates | undefined) => {
+const hasPointerMoved = (
+  threshold: number,
+  startCoord: PointerCoordinates | undefined,
+  endCoord: PointerCoordinates | undefined
+) => {
   if (startCoord && endCoord) {
-    const deltaX = (startCoord.x - endCoord.x);
-    const deltaY = (startCoord.y - endCoord.y);
+    const deltaX = startCoord.x - endCoord.x;
+    const deltaY = startCoord.y - endCoord.y;
     const distance = deltaX * deltaX + deltaY * deltaY;
-    return distance > (threshold * threshold);
+    return distance > threshold * threshold;
   }
   return false;
 };

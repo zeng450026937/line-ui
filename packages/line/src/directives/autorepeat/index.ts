@@ -45,10 +45,12 @@ export function createAutoRepeat(el: HTMLElement, options: AutoRepeatOptions) {
 
   const pointerDown = (ev: Event) => {
     if (!enableRepeat) return;
-    if (('isTrusted' in ev && !ev.isTrusted)
-    || ('pointerType' in ev && !(ev as PointerEvent).pointerType)
-    ) return;
-    if (!ev.composedPath().some(path => path === el)) return;
+    if (
+      ('isTrusted' in ev && !ev.isTrusted) ||
+      ('pointerType' in ev && !(ev as PointerEvent).pointerType)
+    )
+      return;
+    if (!ev.composedPath().some((path) => path === el)) return;
     start(ev);
   };
 
@@ -64,7 +66,6 @@ export function createAutoRepeat(el: HTMLElement, options: AutoRepeatOptions) {
     repeatInterval = val.interval || REPEAT_INTERVAL;
     repeatDelay = val.delay || REPEAT_DELAY;
   };
-
 
   const doc = document;
   const opts = { passive: true };
@@ -88,11 +89,11 @@ export function createAutoRepeat(el: HTMLElement, options: AutoRepeatOptions) {
 
   return {
     enable,
-    update    : setOptions,
+    update: setOptions,
     start,
     stop,
     pointerDown,
-    pointerUp : stop,
+    pointerUp: stop,
     destroy,
   };
 }
@@ -104,7 +105,10 @@ export interface AutoRepeatDirective extends VNodeDirective {
 function inserted(el: HTMLElement, binding: AutoRepeatDirective) {
   if (binding.value === false) return;
 
-  (el as any).vAutoRepeat = createAutoRepeat(el, binding.value as AutoRepeatOptions);
+  (el as any).vAutoRepeat = createAutoRepeat(
+    el,
+    binding.value as AutoRepeatOptions
+  );
 }
 
 function unbind(el: HTMLElement) {
@@ -124,7 +128,7 @@ function update(el: HTMLElement, binding: AutoRepeatDirective) {
     return;
   }
 
-  const { vAutoRepeat } = (el as any);
+  const { vAutoRepeat } = el as any;
 
   if (!vAutoRepeat) {
     inserted(el, binding);
@@ -135,9 +139,8 @@ function update(el: HTMLElement, binding: AutoRepeatDirective) {
   vAutoRepeat.update(binding.value);
 }
 
-
 export const vAutoRepeat = /*#__PURE__*/ defineDirective({
-  name : 'autorepeat',
+  name: 'autorepeat',
   inserted,
   update,
   unbind,

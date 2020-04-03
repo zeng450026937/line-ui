@@ -4,7 +4,4 @@
 import ListItem from '@line-ui/line/src/components/list-view/list-item';
 import ListView from '@line-ui/line/src/components/list-view/list-view';
 
-export {
-  ListItem,
-  ListView,
-};
+export { ListItem, ListView };

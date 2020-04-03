@@ -1,13 +1,7 @@
-import {
-  VNode,
-  VNodeDirective,
-  VueConstructor,
-} from 'vue';
+import { VNode, VNodeDirective, VueConstructor } from 'vue';
 import { directiveInstall as install } from '@line-ui/line/src/utils/install';
 
-export type DirectiveCallback<
-  T extends VNodeDirective = VNodeDirective
-> = (
+export type DirectiveCallback<T extends VNodeDirective = VNodeDirective> = (
   el: HTMLElement,
   binding: T,
   vnode: VNode,
@@ -27,9 +21,9 @@ export interface LineDirectiveOptions<
   unbind?: DirectiveCallback<T>;
 }
 
-export function defineDirective<
-  T extends VNodeDirective = VNodeDirective
->(options: LineDirectiveOptions<T>) {
+export function defineDirective<T extends VNodeDirective = VNodeDirective>(
+  options: LineDirectiveOptions<T>
+) {
   options.install = install;
   return options;
 }

@@ -4,7 +4,4 @@
 import DropdownItem from '@line-ui/line/src/components/dropdown/dropdown-item';
 import Dropdown from '@line-ui/line/src/components/dropdown/dropdown';
 
-export {
-  DropdownItem,
-  Dropdown,
-};
+export { DropdownItem, Dropdown };

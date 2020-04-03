@@ -1,8 +1,5 @@
 /* eslint-disable import/extensions */
-import Vue, {
-  ComponentOptions,
-  VueConstructor,
-} from 'vue';
+import Vue, { ComponentOptions, VueConstructor } from 'vue';
 import { isFunction } from '@line-ui/line/src/utils/helpers';
 
 type AssertsKey = 'component' | 'directive';
@@ -13,15 +10,13 @@ export function createInstall<V extends Vue = Vue>(
 ): {
   (constructor?: VueConstructor): void;
   (options: ComponentOptions<V>): void;
-}
+};
 
-export function createInstall<V extends Vue = Vue>(
-  key: AssertsKey,
-) {
-  const propKey = `${ key }s` as AssertsPropKey;
+export function createInstall<V extends Vue = Vue>(key: AssertsKey) {
+  const propKey = `${key}s` as AssertsPropKey;
   return function install(
     this: any,
-    target: VueConstructor | ComponentOptions<V> = Vue,
+    target: VueConstructor | ComponentOptions<V> = Vue
   ) {
     const { name } = this;
     // constructor

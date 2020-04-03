@@ -3,10 +3,7 @@
 export const getClientWidth = () => {
   if (typeof document === 'undefined') return 0; // SSR
 
-  return Math.max(
-    document.documentElement.clientWidth,
-    window.innerWidth || 0,
-  );
+  return Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
 };
 
 export const getClientHeight = () => {
@@ -14,6 +11,6 @@ export const getClientHeight = () => {
 
   return Math.max(
     document.documentElement.clientHeight,
-    window.innerHeight || 0,
+    window.innerHeight || 0
   );
 };

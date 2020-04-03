@@ -18,37 +18,23 @@
 
 <script>
 export default {
-  name : '',
+  name: '',
 
-  props : {
-
-  },
+  props: {},
 
   data() {
-    return {
-
-    };
+    return {};
   },
 
-  computed : {
+  computed: {},
 
-  },
+  created() {},
 
-  created() {
+  mounted() {},
 
-  },
+  methods: {},
 
-  mounted() {
-
-  },
-
-  methods : {
-
-  },
-
-  watch : {
-
-  },
+  watch: {},
 };
 </script>
 

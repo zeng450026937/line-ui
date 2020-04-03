@@ -14,5 +14,8 @@
   ],
   "private": true,
   "author": "Yealink Inc",
-  "license": "MIT"
+  "license": "MIT",
+  "peerDependencies": {
+    "typescript": ">3.7.2"
+  }
 }

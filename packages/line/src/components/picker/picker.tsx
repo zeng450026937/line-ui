@@ -12,47 +12,44 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('picker');
 
 const buttonWrapperClass = (button: PickerButton) => {
   return {
-    [`line-picker__toolbar-${ button.role }`] : button.role !== undefined,
-    'line-picker__toolbar-button'             : true,
+    [`line-picker__toolbar-${button.role}`]: button.role !== undefined,
+    'line-picker__toolbar-button': true,
   };
 };
 
-
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ usePopup(),
-  ],
+  mixins: [/*#__PURE__*/ usePopup()],
 
-  props : {
-    overlayIndex  : Number,
-    keyboardClose : {
-      type    : Boolean,
-      default : true,
+  props: {
+    overlayIndex: Number,
+    keyboardClose: {
+      type: Boolean,
+      default: true,
     },
-    buttons  : Array,
-    columns  : Array,
-    cssClass : Array,
-    duration : {
-      type    : Number,
-      default : 0,
+    buttons: Array,
+    columns: Array,
+    cssClass: Array,
+    duration: {
+      type: Number,
+      default: 0,
     },
-    showBackdrop : {
-      type    : Boolean,
-      default : true,
+    showBackdrop: {
+      type: Boolean,
+      default: true,
     },
-    backdropDismiss : {
-      type    : Boolean,
-      default : true,
+    backdropDismiss: {
+      type: Boolean,
+      default: true,
     },
-    animated : {
-      type    : Boolean,
-      default : true,
+    animated: {
+      type: Boolean,
+      default: true,
     },
   },
 
   data() {
     return {
-      presented : true,
+      presented: true,
     };
   },
 
@@ -65,7 +62,7 @@ export default /*#__PURE__*/ createComponent({
     });
   },
 
-  methods : {
+  methods: {
     async buttonClick(button: PickerButton) {
       const { role } = button;
       if (role === 'cancel') {
@@ -87,7 +84,7 @@ export default /*#__PURE__*/ createComponent({
         // pass the handler the values from the inputs
         const rtn = await safeCall(button.handler, this.getSelected());
         if (rtn === false) {
-        // if the return value of the handler is false then do not dismiss
+          // if the return value of the handler is false then do not dismiss
           return false;
         }
       }
@@ -97,13 +94,14 @@ export default /*#__PURE__*/ createComponent({
     getSelected() {
       const selected: { [k: string]: any } = {};
       this.columns.forEach((col: any, index: number) => {
-        const selectedColumn = col.selectedIndex !== undefined
-          ? col.options[col.selectedIndex]
-          : undefined;
+        const selectedColumn =
+          col.selectedIndex !== undefined
+            ? col.options[col.selectedIndex]
+            : undefined;
         selected[col.name] = {
-          text        : selectedColumn ? selectedColumn.text : undefined,
-          value       : selectedColumn ? selectedColumn.value : undefined,
-          columnIndex : index,
+          text: selectedColumn ? selectedColumn.text : undefined,
+          value: selectedColumn ? selectedColumn.value : undefined,
+          columnIndex: index,
         };
       });
 
@@ -121,7 +119,12 @@ export default /*#__PURE__*/ createComponent({
 
   render() {
     const {
-      mode, overlayIndex, showBackdrop, backdropDismiss, visible, columns,
+      mode,
+      overlayIndex,
+      showBackdrop,
+      backdropDismiss,
+      visible,
+      columns,
     } = this;
 
     return (
@@ -130,23 +133,22 @@ export default /*#__PURE__*/ createComponent({
         v-show={visible}
         class={[
           bem({
-            mode : true,
+            mode: true,
           }),
           {
             // Used internally for styling
-            [`picker-${ mode }`] : true,
+            [`picker-${mode}`]: true,
           },
         ]}
         style={{
-          zIndex : `${ 20000 + overlayIndex }`,
+          zIndex: `${20000 + overlayIndex}`,
         }}
       >
         <Overlay
           visible={showBackdrop}
           tappable={backdropDismiss}
           onTap={this.onTap}
-        >
-        </Overlay>
+        ></Overlay>
         <div class={bem('wrapper')} role="dialog">
           <div class={bem('toolbar')}>
             {this.buttons.map((b: any) => (
@@ -154,10 +156,7 @@ export default /*#__PURE__*/ createComponent({
                 <button
                   type="button"
                   onClick={() => this.buttonClick(b)}
-                  class={[
-                    bem('button'),
-                    { 'line-activatable': true },
-                  ]}
+                  class={[bem('button'), { 'line-activatable': true }]}
                 >
                   {b.text}
                 </button>
@@ -166,12 +165,13 @@ export default /*#__PURE__*/ createComponent({
           </div>
           <div class={bem('columns')}>
             <div class={bem('above-highlight')}></div>
-              {visible && columns.map((c: any) => (
-              <PickerColumn
-                onColChange={this.colChange}
-                col={c}
-              >
-              </PickerColumn>))}
+            {visible &&
+              columns.map((c: any) => (
+                <PickerColumn
+                  onColChange={this.colChange}
+                  col={c}
+                ></PickerColumn>
+              ))}
             <div class={bem('below-highlight')}></div>
           </div>
         </div>

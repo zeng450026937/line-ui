@@ -14,10 +14,7 @@
         v-model="visible"
       >
       </line-toast>
-      <line-button
-        expand="block"
-        @click="open"
-      >
+      <line-button expand="block" @click="open">
         Pair
         <template #end>
           <line-icon
@@ -36,11 +33,11 @@ import Vue from 'vue';
 export default Vue.extend({
   data() {
     return {
-      visible : false,
+      visible: false,
     };
   },
 
-  methods : {
+  methods: {
     open() {
       this.visible = !this.visible;
     },
@@ -48,5 +45,4 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

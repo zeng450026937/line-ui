@@ -1,10 +1,7 @@
 import { CreateElement } from 'vue';
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
 import { createColorClasses } from '@line-ui/line/src/mixins/use-color';
-import {
-  config,
-  getMode,
-} from '@line-ui/line/src/utils/config';
+import { config, getMode } from '@line-ui/line/src/utils/config';
 import {
   SpinnerConfig,
   SPINNERS,
@@ -19,12 +16,18 @@ function getSpinnerName(name?: string): SpinnerTypes {
   if (spinnerName) {
     return spinnerName;
   }
-  return (mode === 'ios') ? 'lines' : 'circular';
+  return mode === 'ios' ? 'lines' : 'circular';
 }
 
-function buildCircle(h: CreateElement, spinner: SpinnerConfig, duration: number, index: number, total: number) {
+function buildCircle(
+  h: CreateElement,
+  spinner: SpinnerConfig,
+  duration: number,
+  index: number,
+  total: number
+) {
   const data = spinner.fn(duration, index, total);
-  data.style['animation-duration'] = `${ duration }ms`;
+  data.style['animation-duration'] = `${duration}ms`;
 
   return (
     <svg viewBox={data.viewBox || '0 0 64 64'} style={data.style}>
@@ -33,15 +36,23 @@ function buildCircle(h: CreateElement, spinner: SpinnerConfig, duration: number,
         cx={data.cx}
         cy={data.cy}
         r={data.r}
-        style={spinner.elmDuration ? { animationDuration: `${ duration }ms` } : {}}
+        style={
+          spinner.elmDuration ? { animationDuration: `${duration}ms` } : {}
+        }
       />
     </svg>
   );
 }
 
-function buildLine(h: CreateElement, spinner: SpinnerConfig, duration: number, index: number, total: number) {
+function buildLine(
+  h: CreateElement,
+  spinner: SpinnerConfig,
+  duration: number,
+  index: number,
+  total: number
+) {
   const data = spinner.fn(duration, index, total);
-  data.style['animation-duration'] = `${ duration }ms`;
+  data.style['animation-duration'] = `${duration}ms`;
 
   return (
     <svg viewBox={data.viewBox || '0 0 64 64'} style={data.style}>
@@ -51,19 +62,19 @@ function buildLine(h: CreateElement, spinner: SpinnerConfig, duration: number, i
 }
 
 export default /*#__PURE__*/ createComponent({
-  functional : true,
+  functional: true,
 
-  props : {
-    color    : String,
-    duration : Number,
-    type     : String,
-    paused   : Boolean,
+  props: {
+    color: String,
+    duration: Number,
+    type: String,
+    paused: Boolean,
   },
 
   render(h, { props, data }) {
     const spinnerName = getSpinnerName(props.type);
     const spinner = SPINNERS[spinnerName] || SPINNERS.lines;
-    const duration = (props.duration > 10 ? props.duration : spinner.dur);
+    const duration = props.duration > 10 ? props.duration : spinner.dur;
     const svgs: any[] = [];
 
     if (spinner.circles !== undefined) {
@@ -79,13 +90,13 @@ export default /*#__PURE__*/ createComponent({
       <div
         class={[
           bem({
-            [spinnerName] : true,
-            paused        : !!props.paused || config.getBoolean('testing'),
+            [spinnerName]: true,
+            paused: !!props.paused || config.getBoolean('testing'),
           }),
           createColorClasses(props.color),
         ]}
         role="progressbar"
-        style={spinner.elmDuration && { animationDuration: `${ duration }ms` }}
+        style={spinner.elmDuration && { animationDuration: `${duration}ms` }}
         {...data}
       >
         {svgs}

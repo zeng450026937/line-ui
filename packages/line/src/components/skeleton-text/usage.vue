@@ -14,7 +14,7 @@
         <line-item>
           <template #start>
             <line-thumbnail>
-              <img src="/avatar-finn.png">
+              <img src="/avatar-finn.png" />
             </line-thumbnail>
           </template>
           <line-label>
@@ -26,7 +26,7 @@
         <line-item>
           <template #start>
             <line-thumbnail>
-              <img src="/avatar-han.png">
+              <img src="/avatar-han.png" />
             </line-thumbnail>
           </template>
           <line-label>
@@ -38,7 +38,7 @@
         <line-item>
           <template #start>
             <line-thumbnail>
-              <img src="/avatar-rey.png">
+              <img src="/avatar-rey.png" />
             </line-thumbnail>
           </template>
           <line-label>
@@ -50,7 +50,7 @@
         <line-item>
           <template #start>
             <line-thumbnail>
-              <img src="/avatar-luke.png">
+              <img src="/avatar-luke.png" />
             </line-thumbnail>
           </template>
           <line-label>
@@ -62,7 +62,7 @@
         <line-item>
           <template #start>
             <line-thumbnail>
-              <img src="/avatar-poe.png">
+              <img src="/avatar-poe.png" />
             </line-thumbnail>
           </template>
           <line-label>
@@ -74,7 +74,7 @@
         <line-item>
           <template #start>
             <line-thumbnail>
-              <img src="/avatar-ben.png">
+              <img src="/avatar-ben.png" />
             </line-thumbnail>
           </template>
           <line-label>
@@ -88,13 +88,10 @@
         <line-list-header>
           <line-skeleton-text
             animated
-            style="width: 80px"
+            style="width: 80px;"
           ></line-skeleton-text>
         </line-list-header>
-        <line-item
-          v-for="(item, index) in 7"
-          :key="index"
-        >
+        <line-item v-for="(item, index) in 7" :key="index">
           <template #start>
             <line-thumbnail>
               <line-skeleton-text></line-skeleton-text>
@@ -104,19 +101,19 @@
             <h3>
               <line-skeleton-text
                 animated
-                style="width: 80%"
+                style="width: 80%;"
               ></line-skeleton-text>
             </h3>
             <p>
               <line-skeleton-text
                 animated
-                style="width: 60%"
+                style="width: 60%;"
               ></line-skeleton-text>
             </p>
             <p>
               <line-skeleton-text
                 animated
-                style="width: 30%"
+                style="width: 30%;"
               ></line-skeleton-text>
             </p>
           </line-label>
@@ -132,11 +129,11 @@ import Vue from 'vue';
 export default Vue.extend({
   data() {
     return {
-      displayData : false,
+      displayData: false,
     };
   },
 
-  methods : {
+  methods: {
     toggleSkeleton() {
       this.displayData = !this.displayData;
     },

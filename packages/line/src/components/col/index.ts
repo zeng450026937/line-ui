@@ -3,6 +3,4 @@
 
 import Col from '@line-ui/line/src/components/col/col';
 
-export {
-  Col,
-};
+export { Col };

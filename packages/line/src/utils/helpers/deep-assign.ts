@@ -1,8 +1,4 @@
-import {
-  hasOwn,
-  isDef,
-  isObject,
-} from '@line-ui/line/src/utils/helpers';
+import { hasOwn, isDef, isObject } from '@line-ui/line/src/utils/helpers';
 
 type ObjectIndex = Record<string, any>;
 

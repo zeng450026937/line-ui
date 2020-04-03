@@ -14,7 +14,7 @@ const { skipBuild } = args;
 const { skipTsd = true } = args;
 const packages = fs
   .readdirSync(path.resolve(__dirname, '../packages'))
-  .filter(p => !p.endsWith('.ts') && !p.startsWith('.'));
+  .filter((p) => !p.endsWith('.ts') && !p.startsWith('.'));
 
 const skippedPackages = [];
 
@@ -28,13 +28,15 @@ const versionIncrements = [
   'prerelease',
 ];
 
-const inc = i => semver.inc(currentVersion, i, preId);
-const bin = name => path.resolve(__dirname, `../node_modules/.bin/${ name }`);
-const run = (bin, args, opts = {}) => execa(bin, args, { stdio: 'inherit', ...opts });
-const dryRun = (bin, args, opts = {}) => console.log(chalk.blue(`[dryrun] ${ bin } ${ args.join(' ') }`), opts);
+const inc = (i) => semver.inc(currentVersion, i, preId);
+const bin = (name) => path.resolve(__dirname, `../node_modules/.bin/${name}`);
+const run = (bin, args, opts = {}) =>
+  execa(bin, args, { stdio: 'inherit', ...opts });
+const dryRun = (bin, args, opts = {}) =>
+  console.log(chalk.blue(`[dryrun] ${bin} ${args.join(' ')}`), opts);
 const runIfNotDry = isDryRun ? dryRun : run;
-const getPkgRoot = pkg => path.resolve(__dirname, `../packages/${ pkg }`);
-const step = msg => console.log(chalk.cyan(msg));
+const getPkgRoot = (pkg) => path.resolve(__dirname, `../packages/${pkg}`);
+const step = (msg) => console.log(chalk.cyan(msg));
 
 async function main() {
   let targetVersion = args._[0];
@@ -42,32 +44,36 @@ async function main() {
   if (!targetVersion) {
     // no explicit version, offer suggestions
     const { release } = await prompt({
-      type    : 'select',
-      name    : 'release',
-      message : 'Select release type',
-      choices : versionIncrements.map(i => `${ i } (${ inc(i) })`).concat(['custom']),
+      type: 'select',
+      name: 'release',
+      message: 'Select release type',
+      choices: versionIncrements
+        .map((i) => `${i} (${inc(i)})`)
+        .concat(['custom']),
     });
 
     if (release === 'custom') {
-      targetVersion = (await prompt({
-        type    : 'input',
-        name    : 'version',
-        message : 'Input custom version',
-        initial : currentVersion,
-      })).version;
+      targetVersion = (
+        await prompt({
+          type: 'input',
+          name: 'version',
+          message: 'Input custom version',
+          initial: currentVersion,
+        })
+      ).version;
     } else {
       targetVersion = release.match(/\((.*)\)/)[1];
     }
   }
 
   if (!semver.valid(targetVersion)) {
-    throw new Error(`invalid target version: ${ targetVersion }`);
+    throw new Error(`invalid target version: ${targetVersion}`);
   }
 
   const { yes } = await prompt({
-    type    : 'confirm',
-    name    : 'yes',
-    message : `Releasing v${ targetVersion }. Confirm?`,
+    type: 'confirm',
+    name: 'yes',
+    message: `Releasing v${targetVersion}. Confirm?`,
   });
 
   if (!yes) {
@@ -108,7 +114,7 @@ async function main() {
   if (stdout) {
     step('\nCommitting changes...');
     await runIfNotDry('git', ['add', '-A']);
-    await runIfNotDry('git', ['commit', '-m', `release: v${ targetVersion }`]);
+    await runIfNotDry('git', ['commit', '-m', `release: v${targetVersion}`]);
   } else {
     console.log('No changes to commit.');
   }
@@ -121,8 +127,8 @@ async function main() {
 
   // push to GitHub
   step('\nPushing to GitHub...');
-  await runIfNotDry('git', ['tag', `v${ targetVersion }`]);
-  await runIfNotDry('git', ['push', 'origin', `refs/tags/v${ targetVersion }`]);
+  await runIfNotDry('git', ['tag', `v${targetVersion}`]);
+  await runIfNotDry('git', ['push', 'origin', `refs/tags/v${targetVersion}`]);
   await runIfNotDry('git', ['push']);
 
   if (isDryRun) {
@@ -132,10 +138,10 @@ async function main() {
   if (skippedPackages.length) {
     console.log(
       chalk.yellow(
-        `The following packages are skipped and NOT published:\n- ${ skippedPackages.join(
-          '\n- ',
-        ) }`,
-      ),
+        `The following packages are skipped and NOT published:\n- ${skippedPackages.join(
+          '\n- '
+        )}`
+      )
     );
   }
   console.log();
@@ -145,7 +151,7 @@ function updateVersions(version) {
   // 1. update root package.json
   updatePackage(path.resolve(__dirname, '..'), version);
   // 2. update all packages
-  packages.forEach(p => updatePackage(getPkgRoot(p), version));
+  packages.forEach((p) => updatePackage(getPkgRoot(p), version));
 }
 
 function updatePackage(pkgRoot, version) {
@@ -154,19 +160,20 @@ function updatePackage(pkgRoot, version) {
   pkg.version = version;
   updateDeps(pkg, 'dependencies', version);
   updateDeps(pkg, 'peerDependencies', version);
-  fs.writeFileSync(pkgPath, `${ JSON.stringify(pkg, null, 2) }\n`);
+  fs.writeFileSync(pkgPath, `${JSON.stringify(pkg, null, 2)}\n`);
 }
 
 function updateDeps(pkg, depType, version) {
   const deps = pkg[depType];
   if (!deps) return;
-  Object.keys(deps).forEach(dep => {
+  Object.keys(deps).forEach((dep) => {
     if (
-      dep === '@line-ui/line'
-      || (dep.startsWith('@line-ui') && packages.includes(dep.replace(/^@line-ui\//, '')))
+      dep === '@line-ui/line' ||
+      (dep.startsWith('@line-ui') &&
+        packages.includes(dep.replace(/^@line-ui\//, '')))
     ) {
       console.log(
-        chalk.yellow(`${ pkg.name } -> ${ depType } -> ${ dep }@${ version }`),
+        chalk.yellow(`${pkg.name} -> ${depType} -> ${dep}@${version}`)
       );
       deps[dep] = version;
     }
@@ -186,7 +193,7 @@ async function publishPackage(pkgName, version, runIfNotDry) {
 
   const releaseTag = semver.prerelease(version)[0] || null;
 
-  step(`Publishing ${ pkgName }...`);
+  step(`Publishing ${pkgName}...`);
   try {
     await runIfNotDry(
       'yarn',
@@ -199,20 +206,20 @@ async function publishPackage(pkgName, version, runIfNotDry) {
         'public',
       ],
       {
-        cwd   : pkgRoot,
-        stdio : 'pipe',
-      },
+        cwd: pkgRoot,
+        stdio: 'pipe',
+      }
     );
-    console.log(chalk.green(`Successfully published ${ pkgName }@${ version }`));
+    console.log(chalk.green(`Successfully published ${pkgName}@${version}`));
   } catch (e) {
     if (e.stderr.match(/previously published/)) {
-      console.log(chalk.red(`Skipping already published: ${ pkgName }`));
+      console.log(chalk.red(`Skipping already published: ${pkgName}`));
     } else {
       throw e;
     }
   }
 }
 
-main().catch(err => {
+main().catch((err) => {
   console.error(err);
 });

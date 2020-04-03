@@ -15,13 +15,13 @@ const removeRipple = (ripple: HTMLElement, effect?: HTMLElement) => {
 export type RippleOption = {
   unbounded: boolean;
   delay: boolean | number;
-}
+};
 
 export function createRippleEffect(el: HTMLElement, options: RippleOption) {
   const { unbounded = false } = options;
 
   const addRipple = (x: number, y: number) => {
-    return new Promise<() => void>(resolve => {
+    return new Promise<() => void>((resolve) => {
       const rect = el.getBoundingClientRect();
       const { width } = rect;
       const { height } = rect;
@@ -45,11 +45,11 @@ export function createRippleEffect(el: HTMLElement, options: RippleOption) {
       ripple.classList.add('ripple');
 
       const { style } = ripple;
-      style.top = `${ styleY }px`;
-      style.left = `${ styleX }px`;
-      style.width = style.height = `${ initialSize }px`;
-      style.setProperty('--final-scale', `${ finalScale }`);
-      style.setProperty('--translate-end', `${ moveX }px, ${ moveY }px`);
+      style.top = `${styleY}px`;
+      style.left = `${styleX}px`;
+      style.width = style.height = `${initialSize}px`;
+      style.setProperty('--final-scale', `${finalScale}`);
+      style.setProperty('--translate-end', `${moveX}px, ${moveY}px`);
 
       const effect = document.createElement('div');
       effect.classList.add('ripple-effect');
@@ -111,7 +111,7 @@ function update(el: HTMLElement, binding: RippleVNodeDirective) {
 }
 
 export const vRipple = /*#__PURE__*/ defineDirective({
-  name : 'ripple',
+  name: 'ripple',
   inserted,
   update,
   unbind,

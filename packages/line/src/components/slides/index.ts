@@ -3,6 +3,4 @@
 
 import Slides from '@line-ui/line/src/components/slides/slides';
 
-export {
-  Slides,
-};
+export { Slides };

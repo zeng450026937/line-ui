@@ -3,6 +3,4 @@
 
 import Reorder from '@line-ui/line/src/components/reorder/reorder';
 
-export {
-  Reorder,
-};
+export { Reorder };

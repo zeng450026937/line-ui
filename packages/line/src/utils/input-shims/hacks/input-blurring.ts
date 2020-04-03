@@ -1,4 +1,3 @@
-
 const SKIP_SELECTOR = 'input, textarea, [no-blur]';
 
 export const enableInputBlurring = () => {

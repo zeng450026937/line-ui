@@ -5,7 +5,7 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('reorder');
 export default /*#__PURE__*/ createComponent({
   data() {
     return {
-      reorderIndex : -1,
+      reorderIndex: -1,
     };
   },
 
@@ -14,16 +14,14 @@ export default /*#__PURE__*/ createComponent({
 
     return (
       <div class={bem()}>
-        {
-          this.slots() || (
-            <line-icon
-              class={bem('icon')}
-              size="small"
-              name={reorderIcon}
-              lazy={false}
-            />
-          )
-        }
+        {this.slots() || (
+          <line-icon
+            class={bem('icon')}
+            size="small"
+            name={reorderIcon}
+            lazy={false}
+          />
+        )}
       </div>
     );
   },

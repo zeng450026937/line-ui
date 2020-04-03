@@ -9,43 +9,28 @@
 import { TextArea as LineTextArea } from '@line-ui/skyline/src/components/text-area';
 
 export default {
-  name : 'TextAreaDemo',
+  name: 'TextAreaDemo',
 
-  components : {
+  components: {
     LineTextArea,
   },
 
-  props : {
-
-  },
+  props: {},
 
   data() {
-    return {
-
-    };
+    return {};
   },
 
-  computed : {
+  computed: {},
 
-  },
+  created() {},
 
-  created() {
+  mounted() {},
 
-  },
+  methods: {},
 
-  mounted() {
-
-  },
-
-  methods : {
-
-  },
-
-  watch : {
-
-  },
+  watch: {},
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

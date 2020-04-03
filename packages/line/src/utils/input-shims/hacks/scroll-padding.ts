@@ -27,9 +27,9 @@ const setScrollPadding = (input: HTMLElement, keyboardHeight: number) => {
     return;
   }
   if (
-    input.parentElement
-    && input.parentElement.parentElement
-    && input.parentElement.parentElement.tagName === 'LINE-SEARCHBAR'
+    input.parentElement &&
+    input.parentElement.parentElement &&
+    input.parentElement.parentElement.tagName === 'LINE-SEARCHBAR'
   ) {
     return;
   }
@@ -44,7 +44,7 @@ const setScrollPadding = (input: HTMLElement, keyboardHeight: number) => {
   }
 
   if (keyboardHeight > 0) {
-    el.style.setProperty('--keyboard-offset', `${ keyboardHeight }px`);
+    el.style.setProperty('--keyboard-offset', `${keyboardHeight}px`);
   } else {
     (el as any)[PADDING_TIMER_KEY] = setTimeout(() => {
       el.style.setProperty('--keyboard-offset', '0px');

@@ -15,59 +15,59 @@ const findItemLabel = (componentEl: HTMLElement) => {
 let inputIds = 0;
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
+  mixins: [
     /*#__PURE__*/ useModel('nativeValue', { event: 'inputChange' }),
     /*#__PURE__*/ useColor(),
   ],
 
-  inject : {
-    Item : { default: undefined },
+  inject: {
+    Item: { default: undefined },
   },
 
-  props : {
-    accept         : String,
-    autocapitalize : {
-      type    : String,
-      default : 'off',
+  props: {
+    accept: String,
+    autocapitalize: {
+      type: String,
+      default: 'off',
     },
-    autocomplete : {
-      type    : String,
-      default : 'off',
+    autocomplete: {
+      type: String,
+      default: 'off',
     },
-    autocorrect : {
-      type    : String,
-      default : 'off',
+    autocorrect: {
+      type: String,
+      default: 'off',
     },
-    autofocus   : Boolean,
-    clearInput  : Boolean,
-    clearOnEdit : Boolean,
-    inputmode   : {
-      type    : String,
-      default : 'text',
+    autofocus: Boolean,
+    clearInput: Boolean,
+    clearOnEdit: Boolean,
+    inputmode: {
+      type: String,
+      default: 'text',
     },
-    max         : String,
-    maxlength   : Number,
-    min         : String,
-    multiple    : Boolean,
-    pattern     : String,
-    placeholder : String,
-    readonly    : Boolean,
-    size        : Number,
-    type        : {
-      type    : String,
-      default : 'text',
+    max: String,
+    maxlength: Number,
+    min: String,
+    multiple: Boolean,
+    pattern: String,
+    placeholder: String,
+    readonly: Boolean,
+    size: Number,
+    type: {
+      type: String,
+      default: 'text',
     },
-    disabled : Boolean,
+    disabled: Boolean,
   },
 
   data() {
     return {
-      hasFocus         : false,
-      didBlurAfterEdit : false,
+      hasFocus: false,
+      didBlurAfterEdit: false,
     };
   },
 
-  methods : {
+  methods: {
     /**
      * Sets focus on the specified `line-input`. Use this method instead of the global
      * `input.focus()`.
@@ -91,41 +91,40 @@ export default /*#__PURE__*/ createComponent({
 
     shouldClearOnEdit() {
       const { type, clearOnEdit } = this;
-      return (clearOnEdit === undefined)
-        ? type === 'password'
-        : clearOnEdit;
+      return clearOnEdit === undefined ? type === 'password' : clearOnEdit;
     },
 
     getValue(): string {
-      return typeof this.nativeValue === 'number' ? this.nativeValue.toString()
+      return typeof this.nativeValue === 'number'
+        ? this.nativeValue.toString()
         : (this.nativeValue || '').toString();
     },
 
     emitStyle() {
       if (!this.Item) return;
 
-      this.Item.itemStyle(
-        'input',
-        {
-          interactive            : true,
-          input                  : true,
-          'has-placeholder'      : this.placeholder != null,
-          'has-value'            : this.hasValue(),
-          'has-focus'            : this.hasFocus,
-          'interactive-disabled' : this.disabled,
-        },
-      );
+      this.Item.itemStyle('input', {
+        interactive: true,
+        input: true,
+        'has-placeholder': this.placeholder != null,
+        'has-value': this.hasValue(),
+        'has-focus': this.hasFocus,
+        'interactive-disabled': this.disabled,
+      });
     },
 
     setInputValue(): void {
       const { input } = this.$refs;
-      if ((input as HTMLInputElement).value === this.inputValue || !input) return;
+      if ((input as HTMLInputElement).value === this.inputValue || !input)
+        return;
       (input as HTMLInputElement).value = this.inputValue;
     },
 
     onInput(ev: Event): void {
       const input = ev.target as HTMLInputElement | null;
-      if (input) { this.nativeValue = input.value || ''; }
+      if (input) {
+        this.nativeValue = input.value || '';
+      }
     },
 
     onBlur(): void {
@@ -203,7 +202,7 @@ export default /*#__PURE__*/ createComponent({
   },
 
   beforeMount() {
-    this.inputId = `line-input-${ inputIds++ }`;
+    this.inputId = `line-input-${inputIds++}`;
     this.emitStyle();
   },
 
@@ -212,7 +211,7 @@ export default /*#__PURE__*/ createComponent({
     this.nativeInput = nativeInput;
   },
 
-  watch : {
+  watch: {
     disabled() {
       this.disabledChanged();
     },
@@ -220,17 +219,28 @@ export default /*#__PURE__*/ createComponent({
     nativeValue() {
       this.emitStyle();
     },
-
   },
 
   render() {
-    const labelId = `${ this.inputId }-lbl`;
+    const labelId = `${this.inputId}-lbl`;
     const label = findItemLabel(this.$el as HTMLElement);
 
     const {
-      nativeValue, hasFocus, accept, type, maxlength, readonly,
-      placeholder, autocomplete, disabled, max, min,
-      size, autoFocus, pattern, required,
+      nativeValue,
+      hasFocus,
+      accept,
+      type,
+      maxlength,
+      readonly,
+      placeholder,
+      autocomplete,
+      disabled,
+      max,
+      min,
+      size,
+      autoFocus,
+      pattern,
+      required,
     } = this;
 
     if (label) {
@@ -242,8 +252,8 @@ export default /*#__PURE__*/ createComponent({
         class={[
           bem(),
           {
-            'has-value' : nativeValue && (nativeValue as string).length,
-            'has-focus' : hasFocus,
+            'has-value': nativeValue && (nativeValue as string).length,
+            'has-focus': hasFocus,
           },
         ]}
         on={this.$listeners}
@@ -269,10 +279,9 @@ export default /*#__PURE__*/ createComponent({
           onFocus={this.onFocus}
           onBlur={this.onBlur}
           onChange={this.onChange}
-        >
-        </input>
-        {
-          (this.clearInput && !readonly && !disabled) && <button
+        ></input>
+        {this.clearInput && !readonly && !disabled && (
+          <button
             type="button"
             class="input-clear-icon"
             tabindex="-1"
@@ -280,9 +289,8 @@ export default /*#__PURE__*/ createComponent({
             onMouseDown={this.clearTextInput}
             onClick={this.clearTextInput}
           />
-        }
+        )}
       </div>
     );
   },
-
 });

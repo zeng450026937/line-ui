@@ -27,7 +27,11 @@ export interface MenuI {
 
 export interface MenuControllerI {
   _createAnimation(type: string, menuCmp: MenuI): Promise<Animation>;
-  _setOpen(menu: MenuI, shouldOpen: boolean, animated: boolean): Promise<boolean>;
+  _setOpen(
+    menu: MenuI,
+    shouldOpen: boolean,
+    animated: boolean
+  ): Promise<boolean>;
   _register(menu: MenuI): void;
   _unregister(menu: MenuI): void;
   _setActiveMenu(menu: MenuI): void;

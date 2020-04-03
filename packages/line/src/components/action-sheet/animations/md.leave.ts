@@ -1,7 +1,4 @@
-import {
-  Animation,
-  createAnimation,
-} from '@line-ui/line/src/utils/animation';
+import { Animation, createAnimation } from '@line-ui/line/src/utils/animation';
 
 /**
  * MD Action Sheet Leave Animation

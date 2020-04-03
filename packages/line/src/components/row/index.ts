@@ -3,6 +3,4 @@
 
 import Row from '@line-ui/line/src/components/row/row';
 
-export {
-  Row,
-};
+export { Row };

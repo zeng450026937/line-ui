@@ -9,7 +9,9 @@ import { Tooltip } from '@line-ui/line/src/components/tooltip';
 
 import { createController } from '@line-ui/line/src/controllers/factory';
 
-export const ActionSheetController = /*#__PURE__*/ createController(ActionSheet);
+export const ActionSheetController = /*#__PURE__*/ createController(
+  ActionSheet
+);
 export const AlertController = /*#__PURE__*/ createController(Alert);
 export const LoadingController = /*#__PURE__*/ createController(Loading);
 export const PickerController = /*#__PURE__*/ createController(Picker);

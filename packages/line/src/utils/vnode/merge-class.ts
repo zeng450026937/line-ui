@@ -12,16 +12,12 @@ export const mergeClass = (exist?: any, value?: any) => {
 };
 
 export const mergeStaticClass = (exist?: string, value?: string) => {
-  return exist
-    ? value
-      ? (`${ exist } ${ value }`)
-      : exist
-    : (value || '');
+  return exist ? (value ? `${exist} ${value}` : exist) : value || '';
 };
 
 export const renderClass = (
   staticClass?: string,
-  dynamicClass?: any,
+  dynamicClass?: any
 ): string => {
   if (!isDef(staticClass) && !isDef(dynamicClass)) return '';
   /* eslint-disable-next-line @typescript-eslint/no-use-before-define */

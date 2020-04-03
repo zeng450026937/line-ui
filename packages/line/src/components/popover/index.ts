@@ -3,6 +3,4 @@
 
 import Popover from '@line-ui/line/src/components/popover/popover';
 
-export {
-  Popover,
-};
+export { Popover };

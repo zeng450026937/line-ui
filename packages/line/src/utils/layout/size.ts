@@ -25,16 +25,20 @@ export class Size {
     return this.width >= 0 && this.height >= 0;
   }
 
-  scale(width: number, height: number, mode: AspectRatioMode = AspectRatioMode.IgnoreAspectRatio) {
+  scale(
+    width: number,
+    height: number,
+    mode: AspectRatioMode = AspectRatioMode.IgnoreAspectRatio
+  ) {
     const ratio = this.width / this.height;
     switch (mode) {
       case AspectRatioMode.KeepAspectRatio:
-        this.width = ratio > 1 ? width : (width * ratio);
-        this.height = ratio > 1 ? (height * ratio) : height;
+        this.width = ratio > 1 ? width : width * ratio;
+        this.height = ratio > 1 ? height * ratio : height;
         break;
       case AspectRatioMode.KeepAspectRatioByExpanding:
-        this.width = ratio > 1 ? (width * ratio) : width;
-        this.height = ratio > 1 ? height : (height * ratio);
+        this.width = ratio > 1 ? width * ratio : width;
+        this.height = ratio > 1 ? height : height * ratio;
         break;
       case AspectRatioMode.IgnoreAspectRatio:
       default:
@@ -45,7 +49,11 @@ export class Size {
     return this;
   }
 
-  scaled(width: number, height: number, mode = AspectRatioMode.IgnoreAspectRatio) {
+  scaled(
+    width: number,
+    height: number,
+    mode = AspectRatioMode.IgnoreAspectRatio
+  ) {
     const scaled = new Size(this.width, this.height);
     scaled.scale(width, height, mode);
     return scaled;

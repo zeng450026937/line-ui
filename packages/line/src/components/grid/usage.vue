@@ -92,8 +92,10 @@ export default Vue.extend({});
 
 <style lang="scss" scoped>
 .line-col > div {
-    background-color: #f7f7f7;
-    border: solid 1px #ddd;
-    padding: 10px;
+  padding: 10px;
+
+  border: solid 1px #ddd;
+
+  background-color: #f7f7f7;
 }
 </style>

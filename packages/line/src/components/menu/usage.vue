@@ -42,7 +42,9 @@
         </line-content>
       </line-menu>
       <div id="main-content">
-        <line-button @click="openMenu('overlay')">openMenu - overlay</line-button>
+        <line-button @click="openMenu('overlay')"
+          >openMenu - overlay</line-button
+        >
         <line-button @click="openMenu('push')">openMenu - push</line-button>
         <line-button @click="openMenu('reveal')">openMenu - reveal</line-button>
       </div>
@@ -56,19 +58,19 @@ import Vue from 'vue';
 export default Vue.extend({
   data() {
     return {
-      type  : 'overlay',
-      value : false,
+      type: 'overlay',
+      value: false,
     };
   },
 
-  methods : {
+  methods: {
     openMenu(type) {
       this.type = type;
       this.value = !this.value;
     },
   },
 
-  watch : {
+  watch: {
     value(val) {
       console.log('watch: value', val);
     },

@@ -1,16 +1,14 @@
 <template>
-  <div class="tool-tip"
-       ref="reference"
-       v-remote="false">
-    <span class="tool-tip__content"
-          v-show="visible"
-          ref="content">
+  <div class="tool-tip" ref="reference" v-remote="false">
+    <span class="tool-tip__content" v-show="visible" ref="content">
       {{ text }}
     </span>
-    <span @mouseenter="onMouseenter"
-          @touchStart="onMouseenter"
-          @mouseleave="onMouseleave"
-          @touchEnd="onMouseleave">
+    <span
+      @mouseenter="onMouseenter"
+      @touchStart="onMouseenter"
+      @mouseleave="onMouseleave"
+      @touchEnd="onMouseleave"
+    >
       <slot name="default"></slot>
     </span>
   </div>
@@ -23,53 +21,53 @@ import { Popup } from '@line-ui/skyline/src/components/popup';
 export { Placement };
 
 export default {
-  name : 'ToolTip',
+  name: 'ToolTip',
 
-  extends : Popup,
+  extends: Popup,
 
-  model : {
-    prop  : 'value',
-    event : 'change',
+  model: {
+    prop: 'value',
+    event: 'change',
   },
 
-  props : {
-    delay : {
-      type    : Number,
-      default : 0,
+  props: {
+    delay: {
+      type: Number,
+      default: 0,
     },
-    text : {
-      type    : String,
-      default : '',
+    text: {
+      type: String,
+      default: '',
     },
-    timeout : {
-      type    : Number,
-      default : 0,
+    timeout: {
+      type: Number,
+      default: 0,
     },
-    value : {
-      type    : Boolean,
-      default : false,
+    value: {
+      type: Boolean,
+      default: false,
     },
-    placement : {
-      type    : String,
-      default : 'top',
+    placement: {
+      type: String,
+      default: 'top',
     },
   },
 
   provide() {
     return {
-      ToolTip : {
-        delay   : this.delay,
-        text    : this.text,
-        timeout : this.timeout,
-        toolTip : this,
-        visible : this.visible,
+      ToolTip: {
+        delay: this.delay,
+        text: this.text,
+        timeout: this.timeout,
+        toolTip: this,
+        visible: this.visible,
       },
     };
   },
 
   data() {
     return {
-      visible : this.value,
+      visible: this.value,
     };
   },
 
@@ -82,9 +80,7 @@ export default {
     this.$emit('reset');
   },
 
-  mounted() {
-
-  },
+  mounted() {},
 
   beforeDestroy() {
     if (this.popper) {
@@ -93,20 +89,20 @@ export default {
     }
   },
 
-  methods : {
-    hide() { },
-    show() { },
+  methods: {
+    hide() {},
+    show() {},
     onMouseenter() {
       const { reference, content } = this.$refs;
       this.visible = true;
       this.popper = new Popper(reference, content, {
-        placement     : this.placement,
-        eventsEnabled : false,
-        modifiers     : {
-          flip            : { enabled: true },
-          preventOverflow : {
-            enabled             : true,
-            escapeWithReference : false,
+        placement: this.placement,
+        eventsEnabled: false,
+        modifiers: {
+          flip: { enabled: true },
+          preventOverflow: {
+            enabled: true,
+            escapeWithReference: false,
           },
         },
       });
@@ -115,12 +111,11 @@ export default {
       this.visible = false;
     },
   },
-  watch : {
+  watch: {
     visible(val) {
       this.$emit('change', val);
     },
   },
-
 };
 </script>
 
@@ -128,17 +123,26 @@ export default {
 .tool-tip {
   position: relative;
   &__content {
-    height: 32px;
-    color: #ffffff;
-    background-color: var(--dark);
-    font-size: 14px;
-    border-radius: 4px;
-    padding: 0 20px;
-    margin: 10px;
     display: flex;
+
     align-items: center;
-    white-space: nowrap;
+
+    height: 32px;
+
+    margin: 10px;
+
+    padding: 0 20px;
+
+    border-radius: 4px;
+
+    background-color: var(--dark);
+    color: #ffffff;
+
+    font-size: 14px;
+
     line-height: 1.2;
+
+    white-space: nowrap;
   }
 }
 </style>

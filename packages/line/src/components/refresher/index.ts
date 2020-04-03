@@ -3,6 +3,4 @@
 
 import Refresher from '@line-ui/line/src/components/refresher/refresher';
 
-export {
-  Refresher,
-};
+export { Refresher };

@@ -16,44 +16,44 @@ const findItemLabel = (componentEl: HTMLElement) => {
 let textareaIds = 0;
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
+  mixins: [
     /*#__PURE__*/ useModel('nativeValue', { event: 'textareaChange' }),
     /*#__PURE__*/ useColor(),
   ],
 
-  inject : {
-    Item : { default: undefined },
+  inject: {
+    Item: { default: undefined },
   },
 
-  props : {
-    autocapitalize : {
-      type    : String,
-      default : 'none',
+  props: {
+    autocapitalize: {
+      type: String,
+      default: 'none',
     },
-    autofocus   : Boolean,
-    clearOnEdit : Boolean,
-    disabled    : Boolean,
-    maxlength   : Number,
-    minlength   : Number,
-    placeholder : String,
-    readonly    : Boolean,
-    required    : Boolean,
-    spellcheck  : Boolean,
-    cols        : Number,
-    rows        : Number,
-    wrap        : String,
-    autoGrow    : Boolean,
+    autofocus: Boolean,
+    clearOnEdit: Boolean,
+    disabled: Boolean,
+    maxlength: Number,
+    minlength: Number,
+    placeholder: String,
+    readonly: Boolean,
+    required: Boolean,
+    spellcheck: Boolean,
+    cols: Number,
+    rows: Number,
+    wrap: String,
+    autoGrow: Boolean,
   },
 
   data() {
     return {
-      hasFocus         : false,
-      didBlurAfterEdit : false,
+      hasFocus: false,
+      didBlurAfterEdit: false,
     };
   },
 
   beforeMount() {
-    this.inputId = `line-input-${ textareaIds++ }`;
+    this.inputId = `line-input-${textareaIds++}`;
   },
 
   mounted() {
@@ -64,7 +64,7 @@ export default /*#__PURE__*/ createComponent({
     this.emitStyle();
   },
 
-  methods : {
+  methods: {
     disabledChanged() {
       this.emitStyle();
     },
@@ -75,7 +75,7 @@ export default /*#__PURE__*/ createComponent({
       if (nativeInput && this.autoGrow) {
         this.$nextTick(() => {
           nativeInput.style.height = 'inherit';
-          nativeInput.style.height = `${ nativeInput.scrollHeight }px`;
+          nativeInput.style.height = `${nativeInput.scrollHeight}px`;
         });
       }
     },
@@ -100,18 +100,15 @@ export default /*#__PURE__*/ createComponent({
     emitStyle() {
       if (!this.Item) return;
 
-      this.Item.itemStyle(
-        'textarea',
-        {
-          interactive            : true,
-          textarea               : true,
-          input                  : true,
-          'interactive-disabled' : this.disabled,
-          'has-placeholder'      : this.placeholder != null,
-          'has-value'            : this.hasValue(),
-          'has-focus'            : this.hasFocus,
-        },
-      );
+      this.Item.itemStyle('textarea', {
+        interactive: true,
+        textarea: true,
+        input: true,
+        'interactive-disabled': this.disabled,
+        'has-placeholder': this.placeholder != null,
+        'has-value': this.hasValue(),
+        'has-focus': this.hasFocus,
+      });
     },
 
     /**
@@ -178,7 +175,7 @@ export default /*#__PURE__*/ createComponent({
     },
   },
 
-  watch : {
+  watch: {
     value() {
       this.runAutoGrow();
       this.emitStyle();
@@ -191,30 +188,37 @@ export default /*#__PURE__*/ createComponent({
 
   render() {
     const {
-      nativeValue, rows, maxlength, placeholder, readonly, disabled,
-      autocapitalize, autofocus, cols, spellcheck, wrap, minlength,
+      nativeValue,
+      rows,
+      maxlength,
+      placeholder,
+      readonly,
+      disabled,
+      autocapitalize,
+      autofocus,
+      cols,
+      spellcheck,
+      wrap,
+      minlength,
     } = this;
-    const labelId = `${ this.inputId }-lbl`;
+    const labelId = `${this.inputId}-lbl`;
     const label = findItemLabel(this.$el as HTMLElement);
     if (label) {
       label.id = labelId;
     }
 
     return (
-      <div
-        class={[bem()]}
-        on={this.$listeners}
-      >
+      <div class={[bem()]} on={this.$listeners}>
         <textarea
           class="native-textarea"
-          ref='nativeInput'
+          ref="nativeInput"
           autoCapitalize={autocapitalize}
           autoFocus={autofocus}
           cols={cols}
           rows={rows}
           wrap={wrap}
           maxlength={maxlength}
-          minlength ={minlength}
+          minlength={minlength}
           placeholder={placeholder || ''}
           spellCheck={spellcheck}
           readonly={readonly}
@@ -229,5 +233,4 @@ export default /*#__PURE__*/ createComponent({
       </div>
     );
   },
-
 });

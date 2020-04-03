@@ -38,7 +38,6 @@
               <line-note color="dark">Dark</line-note>
             </line-col>
           </line-row>
-
         </line-grid>
 
         <line-list-header>List Notes</line-list-header>

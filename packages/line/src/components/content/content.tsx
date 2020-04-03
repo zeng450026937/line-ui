@@ -38,36 +38,34 @@ const getPageElement = (el: HTMLElement) => {
 };
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ useColor(),
-  ],
+  mixins: [/*#__PURE__*/ useColor()],
 
   provide(): any {
     return {
-      Content : this,
+      Content: this,
     };
   },
 
-  props : {
-    forceOverscroll : Boolean,
-    fullscreen      : Boolean,
-    scrollX         : Boolean,
-    scrollY         : {
-      type    : Boolean,
-      default : true,
+  props: {
+    forceOverscroll: Boolean,
+    fullscreen: Boolean,
+    scrollX: Boolean,
+    scrollY: {
+      type: Boolean,
+      default: true,
     },
-    scrollEvents : Boolean,
-    value        : Boolean,
+    scrollEvents: Boolean,
+    value: Boolean,
   },
 
   data() {
     return {
-      cTop    : 0,
-      cBottom : 0,
+      cTop: 0,
+      cBottom: 0,
     };
   },
 
-  computed : {
+  computed: {
     shouldForceOverscroll(): boolean {
       const { forceOverscroll, mode } = this;
       return forceOverscroll === undefined
@@ -76,7 +74,7 @@ export default /*#__PURE__*/ createComponent({
     },
   },
 
-  watch : {
+  watch: {
     fullscreen(val) {
       if (val) {
         this.readDimensions();
@@ -93,7 +91,7 @@ export default /*#__PURE__*/ createComponent({
     }
   },
 
-  methods : {
+  methods: {
     readDimensions() {
       const el = this.$el as HTMLElement;
       const page = getPageElement(el);
@@ -124,7 +122,7 @@ export default /*#__PURE__*/ createComponent({
       const { scrollEl } = this.$refs as { scrollEl: HTMLElement };
       if (!scrollEl) return;
       const target = isString(el)
-        ? scrollEl.querySelector(el) as HTMLElement | null
+        ? (scrollEl.querySelector(el) as HTMLElement | null)
         : el;
       await scrollToElement(scrollEl, target);
     },
@@ -175,7 +173,7 @@ export default /*#__PURE__*/ createComponent({
     onScrollStart() {
       this.isScrolling = true;
       this.$emit('scrollstart', {
-        isScrolling : true,
+        isScrolling: true,
       });
 
       if (this.watchDog) {
@@ -195,7 +193,7 @@ export default /*#__PURE__*/ createComponent({
       if (this.isScrolling) {
         this.isScrolling = false;
         this.$emit('scrollend', {
-          isScrolling : false,
+          isScrolling: false,
         });
       }
     },
@@ -211,26 +209,23 @@ export default /*#__PURE__*/ createComponent({
           shouldForceOverscroll && 'overscroll',
         ]}
         style={{
-          '--offset-top'    : `${ this.cTop || 0 }px`,
-          '--offset-bottom' : `${ this.cBottom || 0 }px`,
+          '--offset-top': `${this.cTop || 0}px`,
+          '--offset-bottom': `${this.cBottom || 0}px`,
         }}
         on={{
-          '!click' : this.onClick,
+          '!click': this.onClick,
         }}
       >
-        <div
-          ref="backgroundContentEl"
-          id="background-content"
-        ></div>
+        <div ref="backgroundContentEl" id="background-content"></div>
 
         {this.slots('header')}
 
         <main
           class={{
-            'inner-scroll' : true,
-            'scroll-x'     : scrollX,
-            'scroll-y'     : scrollY,
-            overscroll     : (scrollX || scrollY) && shouldForceOverscroll,
+            'inner-scroll': true,
+            'scroll-x': scrollX,
+            'scroll-y': scrollY,
+            overscroll: (scrollX || scrollY) && shouldForceOverscroll,
           }}
           ref={'scrollEl'}
           onScroll={this.onScroll}

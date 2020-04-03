@@ -7,10 +7,4 @@ import CardSubtitle from '@line-ui/line/src/components/card/card-subtitle';
 import CardTitle from '@line-ui/line/src/components/card/card-title';
 import Card from '@line-ui/line/src/components/card/card';
 
-export {
-  CardContent,
-  CardHeader,
-  CardSubtitle,
-  CardTitle,
-  Card,
-};
+export { CardContent, CardHeader, CardSubtitle, CardTitle, Card };

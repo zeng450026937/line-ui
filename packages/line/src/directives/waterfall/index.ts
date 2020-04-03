@@ -1,16 +1,10 @@
 import { VNodeDirective } from 'vue';
 import { defineDirective } from '@line-ui/line/src/utils/directive';
 import { isObject } from '@line-ui/line/src/utils/helpers';
-import {
-  getScrollParent,
-  isWindow,
-  on,
-} from '@line-ui/line/src/utils/dom';
+import { getScrollParent, isWindow, on } from '@line-ui/line/src/utils/dom';
 
 function getScrollTop(el: Element | Window) {
-  return isWindow(el)
-    ? el.pageYOffset
-    : el.scrollTop;
+  return isWindow(el) ? el.pageYOffset : el.scrollTop;
 }
 
 // get distance from el top to page top
@@ -21,21 +15,17 @@ function getElementTop(el: Element | Window) {
 }
 
 function getVisibleHeight(el: Element | Window) {
-  return isWindow(el)
-    ? el.innerHeight
-    : el.getBoundingClientRect().height;
+  return isWindow(el) ? el.innerHeight : el.getBoundingClientRect().height;
 }
 
 const DEFAULT_OFFSET = 300;
 
-export type WaterfallHandler = (
-  info: {
-    down: boolean;
-    up: boolean;
-    target: Element;
-    scrollTop: number;
-  }
-) => void;
+export type WaterfallHandler = (info: {
+  down: boolean;
+  up: boolean;
+  target: Element;
+  scrollTop: number;
+}) => void;
 
 export interface WaterfallOptions extends AddEventListenerOptions {
   handler: WaterfallHandler;
@@ -45,12 +35,7 @@ export interface WaterfallOptions extends AddEventListenerOptions {
 }
 
 export function createWaterfall(el: HTMLElement, options: WaterfallOptions) {
-  const {
-    handler,
-    offset = DEFAULT_OFFSET,
-    up = true,
-    down = true,
-  } = options;
+  const { handler, offset = DEFAULT_OFFSET, up = true, down = true } = options;
 
   const target = getScrollParent(el);
 
@@ -69,7 +54,8 @@ export function createWaterfall(el: HTMLElement, options: WaterfallOptions) {
       if (el === target) {
         hitDown = target.scrollHeight - validHeight < offset;
       } else {
-        const elementBottom = getElementTop(el) - getElementTop(target) + getVisibleHeight(el);
+        const elementBottom =
+          getElementTop(el) - getElementTop(target) + getVisibleHeight(el);
         hitDown = elementBottom - visibleHeight < offset;
       }
     }
@@ -83,12 +69,13 @@ export function createWaterfall(el: HTMLElement, options: WaterfallOptions) {
     }
 
     if ((hitDown && down) || (hitUp && up)) {
-      handler && handler({
-        down : hitDown,
-        up   : hitUp,
-        target,
-        scrollTop,
-      });
+      handler &&
+        handler({
+          down: hitDown,
+          up: hitUp,
+          target,
+          scrollTop,
+        });
     }
   };
 
@@ -114,8 +101,8 @@ function inserted(el: HTMLElement, binding: WaterfallVNodeDirective) {
   if (!value) return;
 
   const options = isObject(value)
-    ? value as WaterfallOptions
-    : { handler: value } as WaterfallOptions;
+    ? (value as WaterfallOptions)
+    : ({ handler: value } as WaterfallOptions);
 
   const vWaterfall = createWaterfall(el, {
     ...modifiers,
@@ -135,7 +122,6 @@ function unbind(el: HTMLElement) {
   delete (el as any).vWaterfall;
 }
 
-
 function update(el: HTMLElement, binding: WaterfallVNodeDirective) {
   const { value, oldValue } = binding;
 
@@ -150,7 +136,7 @@ function update(el: HTMLElement, binding: WaterfallVNodeDirective) {
 }
 
 export const vWaterfall = /*#__PURE__*/ defineDirective({
-  name : 'waterfall',
+  name: 'waterfall',
   inserted,
   unbind,
   update,

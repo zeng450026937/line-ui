@@ -5,13 +5,11 @@ import { isDef } from '@line-ui/line/src/utils/helpers';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('title');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ useColor(),
-  ],
+  mixins: [/*#__PURE__*/ useColor()],
 
-  props : {
+  props: {
     // large | small | default
-    size : String,
+    size: String,
   },
 
   render() {
@@ -19,13 +17,11 @@ export default /*#__PURE__*/ createComponent({
     return (
       <div
         class={bem({
-          [size] : isDef(size),
+          [size]: isDef(size),
         })}
         on={this.$listeners}
       >
-        <div class={bem('inner')}>
-          {this.slots()}
-        </div>
+        <div class={bem('inner')}>{this.slots()}</div>
       </div>
     );
   },

@@ -8,33 +8,39 @@ import {
 } from 'vue/types/vnode';
 
 import { mergeData } from '@line-ui/line/src/utils/vnode/merge-data';
-import {
-  hasOwn,
-  isFunction,
-} from '@line-ui/line/src/utils/helpers';
+import { hasOwn, isFunction } from '@line-ui/line/src/utils/helpers';
 
 type UnifyContext = RenderContext | Vue;
 
-export function createSlots<T extends UnifyContext>(context: T, functional = true) {
+export function createSlots<T extends UnifyContext>(
+  context: T,
+  functional = true
+) {
   const prefix = functional ? '' : '$';
-  const attrsKey = `${ prefix }attrs`;
-  const slotsKey = `${ prefix }slots`;
-  const scopedSlotsKey = `${ prefix }scopedSlots`;
+  const attrsKey = `${prefix}attrs`;
+  const slotsKey = `${prefix}slots`;
+  const scopedSlotsKey = `${prefix}scopedSlots`;
 
   function extrieve() {
     return {
-      $slots       : context[slotsKey] as Slots,
-      $scopedSlots : (context[scopedSlotsKey] || context[attrsKey] || {}) as ScopedSlots,
+      $slots: context[slotsKey] as Slots,
+      $scopedSlots: (context[scopedSlotsKey] ||
+        context[attrsKey] ||
+        {}) as ScopedSlots,
     };
   }
 
   return {
-    hasSlot : (name = 'default'): boolean => {
+    hasSlot: (name = 'default'): boolean => {
       const { $slots, $scopedSlots } = extrieve();
       return !!$scopedSlots[name] || !!$slots[name];
     },
 
-    slots : (name = 'default', ctx?: any, patch?: VNodeData | PacthFn): ScopedSlotChildren => {
+    slots: (
+      name = 'default',
+      ctx?: any,
+      patch?: VNodeData | PacthFn
+    ): ScopedSlotChildren => {
       // IMPORTANT
       //
       // if children is not SCOPED slot
@@ -50,8 +56,8 @@ export function createSlots<T extends UnifyContext>(context: T, functional = tru
 
       if (vnodes) {
         const slotclass = {
-          slotted            : true,
-          [`slot-${ name }`] : name !== 'default',
+          slotted: true,
+          [`slot-${name}`]: name !== 'default',
         };
 
         vnodes.forEach((vnode, index) => {
@@ -60,10 +66,7 @@ export function createSlots<T extends UnifyContext>(context: T, functional = tru
           vnode.data = vnode.data || {};
 
           if (!(vnode.data as any).__slotted) {
-            vnode.data = mergeData(
-              vnode.data,
-              { class: slotclass },
-            );
+            vnode.data = mergeData(vnode.data, { class: slotclass });
             (vnode.data as any).__slotted = true;
           }
 
@@ -72,7 +75,7 @@ export function createSlots<T extends UnifyContext>(context: T, functional = tru
           if (!(vnode.data as any).__patched) {
             vnode.data = mergeData(
               vnode.data,
-              isFunction(patch) ? patch(vnode.data, index) : patch,
+              isFunction(patch) ? patch(vnode.data, index) : patch
             );
             (vnode.data as any).__patched = true;
           }
@@ -101,7 +104,7 @@ type Slots = {
   [key: string]: ScopedSlotChildren;
 };
 type ScopedSlots = {
-  [key: string]: NormalizedScopedSlot | undefined ;
+  [key: string]: NormalizedScopedSlot | undefined;
 };
 
 type PacthFn = (vnode: VNodeData, index: number) => VNodeData;

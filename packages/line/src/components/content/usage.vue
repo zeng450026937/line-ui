@@ -5,28 +5,18 @@
         <line-title>Alert</line-title>
       </line-toolbar>
     </line-header>
-    <line-content
-      class="line-padding"
-      ref="content"
-    >
+    <line-content class="line-padding" ref="content">
       <line-list>
-        <line-button
-          expand="block"
-          fill="outline"
-          @click="scrollToBottom"
-        >Scroll Bottom</line-button>
-        <line-item
-          v-for="(item, index) in 20"
-          :key="index"
+        <line-button expand="block" fill="outline" @click="scrollToBottom"
+          >Scroll Bottom</line-button
         >
-          <line-label>Item {{index}}</line-label>
+        <line-item v-for="(item, index) in 20" :key="index">
+          <line-label>Item {{ index }}</line-label>
         </line-item>
       </line-list>
-      <line-button
-        expand="block"
-        fill="outline"
-        @click="scrollToTop"
-      >Scroll Top</line-button>
+      <line-button expand="block" fill="outline" @click="scrollToTop"
+        >Scroll Top</line-button
+      >
     </line-content>
   </line-app>
 </template>
@@ -35,7 +25,7 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  methods : {
+  methods: {
     scrollToBottom() {
       this.$refs.content.scrollToBottom(500);
     },
@@ -47,5 +37,4 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

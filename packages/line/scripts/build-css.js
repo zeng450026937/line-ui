@@ -9,7 +9,7 @@ const target = 'line';
 const packagesDir = path.resolve(__dirname, '../packages');
 const packageDir = path.resolve(packagesDir, process.env.TARGET || target);
 const name = path.basename(packageDir);
-const resolve = p => path.resolve(packageDir, p);
+const resolve = (p) => path.resolve(packageDir, p);
 
 async function generateScssFile(source, destination) {
   const src = resolve(source);
@@ -34,41 +34,43 @@ async function getScssFileDeps(src, pathList) {
     const deps = [src];
 
     // We do 2 things here: validate and build import graph
-    sass.render({
-      file     : src,
-      importer : [
-        (url, prev, done) => {
-          console.log('importer?');
-          // needed for Windows as "prev"
-          // comes with backward slashes
-          prev = path.normalize(prev);
+    sass.render(
+      {
+        file: src,
+        importer: [
+          (url, prev, done) => {
+            console.log('importer?');
+            // needed for Windows as "prev"
+            // comes with backward slashes
+            prev = path.normalize(prev);
 
-          const file = path.normalize(path.join(
-            prev ? path.dirname(prev) : pathList,
-            url,
-          ));
+            const file = path.normalize(
+              path.join(prev ? path.dirname(prev) : pathList, url)
+            );
 
-          // avoid duplicates
-          if (deps.indexOf(file) === -1) {
-            // insert in the right order
-            if (prev) {
-              deps.splice(deps.indexOf(prev), 0, file);
-            } else {
-              deps.push(file);
+            // avoid duplicates
+            if (deps.indexOf(file) === -1) {
+              // insert in the right order
+              if (prev) {
+                deps.splice(deps.indexOf(prev), 0, file);
+              } else {
+                deps.push(file);
+              }
             }
-          }
 
-          done({ file });
-        },
-      ],
-    }, (err, result) => {
-      if (err) {
-        reject(err);
-        return;
+            done({ file });
+          },
+        ],
+      },
+      (err, result) => {
+        if (err) {
+          reject(err);
+          return;
+        }
+
+        resolve(result.stats.includedFiles);
       }
-
-      resolve(result.stats.includedFiles);
-    });
+    );
   });
 }
 
@@ -77,7 +79,7 @@ async function getConcatenatedContent(src) {
     let code = '';
 
     src.forEach((file) => {
-      code += `${ fs.readFileSync(file) }\n`;
+      code += `${fs.readFileSync(file)}\n`;
     });
 
     code = code

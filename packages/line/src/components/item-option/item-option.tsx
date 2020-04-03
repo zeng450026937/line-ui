@@ -5,24 +5,22 @@ import { useColor } from '@line-ui/line/src/mixins/use-color';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('item-option');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ useColor(),
-  ],
+  mixins: [/*#__PURE__*/ useColor()],
 
-  props : {
-    disabled   : Boolean,
-    download   : String,
-    expandable : Boolean,
-    href       : String,
-    rel        : String,
-    target     : String,
-    type       : {
-      type    : String,
-      default : 'button',
+  props: {
+    disabled: Boolean,
+    download: String,
+    expandable: Boolean,
+    href: String,
+    rel: String,
+    target: String,
+    type: {
+      type: String,
+      default: 'button',
     },
   },
 
-  methods : {
+  methods: {
     onClick(ev: Event) {
       const el = (ev.target as HTMLElement).closest('.line-item-option');
       if (el) {
@@ -32,31 +30,23 @@ export default /*#__PURE__*/ createComponent({
   },
 
   render() {
-    const {
-      disabled, expandable, href, mode, type, download, target,
-    } = this;
-    const TagType = href === undefined ? 'button' : 'a' as any;
-    const attrs = (TagType === 'button')
-      ? { type }
-      : {
-        download,
-        href,
-        target,
-      };
+    const { disabled, expandable, href, mode, type, download, target } = this;
+    const TagType = href === undefined ? 'button' : ('a' as any);
+    const attrs =
+      TagType === 'button'
+        ? { type }
+        : {
+            download,
+            href,
+            target,
+          };
 
     return (
       <div
-        class={[
-          bem({ disabled, expandable }),
-          'line-activatable',
-        ]}
+        class={[bem({ disabled, expandable }), 'line-activatable']}
         onClick={this.onClick}
       >
-        <TagType
-          {...attrs}
-          class={bem('button-native')}
-          disabled={disabled}
-        >
+        <TagType {...attrs} class={bem('button-native')} disabled={disabled}>
           <span class={bem('button-inner')}>
             {this.slots('top')}
 

@@ -3,6 +3,4 @@
 
 import Item from '@line-ui/line/src/components/item/item';
 
-export {
-  Item,
-};
+export { Item };

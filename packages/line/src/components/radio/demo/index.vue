@@ -10,43 +10,28 @@
 import { Radio as LineRadio } from '@line-ui/skyline/src/components/radio';
 
 export default {
-  name : 'RadioDemo',
+  name: 'RadioDemo',
 
-  components : {
+  components: {
     LineRadio,
   },
 
-  props : {
-
-  },
+  props: {},
 
   data() {
-    return {
-
-    };
+    return {};
   },
 
-  computed : {
+  computed: {},
 
-  },
+  created() {},
 
-  created() {
+  mounted() {},
 
-  },
+  methods: {},
 
-  mounted() {
-
-  },
-
-  methods : {
-
-  },
-
-  watch : {
-
-  },
+  watch: {},
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

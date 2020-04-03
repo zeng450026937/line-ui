@@ -2,25 +2,25 @@
 let globalId = 1;
 
 export default {
-  name : 'portal',
+  name: 'portal',
 
-  props : {
-    remote : {
-      type     : String,
-      required : true,
+  props: {
+    remote: {
+      type: String,
+      required: true,
     },
 
-    disabled : Boolean,
+    disabled: Boolean,
   },
 
-  inject : ['Portal'],
+  inject: ['Portal'],
 
-  watch : {
-    remote   : 'transfer',
-    disabled : 'transfer',
+  watch: {
+    remote: 'transfer',
+    disabled: 'transfer',
   },
 
-  methods : {
+  methods: {
     transfer() {
       this.portal.transfer(this.payload);
     },
@@ -28,11 +28,11 @@ export default {
 
   created() {
     const { Portal } = this;
-    this.id = `portal-${ globalId++ }`;
+    this.id = `portal-${globalId++}`;
     this.portal = Portal.open(this.id);
     this.payload = {
-      to   : this.remote,
-      slot : null,
+      to: this.remote,
+      slot: null,
     };
   },
 
@@ -62,6 +62,4 @@ export default {
 };
 </script>
 
-<style lang="stylus">
-
-</style>
+<style lang="stylus"></style>

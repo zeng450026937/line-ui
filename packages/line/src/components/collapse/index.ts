@@ -4,7 +4,4 @@
 import CollapseItem from '@line-ui/line/src/components/collapse/collapse-item';
 import Collapse from '@line-ui/line/src/components/collapse/collapse';
 
-export {
-  CollapseItem,
-  Collapse,
-};
+export { CollapseItem, Collapse };

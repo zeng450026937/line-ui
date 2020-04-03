@@ -9,14 +9,9 @@ export interface RemoteOptions {
 
 export function createRemote(el: HTMLElement, options: RemoteOptions) {
   const { container = '' } = options;
-  const containerEl = isString(container)
-    ? getApp(el, container)
-    : container;
+  const containerEl = isString(container) ? getApp(el, container) : container;
 
-  const {
-    parentElement: originParent,
-    nextElementSibling: originSibling,
-  } = el;
+  const { parentElement: originParent, nextElementSibling: originSibling } = el;
 
   const destroy = () => {
     const { parentElement } = el;
@@ -51,7 +46,7 @@ function inserted(el: HTMLElement, binding: RemoteVNodeDirective) {
 }
 
 function unbind(el: HTMLElement) {
-  const { vRemote } = (el as any);
+  const { vRemote } = el as any;
 
   if (!vRemote) return;
 
@@ -74,7 +69,7 @@ function update(el: HTMLElement, binding: RemoteVNodeDirective) {
 }
 
 export const vRemote = /*#__PURE__*/ defineDirective({
-  name : 'remote',
+  name: 'remote',
   inserted,
   update,
   unbind,

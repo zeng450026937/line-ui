@@ -3,7 +3,7 @@ const path = require('path');
 const globby = require('globby');
 
 const packageDir = path.resolve(__dirname, '../');
-const resolve = p => path.resolve(packageDir, p);
+const resolve = (p) => path.resolve(packageDir, p);
 
 const warning = require('./warning');
 const logger = require('./logger');
@@ -20,31 +20,32 @@ async function run() {
   logger.log('components', 'GEN');
 
   const root = resolve('src/components');
-  const folders = fs.readdirSync(root)
-    .filter(f => fs.statSync(`${ root }/${ f }`).isDirectory())
+  const folders = fs
+    .readdirSync(root)
+    .filter((f) => fs.statSync(`${root}/${f}`).isDirectory())
     .sort();
 
-  let code = `${ warning }\n`;
+  let code = `${warning}\n`;
 
   for (const folder of folders) {
-    if (matchWIP(`${ root }/${ folder }/`)) {
+    if (matchWIP(`${root}/${folder}/`)) {
       skipped.push(folder);
-      logger.log(`${ folder } (skipped)`, 'WIP');
+      logger.log(`${folder} (skipped)`, 'WIP');
       continue;
     }
 
     const components = await generate(
       ['*.tsx'],
-      resolve(`${ root }/${ folder }`),
-      resolve(`${ root }/${ folder }/index.ts`),
+      resolve(`${root}/${folder}`),
+      resolve(`${root}/${folder}/index.ts`)
     );
 
     if (components.length) {
-      code += `export * from '@line-ui/line/src/components/${ folder }';\n`;
+      code += `export * from '@line-ui/line/src/components/${folder}';\n`;
     }
   }
 
-  logger.log(`total :  ${ count } components`, 'DONE');
+  logger.log(`total :  ${count} components`, 'DONE');
 
   // const dist = resolve(`${ root }/index.ts`);
   const dist = resolve('src/components.ts');
@@ -56,12 +57,12 @@ async function run() {
 async function generate(patterns, folder, dist) {
   const dir = path.basename(folder);
   const files = await globby(patterns, { cwd: folder });
-  const components = files.sort().map(file => {
+  const components = files.sort().map((file) => {
     const filename = path.basename(file, '.tsx');
-    const name = camelize(`-${ filename }`);
+    const name = camelize(`-${filename}`);
 
     function toImport() {
-      return `import ${ name } from '@line-ui/line/src/components/${ dir }/${ filename }';`;
+      return `import ${name} from '@line-ui/line/src/components/${dir}/${filename}';`;
     }
 
     return {
@@ -76,14 +77,17 @@ async function generate(patterns, folder, dist) {
 
   if (components.length) {
     await fs.ensureFile(dist);
-    await fs.writeFile(dist, `
-${ warning }
-${ components.map(comp => comp.toImport()).join('\n') }
+    await fs.writeFile(
+      dist,
+      `
+${warning}
+${components.map((comp) => comp.toImport()).join('\n')}
 
 export {
-  ${ components.map(comp => `${ comp.name },`).join('\n  ') }
+  ${components.map((comp) => `${comp.name},`).join('\n  ')}
 };
-`.trimLeft());
+`.trimLeft()
+    );
   }
 
   // logger.log(`${ dir.padEnd(25) } \t: ${ components.length } components`);

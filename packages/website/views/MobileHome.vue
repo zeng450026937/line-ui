@@ -1,13 +1,14 @@
 <template>
-   <div class="mobile-home">
-     <div class="mobile-home__info">
-       <p class="info__subject">SKYLINE</p>
-       <p class="info__detail">
-        XXXXX, XXXXXXXXXXXXXXXXX。XXXXXXXXXXX, xxxxxxxxxxxx, xxxxxxxxxxxxxxxxxxx。
-       </p>
-     </div>
-     <mobile-navigation :list="list"></mobile-navigation>
-   </div>
+  <div class="mobile-home">
+    <div class="mobile-home__info">
+      <p class="info__subject">SKYLINE</p>
+      <p class="info__detail">
+        XXXXX, XXXXXXXXXXXXXXXXX。XXXXXXXXXXX, xxxxxxxxxxxx,
+        xxxxxxxxxxxxxxxxxxx。
+      </p>
+    </div>
+    <mobile-navigation :list="list"></mobile-navigation>
+  </div>
 </template>
 
 <script>
@@ -15,43 +16,31 @@ import { navList } from '../utils/navigation.mobile';
 import MobileNavigation from '../components/mobile/mobile-navigation.vue';
 
 export default {
-  name : 'MobileHome',
+  name: 'MobileHome',
 
-  components : {
+  components: {
     MobileNavigation,
   },
 
-  props : {
-
-  },
+  props: {},
 
   data() {
-    return {
-
-    };
+    return {};
   },
 
-  computed : {
+  computed: {
     list() {
       return navList;
     },
   },
 
-  created() {
+  created() {},
 
-  },
+  mounted() {},
 
-  mounted() {
+  methods: {},
 
-  },
-
-  methods : {
-
-  },
-
-  watch : {
-
-  },
+  watch: {},
 };
 </script>
 
@@ -61,7 +50,6 @@ export default {
 
   flex-direction: column;
 
-
   width: 100%;
   height: 100%;
 
@@ -70,9 +58,9 @@ export default {
   overflow: auto;
 
   &::-webkit-scrollbar {
-  width: 0px;
-  height: 0px;
-}
+    width: 0px;
+    height: 0px;
+  }
 
   &__info {
     padding: 20px 0;

@@ -3,6 +3,4 @@
 
 import Spinner from '@line-ui/line/src/components/spinner/spinner';
 
-export {
-  Spinner,
-};
+export { Spinner };

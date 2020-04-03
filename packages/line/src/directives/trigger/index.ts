@@ -41,7 +41,7 @@ function update(el: HTMLElement, binding: TriggerVNodeDirective) {
 }
 
 export const vTrigger = /*#__PURE__*/ defineDirective({
-  name : 'trigger',
+  name: 'trigger',
   inserted,
   unbind,
   update,

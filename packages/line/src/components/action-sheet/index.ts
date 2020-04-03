@@ -6,9 +6,4 @@ import ActionSheetGroup from '@line-ui/line/src/components/action-sheet/action-s
 import ActionSheetTitle from '@line-ui/line/src/components/action-sheet/action-sheet-title';
 import ActionSheet from '@line-ui/line/src/components/action-sheet/action-sheet';
 
-export {
-  ActionSheetButton,
-  ActionSheetGroup,
-  ActionSheetTitle,
-  ActionSheet,
-};
+export { ActionSheetButton, ActionSheetGroup, ActionSheetTitle, ActionSheet };

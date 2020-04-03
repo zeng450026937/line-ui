@@ -1,8 +1,5 @@
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
-import {
-  createGesture,
-  GestureDetail,
-} from '@line-ui/line/src/utils/gesture';
+import { createGesture, GestureDetail } from '@line-ui/line/src/utils/gesture';
 import { Animation } from '@line-ui/line/src/utils/animation';
 import { getTimeGivenProgression } from '@line-ui/line/src/utils/animation/cubic-bezier';
 import {
@@ -16,7 +13,6 @@ import {
   transitionEndAsync,
   translateElement,
 } from '@line-ui/line/src/components/refresher/refresher.utils';
-
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('refresher');
 
@@ -35,57 +31,56 @@ const enum RefresherState {
   _BUSY_ = Refreshing | Cancelling | Completing,
 }
 
-
 export default /*#__PURE__*/ createComponent({
-  props : {
-    pullMin : {
-      type    : Number,
-      default : 60,
+  props: {
+    pullMin: {
+      type: Number,
+      default: 60,
     },
-    pullMax : {
-      type    : Number,
-      default : 120,
+    pullMax: {
+      type: Number,
+      default: 120,
     },
-    closeDuration : {
-      type    : String,
-      default : '280ms',
+    closeDuration: {
+      type: String,
+      default: '280ms',
     },
-    snapbackDuration : {
-      type    : String,
-      default : '280ms',
+    snapbackDuration: {
+      type: String,
+      default: '280ms',
     },
-    pullFactor : {
-      type    : Number,
-      default : 1,
+    pullFactor: {
+      type: Number,
+      default: 1,
     },
-    disabled : Boolean,
+    disabled: Boolean,
   },
 
   data() {
     let scrollListenerCallback: any;
 
     return {
-      appliedStyles : false,
-      didStart      : false,
-      progress      : 0,
+      appliedStyles: false,
+      didStart: false,
+      progress: 0,
 
       scrollListenerCallback,
 
-      pointerDown     : false,
-      needsCompletion : false,
-      didRefresh      : false,
-      lastVelocityY   : 0,
+      pointerDown: false,
+      needsCompletion: false,
+      didRefresh: false,
+      lastVelocityY: 0,
 
-      nativeRefresher : false,
-      state           : RefresherState.Inactive,
+      nativeRefresher: false,
+      state: RefresherState.Inactive,
     };
   },
 
-  computed : {
+  computed: {
     style() {
       const style = {
-        transform             : `translate3d(0, ${ this.top }px, 0)`,
-        'transition-duration' : '',
+        transform: `translate3d(0, ${this.top}px, 0)`,
+        'transition-duration': '',
       };
       if (!this.touching) {
         style['transition-duration'] = '300ms';
@@ -104,12 +99,18 @@ export default /*#__PURE__*/ createComponent({
     },
   },
 
-  methods : {
+  methods: {
     checkNativeRefresher() {
       const { mode } = this;
-      const useNativeRefresher = shouldUseNativeRefresher(this.$el as HTMLElement, mode);
+      const useNativeRefresher = shouldUseNativeRefresher(
+        this.$el as HTMLElement,
+        mode
+      );
       if (useNativeRefresher && !this.nativeRefresher) {
-        const contentEl = this.$parent.$options.name === 'line-content' ? this.$parent.$el : null;
+        const contentEl =
+          this.$parent.$options.name === 'line-content'
+            ? this.$parent.$el
+            : null;
         this.setupNativeRefresher(contentEl as HTMLElement);
       } else if (!useNativeRefresher) {
         this.destroyNativeRefresher();
@@ -118,21 +119,29 @@ export default /*#__PURE__*/ createComponent({
 
     destroyNativeRefresher() {
       if (this.scrollEl && this.scrollListenerCallback) {
-        this.scrollEl.removeEventListener('scroll', this.scrollListenerCallback);
+        this.scrollEl.removeEventListener(
+          'scroll',
+          this.scrollListenerCallback
+        );
         this.scrollListenerCallback = undefined;
       }
 
       this.nativeRefresher = false;
     },
 
-    async resetNativeRefresher(el: HTMLElement | undefined, state: RefresherState) {
+    async resetNativeRefresher(
+      el: HTMLElement | undefined,
+      state: RefresherState
+    ) {
       this.state = state;
       const { mode } = this;
 
       if (mode === 'ios') {
         await translateElement(el, undefined);
       } else {
-        await transitionEndAsync(this.$el.querySelector('.refresher-refreshing-icon'));
+        await transitionEndAsync(
+          this.$el.querySelector('.refresher-refreshing-icon')
+        );
       }
 
       this.didRefresh = false;
@@ -145,17 +154,25 @@ export default /*#__PURE__*/ createComponent({
       this.state = RefresherState.Inactive;
     },
 
-    async setupIOSNativeRefresher(pullingSpinner: HTMLElement, refreshingSpinner: HTMLElement) {
+    async setupIOSNativeRefresher(
+      pullingSpinner: HTMLElement,
+      refreshingSpinner: HTMLElement
+    ) {
       this.elementToTransform = this.scrollEl;
-      const ticks = pullingSpinner && pullingSpinner.shadowRoot!.querySelectorAll('svg');
+      const ticks =
+        pullingSpinner && pullingSpinner.shadowRoot!.querySelectorAll('svg');
       const MAX_PULL = this.scrollEl.clientHeight * 0.16;
       const NUM_TICKS = ticks.length;
 
-      this.$nextTick(() => ticks.forEach(el => el.style.setProperty('animation', 'none')));
+      this.$nextTick(() =>
+        ticks.forEach((el) => el.style.setProperty('animation', 'none'))
+      );
 
       this.scrollListenerCallback = () => {
         // If pointer is not on screen or refresher is not active, ignore scroll
-        if (!this.pointerDown && this.state === RefresherState.Inactive) { return; }
+        if (!this.pointerDown && this.state === RefresherState.Inactive) {
+          return;
+        }
 
         this.$nextTick(() => {
           // PTR should only be active when overflow scrolling at the top
@@ -169,7 +186,9 @@ export default /*#__PURE__*/ createComponent({
              */
             if (this.state === RefresherState.Refreshing) {
               const ratio = clamp(0, scrollTop / (refresherHeight * 0.5), 1);
-              this.$nextTick(() => setSpinnerOpacity(refreshingSpinner, 1 - ratio));
+              this.$nextTick(() =>
+                setSpinnerOpacity(refreshingSpinner, 1 - ratio)
+              );
               return;
             }
 
@@ -191,14 +210,26 @@ export default /*#__PURE__*/ createComponent({
 
           // delay showing the next tick marks until user has pulled 30px
           const opacity = clamp(0, Math.abs(scrollTop) / refresherHeight, 0.99);
-          const pullAmount = this.progress = clamp(0, (Math.abs(scrollTop) - 30) / MAX_PULL, 1);
-          const currentTickToShow = clamp(0, Math.floor(pullAmount * NUM_TICKS), NUM_TICKS - 1);
-          const shouldShowRefreshingSpinner = this.state
-            === RefresherState.Refreshing || currentTickToShow === NUM_TICKS - 1;
+          const pullAmount = (this.progress = clamp(
+            0,
+            (Math.abs(scrollTop) - 30) / MAX_PULL,
+            1
+          ));
+          const currentTickToShow = clamp(
+            0,
+            Math.floor(pullAmount * NUM_TICKS),
+            NUM_TICKS - 1
+          );
+          const shouldShowRefreshingSpinner =
+            this.state === RefresherState.Refreshing ||
+            currentTickToShow === NUM_TICKS - 1;
 
           if (shouldShowRefreshingSpinner) {
             if (this.pointerDown) {
-              handleScrollWhileRefreshing(refreshingSpinner, this.lastVelocityY);
+              handleScrollWhileRefreshing(
+                refreshingSpinner,
+                this.lastVelocityY
+              );
             }
 
             if (!this.didRefresh) {
@@ -211,12 +242,20 @@ export default /*#__PURE__*/ createComponent({
                * from screen the scroll content will bounce back over the refresher
                */
               if (!this.pointerDown) {
-                translateElement(this.elementToTransform, `${ refresherHeight }px`);
+                translateElement(
+                  this.elementToTransform,
+                  `${refresherHeight}px`
+                );
               }
             }
           } else {
             this.state = RefresherState.Pulling;
-            handleScrollWhilePulling(pullingSpinner, ticks, opacity, currentTickToShow);
+            handleScrollWhilePulling(
+              pullingSpinner,
+              ticks,
+              opacity,
+              currentTickToShow
+            );
           }
         });
       };
@@ -224,30 +263,38 @@ export default /*#__PURE__*/ createComponent({
       this.scrollEl.addEventListener('scroll', this.scrollListenerCallback);
 
       this.gesture = createGesture({
-        el              : this.scrollEl,
-        gestureName     : 'refresher',
-        gesturePriority : 10,
-        direction       : 'y',
-        threshold       : 5,
-        onStart         : () => {
+        el: this.scrollEl,
+        gestureName: 'refresher',
+        gesturePriority: 10,
+        direction: 'y',
+        threshold: 5,
+        onStart: () => {
           this.pointerDown = true;
 
           if (!this.didRefresh) {
             translateElement(this.elementToTransform, '0px');
           }
         },
-        onMove : ev => {
+        onMove: (ev) => {
           this.lastVelocityY = ev.velocityY;
         },
-        onEnd : () => {
+        onEnd: () => {
           this.pointerDown = false;
           this.didStart = false;
 
           if (this.needsCompletion) {
-            this.resetNativeRefresher(this.elementToTransform, RefresherState.Completing);
+            this.resetNativeRefresher(
+              this.elementToTransform,
+              RefresherState.Completing
+            );
             this.needsCompletion = false;
           } else if (this.didRefresh) {
-            this.$nextTick(() => translateElement(this.elementToTransform, `${ this.$el.clientHeight }px`));
+            this.$nextTick(() =>
+              translateElement(
+                this.elementToTransform,
+                `${this.$el.clientHeight}px`
+              )
+            );
           }
         },
       });
@@ -255,10 +302,19 @@ export default /*#__PURE__*/ createComponent({
       this.disabledChanged();
     },
 
-    async setupMDNativeRefresher(contentEl: HTMLElement, pullingSpinner: HTMLElement, refreshingSpinner: HTMLElement) {
-      const circle = pullingSpinner && pullingSpinner.shadowRoot!.querySelector('circle');
-      const pullingRefresherIcon = this.$el.querySelector('.line-refresher-content .refresher-pulling-icon') as HTMLElement;
-      const refreshingCircle = refreshingSpinner && refreshingSpinner.shadowRoot!.querySelector('circle');
+    async setupMDNativeRefresher(
+      contentEl: HTMLElement,
+      pullingSpinner: HTMLElement,
+      refreshingSpinner: HTMLElement
+    ) {
+      const circle =
+        pullingSpinner && pullingSpinner.shadowRoot!.querySelector('circle');
+      const pullingRefresherIcon = this.$el.querySelector(
+        '.line-refresher-content .refresher-pulling-icon'
+      ) as HTMLElement;
+      const refreshingCircle =
+        refreshingSpinner &&
+        refreshingSpinner.shadowRoot!.querySelector('circle');
 
       if (circle !== null && refreshingCircle !== null) {
         this.$nextTick(() => {
@@ -271,18 +327,23 @@ export default /*#__PURE__*/ createComponent({
       }
 
       this.gesture = createGesture({
-        el              : this.scrollEl,
-        gestureName     : 'refresher',
-        gesturePriority : 10,
-        direction       : 'y',
-        threshold       : 5,
-        canStart        : () => this.state !== RefresherState.Refreshing
-          && this.state !== RefresherState.Completing && this.scrollEl.scrollTop === 0,
-        onStart : (ev: GestureDetail) => {
+        el: this.scrollEl,
+        gestureName: 'refresher',
+        gesturePriority: 10,
+        direction: 'y',
+        threshold: 5,
+        canStart: () =>
+          this.state !== RefresherState.Refreshing &&
+          this.state !== RefresherState.Completing &&
+          this.scrollEl.scrollTop === 0,
+        onStart: (ev: GestureDetail) => {
           ev.data = { animation: undefined, didStart: false, cancelled: false };
         },
-        onMove : (ev: GestureDetail) => {
-          if ((ev.velocityY < 0 && this.progress === 0 && !ev.data.didStart) || ev.data.cancelled) {
+        onMove: (ev: GestureDetail) => {
+          if (
+            (ev.velocityY < 0 && this.progress === 0 && !ev.data.didStart) ||
+            ev.data.cancelled
+          ) {
             ev.data.cancelled = true;
             return;
           }
@@ -294,7 +355,10 @@ export default /*#__PURE__*/ createComponent({
 
             this.$nextTick(() => {
               const animationType = getRefresherAnimationType(contentEl);
-              const animation = createPullingAnimation(animationType, pullingRefresherIcon);
+              const animation = createPullingAnimation(
+                animationType,
+                pullingRefresherIcon
+              );
               ev.data.animation = animation;
 
               this.scrollEl.style.setProperty('--overflow', 'hidden');
@@ -312,17 +376,23 @@ export default /*#__PURE__*/ createComponent({
           ev.data.animation.progressStep(this.progress);
           this.$emit('pull');
         },
-        onEnd : (ev: GestureDetail) => {
-          if (!ev.data.didStart) { return; }
+        onEnd: (ev: GestureDetail) => {
+          if (!ev.data.didStart) {
+            return;
+          }
 
-          this.$nextTick(() => this.scrollEl.style.removeProperty('--overflow'));
+          this.$nextTick(() =>
+            this.scrollEl.style.removeProperty('--overflow')
+          );
           if (this.progress <= 0.4) {
             this.gesture.enable(false);
 
             ev.data.animation
               .progressEnd(0, this.progress, 500)
               .onFinish(() => {
-                this.animations.forEach((ani: any) => (ani as Animation).destroy());
+                this.animations.forEach((ani: any) =>
+                  (ani as Animation).destroy()
+                );
                 this.animations = [];
                 this.gesture.enable(true);
                 this.state = RefresherState.Inactive;
@@ -330,12 +400,23 @@ export default /*#__PURE__*/ createComponent({
             return;
           }
 
-          const progress = getTimeGivenProgression([0, 0], [0, 0], [1, 1], [1, 1], this.progress)[0];
-          const snapBackAnimation = createSnapBackAnimation(pullingRefresherIcon);
+          const progress = getTimeGivenProgression(
+            [0, 0],
+            [0, 0],
+            [1, 1],
+            [1, 1],
+            this.progress
+          )[0];
+          const snapBackAnimation = createSnapBackAnimation(
+            pullingRefresherIcon
+          );
           this.animations.push(snapBackAnimation);
 
           this.$nextTick(async () => {
-            pullingRefresherIcon.style.setProperty('--line-pulling-refresher-translate', `${ (progress * 100) }px`);
+            pullingRefresherIcon.style.setProperty(
+              '--line-pulling-refresher-translate',
+              `${progress * 100}px`
+            );
             ev.data.animation.progressEnd();
             await snapBackAnimation.play();
             this.beginRefresh();
@@ -348,20 +429,33 @@ export default /*#__PURE__*/ createComponent({
     },
 
     async setupNativeRefresher(contentEl: HTMLElement | null) {
-      if (this.scrollListenerCallback || !contentEl || this.nativeRefresher || !this.scrollEl) {
+      if (
+        this.scrollListenerCallback ||
+        !contentEl ||
+        this.nativeRefresher ||
+        !this.scrollEl
+      ) {
         return;
       }
 
       this.nativeRefresher = true;
 
-      const pullingSpinner = this.$el.querySelector('.line-refresher-content .refresher-pulling .line-spinner') as HTMLElement;
-      const refreshingSpinner = this.$el.querySelector('.line-refresher-content .refresher-refreshing .line-spinner') as HTMLElement;
+      const pullingSpinner = this.$el.querySelector(
+        '.line-refresher-content .refresher-pulling .line-spinner'
+      ) as HTMLElement;
+      const refreshingSpinner = this.$el.querySelector(
+        '.line-refresher-content .refresher-refreshing .line-spinner'
+      ) as HTMLElement;
 
       const { mode } = this;
       if (mode === 'ios') {
         this.setupIOSNativeRefresher(pullingSpinner, refreshingSpinner);
       } else {
-        this.setupMDNativeRefresher(contentEl, pullingSpinner, refreshingSpinner);
+        this.setupMDNativeRefresher(
+          contentEl,
+          pullingSpinner,
+          refreshingSpinner
+        );
       }
     },
 
@@ -380,7 +474,10 @@ export default /*#__PURE__*/ createComponent({
 
         // Do not reset scroll el until user removes pointer from screen
         if (!this.pointerDown) {
-          this.resetNativeRefresher(this.elementToTransform, RefresherState.Completing);
+          this.resetNativeRefresher(
+            this.elementToTransform,
+            RefresherState.Completing
+          );
         }
       } else {
         this.close(RefresherState.Completing, '120ms');
@@ -392,9 +489,12 @@ export default /*#__PURE__*/ createComponent({
      */
     async cancel() {
       if (this.nativeRefresher) {
-      // Do not reset scroll el until user removes pointer from screen
+        // Do not reset scroll el until user removes pointer from screen
         if (!this.pointerDown) {
-          this.resetNativeRefresher(this.elementToTransform, RefresherState.Cancelling);
+          this.resetNativeRefresher(
+            this.elementToTransform,
+            RefresherState.Cancelling
+          );
         }
       } else {
         this.close(RefresherState.Cancelling, '');
@@ -454,7 +554,10 @@ export default /*#__PURE__*/ createComponent({
         return;
       }
 
-      const pullFactor = (Number.isNaN(this.pullFactor) || this.pullFactor < 0) ? 1 : this.pullFactor;
+      const pullFactor =
+        Number.isNaN(this.pullFactor) || this.pullFactor < 0
+          ? 1
+          : this.pullFactor;
       const deltaY = detail.deltaY * pullFactor;
       // don't bother if they're scrolling up
       // and have not already started dragging
@@ -580,19 +683,26 @@ export default /*#__PURE__*/ createComponent({
       // TODO: stop gesture
     },
 
+    setCss(
+      y: number,
+      duration: string,
+      overflowVisible: boolean,
+      delay: string
+    ) {
+      if (this.nativeRefresher) {
+        return;
+      }
 
-    setCss(y: number, duration: string, overflowVisible: boolean, delay: string) {
-      if (this.nativeRefresher) { return; }
-
-      this.appliedStyles = (y > 0);
+      this.appliedStyles = y > 0;
       this.$nextTick(() => {
         if (this.scrollEl && this.backgroundContentEl) {
           const scrollStyle = this.scrollEl.style;
           const backgroundStyle = this.backgroundContentEl.style;
-          scrollStyle.transform = backgroundStyle.transform = ((y > 0) ? `translateY(${ y }px) translateZ(0px)` : '');
+          scrollStyle.transform = backgroundStyle.transform =
+            y > 0 ? `translateY(${y}px) translateZ(0px)` : '';
           scrollStyle.transitionDuration = backgroundStyle.transitionDuration = duration;
           scrollStyle.transitionDelay = backgroundStyle.transitionDelay = delay;
-          scrollStyle.overflow = (overflowVisible ? 'hidden' : '');
+          scrollStyle.overflow = overflowVisible ? 'hidden' : '';
         }
       });
     },
@@ -604,7 +714,7 @@ export default /*#__PURE__*/ createComponent({
     },
   },
 
-  watch : {
+  watch: {
     disabled() {
       this.disabledChanged();
     },
@@ -618,30 +728,33 @@ export default /*#__PURE__*/ createComponent({
     //   return;
     // }
 
-    const contentEl = this.$parent.$options.name === 'line-content' ? this.$parent.$el : null;
+    const contentEl =
+      this.$parent.$options.name === 'line-content' ? this.$parent.$el : null;
 
     if (!contentEl) {
-      __DEV__ && console.error('<line-refresher> must be used inside an <line-content>');
+      __DEV__ &&
+        console.error('<line-refresher> must be used inside an <line-content>');
       return;
     }
 
     this.scrollEl = await this.$parent.getScrollElement();
-    this.backgroundContentEl = this.$parent.$refs.backgroundContentEl as HTMLElement;
+    this.backgroundContentEl = this.$parent.$refs
+      .backgroundContentEl as HTMLElement;
     const { mode } = this;
     if (shouldUseNativeRefresher(this.$el as HTMLElement, mode)) {
       this.setupNativeRefresher(contentEl as HTMLElement);
     } else {
       this.gesture = createGesture({
-        el              : contentEl,
-        gestureName     : 'refresher',
-        gesturePriority : 10,
-        direction       : 'y',
-        threshold       : 20,
-        passive         : false,
-        canStart        : () => this.canStart(),
-        onStart         : () => this.onStart(),
-        onMove          : ev => this.onMove(ev),
-        onEnd           : () => this.onEnd(),
+        el: contentEl,
+        gestureName: 'refresher',
+        gesturePriority: 10,
+        direction: 'y',
+        threshold: 20,
+        passive: false,
+        canStart: () => this.canStart(),
+        onStart: () => this.onStart(),
+        onMove: (ev) => this.onMove(ev),
+        onEnd: () => this.onEnd(),
       });
 
       this.disabledChanged();
@@ -657,14 +770,14 @@ export default /*#__PURE__*/ createComponent({
           bem(),
           {
             // Used internally for styling
-            [`refresher-${ mode }`] : true,
-            'refresher-native'      : this.nativeRefresher,
-            'refresher-active'      : this.state !== RefresherState.Inactive,
-            'refresher-pulling'     : this.state === RefresherState.Pulling,
-            'refresher-ready'       : this.state === RefresherState.Ready,
-            'refresher-refreshing'  : this.state === RefresherState.Refreshing,
-            'refresher-cancelling'  : this.state === RefresherState.Cancelling,
-            'refresher-completing'  : this.state === RefresherState.Completing,
+            [`refresher-${mode}`]: true,
+            'refresher-native': this.nativeRefresher,
+            'refresher-active': this.state !== RefresherState.Inactive,
+            'refresher-pulling': this.state === RefresherState.Pulling,
+            'refresher-ready': this.state === RefresherState.Ready,
+            'refresher-refreshing': this.state === RefresherState.Refreshing,
+            'refresher-cancelling': this.state === RefresherState.Cancelling,
+            'refresher-completing': this.state === RefresherState.Completing,
           },
         ]}
       >

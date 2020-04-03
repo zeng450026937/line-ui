@@ -3,20 +3,20 @@ import { createNamespace } from '@line-ui/line/src/utils/namespace';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('img');
 
 export default /*#__PURE__*/ createComponent({
-  props : {
-    alt : String,
-    src : String,
+  props: {
+    alt: String,
+    src: String,
   },
 
   data() {
     return {
-      loading   : false,
-      loaderror : false,
-      loadsrc   : '',
+      loading: false,
+      loaderror: false,
+      loadsrc: '',
     };
   },
 
-  watch : {
+  watch: {
     src() {
       this.addIO();
     },
@@ -30,13 +30,13 @@ export default /*#__PURE__*/ createComponent({
     this.removeIO();
   },
 
-  methods : {
+  methods: {
     addIO() {
       if (!this.src) return;
 
       if ('IntersectionObserver' in window) {
         this.removeIO();
-        this.io = new IntersectionObserver(data => {
+        this.io = new IntersectionObserver((data) => {
           // because there will only ever be one instance
           // of the element we are observing
           // we can just use data[0]
@@ -82,10 +82,7 @@ export default /*#__PURE__*/ createComponent({
 
   render() {
     return (
-      <div
-        class={bem()}
-        on={this.$listeners}
-      >
+      <div class={bem()} on={this.$listeners}>
         <img
           decoding="async"
           src={this.loadsrc}

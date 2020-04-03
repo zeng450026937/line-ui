@@ -1,12 +1,16 @@
 const cheerio = require('cheerio');
 
-const load = c => cheerio.load(c, { xmlMode: true });
+const load = (c) => cheerio.load(c, { xmlMode: true });
 const each = (o, f) => Object.keys(o).forEach(f);
 
 module.exports = function createSvgSymbol(inline = true) {
   const svg = `
-${ inline ? '' : '<?xml version="1.0" encoding="UTF-8"?>' }
-${ inline ? '' : '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">' }
+${inline ? '' : '<?xml version="1.0" encoding="UTF-8"?>'}
+${
+  inline
+    ? ''
+    : '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">'
+}
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"> id="svg-symbols">
   <defs/>
 </svg>
@@ -41,7 +45,7 @@ ${ inline ? '' : '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.
 
     const attrs = $svg[0].attribs;
 
-    each(attrs, key => {
+    each(attrs, (key) => {
       if (!/xmlns:.+/.test(key)) {
         return;
       }
@@ -50,17 +54,17 @@ ${ inline ? '' : '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.
 
       if (stored && value !== stored) {
         console.log(
-          `${ key } namespace appeared multiple times with different value.\n`
-          + `Keeping the first one : "${ stored }".\n`
-          + 'Each namespace must be unique across files.',
+          `${key} namespace appeared multiple times with different value.\n` +
+            `Keeping the first one : "${stored}".\n` +
+            'Each namespace must be unique across files.'
         );
         return;
       }
       each(namespaces, (ns) => {
         if (namespaces[ns] === value) {
           console.log(
-            `Same namespace value under different names : ${ ns } and ${ key }\n`
-            + 'Keeping both.',
+            `Same namespace value under different names : ${ns} and ${key}\n` +
+              'Keeping both.'
           );
         }
       });
@@ -81,7 +85,7 @@ ${ inline ? '' : '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.
     if (!$DEFS.contents().length) {
       $DEFS.remove();
     }
-    each(namespaces, ns => {
+    each(namespaces, (ns) => {
       $SVG.attr(ns, namespaces[ns]);
     });
     return $.xml();

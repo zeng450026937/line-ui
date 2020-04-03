@@ -14,20 +14,17 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('switch');
 let gesture: Gesture | undefined;
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ useCheckItem(NAMESPACE),
-    /*#__PURE__*/ useColor(),
-  ],
+  mixins: [/*#__PURE__*/ useCheckItem(NAMESPACE), /*#__PURE__*/ useColor()],
 
   data() {
     return {
       gesture,
-      lastDrag  : 0,
-      activated : false,
+      lastDrag: 0,
+      activated: false,
     };
   },
 
-  methods : {
+  methods: {
     onClick() {
       if (this.lastDrag + 300 < Date.now()) {
         this.checked = !this.checked;
@@ -55,24 +52,24 @@ export default /*#__PURE__*/ createComponent({
       ev.event.stopImmediatePropagation();
     },
 
-    shouldToggle(doc: HTMLDocument, checked: boolean, deltaX: number, margin: number): boolean {
+    shouldToggle(
+      doc: HTMLDocument,
+      checked: boolean,
+      deltaX: number,
+      margin: number
+    ): boolean {
       const isRTL = doc.dir === 'rtl';
 
       if (checked) {
-        return (!isRTL && (margin > deltaX))
-          || (isRTL && (-margin < deltaX));
+        return (!isRTL && margin > deltaX) || (isRTL && -margin < deltaX);
       }
-      return (!isRTL && (-margin < deltaX))
-          || (isRTL && (margin > deltaX));
+      return (!isRTL && -margin < deltaX) || (isRTL && margin > deltaX);
     },
 
     emitStyle() {
       if (!this.Item) return;
 
-      this.Item.itemStyle(
-        'switch',
-        { 'interactive-disabled': this.disabled },
-      );
+      this.Item.itemStyle('switch', { 'interactive-disabled': this.disabled });
     },
 
     setFocus() {
@@ -92,14 +89,14 @@ export default /*#__PURE__*/ createComponent({
     this.buttonEl = this.$refs.buttonEl;
 
     this.gesture = createGesture({
-      el              : this.$el,
-      gestureName     : 'toggle',
-      gesturePriority : 100,
-      threshold       : 5,
-      passive         : false,
-      onStart         : () => this.onStart(),
-      onMove          : ev => this.onMove(ev),
-      onEnd           : ev => this.onEnd(ev),
+      el: this.$el,
+      gestureName: 'toggle',
+      gesturePriority: 100,
+      threshold: 5,
+      passive: false,
+      onStart: () => this.onStart(),
+      onMove: (ev) => this.onMove(ev),
+      onEnd: (ev) => this.onEnd(ev),
     });
     this.disabledChanged();
     this.emitStyle();
@@ -112,7 +109,7 @@ export default /*#__PURE__*/ createComponent({
     }
   },
 
-  watch : {
+  watch: {
     disabled() {
       this.emitStyle();
       this.disabledChanged();
@@ -124,33 +121,23 @@ export default /*#__PURE__*/ createComponent({
   },
 
   render() {
-    const {
-      checked, disabled, activated,
-    } = this;
+    const { checked, disabled, activated } = this;
     return (
       <div
         role="checkbox"
-        class={
-          bem({
-            disabled,
-            checked,
-            activated,
-          })
-        }
+        class={bem({
+          disabled,
+          checked,
+          activated,
+        })}
         onClick={this.onClick}
         on={this.$listeners}
       >
         <div class={bem('icon')}>
-          <div class={bem('inner')}/>
+          <div class={bem('inner')} />
         </div>
-        <button
-          type="button"
-          disabled={disabled}
-          ref="buttonEl"
-        >
-        </button>
+        <button type="button" disabled={disabled} ref="buttonEl"></button>
       </div>
     );
   },
-
 });

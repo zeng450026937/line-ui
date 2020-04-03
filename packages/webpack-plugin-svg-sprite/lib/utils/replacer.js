@@ -76,15 +76,18 @@ module.exports = class Replacer {
     const originalSourceContent = module.originalSource().source();
 
     replacements.forEach(({ token, replaceTo }) => {
-      const indexes = Replacer.getAllStringOccurrences(originalSourceContent, token);
+      const indexes = Replacer.getAllStringOccurrences(
+        originalSourceContent,
+        token
+      );
 
-      indexes.forEach(idx => {
+      indexes.forEach((idx) => {
         const start = idx[0];
         const end = idx[1] - 1;
 
-        const alreadyHasReplacement = source.replacements.find(r => (
-          r[0] === start && r[1] === end && r[2] === replaceTo
-        ));
+        const alreadyHasReplacement = source.replacements.find(
+          (r) => r[0] === start && r[1] === end && r[2] === replaceTo
+        );
 
         if (alreadyHasReplacement) {
           return;

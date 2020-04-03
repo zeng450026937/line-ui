@@ -1,18 +1,11 @@
-import {
-  CreateElement,
-  VNode,
-} from 'vue';
+import { CreateElement, VNode } from 'vue';
 import { createMixins } from '@line-ui/line/src/utils/mixins';
 
 export function useAsyncRender() {
   return createMixins({
     beforeCreate() {
-      const {
-        $options: options,
-      } = this;
-      const {
-        render,
-      } = options;
+      const { $options: options } = this;
+      const { render } = options;
 
       let snapshot: VNode;
       let pending = false;

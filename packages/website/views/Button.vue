@@ -1,49 +1,31 @@
 <template>
-   <div>
-     button - doc
-   </div>
+  <div>
+    button - doc
+  </div>
 </template>
 
 <script>
 export default {
-  name : 'ButtonDoc',
+  name: 'ButtonDoc',
 
-  components : {
+  components: {},
 
-  },
-
-  props : {
-
-  },
+  props: {},
 
   data() {
-    return {
-
-    };
+    return {};
   },
 
-  computed : {
+  computed: {},
 
-  },
+  created() {},
 
-  created() {
+  mounted() {},
 
-  },
+  methods: {},
 
-  mounted() {
-
-  },
-
-  methods : {
-
-  },
-
-  watch : {
-
-  },
+  watch: {},
 };
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

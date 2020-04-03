@@ -3,6 +3,4 @@
 
 import DropdownMenu from '@line-ui/line/src/components/dropdown-menu/dropdown-menu';
 
-export {
-  DropdownMenu,
-};
+export { DropdownMenu };

@@ -1,8 +1,5 @@
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
-import {
-  createGesture,
-  GestureDetail,
-} from '@line-ui/line/src/utils/gesture';
+import { createGesture, GestureDetail } from '@line-ui/line/src/utils/gesture';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('picker-column');
 
@@ -16,19 +13,19 @@ const MAX_PICKER_SPEED = 90;
 const TRANSITION_DURATION = 150;
 
 export default /*#__PURE__*/ createComponent({
-  props : {
-    col : Object,
+  props: {
+    col: Object,
   },
 
   data() {
     return {
-      optHeight    : 0,
-      rotateFactor : 0,
-      scaleFactor  : 1,
-      velocity     : 0,
-      y            : 0,
+      optHeight: 0,
+      rotateFactor: 0,
+      scaleFactor: 1,
+      velocity: 0,
+      y: 0,
 
-      noAnimate : true,
+      noAnimate: true,
     };
   },
 
@@ -49,13 +46,13 @@ export default /*#__PURE__*/ createComponent({
     this.scaleFactor = pickerScaleFactor;
 
     this.gesture = createGesture({
-      el              : this.$el,
-      gestureName     : 'picker-swipe',
-      gesturePriority : 100,
-      threshold       : 0,
-      onStart         : ev => this.onStart(ev),
-      onMove          : ev => this.onMove(ev),
-      onEnd           : ev => this.onEnd(ev),
+      el: this.$el,
+      gestureName: 'picker-swipe',
+      gesturePriority: 100,
+      threshold: 0,
+      onStart: (ev) => this.onStart(ev),
+      onMove: (ev) => this.onMove(ev),
+      onEnd: (ev) => this.onEnd(ev),
     });
     this.gesture.enable();
     this.tmrId = setTimeout(() => {
@@ -66,14 +63,15 @@ export default /*#__PURE__*/ createComponent({
     if (optsEl) {
       // DOM READ
       // We perfom a DOM read over a rendered item, this needs to happen after the first render
-      this.optHeight = ((optsEl as HTMLElement).firstElementChild
-        ? (optsEl as HTMLElement).firstElementChild!.clientHeight : 0);
+      this.optHeight = (optsEl as HTMLElement).firstElementChild
+        ? (optsEl as HTMLElement).firstElementChild!.clientHeight
+        : 0;
     }
 
     this.refresh();
   },
 
-  methods : {
+  methods: {
     colChanged() {
       this.refresh();
     },
@@ -85,7 +83,7 @@ export default /*#__PURE__*/ createComponent({
     setSelected(selectedIndex: number, duration: number) {
       // if there is a selected index, then figure out it's y position
       // if there isn't a selected index, then just use the top y position
-      const y = (selectedIndex > -1) ? -(selectedIndex * this.optHeight) : 0;
+      const y = selectedIndex > -1 ? -(selectedIndex * this.optHeight) : 0;
 
       this.velocity = 0;
 
@@ -105,15 +103,15 @@ export default /*#__PURE__*/ createComponent({
       let translateY = 0;
       let translateZ = 0;
       const { col, rotateFactor } = this;
-      const selectedIndex = col.selectedIndex = this.indexForY(-y);
-      const durationStr = (duration === 0) ? '' : `${ duration }ms`;
-      const scaleStr = `scale(${ this.scaleFactor })`;
+      const selectedIndex = (col.selectedIndex = this.indexForY(-y));
+      const durationStr = duration === 0 ? '' : `${duration}ms`;
+      const scaleStr = `scale(${this.scaleFactor})`;
 
       const { children } = this.optsEl;
       for (let i = 0; i < children.length; i++) {
         const button = children[i] as HTMLElement;
         const opt = col.options[i];
-        const optOffset = (i * this.optHeight) + y;
+        const optOffset = i * this.optHeight + y;
         let transform = '';
 
         if (rotateFactor !== 0) {
@@ -121,7 +119,7 @@ export default /*#__PURE__*/ createComponent({
           if (Math.abs(rotateX) <= 90) {
             translateY = 0;
             translateZ = 90;
-            transform = `rotateX(${ rotateX }deg) `;
+            transform = `rotateX(${rotateX}deg) `;
           } else {
             translateY = -9999;
           }
@@ -131,7 +129,7 @@ export default /*#__PURE__*/ createComponent({
         }
 
         const selected = selectedIndex === i;
-        transform += `translate3d(0px,${ translateY }px,${ translateZ }px) `;
+        transform += `translate3d(0px,${translateY}px,${translateZ}px) `;
         if (this.scaleFactor !== 1 && !selected) {
           transform += scaleStr;
         }
@@ -180,9 +178,10 @@ export default /*#__PURE__*/ createComponent({
         this.velocity *= DECELERATION_FRICTION;
 
         // do not let it go slower than a velocity of 1
-        this.velocity = (this.velocity > 0)
-          ? Math.max(this.velocity, 1)
-          : Math.min(this.velocity, -1);
+        this.velocity =
+          this.velocity > 0
+            ? Math.max(this.velocity, 1)
+            : Math.min(this.velocity, -1);
 
         let y = this.y + this.velocity;
 
@@ -197,7 +196,8 @@ export default /*#__PURE__*/ createComponent({
         }
 
         this.update(y, 0, true);
-        const notLockedIn = (Math.round(y) % this.optHeight !== 0) || (Math.abs(this.velocity) > 1);
+        const notLockedIn =
+          Math.round(y) % this.optHeight !== 0 || Math.abs(this.velocity) > 1;
         if (notLockedIn) {
           // isn't locked in yet, keep decelerating until it is
           this.rafId = requestAnimationFrame(() => this.decelerate());
@@ -210,14 +210,17 @@ export default /*#__PURE__*/ createComponent({
         const currentPos = Math.abs(this.y % this.optHeight);
 
         // create a velocity in the direction it needs to scroll
-        this.velocity = (currentPos > (this.optHeight / 2) ? 1 : -1);
+        this.velocity = currentPos > this.optHeight / 2 ? 1 : -1;
 
         this.decelerate();
       }
     },
 
     indexForY(y: number) {
-      return Math.min(Math.max(Math.abs(Math.round(y / this.optHeight)), 0), this.col.options.length - 1);
+      return Math.min(
+        Math.max(Math.abs(Math.round(y / this.optHeight)), 0),
+        this.col.options.length - 1
+      );
     },
 
     // TODO should this check disabled?
@@ -232,7 +235,7 @@ export default /*#__PURE__*/ createComponent({
       // reset everything
       cancelAnimationFrame(this.rafId);
       const { options } = this.col;
-      let minY = (options.length - 1);
+      let minY = options.length - 1;
       let maxY = 0;
       for (let i = 0; i < options.length; i++) {
         if (!options[i].disabled) {
@@ -251,7 +254,6 @@ export default /*#__PURE__*/ createComponent({
 
       // update the scroll position relative to pointer start position
       let y = this.y + detail.deltaY;
-
 
       if (y > this.minY) {
         // scrolling up higher than scroll area
@@ -274,25 +276,34 @@ export default /*#__PURE__*/ createComponent({
         this.update(this.minY, 100, true);
         this.emitColChange();
         return;
-      } if (this.bounceFrom < 0) {
+      }
+      if (this.bounceFrom < 0) {
         // bounce back down
         this.update(this.maxY, 100, true);
         this.emitColChange();
         return;
       }
 
-      this.velocity = clamp(-MAX_PICKER_SPEED, detail.velocityY * 23, MAX_PICKER_SPEED);
+      this.velocity = clamp(
+        -MAX_PICKER_SPEED,
+        detail.velocityY * 23,
+        MAX_PICKER_SPEED
+      );
       if (this.velocity === 0 && detail.deltaY === 0) {
         const opt = (detail.event.target as Element).closest('.picker-opt');
         if (opt && opt.hasAttribute('opt-index')) {
-          this.setSelected(parseInt(opt.getAttribute('opt-index') as string, 10), TRANSITION_DURATION);
+          this.setSelected(
+            parseInt(opt.getAttribute('opt-index') as string, 10),
+            TRANSITION_DURATION
+          );
         }
       } else {
         this.y += detail.deltaY;
 
         if (Math.abs(detail.velocityY) < 0.05) {
           const isScrollingUp = detail.deltaY > 0;
-          const optHeightFraction = (Math.abs(this.y) % this.optHeight) / this.optHeight;
+          const optHeightFraction =
+            (Math.abs(this.y) % this.optHeight) / this.optHeight;
 
           if (isScrollingUp && optHeightFraction > 0.5) {
             this.velocity = Math.abs(this.velocity) * -1;
@@ -323,18 +334,20 @@ export default /*#__PURE__*/ createComponent({
        * a value different than the value at
        * selectedIndex
        */
-      if (this.velocity !== 0) { return; }
+      if (this.velocity !== 0) {
+        return;
+      }
 
       const selectedIndex = clamp(min, this.col.selectedIndex || 0, max);
       if (this.col.prevSelected !== selectedIndex || forceRefresh) {
-        const y = (selectedIndex * this.optHeight) * -1;
+        const y = selectedIndex * this.optHeight * -1;
         this.velocity = 0;
         this.update(y, TRANSITION_DURATION, true);
       }
     },
   },
 
-  watch : {
+  watch: {
     col() {
       this.colChanged();
     },
@@ -345,22 +358,17 @@ export default /*#__PURE__*/ createComponent({
 
     return (
       <div
-        class={
-          bem({
-            col          : true,
-            'opts-left'  : col.align === 'left',
-            'opts-right' : col.align === 'right',
-          })
-        }
+        class={bem({
+          col: true,
+          'opts-left': col.align === 'left',
+          'opts-right': col.align === 'right',
+        })}
         style={{
-          'max-width' : this.col.columnWidth,
+          'max-width': this.col.columnWidth,
         }}
       >
         {col.prefix && (
-          <div
-            class={bem('prefix')}
-            style={{ width: col.prefixWidth }}
-          >
+          <div class={bem('prefix')} style={{ width: col.prefixWidth }}>
             {/* "picker-prefix" */}
             {col.prefix}
           </div>
@@ -370,19 +378,18 @@ export default /*#__PURE__*/ createComponent({
           style={{ maxWidth: col.optionsWidth }}
           ref="optsEl"
         >
-          { col.options.map((o: any, index: number) => <button
+          {col.options.map((o: any, index: number) => (
+            <button
               type="button"
               class={bem('opt', { disabled: !!o.disabled })}
               opt-index={index}
             >
               {o.text}
-            </button>)}
+            </button>
+          ))}
         </div>
         {col.suffix && (
-          <div
-            class={bem('suffix')}
-            style={{ width: col.suffixWidth }}
-          >
+          <div class={bem('suffix')} style={{ width: col.suffixWidth }}>
             {col.suffix}
           </div>
         )}

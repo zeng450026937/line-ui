@@ -1,7 +1,4 @@
-import {
-  Animation,
-  createAnimation,
-} from '@line-ui/line/src/utils/animation';
+import { Animation, createAnimation } from '@line-ui/line/src/utils/animation';
 import { MenuI } from '@line-ui/line/src/utils/menu-controller/menu-interface';
 import { baseAnimation } from '@line-ui/line/src/utils/menu-controller/animations/base';
 
@@ -19,17 +16,17 @@ export const menuOverlayAnimation = (menu: MenuI): Animation => {
 
   if (menu.isEndSide) {
     // right side
-    closedX = `${ width }px`;
+    closedX = `${width}px`;
     openedX = '0px';
   } else {
     // left side
-    closedX = `${ -width }px`;
+    closedX = `${-width}px`;
     openedX = '0px';
   }
 
   menuAnimation
     .addElement(menu.menuInnerEl!)
-    .fromTo('transform', `translateX(${ closedX })`, `translateX(${ openedX })`);
+    .fromTo('transform', `translateX(${closedX})`, `translateX(${openedX})`);
 
   const isIos = menu.mode === 'ios';
   const opacity = isIos ? 0.2 : 0.25;

@@ -5,18 +5,18 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('overlay');
 const now = (ev: any) => ev.timeStamp || Date.now();
 
 export default /*#__PURE__*/ createComponent({
-  props : {
-    visible : {
-      type    : Boolean,
-      default : true,
+  props: {
+    visible: {
+      type: Boolean,
+      default: true,
     },
-    tappable : {
-      type    : Boolean,
-      default : true,
+    tappable: {
+      type: Boolean,
+      default: true,
     },
-    stopPropagation : {
-      type    : Boolean,
-      default : true,
+    stopPropagation: {
+      type: Boolean,
+      default: true,
     },
   },
 
@@ -24,7 +24,7 @@ export default /*#__PURE__*/ createComponent({
     this.lastClick = -10000;
   },
 
-  methods : {
+  methods: {
     onTouchStart(ev: UIEvent) {
       this.emitTap(ev);
     },
@@ -50,15 +50,16 @@ export default /*#__PURE__*/ createComponent({
 
   render() {
     return (
-      <div tabindex="-1"
+      <div
+        tabindex="-1"
         class={bem({
-          hide          : !this.visible,
-          'no-tappable' : !this.tappable,
+          hide: !this.visible,
+          'no-tappable': !this.tappable,
         })}
         on={{
-          '!touchstart' : this.onTouchStart,
-          '!click'      : this.onMouseDown,
-          '!mousedown'  : this.onMouseDown,
+          '!touchstart': this.onTouchStart,
+          '!click': this.onMouseDown,
+          '!mousedown': this.onMouseDown,
         }}
       >
         {this.slots()}

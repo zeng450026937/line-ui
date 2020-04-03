@@ -11,7 +11,7 @@ const cssnano = require('cssnano');
 const autoprefixer = require('autoprefixer');
 
 const packageDir = path.resolve(__dirname, '../');
-const resolve = p => path.resolve(packageDir, p);
+const resolve = (p) => path.resolve(packageDir, p);
 const relative = (from, to) => path.relative(from, to).split('\\').join('/');
 
 const args = require('minimist')(process.argv.slice(2));
@@ -35,12 +35,15 @@ const bundleDir = resolve('src/style');
 const autoprefix = postcss([autoprefixer()]);
 const nano = postcss([
   cssnano({
-    preset : ['default', {
-      mergeLonghand        : false,
-      convertValues        : false,
-      cssDeclarationSorter : false,
-      reduceTransforms     : false,
-    }],
+    preset: [
+      'default',
+      {
+        mergeLonghand: false,
+        convertValues: false,
+        cssDeclarationSorter: false,
+        reduceTransforms: false,
+      },
+    ],
   }),
 ]);
 
@@ -62,13 +65,16 @@ async function run() {
   }
 
   const themes = {
-    base : '.scss',
-    ios  : '.ios.scss',
-    md   : '.md.scss',
+    base: '.scss',
+    ios: '.ios.scss',
+    md: '.md.scss',
   };
   const styles = {};
   const sideEffects = {};
-  const components = await globby(['**/*.tsx'], { cwd: componentsDir, deep: 2 });
+  const components = await globby(['**/*.tsx'], {
+    cwd: componentsDir,
+    deep: 2,
+  });
   const directives = await globby(['**/*.ts'], { cwd: directivesDir, deep: 2 });
 
   let baseStyles = [];
@@ -87,11 +93,11 @@ async function run() {
   for (const component of components) {
     const dirname = path.dirname(component);
     const filename = path.basename(component, '.tsx');
-    const name = camelize(`-${ filename }`);
+    const name = camelize(`-${filename}`);
 
-    if (matchWIP(`${ componentsDir }/${ dirname }/`)) {
+    if (matchWIP(`${componentsDir}/${dirname}/`)) {
       skipped.push(component);
-      logger.log(`component: ${ filename } (skipped)`, 'WIP');
+      logger.log(`component: ${filename} (skipped)`, 'WIP');
       continue;
     }
 
@@ -101,10 +107,10 @@ async function run() {
     await Promise.all(
       Object.keys(themes).map(async (theme) => {
         const ext = themes[theme];
-        const stylename = `${ filename }${ ext }`;
-        const stylefile = `${ componentsDir }/${ dirname }/${ stylename }`;
+        const stylename = `${filename}${ext}`;
+        const stylefile = `${componentsDir}/${dirname}/${stylename}`;
         const exsit = fs.existsSync(stylefile);
-        const distdir = `${ distDir }/${ dirname }`;
+        const distdir = `${distDir}/${dirname}`;
 
         if (!exsit) return;
 
@@ -115,14 +121,10 @@ async function run() {
         }
 
         sideEffects[name][theme] = effectPath(distdir, stylename);
-      }),
+      })
     );
 
-    const {
-      base: baseStyle,
-      ios: iosStyle,
-      md: mdStyle,
-    } = styles[name];
+    const { base: baseStyle, ios: iosStyle, md: mdStyle } = styles[name];
 
     baseStyles.push(baseStyle);
     iosStyles.push(iosStyle || baseStyle);
@@ -131,11 +133,11 @@ async function run() {
 
   for (const directive of directives) {
     const dirname = path.dirname(directive);
-    const name = camelize(`v-${ dirname }`);
+    const name = camelize(`v-${dirname}`);
 
-    if (matchWIP(`${ directivesDir }/${ dirname }/`)) {
+    if (matchWIP(`${directivesDir}/${dirname}/`)) {
       skipped.push(dirname);
-      logger.log(`directive: v-${ dirname } (skipped)`, 'WIP');
+      logger.log(`directive: v-${dirname} (skipped)`, 'WIP');
       continue;
     }
 
@@ -145,10 +147,10 @@ async function run() {
     await Promise.all(
       Object.keys(themes).map(async (theme) => {
         const ext = themes[theme];
-        const stylename = `${ dirname }${ ext }`;
-        const stylefile = `${ directivesDir }/${ dirname }/${ stylename }`;
+        const stylename = `${dirname}${ext}`;
+        const stylefile = `${directivesDir}/${dirname}/${stylename}`;
         const exsit = fs.existsSync(stylefile);
-        const distdir = `${ distDir }/v-${ dirname }`;
+        const distdir = `${distDir}/v-${dirname}`;
 
         if (!exsit) return;
 
@@ -159,14 +161,10 @@ async function run() {
         }
 
         sideEffects[name][theme] = effectPath(distdir, stylename);
-      }),
+      })
     );
 
-    const {
-      base: baseStyle,
-      ios: iosStyle,
-      md: mdStyle,
-    } = styles[name];
+    const { base: baseStyle, ios: iosStyle, md: mdStyle } = styles[name];
 
     baseStyles.push(baseStyle);
     iosStyles.push(iosStyle || baseStyle);
@@ -178,39 +176,30 @@ async function run() {
   mdStyles = mdStyles.filter(Boolean);
 
   // bundles
-  const defaultBundle = `${ pkgName }.bundle.scss`;
-  const baseBundle = `${ pkgName }.scss`;
-  const iosBundle = `${ pkgName }.ios.scss`;
-  const mdBundler = `${ pkgName }.md.scss`;
+  const defaultBundle = `${pkgName}.bundle.scss`;
+  const baseBundle = `${pkgName}.scss`;
+  const iosBundle = `${pkgName}.ios.scss`;
+  const mdBundler = `${pkgName}.md.scss`;
 
   // gen bundles
   if (genBundle) {
-    logger.log(`${ baseBundle }`, 'GEN');
-    await generate(
-      baseStyles,
-      `${ bundleDir }/${ baseBundle }`,
-    );
-    logger.log(`${ iosBundle }`, 'GEN');
-    await generate(
-      iosStyles,
-      `${ bundleDir }/${ iosBundle }`,
-    );
-    logger.log(`${ mdBundler }`, 'GEN');
-    await generate(
-      mdStyles,
-      `${ bundleDir }/${ mdBundler }`,
-    );
+    logger.log(`${baseBundle}`, 'GEN');
+    await generate(baseStyles, `${bundleDir}/${baseBundle}`);
+    logger.log(`${iosBundle}`, 'GEN');
+    await generate(iosStyles, `${bundleDir}/${iosBundle}`);
+    logger.log(`${mdBundler}`, 'GEN');
+    await generate(mdStyles, `${bundleDir}/${mdBundler}`);
   }
 
   const bundles = [
-    `${ bundleDir }/${ baseBundle }`,
-    `${ bundleDir }/${ iosBundle }`,
-    `${ bundleDir }/${ mdBundler }`,
+    `${bundleDir}/${baseBundle}`,
+    `${bundleDir}/${iosBundle}`,
+    `${bundleDir}/${mdBundler}`,
   ];
 
   // build bundles
   if (buildBundle) {
-    await build(`${ bundleDir }/${ defaultBundle }`, distDir);
+    await build(`${bundleDir}/${defaultBundle}`, distDir);
     for (const bundle of bundles) {
       await build(bundle, distDir);
     }
@@ -223,14 +212,14 @@ async function run() {
       path.basename(iosBundle, '.scss'),
       path.basename(mdBundler, '.scss'),
     ],
-    distDir,
+    distDir
   );
 
   // DEFAULT EFFECTS
   sideEffects.default = new SideEffect(
     effectPath(distDir, baseBundle),
     effectPath(distDir, iosBundle),
-    effectPath(distDir, mdBundler),
+    effectPath(distDir, mdBundler)
   );
 
   // BUNDLE EFFECTS
@@ -242,30 +231,32 @@ async function run() {
   //   stringifyJSON(sideEffects, null, 2),
   // );
 
-  logger.log(`total :  ${ count } styles`, 'DONE');
+  logger.log(`total :  ${count} styles`, 'DONE');
 }
 
 function effectPath(dir, filename, css = true) {
-  return `${ pkgName }/${ relative(packageDir, dir) }/`
-   + `${ path.basename(filename, '.scss') }.${ css ? 'css' : 'scss' }`;
+  return (
+    `${pkgName}/${relative(packageDir, dir)}/` +
+    `${path.basename(filename, '.scss')}.${css ? 'css' : 'scss'}`
+  );
 }
 
 async function generate(files, dist, deps = []) {
-  const imports = files.sort().map(file => {
+  const imports = files.sort().map((file) => {
     // relative path
     const dir = relative(path.dirname(dist), path.dirname(file));
-    const from = `${ dir || '.' }/${ path.basename(file, '.scss') }`;
-    return `@import "${ from }";`;
+    const from = `${dir || '.'}/${path.basename(file, '.scss')}`;
+    return `@import "${from}";`;
   });
 
   deps = Array.isArray(deps) ? deps : [deps];
-  deps = deps.sort().map(file => {
+  deps = deps.sort().map((file) => {
     const dir = relative(path.dirname(dist), path.dirname(file));
-    const from = `${ dir || '.' }/${ path.basename(file, '.scss') }`;
-    return `@import "${ from }";`;
+    const from = `${dir || '.'}/${path.basename(file, '.scss')}`;
+    return `@import "${from}";`;
   });
 
-  let code = `${ warning }\n`;
+  let code = `${warning}\n`;
 
   if (deps.length) {
     code += deps.join('\n');
@@ -283,26 +274,22 @@ async function generate(files, dist, deps = []) {
 
 async function build(file, distDir, check = false) {
   count++;
-  logger.clear(` RENDER  ${ path.relative(packageDir, path.normalize(file)) }`);
+  logger.clear(` RENDER  ${path.relative(packageDir, path.normalize(file))}`);
 
   const rendered = await renderScss(file);
 
-  const autoprefixed = await autoprefix.process(rendered.css, { from: undefined });
+  const autoprefixed = await autoprefix.process(rendered.css, {
+    from: undefined,
+  });
 
   const filename = path.basename(file, '.scss');
 
   await fs.ensureDir(distDir);
-  await fs.writeFile(
-    `${ distDir }/${ filename }.css`,
-    autoprefixed.css,
-  );
+  await fs.writeFile(`${distDir}/${filename}.css`, autoprefixed.css);
 
   const minimized = await nano.process(autoprefixed.css, { from: undefined });
 
-  await fs.writeFile(
-    `${ distDir }/${ filename }.min.css`,
-    minimized.css,
-  );
+  await fs.writeFile(`${distDir}/${filename}.min.css`, minimized.css);
 
   logger.clear();
 
@@ -316,14 +303,17 @@ function renderScss(file) {
     sass.render(
       {
         file,
-        importer : [
+        importer: [
           (url, prev, done) => {
             let file;
 
             switch (true) {
               case /@line\//.test(url):
                 // replace @ with src
-                file = path.resolve(packageDir, url.replace('@line-ui/line/', 'src/'));
+                file = path.resolve(
+                  packageDir,
+                  url.replace('@line-ui/line/', 'src/')
+                );
                 break;
               default:
                 // resolve directly
@@ -342,7 +332,7 @@ function renderScss(file) {
         }
 
         resolve(result);
-      },
+      }
     );
   });
 }
@@ -361,19 +351,21 @@ function checkAllSizes(targets, distDir) {
 }
 
 function checkSize(target, distDir) {
-  const dist = `${ distDir }/${ target }.min.css`;
+  const dist = `${distDir}/${target}.min.css`;
   if (fs.existsSync(dist)) {
     const file = fs.readFileSync(dist);
-    const minSize = `${ (file.length / 1024).toFixed(2) }kb`;
+    const minSize = `${(file.length / 1024).toFixed(2)}kb`;
     const gzipped = gzipSync(file);
-    const gzippedSize = `${ (gzipped.length / 1024).toFixed(2) }kb`;
+    const gzippedSize = `${(gzipped.length / 1024).toFixed(2)}kb`;
     const compressed = compress(file) || [];
-    const compressedSize = `${ (compressed.length / 1024).toFixed(2) }kb`;
+    const compressedSize = `${(compressed.length / 1024).toFixed(2)}kb`;
     logger.log(
-      `${ chalk.gray(
-        chalk.bold(target),
-      ).padEnd(25) } min:${ minSize } / gzip:${ gzippedSize } / brotli:${ compressedSize }`,
-      'CSS',
+      `${chalk
+        .gray(chalk.bold(target))
+        .padEnd(
+          25
+        )} min:${minSize} / gzip:${gzippedSize} / brotli:${compressedSize}`,
+      'CSS'
     );
   }
 }

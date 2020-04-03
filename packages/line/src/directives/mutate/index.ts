@@ -4,7 +4,7 @@ import { isObject } from '@line-ui/line/src/utils/helpers';
 
 export type MutateHandler = (
   mutationsList: MutationRecord[],
-  observer: MutationObserver,
+  observer: MutationObserver
 ) => void;
 
 export interface MutateOptions extends MutationObserverInit {
@@ -24,18 +24,15 @@ export function createMutate(el: HTMLElement, options: MutateOptions) {
   } = options;
 
   const observer = new MutationObserver(
-    (
-      mutationsList: MutationRecord[],
-      observer: MutationObserver,
-    ) => {
+    (mutationsList: MutationRecord[], observer: MutationObserver) => {
       handler(mutationsList, observer);
 
       // If has the once modifier, unbind
       if (once) {
-      /* eslint-disable-next-line @typescript-eslint/no-use-before-define */
+        /* eslint-disable-next-line @typescript-eslint/no-use-before-define */
         destroy();
       }
-    },
+    }
   );
 
   const destroy = () => {
@@ -66,8 +63,8 @@ function inserted(el: HTMLElement, binding: MutateVNodeDirective) {
   if (!value) return;
 
   const options = isObject(value)
-    ? value as MutateOptions
-    : { handler: value } as MutateOptions;
+    ? (value as MutateOptions)
+    : ({ handler: value } as MutateOptions);
 
   // alias for MutationObserverInit
   const {
@@ -112,7 +109,7 @@ function update(el: HTMLElement, binding: MutateVNodeDirective) {
 }
 
 export const vMutate = /*#__PURE__*/ defineDirective({
-  name : 'mutate',
+  name: 'mutate',
   inserted,
   unbind,
   update,

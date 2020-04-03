@@ -11,25 +11,25 @@ import DropdownItem from '@line-ui/line/src/components/dropdown/dropdown-item';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('dropdown');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
+  mixins: [
     /*#__PURE__*/ useColor(),
     /*#__PURE__*/ usePopup({ disableScroll: false }),
     /*#__PURE__*/ useTrigger(),
     /*#__PURE__*/ useClickOutside(),
   ],
 
-  props : {
-    options : {
-      type    : Array,
-      default : () => [],
+  props: {
+    options: {
+      type: Array,
+      default: () => [],
     },
-    offset : {
-      type    : Array,
-      default : () => [0, 0],
+    offset: {
+      type: Array,
+      default: () => [0, 0],
     },
-    placement : {
-      type    : String,
-      default : 'bottom',
+    placement: {
+      type: String,
+      default: 'bottom',
     },
   },
 
@@ -42,13 +42,12 @@ export default /*#__PURE__*/ createComponent({
         offset,
       } = this;
 
-      this.popper = this.popper || createPopper(
-        $triggerEl,
-        $el as HTMLElement,
-        {
-          placement : placement as any,
-          strategy  : 'fixed',
-          modifiers : [
+      this.popper =
+        this.popper ||
+        createPopper($triggerEl, $el as HTMLElement, {
+          placement: placement as any,
+          strategy: 'fixed',
+          modifiers: [
             // {
             //   name    : 'preventOverflow',
             //   options : {
@@ -56,21 +55,20 @@ export default /*#__PURE__*/ createComponent({
             //   },
             // },
             {
-              name    : 'offset',
-              options : {
+              name: 'offset',
+              options: {
                 offset,
               },
             },
             {
-              name    : 'flip',
-              options : {
-                rootBoundary : 'body',
+              name: 'flip',
+              options: {
+                rootBoundary: 'body',
                 // fallbackPlacements : ['top'],
               },
             },
           ],
-        },
-      );
+        });
 
       animate(iosEnterAnimation(baseEl));
     });
@@ -98,19 +96,12 @@ export default /*#__PURE__*/ createComponent({
     const { visible, options } = this;
 
     return (
-      <div
-        vShow={visible}
-        class={bem()}
-        on={this.$listeners}
-      >
+      <div vShow={visible} class={bem()} on={this.$listeners}>
         <ul class={bem('content')}>
-          {
-            this.slots() || options.map((option: any) => (
-              <DropdownItem option={option}>
-                {option.text}
-              </DropdownItem>
-            ))
-          }
+          {this.slots() ||
+            options.map((option: any) => (
+              <DropdownItem option={option}>{option.text}</DropdownItem>
+            ))}
         </ul>
       </div>
     );

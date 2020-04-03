@@ -2,7 +2,7 @@ import { newE2EPage } from '@stencil/core/testing';
 
 test('button: dynamic', async () => {
   const page = await newE2EPage({
-    url : '/src/components/button/test/dynamic?ionic:_testing=true',
+    url: '/src/components/button/test/dynamic?ionic:_testing=true',
   });
 
   const compares = [];
@@ -23,7 +23,9 @@ test('button: dynamic', async () => {
 
   await page.click('#change-item-divider-button');
 
-  compares.push(await page.compareScreenshot('change item divider button size'));
+  compares.push(
+    await page.compareScreenshot('change item divider button size')
+  );
 
   for (const compare of compares) {
     expect(compare).toMatchScreenshot();

@@ -1,14 +1,11 @@
 import { VNodeDirective } from 'vue';
 import { defineDirective } from '@line-ui/line/src/utils/directive';
-import {
-  isObject,
-  isString,
-} from '@line-ui/line/src/utils/helpers';
+import { isObject, isString } from '@line-ui/line/src/utils/helpers';
 
 export type IntersectHandler = (
   entries: IntersectionObserverEntry[],
   observer: IntersectionObserver,
-  isIntersecting: boolean,
+  isIntersecting: boolean
 ) => void;
 
 export interface IntersectOptions {
@@ -21,27 +18,19 @@ export interface IntersectOptions {
 }
 
 export function createIntersect(el: HTMLElement, options: IntersectOptions) {
-  const {
-    handler,
-    root,
-    rootMargin,
-    threshold,
-    quiet,
-    once,
-  } = options;
-
+  const { handler, root, rootMargin, threshold, quiet, once } = options;
 
   let inited = false;
 
   const observer = new IntersectionObserver(
     (
       entries: IntersectionObserverEntry[] = [],
-      observer: IntersectionObserver,
+      observer: IntersectionObserver
     ) => {
       // If is not quiet or has already been
       // initted, invoke the user handler
       if (handler && (!quiet || inited)) {
-        const isIntersecting = entries.some(entry => entry.isIntersecting);
+        const isIntersecting = entries.some((entry) => entry.isIntersecting);
 
         handler(entries, observer, isIntersecting);
       }
@@ -57,10 +46,10 @@ export function createIntersect(el: HTMLElement, options: IntersectOptions) {
       }
     },
     {
-      root : isString(root) ? document.querySelector(root) : root,
+      root: isString(root) ? document.querySelector(root) : root,
       rootMargin,
       threshold,
-    },
+    }
   );
 
   const destroy = () => {
@@ -86,13 +75,13 @@ function inserted(el: HTMLElement, binding: ObserveVNodeDirective) {
   if (!value || !arg) return;
 
   const options = isObject(value)
-    ? value as IntersectOptions
-    : { handler: value } as IntersectOptions;
+    ? (value as IntersectOptions)
+    : ({ handler: value } as IntersectOptions);
 
   (el as any).vIntersect = createIntersect(el, {
     ...modifiers, // once, quiet
     ...options,
-    root : arg || options.root,
+    root: arg || options.root,
   });
 }
 
@@ -120,7 +109,7 @@ function update(el: HTMLElement, binding: ObserveVNodeDirective) {
 }
 
 export const vIntersect = /*#__PURE__*/ defineDirective({
-  name : 'intersect',
+  name: 'intersect',
   inserted,
   update,
   unbind,

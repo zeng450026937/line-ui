@@ -1,7 +1,4 @@
-import {
-  Mode,
-  TextFieldTypes,
-} from '@line-ui/line/src/types';
+import { Mode, TextFieldTypes } from '@line-ui/line/src/types';
 import { AnimationBuilder } from '@line-ui/line/src/utils/animation';
 
 export interface AlertOptions {
@@ -41,5 +38,5 @@ export interface AlertButton {
   text: string;
   role?: string;
   cssClass?: string | string[];
-  handler?: (value: any) => boolean | void | {[key: string]: any};
+  handler?: (value: any) => boolean | void | { [key: string]: any };
 }

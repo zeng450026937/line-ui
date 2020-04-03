@@ -8,31 +8,35 @@ const importgen = (parsed) => {
 
   if (inspect.isDev) {
     return `
-${
-  components.map(name => {
+${components
+  .map((name) => {
     if (!inspect.imports.has(name)) return '';
-    return `import ${ name } from '${ inspect.imports.get(name) }';`;
-  }).filter(Boolean).join('\n')
-}
-${
-  directives.map(name => {
+    return `import ${name} from '${inspect.imports.get(name)}';`;
+  })
+  .filter(Boolean)
+  .join('\n')}
+${directives
+  .map((name) => {
     if (!inspect.imports.has(name)) return '';
-    return `import ${ name } from '${ inspect.imports.get(name) }';`;
-  }).filter(Boolean).join('\n')
-}
+    return `import ${name} from '${inspect.imports.get(name)}';`;
+  })
+  .filter(Boolean)
+  .join('\n')}
     `.trim();
   }
 
   return `
-import { ${ [].concat(components, directives).join(', ') } } from '${ inspect.name };';
+import { ${[].concat(components, directives).join(', ')} } from '${
+    inspect.name
+  };';
   `.trim();
 };
 
 module.exports = {
   ...inspect,
 
-  tag : true,
-  dir : true,
+  tag: true,
+  dir: true,
 
   get components() {
     return inspect.components;

@@ -1,7 +1,6 @@
 <template>
   <div>
-    <line-input v-model="inputVal">
-    </line-input>
+    <line-input v-model="inputVal"> </line-input>
   </div>
 </template>
 
@@ -9,43 +8,30 @@
 import { Input as LineInput } from '@line-ui/skyline/components/input';
 
 export default {
-  name : 'InputDemo',
+  name: 'InputDemo',
 
-  components : {
+  components: {
     LineInput,
   },
 
-  props : {
-
-  },
+  props: {},
 
   data() {
     return {
-      inputVal : '',
+      inputVal: '',
     };
   },
 
-  computed : {
+  computed: {},
 
-  },
+  created() {},
 
-  created() {
+  mounted() {},
 
-  },
+  methods: {},
 
-  mounted() {
-
-  },
-
-  methods : {
-
-  },
-
-  watch : {
-
-  },
+  watch: {},
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

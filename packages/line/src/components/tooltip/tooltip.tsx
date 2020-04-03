@@ -13,7 +13,7 @@ import { vHover } from '@line-ui/line/src/directives/hover';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('tooltip');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
+  mixins: [
     /*#__PURE__*/ useColor(),
     /*#__PURE__*/ usePopup({ disableScroll: false }),
     /*#__PURE__*/ usePopupDuration(),
@@ -21,21 +21,21 @@ export default /*#__PURE__*/ createComponent({
     /*#__PURE__*/ useTrigger(),
   ],
 
-  props : {
+  props: {
     // This property holds the text shown on the tool tip.
-    text      : String,
-    placement : {
-      type    : String,
-      default : 'top',
+    text: String,
+    placement: {
+      type: String,
+      default: 'top',
     },
-    openOnHover : {
-      type    : Boolean,
-      default : true,
+    openOnHover: {
+      type: Boolean,
+      default: true,
     },
   },
 
-  watch : {
-    trigger : 'createDirective',
+  watch: {
+    trigger: 'createDirective',
     placement(val) {
       if (this.popper) {
         this.popper.setOptions({ placement: val });
@@ -69,7 +69,7 @@ export default /*#__PURE__*/ createComponent({
     }
   },
 
-  methods : {
+  methods: {
     createDirective() {
       if (this.vHover) {
         this.vHover.unbind();
@@ -77,50 +77,43 @@ export default /*#__PURE__*/ createComponent({
 
       if (!this.$triggerEl) return;
 
-      this.vHover = createDirective(
-        vHover,
-        this.$triggerEl,
-        { name: 'hover' },
-      );
+      this.vHover = createDirective(vHover, this.$triggerEl, { name: 'hover' });
       this.vHover.inserted(this.onHover);
     },
     createPopper() {
       if (this.popper) return;
 
-      const getBoundingClientRect = () => this.$triggerEl.getBoundingClientRect();
+      const getBoundingClientRect = () =>
+        this.$triggerEl.getBoundingClientRect();
       const $trigger = { getBoundingClientRect };
       const { $el, placement } = this as any;
       const offset = 10;
 
-      this.popper = createPopper(
-        $trigger,
-        $el,
-        {
-          placement,
-          strategy  : 'fixed',
-          modifiers : [
-            {
-              name    : 'offset',
-              options : {
-                offset : [0, offset],
-              },
+      this.popper = createPopper($trigger, $el, {
+        placement,
+        strategy: 'fixed',
+        modifiers: [
+          {
+            name: 'offset',
+            options: {
+              offset: [0, offset],
             },
-            {
-              name    : 'preventOverflow',
-              options : {
-                altAxis : true, // false by default
-                padding : offset,
-              },
+          },
+          {
+            name: 'preventOverflow',
+            options: {
+              altAxis: true, // false by default
+              padding: offset,
             },
-            {
-              name    : 'flip',
-              options : {
-                padding : offset,
-              },
+          },
+          {
+            name: 'flip',
+            options: {
+              padding: offset,
             },
-          ],
-        },
-      );
+          },
+        ],
+      });
     },
 
     onHover(hover: boolean) {
@@ -139,9 +132,7 @@ export default /*#__PURE__*/ createComponent({
         on={this.$listeners}
       >
         <div class={bem('arrow')} data-popper-arrow></div>
-        <div class={bem('content')}>
-          { this.slots() || text }
-        </div>
+        <div class={bem('content')}>{this.slots() || text}</div>
       </div>
     );
   },

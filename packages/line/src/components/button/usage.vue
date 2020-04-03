@@ -10,14 +10,8 @@
       <section>
         <header>Small Size</header>
         <line-button size="small">Default</line-button>
-        <line-button
-          size="small"
-          color="secondary"
-        >Secondary</line-button>
-        <line-button
-          size="small"
-          color="tertiary"
-        >Tertiary</line-button>
+        <line-button size="small" color="secondary">Secondary</line-button>
+        <line-button size="small" color="tertiary">Tertiary</line-button>
       </section>
 
       <section>
@@ -29,18 +23,9 @@
 
       <section>
         <header>Large Size</header>
-        <line-button
-          size="large"
-          color="light"
-        >Light</line-button>
-        <line-button
-          size="large"
-          color="medium"
-        >Medium</line-button>
-        <line-button
-          size="large"
-          color="dark"
-        >Dark</line-button>
+        <line-button size="large" color="light">Light</line-button>
+        <line-button size="large" color="medium">Medium</line-button>
+        <line-button size="large" color="dark">Dark</line-button>
       </section>
 
       <section>
@@ -50,10 +35,9 @@
 
       <section class="full-width">
         <header>Full Width</header>
-        <line-button
-          expand="full"
-          color="secondary"
-        >A full-width button</line-button>
+        <line-button expand="full" color="secondary"
+          >A full-width button</line-button
+        >
       </section>
     </line-content>
   </line-app>

@@ -8,13 +8,13 @@
     <line-content>
       <line-list-header>Default</line-list-header>
       <line-avatar class="line-margin-start">
-        <img src="/avatar.svg">
+        <img src="/avatar.svg" />
       </line-avatar>
 
       <line-list-header>Chip Avatar</line-list-header>
       <line-chip class="line-margin-start">
         <line-avatar>
-          <img src="/avatar.svg">
+          <img src="/avatar.svg" />
         </line-avatar>
         <line-label>Kit Bishop</line-label>
       </line-chip>
@@ -24,7 +24,7 @@
         <line-item>
           <template #start>
             <line-avatar>
-              <img src="/avatar.svg">
+              <img src="/avatar.svg" />
             </line-avatar>
           </template>
           <line-label>Lorem ipsum</line-label>
@@ -32,7 +32,7 @@
         <line-item>
           <template #start>
             <line-avatar>
-              <img src="/avatar.svg">
+              <img src="/avatar.svg" />
             </line-avatar>
           </template>
           <line-label>
@@ -43,7 +43,7 @@
         <line-item>
           <template #start>
             <line-avatar>
-              <img src="/avatar.svg">
+              <img src="/avatar.svg" />
             </line-avatar>
           </template>
           <line-label>
@@ -55,7 +55,7 @@
         <line-item>
           <template #end>
             <line-avatar>
-              <img src="/avatar.svg">
+              <img src="/avatar.svg" />
             </line-avatar>
           </template>
           <line-label>Lorem ipsum</line-label>
@@ -63,7 +63,7 @@
         <line-item>
           <template #end>
             <line-avatar>
-              <img src="/avatar.svg">
+              <img src="/avatar.svg" />
             </line-avatar>
           </template>
           <line-label>
@@ -74,7 +74,7 @@
         <line-item>
           <template #end>
             <line-avatar>
-              <img src="/avatar.svg">
+              <img src="/avatar.svg" />
             </line-avatar>
           </template>
           <line-label>
@@ -94,5 +94,4 @@ import Vue from 'vue';
 export default Vue.extend({});
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

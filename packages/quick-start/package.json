@@ -8,6 +8,7 @@
   "private": true,
   "license": "MIT",
   "dependencies": {
-    "@line-ui/line": "1.0.0-alpha.0"
+    "@line-ui/line": "1.0.0-alpha.0",
+    "vue": "^2.6.11"
   }
 }

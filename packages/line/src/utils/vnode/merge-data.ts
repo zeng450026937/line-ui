@@ -4,10 +4,7 @@ import {
   mergeStaticClass,
 } from '@line-ui/line/src/utils/vnode/merge-class';
 import { mergeListener } from '@line-ui/line/src/utils/vnode/merge-listener';
-import {
-  isArray,
-  isObject,
-} from '@line-ui/line/src/utils/helpers';
+import { isArray, isObject } from '@line-ui/line/src/utils/helpers';
 
 export function mergeData(exist: VNodeData, value?: VNodeData) {
   if (!value) return exist;
@@ -35,8 +32,8 @@ export function mergeData(exist: VNodeData, value?: VNodeData) {
         data[key as keyof VNodeData] = isArray(old)
           ? old.concat(val)
           : isObject(val)
-            ? { ...old, ...val }
-            : val;
+          ? { ...old, ...val }
+          : val;
     }
   }
   return data;

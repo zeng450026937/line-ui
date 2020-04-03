@@ -17,41 +17,25 @@
 
 <script>
 export default {
-  name : 'MainHeader',
+  name: 'MainHeader',
 
-  components : {
+  components: {},
 
-  },
-
-  props : {
-
-  },
+  props: {},
 
   data() {
-    return {
-
-    };
+    return {};
   },
 
-  computed : {
+  computed: {},
 
-  },
+  created() {},
 
-  created() {
+  mounted() {},
 
-  },
+  methods: {},
 
-  mounted() {
-
-  },
-
-  methods : {
-
-  },
-
-  watch : {
-
-  },
+  watch: {},
 };
 </script>
 
@@ -96,7 +80,7 @@ export default {
 
         border-top: 2px solid #10c29b;
 
-        content: "";
+        content: '';
       }
     }
   }

@@ -19,7 +19,8 @@ function getAllModules(compilation) {
 
   // Look up in child compilations
   if (compilation.children.length > 0) {
-    const childModules = compilation.children.map(getAllModules)
+    const childModules = compilation.children
+      .map(getAllModules)
       .reduce((acc, compilationModules) => acc.concat(compilationModules), []);
 
     modules = modules.concat(childModules);
@@ -28,16 +29,17 @@ function getAllModules(compilation) {
   // Merge modules from ConcatenatedModule
   if (ConcatenatedModule) {
     const concatenatedModules = modules
-      .filter(m => m instanceof ConcatenatedModule)
+      .filter((m) => m instanceof ConcatenatedModule)
       .reduce((acc, m) => {
         /**
          * @see https://git.io/v7XDu
          * In webpack@3.5.1 `modules` public property was removed
          * To workaround this private `_orderedConcatenationList` property is used to collect modules
          */
-        const subModules = 'modules' in m
-          ? m.modules
-          : m._orderedConcatenationList.map(entry => entry.module);
+        const subModules =
+          'modules' in m
+            ? m.modules
+            : m._orderedConcatenationList.map((entry) => entry.module);
 
         return acc.concat(subModules);
       }, []);
@@ -47,11 +49,10 @@ function getAllModules(compilation) {
     }
   }
 
-  return modules.filter(m => m.rawRequest);
+  return modules.filter((m) => m.rawRequest);
 }
 
 module.exports.getAllModules = getAllModules;
-
 
 /**
  * Find nearest module chunk (not sure that is reliable method, but who cares).
@@ -73,7 +74,8 @@ function getModuleChunk(module) {
 
   if (Array.isArray(chunks) && chunks.length > 0) {
     return chunks[chunks.length - 1];
-  } if (module.issuer) {
+  }
+  if (module.issuer) {
     return getModuleChunk(module.issuer);
   }
 
@@ -98,8 +100,8 @@ module.exports.getWebpackMajorVersion = getWebpackMajorVersion;
  */
 function isHtmlPluginCompilation(compilation) {
   return (
-    compilation.compiler.name
-    && compilation.compiler.name.startsWith('html-webpack-plugin')
+    compilation.compiler.name &&
+    compilation.compiler.name.startsWith('html-webpack-plugin')
   );
 }
 
@@ -111,8 +113,8 @@ module.exports.isHtmlPluginCompilation = isHtmlPluginCompilation;
  */
 function isMiniExtractCompilation(compilation) {
   return (
-    compilation.compiler.name
-    && compilation.compiler.name.startsWith('mini-css-extract-plugin')
+    compilation.compiler.name &&
+    compilation.compiler.name.startsWith('mini-css-extract-plugin')
   );
 }
 
@@ -142,7 +144,9 @@ function getPluginFromLoaderContext(loaderContext) {
     : null;
 
   return parentCompiler
-    ? parentCompiler.options.plugins.find(p => p.NAMESPACE && p.NAMESPACE === NAMESPACE)
+    ? parentCompiler.options.plugins.find(
+        (p) => p.NAMESPACE && p.NAMESPACE === NAMESPACE
+      )
     : loaderContext[NAMESPACE];
 }
 
@@ -162,9 +166,7 @@ function isModuleShouldBeExtracted(module) {
     issuerResource = typeof issuer === 'string' ? issuer : issuer.resource;
   }
 
-  return (
-    issuer && EXTRACTABLE_MODULE_ISSUER_PATTERN.test(issuerResource)
-  );
+  return issuer && EXTRACTABLE_MODULE_ISSUER_PATTERN.test(issuerResource);
 }
 
 module.exports.isModuleShouldBeExtracted = isModuleShouldBeExtracted;

@@ -4,8 +4,8 @@ import SvgIcon from '@line-ui/line/src/components/icon/svg-icon';
 
 const { createComponent } = /*#__PURE__*/ createNamespace('icon');
 
-export default /*#__PURE__*/createComponent({
-  functional : true,
+export default /*#__PURE__*/ createComponent({
+  functional: true,
 
   render(h, { data, children }) {
     const { attrs } = data;
@@ -15,5 +15,4 @@ export default /*#__PURE__*/createComponent({
     }
     return h(FontIcon, data, children);
   },
-
 });

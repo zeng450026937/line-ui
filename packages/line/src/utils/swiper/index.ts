@@ -1,8 +1,3 @@
-import Swiper, {
-  SwiperOptions,
-} from 'swiper';
+import Swiper, { SwiperOptions } from 'swiper';
 
-export {
-  Swiper,
-  SwiperOptions,
-};
+export { Swiper, SwiperOptions };

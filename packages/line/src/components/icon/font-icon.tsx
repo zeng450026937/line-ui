@@ -10,13 +10,13 @@ function getDefaultText(slots: Function) {
 }
 
 export default /*#__PURE__*/ createComponent({
-  functional : true,
+  functional: true,
 
-  props : {
-    name   : String,
-    source : String,
-    size   : String,
-    color  : String,
+  props: {
+    name: String,
+    source: String,
+    size: String,
+    color: String,
   },
 
   render(h, { props, data, slots }) {
@@ -27,7 +27,7 @@ export default /*#__PURE__*/ createComponent({
       <i
         class={[
           'line-icon',
-          bem({ [`${ size }`]: !!size }),
+          bem({ [`${size}`]: !!size }),
           createColorClasses(color),
         ]}
         aria-hidden={!attrs['aria-label']}

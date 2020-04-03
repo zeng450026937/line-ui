@@ -37,7 +37,7 @@ module.exports = class SpriteCompiler {
    */
   getReplacements() {
     return Array.from(this.symbols.values())
-      .map(s => s.replacements)
+      .map((s) => s.replacements)
       .reduce((acc, r) => acc.concat(r), []);
   }
 
@@ -47,19 +47,22 @@ module.exports = class SpriteCompiler {
   groupBySpriteFileName(compilation) {
     const sprites = [];
 
-    Array.from(this.symbols.keys()).forEach(path => {
+    Array.from(this.symbols.keys()).forEach((path) => {
       const symbol = this.symbols.get(path);
       const { config, module } = symbol;
 
       const chunk = helpers.getModuleChunk(module);
-      const compilationContext = helpers.getRootCompilation(compilation).compiler.context;
-      const shouldEmit = config.emit || helpers.isModuleShouldBeExtracted(module);
+      const compilationContext = helpers.getRootCompilation(compilation)
+        .compiler.context;
+      const shouldEmit =
+        config.emit || helpers.isModuleShouldBeExtracted(module);
 
       let filename;
       if (config.filename && shouldEmit) {
-        filename = typeof config.filename === 'function'
-          ? config.filename(module)
-          : config.filename;
+        filename =
+          typeof config.filename === 'function'
+            ? config.filename(module)
+            : config.filename;
 
         if (filename.includes('[issuer-path]')) {
           filename = filename.replace(
@@ -67,7 +70,7 @@ module.exports = class SpriteCompiler {
             module.issuer.resource
               .replace(compilationContext, '')
               .replace(Path.extname(module.issuer.resource), '')
-              .replace(/^\//, ''),
+              .replace(/^\//, '')
           );
         }
         if (filename.includes('[chunkname]') && chunk && chunk.name) {
@@ -75,7 +78,7 @@ module.exports = class SpriteCompiler {
         }
       }
 
-      let sprite = sprites.find(s => s.filename === filename);
+      let sprite = sprites.find((s) => s.filename === filename);
       if (!sprite) {
         sprite = { symbols: [symbol] };
         if (filename) {
@@ -97,38 +100,42 @@ module.exports = class SpriteCompiler {
   compile(compilation) {
     const { spriteClass, spriteConfig } = this.config;
 
-    const promises = this.groupBySpriteFileName(compilation).map(spriteData => {
-      const { filename, symbols } = spriteData;
+    const promises = this.groupBySpriteFileName(compilation).map(
+      (spriteData) => {
+        const { filename, symbols } = spriteData;
 
-      // eslint-disable-next-line new-cap
-      const sprite = new spriteClass(spriteConfig, symbols);
+        // eslint-disable-next-line new-cap
+        const sprite = new spriteClass(spriteConfig, symbols);
 
-      return sprite.render()
-        .then(content => {
+        return sprite.render().then((content) => {
           const result = { sprite, content, filename };
 
           if (filename && filename.includes('[contenthash')) {
             result.filename = interpolateName(
               process.cwd(),
               filename.replace('[contenthash', '[hash'),
-              { content },
+              { content }
             );
           }
 
-          sprite.symbols.forEach(symbol => {
+          sprite.symbols.forEach((symbol) => {
             const { config, request } = symbol;
             const position = sprite.calculateSymbolPosition(symbol, 'percent');
 
             symbol.cssModules = symbol.issuers
-              .map(issuer => compilation.modules
-                .find(m => m.type === MINI_EXTRACT_MODULE_TYPE
-                  && m.issuer.request.includes(issuer.request)))
+              .map((issuer) =>
+                compilation.modules.find(
+                  (m) =>
+                    m.type === MINI_EXTRACT_MODULE_TYPE &&
+                    m.issuer.request.includes(issuer.request)
+                )
+              )
               .filter(Boolean);
 
             symbol.replacements = [
               generator.symbolUrl(symbol, {
                 ...config,
-                filename : result.filename,
+                filename: result.filename,
               }),
 
               // generator.bgPosLeft(request, position),
@@ -138,12 +145,13 @@ module.exports = class SpriteCompiler {
               // generator.bgSizeWidth(request, position),
 
               // generator.bgSizeHeight(request, position),
-            ].filter(replacement => replacement && replacement.replaceTo);
+            ].filter((replacement) => replacement && replacement.replaceTo);
           });
 
           return new CompiledSprite(result);
         });
-    });
+      }
+    );
 
     return Promise.all(promises);
   }

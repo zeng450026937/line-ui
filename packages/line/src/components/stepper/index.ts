@@ -3,6 +3,4 @@
 
 import Stepper from '@line-ui/line/src/components/stepper/stepper';
 
-export {
-  Stepper,
-};
+export { Stepper };

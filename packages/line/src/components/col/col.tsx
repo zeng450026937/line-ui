@@ -7,34 +7,34 @@ const BREAKPOINTS = ['', 'xs', 'sm', 'md', 'lg', 'xl'];
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('col');
 
 export default /*#__PURE__*/ createComponent({
-  props : {
-    offset   : String,
-    offsetXs : String,
-    offsetSm : String,
-    offsetMd : String,
-    offsetLg : String,
-    offsetXl : String,
+  props: {
+    offset: String,
+    offsetXs: String,
+    offsetSm: String,
+    offsetMd: String,
+    offsetLg: String,
+    offsetXl: String,
 
-    pull   : String,
-    pullXs : String,
-    pullSm : String,
-    pullMd : String,
-    pullLg : String,
-    pullXl : String,
+    pull: String,
+    pullXs: String,
+    pullSm: String,
+    pullMd: String,
+    pullLg: String,
+    pullXl: String,
 
-    push   : String,
-    pushXs : String,
-    pushSm : String,
-    pushMd : String,
-    pushLg : String,
-    pushXl : String,
+    push: String,
+    pushXs: String,
+    pushSm: String,
+    pushMd: String,
+    pushLg: String,
+    pushXl: String,
 
-    size   : String,
-    sizeXs : String,
-    sizeSm : String,
-    sizeMd : String,
-    sizeLg : String,
-    sizeXl : String,
+    size: String,
+    sizeXs: String,
+    sizeSm: String,
+    sizeMd: String,
+    sizeLg: String,
+    sizeXl: String,
   },
 
   mounted() {
@@ -45,7 +45,7 @@ export default /*#__PURE__*/ createComponent({
     window.removeEventListener('resize', this.onResize);
   },
 
-  methods : {
+  methods: {
     onResize() {
       this.$forceUpdate();
     },
@@ -60,7 +60,9 @@ export default /*#__PURE__*/ createComponent({
 
         // Grab the value of the property, if it exists and our
         // media query matches we return the value
-        const columns = (this as any)[property + breakpoint.charAt(0).toUpperCase() + breakpoint.slice(1)];
+        const columns = (this as any)[
+          property + breakpoint.charAt(0).toUpperCase() + breakpoint.slice(1)
+        ];
 
         if (matches && columns !== undefined) {
           matched = columns;
@@ -84,19 +86,21 @@ export default /*#__PURE__*/ createComponent({
       }
 
       // If the size is set to auto then don't calculate a size
-      const colSize = (columns === 'auto')
-        ? 'auto'
-        // If CSS supports variables we should use the grid columns var
-        : isSupportsVars() ? `calc(calc(${ columns } / var(--line-grid-columns, 12)) * 100%)`
-          // Convert the columns to a percentage by dividing by the total number
-          // of columns (12) and then multiplying by 100
-          : `${ (columns / 12) * 100 }%`;
+      const colSize =
+        columns === 'auto'
+          ? 'auto'
+          : // If CSS supports variables we should use the grid columns var
+          isSupportsVars()
+          ? `calc(calc(${columns} / var(--line-grid-columns, 12)) * 100%)`
+          : // Convert the columns to a percentage by dividing by the total number
+            // of columns (12) and then multiplying by 100
+            `${(columns / 12) * 100}%`;
 
       /* eslint-disable-next-line consistent-return */
       return {
-        flex        : `0 0 ${ colSize }`,
-        width       : `${ colSize }`,
-        'max-width' : `${ colSize }`,
+        flex: `0 0 ${colSize}`,
+        width: `${colSize}`,
+        'max-width': `${colSize}`,
       };
     },
 
@@ -111,20 +115,25 @@ export default /*#__PURE__*/ createComponent({
       // If the number of columns passed are greater than 0 and less than
       // 12 we can position the column, else default to auto
       const amount = isSupportsVars()
-      // If CSS supports variables we should use the grid columns var
-        ? `calc(calc(${ columns } / var(--line-grid-columns, 12)) * 100%)`
-      // Convert the columns to a percentage by dividing by the total number
-      // of columns (12) and then multiplying by 100
-        : (columns > 0 && columns < 12) ? `${ (columns / 12) * 100 }%` : 'auto';
+        ? // If CSS supports variables we should use the grid columns var
+          `calc(calc(${columns} / var(--line-grid-columns, 12)) * 100%)`
+        : // Convert the columns to a percentage by dividing by the total number
+        // of columns (12) and then multiplying by 100
+        columns > 0 && columns < 12
+        ? `${(columns / 12) * 100}%`
+        : 'auto';
 
       /* eslint-disable-next-line consistent-return */
       return {
-        [modifier] : amount,
+        [modifier]: amount,
       };
     },
 
     calculateOffset(isRTL: boolean) {
-      return this.calculatePosition('offset', isRTL ? 'margin-right' : 'margin-left');
+      return this.calculatePosition(
+        'offset',
+        isRTL ? 'margin-right' : 'margin-left'
+      );
     },
 
     calculatePull(isRTL: boolean) {

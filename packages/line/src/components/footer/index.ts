@@ -3,6 +3,4 @@
 
 import Footer from '@line-ui/line/src/components/footer/footer';
 
-export {
-  Footer,
-};
+export { Footer };

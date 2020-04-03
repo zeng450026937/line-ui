@@ -22,11 +22,11 @@ const masterVersion = require('./package.json').version;
 const packagesDir = path.resolve(__dirname, 'packages');
 const packageDir = path.resolve(packagesDir, process.env.TARGET);
 const name = path.basename(packageDir);
-const resolve = p => path.resolve(packageDir, p);
+const resolve = (p) => path.resolve(packageDir, p);
 const pkg = require(resolve('package.json'));
 const packageOptions = pkg.buildOptions || {};
 
-const knownExternals = fs.readdirSync(packagesDir).filter(p => {
+const knownExternals = fs.readdirSync(packagesDir).filter((p) => {
   return p !== '@line-ui/utils';
 });
 
@@ -34,37 +34,38 @@ const knownExternals = fs.readdirSync(packagesDir).filter(p => {
 let hasTSChecked = false;
 
 const outputConfigs = {
-  'esm-bundler' : {
-    file   : resolve(`dist/${ name }.esm-bundler.js`),
-    format : 'es',
+  'esm-bundler': {
+    file: resolve(`dist/${name}.esm-bundler.js`),
+    format: 'es',
   },
-  cjs : {
-    file   : resolve(`dist/${ name }.cjs.js`),
-    format : 'cjs',
+  cjs: {
+    file: resolve(`dist/${name}.cjs.js`),
+    format: 'cjs',
   },
-  global : {
-    file   : resolve(`dist/${ name }.global.js`),
-    format : 'iife',
+  global: {
+    file: resolve(`dist/${name}.global.js`),
+    format: 'iife',
   },
-  esm : {
-    file   : resolve(`dist/${ name }.esm.js`),
-    format : 'es',
+  esm: {
+    file: resolve(`dist/${name}.esm.js`),
+    format: 'es',
   },
-  umd : {
-    file   : resolve(`dist/${ name }.umd.js`),
-    format : 'umd',
+  umd: {
+    file: resolve(`dist/${name}.umd.js`),
+    format: 'umd',
   },
 };
 
 const defaultFormats = ['esm-bundler', 'cjs'];
 const inlineFormats = process.env.FORMATS && process.env.FORMATS.split(',');
-const packageFormats = inlineFormats || packageOptions.formats || defaultFormats;
+const packageFormats =
+  inlineFormats || packageOptions.formats || defaultFormats;
 const packageConfigs = process.env.PROD_ONLY
   ? []
-  : packageFormats.map(format => createConfig(format, outputConfigs[format]));
+  : packageFormats.map((format) => createConfig(format, outputConfigs[format]));
 
 if (process.env.NODE_ENV === 'production') {
-  packageFormats.forEach(format => {
+  packageFormats.forEach((format) => {
     if (format === 'cjs' && packageOptions.prod !== false) {
       packageConfigs.push(createProductionConfig(format));
     }
@@ -78,14 +79,15 @@ export default packageConfigs;
 
 function createConfig(format, output, plugins = []) {
   if (!output) {
-    console.log(require('chalk').yellow(`invalid format: "${ format }"`));
+    console.log(require('chalk').yellow(`invalid format: "${format}"`));
     process.exit(1);
   }
 
   output.sourcemap = !!process.env.SOURCE_MAP || packageOptions.sourcemap;
   output.externalLiveBindings = false;
 
-  const isProductionBuild = process.env.__DEV__ === 'false' || /\.prod\.js$/.test(output.file);
+  const isProductionBuild =
+    process.env.__DEV__ === 'false' || /\.prod\.js$/.test(output.file);
   const isGlobalBuild = format === 'global';
   const isRawESMBuild = format === 'esm';
   const isNodeBuild = format === 'cjs';
@@ -95,9 +97,10 @@ function createConfig(format, output, plugins = []) {
     output.name = packageOptions.name;
   }
 
-  const shouldEmitDeclarations = process.env.TYPES != null
-    && process.env.NODE_ENV === 'production'
-    && !hasTSChecked;
+  const shouldEmitDeclarations =
+    process.env.TYPES != null &&
+    process.env.NODE_ENV === 'production' &&
+    !hasTSChecked;
 
   const resolvedPlugins = [];
 
@@ -114,52 +117,46 @@ function createConfig(format, output, plugins = []) {
   if (enableAlias) {
     resolvedPlugins.push(
       alias({
-        entries : {
-          [name] : packageDir,
+        entries: {
+          [name]: packageDir,
         },
-      }),
+      })
     );
   }
 
   if (enableNodeModule) {
     resolvedPlugins.push(
       noderesolve({
-        browser    : !isNodeBuild,
-        extensions : ['.js', '.jsx', '.ts', '.tsx'],
+        browser: !isNodeBuild,
+        extensions: ['.js', '.jsx', '.ts', '.tsx'],
       }),
-      commonjs({}),
+      commonjs({})
     );
   }
 
   if (enableJson) {
     resolvedPlugins.push(
       json({
-        namedExports : false,
-      }),
+        namedExports: false,
+      })
     );
   }
 
   if (enableTypescript) {
     resolvedPlugins.push(
       ts({
-        check            : process.env.NODE_ENV === 'production' && !hasTSChecked,
-        tsconfig         : path.resolve(__dirname, 'tsconfig.json'),
-        cacheRoot        : path.resolve(__dirname, 'node_modules/.rts2_cache'),
-        tsconfigOverride : {
-          compilerOptions : {
-            sourceMap      : output.sourcemap,
-            declaration    : shouldEmitDeclarations,
-            declarationMap : shouldEmitDeclarations,
+        check: process.env.NODE_ENV === 'production' && !hasTSChecked,
+        tsconfig: path.resolve(__dirname, 'tsconfig.json'),
+        cacheRoot: path.resolve(__dirname, 'node_modules/.rts2_cache'),
+        tsconfigOverride: {
+          compilerOptions: {
+            sourceMap: output.sourcemap,
+            declaration: shouldEmitDeclarations,
+            declarationMap: shouldEmitDeclarations,
           },
-          exclude : [
-            '**/__tests__',
-            'test-dts',
-            '**/test',
-            'src',
-            'tests',
-          ],
+          exclude: ['**/__tests__', 'test-dts', '**/test', 'src', 'tests'],
         },
-      }),
+      })
     );
     // we only need to check TS and generate declarations once for each build.
     // it also seems to run into weird issues when checking multiple times
@@ -173,41 +170,42 @@ function createConfig(format, output, plugins = []) {
         isProductionBuild,
         isBundlerESMBuild,
         // isBrowserBuild?
-        (isGlobalBuild || isRawESMBuild || isBundlerESMBuild)
-          && !packageOptions.enableNonBrowserBranches,
-        isNodeBuild,
-      ),
+        (isGlobalBuild || isRawESMBuild || isBundlerESMBuild) &&
+          !packageOptions.enableNonBrowserBranches,
+        isNodeBuild
+      )
     );
   }
 
   if (enableBabel) {
     resolvedPlugins.push(
       babel({
-        extensions     : ['.jsx', '.tsx'],
-        exclude        : 'node_modules/**',
-        babelrc        : false,
-        root           : packageDir,
-        rootMode       : 'upward',
-        runtimeHelpers : true,
-        compact        : false,
-      }),
+        extensions: ['.jsx', '.tsx'],
+        exclude: 'node_modules/**',
+        babelrc: false,
+        root: packageDir,
+        rootMode: 'upward',
+        runtimeHelpers: true,
+        compact: false,
+      })
     );
   }
 
   if (enableBuble) {
     resolvedPlugins.push(
       buble({
-        objectAssign : true,
-      }),
+        objectAssign: true,
+      })
     );
   }
 
   const fileExt = enableTypescript ? 'ts' : 'js';
-  const entryFile = `src/index.${ fileExt }`;
+  const entryFile = `src/index.${fileExt}`;
 
-  const external = isGlobalBuild || isRawESMBuild
-    ? []
-    : knownExternals.concat(Object.keys(pkg.dependencies || []));
+  const external =
+    isGlobalBuild || isRawESMBuild
+      ? []
+      : knownExternals.concat(Object.keys(pkg.dependencies || []));
 
   // always external vue
   external.push('vue');
@@ -217,16 +215,13 @@ function createConfig(format, output, plugins = []) {
   }
 
   return {
-    input   : resolve(entryFile),
+    input: resolve(entryFile),
     // Global and Browser ESM builds inlines everything so that they can be
     // used alone.
     external,
-    plugins : [
-      ...resolvedPlugins,
-      ...plugins,
-    ],
+    plugins: [...resolvedPlugins, ...plugins],
     output,
-    onwarn : (msg, warn) => {
+    onwarn: (msg, warn) => {
       if (!/Circular/.test(msg)) {
         warn(msg);
       }
@@ -238,37 +233,37 @@ function createReplacePlugin(
   isProduction,
   isBundlerESMBuild,
   isBrowserBuild,
-  isNodeBuild,
+  isNodeBuild
 ) {
   const replacements = {
-    __COMMIT__  : `"${ process.env.COMMIT }"`,
-    __VERSION__ : `"${ masterVersion }"`,
-    __DEV__     : isBundlerESMBuild
+    __COMMIT__: `"${process.env.COMMIT}"`,
+    __VERSION__: `"${masterVersion}"`,
+    __DEV__: isBundlerESMBuild
       ? // preserve to be handled by bundlers
-      '(process.env.NODE_ENV !== \'production\')'
+        "(process.env.NODE_ENV !== 'production')"
       : // hard coded dev/prod builds
-      !isProduction,
+        !isProduction,
     // this is only used during tests
-    __TEST__            : isBundlerESMBuild ? '(process.env.NODE_ENV === \'test\')' : false,
+    __TEST__: isBundlerESMBuild ? "(process.env.NODE_ENV === 'test')" : false,
     // If the build is expected to run directly in the browser (global / esm builds)
-    __BROWSER__         : isBrowserBuild,
+    __BROWSER__: isBrowserBuild,
     // is targeting bundlers?
-    __BUNDLER__         : isBundlerESMBuild,
+    __BUNDLER__: isBundlerESMBuild,
     // is targeting Node (SSR)?
-    __NODE_JS__         : isNodeBuild,
+    __NODE_JS__: isNodeBuild,
     // support options?
     // the lean build drops options related code with buildOptions.lean: true
-    __FEATURE_OPTIONS__ : !packageOptions.lean && !process.env.LEAN,
+    __FEATURE_OPTIONS__: !packageOptions.lean && !process.env.LEAN,
     ...(isProduction && isBrowserBuild
       ? {
-        // 'createNamespace(' : '/*#__PURE__*/ createNamespace(',
-        // 'createComponent(' : '/*#__PURE__*/ createComponent(',
-      }
+          // 'createNamespace(' : '/*#__PURE__*/ createNamespace(',
+          // 'createComponent(' : '/*#__PURE__*/ createComponent(',
+        }
       : {}),
   };
   // allow inline overrides like
   // __RUNTIME_COMPILE__=true yarn build runtime-core
-  Object.keys(replacements).forEach(key => {
+  Object.keys(replacements).forEach((key) => {
     if (key in process.env) {
       replacements[key] = process.env[key];
     }
@@ -278,8 +273,8 @@ function createReplacePlugin(
 
 function createProductionConfig(format) {
   return createConfig(format, {
-    file   : resolve(`dist/${ name }.${ format }.prod.js`),
-    format : outputConfigs[format].format,
+    file: resolve(`dist/${name}.${format}.prod.js`),
+    format: outputConfigs[format].format,
   });
 }
 
@@ -288,20 +283,20 @@ function createMinifiedConfig(format) {
   return createConfig(
     format,
     {
-      file   : resolve(`dist/${ name }.${ format }.prod.js`),
-      format : outputConfigs[format].format,
+      file: resolve(`dist/${name}.${format}.prod.js`),
+      format: outputConfigs[format].format,
     },
     [
       terser({
-        module   : /^esm/.test(format),
-        compress : {
-          ecma         : 2015,
-          pure_getters : true,
+        module: /^esm/.test(format),
+        compress: {
+          ecma: 2015,
+          pure_getters: true,
         },
-        output : {
-          comments : false,
+        output: {
+          comments: false,
         },
       }),
-    ],
+    ]
   );
 }

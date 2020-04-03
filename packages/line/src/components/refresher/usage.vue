@@ -8,21 +8,14 @@
 
     <line-content>
       <template #fixed>
-        <line-refresher
-          @start="onStart"
-          @pull="onPull"
-          @refresh="refresh"
-        >
+        <line-refresher @start="onStart" @pull="onPull" @refresh="refresh">
           <line-refresher-content></line-refresher-content>
         </line-refresher>
       </template>
 
       <line-list>
-        <line-item
-          v-for="(item, index) in list"
-          :key="index"
-        >
-          <line-label>{{item}}</line-label>
+        <line-item v-for="(item, index) in list" :key="index">
+          <line-label>{{ item }}</line-label>
         </line-item>
       </line-list>
     </line-content>
@@ -30,11 +23,10 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
-      list : [],
+      list: [],
     };
   },
 
@@ -44,7 +36,7 @@ export default {
     }
   },
 
-  methods : {
+  methods: {
     onStart() {
       console.log('onStart');
     },
@@ -66,9 +58,7 @@ export default {
     },
   },
 
-  watch : {
-
-  },
+  watch: {},
 };
 </script>
 

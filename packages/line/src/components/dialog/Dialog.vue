@@ -1,42 +1,41 @@
 <template>
-  <div class="dialog">
-  </div>
+  <div class="dialog"></div>
 </template>
 
 <script>
 import { Popup } from '@line-ui/skyline/src/components/popup';
 
 export default {
-  name : 'Dialog',
+  name: 'Dialog',
 
-  extends : Popup,
+  extends: Popup,
 
-  props : {
-    footer : {
-      type    : Object,
-      default : () => ({}),
+  props: {
+    footer: {
+      type: Object,
+      default: () => ({}),
     },
-    header : {
-      type    : Object,
-      default : () => ({}),
+    header: {
+      type: Object,
+      default: () => ({}),
     },
-    standardButtons : {
-      type    : Number,
-      default : 0,
+    standardButtons: {
+      type: Number,
+      default: 0,
     },
-    title : {
-      type    : String,
-      default : '',
+    title: {
+      type: String,
+      default: '',
     },
   },
 
-  computed : {
+  computed: {
     result() {
       return 0;
     },
   },
 
-  methods : {
+  methods: {
     accept() {},
     done() {},
     reject() {},
@@ -54,6 +53,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>

@@ -1,26 +1,24 @@
 const qs = require('querystring');
 const loaderUtils = require('loader-utils');
 
-const isPitcher = l => l.path !== __filename;
+const isPitcher = (l) => l.path !== __filename;
 
-module.exports = code => code;
+module.exports = (code) => code;
 
 module.exports.pitch = function (remainingRequest) {
   const loaderContext = this;
 
-  const {
-    resourcePath,
-    resourceQuery,
-  } = loaderContext;
+  const { resourcePath, resourceQuery } = loaderContext;
 
   // remove self
   const loaders = loaderContext.loaders.filter(isPitcher);
 
   const rawQuery = resourceQuery.slice(1);
-  const inheritQuery = `&${ rawQuery }`;
+  const inheritQuery = `&${rawQuery}`;
   const incomingQuery = qs.parse(rawQuery);
 
-  const stringifyRequest = r => loaderUtils.stringifyRequest(loaderContext, r);
+  const stringifyRequest = (r) =>
+    loaderUtils.stringifyRequest(loaderContext, r);
   const genRequest = (loaders, url) => {
     // Important: dedupe since both the original rule
     // and the cloned rule would match a source import request.
@@ -33,10 +31,9 @@ module.exports.pitch = function (remainingRequest) {
     const seen = new Map();
     const loaderStrings = [];
 
-    loaders.forEach(loader => {
-      const identifier = typeof loader === 'string'
-        ? loader
-        : (loader.path + loader.query);
+    loaders.forEach((loader) => {
+      const identifier =
+        typeof loader === 'string' ? loader : loader.path + loader.query;
       const request = typeof loader === 'string' ? loader : loader.request;
       if (!seen.has(identifier)) {
         seen.set(identifier, true);
@@ -46,20 +43,22 @@ module.exports.pitch = function (remainingRequest) {
       }
     });
 
-    return stringifyRequest(`-!${ [
-      ...loaderStrings,
-      url || resourcePath + resourceQuery,
-    ].join('!') }`);
+    return stringifyRequest(
+      `-!${[...loaderStrings, url || resourcePath + resourceQuery].join('!')}`
+    );
   };
 
   const options = loaderUtils.getOptions(loaderContext);
 
   // Inject babel loader
-  const request = genRequest([`${ require.resolve('babel-loader') }`, ...loaders]);
+  const request = genRequest([
+    `${require.resolve('babel-loader')}`,
+    ...loaders,
+  ]);
 
   return `
-import mod from ${ request };
+import mod from ${request};
 export default mod;
-export * from ${ request };
+export * from ${request};
   `.trim();
 };

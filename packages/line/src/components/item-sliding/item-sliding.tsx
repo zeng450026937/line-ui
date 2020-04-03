@@ -1,9 +1,6 @@
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
 import { Side } from '@line-ui/line/src/types';
-import {
-  createGesture,
-  GestureDetail,
-} from '@line-ui/line/src/utils/gesture';
+import { createGesture, GestureDetail } from '@line-ui/line/src/utils/gesture';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('item-sliding');
 
@@ -14,7 +11,7 @@ const enum ItemSide {
   None = 0,
   Start = 1 << 0,
   End = 1 << 1,
-  Both = Start | End
+  Both = Start | End,
 }
 
 const enum SlidingState {
@@ -32,14 +29,22 @@ let openSlidingItem: any | undefined;
 const isEndSide = (side: Side): boolean => {
   const isRTL = document.dir === 'rtl';
   switch (side) {
-    case 'start': return isRTL;
-    case 'end': return !isRTL;
+    case 'start':
+      return isRTL;
+    case 'end':
+      return !isRTL;
     default:
-      throw new Error(`"${ side }" is not a valid value for [side]. Use "start" or "end" instead.`);
+      throw new Error(
+        `"${side}" is not a valid value for [side]. Use "start" or "end" instead.`
+      );
   }
 };
 
-const swipeShouldReset = (isResetDirection: boolean, isMovingFast: boolean, isOnResetZone: boolean): boolean => {
+const swipeShouldReset = (
+  isResetDirection: boolean,
+  isMovingFast: boolean,
+  isOnResetZone: boolean
+): boolean => {
   // The logic required to know when the sliding item should close (openAmount=0)
   // depends on three booleans (isResetDirection, isMovingFast, isOnResetZone)
   // and it ended up being too complicated to be written manually without errors
@@ -60,27 +65,27 @@ const swipeShouldReset = (isResetDirection: boolean, isMovingFast: boolean, isOn
 export default /*#__PURE__*/ createComponent({
   provide(): any {
     return {
-      ItemSliding : this,
+      ItemSliding: this,
     };
   },
 
-  inject : {
-    Item : { default: undefined },
+  inject: {
+    Item: { default: undefined },
   },
 
-  props : {
-    disabled : Boolean,
+  props: {
+    disabled: Boolean,
   },
 
   data() {
     return {
-      state : SlidingState.Disabled,
+      state: SlidingState.Disabled,
 
-      options : [] as any[],
+      options: [] as any[],
     };
   },
 
-  methods : {
+  methods: {
     disabledChanged() {
       if (this.gesture) {
         this.gesture.enable(!this.disabled);
@@ -112,17 +117,21 @@ export default /*#__PURE__*/ createComponent({
      * it will open the first set of options it finds within the item.
      */
     async open(side: Side | undefined) {
-      if (this.item === null) { return; }
+      if (this.item === null) {
+        return;
+      }
 
       const optionsToOpen = this.getOptions(side);
-      if (!optionsToOpen) { return; }
+      if (!optionsToOpen) {
+        return;
+      }
 
       /**
        * If side is not set, we need to infer the side
        * so we know which direction to move the options
        */
       if (side === undefined) {
-        side = (optionsToOpen === this.leftOptions) ? 'start' : 'end';
+        side = optionsToOpen === this.leftOptions ? 'start' : 'end';
       }
 
       // In RTL we want to switch the sides
@@ -135,8 +144,12 @@ export default /*#__PURE__*/ createComponent({
        * If a side is open and a user tries to
        * re-open the same side, we should not do anything
        */
-      if (isStartOpen && optionsToOpen === this.leftOptions) { return; }
-      if (isEndOpen && optionsToOpen === this.rightOptions) { return; }
+      if (isStartOpen && optionsToOpen === this.leftOptions) {
+        return;
+      }
+      if (isEndOpen && optionsToOpen === this.rightOptions) {
+        return;
+      }
 
       this.closeOpened();
 
@@ -145,11 +158,12 @@ export default /*#__PURE__*/ createComponent({
       requestAnimationFrame(() => {
         this.calculateOptsWidth();
 
-        const width = (side === 'end') ? this.optsWidthRightSide : -this.optsWidthLeftSide;
+        const width =
+          side === 'end' ? this.optsWidthRightSide : -this.optsWidthLeftSide;
         openSlidingItem = this;
 
         this.setOpenAmount(width, false);
-        this.state = (side === 'end') ? SlidingState.End : SlidingState.Start;
+        this.state = side === 'end' ? SlidingState.End : SlidingState.Start;
       });
     },
 
@@ -181,7 +195,8 @@ export default /*#__PURE__*/ createComponent({
     getOptions(side?: string): HTMLElement | undefined {
       if (side === undefined) {
         return this.leftOptions || this.rightOptions;
-      } if (side === 'start') {
+      }
+      if (side === 'start') {
         return this.leftOptions;
       }
       return this.rightOptions;
@@ -219,7 +234,9 @@ export default /*#__PURE__*/ createComponent({
        * back will still work.
        */
       const rtl = document.dir === 'rtl';
-      const atEdge = (rtl) ? (window.innerWidth - gesture.startX) < 15 : gesture.startX < 15;
+      const atEdge = rtl
+        ? window.innerWidth - gesture.startX < 15
+        : gesture.startX < 15;
       if (atEdge) {
         return false;
       }
@@ -257,11 +274,19 @@ export default /*#__PURE__*/ createComponent({
       let openAmount = this.initialOpenAmount - gesture.deltaX;
 
       switch (this.sides) {
-        case ItemSide.End: openAmount = Math.max(0, openAmount); break;
-        case ItemSide.Start: openAmount = Math.min(0, openAmount); break;
-        case ItemSide.Both: break;
-        case ItemSide.None: return;
-        default: __DEV__ && console.warn('invalid ItemSideFlags value', this.sides); break;
+        case ItemSide.End:
+          openAmount = Math.max(0, openAmount);
+          break;
+        case ItemSide.Start:
+          openAmount = Math.min(0, openAmount);
+          break;
+        case ItemSide.Both:
+          break;
+        case ItemSide.None:
+          return;
+        default:
+          __DEV__ && console.warn('invalid ItemSideFlags value', this.sides);
+          break;
       }
 
       let optsWidth;
@@ -279,15 +304,15 @@ export default /*#__PURE__*/ createComponent({
     onEnd(gesture: GestureDetail) {
       const velocity = gesture.velocityX;
 
-      let restingPoint = (this.openAmount > 0)
-        ? this.optsWidthRightSide
-        : -this.optsWidthLeftSide;
+      let restingPoint =
+        this.openAmount > 0 ? this.optsWidthRightSide : -this.optsWidthLeftSide;
 
       // Check if the drag didn't clear the buttons mid-point
       // and we aren't moving fast enough to swipe open
-      const isResetDirection = (this.openAmount > 0) === !(velocity < 0);
+      const isResetDirection = this.openAmount > 0 === !(velocity < 0);
       const isMovingFast = Math.abs(velocity) > 0.3;
-      const isOnCloseZone = Math.abs(this.openAmount) < Math.abs(restingPoint / 2);
+      const isOnCloseZone =
+        Math.abs(this.openAmount) < Math.abs(restingPoint / 2);
       if (swipeShouldReset(isResetDirection, isMovingFast, isOnCloseZone)) {
         restingPoint = 0;
       }
@@ -336,13 +361,15 @@ export default /*#__PURE__*/ createComponent({
       }
 
       if (openAmount > 0) {
-        this.state = (openAmount >= (this.optsWidthRightSide + SWIPE_MARGIN))
-          ? SlidingState.End | SlidingState.SwipeEnd
-          : SlidingState.End;
+        this.state =
+          openAmount >= this.optsWidthRightSide + SWIPE_MARGIN
+            ? SlidingState.End | SlidingState.SwipeEnd
+            : SlidingState.End;
       } else if (openAmount < 0) {
-        this.state = (openAmount <= (-this.optsWidthLeftSide - SWIPE_MARGIN))
-          ? SlidingState.Start | SlidingState.SwipeStart
-          : SlidingState.Start;
+        this.state =
+          openAmount <= -this.optsWidthLeftSide - SWIPE_MARGIN
+            ? SlidingState.Start | SlidingState.SwipeStart
+            : SlidingState.Start;
       } else {
         this.tmr = setTimeout(() => {
           this.state = SlidingState.Disabled;
@@ -354,18 +381,19 @@ export default /*#__PURE__*/ createComponent({
         return;
       }
 
-      style.transform = `translate3d(${ -openAmount }px,0,0)`;
+      style.transform = `translate3d(${-openAmount}px,0,0)`;
 
       this.$emit('drag', {
-        amount : openAmount,
-        ratio  : this.getSlidingRatioSync(),
+        amount: openAmount,
+        ratio: this.getSlidingRatioSync(),
       });
     },
 
     getSlidingRatioSync(): number {
       if (this.openAmount > 0) {
         return this.openAmount / this.optsWidthRightSide;
-      } if (this.openAmount < 0) {
+      }
+      if (this.openAmount < 0) {
         return this.openAmount / this.optsWidthLeftSide;
       }
       return 0;
@@ -373,13 +401,13 @@ export default /*#__PURE__*/ createComponent({
   },
 
   beforeMount() {
-    this.item = null as (HTMLElement | null);
+    this.item = null as HTMLElement | null;
     this.openAmount = 0;
     this.initialOpenAmount = 0;
     this.optsWidthRightSide = 0;
     this.optsWidthLeftSide = 0;
     this.sides = ItemSide.None;
-    this.tmr = undefined as (number | undefined);
+    this.tmr = undefined as number | undefined;
     this.optsDirty = true;
   },
 
@@ -388,31 +416,28 @@ export default /*#__PURE__*/ createComponent({
     await this.updateOptions();
 
     this.gesture = createGesture({
-      el              : this.$el,
-      gestureName     : 'item-swipe',
-      gesturePriority : 100,
-      threshold       : 5,
-      canStart        : ev => this.canStart(ev),
-      onStart         : () => this.onStart(),
-      onMove          : ev => this.onMove(ev),
-      onEnd           : ev => this.onEnd(ev),
+      el: this.$el,
+      gestureName: 'item-swipe',
+      gesturePriority: 100,
+      threshold: 5,
+      canStart: (ev) => this.canStart(ev),
+      onStart: () => this.onStart(),
+      onMove: (ev) => this.onMove(ev),
+      onEnd: (ev) => this.onEnd(ev),
     });
     this.disabledChanged();
   },
 
-
   render() {
     return (
       <div
-        class={
-          bem({
-            'active-slide'         : (this.state !== SlidingState.Disabled),
-            'active-options-end'   : (this.state & SlidingState.End) !== 0,
-            'active-options-start' : (this.state & SlidingState.Start) !== 0,
-            'active-swipe-end'     : (this.state & SlidingState.SwipeEnd) !== 0,
-            'active-swipe-start'   : (this.state & SlidingState.SwipeStart) !== 0,
-          })
-        }
+        class={bem({
+          'active-slide': this.state !== SlidingState.Disabled,
+          'active-options-end': (this.state & SlidingState.End) !== 0,
+          'active-options-start': (this.state & SlidingState.Start) !== 0,
+          'active-swipe-end': (this.state & SlidingState.SwipeEnd) !== 0,
+          'active-swipe-start': (this.state & SlidingState.SwipeStart) !== 0,
+        })}
       >
         {this.slots()}
       </div>

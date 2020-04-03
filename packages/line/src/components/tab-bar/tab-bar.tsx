@@ -6,34 +6,33 @@ const NAMESPACE = 'TabBar';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('tab-bar');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
+  mixins: [
     /*#__PURE__*/ useCheckGroupWithModel(NAMESPACE),
     /*#__PURE__*/ useColor(),
   ],
 
-  props : {
-    exclusive : {
-      type    : Boolean,
-      default : true,
+  props: {
+    exclusive: {
+      type: Boolean,
+      default: true,
     },
-    value           : String,
-    translucent     : Boolean,
-    keyboardVisible : Boolean,
-    selectedTab     : String,
+    value: String,
+    translucent: Boolean,
+    keyboardVisible: Boolean,
+    selectedTab: String,
   },
 
-  methods : {
+  methods: {
     selectedTabChanged() {
       if (this.selectedTab !== undefined) {
         this.$emit('tabBarChanged', {
-          tab : this.selectedTab,
+          tab: this.selectedTab,
         });
       }
     },
-
   },
 
-  watch : {
+  watch: {
     selectedTab() {
       this.selectedTabChanged();
     },
@@ -48,12 +47,10 @@ export default /*#__PURE__*/ createComponent({
 
     return (
       <div
-        class={
-          bem({
-            translucent,
-            hidden : keyboardVisible,
-          })
-        }
+        class={bem({
+          translucent,
+          hidden: keyboardVisible,
+        })}
         on={this.$listeners}
       >
         {this.slots()}

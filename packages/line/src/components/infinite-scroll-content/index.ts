@@ -3,6 +3,4 @@
 
 import InfiniteScrollContent from '@line-ui/line/src/components/infinite-scroll-content/infinite-scroll-content';
 
-export {
-  InfiniteScrollContent,
-};
+export { InfiniteScrollContent };

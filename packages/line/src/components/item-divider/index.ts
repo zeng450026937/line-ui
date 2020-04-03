@@ -3,6 +3,4 @@
 
 import ItemDivider from '@line-ui/line/src/components/item-divider/item-divider';
 
-export {
-  ItemDivider,
-};
+export { ItemDivider };

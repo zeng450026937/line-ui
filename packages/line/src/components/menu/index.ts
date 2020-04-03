@@ -3,6 +3,4 @@
 
 import Menu from '@line-ui/line/src/components/menu/menu';
 
-export {
-  Menu,
-};
+export { Menu };

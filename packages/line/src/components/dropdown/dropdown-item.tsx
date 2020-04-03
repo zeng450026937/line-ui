@@ -17,22 +17,22 @@ const safeCall = (handler: any, arg?: any) => {
 };
 
 export default /*#__PURE__*/ createComponent({
-  props : {
-    option : {
-      type : Object,
+  props: {
+    option: {
+      type: Object,
     },
   },
 
-  methods : {
+  methods: {
     async buttonClick(button: ActionSheetButtonOption) {
-      const parent = this.$parent.$options.name === 'line-dropdown' ? this.$parent : null;
+      const parent =
+        this.$parent.$options.name === 'line-dropdown' ? this.$parent : null;
 
       if (!parent) return;
 
       if (!button) {
         return parent.close();
       }
-
 
       const { role } = button;
 
@@ -72,9 +72,7 @@ export default /*#__PURE__*/ createComponent({
         class={[bem(''), 'line-activatable']}
         onClick={() => this.buttonClick(option)}
       >
-        <span class={bem('inner')}>
-          {this.slots() || option.text}
-        </span>
+        <span class={bem('inner')}>{this.slots() || option.text}</span>
       </li>
     );
   },

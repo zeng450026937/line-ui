@@ -1,9 +1,6 @@
 import { VNodeDirective } from 'vue';
 import { defineDirective } from '@line-ui/line/src/utils/directive';
-import {
-  getApp,
-  on,
-} from '@line-ui/line/src/utils/dom';
+import { getApp, on } from '@line-ui/line/src/utils/dom';
 
 export interface ClickOutsideOptions {
   enabled?: (ev?: Event) => boolean;
@@ -11,25 +8,26 @@ export interface ClickOutsideOptions {
   callback: (ev: Event) => void;
 }
 
-export function createClickOutside(el: HTMLElement, options: ClickOutsideOptions) {
-  const {
-    enabled = () => true,
-    include = () => [],
-    callback,
-  } = options;
+export function createClickOutside(
+  el: HTMLElement,
+  options: ClickOutsideOptions
+) {
+  const { enabled = () => true, include = () => [], callback } = options;
 
   const maybe = (ev: Event) => {
     if (!ev) return;
     if (enabled(ev) === false) return;
 
-    if (('isTrusted' in ev && !ev.isTrusted)
-    || ('pointerType' in ev && !(ev as PointerEvent).pointerType)
-    ) return;
+    if (
+      ('isTrusted' in ev && !ev.isTrusted) ||
+      ('pointerType' in ev && !(ev as PointerEvent).pointerType)
+    )
+      return;
 
     const elements = include();
     elements.push(el);
 
-    if (!elements.some(element => element.contains(ev.target as Node))) {
+    if (!elements.some((element) => element.contains(ev.target as Node))) {
       callback(ev);
     }
   };
@@ -59,13 +57,10 @@ export interface ClickOutsideDirective extends VNodeDirective {
 function inserted(el: HTMLElement, binding: ClickOutsideDirective) {
   if (!binding.value) return;
 
-  (el as any).vClickOutside = createClickOutside(
-    el,
-    {
-      ...binding.args,
-      callback : binding.value,
-    } as ClickOutsideOptions,
-  );
+  (el as any).vClickOutside = createClickOutside(el, {
+    ...binding.args,
+    callback: binding.value,
+  } as ClickOutsideOptions);
 }
 
 function unbind(el: HTMLElement) {
@@ -92,7 +87,7 @@ function update(el: HTMLElement, binding: ClickOutsideDirective) {
 }
 
 export const vClickOutside = /*#__PURE__*/ defineDirective({
-  name : 'click-outside',
+  name: 'click-outside',
   inserted,
   unbind,
   update,

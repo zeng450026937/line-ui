@@ -4,16 +4,18 @@ module.exports = (api, options) => {
   api.registerCommand(
     'lint:style',
     {
-      description : 'lint line style',
-      usage       : 'vue-cli-service lint:style',
-      details     : 'TBD',
+      description: 'lint line style',
+      usage: 'vue-cli-service lint:style',
+      details: 'TBD',
     },
     async (args, rawArgs) => {
-      await execa('stylelint', ['src/**/*.scss', ...rawArgs], { stdio: 'inherit' });
-    },
+      await execa('stylelint', ['src/**/*.scss', ...rawArgs], {
+        stdio: 'inherit',
+      });
+    }
   );
 };
 
 module.exports.defaultModes = {
-  'lint:style' : 'production',
+  'lint:style': 'production',
 };

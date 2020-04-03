@@ -3,6 +3,4 @@
 
 import Thumbnail from '@line-ui/line/src/components/thumbnail/thumbnail';
 
-export {
-  Thumbnail,
-};
+export { Thumbnail };

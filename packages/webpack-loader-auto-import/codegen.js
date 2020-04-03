@@ -17,53 +17,61 @@ module.exports = (parsed, options) => {
     return '';
   }
 
-  const importgen = customImportGen || (() => {
-    const imports = [].concat(components, directives);
+  const importgen =
+    customImportGen ||
+    (() => {
+      const imports = [].concat(components, directives);
 
-    return `
-  import { ${ imports.join(',') } } from '${ name }';
+      return `
+  import { ${imports.join(',')} } from '${name}';
     `.trim();
-  });
+    });
 
-  const exportgen = customExportGen || (() => {
-    const componentPart = hasComponents
-      ? `
+  const exportgen =
+    customExportGen ||
+    (() => {
+      const componentPart = hasComponents
+        ? `
   const components = {
-    ${ components.map(component => `[${ component }.name]: ${ component },`).join('\n    ') }
+    ${components
+      .map((component) => `[${component}.name]: ${component},`)
+      .join('\n    ')}
   };
   options.components = Object.assign(
     components,
     options.components,
   );  
       `.trim()
-      : '';
+        : '';
 
-    const directivePart = hasDirectives
-      ? `
+      const directivePart = hasDirectives
+        ? `
   const directives = {
-    ${ directives.map(directive => `[${ directive }.name]: ${ directive },`).join('\n    ') }
+    ${directives
+      .map((directive) => `[${directive}.name]: ${directive},`)
+      .join('\n    ')}
   };
   options.directives = Object.assign(
     directives,
     options.directives,
   );  
       `.trim()
-      : '';
+        : '';
 
-    return `
+      return `
 export default function (component) {
   const { options } = component;
-  ${ componentPart }
-  ${ directivePart }
+  ${componentPart}
+  ${directivePart}
 }
     `.trim();
-  });
+    });
 
   const code = `
 <import lang="js">
-${ importgen(parsed, options) }
+${importgen(parsed, options)}
 
-${ exportgen(parsed, options) }
+${exportgen(parsed, options)}
 </import>
   `.trim();
 

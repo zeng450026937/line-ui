@@ -7,7 +7,8 @@
             color="dark"
             style="font-weight: bold;"
             @click="$router.push('/')"
-          >SKYLINE</line-button>
+            >SKYLINE</line-button
+          >
         </template>
         <template #end>
           <line-button size="small">GITHUB</line-button>
@@ -16,10 +17,7 @@
     </line-header>
     <line-content class="line-padding">
       <div class="content-nav">
-        <line-list
-          lines="inset"
-          style="width: 220px;"
-        >
+        <line-list lines="inset" style="width: 220px;">
           <line-list-header>Components</line-list-header>
           <template v-for="component in components">
             <line-item
@@ -63,7 +61,7 @@ import Vue from 'vue';
 import { components } from './router';
 
 export default Vue.extend({
-  name : 'App',
+  name: 'App',
 
   data() {
     this.components = components;

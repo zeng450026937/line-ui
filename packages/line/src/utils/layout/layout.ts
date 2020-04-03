@@ -2,7 +2,8 @@ import { LayoutItem } from './layout-item';
 
 export type ItemCreator = (index: number) => LayoutItem;
 
-export const DefaultItemCreator: ItemCreator = (index: number) => new LayoutItem();
+export const DefaultItemCreator: ItemCreator = (index: number) =>
+  new LayoutItem();
 
 export class Layout extends LayoutItem {
   items: Array<LayoutItem>;

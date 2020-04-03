@@ -8,15 +8,10 @@ import {
 export type ClickOutsideOption = EventOptions;
 
 export function useClickOutside(options?: ClickOutsideOption) {
-  const {
-    global = true,
-    event = ['mouseup', 'touchend'],
-  } = options || {};
+  const { global = true, event = ['mouseup', 'touchend'] } = options || {};
 
   return createMixins({
-    mixins : [
-      useEvent({ global, event }),
-    ],
+    mixins: [useEvent({ global, event })],
 
     mounted() {
       this.$on('event-condition', (condition: EventCondition) => {
@@ -26,9 +21,11 @@ export function useClickOutside(options?: ClickOutsideOption) {
         // Chrome/Firefox support isTrusted property
         // IE/Edge support pointerType property (empty if not triggered
         // by pointing device)
-        if (('isTrusted' in ev && !ev.isTrusted)
-         || ('pointerType' in ev && !(ev as PointerEvent).pointerType)
-        ) return false;
+        if (
+          ('isTrusted' in ev && !ev.isTrusted) ||
+          ('pointerType' in ev && !(ev as PointerEvent).pointerType)
+        )
+          return false;
 
         let elements: Element[] = [this.$el];
 
@@ -38,7 +35,7 @@ export function useClickOutside(options?: ClickOutsideOption) {
 
         this.$emit('event-include', include);
 
-        if (elements.some(el => el && el.contains(ev.target as Node))) {
+        if (elements.some((el) => el && el.contains(ev.target as Node))) {
           prevent();
         }
       });

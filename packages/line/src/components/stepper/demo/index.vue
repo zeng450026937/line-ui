@@ -6,44 +6,30 @@
 
 <script>
 export default {
-  name : 'StepperDemo',
+  name: 'StepperDemo',
 
-  components : {
+  components: {},
 
-  },
-
-  props : {
-
-  },
+  props: {},
 
   data() {
-    return {
-
-    };
+    return {};
   },
 
-  computed : {
+  computed: {},
 
-  },
+  created() {},
 
-  created() {
+  mounted() {},
 
-  },
+  methods: {},
 
-  mounted() {
-
-  },
-
-  methods : {
-
-  },
-
-  watch : {
-
-  },
+  watch: {},
 };
 </script>
 
-<style lang="2
-" scoped>
-</style>
+<style
+  lang="2
+"
+  scoped
+></style>

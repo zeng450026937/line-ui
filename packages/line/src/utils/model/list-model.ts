@@ -16,7 +16,9 @@ export class ListModel extends ItemModel {
     return this.indexs.length;
   }
 
-  columnCount() { return 1; }
+  columnCount() {
+    return 1;
+  }
 
   data(index) {
     if (!index.isValid() || index.row > this.rowCount()) {

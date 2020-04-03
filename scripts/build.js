@@ -56,8 +56,8 @@ async function buildAll(targets) {
 }
 
 async function build(target) {
-  const pkgDir = path.resolve(`packages/${ target }`);
-  const resolve = p => path.resolve(pkgDir, p);
+  const pkgDir = path.resolve(`packages/${target}`);
+  const resolve = (p) => path.resolve(pkgDir, p);
   const pkg = require(resolve('package.json'));
 
   // only build published packages for release
@@ -73,36 +73,33 @@ async function build(target) {
   const configFile = resolve('rollup.config.js');
   const hasConfig = await fs.exists(configFile);
 
-  const env = (pkg.buildOptions && pkg.buildOptions.env)
-    || (devOnly ? 'development' : 'production');
+  const env =
+    (pkg.buildOptions && pkg.buildOptions.env) ||
+    (devOnly ? 'development' : 'production');
 
   // STAGE: prepare
   if (prepare && pkg.buildOptions && pkg.buildOptions.prepare) {
     console.log();
     console.log(
-      `${ chalk.bold(chalk.bgBlue(' STAGE ')) }${ chalk.bgGray(' PREPARE ') }`,
+      `${chalk.bold(chalk.bgBlue(' STAGE '))}${chalk.bgGray(' PREPARE ')}`
     );
     const scripts = [].concat(pkg.buildOptions.prepare);
     for (const script of scripts) {
-      await execa(
-        'node',
-        [resolve(script)],
-        {
-          stdio : 'inherit',
-          cwd   : pkgDir,
-          env   : {
-            COMMIT   : `${ commit }`,
-            NODE_ENV : `${ env }`,
-          },
+      await execa('node', [resolve(script)], {
+        stdio: 'inherit',
+        cwd: pkgDir,
+        env: {
+          COMMIT: `${commit}`,
+          NODE_ENV: `${env}`,
         },
-      );
+      });
     }
   }
 
   // STAGE: build
   console.log();
   console.log(
-    `${ chalk.bold(chalk.bgBlue(' STAGE ')) }${ chalk.bgGray(' BUILD ') }`,
+    `${chalk.bold(chalk.bgBlue(' STAGE '))}${chalk.bgGray(' BUILD ')}`
   );
   await execa(
     'rollup',
@@ -111,10 +108,10 @@ async function build(target) {
       ...(hasConfig ? [configFile] : []),
       '--environment',
       [
-        `COMMIT:${ commit }`,
-        `NODE_ENV:${ env }`,
-        `TARGET:${ target }`,
-        formats ? `FORMATS:${ formats }` : '',
+        `COMMIT:${commit}`,
+        `NODE_ENV:${env}`,
+        `TARGET:${target}`,
+        formats ? `FORMATS:${formats}` : '',
         buildTypes ? 'TYPES:true' : '',
         prodOnly ? 'PROD_ONLY:true' : '',
         lean ? 'LEAN:true' : '',
@@ -123,18 +120,18 @@ async function build(target) {
         .filter(Boolean)
         .join(','),
     ],
-    { stdio: 'inherit' },
+    { stdio: 'inherit' }
   );
 
   // STAGE: types
   if (buildTypes && pkg.types) {
     console.log();
     console.log(
-      `${ chalk.bold(chalk.bgBlue(' STAGE ')) }${ chalk.bgGray(' TYPES ') }`,
+      `${chalk.bold(chalk.bgBlue(' STAGE '))}${chalk.bgGray(' TYPES ')}`
     );
     console.log();
     console.log(
-      chalk.bold(chalk.yellow(`Rolling up type definitions for ${ target }...`)),
+      chalk.bold(chalk.yellow(`Rolling up type definitions for ${target}...`))
     );
 
     // build types
@@ -142,11 +139,11 @@ async function build(target) {
 
     const extractorConfigPath = resolve('api-extractor.json');
     const extractorConfig = ExtractorConfig.loadFileAndPrepare(
-      extractorConfigPath,
+      extractorConfigPath
     );
     const result = Extractor.invoke(extractorConfig, {
-      localBuild          : true,
-      showVerboseMessages : true,
+      localBuild: true,
+      showVerboseMessages: true,
     });
 
     if (result.succeeded) {
@@ -155,19 +152,19 @@ async function build(target) {
         const dtsPath = resolve(pkg.types);
         const existing = await fs.readFile(dtsPath, 'utf-8');
         const toAdd = await Promise.all(
-          pkg.buildOptions.dts.map(file => {
+          pkg.buildOptions.dts.map((file) => {
             return fs.readFile(resolve(file), 'utf-8');
-          }),
+          })
         );
-        await fs.writeFile(dtsPath, `${ existing }\n${ toAdd.join('\n') }`);
+        await fs.writeFile(dtsPath, `${existing}\n${toAdd.join('\n')}`);
       }
       console.log(
-        chalk.bold(chalk.green('API Extractor completed successfully.')),
+        chalk.bold(chalk.green('API Extractor completed successfully.'))
       );
     } else {
       console.error(
-        `API Extractor completed with ${ result.errorCount } errors`
-          + ` and ${ result.warningCount } warnings`,
+        `API Extractor completed with ${result.errorCount} errors` +
+          ` and ${result.warningCount} warnings`
       );
       process.exitCode = 1;
     }
@@ -179,24 +176,21 @@ async function build(target) {
   if (scripts && pkg.buildOptions && pkg.buildOptions.scripts) {
     console.log();
     console.log(
-      `${ chalk.bold(chalk.bgBlue(' STAGE ')) }${ chalk.bgGray(' SCRIPTS ') }`,
+      `${chalk.bold(chalk.bgBlue(' STAGE '))}${chalk.bgGray(' SCRIPTS ')}`
     );
     const scripts = [].concat(pkg.buildOptions.scripts);
     for (const script of scripts) {
       await execa(
         'node',
-        [
-          resolve(script),
-          `${ isRelease ? '--release' : '' }`,
-        ].filter(Boolean),
+        [resolve(script), `${isRelease ? '--release' : ''}`].filter(Boolean),
         {
-          stdio : 'inherit',
-          cwd   : pkgDir,
-          env   : {
-            COMMIT   : `${ commit }`,
-            NODE_ENV : `${ env }`,
+          stdio: 'inherit',
+          cwd: pkgDir,
+          env: {
+            COMMIT: `${commit}`,
+            NODE_ENV: `${env}`,
           },
-        },
+        }
       );
     }
   }
@@ -214,19 +208,19 @@ function checkAllSizes(targets) {
 }
 
 function checkSize(target) {
-  const pkgDir = path.resolve(`packages/${ target }`);
-  const esmProdBuild = `${ pkgDir }/dist/${ target }.global.prod.js`;
+  const pkgDir = path.resolve(`packages/${target}`);
+  const esmProdBuild = `${pkgDir}/dist/${target}.global.prod.js`;
   if (fs.existsSync(esmProdBuild)) {
     const file = fs.readFileSync(esmProdBuild);
-    const minSize = `${ (file.length / 1024).toFixed(2) }kb`;
+    const minSize = `${(file.length / 1024).toFixed(2)}kb`;
     const gzipped = gzipSync(file);
-    const gzippedSize = `${ (gzipped.length / 1024).toFixed(2) }kb`;
+    const gzippedSize = `${(gzipped.length / 1024).toFixed(2)}kb`;
     const compressed = compress(file);
-    const compressedSize = `${ (compressed.length / 1024).toFixed(2) }kb`;
+    const compressedSize = `${(compressed.length / 1024).toFixed(2)}kb`;
     console.log(
-      `${ chalk.gray(
-        chalk.bold(target),
-      ) } min:${ minSize } / gzip:${ gzippedSize } / brotli:${ compressedSize }`,
+      `${chalk.gray(
+        chalk.bold(target)
+      )} min:${minSize} / gzip:${gzippedSize} / brotli:${compressedSize}`
     );
   }
 }

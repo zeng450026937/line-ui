@@ -8,13 +8,10 @@
 
     <line-content class="line-padding">
       <line-list>
-        <line-item
-          v-for="item in items"
-          :key="item.src"
-        >
+        <line-item v-for="item in items" :key="item.src">
           <template #start>
             <line-thumbnail>
-              <img :src="item.src">
+              <img :src="item.src" />
             </line-thumbnail>
           </template>
           <line-label>{{ item.text }}</line-label>
@@ -31,10 +28,7 @@
           </line-label>
         </line-item>
 
-        <line-item
-          v-for="item in lazyitems"
-          :key="item.src"
-        >
+        <line-item v-for="item in lazyitems" :key="item.src">
           <template #start>
             <line-thumbnail>
               <line-img :src="item.src"></line-img>
@@ -53,22 +47,45 @@ import Vue from 'vue';
 export default Vue.extend({
   data() {
     return {
-      items : [
-        { src: `https://picsum.photos/200/300?${ Math.random() * 1000 }`, text: 'random world' },
-        { src: `https://picsum.photos/200/300?${ Math.random() * 1000 }`, text: 'random world' },
-        { src: `https://picsum.photos/200/300?${ Math.random() * 1000 }`, text: 'random world' },
-        { src: `https://picsum.photos/200/300?${ Math.random() * 1000 }`, text: 'random world' },
+      items: [
+        {
+          src: `https://picsum.photos/200/300?${Math.random() * 1000}`,
+          text: 'random world',
+        },
+        {
+          src: `https://picsum.photos/200/300?${Math.random() * 1000}`,
+          text: 'random world',
+        },
+        {
+          src: `https://picsum.photos/200/300?${Math.random() * 1000}`,
+          text: 'random world',
+        },
+        {
+          src: `https://picsum.photos/200/300?${Math.random() * 1000}`,
+          text: 'random world',
+        },
       ],
-      lazyitems : [
-        { src: `https://picsum.photos/200/300?${ Math.random() * 1000 }`, text: 'lazy world' },
-        { src: `https://picsum.photos/200/300?${ Math.random() * 1000 }`, text: 'lazy world' },
-        { src: `https://picsum.photos/200/300?${ Math.random() * 1000 }`, text: 'lazy world' },
-        { src: `https://picsum.photos/200/300?${ Math.random() * 1000 }`, text: 'lazy world' },
+      lazyitems: [
+        {
+          src: `https://picsum.photos/200/300?${Math.random() * 1000}`,
+          text: 'lazy world',
+        },
+        {
+          src: `https://picsum.photos/200/300?${Math.random() * 1000}`,
+          text: 'lazy world',
+        },
+        {
+          src: `https://picsum.photos/200/300?${Math.random() * 1000}`,
+          text: 'lazy world',
+        },
+        {
+          src: `https://picsum.photos/200/300?${Math.random() * 1000}`,
+          text: 'lazy world',
+        },
       ],
     };
   },
 });
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

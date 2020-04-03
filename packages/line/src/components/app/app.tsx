@@ -11,17 +11,15 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('app');
 let initialized: boolean | undefined;
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ useBreakPoint(),
-  ],
+  mixins: [/*#__PURE__*/ useBreakPoint()],
 
-  props : {
-    id : String,
+  props: {
+    id: String,
   },
 
   provide() {
     return {
-      App : this,
+      App: this,
     };
   },
 
@@ -46,12 +44,7 @@ export default /*#__PURE__*/ createComponent({
   render() {
     const { id = 'app' } = this;
     return (
-      <div
-        id={id}
-        line-app
-        class={[bem(), 'line-page']}
-        on={this.$listeners}
-      >
+      <div id={id} line-app class={[bem(), 'line-page']} on={this.$listeners}>
         {this.slots('header')}
         {this.slots()}
         {this.slots('footer')}

@@ -1,29 +1,30 @@
 import { VNodeDirective } from 'vue';
 import { defineDirective } from '@line-ui/line/src/utils/directive';
 import { keys } from '@line-ui/line/src/utils/helpers';
-import {
-  off,
-  on,
-} from '@line-ui/line/src/utils/dom';
+import { off, on } from '@line-ui/line/src/utils/dom';
 
 const DIR_RATIO = 0.5;
 const MIN_DISTANCE = 16;
 
 const handleGesture = (wrapper: TouchWrapper) => {
-  const {
-    touchstartX, touchendX, touchstartY, touchendY,
-  } = wrapper;
+  const { touchstartX, touchendX, touchstartY, touchendY } = wrapper;
   wrapper.offsetX = touchendX - touchstartX;
   wrapper.offsetY = touchendY - touchstartY;
 
   if (Math.abs(wrapper.offsetY) < DIR_RATIO * Math.abs(wrapper.offsetX)) {
-    wrapper.left && (touchendX < touchstartX - MIN_DISTANCE) && wrapper.left(wrapper);
-    wrapper.right && (touchendX > touchstartX + MIN_DISTANCE) && wrapper.right(wrapper);
+    wrapper.left &&
+      touchendX < touchstartX - MIN_DISTANCE &&
+      wrapper.left(wrapper);
+    wrapper.right &&
+      touchendX > touchstartX + MIN_DISTANCE &&
+      wrapper.right(wrapper);
   }
 
   if (Math.abs(wrapper.offsetX) < DIR_RATIO * Math.abs(wrapper.offsetY)) {
-    wrapper.up && (touchendY < touchstartY - MIN_DISTANCE) && wrapper.up(wrapper);
-    wrapper.down && (touchendY > touchstartY + MIN_DISTANCE) && wrapper.down(wrapper);
+    wrapper.up && touchendY < touchstartY - MIN_DISTANCE && wrapper.up(wrapper);
+    wrapper.down &&
+      touchendY > touchstartY + MIN_DISTANCE &&
+      wrapper.down(wrapper);
   }
 };
 
@@ -32,8 +33,7 @@ function touchstart(event: TouchEvent, wrapper: TouchWrapper) {
   wrapper.touchstartX = touch.clientX;
   wrapper.touchstartY = touch.clientY;
 
-  wrapper.start
-    && wrapper.start(Object.assign(event, wrapper));
+  wrapper.start && wrapper.start(Object.assign(event, wrapper));
 }
 
 function touchend(event: TouchEvent, wrapper: TouchWrapper) {
@@ -41,8 +41,7 @@ function touchend(event: TouchEvent, wrapper: TouchWrapper) {
   wrapper.touchendX = touch.clientX;
   wrapper.touchendY = touch.clientY;
 
-  wrapper.end
-    && wrapper.end(Object.assign(event, wrapper));
+  wrapper.end && wrapper.end(Object.assign(event, wrapper));
 
   handleGesture(wrapper);
 }
@@ -55,7 +54,6 @@ function touchmove(event: TouchEvent, wrapper: TouchWrapper) {
   wrapper.move && wrapper.move(Object.assign(event, wrapper));
 }
 
-
 interface TouchStoredHandlers {
   touchstart: (e: TouchEvent) => void;
   touchend: (e: TouchEvent) => void;
@@ -64,27 +62,27 @@ interface TouchStoredHandlers {
 
 function createHandlers(value: TouchHandlers): TouchStoredHandlers {
   const wrapper = {
-    touchstartX : 0,
-    touchstartY : 0,
-    touchendX   : 0,
-    touchendY   : 0,
-    touchmoveX  : 0,
-    touchmoveY  : 0,
-    offsetX     : 0,
-    offsetY     : 0,
-    left        : value.left,
-    right       : value.right,
-    up          : value.up,
-    down        : value.down,
-    start       : value.start,
-    move        : value.move,
-    end         : value.end,
+    touchstartX: 0,
+    touchstartY: 0,
+    touchendX: 0,
+    touchendY: 0,
+    touchmoveX: 0,
+    touchmoveY: 0,
+    offsetX: 0,
+    offsetY: 0,
+    left: value.left,
+    right: value.right,
+    up: value.up,
+    down: value.down,
+    start: value.start,
+    move: value.move,
+    end: value.end,
   };
 
   return {
-    touchstart : (e: TouchEvent) => touchstart(e, wrapper),
-    touchend   : (e: TouchEvent) => touchend(e, wrapper),
-    touchmove  : (e: TouchEvent) => touchmove(e, wrapper),
+    touchstart: (e: TouchEvent) => touchstart(e, wrapper),
+    touchend: (e: TouchEvent) => touchend(e, wrapper),
+    touchmove: (e: TouchEvent) => touchmove(e, wrapper),
   };
 }
 
@@ -170,7 +168,7 @@ function update(el: HTMLElement, binding: TouchVNodeDirective) {
 }
 
 export const vTouch = /*#__PURE__*/ defineDirective({
-  name : 'touch',
+  name: 'touch',
   inserted,
   unbind,
   update,

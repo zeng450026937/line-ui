@@ -39,7 +39,7 @@ function update(el: HTMLElement, binding: GestureVNodeDirective) {
 }
 
 export const vGesture = /*#__PURE__*/ defineDirective({
-  name : 'gesture',
+  name: 'gesture',
   inserted,
   unbind,
   update,

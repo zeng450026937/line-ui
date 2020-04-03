@@ -9,7 +9,7 @@
     <line-content>
       <line-list-header>Default</line-list-header>
       <line-thumbnail class="line-margin-start">
-        <img src="/avatar.svg">
+        <img src="/avatar.svg" />
       </line-thumbnail>
 
       <line-list>
@@ -17,7 +17,7 @@
         <line-item>
           <template #start>
             <line-thumbnail>
-              <img src="/avatar.svg">
+              <img src="/avatar.svg" />
             </line-thumbnail>
           </template>
           <line-label>Lorem ipsum</line-label>
@@ -25,7 +25,7 @@
         <line-item>
           <template #start>
             <line-thumbnail>
-              <img src="/avatar.svg">
+              <img src="/avatar.svg" />
             </line-thumbnail>
           </template>
           <line-label>
@@ -36,7 +36,7 @@
         <line-item>
           <template #start>
             <line-thumbnail>
-              <img src="/avatar.svg">
+              <img src="/avatar.svg" />
             </line-thumbnail>
           </template>
           <line-label>
@@ -48,7 +48,7 @@
         <line-item>
           <template #end>
             <line-thumbnail>
-              <img src="/avatar.svg">
+              <img src="/avatar.svg" />
             </line-thumbnail>
           </template>
           <line-label>Lorem ipsum</line-label>
@@ -56,7 +56,7 @@
         <line-item>
           <template #end>
             <line-thumbnail>
-              <img src="/avatar.svg">
+              <img src="/avatar.svg" />
             </line-thumbnail>
           </template>
           <line-label>
@@ -67,7 +67,7 @@
         <line-item>
           <template #end>
             <line-thumbnail>
-              <img src="/avatar.svg">
+              <img src="/avatar.svg" />
             </line-thumbnail>
           </template>
           <line-label>
@@ -78,7 +78,6 @@
         </line-item>
       </line-list>
     </line-content>
-
   </line-app>
 </template>
 
@@ -88,5 +87,4 @@ import Vue from 'vue';
 export default Vue.extend({});
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

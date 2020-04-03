@@ -2,11 +2,18 @@
 !{src,tests,packages}/**/.*.js
 
 dist
+**/dist
 node_modules
 **/node_modules
 
-
 # temporarily stop lint
-src/components/**/test
-src/utils/model
-src/utils/input-shims
+packages/playground
+packages/website
+packages/ts-auto-import
+
+packages/line/src/**/*.vue
+
+packages/line/src/components/**/test
+packages/line/src/utils/model
+packages/line/src/utils/input-shims
+packages/line/src/utils/layout

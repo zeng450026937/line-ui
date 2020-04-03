@@ -11,14 +11,11 @@ import { mdLeaveAnimation } from '@line-ui/line/src/components/loading/animation
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('loading');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ usePopup(),
-    /*#__PURE__*/ usePopupDuration(),
-  ],
+  mixins: [/*#__PURE__*/ usePopup(), /*#__PURE__*/ usePopupDuration()],
 
-  props : {
-    message : String,
-    spinner : String,
+  props: {
+    message: String,
+    spinner: String,
   },
 
   beforeMount() {
@@ -33,7 +30,7 @@ export default /*#__PURE__*/ createComponent({
     });
   },
 
-  methods : {
+  methods: {
     onTap() {
       this.$emit('overlay-tap');
     },
@@ -47,33 +44,20 @@ export default /*#__PURE__*/ createComponent({
         role="dialog"
         aria-modal="true"
         class={bem({
-          translucent : this.translucent,
+          translucent: this.translucent,
         })}
         on={this.$listeners}
       >
-        <Overlay
-          visible={this.dim}
-          onTap={this.onTap}
-        >
-        </Overlay>
+        <Overlay visible={this.dim} onTap={this.onTap}></Overlay>
 
-        <div
-          role="dialog"
-          class={bem('wrapper')}
-        >
-          {
-            spinner && (
-              <div class={bem('spinner')}>
-                <Spinner type={spinner} />
-              </div>
-            )
-          }
+        <div role="dialog" class={bem('wrapper')}>
+          {spinner && (
+            <div class={bem('spinner')}>
+              <Spinner type={spinner} />
+            </div>
+          )}
 
-          {
-            message && (
-              <div class={bem('content')}>{message}</div>
-            )
-          }
+          {message && <div class={bem('content')}>{message}</div>}
         </div>
       </div>
     );

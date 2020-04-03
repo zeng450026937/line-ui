@@ -1,72 +1,71 @@
 <template>
-  <div class="combo-box">
-  </div>
+  <div class="combo-box"></div>
 </template>
 
 <script>
 export default {
-  name : 'ComboBox',
+  name: 'ComboBox',
 
-  props : {
-    currentIndex : {
-      type    : Number,
-      default : 0,
+  props: {
+    currentIndex: {
+      type: Number,
+      default: 0,
     },
-    delegate : {
-      type    : Object,
-      default : () => ({}),
+    delegate: {
+      type: Object,
+      default: () => ({}),
     },
-    displayText : {
-      type    : String,
-      default : '',
+    displayText: {
+      type: String,
+      default: '',
     },
-    down : {
-      type    : Boolean,
-      default : false,
+    down: {
+      type: Boolean,
+      default: false,
     },
-    editText : {
-      type    : String,
-      default : '',
+    editText: {
+      type: String,
+      default: '',
     },
-    editable : {
-      type    : Boolean,
-      default : false,
+    editable: {
+      type: Boolean,
+      default: false,
     },
-    flat : {
-      type    : Boolean,
-      default : false,
+    flat: {
+      type: Boolean,
+      default: false,
     },
-    indicator : {
-      type    : Object,
-      default : () => ({}),
+    indicator: {
+      type: Object,
+      default: () => ({}),
     },
-    inputMethodHints : {
-      type    : String,
-      default : '',
+    inputMethodHints: {
+      type: String,
+      default: '',
     },
-    model : {
-      type    : Object,
-      default : () => ({}),
+    model: {
+      type: Object,
+      default: () => ({}),
     },
-    popup : {
-      type    : Object,
-      default : () => ({}),
+    popup: {
+      type: Object,
+      default: () => ({}),
     },
-    pressed : {
-      type    : Boolean,
-      default : false,
+    pressed: {
+      type: Boolean,
+      default: false,
     },
-    textRole : {
-      type    : String,
-      default : '',
+    textRole: {
+      type: String,
+      default: '',
     },
-    validator : {
-      type    : Boolean,
-      default : false,
+    validator: {
+      type: Boolean,
+      default: false,
     },
   },
 
-  computed : {
+  computed: {
     acceptableInput() {
       return false;
     },
@@ -81,7 +80,7 @@ export default {
     },
   },
 
-  methods : {
+  methods: {
     decrementCurrentIndex() {},
     find() {},
     incrementCurrentIndex() {},
@@ -97,6 +96,4 @@ export default {
 };
 </script>
 
-<style lang="scss">
-
-</style>
+<style lang="scss"></style>

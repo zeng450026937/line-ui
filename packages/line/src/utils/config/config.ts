@@ -54,7 +54,7 @@ export class Config {
 
   get(key: keyof SkylinConfig, fallback?: any): any {
     const value = this.m.get(key);
-    return (value !== undefined) ? value : fallback;
+    return value !== undefined ? value : fallback;
   }
 
   getBoolean(key: keyof SkylinConfig, fallback = false): boolean {
@@ -101,10 +101,14 @@ export const saveConfig = (win: Window, c: any) => {
 export const configFromURL = (win: Window): SkylinConfig => {
   const configObj: any = {};
   try {
-    win.location.search.slice(1)
+    win.location.search
+      .slice(1)
       .split('&')
-      .map(entry => entry.split('='))
-      .map(([key, value]) => [decodeURIComponent(key), decodeURIComponent(value)])
+      .map((entry) => entry.split('='))
+      .map(([key, value]) => [
+        decodeURIComponent(key),
+        decodeURIComponent(value),
+      ])
       .filter(([key]) => startsWith(key, LINE_PREFIX))
       .map(([key, value]) => [key.slice(LINE_PREFIX.length), value])
       .forEach(([key, value]) => {

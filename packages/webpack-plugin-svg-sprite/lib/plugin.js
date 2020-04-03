@@ -26,7 +26,7 @@ class ExtractSvgSpritePlugin {
     const errors = validate(schemas.plugin, this.config);
 
     if (errors.length) {
-      throw new Error(`${ packageName }: ${ errors.join('\n') }`);
+      throw new Error(`${packageName}: ${errors.join('\n')}`);
     }
 
     this.compiler = new SpriteCompiler(this.config);
@@ -41,85 +41,78 @@ class ExtractSvgSpritePlugin {
     const { NAMESPACE } = config;
 
     if (compiler.hooks) {
-      compiler.hooks
-        .thisCompilation
-        .tap(NAMESPACE, compilation => {
-          // compile sprite
-          compilation.hooks
-            .optimizeTree
-            .tapPromise(NAMESPACE, () => this.hookOptimizeTree(compilation));
+      compiler.hooks.thisCompilation.tap(NAMESPACE, (compilation) => {
+        // compile sprite
+        compilation.hooks.optimizeTree.tapPromise(NAMESPACE, () =>
+          this.hookOptimizeTree(compilation)
+        );
 
-          // replace css placeholder
-          // compilation.hooks
-          //   .afterOptimizeTree
-          //   .tap(NAMESPACE, () => this.hookAfterOptimizeTree(compilation));
+        // replace css placeholder
+        // compilation.hooks
+        //   .afterOptimizeTree
+        //   .tap(NAMESPACE, () => this.hookAfterOptimizeTree(compilation));
 
-          // replace (chunk) placeholder
-          compilation.hooks
-            .beforeChunkAssets
-            .tap(NAMESPACE, () => this.hookBeforeChunkAssets(compilation));
+        // replace (chunk) placeholder
+        compilation.hooks.beforeChunkAssets.tap(NAMESPACE, () =>
+          this.hookBeforeChunkAssets(compilation)
+        );
 
-          // add sprite asset
-          compilation.hooks
-            .additionalAssets
-            .tapPromise(NAMESPACE, () => this.hookAdditionalAssets(compilation));
-        });
+        // add sprite asset
+        compilation.hooks.additionalAssets.tapPromise(NAMESPACE, () =>
+          this.hookAdditionalAssets(compilation)
+        );
+      });
 
-      compiler.hooks
-        .compilation
-        .tap(NAMESPACE, compilation => {
-          compilation.hooks
-            .normalModuleLoader
-            .tap(NAMESPACE, loaderCtx => this.hookNormalModuleLoader(loaderCtx));
+      compiler.hooks.compilation.tap(NAMESPACE, (compilation) => {
+        compilation.hooks.normalModuleLoader.tap(NAMESPACE, (loaderCtx) =>
+          this.hookNormalModuleLoader(loaderCtx)
+        );
 
-          if (compilation.hooks.htmlWebpackPluginBeforeHtmlGeneration) {
-            compilation.hooks
-              .htmlWebpackPluginBeforeHtmlGeneration
-              .tapAsync(NAMESPACE, async (htmlPluginData, done) => {
-                const result = await this.compileSprites(compilation);
-                this.hookBeforeHtmlGeneration(htmlPluginData, result);
-                done(null, htmlPluginData);
-              });
-          }
-        });
+        if (compilation.hooks.htmlWebpackPluginBeforeHtmlGeneration) {
+          compilation.hooks.htmlWebpackPluginBeforeHtmlGeneration.tapAsync(
+            NAMESPACE,
+            async (htmlPluginData, done) => {
+              const result = await this.compileSprites(compilation);
+              this.hookBeforeHtmlGeneration(htmlPluginData, result);
+              done(null, htmlPluginData);
+            }
+          );
+        }
+      });
     } else {
-      compiler.plugin('compilation', compilation => {
+      compiler.plugin('compilation', (compilation) => {
         if (isHtmlPluginCompilation(compilation)) {
           return;
         }
 
-        compilation.plugin(
-          'normal-module-loader',
-          loaderCtx => this.hookNormalModuleLoader(loaderCtx),
+        compilation.plugin('normal-module-loader', (loaderCtx) =>
+          this.hookNormalModuleLoader(loaderCtx)
         );
 
         // NOT TESTED
-        compilation.plugin(
-          'optimize-tree',
-          done => this.hookOptimizeTree(compilation).then(done),
+        compilation.plugin('optimize-tree', (done) =>
+          this.hookOptimizeTree(compilation).then(done)
         );
 
         // NOT TESTED
-        compilation.plugin(
-          'before-chunk-assets',
-          () => this.hookBeforeChunkAssets(compilation),
+        compilation.plugin('before-chunk-assets', () =>
+          this.hookBeforeChunkAssets(compilation)
         );
 
         // NOT TESTED
-        compilation.plugin(
-          'additional-assets',
-          done => this.hookAdditionalAssets(compilation).then(done),
+        compilation.plugin('additional-assets', (done) =>
+          this.hookAdditionalAssets(compilation).then(done)
         );
 
         // NOT TESTED
         compilation.plugin(
           'html-webpack-plugin-before-html-generation',
           (htmlPluginData, done) => {
-            this.compileSprites(compilation).then(result => {
+            this.compileSprites(compilation).then((result) => {
               this.hookBeforeHtmlGeneration(htmlPluginData, result);
               done(null, htmlPluginData);
             });
-          },
+          }
         );
       });
     }
@@ -144,9 +137,9 @@ class ExtractSvgSpritePlugin {
   hookAfterOptimizeTree(compilation) {
     const symbols = this.compiler.getSymbols();
 
-    symbols.forEach(s => {
+    symbols.forEach((s) => {
       if (!s.replacements) return;
-      s.cssModules.forEach(m => {
+      s.cssModules.forEach((m) => {
         Replacer.replaceInModuleSource(m, s.replacements, compilation);
       });
     });
@@ -155,10 +148,10 @@ class ExtractSvgSpritePlugin {
   hookBeforeChunkAssets(compilation) {
     const symbols = this.compiler.getSymbols();
 
-    symbols.forEach(s => {
+    symbols.forEach((s) => {
       if (!s.replacements) return;
 
-      s.cssModules.forEach(m => {
+      s.cssModules.forEach((m) => {
         Replacer.replaceInModuleSource(m, s.replacements, compilation);
       });
 
@@ -173,8 +166,8 @@ class ExtractSvgSpritePlugin {
     result.forEach(({ filename, content }) => {
       if (filename) {
         compilation.assets[filename.split('?')[0]] = {
-          source : () => content,
-          size   : () => content.length,
+          source: () => content,
+          size: () => content.length,
         };
       }
     });
@@ -182,8 +175,10 @@ class ExtractSvgSpritePlugin {
 
   // eslint-disable-next-line class-methods-use-this
   hookBeforeHtmlGeneration(htmlPluginData, result) {
-    htmlPluginData.assets.sprites = result
-      .map(({ filename, content }) => ({ filename, content }));
+    htmlPluginData.assets.sprites = result.map(({ filename, content }) => ({
+      filename,
+      content,
+    }));
   }
 }
 

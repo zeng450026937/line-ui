@@ -3,6 +3,4 @@
 
 import Fab from '@line-ui/line/src/components/fab/fab';
 
-export {
-  Fab,
-};
+export { Fab };

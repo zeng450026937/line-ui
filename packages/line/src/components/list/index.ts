@@ -3,6 +3,4 @@
 
 import List from '@line-ui/line/src/components/list/list';
 
-export {
-  List,
-};
+export { List };

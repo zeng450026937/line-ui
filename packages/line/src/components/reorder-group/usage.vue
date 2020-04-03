@@ -60,10 +60,7 @@
             </line-label>
             <template #start>
               <line-reorder>
-                <line-icon
-                  name="repeat"
-                  size="small"
-                ></line-icon>
+                <line-icon name="repeat" size="small"></line-icon>
               </line-reorder>
             </template>
           </line-item>
@@ -74,10 +71,7 @@
             </line-label>
             <template #start>
               <line-reorder>
-                <line-icon
-                  name="repeat"
-                  size="small"
-                ></line-icon>
+                <line-icon name="repeat" size="small"></line-icon>
               </line-reorder>
             </template>
           </line-item>
@@ -88,10 +82,7 @@
             </line-label>
             <template #start>
               <line-reorder>
-                <line-icon
-                  name="repeat"
-                  size="small"
-                ></line-icon>
+                <line-icon name="repeat" size="small"></line-icon>
               </line-reorder>
             </template>
           </line-item>
@@ -120,7 +111,6 @@
               </line-label>
             </line-item>
           </line-reorder>
-
         </line-reorder-group>
       </line-list>
     </line-content>
@@ -128,15 +118,14 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
-      disabled : true,
+      disabled: true,
     };
   },
 
-  methods : {
+  methods: {
     toggleReorder() {
       this.disabled = !this.disabled;
     },
@@ -146,9 +135,7 @@ export default {
     },
   },
 
-  watch : {
-
-  },
+  watch: {},
 };
 </script>
 

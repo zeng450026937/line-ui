@@ -3,6 +3,4 @@
 
 import Alert from '@line-ui/line/src/components/alert/alert';
 
-export {
-  Alert,
-};
+export { Alert };

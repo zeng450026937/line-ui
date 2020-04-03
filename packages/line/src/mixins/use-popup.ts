@@ -6,14 +6,8 @@ import { useTransition } from '@line-ui/line/src/mixins/use-transition';
 import { popupContext } from '@line-ui/line/src/utils/popup';
 import { GESTURE_CONTROLLER } from '@line-ui/line/src/utils/gesture';
 import { config } from '@line-ui/line/src/utils/config';
-import {
-  Animation,
-  createAnimation,
-} from '@line-ui/line/src/utils/animation';
-import {
-  isDef,
-  NOOP,
-} from '@line-ui/line/src/utils/helpers';
+import { Animation, createAnimation } from '@line-ui/line/src/utils/animation';
+import { isDef, NOOP } from '@line-ui/line/src/utils/helpers';
 
 export interface PopupOptions {
   disableScroll?: boolean;
@@ -23,7 +17,7 @@ export function usePopup(options?: PopupOptions) {
   const { disableScroll = true } = options || {};
 
   return createMixins({
-    mixins : [
+    mixins: [
       useModel('visible'),
       useLazy('visible'),
       useRemote(),
@@ -32,22 +26,22 @@ export function usePopup(options?: PopupOptions) {
       useTransition(),
     ],
 
-    props : {
+    props: {
       // This property holds whether the popup show the overlay.
-      overlay : {
-        type    : Boolean,
-        default : true,
+      overlay: {
+        type: Boolean,
+        default: true,
       },
       // This property holds whether the popup dims the background.
       // Unless explicitly set, this property follows the value of modal.
-      dim : {
-        type    : Boolean,
-        default : undefined,
+      dim: {
+        type: Boolean,
+        default: undefined,
       },
       // This property holds whether the popup translucent the content.
-      translucent : {
-        type    : Boolean,
-        default : false,
+      translucent: {
+        type: Boolean,
+        default: false,
       },
       // This property holds whether the popup is modal.
       //
@@ -58,24 +52,24 @@ export function usePopup(options?: PopupOptions) {
       // On desktop platforms, it is common for modal popups
       // to be closed only when the escape key is pressed. To achieve this
       // behavior, set closePolicy to Popup.CloseOnEscape.
-      modal : {
-        type    : Boolean,
-        default : false,
+      modal: {
+        type: Boolean,
+        default: false,
       },
       // The popup will close when the mouse is click outside of it.
-      closeOnClickOutside : {
-        type    : Boolean,
-        default : true,
+      closeOnClickOutside: {
+        type: Boolean,
+        default: true,
       },
       // The popup will close when the escape key is pressed while the popup has
       // active focus.
-      closeOnEscape : {
-        type    : Boolean,
-        default : true,
+      closeOnEscape: {
+        type: Boolean,
+        default: true,
       },
-      activeFocus : {
-        type    : Boolean,
-        default : true,
+      activeFocus: {
+        type: Boolean,
+        default: true,
       },
     },
 
@@ -108,7 +102,7 @@ export function usePopup(options?: PopupOptions) {
         await this.$nextTick();
 
         // update zIndex
-        el.style.zIndex = `${ popupContext.getOverlayIndex() }`;
+        el.style.zIndex = `${popupContext.getOverlayIndex()}`;
 
         const animate = (animation: Animation) => {
           if (!config.getBoolean('animated', true)) {
@@ -119,9 +113,9 @@ export function usePopup(options?: PopupOptions) {
 
         this.$emit('animation-enter', el, animate);
 
-        await (this.animation as Animation).play().catch(
-          __DEV__ ? (e) => console.error(e) : NOOP,
-        );
+        await (this.animation as Animation)
+          .play()
+          .catch(__DEV__ ? (e) => console.error(e) : NOOP);
 
         done();
       };
@@ -143,7 +137,8 @@ export function usePopup(options?: PopupOptions) {
           }
           if (this.closeOnEscape) {
             animation.beforeAddWrite(() => {
-              const activeElement = el.ownerDocument!.activeElement as HTMLElement;
+              const activeElement = el.ownerDocument!
+                .activeElement as HTMLElement;
               if (activeElement && activeElement.matches('input, textarea')) {
                 activeElement.blur();
               }
@@ -154,9 +149,9 @@ export function usePopup(options?: PopupOptions) {
 
         this.$emit('animation-leave', el, animate);
 
-        await (this.animation as Animation).play().catch(
-          __DEV__ ? (e) => console.error(e) : NOOP,
-        );
+        await (this.animation as Animation)
+          .play()
+          .catch(__DEV__ ? (e) => console.error(e) : NOOP);
 
         done();
       };
@@ -210,10 +205,10 @@ export function usePopup(options?: PopupOptions) {
       this.$on('overlay-tap', onClickOutside);
       this.$on('clickoutside', onClickOutside);
 
-      this.visible = this.inited = this.visible || (
-        isDef(this.$attrs.visible)
-          && (this.$attrs.visible as string | boolean) !== false
-      );
+      this.visible = this.inited =
+        this.visible ||
+        (isDef(this.$attrs.visible) &&
+          (this.$attrs.visible as string | boolean) !== false);
     },
 
     mounted() {
@@ -236,7 +231,7 @@ export function usePopup(options?: PopupOptions) {
       this.close();
     },
 
-    methods : {
+    methods: {
       open(ev?: Event) {
         if (this.opened) return false;
 
@@ -282,7 +277,9 @@ export function usePopup(options?: PopupOptions) {
 
         (this.animation as Animation).play();
 
-        const firstInput = this.$el.querySelector('input, button') as HTMLElement | null;
+        const firstInput = this.$el.querySelector(
+          'input, button'
+        ) as HTMLElement | null;
 
         if (firstInput) {
           firstInput.focus();

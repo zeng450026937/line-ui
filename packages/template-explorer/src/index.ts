@@ -13,7 +13,9 @@ window.init = () => {
   const { monaco, Vue } = window;
   const config = configFromURL(window);
 
-  const template = config.template || `
+  const template =
+    config.template ||
+    `
 <line-app>
   <line-header>
     <line-toolbar>
@@ -35,21 +37,21 @@ window.init = () => {
 `.trim();
 
   const editor = monaco.editor.create(document.getElementById('source')!, {
-    value                : template,
-    language             : 'html',
-    theme                : 'vs-dark',
-    fontSize             : 14,
-    wordWrap             : 'on',
-    scrollBeyondLastLine : false,
-    renderWhitespace     : 'selection',
-    contextmenu          : false,
-    minimap              : {
-      enabled : false,
+    value: template,
+    language: 'html',
+    theme: 'vs-dark',
+    fontSize: 14,
+    wordWrap: 'on',
+    scrollBeyondLastLine: false,
+    renderWhitespace: 'selection',
+    contextmenu: false,
+    minimap: {
+      enabled: false,
     },
   });
 
   editor.getModel()!.updateOptions({
-    tabSize : 2,
+    tabSize: 2,
   });
 
   // handle resize
@@ -60,9 +62,11 @@ window.init = () => {
   // update compile output when input changes
   editor.onDidChangeModelContent(debounce(reCompile));
 
-  editor.onDidChangeCursorPosition(debounce(e => {
-    clearEditorDecos();
-  }, 100));
+  editor.onDidChangeCursorPosition(
+    debounce(() => {
+      clearEditorDecos();
+    }, 100)
+  );
 
   let previousEditorDecos: string[] = [];
   function clearEditorDecos() {
@@ -87,7 +91,7 @@ window.init = () => {
     console.clear();
     const start = performance.now();
     const compiled = Vue.compile(src);
-    console.log(`Compiled in ${ (performance.now() - start).toFixed(2) }ms.`);
+    console.log(`Compiled in ${(performance.now() - start).toFixed(2)}ms.`);
 
     component.$options.render = compiled.render;
     component.$options.staticRenderFns = compiled.staticRenderFns;
@@ -102,33 +106,38 @@ window.init = () => {
         h(
           'a',
           {
-            domProps : {
-              href   : `http://gitcode.yealink.com/server/client/web_app/line-ui/tree/${ __COMMIT__ }`,
-              target : '_blank',
+            domProps: {
+              href: `http://gitcode.yealink.com/server/client/web_app/line-ui/tree/${__COMMIT__}`,
+              target: '_blank',
             },
           },
-          `@${ __COMMIT__ }`,
+          `@${__COMMIT__}`
         ),
 
         h(
           'div',
           {
-            domProps : {
-              id : 'options-wrapper',
+            domProps: {
+              id: 'options-wrapper',
             },
           },
           [
-            h('div', { domProps: { id: 'options-label' } }, `Line ${ __VERSION__ } ↘`),
-          ],
+            h(
+              'div',
+              { domProps: { id: 'options-label' } },
+              `Line ${__VERSION__} ↘`
+            ),
+          ]
         ),
       ]);
     },
   }).$mount('#header');
 };
 
-function debounce<T extends(...args: any[]) => any>(
+function debounce<T extends (...args: any[]) => any>(
   fn: T,
-  delay: number = 1000): T {
+  delay: number = 1000
+): T {
   let prevTimer: number | null = null;
   return ((...args: any[]) => {
     if (prevTimer) {
@@ -143,9 +152,10 @@ function debounce<T extends(...args: any[]) => any>(
 
 const configFromURL = (win: Window) => {
   const configObj: any = {};
-  win.location.search.slice(1)
+  win.location.search
+    .slice(1)
     .split('&')
-    .map(entry => entry.split('='))
+    .map((entry) => entry.split('='))
     .map(([key, value]) => [decodeURIComponent(key), decodeURIComponent(value)])
     .forEach(([key, value]) => {
       configObj[key] = value;

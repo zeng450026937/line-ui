@@ -3,7 +3,7 @@ import { createNamespace } from '@line-ui/line/src/utils/namespace';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('slide');
 
 export default /*#__PURE__*/ createComponent({
-  functional : true,
+  functional: true,
 
   render(h, { data, slots }) {
     return (
@@ -11,8 +11,8 @@ export default /*#__PURE__*/ createComponent({
         class={[
           bem(),
           {
-            'swiper-slide'          : true,
-            'swiper-zoom-container' : true,
+            'swiper-slide': true,
+            'swiper-zoom-container': true,
           },
         ]}
         {...data}
@@ -21,5 +21,4 @@ export default /*#__PURE__*/ createComponent({
       </div>
     );
   },
-
 });

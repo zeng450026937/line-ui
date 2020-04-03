@@ -14,38 +14,38 @@ import { ActionSheetButtonOption } from '@line-ui/line/src/components/action-she
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('action-sheet');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ usePopup(),
-  ],
+  mixins: [/*#__PURE__*/ usePopup()],
 
   provide(): any {
     return {
-      Item : this,
+      Item: this,
     };
   },
 
-  props : {
-    header    : String,
-    subHeader : String,
-    actions   : Array,
+  props: {
+    header: String,
+    subHeader: String,
+    actions: Array,
   },
 
-  computed : {
+  computed: {
     normalizedActions(): ActionSheetButtonOption[] {
-      const { actions } = this as { actions: (ActionSheetButtonOption | string)[] };
-      return actions.map(action => {
-        return (typeof action === 'string')
-          ? { text: action }
-          : action;
+      const { actions } = this as {
+        actions: (ActionSheetButtonOption | string)[];
+      };
+      return actions.map((action) => {
+        return typeof action === 'string' ? { text: action } : action;
       });
     },
 
     optionActions(): ActionSheetButtonOption[] {
-      return this.normalizedActions.filter(action => action.role !== 'cancel');
+      return this.normalizedActions.filter(
+        (action) => action.role !== 'cancel'
+      );
     },
 
     cancelAction(): ActionSheetButtonOption | undefined {
-      return this.normalizedActions.find(action => action.role === 'cancel');
+      return this.normalizedActions.find((action) => action.role === 'cancel');
     },
   },
 
@@ -61,7 +61,7 @@ export default /*#__PURE__*/ createComponent({
     });
   },
 
-  methods : {
+  methods: {
     onTap() {
       this.$emit('overlay-tap');
     },
@@ -77,44 +77,32 @@ export default /*#__PURE__*/ createComponent({
         aria-modal="true"
         class={bem({ translucent })}
       >
-        <Overlay
-          visible={this.dim}
-          onTap={this.onTap}
-        >
-        </Overlay>
+        <Overlay visible={this.dim} onTap={this.onTap}></Overlay>
 
-        <div
-          role="dialog"
-          class={bem('wrapper')}
-        >
-          { this.slots()
-            ? <div class={bem('container')}>{this.slots()}</div>
-            : <div class={bem('container')}>
-                <ActionSheetGroup>
-                  {
-                    this.header && (
-                      <ActionSheetTitle
-                        header={this.header}
-                        subHeader={this.subHeader}
-                      ></ActionSheetTitle>
-                    )
-                  }
+        <div role="dialog" class={bem('wrapper')}>
+          {this.slots() ? (
+            <div class={bem('container')}>{this.slots()}</div>
+          ) : (
+            <div class={bem('container')}>
+              <ActionSheetGroup>
+                {this.header && (
+                  <ActionSheetTitle
+                    header={this.header}
+                    subHeader={this.subHeader}
+                  ></ActionSheetTitle>
+                )}
 
-                  {
-                    optionActions.map((action) => (
-                      <ActionSheetButton option={action}></ActionSheetButton>
-                    ))
-                  }
+                {optionActions.map((action) => (
+                  <ActionSheetButton option={action}></ActionSheetButton>
+                ))}
+              </ActionSheetGroup>
+              {cancelAction && (
+                <ActionSheetGroup cancel={true}>
+                  <ActionSheetButton option={cancelAction}></ActionSheetButton>
                 </ActionSheetGroup>
-                {
-                  cancelAction && (
-                    <ActionSheetGroup cancel={true}>
-                      <ActionSheetButton option={cancelAction}></ActionSheetButton>
-                    </ActionSheetGroup>
-                  )
-                }
+              )}
             </div>
-          }
+          )}
         </div>
       </div>
     );

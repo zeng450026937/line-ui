@@ -2,15 +2,20 @@ import { createMixins } from '@line-ui/line/src/utils/mixins';
 
 export function useOptions(options: Array<string>, namsespace = 'options') {
   return createMixins({
-    props : options.reduce((prev, val) => {
-      prev[val] = Boolean;
-      return prev;
-    }, {
-      [namsespace] : {
-        type : String,
-        validator(val: string) { return options.includes(val); },
+    props: options.reduce(
+      (prev, val) => {
+        prev[val] = Boolean;
+        return prev;
       },
-    } as Record<string, any>),
+      {
+        [namsespace]: {
+          type: String,
+          validator(val: string) {
+            return options.includes(val);
+          },
+        },
+      } as Record<string, any>
+    ),
 
     beforeRender() {
       const { $props: props } = this;

@@ -3,6 +3,4 @@
 
 import Title from '@line-ui/line/src/components/tool-title/title';
 
-export {
-  Title,
-};
+export { Title };

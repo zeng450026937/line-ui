@@ -3,6 +3,4 @@
 
 import Avatar from '@line-ui/line/src/components/avatar/avatar';
 
-export {
-  Avatar,
-};
+export { Avatar };

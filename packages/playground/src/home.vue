@@ -1,6 +1,5 @@
 <template>
   <div class="page-wrapper">
-
     <main class="demo-wrapper">
       <article>
         <router-view name="readme"></router-view>
@@ -31,7 +30,7 @@
             ref="device"
             :src="src"
             frameborder="0"
-            style="width: 320px; height: 680px"
+            style="width: 320px; height: 680px;"
           >
           </iframe>
         </figure>
@@ -44,11 +43,11 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  name : 'line-home',
+  name: 'line-home',
 
   data() {
     return {
-      src : '/mobile/home',
+      src: '/mobile/home',
     };
   },
 
@@ -60,20 +59,20 @@ export default Vue.extend({
     };
   },
 
-  watch : {
+  watch: {
     $route(val) {
       this.changePath(val);
     },
   },
 
-  methods : {
+  methods: {
     changePath(route: any) {
       const { path } = route;
       const { device } = this.$refs;
 
       if (device) {
         setTimeout(() => {
-          this.src = `/mobile/home${ path }`;
+          this.src = `/mobile/home${path}`;
         }, 0);
       }
     },
@@ -92,7 +91,8 @@ export default Vue.extend({
 
   margin-left: 240px;
 
-  transition: transform 0.2s cubic-bezier(0.2, 1, 0.2, 1), -webkit-transform 0.2s cubic-bezier(0.2, 1, 0.2, 1);
+  transition: transform 0.2s cubic-bezier(0.2, 1, 0.2, 1),
+    -webkit-transform 0.2s cubic-bezier(0.2, 1, 0.2, 1);
 
   font-size: 15px;
 
@@ -141,7 +141,10 @@ export default Vue.extend({
   & > figure {
     position: relative;
 
-    width: calc((100vh - var(--header-height, 56px) - var(--device-padding) * 2) / var(--device-aspect-ratio));
+    width: calc(
+      (100vh - var(--header-height, 56px) - var(--device-padding) * 2) /
+        var(--device-aspect-ratio)
+    );
     min-width: 320px;
     max-width: 320px;
 
@@ -155,7 +158,8 @@ export default Vue.extend({
 
     background-color: rgba(0, 0, 0, 0.02);
 
-    box-shadow: 0 0 0 14px #090a0d, 0 0 0 17px #9fa3a8, 0 0 34px 17px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 0 14px #090a0d, 0 0 0 17px #9fa3a8,
+      0 0 34px 17px rgba(0, 0, 0, 0.2);
 
     overflow: hidden;
 

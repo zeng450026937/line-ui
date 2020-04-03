@@ -26,10 +26,10 @@ module.exports = (content, options) => {
   const shouldParseDir = hasDirectives && dir;
 
   const matched = {
-    tags       : new Set(),
-    dirs       : new Set(),
-    components : new Set(),
-    directives : new Set(),
+    tags: new Set(),
+    dirs: new Set(),
+    components: new Set(),
+    directives: new Set(),
   };
 
   const cached = gCached[name] || (gCached[name] = {});
@@ -40,9 +40,9 @@ module.exports = (content, options) => {
       tagToName = cached.tagToName = makeTagToName(components, prefix);
     }
 
-    const tags = matched.tags = parseTag(content);
+    const tags = (matched.tags = parseTag(content));
 
-    tags.forEach(tag => {
+    tags.forEach((tag) => {
       const name = tagToName(tag);
       if (!name) return;
       matched.components.add(name);
@@ -53,9 +53,9 @@ module.exports = (content, options) => {
       dirToName = cached.dirToName = makeDirToName(directives);
     }
 
-    const tags = matched.dirs = parseDir(content);
+    const tags = (matched.dirs = parseDir(content));
 
-    tags.forEach(tag => {
+    tags.forEach((tag) => {
       const name = dirToName(tag);
       if (!name) return;
       matched.directives.add(name);
@@ -65,25 +65,21 @@ module.exports = (content, options) => {
   return {
     tagToName,
     dirToName,
-    tags       : Array.from(matched.tags),
-    dirs       : Array.from(matched.dirs),
-    components : Array.from(matched.components),
-    directives : Array.from(matched.directives),
+    tags: Array.from(matched.tags),
+    dirs: Array.from(matched.dirs),
+    components: Array.from(matched.components),
+    directives: Array.from(matched.directives),
   };
 };
 
-const knownTags = [
-  'template',
-  'script',
-  'style',
-];
+const knownTags = ['template', 'script', 'style'];
 const htmlTagSet = new Set(htmlTags);
 
 // const tagRE = new RegExp(`(?<=<)(?!${ knownTags.join('|') })(?=line-app)[^/>\\s]+`, 'g');
-const tagRE = new RegExp(`(?<=<)(?!${ knownTags.join('|') })[^/>\\s]+`, 'g');
+const tagRE = new RegExp(`(?<=<)(?!${knownTags.join('|')})[^/>\\s]+`, 'g');
 const parseTag = (content) => {
   const tags = content.match(tagRE) || [];
-  return new Set(tags.filter(tag => !htmlTagSet.has(tag)));
+  return new Set(tags.filter((tag) => !htmlTagSet.has(tag)));
 };
 
 const dirRE = /(?<=\sv-)[^/>=\s]+/g;

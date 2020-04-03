@@ -12,7 +12,7 @@ const DEFAULT_EVENT = 'change';
 
 export function useModel<
   T extends unknown = any,
-  ProxyName extends string = string,
+  ProxyName extends string = string
 >(proxy: ProxyName, options: ModelOptions = {}, defined = false) {
   const {
     prop = DEFAULT_PROP,
@@ -20,21 +20,23 @@ export function useModel<
     default: defaultValue,
   } = options;
   return createMixins({
-    model : { prop, event },
+    model: { prop, event },
 
-    props : {
-      [prop] : {
-        default : defaultValue,
+    props: {
+      [prop]: {
+        default: defaultValue,
       },
     },
 
     data() {
-      return defined ? {} : {
-        [proxy] : this[prop] as T,
-      } as Record<ProxyName, T>;
+      return defined
+        ? {}
+        : ({
+            [proxy]: this[prop] as T,
+          } as Record<ProxyName, T>);
     },
 
-    watch : {
+    watch: {
       [prop](val: any) {
         this[proxy] = val;
       },

@@ -3,6 +3,4 @@
 
 import Textarea from '@line-ui/line/src/components/text-area/textarea';
 
-export {
-  Textarea,
-};
+export { Textarea };

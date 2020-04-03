@@ -4,10 +4,10 @@ import { isDef } from '@line-ui/line/src/utils/helpers';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('list');
 
 export default /*#__PURE__*/ createComponent({
-  props : {
+  props: {
     // 'full' | 'inset' | 'none' | undefined
-    lines : String,
-    inset : Boolean,
+    lines: String,
+    inset: Boolean,
   },
 
   render() {
@@ -15,7 +15,7 @@ export default /*#__PURE__*/ createComponent({
     return (
       <div
         class={bem({
-          [`lines-${ lines }`] : isDef(lines),
+          [`lines-${lines}`]: isDef(lines),
           inset,
         })}
         on={this.$listeners}

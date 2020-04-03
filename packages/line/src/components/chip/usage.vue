@@ -20,7 +20,9 @@
         </line-chip>
         <line-chip>
           <line-avatar>
-            <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjYzVkYmZmIiBkPSJNMCAwaDUxMnY1MTJIMHoiLz48cGF0aCBkPSJNMjU2IDMwNGM2MS42IDAgMTEyLTUwLjQgMTEyLTExMlMzMTcuNiA4MCAyNTYgODBzLTExMiA1MC40LTExMiAxMTIgNTAuNCAxMTIgMTEyIDExMnptMCA0MGMtNzQuMiAwLTIyNCAzNy44LTIyNCAxMTJ2NTZoNDQ4di01NmMwLTc0LjItMTQ5LjgtMTEyLTIyNC0xMTJ6IiBmaWxsPSIjODJhZWZmIi8+PC9zdmc+" />
+            <img
+              src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MTIgNTEyIj48cGF0aCBmaWxsPSIjYzVkYmZmIiBkPSJNMCAwaDUxMnY1MTJIMHoiLz48cGF0aCBkPSJNMjU2IDMwNGM2MS42IDAgMTEyLTUwLjQgMTEyLTExMlMzMTcuNiA4MCAyNTYgODBzLTExMiA1MC40LTExMiAxMTIgNTAuNCAxMTIgMTEyIDExMnptMCA0MGMtNzQuMiAwLTIyNCAzNy44LTIyNCAxMTJ2NTZoNDQ4di01NmMwLTc0LjItMTQ5LjgtMTEyLTIyNC0xMTJ6IiBmaWxsPSIjODJhZWZmIi8+PC9zdmc+"
+            />
           </line-avatar>
           <line-label>Avatar</line-label>
         </line-chip>
@@ -50,78 +52,45 @@
 
       <line-list-header>Outline</line-list-header>
       <p>
-        <line-chip
-          outline
-          color="primary"
-        >
+        <line-chip outline color="primary">
           <line-label>Primary</line-label>
         </line-chip>
-        <line-chip
-          outline
-          color="secondary"
-        >
+        <line-chip outline color="secondary">
           <line-label>Secondary</line-label>
         </line-chip>
-        <line-chip
-          outline
-          color="tertiary"
-        >
+        <line-chip outline color="tertiary">
           <line-label>Tertiary</line-label>
         </line-chip>
-        <line-chip
-          outline
-          color="success"
-        >
+        <line-chip outline color="success">
           <line-label>Success</line-label>
         </line-chip>
-        <line-chip
-          outline
-          color="warning"
-        >
+        <line-chip outline color="warning">
           <line-label>Warning</line-label>
         </line-chip>
-        <line-chip
-          outline
-          color="danger"
-        >
+        <line-chip outline color="danger">
           <line-label>Danger</line-label>
         </line-chip>
       </p>
 
       <line-list-header>Icons</line-list-header>
       <p>
-        <line-chip
-          outline
-          color="primary"
-        >
-          <line-icon
-            source="/ionic-icons.symbols.svg"
-            name="pin"
-          ></line-icon>
+        <line-chip outline color="primary">
+          <line-icon source="/ionic-icons.symbols.svg" name="pin"></line-icon>
           <line-label>Madison</line-label>
           <line-icon
             source="/ionic-icons.symbols.svg"
             name="close-circle"
           ></line-icon>
         </line-chip>
-        <line-chip
-          outline
-          color="secondary"
-        >
-          <line-icon
-            source="/ionic-icons.symbols.svg"
-            name="wine"
-          ></line-icon>
+        <line-chip outline color="secondary">
+          <line-icon source="/ionic-icons.symbols.svg" name="wine"></line-icon>
           <line-label>Nightlife</line-label>
           <line-icon
             source="/ionic-icons.symbols.svg"
             name="close-circle"
           ></line-icon>
         </line-chip>
-        <line-chip
-          outline
-          color="tertiary"
-        >
+        <line-chip outline color="tertiary">
           <line-icon
             source="/ionic-icons.symbols.svg"
             name="restaurant"
@@ -132,10 +101,7 @@
             name="close-circle"
           ></line-icon>
         </line-chip>
-        <line-chip
-          outline
-          color="dark"
-        >
+        <line-chip outline color="dark">
           <line-icon
             source="/ionic-icons.symbols.svg"
             name="videocam"
@@ -157,5 +123,4 @@ import Vue from 'vue';
 export default Vue.extend({});
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

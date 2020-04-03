@@ -5,18 +5,16 @@ import ripple from '@line-ui/line/src/directives/ripple';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('chip');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ useColor(),
-  ],
+  mixins: [/*#__PURE__*/ useColor()],
 
-  directives : { ripple },
+  directives: { ripple },
 
-  props : {
-    ripple  : Boolean,
-    outline : Boolean,
+  props: {
+    ripple: Boolean,
+    outline: Boolean,
   },
 
-  methods : {
+  methods: {
     onClick() {
       this.$emit('close');
     },
@@ -28,10 +26,7 @@ export default /*#__PURE__*/ createComponent({
     return (
       <div
         vRipple={ripple}
-        class={[
-          bem({ outline }),
-          'line-activatable',
-        ]}
+        class={[bem({ outline }), 'line-activatable']}
         on={this.$listeners}
       >
         {this.slots()}

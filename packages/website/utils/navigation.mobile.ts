@@ -1,127 +1,126 @@
 export const navList = [
   {
-    label      : 'Basics',
-    'label-cn' : '基础组件',
-    icon       : 'dashboard',
-    value      : 'base',
-    children   : [
+    label: 'Basics',
+    'label-cn': '基础组件',
+    icon: 'dashboard',
+    value: 'base',
+    children: [
       {
-        label      : 'Button',
-        'label-cn' : '按钮',
-        value      : 'button',
+        label: 'Button',
+        'label-cn': '按钮',
+        value: 'button',
       },
       {
-        label      : 'Icon',
-        'label-cn' : '图标',
-        value      : 'icon',
+        label: 'Icon',
+        'label-cn': '图标',
+        value: 'icon',
       },
       {
-        label      : 'Avatar',
-        'label-cn' : '头像',
-        value      : 'avatar',
+        label: 'Avatar',
+        'label-cn': '头像',
+        value: 'avatar',
       },
       {
-        label      : 'Image',
-        'label-cn' : '图片',
-        value      : 'image',
-      },
-    ],
-  },
-  {
-    label      : 'Form',
-    'label-cn' : '表单',
-    icon       : 'assignment_turned_in',
-    value      : 'form',
-    children   : [
-      {
-        label      : 'Checkbox',
-        'label-cn' : '多选框',
-        value      : 'check-box',
-      },
-      {
-        label      : 'Radio',
-        'label-cn' : '单选框',
-        value      : 'radio',
-      },
-      {
-        label      : 'Switch',
-        'label-cn' : '开关',
-        value      : 'switch',
-      },
-      {
-        label      : 'Input',
-        'label-cn' : '输入框',
-        value      : 'input',
-      },
-      {
-        label      : 'Textarea',
-        'label-cn' : '文本域',
-        value      : 'text-area',
-      },
-      {
-        label      : 'Select',
-        'label-cn' : '选择器',
-        value      : 'select',
-      },
-      {
-        label      : 'Range',
-        'label-cn' : '选择器',
-        value      : 'range',
+        label: 'Image',
+        'label-cn': '图片',
+        value: 'image',
       },
     ],
   },
   {
-    label      : 'Feedback',
-    'label-cn' : '操作反馈',
-    icon       : 'donut_small',
-    value      : 'feedback',
-    children   : [
+    label: 'Form',
+    'label-cn': '表单',
+    icon: 'assignment_turned_in',
+    value: 'form',
+    children: [
       {
-        label      : 'Feedback',
-        'label-cn' : '操作反馈',
-        value      : 'feedback',
+        label: 'Checkbox',
+        'label-cn': '多选框',
+        value: 'check-box',
+      },
+      {
+        label: 'Radio',
+        'label-cn': '单选框',
+        value: 'radio',
+      },
+      {
+        label: 'Switch',
+        'label-cn': '开关',
+        value: 'switch',
+      },
+      {
+        label: 'Input',
+        'label-cn': '输入框',
+        value: 'input',
+      },
+      {
+        label: 'Textarea',
+        'label-cn': '文本域',
+        value: 'text-area',
+      },
+      {
+        label: 'Select',
+        'label-cn': '选择器',
+        value: 'select',
+      },
+      {
+        label: 'Range',
+        'label-cn': '选择器',
+        value: 'range',
       },
     ],
   },
   {
-    label      : 'Show',
-    'label-cn' : '展示',
-    icon       : 'picture_in_picture',
-    value      : 'show',
-    children   : [
+    label: 'Feedback',
+    'label-cn': '操作反馈',
+    icon: 'donut_small',
+    value: 'feedback',
+    children: [
       {
-        label      : 'Show',
-        'label-cn' : '展示',
-        value      : 'show',
+        label: 'Feedback',
+        'label-cn': '操作反馈',
+        value: 'feedback',
       },
-      {
-        label      : 'Chip',
-        'label-cn' : '标签',
-        value      : 'chip',
-      },
-      {
-        label      : 'Badge',
-        'label-cn' : '标签',
-        value      : 'badge',
-      },
-
     ],
   },
   {
-    label      : 'Other',
-    'label-cn' : '其他',
-    icon       : 'grade',
-    value      : 'other',
-    children   : [
+    label: 'Show',
+    'label-cn': '展示',
+    icon: 'picture_in_picture',
+    value: 'show',
+    children: [
       {
-        label      : 'Other',
-        'label-cn' : '其他',
-        value      : 'other',
+        label: 'Show',
+        'label-cn': '展示',
+        value: 'show',
       },
       {
-        label      : 'Tabs',
-        'label-cn' : '其他',
-        value      : 'tabs',
+        label: 'Chip',
+        'label-cn': '标签',
+        value: 'chip',
+      },
+      {
+        label: 'Badge',
+        'label-cn': '标签',
+        value: 'badge',
+      },
+    ],
+  },
+  {
+    label: 'Other',
+    'label-cn': '其他',
+    icon: 'grade',
+    value: 'other',
+    children: [
+      {
+        label: 'Other',
+        'label-cn': '其他',
+        value: 'other',
+      },
+      {
+        label: 'Tabs',
+        'label-cn': '其他',
+        value: 'tabs',
       },
     ],
   },

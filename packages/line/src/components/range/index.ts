@@ -3,6 +3,4 @@
 
 import Range from '@line-ui/line/src/components/range/range';
 
-export {
-  Range,
-};
+export { Range };

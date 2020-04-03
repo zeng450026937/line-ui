@@ -100,7 +100,7 @@ export class Rect {
   center() {
     return new Point(
       this.x + Math.ceil(this.width / 2),
-      this.y + Math.ceil(this.height / 2),
+      this.y + Math.ceil(this.height / 2)
     );
   }
 
@@ -132,10 +132,12 @@ export class Rect {
   }
 
   intersects(rect: Rect) {
-    return this.contains(rect.left, rect.top)
-    || this.contains(rect.right, rect.top)
-    || this.contains(rect.left, rect.bottom)
-    || this.contains(rect.right, rect.bottom);
+    return (
+      this.contains(rect.left, rect.top) ||
+      this.contains(rect.right, rect.top) ||
+      this.contains(rect.left, rect.bottom) ||
+      this.contains(rect.right, rect.bottom)
+    );
   }
 
   adjust(dx1: number, dy1: number, dx2: number, dy2: number) {
@@ -194,10 +196,10 @@ export class Rect {
 
   translated(point: Point) {
     return new Rect(
-      this.x += point.x,
-      this.y += point.y,
+      (this.x += point.x),
+      (this.y += point.y),
       this.width,
-      this.height,
+      this.height
     );
   }
 
@@ -206,7 +208,7 @@ export class Rect {
       Math.min(this.x, rect.x),
       Math.min(this.y, rect.y),
       Math.max(this.width, rect.width),
-      Math.max(this.height, rect.height),
+      Math.max(this.height, rect.height)
     );
   }
 
@@ -215,7 +217,7 @@ export class Rect {
       Math.max(this.x, rect.x),
       Math.max(this.y, rect.y),
       Math.min(this.width, rect.width),
-      Math.min(this.height, rect.height),
+      Math.min(this.height, rect.height)
     );
   }
 }

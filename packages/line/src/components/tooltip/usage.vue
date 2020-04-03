@@ -11,32 +11,19 @@
       :openOnHover="true"
       placement="bottom"
       v-model="visible"
-    >Button - 1 -> tooltip</line-tooltip>
-    <!-- secondary tertiary danger medium -->
-    <line-content
-      :scrollY="true"
-      class="line-padding"
+      >Button - 1 -> tooltip</line-tooltip
     >
-      <line-button
-        expand="block"
-        ref="button"
-      >
+    <!-- secondary tertiary danger medium -->
+    <line-content :scrollY="true" class="line-padding">
+      <line-button expand="block" ref="button">
         Show ToolTip
       </line-button>
-      <line-chip
-        @click="openTooltip"
-        color="warning"
-        ref="chip"
-      >
+      <line-chip @click="openTooltip" color="warning" ref="chip">
         Show ToolTip
       </line-chip>
-      <div style="height: 400px"></div>
+      <div style="height: 400px;"></div>
 
-      <line-button
-        expand="block"
-        @click="open"
-        ref="triggerButton"
-      >
+      <line-button expand="block" @click="open" ref="triggerButton">
         Show ToolTip
       </line-button>
     </line-content>
@@ -45,22 +32,22 @@
 
 <script>
 import Vue from 'vue';
-import { TooltipController } from '@line-ui/skyline/src/controller/tooltip';
+import { TooltipController } from '@line-ui/line/src/controllers';
 
 const controller = new TooltipController();
 
 export default Vue.extend({
   data() {
     return {
-      trigger       : null,
-      triggerButton : null,
-      visible       : false,
+      trigger: null,
+      triggerButton: null,
+      visible: false,
 
-      chipTooltip   : null,
-      buttonToolTip : null,
+      chipTooltip: null,
+      buttonToolTip: null,
     };
   },
-  methods : {
+  methods: {
     open() {
       this.visible = !this.visible;
     },
@@ -73,9 +60,9 @@ export default Vue.extend({
       }
 
       this.chipTooltip = controller.create({
-        text      : 'Chip -> Tooltip',
-        color     : 'medium',
-        placement : 'bottom',
+        text: 'Chip -> Tooltip',
+        color: 'medium',
+        placement: 'bottom',
       });
       this.chipTooltip.open(ev);
     },
@@ -85,16 +72,18 @@ export default Vue.extend({
     this.trigger = this.$refs.chip;
     this.triggerButton = this.$refs.triggerButton;
 
-    this.buttonToolTip = controller.create({
-      trigger     : this.$refs.button,
-      text        : 'Button -> Tooltip',
-      openOnHover : true,
-      color       : 'medium',
-      placement   : 'bottom',
-    }, false);
+    this.buttonToolTip = controller.create(
+      {
+        trigger: this.$refs.button,
+        text: 'Button -> Tooltip',
+        openOnHover: true,
+        color: 'medium',
+        placement: 'bottom',
+      },
+      false
+    );
   },
 });
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

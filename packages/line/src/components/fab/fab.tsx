@@ -8,23 +8,23 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('fab');
 const FAB_SIDES = ['start', 'end', 'top', 'bottom'];
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
+  mixins: [
     /*#__PURE__*/ useModel('activated'),
     /*#__PURE__*/ useClickOutside(),
   ],
 
   provide() {
     return {
-      FAB : this,
+      FAB: this,
     };
   },
 
-  props : {
+  props: {
     // 'start' | 'end' | 'center'
-    horizontal : String,
+    horizontal: String,
     // 'top' | 'bottom' | 'center'
-    vertical   : String,
-    edge       : Boolean,
+    vertical: String,
+    edge: Boolean,
   },
 
   beforeMount() {
@@ -32,48 +32,42 @@ export default /*#__PURE__*/ createComponent({
       this.activated = false;
     });
 
-    this.activated = this.activated || (
-      isDef(this.$attrs.activated)
-        && (this.$attrs.activated as string | boolean) !== false
-    );
+    this.activated =
+      this.activated ||
+      (isDef(this.$attrs.activated) &&
+        (this.$attrs.activated as string | boolean) !== false);
   },
 
-  methods : {
+  methods: {
     toggle() {
       this.activated = !this.activated;
     },
   },
 
   render() {
-    const {
-      horizontal = 'start',
-      vertical = 'top',
-      edge,
-      activated,
-    } = this;
+    const { horizontal = 'start', vertical = 'top', edge, activated } = this;
     return (
       <div
         class={bem({
-          [`horizontal-${ horizontal }`] : isDef(horizontal),
-          [`vertical-${ vertical }`]     : isDef(vertical),
+          [`horizontal-${horizontal}`]: isDef(horizontal),
+          [`vertical-${vertical}`]: isDef(vertical),
           edge,
         })}
         on={this.$listeners}
       >
-        {
-          this.slots(
-            'indicator',
-            { activated },
-            { on: { click: this.toggle } },
-          )
-        }
-        {
-          FAB_SIDES.map((side) => (
-            this.hasSlot(side) && <FabGroup vModel={this.activated} side={side} onClicked={this.toggle}>
-              { this.slots(side) }
-            </FabGroup>
-          ))
-        }
+        {this.slots('indicator', { activated }, { on: { click: this.toggle } })}
+        {FAB_SIDES.map(
+          (side) =>
+            this.hasSlot(side) && (
+              <FabGroup
+                vModel={this.activated}
+                side={side}
+                onClicked={this.toggle}
+              >
+                {this.slots(side)}
+              </FabGroup>
+            )
+        )}
       </div>
     );
   },

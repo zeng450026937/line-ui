@@ -1,15 +1,12 @@
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
-import {
-  createGesture,
-  GestureDetail,
-} from '@line-ui/line/src/utils/gesture';
+import { createGesture, GestureDetail } from '@line-ui/line/src/utils/gesture';
 import { useColor } from '@line-ui/line/src/mixins/use-color';
 
 import { Rect } from '@line-ui/line/src/utils/layout';
 
 export type KnobName = 'A' | 'B' | undefined;
 
-export type RangeValue = number | {lower: number; upper: number};
+export type RangeValue = number | { lower: number; upper: number };
 
 interface RangeKnob {
   knob: string;
@@ -32,15 +29,27 @@ function clamp(value: number, min: number, max: number): number {
   return value;
 }
 
-const renderKnob = (h: any, isRTL: boolean, {
-  knob, value, ratio, min, max, disabled, pressed, pin, handleKeyboard,
-}: RangeKnob) => {
+const renderKnob = (
+  h: any,
+  isRTL: boolean,
+  {
+    knob,
+    value,
+    ratio,
+    min,
+    max,
+    disabled,
+    pressed,
+    pin,
+    handleKeyboard,
+  }: RangeKnob
+) => {
   const start = isRTL ? 'right' : 'left';
 
   const knobStyle = () => {
     const style: any = {};
 
-    style[start] = `${ ratio * 100 }%`;
+    style[start] = `${ratio * 100}%`;
 
     return style;
   };
@@ -49,13 +58,13 @@ const renderKnob = (h: any, isRTL: boolean, {
     <div
       class={[
         bem('knob-handle', {
-          min : value === min,
-          max : value === max,
+          min: value === min,
+          max: value === max,
         }),
         {
-          'line-range__knob--pressed' : pressed,
-          'range-knob-a'              : knob === 'A',
-          'range-knob-b'              : knob === 'B',
+          'line-range__knob--pressed': pressed,
+          'range-knob-a': knob === 'A',
+          'range-knob-b': knob === 'B',
         },
       ]}
       onKeyDown={(ev: KeyboardEvent) => {
@@ -79,16 +88,11 @@ const renderKnob = (h: any, isRTL: boolean, {
       aria-valuenow={value}
     >
       {pin && (
-        <div
-          class={bem('pin')}
-          role="presentation"
-        >
+        <div class={bem('pin')} role="presentation">
           {Math.round(value)}
         </div>
       )}
-      <div
-        class={bem('knob')}
-        role="presentation" />
+      <div class={bem('knob')} role="presentation" />
     </div>
   );
 };
@@ -97,7 +101,7 @@ const ratioToValue = (
   ratio: number,
   min: number,
   max: number,
-  step: number,
+  step: number
 ): number => {
   let value = (max - min) * ratio;
   if (step > 0) {
@@ -111,40 +115,38 @@ const valueToRatio = (value: number, min: number, max: number): number => {
 };
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ useColor(),
-  ],
+  mixins: [/*#__PURE__*/ useColor()],
 
-  inject : {
-    Item : { default: undefined },
+  inject: {
+    Item: { default: undefined },
   },
 
-  props : {
-    text     : String,
-    debounce : {
-      type    : Number,
-      default : 0,
+  props: {
+    text: String,
+    debounce: {
+      type: Number,
+      default: 0,
     },
-    dualKnobs : Boolean,
-    min       : {
-      type    : Number,
-      default : 0,
+    dualKnobs: Boolean,
+    min: {
+      type: Number,
+      default: 0,
     },
-    max : {
-      type    : Number,
-      default : 100,
+    max: {
+      type: Number,
+      default: 100,
     },
-    pin   : Boolean,
-    snaps : Boolean,
-    step  : {
-      type    : Number,
-      default : 1,
+    pin: Boolean,
+    snaps: Boolean,
+    step: {
+      type: Number,
+      default: 1,
     },
-    ticks    : Boolean,
-    disabled : Boolean,
-    value    : {
-      type    : [Number, Object],
-      default : 0,
+    ticks: Boolean,
+    disabled: Boolean,
+    value: {
+      type: [Number, Object],
+      default: 0,
     },
   },
 
@@ -154,17 +156,17 @@ export default /*#__PURE__*/ createComponent({
     let rect!: Rect;
 
     return {
-      hasFocus : false,
-      noUpdate : false,
+      hasFocus: false,
+      noUpdate: false,
       pressedKnob,
       rangeSlider,
       rect,
-      ratioA   : 0,
-      ratioB   : 0,
+      ratioA: 0,
+      ratioB: 0,
     };
   },
 
-  computed : {
+  computed: {
     valA(): number {
       return ratioToValue(this.ratioA, this.min, this.max, this.step);
     },
@@ -188,7 +190,7 @@ export default /*#__PURE__*/ createComponent({
     },
   },
 
-  watch : {
+  watch: {
     disabled() {
       this.disabledChanged();
     },
@@ -205,19 +207,19 @@ export default /*#__PURE__*/ createComponent({
 
     if (rangeSlider) {
       this.gesture = createGesture({
-        el              : rangeSlider as Element,
-        gestureName     : 'range',
-        gesturePriority : 100,
-        threshold       : 0,
-        onStart         : ev => this.onStart(ev),
-        onMove          : ev => this.onMove(ev),
-        onEnd           : ev => this.onEnd(ev),
+        el: rangeSlider as Element,
+        gestureName: 'range',
+        gesturePriority: 100,
+        threshold: 0,
+        onStart: (ev) => this.onStart(ev),
+        onMove: (ev) => this.onMove(ev),
+        onEnd: (ev) => this.onEnd(ev),
       });
       this.gesture.enable(!this.disabled);
     }
   },
 
-  methods : {
+  methods: {
     disabledChanged() {
       if (this.gesture) {
         this.gesture.enable(!this.disabled);
@@ -241,8 +243,8 @@ export default /*#__PURE__*/ createComponent({
     ensureValueInBounds(value: any) {
       if (this.dualKnobs) {
         return {
-          lower : this.clampBounds(value.lower),
-          upper : this.clampBounds(value.upper),
+          lower: this.clampBounds(value.lower),
+          upper: this.clampBounds(value.upper),
         };
       }
       return this.clampBounds(value);
@@ -251,7 +253,7 @@ export default /*#__PURE__*/ createComponent({
     handleKeyboard(knob: string, isIncrease: boolean): void {
       let { step } = this;
       step = step > 0 ? step : 1;
-      step /= (this.max - this.min);
+      step /= this.max - this.min;
       if (!isIncrease) {
         step *= -1;
       }
@@ -270,30 +272,27 @@ export default /*#__PURE__*/ createComponent({
           return value;
         }
         return {
-          lower : 0,
-          upper : value as number,
+          lower: 0,
+          upper: value as number,
         };
       }
       if (typeof value === 'object') {
-        return (value.upper as number);
+        return value.upper as number;
       }
-      return (value as number);
+      return value as number;
     },
 
     emitStyle() {
       if (!this.Item) return;
-      this.Item.itemStyle(
-        'range',
-        {
-          interactive            : true,
-          'interactive-disabled' : this.disabled,
-        },
-      );
+      this.Item.itemStyle('range', {
+        interactive: true,
+        'interactive-disabled': this.disabled,
+      });
     },
 
     onStart(detail: GestureDetail) {
       const { rangeSlider } = this.$refs;
-      const rect = this.rect = (rangeSlider as HTMLElement).getBoundingClientRect() as any;
+      const rect = (this.rect = (rangeSlider as HTMLElement).getBoundingClientRect() as any);
       const { currentX } = detail;
 
       // figure out which knob they started closer to
@@ -302,10 +301,11 @@ export default /*#__PURE__*/ createComponent({
         ratio = 1 - ratio;
       }
 
-      this.pressedKnob = !this.dualKnobs
-        || Math.abs(this.ratioA - ratio) < Math.abs(this.ratioB - ratio)
-        ? 'A'
-        : 'B';
+      this.pressedKnob =
+        !this.dualKnobs ||
+        Math.abs(this.ratioA - ratio) < Math.abs(this.ratioB - ratio)
+          ? 'A'
+          : 'B';
 
       this.setFocus(this.pressedKnob);
 
@@ -336,7 +336,7 @@ export default /*#__PURE__*/ createComponent({
         ratio = valueToRatio(
           ratioToValue(ratio, this.min, this.max, this.step),
           this.min,
-          this.max,
+          this.max
         );
       }
 
@@ -350,7 +350,6 @@ export default /*#__PURE__*/ createComponent({
       // Update input value
       this.updateValue();
     },
-
 
     updateRatio() {
       const value = this.getValue() as any;
@@ -371,16 +370,16 @@ export default /*#__PURE__*/ createComponent({
       const value = !this.dualKnobs
         ? valA
         : {
-          lower : Math.min(valA, valB),
-          upper : Math.max(valA, valB),
-        };
+            lower: Math.min(valA, valB),
+            upper: Math.max(valA, valB),
+          };
       this.$emit('input', value);
       this.noUpdate = false;
     },
 
     setFocus(knob: string) {
       const knobEl = this.$el.querySelector(
-        knob === 'A' ? '.range-knob-a' : '.range-knob-b',
+        knob === 'A' ? '.range-knob-a' : '.range-knob-b'
       ) as HTMLElement | undefined;
       if (knobEl) {
         knobEl.focus();
@@ -406,11 +405,19 @@ export default /*#__PURE__*/ createComponent({
 
   render(h) {
     const {
-      min, max, step, handleKeyboard, pressedKnob, disabled, pin, ratioLower, ratioUpper,
+      min,
+      max,
+      step,
+      handleKeyboard,
+      pressedKnob,
+      disabled,
+      pin,
+      ratioLower,
+      ratioUpper,
     } = this;
 
-    const barStart = `${ ratioLower * 100 }%`;
-    const barEnd = `${ 100 - ratioUpper * 100 }%`;
+    const barStart = `${ratioLower * 100}%`;
+    const barEnd = `${100 - ratioUpper * 100}%`;
 
     const doc = document;
     const isRTL = doc.dir === 'rtl';
@@ -419,16 +426,16 @@ export default /*#__PURE__*/ createComponent({
 
     const tickStyle = (tick: any) => {
       return {
-        [start] : tick[start],
+        [start]: tick[start],
       };
     };
 
     const barStyle = {
-      [start] : barStart,
-      [end]   : barEnd,
+      [start]: barStart,
+      [end]: barEnd,
     };
 
-    const ticks: {ratio: number; active: boolean}[] = [];
+    const ticks: { ratio: number; active: boolean }[] = [];
 
     if (this.snaps && this.ticks) {
       for (let value = min; value <= max; value += step) {
@@ -436,10 +443,10 @@ export default /*#__PURE__*/ createComponent({
 
         const tick: any = {
           ratio,
-          active : ratio >= ratioLower && ratio <= ratioUpper,
+          active: ratio >= ratioLower && ratio <= ratioUpper,
         };
 
-        tick[start] = `${ ratio * 100 }%`;
+        tick[start] = `${ratio * 100}%`;
 
         ticks.push(tick);
       }
@@ -449,41 +456,36 @@ export default /*#__PURE__*/ createComponent({
       <div
         class={bem({
           disabled,
-          pressed   : pressedKnob !== undefined,
-          'has-pin' : pin,
+          pressed: pressedKnob !== undefined,
+          'has-pin': pin,
         })}
         onFocus={this.onFocus}
         onBlur={this.onBlur}
       >
         {this.slots('start')}
-        <div
-          class={bem('slider')}
-          ref="rangeSlider"
-        >
-          {ticks.map(tick => (
+        <div class={bem('slider')} ref="rangeSlider">
+          {ticks.map((tick) => (
             <div
               style={tickStyle(tick)}
               role="presentation"
               class={bem('tick', {
-                active : tick.active,
+                active: tick.active,
               })}
             />
           ))}
 
-          <div
-            class={bem('bar')}
-            role="presentation" />
+          <div class={bem('bar')} role="presentation" />
           <div
             class={bem('bar', { active: true })}
             role="presentation"
             style={barStyle}
           />
 
-          { renderKnob(h, isRTL, {
-            knob    : 'A',
-            pressed : pressedKnob === 'A',
-            value   : this.valA,
-            ratio   : this.ratioA,
+          {renderKnob(h, isRTL, {
+            knob: 'A',
+            pressed: pressedKnob === 'A',
+            value: this.valA,
+            ratio: this.ratioA,
             pin,
             disabled,
             handleKeyboard,
@@ -491,17 +493,18 @@ export default /*#__PURE__*/ createComponent({
             max,
           })}
 
-          { this.dualKnobs && renderKnob(h, isRTL, {
-            knob    : 'B',
-            pressed : pressedKnob === 'B',
-            value   : this.valB,
-            ratio   : this.ratioB,
-            pin,
-            disabled,
-            handleKeyboard,
-            min,
-            max,
-          })}
+          {this.dualKnobs &&
+            renderKnob(h, isRTL, {
+              knob: 'B',
+              pressed: pressedKnob === 'B',
+              value: this.valB,
+              ratio: this.ratioB,
+              pin,
+              disabled,
+              handleKeyboard,
+              min,
+              max,
+            })}
         </div>
         {this.slots('end')}
       </div>

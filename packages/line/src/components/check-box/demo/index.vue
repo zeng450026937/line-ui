@@ -1,13 +1,17 @@
 <template>
   <div>
-    <line-check-box v-model="checkValue" :indeterminate="false" color="danger">test</line-check-box>
-    <line-check-box v-model="checkValue" :indeterminate="false" color="success">test</line-check-box>
+    <line-check-box v-model="checkValue" :indeterminate="false" color="danger"
+      >test</line-check-box
+    >
+    <line-check-box v-model="checkValue" :indeterminate="false" color="success"
+      >test</line-check-box
+    >
     <line-check-box-group>
       <line-check-box v-model="checkValue">test</line-check-box>
     </line-check-box-group>
     <line-cell>
       <template slot="title">
-         test
+        test
       </template>
       <line-check-box slot="content" v-model="checkValue"></line-check-box>
     </line-cell>
@@ -16,50 +20,39 @@
 
 <script>
 import {
-  CheckBox as LineCheckBox, CheckBoxGroup as LineCheckBoxGroup, CheckIndicator as LineCheckIndicator,
+  CheckBox as LineCheckBox,
+  CheckBoxGroup as LineCheckBoxGroup,
+  CheckIndicator as LineCheckIndicator,
 } from '@line-ui/skyline/src/components/check-box';
 import { Cell as LineCell } from '@line-ui/skyline/src/components/cell';
 
 export default {
-  name : 'CheckBoxDemo',
+  name: 'CheckBoxDemo',
 
-  components : {
+  components: {
     LineCheckBox,
     LineCheckBoxGroup,
     LineCell,
   },
 
-  props : {
-
-  },
+  props: {},
 
   data() {
     return {
-      checkValue : false,
+      checkValue: false,
     };
   },
 
-  computed : {
+  computed: {},
 
-  },
+  created() {},
 
-  created() {
+  mounted() {},
 
-  },
+  methods: {},
 
-  mounted() {
-
-  },
-
-  methods : {
-
-  },
-
-  watch : {
-
-  },
+  watch: {},
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

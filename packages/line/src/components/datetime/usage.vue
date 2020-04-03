@@ -41,18 +41,16 @@ import Vue from 'vue';
 export default Vue.extend({
   data() {
     return {
-      visible   : false,
-      startDate : '1990-02-19',
-      startTime : '1990-02-19T07:43Z',
-      endDate   : '1990-02-20',
+      visible: false,
+      startDate: '1990-02-19',
+      startTime: '1990-02-19T07:43Z',
+      endDate: '1990-02-20',
     };
   },
 
-  computed : {
+  computed: {},
 
-  },
-
-  methods : {
+  methods: {
     onClick() {
       const { datetime } = this.$refs;
 
@@ -61,7 +59,7 @@ export default Vue.extend({
     },
   },
 
-  watch : {
+  watch: {
     value(val) {
       console.log('value', val);
     },
@@ -69,5 +67,4 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

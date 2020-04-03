@@ -3,6 +3,4 @@
 
 import Datetime from '@line-ui/line/src/components/datetime/datetime';
 
-export {
-  Datetime,
-};
+export { Datetime };

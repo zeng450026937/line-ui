@@ -2,10 +2,10 @@
   <line-app>
     <line-content>
       <line-button>
-        {{msg}}
+        {{ msg }}
       </line-button>
       <line-button>
-        {{msg}}
+        {{ msg }}
       </line-button>
     </line-content>
   </line-app>
@@ -15,7 +15,7 @@
 export default {
   data() {
     return {
-      msg : 'Click Me',
+      msg: 'Click Me',
     };
   },
 };

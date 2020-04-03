@@ -15,7 +15,7 @@
         <line-item>
           <template #start>
             <line-avatar>
-              <img src="/avatar-finn.png">
+              <img src="/avatar-finn.png" />
             </line-avatar>
           </template>
           <line-label>
@@ -28,7 +28,7 @@
         <line-item>
           <template #start>
             <line-avatar>
-              <img src="/avatar-han.png">
+              <img src="/avatar-han.png" />
             </line-avatar>
           </template>
           <line-label>
@@ -41,7 +41,7 @@
         <line-item>
           <template #start>
             <line-avatar>
-              <img src="/avatar-rey.png">
+              <img src="/avatar-rey.png" />
             </line-avatar>
           </template>
           <line-label>
@@ -54,7 +54,7 @@
         <line-item>
           <template #start>
             <line-avatar>
-              <img src="/avatar-luke.png">
+              <img src="/avatar-luke.png" />
             </line-avatar>
           </template>
           <line-label>
@@ -73,7 +73,7 @@
         <line-item>
           <template #start>
             <line-avatar>
-              <img src="/avatar-poe.png">
+              <img src="/avatar-poe.png" />
             </line-avatar>
           </template>
           <line-label>
@@ -86,7 +86,7 @@
         <line-item>
           <template #start>
             <line-avatar>
-              <img src="/avatar-ben.png">
+              <img src="/avatar-ben.png" />
             </line-avatar>
           </template>
           <line-label>
@@ -99,7 +99,7 @@
         <line-item>
           <template #start>
             <line-avatar>
-              <img src="/avatar-leia.png">
+              <img src="/avatar-leia.png" />
             </line-avatar>
           </template>
           <line-label>
@@ -112,7 +112,7 @@
         <line-item>
           <template #start>
             <line-avatar>
-              <img src="/avatar-yoda.png">
+              <img src="/avatar-yoda.png" />
             </line-avatar>
           </template>
           <line-label>
@@ -132,5 +132,4 @@ import Vue from 'vue';
 export default Vue.extend({});
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -3,6 +3,4 @@
 
 import RefresherContent from '@line-ui/line/src/components/refresher-content/refresher-content';
 
-export {
-  RefresherContent,
-};
+export { RefresherContent };

@@ -16,7 +16,7 @@ export class ScrollBarHost {
   onScroll = () => {
     this.scrollWidth = this.element.scrollWidth;
     this.scrollHeight = this.element.scrollHeight;
-  }
+  };
 
   destroy() {
     this.element.removeEventListener('scroll', this.onScroll);

@@ -69,8 +69,8 @@ function getImportedStructs(node) {
 
       // import { foo as bar } from 'baz'
       structs.add({
-        importName   : importSpecifier.propertyName.text,
-        variableName : importSpecifier.name.text,
+        importName: importSpecifier.propertyName.text,
+        variableName: importSpecifier.name.text,
       });
     });
   });

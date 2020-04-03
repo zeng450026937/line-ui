@@ -3,17 +3,17 @@ import { createNamespace } from '@line-ui/line/src/utils/namespace';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('footer');
 
 export default /*#__PURE__*/ createComponent({
-  inject : {
-    App : { default: undefined },
+  inject: {
+    App: { default: undefined },
   },
 
-  props : {
-    translucent : Boolean,
+  props: {
+    translucent: Boolean,
   },
 
   data() {
     return {
-      isAppFooter : false,
+      isAppFooter: false,
     };
   },
 
@@ -25,11 +25,7 @@ export default /*#__PURE__*/ createComponent({
     const { translucent } = this;
 
     return (
-      <div
-        role="contentinfo"
-        class={bem({ translucent })}
-        on={this.$listeners}
-      >
+      <div role="contentinfo" class={bem({ translucent })} on={this.$listeners}>
         {this.slots()}
       </div>
     );

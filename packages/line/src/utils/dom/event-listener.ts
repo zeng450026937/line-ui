@@ -5,7 +5,7 @@ export const isSupportsPassive = (node: Node) => {
   if (supportsPassive === undefined) {
     try {
       const opts = Object.defineProperty({}, 'passive', {
-        get : () => {
+        get: () => {
           supportsPassive = true;
         },
       });
@@ -21,39 +21,32 @@ export const off = (
   el: EventTarget,
   event: string,
   listener: EventListener,
-  opts?: AddEventListenerOptions,
+  opts?: AddEventListenerOptions
 ) => {
-  el.removeEventListener(
-    event,
-    listener,
-    opts,
-  );
+  el.removeEventListener(event, listener, opts);
 };
 
 export const on = (
   el: EventTarget,
   event: string,
   listener: EventListener,
-  opts: AddEventListenerOptions = { passive: false, capture: false },
+  opts: AddEventListenerOptions = { passive: false, capture: false }
 ) => {
   // use event listener options when supported
   // otherwise it's just a boolean for the "capture" arg
   const listenerOpts = isSupportsPassive(el as Node) ? opts : !!opts.capture;
 
-  el.addEventListener(
-    event,
-    listener,
-    listenerOpts,
-  );
+  el.addEventListener(event, listener, listenerOpts);
 
-  return () => off(el, event, listener, listenerOpts as AddEventListenerOptions);
+  return () =>
+    off(el, event, listener, listenerOpts as AddEventListenerOptions);
 };
 
 export const once = (
   el: Element | Document | Window,
   event: string,
   listener: EventListener,
-  opts?: AddEventListenerOptions,
+  opts?: AddEventListenerOptions
 ) => {
   const off = on(
     el,
@@ -62,6 +55,6 @@ export const once = (
       listener(ev);
       off();
     },
-    opts,
+    opts
   );
 };

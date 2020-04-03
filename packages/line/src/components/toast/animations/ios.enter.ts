@@ -1,12 +1,12 @@
-import {
-  Animation,
-  createAnimation,
-} from '@line-ui/line/src/utils/animation';
+import { Animation, createAnimation } from '@line-ui/line/src/utils/animation';
 
 /**
  * iOS Toast Enter Animation
  */
-export const iosEnterAnimation = (baseEl: HTMLElement, position: string): Animation => {
+export const iosEnterAnimation = (
+  baseEl: HTMLElement,
+  position: string
+): Animation => {
   const baseAnimation = createAnimation();
   const wrapperAnimation = createAnimation();
 
@@ -19,18 +19,26 @@ export const iosEnterAnimation = (baseEl: HTMLElement, position: string): Animat
 
   switch (position) {
     case 'top':
-      wrapperAnimation.fromTo('transform', 'translateY(-100%)', `translateY(${ top })`);
+      wrapperAnimation.fromTo(
+        'transform',
+        'translateY(-100%)',
+        `translateY(${top})`
+      );
       break;
     case 'middle':
       /* eslint-disable-next-line */
       const topPosition = Math.floor(
-        baseEl.clientHeight / 2 - wrapperEl.clientHeight / 2,
+        baseEl.clientHeight / 2 - wrapperEl.clientHeight / 2
       );
-      wrapperEl.style.top = `${ topPosition }px`;
+      wrapperEl.style.top = `${topPosition}px`;
       wrapperAnimation.fromTo('opacity', 0.01, 1);
       break;
     default:
-      wrapperAnimation.fromTo('transform', 'translateY(100%)', `translateY(${ bottom })`);
+      wrapperAnimation.fromTo(
+        'transform',
+        'translateY(100%)',
+        `translateY(${bottom})`
+      );
       break;
   }
   return baseAnimation

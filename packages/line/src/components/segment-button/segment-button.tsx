@@ -2,35 +2,35 @@ import { createNamespace } from '@line-ui/line/src/utils/namespace';
 import { useCheckItemWithModel } from '@line-ui/line/src/mixins/use-check-item';
 
 const NAMESPACE = 'Segment';
-const { createComponent, bem } = /*#__PURE__*/ createNamespace('segment-button');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace(
+  'segment-button'
+);
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ useCheckItemWithModel(NAMESPACE),
-  ],
+  mixins: [/*#__PURE__*/ useCheckItemWithModel(NAMESPACE)],
 
-  props : {
-    layout : {
-      type    : String,
-      default : 'icon-top',
+  props: {
+    layout: {
+      type: String,
+      default: 'icon-top',
     },
-    type : {
-      type    : String,
-      default : 'button',
+    type: {
+      type: String,
+      default: 'button',
     },
   },
 
   data() {
     return {
-      activated    : false,
-      afterChecked : false,
+      activated: false,
+      afterChecked: false,
 
-      inToolbar      : false,
-      inToolbarColor : false,
-      inSegment      : false,
-      inSegmentColor : false,
-      hasLabel       : false,
-      hasIcon        : false,
+      inToolbar: false,
+      inToolbarColor: false,
+      inSegment: false,
+      inSegmentColor: false,
+      hasLabel: false,
+      hasIcon: false,
     };
   },
 
@@ -48,7 +48,7 @@ export default /*#__PURE__*/ createComponent({
     this.indicatorEl = this.$refs.indicatorEl;
   },
 
-  methods : {
+  methods: {
     updateState() {
       this.checked = true;
     },
@@ -56,33 +56,46 @@ export default /*#__PURE__*/ createComponent({
 
   render() {
     const {
-      mode, checked, type, disabled, activated, afterChecked, hasIcon, hasLabel,
-      layout, inToolbar, inToolbarColor, inSegment, inSegmentColor,
+      mode,
+      checked,
+      type,
+      disabled,
+      activated,
+      afterChecked,
+      hasIcon,
+      hasLabel,
+      layout,
+      inToolbar,
+      inToolbarColor,
+      inSegment,
+      inSegmentColor,
     } = this;
 
     return (
       <div
         aria-disabled={disabled ? 'true' : null}
-        class={[bem({
-          'has-label'            : hasLabel,
-          'has-icon'             : hasIcon,
-          'has-label-only'       : hasLabel && !hasIcon,
-          'has-icon-only'        : hasIcon && !hasLabel,
-          'after-checked'        : afterChecked,
-          [`layout-${ layout }`] : true,
-          disabled,
-          checked,
-          activated,
-        }),
-        {
-          'in-toolbar'               : inToolbar,
-          'in-toolbar-color'         : inToolbarColor,
-          'in-segment'               : inSegment,
-          'in-segment-color'         : inSegmentColor,
-          'line-activatable'         : true,
-          'line-activatable-instant' : true,
-          'line-focusable'           : true,
-        }]}
+        class={[
+          bem({
+            'has-label': hasLabel,
+            'has-icon': hasIcon,
+            'has-label-only': hasLabel && !hasIcon,
+            'has-icon-only': hasIcon && !hasLabel,
+            'after-checked': afterChecked,
+            [`layout-${layout}`]: true,
+            disabled,
+            checked,
+            activated,
+          }),
+          {
+            'in-toolbar': inToolbar,
+            'in-toolbar-color': inToolbarColor,
+            'in-segment': inSegment,
+            'in-segment-color': inSegmentColor,
+            'line-activatable': true,
+            'line-activatable-instant': true,
+            'line-focusable': true,
+          },
+        ]}
       >
         <button
           type={type}
@@ -90,9 +103,7 @@ export default /*#__PURE__*/ createComponent({
           class={bem('button-native')}
           disabled={disabled}
         >
-          <span class={bem('button-inner')}>
-            {this.slots()}
-          </span>
+          <span class={bem('button-inner')}>{this.slots()}</span>
           {mode === 'md' && <line-ripple-effect></line-ripple-effect>}
         </button>
         <div

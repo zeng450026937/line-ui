@@ -11,10 +11,7 @@
         :spinner="spinner"
         v-model="visible"
       ></line-loading>
-      <line-button
-        expand="block"
-        @click="open"
-      >
+      <line-button expand="block" @click="open">
         Show Loading
       </line-button>
     </line-content>
@@ -27,11 +24,11 @@ import Vue from 'vue';
 export default Vue.extend({
   data() {
     return {
-      visible : false,
-      spinner : 'lines-small', // bubbles circles circular crescent dots lines lines-small
+      visible: false,
+      spinner: 'lines-small', // bubbles circles circular crescent dots lines lines-small
     };
   },
-  methods : {
+  methods: {
     open() {
       this.visible = !this.visible;
     },
@@ -39,5 +36,4 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

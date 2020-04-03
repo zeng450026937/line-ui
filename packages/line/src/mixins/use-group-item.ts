@@ -3,9 +3,9 @@ import { Group } from '@line-ui/line/src/mixins/use-group';
 
 export function useGroupItem(name: string) {
   return createMixins({
-    inject : {
-      [name] : {
-        default : undefined,
+    inject: {
+      [name]: {
+        default: undefined,
       },
     },
 

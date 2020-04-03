@@ -1,16 +1,17 @@
 <template>
   <div class="main-navigation">
     <template v-for="(item, index) in list">
-      <div class="main-navigation__item is--sub-title"
-           :key="index">
+      <div class="main-navigation__item is--sub-title" :key="index">
         {{ item.label }}
       </div>
-      <div class="main-navigation__item is--link"
-           v-for="(child) in item.children"
-           :key="child.value"
-           :class="{'is--active': child.value === currentName,}"
-           @click="routerView(child.value)">
-        {{child.label}} {{child['label-cn']}}
+      <div
+        class="main-navigation__item is--link"
+        v-for="child in item.children"
+        :key="child.value"
+        :class="{ 'is--active': child.value === currentName }"
+        @click="routerView(child.value)"
+      >
+        {{ child.label }} {{ child['label-cn'] }}
       </div>
     </template>
   </div>
@@ -18,40 +19,32 @@
 
 <script>
 export default {
-  name : 'MainNavigation',
+  name: 'MainNavigation',
 
-  components : {
+  components: {},
 
-  },
-
-  props : {
-    list : {
-      type    : Array,
-      default : () => [],
+  props: {
+    list: {
+      type: Array,
+      default: () => [],
     },
   },
 
   data() {
-    return {
-
-    };
+    return {};
   },
 
-  computed : {
+  computed: {
     currentName() {
       return this.$route.name;
     },
   },
 
-  created() {
+  created() {},
 
-  },
+  mounted() {},
 
-  mounted() {
-
-  },
-
-  methods : {
+  methods: {
     routerView(name) {
       if (this.$route.name === name || !name) {
         return;
@@ -61,9 +54,7 @@ export default {
     },
   },
 
-  watch : {
-
-  },
+  watch: {},
 };
 </script>
 

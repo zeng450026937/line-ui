@@ -8,74 +8,74 @@
 
 <script>
 export const Orientation = {
-  Horizontal : 0,
-  Vertical   : 1,
+  Horizontal: 0,
+  Vertical: 1,
 };
 
 export const Policy = {
-  AsNeeded      : 2,
-  AlwaysOff     : 3,
-  AlwaysOn      : 4,
-  NoSnap        : 5,
-  SnapAlways    : 6,
-  SnapOnRelease : 7,
+  AsNeeded: 2,
+  AlwaysOff: 3,
+  AlwaysOn: 4,
+  NoSnap: 5,
+  SnapAlways: 6,
+  SnapOnRelease: 7,
 };
 
 export default {
-  name : 'ScrollBar',
+  name: 'ScrollBar',
 
-  props : {
-    active : {
-      type    : Boolean,
-      default : true,
+  props: {
+    active: {
+      type: Boolean,
+      default: true,
     },
-    interactive : {
-      type    : Boolean,
-      default : true,
+    interactive: {
+      type: Boolean,
+      default: true,
     },
-    minimumSize : {
-      type    : Number,
-      default : 0,
+    minimumSize: {
+      type: Number,
+      default: 0,
     },
-    orientation : {
-      type    : Number,
-      default : 0,
+    orientation: {
+      type: Number,
+      default: 0,
     },
-    policy : {
-      type    : Number,
-      default : 0,
+    policy: {
+      type: Number,
+      default: 0,
     },
-    position : {
-      type    : Number,
-      default : 0,
+    position: {
+      type: Number,
+      default: 0,
     },
-    pressed : {
-      type    : Boolean,
-      default : false,
+    pressed: {
+      type: Boolean,
+      default: false,
     },
-    size : {
-      type    : Number,
-      default : 0,
+    size: {
+      type: Number,
+      default: 0,
     },
-    snapMode : {
-      type    : Number,
-      default : 0,
+    snapMode: {
+      type: Number,
+      default: 0,
     },
-    stepSize : {
-      type    : Number,
-      default : 0,
+    stepSize: {
+      type: Number,
+      default: 0,
     },
-    visualPosition : {
-      type    : Number,
-      default : 0,
+    visualPosition: {
+      type: Number,
+      default: 0,
     },
-    visualSize : {
-      type    : Number,
-      default : 0,
+    visualSize: {
+      type: Number,
+      default: 0,
     },
   },
 
-  computed : {
+  computed: {
     horizontal() {
       return this.orientation === Orientation.Horizontal;
     },
@@ -84,7 +84,7 @@ export default {
     },
   },
 
-  methods : {
+  methods: {
     decrease() {},
     increase() {},
   },
@@ -92,18 +92,20 @@ export default {
 </script>
 
 <style lang="scss">
-
 .scroll-bar {
   &-track {
     position: absolute;
     right: 2px;
     bottom: 2px;
+
     border-radius: 3px;
-    background-color: rgba(0,0,0,.05);
+
+    background-color: rgba(0, 0, 0, 0.05);
 
     &.vertical {
-      width: 6px;
       top: 2px;
+
+      width: 6px;
 
       .scroll-bar-thumb {
         width: 100%;
@@ -111,8 +113,9 @@ export default {
     }
 
     &.horizontal {
-      height: 6px;
       left: 2px;
+
+      height: 6px;
 
       .scroll-bar-thumb {
         height: 100%;
@@ -121,21 +124,24 @@ export default {
   }
 
   &-thumb {
-    position: relative;
     display: block;
+    position: relative;
+
     width: 100px;
     height: 100px;
-    cursor: pointer;
+
+    transform: translate3d(0, 0, 0);
+
     border-radius: inherit;
-    background-color: rgba(0,0,0,.15);
-    transform: translate3d(0,0,0);
+
+    background-color: rgba(0, 0, 0, 0.15);
+
+    cursor: pointer;
 
     &:hover,
     &:active {
-      background-color: rgba(0,0,0,.25);
+      background-color: rgba(0, 0, 0, 0.25);
     }
   }
 }
-
-
 </style>

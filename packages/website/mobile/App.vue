@@ -1,8 +1,7 @@
 <template>
   <line-app id="mobile-app">
     <keep-alive include="MobileHome">
-      <router-view>
-      </router-view>
+      <router-view> </router-view>
     </keep-alive>
   </line-app>
 </template>
@@ -15,7 +14,7 @@ Vue.use(App);
 export default {
   created() {
     this.$router.push({
-      name : 'mobile',
+      name: 'mobile',
     });
   },
 };

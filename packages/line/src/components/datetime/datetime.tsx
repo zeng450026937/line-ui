@@ -46,7 +46,7 @@ const divyColumns = (columns: PickerColumn[]): PickerColumn[] => {
     columnsWidth.push(0);
 
     for (const option of col.options) {
-      width = (option.text)!.length;
+      width = option.text!.length;
       if (width > columnsWidth[i]) {
         columnsWidth[i] = width;
       }
@@ -57,12 +57,12 @@ const divyColumns = (columns: PickerColumn[]): PickerColumn[] => {
     width = Math.max(columnsWidth[0], columnsWidth[1]);
     columns[0].align = 'right';
     columns[1].align = 'left';
-    columns[0].optionsWidth = columns[1].optionsWidth = `${ width * 17 }px`;
+    columns[0].optionsWidth = columns[1].optionsWidth = `${width * 17}px`;
   } else if (columnsWidth.length === 3) {
     width = Math.max(columnsWidth[0], columnsWidth[2]);
     columns[0].align = 'right';
-    columns[1].columnWidth = `${ columnsWidth[1] * 17 }px`;
-    columns[0].optionsWidth = columns[2].optionsWidth = `${ width * 17 }px`;
+    columns[1].columnWidth = `${columnsWidth[1] * 17}px`;
+    columns[0].optionsWidth = columns[2].optionsWidth = `${width * 17}px`;
     columns[2].align = 'left';
   }
   return columns;
@@ -72,67 +72,69 @@ const DEFAULT_FORMAT = 'MMM D, YYYY';
 
 let datetimeIds = 0;
 
-
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ useModel('dateValue'),
-  ],
+  mixins: [/*#__PURE__*/ useModel('dateValue')],
 
-  inject : {
-    Item : { default: undefined },
+  inject: {
+    Item: { default: undefined },
   },
 
-  props : {
-    name          : String,
-    disabled      : Boolean,
-    readonly      : Boolean,
-    min           : String,
-    max           : String,
-    displayFormat : {
-      type    : String,
-      default : 'MMM D, YYYY',
+  props: {
+    name: String,
+    disabled: Boolean,
+    readonly: Boolean,
+    min: String,
+    max: String,
+    displayFormat: {
+      type: String,
+      default: 'MMM D, YYYY',
     },
-    displayTimezone : String,
-    pickerFormat    : String,
-    cancelText      : {
-      type    : String,
-      default : 'Cancel',
+    displayTimezone: String,
+    pickerFormat: String,
+    cancelText: {
+      type: String,
+      default: 'Cancel',
     },
-    doneText : {
-      type    : String,
-      default : 'Done',
+    doneText: {
+      type: String,
+      default: 'Done',
     },
-    yearValues      : [Array, Number, String],
-    monthValues     : [Array, Number, String],
-    dayValues       : [Array, Number, String],
-    hourValues      : [Array, Number, String],
-    minuteValues    : [Array, Number, String],
-    monthNames      : [Array, String],
-    monthShortNames : [Array, String],
-    dayNames        : [Array, String],
-    dayShortNames   : [Array, String],
-    pickerOptions   : Object,
-    placeholder     : String,
+    yearValues: [Array, Number, String],
+    monthValues: [Array, Number, String],
+    dayValues: [Array, Number, String],
+    hourValues: [Array, Number, String],
+    minuteValues: [Array, Number, String],
+    monthNames: [Array, String],
+    monthShortNames: [Array, String],
+    dayNames: [Array, String],
+    dayShortNames: [Array, String],
+    pickerOptions: Object,
+    placeholder: String,
   },
 
   data() {
     return {
-      isExpanded : false,
-      dateMax    : '',
-      dateMin    : '',
-      inputId    : `line-dt-${ datetimeIds++ }`,
+      isExpanded: false,
+      dateMax: '',
+      dateMin: '',
+      inputId: `line-dt-${datetimeIds++}`,
 
-      locale : {},
-      inItem : false,
+      locale: {},
+      inItem: false,
     };
   },
 
-  computed : {
+  computed: {
     text() {
       // create the text of the formatted data
-      const template = this.displayFormat || this.pickerFormat || DEFAULT_FORMAT;
+      const template =
+        this.displayFormat || this.pickerFormat || DEFAULT_FORMAT;
 
-      if (this.dateValue === undefined || this.dateValue === null || this.dateValue.length === 0) {
+      if (
+        this.dateValue === undefined ||
+        this.dateValue === null ||
+        this.dateValue.length === 0
+      ) {
         return undefined;
       }
 
@@ -158,10 +160,13 @@ export default /*#__PURE__*/ createComponent({
     // if neither were provided then it will use default English names
     this.locale = {
       // this.locale[type] = convertToArrayOfStrings((this[type] ? this[type] : this.config.get(type), type);
-      monthNames      : convertToArrayOfStrings(monthNames, 'monthNames'),
-      monthShortNames : convertToArrayOfStrings(monthShortNames, 'monthShortNames'),
-      dayNames        : convertToArrayOfStrings(dayNames, 'dayNames'),
-      dayShortNames   : convertToArrayOfStrings(dayShortNames, 'dayShortNames'),
+      monthNames: convertToArrayOfStrings(monthNames, 'monthNames'),
+      monthShortNames: convertToArrayOfStrings(
+        monthShortNames,
+        'monthShortNames'
+      ),
+      dayNames: convertToArrayOfStrings(dayNames, 'dayNames'),
+      dayShortNames: convertToArrayOfStrings(dayShortNames, 'dayShortNames'),
     };
 
     this.updateDatetimeValue(this.dateValue);
@@ -175,7 +180,7 @@ export default /*#__PURE__*/ createComponent({
     this.buttonEl = buttonEl;
   },
 
-  methods : {
+  methods: {
     /**
      * Opens the datetime overlay.
      */
@@ -205,7 +210,7 @@ export default /*#__PURE__*/ createComponent({
 
         const changeData: any = {};
         changeData[data.name] = {
-          value : colOptions[colSelectedIndex].value,
+          value: colOptions[colSelectedIndex].value,
         };
 
         this.updateDatetimeValue(changeData);
@@ -216,16 +221,14 @@ export default /*#__PURE__*/ createComponent({
     },
 
     emitStyle(): void {
-      this.Item && this.Item.itemStyle(
-        'datetime',
-        {
-          interactive            : true,
-          datetime               : true,
-          'has-placeholder'      : this.placeholder != null,
-          'has-value'            : this.hasValue(),
-          'interactive-disabled' : this.disabled,
-        },
-      );
+      this.Item &&
+        this.Item.itemStyle('datetime', {
+          interactive: true,
+          datetime: true,
+          'has-placeholder': this.placeholder != null,
+          'has-value': this.hasValue(),
+          'interactive-disabled': this.disabled,
+        });
     },
 
     updateDatetimeValue(value: any): void {
@@ -237,7 +240,7 @@ export default /*#__PURE__*/ createComponent({
       const pickerOptions: any = {
         mode,
         ...this.pickerOptions,
-        columns : this.generateColumns(),
+        columns: this.generateColumns(),
       };
 
       // If the user has not passed in picker buttons,
@@ -246,16 +249,16 @@ export default /*#__PURE__*/ createComponent({
       if (!buttons || buttons.length === 0) {
         pickerOptions.buttons = [
           {
-            text    : this.cancelText,
-            role    : 'cancel',
-            handler : () => {
+            text: this.cancelText,
+            role: 'cancel',
+            handler: () => {
               this.updateDatetimeValue(this.dateValue);
               this.$emit('cancel');
             },
           },
           {
-            text    : this.doneText,
-            handler : (data: any) => {
+            text: this.doneText,
+            handler: (data: any) => {
               this.updateDatetimeValue(data);
 
               /**
@@ -270,9 +273,14 @@ export default /*#__PURE__*/ createComponent({
               const date = new Date(convertDataToISO(this.datetimeValue));
 
               // If a custom display timezone is provided, use that tzOffset value instead
-              this.datetimeValue.tzOffset = (this.displayTimezone !== undefined && this.displayTimezone.length > 0)
-                ? ((getTimezoneOffset(date, this.displayTimezone)) / 1000 / 60) * -1
-                : date.getTimezoneOffset() * -1;
+              this.datetimeValue.tzOffset =
+                this.displayTimezone !== undefined &&
+                this.displayTimezone.length > 0
+                  ? (getTimezoneOffset(date, this.displayTimezone) /
+                      1000 /
+                      60) *
+                    -1
+                  : date.getTimezoneOffset() * -1;
 
               this.dateValue = convertDataToISO(this.datetimeValue);
             },
@@ -296,8 +304,8 @@ export default /*#__PURE__*/ createComponent({
       // automatically remove any day name formats
       template = template.replace('DDDD', '{~}').replace('DDD', '{~}');
       if (template.indexOf('D') === -1) {
-      // there is not a day in the template
-      // replace the day name with a numeric one if it exists
+        // there is not a day in the template
+        // replace the day name with a numeric one if it exists
         template = template.replace('{~}', 'D');
       }
       // make sure no day name replacer is left in the string
@@ -314,14 +322,14 @@ export default /*#__PURE__*/ createComponent({
         // otherwise use the default date part values
         const self = this as any;
         /* eslint-disable-next-line */
-        values = self[`${ key }Values`]
-          ? convertToArrayOfNumbers(self[`${ key }Values`], key)
+        values = self[`${key}Values`]
+          ? convertToArrayOfNumbers(self[`${key}Values`], key)
           : dateValueRange(format, this.datetimeMin, this.datetimeMax);
 
-        const colOptions = values.map(val => {
+        const colOptions = values.map((val) => {
           return {
-            value : val,
-            text  : renderTextFormat(format, val, undefined, this.locale),
+            value: val,
+            text: renderTextFormat(format, val, undefined, this.locale),
           };
         });
 
@@ -329,12 +337,14 @@ export default /*#__PURE__*/ createComponent({
         // preselect the option for this column
         const optValue = getDateValue(this.datetimeValue, format);
 
-        const selectedIndex = colOptions.findIndex(opt => opt.value === optValue);
+        const selectedIndex = colOptions.findIndex(
+          (opt) => opt.value === optValue
+        );
 
         return {
-          name          : key,
-          selectedIndex : selectedIndex >= 0 ? selectedIndex : 0,
-          options       : colOptions,
+          name: key,
+          selectedIndex: selectedIndex >= 0 ? selectedIndex : 0,
+          options: colOptions,
         };
       });
 
@@ -342,8 +352,8 @@ export default /*#__PURE__*/ createComponent({
       const min = this.datetimeMin as any;
       const max = this.datetimeMax as any;
       ['month', 'day', 'hour', 'minute']
-        .filter(name => !columns.find(column => column.name === name))
-        .forEach(name => {
+        .filter((name) => !columns.find((column) => column.name === name))
+        .forEach((name) => {
           min[name] = 0;
           max[name] = 0;
         });
@@ -354,18 +364,22 @@ export default /*#__PURE__*/ createComponent({
       const today = new Date();
       const minCompareVal = dateDataSortValue(this.datetimeMin);
       const maxCompareVal = dateDataSortValue(this.datetimeMax);
-      const yearCol = columns.find(c => c.name === 'year');
+      const yearCol = columns.find((c) => c.name === 'year');
 
       let selectedYear: number = today.getFullYear();
       if (yearCol) {
         // default to the first value if the current year doesn't exist in the options
-        if (!yearCol.options.find((col: any) => col.value === today.getFullYear())) {
+        if (
+          !yearCol.options.find((col: any) => col.value === today.getFullYear())
+        ) {
           selectedYear = yearCol.options[0].value;
         }
 
         const { selectedIndex } = yearCol;
         if (selectedIndex !== undefined) {
-          const yearOpt = yearCol.options[selectedIndex] as PickerColumnOption | undefined;
+          const yearOpt = yearCol.options[selectedIndex] as
+            | PickerColumnOption
+            | undefined;
           if (yearOpt) {
             // they have a selected year value
             selectedYear = yearOpt.value;
@@ -373,30 +387,46 @@ export default /*#__PURE__*/ createComponent({
         }
       }
 
-      const selectedMonth = this.validateColumn(columns,
-        'month', 1,
-        minCompareVal, maxCompareVal,
+      const selectedMonth = this.validateColumn(
+        columns,
+        'month',
+        1,
+        minCompareVal,
+        maxCompareVal,
         [selectedYear, 0, 0, 0, 0],
-        [selectedYear, 12, 31, 23, 59]);
+        [selectedYear, 12, 31, 23, 59]
+      );
 
       const numDaysInMonth = daysInMonth(selectedMonth, selectedYear);
-      const selectedDay = this.validateColumn(columns,
-        'day', 2,
-        minCompareVal, maxCompareVal,
+      const selectedDay = this.validateColumn(
+        columns,
+        'day',
+        2,
+        minCompareVal,
+        maxCompareVal,
         [selectedYear, selectedMonth, 0, 0, 0],
-        [selectedYear, selectedMonth, numDaysInMonth, 23, 59]);
+        [selectedYear, selectedMonth, numDaysInMonth, 23, 59]
+      );
 
-      const selectedHour = this.validateColumn(columns,
-        'hour', 3,
-        minCompareVal, maxCompareVal,
+      const selectedHour = this.validateColumn(
+        columns,
+        'hour',
+        3,
+        minCompareVal,
+        maxCompareVal,
         [selectedYear, selectedMonth, selectedDay, 0, 0],
-        [selectedYear, selectedMonth, selectedDay, 23, 59]);
+        [selectedYear, selectedMonth, selectedDay, 23, 59]
+      );
 
-      this.validateColumn(columns,
-        'minute', 4,
-        minCompareVal, maxCompareVal,
+      this.validateColumn(
+        columns,
+        'minute',
+        4,
+        minCompareVal,
+        maxCompareVal,
         [selectedYear, selectedMonth, selectedDay, selectedHour, 0],
-        [selectedYear, selectedMonth, selectedDay, selectedHour, 59]);
+        [selectedYear, selectedMonth, selectedDay, selectedHour, 59]
+      );
 
       return columns;
     },
@@ -421,8 +451,8 @@ export default /*#__PURE__*/ createComponent({
           this.dateMax = todaysYear.toString();
         }
       }
-      const min = this.datetimeMin = parseDate(this.dateMin)!;
-      const max = this.datetimeMax = parseDate(this.dateMax)!;
+      const min = (this.datetimeMin = parseDate(this.dateMin)!);
+      const max = (this.datetimeMax = parseDate(this.dateMax)!);
 
       min.year = min.year || todaysYear;
       max.year = max.year || todaysYear;
@@ -454,9 +484,16 @@ export default /*#__PURE__*/ createComponent({
       }
     },
 
-    validateColumn(columns: PickerColumn[], name: string, index: number,
-      min: number, max: number, lowerBounds: number[], upperBounds: number[]): number {
-      const column = columns.find(c => c.name === name);
+    validateColumn(
+      columns: PickerColumn[],
+      name: string,
+      index: number,
+      min: number,
+      max: number,
+      lowerBounds: number[],
+      upperBounds: number[]
+    ): number {
+      const column = columns.find((c) => c.name === name);
       if (!column) {
         return 0;
       }
@@ -473,19 +510,24 @@ export default /*#__PURE__*/ createComponent({
         lb[index] = opts.value;
         ub[index] = opts.value;
 
-        const disabled = opts.disabled = (
-          value < lowerBounds[index]
-        || value > upperBounds[index]
-        || dateSortValue(ub[0], ub[1], ub[2], ub[3], ub[4]) < min
-        || dateSortValue(lb[0], lb[1], lb[2], lb[3], lb[4]) > max
-        );
+        const disabled = (opts.disabled =
+          value < lowerBounds[index] ||
+          value > upperBounds[index] ||
+          dateSortValue(ub[0], ub[1], ub[2], ub[3], ub[4]) < min ||
+          dateSortValue(lb[0], lb[1], lb[2], lb[3], lb[4]) > max);
         if (!disabled) {
           indexMin = Math.min(indexMin, i);
           indexMax = Math.max(indexMax, i);
         }
       }
-      const selectedIndex = column.selectedIndex = clamp(indexMin, column.selectedIndex!, indexMax);
-      const opt = column.options[selectedIndex] as PickerColumnOption | undefined;
+      const selectedIndex = (column.selectedIndex = clamp(
+        indexMin,
+        column.selectedIndex!,
+        indexMax
+      ));
+      const opt = column.options[selectedIndex] as
+        | PickerColumnOption
+        | undefined;
       if (opt) {
         return opt.value;
       }
@@ -515,7 +557,7 @@ export default /*#__PURE__*/ createComponent({
     },
   },
 
-  watch : {
+  watch: {
     checked() {
       this.emitStyle();
     },
@@ -527,18 +569,24 @@ export default /*#__PURE__*/ createComponent({
 
   render() {
     const {
-      inputId, text, disabled, readonly, isExpanded, $el, placeholder, inItem,
+      inputId,
+      text,
+      disabled,
+      readonly,
+      isExpanded,
+      $el,
+      placeholder,
+      inItem,
     } = this;
 
-    const labelId = `${ inputId }-lbl`;
+    const labelId = `${inputId}-lbl`;
     const label = findItemLabel($el as HTMLElement);
-    const addPlaceholderClass = !!((text === undefined && placeholder != null));
+    const addPlaceholderClass = !!(text === undefined && placeholder != null);
 
     // If selected text has been passed in, use that first
     // otherwise use the placeholder
-    const datetimeText = text === undefined
-      ? (placeholder != null ? placeholder : '')
-      : text;
+    const datetimeText =
+      text === undefined ? (placeholder != null ? placeholder : '') : text;
 
     if (label) {
       label.id = labelId;
@@ -551,14 +599,14 @@ export default /*#__PURE__*/ createComponent({
         onClick={this.onClick}
         role="combobox"
         aria-disabled={disabled ? 'true' : null}
-        aria-expanded={`${ isExpanded }`}
+        aria-expanded={`${isExpanded}`}
         aria-haspopup="true"
         aria-labelledby={labelId}
         class={[
           bem({
             disabled,
             readonly,
-            placeholder : addPlaceholderClass,
+            placeholder: addPlaceholderClass,
           }),
           { 'in-item': inItem },
         ]}
@@ -570,8 +618,7 @@ export default /*#__PURE__*/ createComponent({
           onBlur={this.onBlur}
           disabled={this.disabled}
           ref="buttonEl"
-        >
-      </button>
+        ></button>
       </div>
     );
   },

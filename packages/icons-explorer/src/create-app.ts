@@ -7,7 +7,7 @@ export function createApp(context?: any /* ssr context */) {
   const router = createRouter();
   const app = new Vue({
     router,
-    render : h => h(App),
+    render: (h) => h(App),
   });
 
   return {

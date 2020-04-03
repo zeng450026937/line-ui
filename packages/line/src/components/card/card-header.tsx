@@ -4,11 +4,11 @@ import { createColorClasses } from '@line-ui/line/src/mixins/use-color';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('card-header');
 
 export default /*#__PURE__*/ createComponent({
-  functional : true,
+  functional: true,
 
-  props : {
-    color       : String,
-    translucent : Boolean,
+  props: {
+    color: String,
+    translucent: Boolean,
   },
 
   render(h, { props, data, slots }) {

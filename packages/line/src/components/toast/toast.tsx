@@ -10,19 +10,19 @@ import { mdLeaveAnimation } from '@line-ui/line/src/components/toast/animations/
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('toast');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
+  mixins: [
     /*#__PURE__*/ usePopup(),
     /*#__PURE__*/ usePopupDuration(),
     /*#__PURE__*/ useColor(),
   ],
 
-  props : {
+  props: {
     /**
      * The position of the toast on the screen.
      */
     // top | bottom | middle
-    position : String,
-    message  : String,
+    position: String,
+    message: String,
   },
 
   beforeMount() {
@@ -38,7 +38,10 @@ export default /*#__PURE__*/ createComponent({
 
     this.$on('opened', () => {
       if (this.duration > 0) {
-        this.durationTimeout = setTimeout(() => this.close('timeout'), this.duration);
+        this.durationTimeout = setTimeout(
+          () => this.close('timeout'),
+          this.duration
+        );
       }
     });
     this.$on('aboutToHide', () => {
@@ -51,25 +54,13 @@ export default /*#__PURE__*/ createComponent({
   render() {
     const { position = 'bottom' } = this;
     return (
-      <div
-        v-show={this.visible}
-        class={[bem()]}
-        on={this.$listeners}
-      >
-        <div
-          class={bem('wrapper', { [position]: true })}
-        >
-          <div
-            class={bem('container')}
-          >
+      <div v-show={this.visible} class={[bem()]} on={this.$listeners}>
+        <div class={bem('wrapper', { [position]: true })}>
+          <div class={bem('container')}>
             {}
 
-            <div
-              class={bem('content')}
-            >
-              <div class={bem('message')}>
-                {this.message}
-              </div>
+            <div class={bem('content')}>
+              <div class={bem('message')}>{this.message}</div>
 
               <div></div>
             </div>

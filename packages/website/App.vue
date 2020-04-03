@@ -15,12 +15,11 @@ Vue.use(App);
 Vue.use(Content);
 
 export default Vue.extend({
-  name : 'App',
+  name: 'App',
 });
 </script>
 
 <style lang="scss">
-
 .logo {
   display: flex;
 

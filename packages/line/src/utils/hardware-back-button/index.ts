@@ -1,4 +1,3 @@
-
 export interface BackButtonEventDetail {
   register(priority: number, handler: () => Promise<any> | void): void;
 }
@@ -35,8 +34,8 @@ export const startHardwareBackButton = () => {
 
     const handlers: HandlerRegister[] = [];
     const ev: BackButtonEvent = new CustomEvent('lineBackButton', {
-      bubbles : false,
-      detail  : {
+      bubbles: false,
+      detail: {
         register(priority: number, handler: Handler) {
           handlers.push({ priority, handler });
         },
@@ -55,7 +54,7 @@ export const startHardwareBackButton = () => {
       });
 
       busy = true;
-      executeAction(selectedHandler).then(() => busy = false);
+      executeAction(selectedHandler).then(() => (busy = false));
     }
   });
 };

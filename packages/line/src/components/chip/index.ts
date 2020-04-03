@@ -3,6 +3,4 @@
 
 import Chip from '@line-ui/line/src/components/chip/chip';
 
-export {
-  Chip,
-};
+export { Chip };

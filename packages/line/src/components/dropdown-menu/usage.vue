@@ -1,4 +1,4 @@
-  <template>
+<template>
   <line-app>
     <line-header translucent>
       <line-toolbar>
@@ -38,15 +38,9 @@
           >menu button</line-button>
         </div> -->
       </line-dropdown-menu>
-      <line-button
-        expand="block"
-        @click="onClick"
-      >Click</line-button>
+      <line-button expand="block" @click="onClick">Click</line-button>
       <div style="height: 400px;"></div>
-      <line-button
-        expand="block"
-        @click="onClick"
-      >Click</line-button>
+      <line-button expand="block" @click="onClick">Click</line-button>
       <div style="height: 100px;"></div>
     </line-content>
   </line-app>
@@ -55,27 +49,19 @@
 <script>
 import Vue from 'vue';
 
-const defaultColumnOptions = [
-  [
-    'Dog',
-    'Cat',
-    'Bird',
-    'Lizard',
-    'Chinchilla',
-  ],
-];
+const defaultColumnOptions = [['Dog', 'Cat', 'Bird', 'Lizard', 'Chinchilla']];
 
 export default Vue.extend({
   data() {
     return {
-      columns   : [],
-      trigger   : null,
-      switchVal : true,
-      visible   : false,
+      columns: [],
+      trigger: null,
+      switchVal: true,
+      visible: false,
     };
   },
 
-  methods : {
+  methods: {
     onColChange(data) {
       console.log('onColChange: ', data);
     },
@@ -90,8 +76,8 @@ export default Vue.extend({
       const columns = [];
       for (let i = 0; i < numColumns; i++) {
         columns.push({
-          name    : `col-${ i }`,
-          options : this.getColumnOptions(i, numOptions, columnOptions),
+          name: `col-${i}`,
+          options: this.getColumnOptions(i, numOptions, columnOptions),
         });
       }
 
@@ -102,8 +88,8 @@ export default Vue.extend({
       const options = [];
       for (let i = 0; i < numOptions; i++) {
         options.push({
-          text  : columnOptions[columnIndex][i % numOptions],
-          value : i,
+          text: columnOptions[columnIndex][i % numOptions],
+          value: i,
         });
       }
 
@@ -117,5 +103,4 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

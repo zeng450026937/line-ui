@@ -8,19 +8,19 @@ const NAMESPACE = 'RadioGroup';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('radio');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
+  mixins: [
     /*#__PURE__*/ useCheckItem(NAMESPACE),
     /*#__PURE__*/ useRipple(),
     /*#__PURE__*/ useColor(),
   ],
 
-  inject : {
-    Item : { default: undefined },
+  inject: {
+    Item: { default: undefined },
   },
 
   data() {
     return {
-      inItem : false,
+      inItem: false,
     };
   },
 
@@ -29,21 +29,18 @@ export default /*#__PURE__*/ createComponent({
     this.emitStyle();
   },
 
-  methods : {
+  methods: {
     emitStyle() {
       const { Item } = this;
       if (!Item) return;
-      Item.itemStyle(
-        'radio',
-        {
-          'radio-checked'        : this.checked,
-          'interactive-disabled' : this.disabled,
-        },
-      );
+      Item.itemStyle('radio', {
+        'radio-checked': this.checked,
+        'interactive-disabled': this.disabled,
+      });
     },
   },
 
-  watch : {
+  watch: {
     color() {
       this.emitStyle();
     },
@@ -58,9 +55,7 @@ export default /*#__PURE__*/ createComponent({
   },
 
   render() {
-    const {
-      checked, disabled, inItem,
-    } = this;
+    const { checked, disabled, inItem } = this;
 
     return (
       <div
@@ -76,16 +71,12 @@ export default /*#__PURE__*/ createComponent({
         on={this.$listeners}
       >
         <div class={bem('icon')}>
-          <div class={bem('inner')}/>
+          <div class={bem('inner')} />
         </div>
 
         {this.slots()}
 
-        <button
-          type="button"
-          disabled={disabled}
-        >
-        </button>
+        <button type="button" disabled={disabled}></button>
       </div>
     );
   },

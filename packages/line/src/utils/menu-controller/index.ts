@@ -10,22 +10,21 @@ const createMenuController = () => {
 
   const waitUntilReady = () => {
     return Promise.all(
-      Array.from(document.querySelectorAll('.line-menu'))
-        .map(menu => {
-          // menu.componentOnReady()
-          // TODO
-          console.log(menu);
-          return true;
-        }),
+      Array.from(document.querySelectorAll('.line-menu')).map((menu) => {
+        // menu.componentOnReady()
+        // TODO
+        console.log(menu);
+        return true;
+      })
     );
   };
 
   const getMenusSync = (): any[] => {
-    return menus.map(menu => menu.el);
+    return menus.map((menu) => menu.el);
   };
 
   const isAnimatingSync = (): boolean => {
-    return menus.some(menu => menu.isAnimating);
+    return menus.some((menu) => menu.isAnimating);
   };
 
   const _setActiveMenu = (menu: MenuI) => {
@@ -34,8 +33,8 @@ const createMenuController = () => {
     // and automatically disable other same side menus
     const { side } = menu;
     menus
-      .filter(m => m.side === side && m !== menu)
-      .forEach(m => m.disabled = true);
+      .filter((m) => m.side === side && m !== menu)
+      .forEach((m) => (m.disabled = true));
   };
 
   const find = (predicate: (menu: MenuI) => boolean): any | undefined => {
@@ -51,7 +50,7 @@ const createMenuController = () => {
     if (menu === 'start' || menu === 'end') {
       // there could be more than one menu on the same side
       // so first try to get the enabled one
-      const menuRef = find(m => m.side === menu && !m.disabled);
+      const menuRef = find((m) => m.side === menu && !m.disabled);
       console.log('menuRef', menuRef);
       if (menuRef) {
         return menuRef;
@@ -59,18 +58,21 @@ const createMenuController = () => {
 
       // didn't find a menu side that is enabled
       // so try to get the first menu side found
-      console.log('find', find(m => m.side === menu));
+      console.log(
+        'find',
+        find((m) => m.side === menu)
+      );
 
-      return find(m => m.side === menu);
+      return find((m) => m.side === menu);
     }
     if (menu != null) {
       // the menuId was not left or right
       // so try to get the menu by its "id"
-      return find(m => m.menuId === menu);
+      return find((m) => m.menuId === menu);
     }
 
     // return the first enabled menu
-    const menuEl = find(m => !m.disabled);
+    const menuEl = find((m) => !m.disabled);
     if (menuEl) {
       return menuEl;
     }
@@ -79,7 +81,7 @@ const createMenuController = () => {
   };
 
   const _getOpenSync = (): any | undefined => {
-    return find(m => m._isOpen);
+    return find((m) => m._isOpen);
   };
 
   /**
@@ -114,7 +116,10 @@ const createMenuController = () => {
     return false;
   };
 
-  const enable = async (shouldEnable: boolean, menu?: string | null): Promise<any | undefined> => {
+  const enable = async (
+    shouldEnable: boolean,
+    menu?: string | null
+  ): Promise<any | undefined> => {
     const menuEl = await get(menu);
     if (menuEl) {
       menuEl.disabled = !shouldEnable;
@@ -122,14 +127,16 @@ const createMenuController = () => {
     return menuEl;
   };
 
-  const swipeGesture = async (shouldEnable: boolean, menu?: string | null): Promise<any | undefined> => {
+  const swipeGesture = async (
+    shouldEnable: boolean,
+    menu?: string | null
+  ): Promise<any | undefined> => {
     const menuEl = await get(menu);
     if (menuEl) {
       menuEl.swipeGesture = shouldEnable;
     }
     return menuEl;
   };
-
 
   const isEnabled = async (menu?: string | null): Promise<boolean> => {
     const menuEl = await get(menu);
@@ -138,7 +145,6 @@ const createMenuController = () => {
     }
     return false;
   };
-
 
   const registerAnimation = (name: string, animation: AnimationBuilder) => {
     menuAnimations.set(name, animation);
@@ -163,7 +169,6 @@ const createMenuController = () => {
     }
   };
 
-
   const _createAnimation = (type: string, menuCmp: MenuI) => {
     const animationBuilder = menuAnimations.get(type) as any;
 
@@ -174,7 +179,6 @@ const createMenuController = () => {
     const animation = animationBuilder(menuCmp);
     return animation;
   };
-
 
   /**
    * Get all menu instances.
@@ -187,7 +191,7 @@ const createMenuController = () => {
   const isOpen = async (menu?: string | null): Promise<boolean> => {
     if (menu != null) {
       const menuEl = await get(menu);
-      return (menuEl !== undefined && menuEl.isOpen());
+      return menuEl !== undefined && menuEl.isOpen();
     }
     const menuEl = await getOpen();
     return menuEl !== undefined;
@@ -202,7 +206,11 @@ const createMenuController = () => {
     return isAnimatingSync();
   };
 
-  const _setOpen = async (menu: MenuI, shouldOpen: boolean, animated: boolean): Promise<boolean> => {
+  const _setOpen = async (
+    menu: MenuI,
+    shouldOpen: boolean,
+    animated: boolean
+  ): Promise<boolean> => {
     if (isAnimatingSync()) {
       return false;
     }
@@ -214,7 +222,6 @@ const createMenuController = () => {
     }
     return menu._setOpen(shouldOpen, animated);
   };
-
 
   registerAnimation('reveal', menuRevealAnimation);
   registerAnimation('push', menuPushAnimation);
@@ -242,4 +249,4 @@ const createMenuController = () => {
   };
 };
 
-export const menuController = /* @__PURE__ */createMenuController();
+export const menuController = /* @__PURE__ */ createMenuController();

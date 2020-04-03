@@ -12,26 +12,30 @@ export function useBreakPoint() {
   return createMixins({
     data() {
       return {
-        clientWidth  : getClientWidth(),
-        clientHeight : getClientHeight(),
+        clientWidth: getClientWidth(),
+        clientHeight: getClientHeight(),
 
-        thresholds : {
-          xs : 600,
-          sm : 960,
-          md : 1280,
-          lg : 1920,
+        thresholds: {
+          xs: 600,
+          sm: 960,
+          md: 1280,
+          lg: 1920,
         },
-        scrollbarWidth : 16,
+        scrollbarWidth: 16,
       };
     },
 
-    computed : {
+    computed: {
       breakpoint() {
         const xs = this.clientWidth < this.thresholds.xs;
         const sm = this.clientWidth < this.thresholds.sm && !xs;
-        const md = this.clientWidth < (this.thresholds.md - this.scrollbarWidth) && !(sm || xs);
-        const lg = this.clientWidth < (this.thresholds.lg - this.scrollbarWidth) && !(md || sm || xs);
-        const xl = this.clientWidth >= (this.thresholds.lg - this.scrollbarWidth);
+        const md =
+          this.clientWidth < this.thresholds.md - this.scrollbarWidth &&
+          !(sm || xs);
+        const lg =
+          this.clientWidth < this.thresholds.lg - this.scrollbarWidth &&
+          !(md || sm || xs);
+        const xl = this.clientWidth >= this.thresholds.lg - this.scrollbarWidth;
 
         const xsOnly = xs;
         const smOnly = sm;
@@ -47,16 +51,16 @@ export function useBreakPoint() {
 
         let name;
         switch (true) {
-          case (xs):
+          case xs:
             name = 'xs';
             break;
-          case (sm):
+          case sm:
             name = 'sm';
             break;
-          case (md):
+          case md:
             name = 'md';
             break;
-          case (lg):
+          case lg:
             name = 'lg';
             break;
           default:
@@ -65,7 +69,7 @@ export function useBreakPoint() {
         }
 
         return {
-        // Definite breakpoint.
+          // Definite breakpoint.
           xs,
           sm,
           md,
@@ -89,16 +93,16 @@ export function useBreakPoint() {
           xlOnly,
 
           // For custom breakpoint logic.
-          width          : this.clientWidth,
-          height         : this.clientHeight,
-          thresholds     : this.thresholds,
-          scrollbarWidth : this.scrollbarWidth,
+          width: this.clientWidth,
+          height: this.clientHeight,
+          thresholds: this.thresholds,
+          scrollbarWidth: this.scrollbarWidth,
         };
       },
     },
 
-    methods : {
-      onResize : debounce(function onResize(this: any) {
+    methods: {
+      onResize: debounce(function onResize(this: any) {
         this.setDimensions();
       }, 200),
 

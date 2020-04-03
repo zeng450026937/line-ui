@@ -2,7 +2,7 @@ const { addSideEffect } = require('@babel/helper-module-imports');
 
 module.exports = () => {
   return {
-    visitor : {
+    visitor: {
       ImportDeclaration(path, state) {
         // https://github.com/babel/babel/tree/master/packages/babel-types#timportdeclarationspecifiers-source
 
@@ -24,7 +24,7 @@ module.exports = () => {
             memberImport = true,
           } = options;
 
-          path.node.specifiers.forEach(specifier => {
+          path.node.specifiers.forEach((specifier) => {
             // Examples of "full" imports:
             //   import * as name from 'module'; (ImportNamespaceSpecifier)
             //   import name from 'module'; (ImportDefaultSpecifier)
@@ -36,10 +36,14 @@ module.exports = () => {
             const importName = specifier.local.name;
 
             if (isFullImport && !fullImport) {
-              throw new Error(`Import of entire module ${ source } not allowed due to fullImport setting`);
+              throw new Error(
+                `Import of entire module ${source} not allowed due to fullImport setting`
+              );
             }
             if (isMemberImport && !memberImport) {
-              throw new Error(`Member Import of module ${ source } not allowed due to memberImport setting`);
+              throw new Error(
+                `Member Import of module ${source} not allowed due to memberImport setting`
+              );
             }
 
             if (isFullImport && fullImportEffect) {
@@ -50,11 +54,13 @@ module.exports = () => {
             }
 
             if (effect) {
-              effects = effects.concat(effect(importName, isFullImport /* full import */));
+              effects = effects.concat(
+                effect(importName, isFullImport /* full import */)
+              );
             }
           });
 
-          effects.forEach(effect => effect && addSideEffect(path, effect));
+          effects.forEach((effect) => effect && addSideEffect(path, effect));
         }
       },
     },

@@ -2,7 +2,7 @@ import { VueConstructor } from 'vue';
 import { RouteConfig } from 'vue-router';
 
 interface Model extends Object {
-  default: VueConstructor
+  default: VueConstructor;
 }
 
 interface ComponentMap extends Object {
@@ -10,13 +10,20 @@ interface ComponentMap extends Object {
 }
 
 interface NavItem extends Object {
-  label: string,
-  value: string,
-  children?: NavItem[]
+  label: string;
+  value: string;
+  children?: NavItem[];
 }
 
-const registerRoute = ({ list, componentMap, isDemo = false }:
-  {list: NavItem[], componentMap: ComponentMap, isDemo: boolean}): RouteConfig[] => {
+const registerRoute = ({
+  list,
+  componentMap,
+  isDemo = false,
+}: {
+  list: NavItem[];
+  componentMap: ComponentMap;
+  isDemo: boolean;
+}): RouteConfig[] => {
   const route: RouteConfig[] = [];
 
   function addRoute(item: NavItem) {
@@ -25,9 +32,9 @@ const registerRoute = ({ list, componentMap, isDemo = false }:
     if (value) {
       let component;
       if (isDemo) {
-        module = componentMap[`./${ value }/demo/index.vue`];
+        module = componentMap[`./${value}/demo/index.vue`];
       } else {
-        module = componentMap[`./${ value }/readme.md`];
+        module = componentMap[`./${value}/readme.md`];
       }
 
       if (module) {
@@ -36,13 +43,12 @@ const registerRoute = ({ list, componentMap, isDemo = false }:
 
       route.push({
         component,
-        name : isDemo ? `demo-${ value }` : value,
-        path : isDemo ? `/mobile/${ value }` : `/website/${ value }`,
-        meta : { title: label, displayDemo: !isDemo },
+        name: isDemo ? `demo-${value}` : value,
+        path: isDemo ? `/mobile/${value}` : `/website/${value}`,
+        meta: { title: label, displayDemo: !isDemo },
       });
     }
   }
-
 
   list.forEach((item: NavItem) => {
     item.children!.forEach((child) => {

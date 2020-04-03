@@ -1,41 +1,47 @@
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
 
-const { createComponent, bem } = /*#__PURE__*/ createNamespace('infinite-scroll');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace(
+  'infinite-scroll'
+);
 
 export default /*#__PURE__*/ createComponent({
-  inject : {
-    Content : { default: undefined },
+  inject: {
+    Content: { default: undefined },
   },
 
-  props : {
-    threshold : {
-      type    : String,
-      default : '15%',
+  props: {
+    threshold: {
+      type: String,
+      default: '15%',
     },
-    disabled : Boolean,
-    position : {
-      type    : String,
-      default : 'bottom',
+    disabled: Boolean,
+    position: {
+      type: String,
+      default: 'bottom',
     },
   },
 
   data() {
     return {
-      isLoading : false,
+      isLoading: false,
     };
   },
 
-  watch : {
+  watch: {
     threshold() {
       this.thresholdChanged();
     },
   },
 
   async mounted() {
-    const contentEl = this.$parent.$options.name === 'line-content' ? this.$parent.$el : null;
+    const contentEl =
+      this.$parent.$options.name === 'line-content' ? this.$parent.$el : null;
 
     if (!contentEl) {
-      __DEV__ && console.error('<line-infinite-scroll> must be used inside an <line-content>');
+      __DEV__ &&
+        console.error(
+          '<line-infinite-scroll> must be used inside an <line-content>'
+        );
       return;
     }
 
@@ -45,7 +51,8 @@ export default /*#__PURE__*/ createComponent({
     if (this.position === 'top') {
       this.$nextTick(() => {
         if (this.scrollEl) {
-          this.scrollEl.scrollTop = this.scrollEl.scrollHeight - this.scrollEl.clientHeight;
+          this.scrollEl.scrollTop =
+            this.scrollEl.scrollHeight - this.scrollEl.clientHeight;
         }
       });
     }
@@ -56,7 +63,7 @@ export default /*#__PURE__*/ createComponent({
     this.scrollEl = undefined;
   },
 
-  methods : {
+  methods: {
     onScroll() {
       const { scrollEl } = this;
       if (!scrollEl || !this.canStart()) {
@@ -71,11 +78,12 @@ export default /*#__PURE__*/ createComponent({
       const { scrollTop } = scrollEl;
       const { scrollHeight } = scrollEl;
       const height = scrollEl.offsetHeight;
-      const threshold = this.thrPc !== 0 ? (height * this.thrPc) : this.thrPx;
+      const threshold = this.thrPc !== 0 ? height * this.thrPc : this.thrPx;
 
-      const distanceFromInfinite = (this.position === 'bottom')
-        ? scrollHeight - infiniteHeight - scrollTop - threshold - height
-        : scrollTop - infiniteHeight - threshold;
+      const distanceFromInfinite =
+        this.position === 'bottom'
+          ? scrollHeight - infiniteHeight - scrollTop - threshold - height
+          : scrollTop - infiniteHeight - threshold;
 
       if (distanceFromInfinite < 0) {
         if (!this.didFire) {
@@ -109,26 +117,26 @@ export default /*#__PURE__*/ createComponent({
       this.isLoading = false;
 
       if (this.position === 'top') {
-      /**
-       * New content is being added at the top, but the scrollTop position stays the same,
-       * which causes a scroll jump visually. This algorithm makes sure to prevent this.
-       * (Frame 1)
-       *    - complete() is called, but the UI hasn't had time to update yet.
-       *    - Save the current content dimensions.
-       *    - Wait for the next frame using _dom.read, so the UI will be updated.
-       * (Frame 2)
-       *    - Read the new content dimensions.
-       *    - Calculate the height difference and the new scroll position.
-       *    - Delay the scroll position change until other possible dom
-       * reads are done using _dom.write to be performant.
-       * (Still frame 2, if I'm correct)
-       *    - Change the scroll position (= visually maintain the scroll position).
-       *    - Change the state to re-enable the InfiniteScroll.
-       *    - This should be after changing the scroll position, or it could
-       *    cause the InfiniteScroll to be triggered again immediately.
-       * (Frame 3)
-       *    Done.
-       */
+        /**
+         * New content is being added at the top, but the scrollTop position stays the same,
+         * which causes a scroll jump visually. This algorithm makes sure to prevent this.
+         * (Frame 1)
+         *    - complete() is called, but the UI hasn't had time to update yet.
+         *    - Save the current content dimensions.
+         *    - Wait for the next frame using _dom.read, so the UI will be updated.
+         * (Frame 2)
+         *    - Read the new content dimensions.
+         *    - Calculate the height difference and the new scroll position.
+         *    - Delay the scroll position change until other possible dom
+         * reads are done using _dom.write to be performant.
+         * (Still frame 2, if I'm correct)
+         *    - Change the scroll position (= visually maintain the scroll position).
+         *    - Change the state to re-enable the InfiniteScroll.
+         *    - This should be after changing the scroll position, or it could
+         *    cause the InfiniteScroll to be triggered again immediately.
+         * (Frame 3)
+         *    Done.
+         */
         this.isBusy = true;
         // ******** DOM READ ****************
         // Save the current content dimensions before the UI updates
@@ -157,10 +165,7 @@ export default /*#__PURE__*/ createComponent({
 
     canStart(): boolean {
       return (
-        !this.disabled
-      && !this.isBusy
-      && !!this.scrollEl
-      && !this.isLoading
+        !this.disabled && !this.isBusy && !!this.scrollEl && !this.isLoading
       );
     },
 
@@ -178,7 +183,7 @@ export default /*#__PURE__*/ createComponent({
       const val = this.threshold;
       if (val.lastIndexOf('%') > -1) {
         this.thrPx = 0;
-        this.thrPc = (parseFloat(val) / 100);
+        this.thrPc = parseFloat(val) / 100;
       } else {
         this.thrPx = parseFloat(val);
         this.thrPc = 0;
@@ -202,8 +207,8 @@ export default /*#__PURE__*/ createComponent({
       <div
         class={[
           bem({
-            loading : isLoading,
-            enabled : !disabled,
+            loading: isLoading,
+            enabled: !disabled,
           }),
         ]}
       >

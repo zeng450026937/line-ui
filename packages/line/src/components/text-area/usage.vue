@@ -7,10 +7,7 @@
     </line-header>
 
     <line-content>
-      <line-list
-        lines="full"
-        class="line-no-margin line-no-padding"
-      >
+      <line-list lines="full" class="line-no-margin line-no-padding">
         <line-item>
           <line-label position="stacked">Notes</line-label>
           <line-textarea v-model="value"></line-textarea>
@@ -18,15 +15,12 @@
       </line-list>
 
       <div class="line-padding">
-        <line-button
-          expand="block"
-          type="submit"
-          class="line-no-margin"
-        >Create account</line-button>
+        <line-button expand="block" type="submit" class="line-no-margin"
+          >Create account</line-button
+        >
       </div>
     </line-content>
   </line-app>
-
 </template>
 
 <script>
@@ -35,13 +29,11 @@ import Vue from 'vue';
 export default Vue.extend({
   data() {
     return {
-      value : 'line-textarea',
+      value: 'line-textarea',
     };
   },
 
-  methods : {
-
-  },
+  methods: {},
 });
 </script>
 

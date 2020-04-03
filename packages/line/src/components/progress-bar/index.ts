@@ -3,6 +3,4 @@
 
 import ProgressBar from '@line-ui/line/src/components/progress-bar/progress-bar';
 
-export {
-  ProgressBar,
-};
+export { ProgressBar };

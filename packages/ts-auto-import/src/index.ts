@@ -1,12 +1,14 @@
 import * as ts from 'typescript';
-import {
-  join as pathJoin,
-  sep,
-} from 'path';
+import { join as pathJoin, sep } from 'path';
 
 export interface Options {
   libraryName?: string;
-  style?: boolean | 'css' | 'css.web' | string | ((name: string) => string | false);
+  style?:
+    | boolean
+    | 'css'
+    | 'css.web'
+    | string
+    | ((name: string) => string | false);
   libraryDirectory?: ((name: string) => string) | string;
   libraryOverride?: boolean;
   camel2DashComponentName?: boolean;
@@ -34,12 +36,12 @@ function join(...params: string[]) {
 // borrow from https://github.com/ant-design/babel-plugin-import
 function camel2Dash(_str: string) {
   const str = _str[0].toLowerCase() + _str.substr(1);
-  return str.replace(/([A-Z])/g, ($1) => `-${ $1.toLowerCase() }`);
+  return str.replace(/([A-Z])/g, ($1) => `-${$1.toLowerCase()}`);
 }
 
 function camel2Underline(_str: string) {
   const str = _str[0].toLowerCase() + _str.substr(1);
-  return str.replace(/([A-Z])/g, ($1) => `_${ $1.toLowerCase() }`);
+  return str.replace(/([A-Z])/g, ($1) => `_${$1.toLowerCase()}`);
 }
 
 function getImportedStructs(node: ts.Node) {
@@ -65,7 +67,7 @@ function getImportedStructs(node: ts.Node) {
 
     importChild.namedBindings.forEachChild((namedBinding) => {
       // ts.NamedImports.elements will always be ts.ImportSpecifier
-      const importSpecifier = <ts.ImportSpecifier>namedBinding;
+      const importSpecifier = namedBinding as ts.ImportSpecifier;
 
       // import { foo } from 'bar'
       if (!importSpecifier.propertyName) {
@@ -75,8 +77,8 @@ function getImportedStructs(node: ts.Node) {
 
       // import { foo as bar } from 'baz'
       structs.add({
-        importName   : importSpecifier.propertyName.text,
-        variableName : importSpecifier.name.text,
+        importName: importSpecifier.propertyName.text,
+        variableName: importSpecifier.name.text,
       });
     });
   });
@@ -91,25 +93,28 @@ function createDistAst(struct: ImportedStruct, options: Options) {
   const importName = options.camel2UnderlineComponentName
     ? camel2Underline(_importName)
     : options.camel2DashComponentName
-      ? camel2Dash(_importName)
-      : _importName;
+    ? camel2Dash(_importName)
+    : _importName;
 
-  const libraryDirectory = typeof options.libraryDirectory === 'function'
-    ? options.libraryDirectory(_importName)
-    : join(options.libraryDirectory || '', importName);
+  const libraryDirectory =
+    typeof options.libraryDirectory === 'function'
+      ? options.libraryDirectory(_importName)
+      : join(options.libraryDirectory || '', importName);
 
   /* istanbul ignore next  */
   if (process.env.NODE_ENV !== 'production' && libraryDirectory == null) {
-    console.warn(`custom libraryDirectory resolve a ${ libraryDirectory } path`);
+    console.warn(`custom libraryDirectory resolve a ${libraryDirectory} path`);
   }
 
-  const importPath = !libraryOverride ? join(libraryName!, libraryDirectory) : libraryDirectory;
+  const importPath = !libraryOverride
+    ? join(libraryName!, libraryDirectory)
+    : libraryDirectory;
 
   let canResolveImportPath = true;
 
   try {
     require.resolve(importPath, {
-      paths : [process.cwd(), ...options.resolveContext!],
+      paths: [process.cwd(), ...options.resolveContext!],
     });
   } catch (e) {
     canResolveImportPath = false;
@@ -119,10 +124,15 @@ function createDistAst(struct: ImportedStruct, options: Options) {
         undefined,
         ts.createImportClause(
           undefined,
-          ts.createNamedImports([ts.createImportSpecifier(undefined, ts.createIdentifier(_importName))]),
+          ts.createNamedImports([
+            ts.createImportSpecifier(
+              undefined,
+              ts.createIdentifier(_importName)
+            ),
+          ])
         ),
-        ts.createLiteral(libraryName!),
-      ),
+        ts.createLiteral(libraryName!)
+      )
     );
   }
 
@@ -131,21 +141,28 @@ function createDistAst(struct: ImportedStruct, options: Options) {
       undefined,
       undefined,
       ts.createImportClause(
-        struct.variableName || !options.transformToDefaultImport ? undefined : ts.createIdentifier(struct.importName),
+        struct.variableName || !options.transformToDefaultImport
+          ? undefined
+          : ts.createIdentifier(struct.importName),
         struct.variableName
           ? ts.createNamedImports([
-            ts.createImportSpecifier(
-              options.transformToDefaultImport
-                ? ts.createIdentifier('default')
-                : ts.createIdentifier(struct.importName),
-              ts.createIdentifier(struct.variableName),
-            ),
-          ])
+              ts.createImportSpecifier(
+                options.transformToDefaultImport
+                  ? ts.createIdentifier('default')
+                  : ts.createIdentifier(struct.importName),
+                ts.createIdentifier(struct.variableName)
+              ),
+            ])
           : options.transformToDefaultImport
-            ? undefined
-            : ts.createNamedImports([ts.createImportSpecifier(undefined, ts.createIdentifier(struct.importName))]),
+          ? undefined
+          : ts.createNamedImports([
+              ts.createImportSpecifier(
+                undefined,
+                ts.createIdentifier(struct.importName)
+              ),
+            ])
       ),
-      ts.createLiteral(importPath),
+      ts.createLiteral(importPath)
     );
 
     astNodes.push(scriptNode);
@@ -157,11 +174,18 @@ function createDistAst(struct: ImportedStruct, options: Options) {
         stylePath = style(importPath);
       } else {
         // eslint-disable-next-line no-restricted-syntax
-        stylePath = `${ importPath }/style/${ style === true ? 'index' : style }.js`;
+        stylePath = `${importPath}/style/${
+          style === true ? 'index' : style
+        }.js`;
       }
 
       if (stylePath) {
-        const styleNode = ts.createImportDeclaration(undefined, undefined, undefined, ts.createLiteral(stylePath));
+        const styleNode = ts.createImportDeclaration(
+          undefined,
+          undefined,
+          undefined,
+          ts.createLiteral(stylePath)
+        );
         astNodes.push(styleNode);
       }
     }
@@ -170,8 +194,9 @@ function createDistAst(struct: ImportedStruct, options: Options) {
   return astNodes;
 }
 
-
-export function createTransformer(_options: Partial<Options> | Array<Partial<Options>> = {}) {
+export function createTransformer(
+  _options: Partial<Options> | Array<Partial<Options>> = {}
+) {
   return (context: ts.TransformationContext) => {
     const visitor: ts.Visitor = (node) => {
       if (ts.isSourceFile(node)) {
@@ -182,9 +207,11 @@ export function createTransformer(_options: Partial<Options> | Array<Partial<Opt
         return node;
       }
 
-      const importedLibName = (<ts.StringLiteral>node.moduleSpecifier).text;
+      const importedLibName = (node.moduleSpecifier as ts.StringLiteral).text;
 
-      const options = optionsArray.find((_) => _.libraryName === importedLibName);
+      const options = optionsArray.find(
+        (_) => _.libraryName === importedLibName
+      );
 
       if (!options) {
         return node;
@@ -198,7 +225,7 @@ export function createTransformer(_options: Partial<Options> | Array<Partial<Opt
       return Array.from(structs).reduce((acc, struct) => {
         const nodes = createDistAst(struct, options);
         return acc.concat(nodes);
-      }, <ts.Node[]>[]);
+      }, [] as ts.Node[]);
     };
 
     return (node: ts.Node) => ts.visitNode(node, visitor);

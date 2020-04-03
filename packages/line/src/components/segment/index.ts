@@ -3,6 +3,4 @@
 
 import Segment from '@line-ui/line/src/components/segment/segment';
 
-export {
-  Segment,
-};
+export { Segment };

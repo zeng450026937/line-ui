@@ -38,16 +38,13 @@ export interface HoverVNodeDirective extends VNodeDirective {
 }
 
 function inserted(el: HTMLElement, binding: HoverVNodeDirective) {
-  const {
-    value: callback,
-    modifiers: options,
-  } = binding;
+  const { value: callback, modifiers: options } = binding;
 
   if (!callback) return;
 
   (el as any).vHover = createHover(el, {
     callback,
-    passive : true,
+    passive: true,
     ...options,
   });
 }
@@ -76,7 +73,7 @@ function update(el: HTMLElement, binding: HoverVNodeDirective) {
 }
 
 export const vHover = /*#__PURE__*/ defineDirective({
-  name : 'hover',
+  name: 'hover',
   inserted,
   unbind,
   update,

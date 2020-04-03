@@ -21,20 +21,12 @@
     "baseUrl": ".",
     "rootDir": ".",
     "outDir": "./out",
-    "types": [
-      "webpack-env",
-      "jest"
-    ],
+    "types": ["webpack-env", "jest"],
     "paths": {
       "@/*": ["src/*"],
-      "@line-ui/*": ["packages/*/src"],
+      "@line-ui/*": ["packages/*/src"]
     },
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ]
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
   "include": [
     "packages/*/src",
@@ -43,8 +35,5 @@
     "tests",
     "types"
   ],
-  "exclude": [
-    "node_modules",
-    "packages/*/test",
-  ]
+  "exclude": ["node_modules", "packages/*/test"]
 }

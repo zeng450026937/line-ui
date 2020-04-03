@@ -4,10 +4,10 @@ module.exports = (api, options) => {
   api.registerCommand(
     'ssr',
     {
-      description : 'start SSR development server',
-      usage       : 'vue-cli-service SSR [options]',
-      options     : {
-        '--dev' : 'compile line-ui from source',
+      description: 'start SSR development server',
+      usage: 'vue-cli-service SSR [options]',
+      options: {
+        '--dev': 'compile line-ui from source',
         // any other options supported in 'server' command
       },
     },
@@ -24,13 +24,8 @@ module.exports = (api, options) => {
         warn('SSR for multi-pages is not supported.');
       }
 
-      log(
-        `${ chalk.bold(chalk.bgBlue(' SSR ')) }${ chalk.bgGray(' PREPARE ') }`,
-      );
-      log(
-        'Preparing SSR...',
-        `${ chalk.green('☕️') }`,
-      );
+      log(`${chalk.bold(chalk.bgBlue(' SSR '))}${chalk.bgGray(' PREPARE ')}`);
+      log('Preparing SSR...', `${chalk.green('☕️')}`);
 
       let bundle;
       let manifest;
@@ -38,50 +33,49 @@ module.exports = (api, options) => {
 
       const template = await fs.readFile(
         api.resolve('public/ssr.index.html'),
-        'utf-8',
+        'utf-8'
       );
 
       const createRenderer = () => {
         renderer = createBundleRenderer(bundle, {
           // component caching
-          cache : new LRU({
-            max    : 1000,
-            maxAge : 1000 * 60 * 15,
+          cache: new LRU({
+            max: 1000,
+            maxAge: 1000 * 60 * 15,
           }),
           template,
-          clientManifest  : manifest,
-          runInNewContext : false,
+          clientManifest: manifest,
+          runInNewContext: false,
         });
       };
 
       const readFile = (fs, file) => {
-        return fs.readFileSync(api.resolve(`${ outputDir }/${ file }`), 'utf-8');
+        return fs.readFileSync(api.resolve(`${outputDir}/${file}`), 'utf-8');
       };
 
       const ssrServer = async () => {
         const config = api.resolveChainableWebpackConfig();
 
-        config.entry('app')
-          .clear()
-          .add(api.resolve('src/app.ssr.ts'));
+        config.entry('app').clear().add(api.resolve('src/app.ssr.ts'));
 
         config.target('node');
 
-        config.output
-          .libraryTarget('commonjs2');
+        config.output.libraryTarget('commonjs2');
 
         // https://webpack.js.org/configuration/externals/#externals
         // https://github.com/liady/webpack-node-externals
-        config.externals(require('webpack-node-externals')({
-          whitelist : [
-            /\.css$/,
-            dev ? /^@line-ui\/line/ : '',
-            dev ? /^swiper/ : '',
-            dev ? /^dom7/ : '',
-            dev ? /^ssr-window/ : '',
-            dev ? /^@popperjs/ : '',
-          ].filter(Boolean),
-        }));
+        config.externals(
+          require('webpack-node-externals')({
+            whitelist: [
+              /\.css$/,
+              dev ? /^@line-ui\/line/ : '',
+              dev ? /^swiper/ : '',
+              dev ? /^dom7/ : '',
+              dev ? /^ssr-window/ : '',
+              dev ? /^@popperjs/ : '',
+            ].filter(Boolean),
+          })
+        );
 
         // remove html plugins
         // config.plugins.values().forEach((plugin) => {
@@ -101,25 +95,20 @@ module.exports = (api, options) => {
 
         // disable any of the default cache groups
         config.optimization.splitChunks({
-          cacheGroups : {
-            default : false,
+          cacheGroups: {
+            default: false,
           },
         });
         config.optimization.runtimeChunk = false;
 
         // gen `vue-ssr-client-manifest.json`
-        config.plugin('vue-ssr-server')
+        config
+          .plugin('vue-ssr-server')
           .use(require('vue-server-renderer/server-plugin'));
 
-
         await new Promise((resolve, reject) => {
-          log(
-            `${ chalk.bold(chalk.bgBlue(' SSR ')) }${ chalk.bgGray(' BUILD ') }`,
-          );
-          log(
-            'Starting SSR...',
-            `${ chalk.green('🚀') }`,
-          );
+          log(`${chalk.bold(chalk.bgBlue(' SSR '))}${chalk.bgGray(' BUILD ')}`);
+          log('Starting SSR...', `${chalk.green('🚀')}`);
 
           let handleResolve = resolve;
           let handleReject = reject;
@@ -146,9 +135,7 @@ module.exports = (api, options) => {
               return;
             }
 
-            bundle = JSON.parse(
-              readFile(mfs, 'vue-ssr-server-bundle.json'),
-            );
+            bundle = JSON.parse(readFile(mfs, 'vue-ssr-server-bundle.json'));
 
             createRenderer();
 
@@ -187,48 +174,47 @@ module.exports = (api, options) => {
       };
 
       const ssrClient = async () => {
-        api.chainWebpack(config => {
-          config.entry('app')
-            .clear()
-            .add(api.resolve('src/app.ts'));
+        api.chainWebpack((config) => {
+          config.entry('app').clear().add(api.resolve('src/app.ts'));
 
-          config.plugin('vue-ssr-server')
+          config
+            .plugin('vue-ssr-server')
             .use(require('vue-server-renderer/client-plugin'));
         });
 
         api.configureDevServer((app, server) => {
           app.get('*', ssrMiddleware);
-          server.compiler.hooks.done.tap(
-            'ssr-hack',
-            ({ compilation }) => {
-              if (compilation.errors.length) return;
+          server.compiler.hooks.done.tap('ssr-hack', ({ compilation }) => {
+            if (compilation.errors.length) return;
 
-              manifest = JSON.parse(
-                readFile(
-                  server.compiler.outputFileSystem,
-                  'vue-ssr-client-manifest.json',
-                ),
-              );
+            manifest = JSON.parse(
+              readFile(
+                server.compiler.outputFileSystem,
+                'vue-ssr-client-manifest.json'
+              )
+            );
 
-              createRenderer();
-            },
-          );
+            createRenderer();
+          });
         });
 
         await api.service.run('serve', args, rawArgs);
       };
 
-      const serverinfo = `express/${ require('express/package.json').version } `
-      + `vue-server-renderer/${ require('vue-server-renderer/package.json').version }`;
+      const serverinfo =
+        `express/${require('express/package.json').version} ` +
+        `vue-server-renderer/${
+          require('vue-server-renderer/package.json').version
+        }`;
 
       const ssrMiddleware = (req, res, next) => {
         const now = Date.now();
 
         const context = {
-          url : req.url,
+          url: req.url,
         };
 
-        const handleError = err => {
+        const handleError = (err) => {
           // not found
           // invoke next middleware(devServer)
           if (err.code === 404) {
@@ -243,10 +229,10 @@ module.exports = (api, options) => {
           // error page
           res.status(500).send(`
             <div>500 | Internal Server Error</div>
-            <div>error during render: ${ req.url }</div>
-            <pre>${ err.stack }</pre>
+            <div>error during render: ${req.url}</div>
+            <pre>${err.stack}</pre>
           `);
-          error(`error during render: ${ req.url }`);
+          error(`error during render: ${req.url}`);
           error(err.stack);
         };
 
@@ -261,14 +247,16 @@ module.exports = (api, options) => {
 
           res.send(html);
 
-          log(`${ Date.now() - now }ms - ${ req.url }`, `${ chalk.green('⚡️') }`);
+          log(`${Date.now() - now}ms - ${req.url}`, `${chalk.green('⚡️')}`);
         });
       };
 
       if (dev) {
-        api.chainWebpack(config => {
-          config.resolve.alias
-            .set('@line-ui/line', api.resolve('packages/line'));
+        api.chainWebpack((config) => {
+          config.resolve.alias.set(
+            '@line-ui/line',
+            api.resolve('packages/line')
+          );
         });
       }
 
@@ -279,13 +267,13 @@ module.exports = (api, options) => {
         ssrClient(),
       ]);
 
+      log(`${chalk.bold(chalk.bgBlue(' SSR '))}${chalk.bgGray(' DONE ')}`);
       log(
-        `${ chalk.bold(chalk.bgBlue(' SSR ')) }${ chalk.bgGray(' DONE ') }`,
+        `Running SSR with LINE-UI ${
+          require('@line-ui/line/package.json').version
+        }`,
+        `${chalk.green('🍺')}`
       );
-      log(
-        `Running SSR with LINE-UI ${ require('@line-ui/line/package.json').version }`,
-        `${ chalk.green('🍺') }`,
-      );
-    },
+    }
   );
 };

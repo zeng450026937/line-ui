@@ -14,7 +14,7 @@ const plugins = [
 
 const optimize = async (svg, config) => {
   const svgo = new SVGO({
-    multipass : true,
+    multipass: true,
     plugins,
     ...config,
   });

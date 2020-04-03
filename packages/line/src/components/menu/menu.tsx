@@ -13,7 +13,6 @@ import {
 
 import { Overlay } from '@line-ui/line/src/components/overlay';
 
-
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('menu');
 
 const iosEasing = 'cubic-bezier(0.32,0.72,0,1)';
@@ -24,7 +23,7 @@ const mdEasingReverse = 'cubic-bezier(0.4, 0, 0.6, 1)';
 const computeDelta = (
   deltaX: number,
   isOpen: boolean,
-  isEndSide: boolean,
+  isEndSide: boolean
 ): number => {
   return Math.max(0, isOpen !== isEndSide ? -deltaX : deltaX);
 };
@@ -33,7 +32,7 @@ const checkEdgeSide = (
   win: Window,
   posX: number,
   isEndSide: boolean,
-  maxEdgeStart: number,
+  maxEdgeStart: number
 ): boolean => {
   if (isEndSide) {
     return posX >= win.innerWidth - maxEdgeStart;
@@ -47,7 +46,7 @@ const clamp = (min: number, n: number, max: number) => {
 
 const assert = (actual: any, reason: string) => {
   if (!actual) {
-    const message = `ASSERT: ${ reason }`;
+    const message = `ASSERT: ${reason}`;
     __DEV__ && console.error(message);
     debugger; // tslint:disable-line
     throw new Error(message);
@@ -57,10 +56,14 @@ const assert = (actual: any, reason: string) => {
 const isEnd = (side: Side): boolean => {
   const isRTL = document.dir === 'rtl';
   switch (side) {
-    case 'start': return isRTL;
-    case 'end': return !isRTL;
+    case 'start':
+      return isRTL;
+    case 'end':
+      return !isRTL;
     default:
-      throw new Error(`"${ side }" is not a valid value for [side]. Use "start" or "end" instead.`);
+      throw new Error(
+        `"${side}" is not a valid value for [side]. Use "start" or "end" instead.`
+      );
   }
 };
 
@@ -68,33 +71,30 @@ const SHOW_MENU = 'show-menu';
 const SHOW_BACKDROP = 'show-overlay';
 const MENU_CONTENT_OPEN = 'line-menu__content-open';
 
-
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ useModel<boolean>('actived'),
-  ],
+  mixins: [/*#__PURE__*/ useModel<boolean>('actived')],
 
-  props : {
-    contentId : {
-      type     : String,
-      required : true,
+  props: {
+    contentId: {
+      type: String,
+      required: true,
     },
-    type : {
-      type    : String,
-      default : 'overlay',
+    type: {
+      type: String,
+      default: 'overlay',
     },
-    maxEdgeStart : {
-      type    : Number,
-      default : 50,
+    maxEdgeStart: {
+      type: Number,
+      default: 50,
     },
-    disabled : Boolean,
-    side     : {
-      type    : String,
-      default : 'start',
+    disabled: Boolean,
+    side: {
+      type: String,
+      default: 'start',
     },
-    swipeGesture : {
-      type    : Boolean,
-      default : true,
+    swipeGesture: {
+      type: Boolean,
+      default: true,
     },
   },
 
@@ -104,27 +104,27 @@ export default /*#__PURE__*/ createComponent({
     const easingReverse: string = iosEasingReverse || mdEasingReverse;
 
     return {
-      lastOnEnd : 0,
-      blocker   : GESTURE_CONTROLLER.createBlocker({ disableScroll: true }),
+      lastOnEnd: 0,
+      blocker: GESTURE_CONTROLLER.createBlocker({ disableScroll: true }),
 
-      isPaneVisible : false,
-      isEndSide     : false,
-      isAnimating   : false,
-      isOpen        : false,
+      isPaneVisible: false,
+      isEndSide: false,
+      isAnimating: false,
+      isOpen: false,
 
-      visible : false,
+      visible: false,
 
       easing,
       easingReverse,
     };
   },
 
-  methods : {
+  methods: {
     onBackdropClick(ev: any) {
       if (this.isOpen) {
         // TODO
         // && this.lastOnEnd < ev.timeStamp - 100
-        const shouldClose = (ev.composedPath)
+        const shouldClose = ev.composedPath
           ? !ev.composedPath().includes(this.menuInnerEl)
           : false;
 
@@ -189,7 +189,10 @@ export default /*#__PURE__*/ createComponent({
         this.animation = undefined;
       }
       // Create new animation
-      this.animation = await menuController._createAnimation(this.type, this as any);
+      this.animation = await menuController._createAnimation(
+        this.type,
+        this as any
+      );
 
       if (!config.getBoolean('animated', true)) {
         this.animation.duration(0);
@@ -197,15 +200,18 @@ export default /*#__PURE__*/ createComponent({
       this.animation.fill('both');
     },
 
-    async startAnimation(shouldOpen: boolean, animated: boolean): Promise<void> {
+    async startAnimation(
+      shouldOpen: boolean,
+      animated: boolean
+    ): Promise<void> {
       const isReversed = !shouldOpen;
 
       // type and value concurrent change, animation = undefined
       if (!this.animation) await this.loadAnimation();
 
       const ani = (this.animation as Animation)
-        .direction((isReversed) ? 'reverse' : 'normal')
-        .easing((isReversed) ? this.easingReverse : this.easing)
+        .direction(isReversed ? 'reverse' : 'normal')
+        .easing(isReversed ? this.easingReverse : this.easing)
         .onFinish(() => {
           if (ani.getDirection() === 'reverse') {
             ani.direction('normal');
@@ -237,7 +243,7 @@ export default /*#__PURE__*/ createComponent({
       }
       if (this.isOpen) {
         return true;
-      // TODO error
+        // TODO error
       }
       // TODO
       // if (menuController._getOpenSync()) {
@@ -247,7 +253,7 @@ export default /*#__PURE__*/ createComponent({
         window,
         detail.currentX,
         this.isEndSide,
-        this.maxEdgeStart,
+        this.maxEdgeStart
       );
     },
 
@@ -263,7 +269,7 @@ export default /*#__PURE__*/ createComponent({
       }
 
       // the cloned animation should not use an easing curve during seek
-      (this.animation as Animation).progressStart(true, (this.isOpen ? 1 : 0));
+      (this.animation as Animation).progressStart(true, this.isOpen ? 1 : 0);
     },
 
     onMove(detail: GestureDetail) {
@@ -275,7 +281,7 @@ export default /*#__PURE__*/ createComponent({
       const delta = computeDelta(detail.deltaX, this.isOpen, this.isEndSide);
       const stepValue = delta / this.width;
 
-      this.animation.progressStep((this.isOpen) ? 1 - stepValue : stepValue);
+      this.animation.progressStep(this.isOpen ? 1 - stepValue : stepValue);
     },
 
     onEnd(detail: GestureDetail) {
@@ -290,13 +296,19 @@ export default /*#__PURE__*/ createComponent({
       const stepValue = delta / width;
       const velocity = detail.velocityX;
       const z = width / 2.0;
-      const shouldCompleteRight = velocity >= 0 && (velocity > 0.2 || detail.deltaX > z);
+      const shouldCompleteRight =
+        velocity >= 0 && (velocity > 0.2 || detail.deltaX > z);
 
-      const shouldCompleteLeft = velocity <= 0 && (velocity < -0.2 || detail.deltaX < -z);
+      const shouldCompleteLeft =
+        velocity <= 0 && (velocity < -0.2 || detail.deltaX < -z);
 
       const shouldComplete = isOpen
-        ? isEndSide ? shouldCompleteRight : shouldCompleteLeft
-        : isEndSide ? shouldCompleteLeft : shouldCompleteRight;
+        ? isEndSide
+          ? shouldCompleteRight
+          : shouldCompleteLeft
+        : isEndSide
+        ? shouldCompleteLeft
+        : shouldCompleteRight;
 
       let shouldOpen = !isOpen && shouldComplete;
       if (isOpen && !shouldComplete) {
@@ -306,7 +318,7 @@ export default /*#__PURE__*/ createComponent({
       this.lastOnEnd = detail.currentTime;
 
       // Account for rounding errors in JS
-      let newStepValue = (shouldComplete) ? 0.001 : -0.001;
+      let newStepValue = shouldComplete ? 0.001 : -0.001;
 
       /**
        * TODO: stepValue can sometimes return a negative
@@ -314,7 +326,7 @@ export default /*#__PURE__*/ createComponent({
        * for the cubic bezier curve (at least with web animations)
        * Not sure if the negative step value is an error or not
        */
-      const adjustedStepValue = (stepValue < 0) ? 0.01 : stepValue;
+      const adjustedStepValue = stepValue < 0 ? 0.01 : stepValue;
 
       /**
        * Animation will be reversed here, so need to
@@ -324,23 +336,34 @@ export default /*#__PURE__*/ createComponent({
        * to the new easing curve, as `stepValue` is going to be given
        * in terms of a linear curve.
        */
-      newStepValue += getTimeGivenProgression(
-        [0, 0], [0.4, 0], [0.6, 1], [1, 1], clamp(0, adjustedStepValue, 0.9999),
-      )[0] || 0;
+      newStepValue +=
+        getTimeGivenProgression(
+          [0, 0],
+          [0.4, 0],
+          [0.6, 1],
+          [1, 1],
+          clamp(0, adjustedStepValue, 0.9999)
+        )[0] || 0;
 
-      const playTo = (this.isOpen) ? !shouldComplete : shouldComplete;
+      const playTo = this.isOpen ? !shouldComplete : shouldComplete;
 
       this.animation
         .easing('cubic-bezier(0.4, 0.0, 0.6, 1)')
-        .onFinish(
-          () => this.afterAnimation(shouldOpen),
-          { oneTimeCallback: true },
-        )
-        .progressEnd((playTo) ? 1 : 0, (this.isOpen) ? 1 - newStepValue : newStepValue, 300);
+        .onFinish(() => this.afterAnimation(shouldOpen), {
+          oneTimeCallback: true,
+        })
+        .progressEnd(
+          playTo ? 1 : 0,
+          this.isOpen ? 1 - newStepValue : newStepValue,
+          300
+        );
     },
 
     beforeAnimation(shouldOpen: boolean) {
-      assert(!this.isAnimating, '_before() should not be called while animating');
+      assert(
+        !this.isAnimating,
+        '_before() should not be called while animating'
+      );
 
       // this places the menu into the correct location before it animates in
       // this css class doesn't actually kick off any animations
@@ -437,9 +460,9 @@ export default /*#__PURE__*/ createComponent({
       this.animation = undefined;
       if (contentEl) {
         if (oldValue !== undefined) {
-          contentEl.classList.remove(`line-menu__content-${ oldValue }`);
+          contentEl.classList.remove(`line-menu__content-${oldValue}`);
         }
-        contentEl.classList.add(`line-menu__content-${ value }`);
+        contentEl.classList.add(`line-menu__content-${value}`);
         contentEl.removeAttribute('style');
       }
       if (this.menuInnerEl) {
@@ -453,7 +476,7 @@ export default /*#__PURE__*/ createComponent({
     },
   },
 
-  watch : {
+  watch: {
     type(value: string, oldValue?: string) {
       this.typeChanged(value, oldValue);
     },
@@ -471,7 +494,6 @@ export default /*#__PURE__*/ createComponent({
         this.open();
       }
     },
-
   },
 
   async mounted() {
@@ -484,11 +506,12 @@ export default /*#__PURE__*/ createComponent({
     const { menuInnerEl, backdropEl } = this.$refs;
     const parent = this.$el.parentNode as any;
 
-    this.menuInnerEl = (menuInnerEl as HTMLElement);
+    this.menuInnerEl = menuInnerEl as HTMLElement;
     this.backdropEl = (backdropEl as any).$el;
 
     if (this.contentId === undefined) {
-      __DEV__ && console.warn(`[DEPRECATED][line-menu] Using the [main] attribute is deprecated, please use the "contentId" property instead:
+      __DEV__ &&
+        console.warn(`[DEPRECATED][line-menu] Using the [main] attribute is deprecated, please use the "contentId" property instead:
       BEFORE:
         <line-menu>...</line-menu>
         <div main>...</div>
@@ -498,13 +521,17 @@ export default /*#__PURE__*/ createComponent({
         <div id="main-content">...</div>
       `);
     }
-    const content = this.contentId !== undefined
-      ? document.getElementById(this.contentId)
-      : parent && parent.querySelector && parent.querySelector('[main]');
+    const content =
+      this.contentId !== undefined
+        ? document.getElementById(this.contentId)
+        : parent && parent.querySelector && parent.querySelector('[main]');
 
     if (!content || !content.tagName) {
       // requires content element
-      __DEV__ && console.error('Menu: must have a "content" element to listen for drag events on.');
+      __DEV__ &&
+        console.error(
+          'Menu: must have a "content" element to listen for drag events on.'
+        );
       return;
     }
     this.contentEl = content as HTMLElement;
@@ -512,10 +539,12 @@ export default /*#__PURE__*/ createComponent({
     // add menu's content classes
     content.classList.add('line-menu__content');
 
-
     if (!content || !(content as HTMLElement).tagName) {
       // requires content element
-      __DEV__ && console.error('Menu: must have a "content" element to listen for drag events on.');
+      __DEV__ &&
+        console.error(
+          'Menu: must have a "content" element to listen for drag events on.'
+        );
       return;
     }
     this.contentEl = content as HTMLElement;
@@ -531,15 +560,15 @@ export default /*#__PURE__*/ createComponent({
     // menuController._register(this);
 
     this.gesture = createGesture({
-      el              : document,
-      gestureName     : 'menu-swipe',
-      gesturePriority : 30,
-      threshold       : 10,
-      canStart        : ev => this.canStart(ev),
-      onWillStart     : () => this.onWillStart(),
-      onStart         : () => this.onStart(),
-      onMove          : ev => this.onMove(ev),
-      onEnd           : ev => this.onEnd(ev),
+      el: document,
+      gestureName: 'menu-swipe',
+      gesturePriority: 30,
+      threshold: 10,
+      canStart: (ev) => this.canStart(ev),
+      onWillStart: () => this.onWillStart(),
+      onStart: () => this.onStart(),
+      onMove: (ev) => this.onMove(ev),
+      onEnd: (ev) => this.onEnd(ev),
     });
     this.updateState();
 
@@ -570,28 +599,24 @@ export default /*#__PURE__*/ createComponent({
   },
 
   render() {
-    const {
-      isEndSide, type, disabled, isPaneVisible, visible,
-    } = this;
+    const { isEndSide, type, disabled, isPaneVisible, visible } = this;
 
     return (
       <div
         class={[
           bem({
-            [`type-${ type }`] : true,
-            enabled            : !disabled,
-            'side-end'         : isEndSide,
-            'side-start'       : !isEndSide,
-            'pane-visible'     : isPaneVisible,
+            [`type-${type}`]: true,
+            enabled: !disabled,
+            'side-end': isEndSide,
+            'side-start': !isEndSide,
+            'pane-visible': isPaneVisible,
           }),
           {
-            'show-menu' : visible,
-          }]}
+            'show-menu': visible,
+          },
+        ]}
       >
-        <div
-          class={bem('inner')}
-          ref="menuInnerEl"
-        >
+        <div class={bem('inner')} ref="menuInnerEl">
           {this.slots()}
         </div>
 

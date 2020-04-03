@@ -4,7 +4,7 @@ export const updateScrollDetail = (
   detail: ScrollDetail,
   el: Element,
   timestamp: number,
-  shouldStart: boolean,
+  shouldStart: boolean
 ) => {
   const prevX = detail.currentX;
   const prevY = detail.currentY;

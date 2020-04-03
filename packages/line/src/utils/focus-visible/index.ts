@@ -1,7 +1,17 @@
-
 const LINE_FOCUSED = 'line-focused';
 const LINE_FOCUSABLE = 'line-focusable';
-const FOCUS_KEYS = ['Tab', 'ArrowDown', 'Space', 'Escape', ' ', 'Shift', 'Enter', 'ArrowLeft', 'ArrowRight', 'ArrowUp'];
+const FOCUS_KEYS = [
+  'Tab',
+  'ArrowDown',
+  'Space',
+  'Escape',
+  ' ',
+  'Shift',
+  'Enter',
+  'ArrowLeft',
+  'ArrowRight',
+  'ArrowUp',
+];
 
 export const setupFocusVisible = () => {
   let currentFocus: Element[] = [];
@@ -9,8 +19,8 @@ export const setupFocusVisible = () => {
 
   const doc = document;
   const setFocus = (elements: Element[]) => {
-    currentFocus.forEach(el => el.classList.remove(LINE_FOCUSED));
-    elements.forEach(el => el.classList.add(LINE_FOCUSED));
+    currentFocus.forEach((el) => el.classList.remove(LINE_FOCUSED));
+    elements.forEach((el) => el.classList.add(LINE_FOCUSED));
     currentFocus = elements;
   };
   const pointerDown = () => {
@@ -18,14 +28,14 @@ export const setupFocusVisible = () => {
     setFocus([]);
   };
 
-  doc.addEventListener('keydown', ev => {
+  doc.addEventListener('keydown', (ev) => {
     keyboardMode = FOCUS_KEYS.includes(ev.key);
     if (!keyboardMode) {
       setFocus([]);
     }
   });
 
-  doc.addEventListener('focusin', ev => {
+  doc.addEventListener('focusin', (ev) => {
     if (keyboardMode && ev.composedPath) {
       const toFocus = ev.composedPath().filter((el: any) => {
         if (el.classList) {

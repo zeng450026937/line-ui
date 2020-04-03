@@ -3,6 +3,4 @@
 
 import ListHeader from '@line-ui/line/src/components/list-header/list-header';
 
-export {
-  ListHeader,
-};
+export { ListHeader };

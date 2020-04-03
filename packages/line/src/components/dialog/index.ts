@@ -3,6 +3,4 @@
 
 import Dialog from '@line-ui/line/src/components/dialog/dialog';
 
-export {
-  Dialog,
-};
+export { Dialog };

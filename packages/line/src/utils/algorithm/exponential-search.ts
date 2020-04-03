@@ -1,7 +1,4 @@
-import {
-  binarySearch,
-  CompareFunc,
-} from './binary-search';
+import { binarySearch, CompareFunc } from './binary-search';
 
 export function exponentialSearch<T>(
   array: Array<T> = [],
@@ -9,19 +6,21 @@ export function exponentialSearch<T>(
   compare: CompareFunc<T>,
   from: number,
   to: number,
-  bound?: number,
+  bound?: number
 ): number {
   let index = from;
   let interval = 1;
-  while (
-    index < to
-    && compare(array[index], wanted, index) < 0
-  ) {
+  while (index < to && compare(array[index], wanted, index) < 0) {
     index += interval;
     interval *= 2;
   }
 
   return binarySearch(
-    array, wanted, compare, Math.floor(index / 2), Math.min(index, to), bound,
+    array,
+    wanted,
+    compare,
+    Math.floor(index / 2),
+    Math.min(index, to),
+    bound
   );
 }

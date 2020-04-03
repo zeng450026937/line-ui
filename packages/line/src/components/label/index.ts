@@ -3,6 +3,4 @@
 
 import Label from '@line-ui/line/src/components/label/label';
 
-export {
-  Label,
-};
+export { Label };

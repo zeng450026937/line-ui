@@ -3,7 +3,7 @@ const path = require('path');
 const globby = require('globby');
 
 const packageDir = path.resolve(__dirname, '../');
-const resolve = p => path.resolve(packageDir, p);
+const resolve = (p) => path.resolve(packageDir, p);
 
 const warning = require('./warning');
 const logger = require('./logger');
@@ -22,20 +22,20 @@ async function run() {
   const root = resolve('src/mixins');
   const files = await globby(['*.ts', '!*-legacy.ts'], { cwd: root });
 
-  let code = `${ warning }\n`;
+  let code = `${warning}\n`;
 
   for (const file of files) {
-    if (matchWIP(`${ root }/${ file }`)) {
+    if (matchWIP(`${root}/${file}`)) {
       skipped.push(file);
-      logger.log(`${ file } (skipped)`, 'WIP');
+      logger.log(`${file} (skipped)`, 'WIP');
       continue;
     }
     const filename = path.basename(file, '.ts');
-    code += `export * from '@line-ui/line/src/mixins/${ filename }';\n`;
+    code += `export * from '@line-ui/line/src/mixins/${filename}';\n`;
     count++;
   }
 
-  logger.log(`total :  ${ count } mixins`, 'DONE');
+  logger.log(`total :  ${count} mixins`, 'DONE');
 
   // const dist = resolve(`${ root }/index.ts`);
   // const dist = resolve('gen/mixins/index.ts');

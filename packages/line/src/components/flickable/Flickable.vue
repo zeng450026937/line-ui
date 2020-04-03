@@ -6,11 +6,11 @@
 
 <script>
 export default {
-  name : 'Flicable',
+  name: 'Flicable',
 
-  props : {},
+  props: {},
 
-  methods : {
+  methods: {
     cancelFlick() {},
     flick() {},
     resizeContent() {},
@@ -35,13 +35,14 @@ export default {
 </script>
 
 <style lang="scss">
-
 .flicable {
-  overflow: hidden;
   position: relative;
+
   width: 300px;
   height: 300px;
-  border: dotted gray;
-}
 
+  border: dotted gray;
+
+  overflow: hidden;
+}
 </style>

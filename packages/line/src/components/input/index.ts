@@ -3,6 +3,4 @@
 
 import Input from '@line-ui/line/src/components/input/input';
 
-export {
-  Input,
-};
+export { Input };

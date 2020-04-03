@@ -14,28 +14,23 @@ export const enum CheckState {
 
 export function useTreeItem(name: string) {
   return createMixins({
-    mixins : [
-      useGroup(name),
-      useGroupItem(name),
-    ],
+    mixins: [useGroup(name), useGroupItem(name)],
 
     data() {
       return {
-        checked : false,
+        checked: false,
       };
     },
 
-    computed : {
+    computed: {
       tristate() {
         return !!this.items.length;
       },
 
-      checkState : {
+      checkState: {
         get() {
           if (!this.tristate) {
-            return this.checked
-              ? CheckState.Checked
-              : CheckState.Unchecked;
+            return this.checked ? CheckState.Checked : CheckState.Unchecked;
           }
 
           let hasUnchecked = false;
@@ -43,8 +38,11 @@ export function useTreeItem(name: string) {
           let hasChecked = false;
 
           for (const item of this.items) {
-            hasUnchecked = hasUnchecked || item.checkState === CheckState.Unchecked;
-            hasPartiallyChecked = hasPartiallyChecked || item.checkState === CheckState.PartiallyChecked;
+            hasUnchecked =
+              hasUnchecked || item.checkState === CheckState.Unchecked;
+            hasPartiallyChecked =
+              hasPartiallyChecked ||
+              item.checkState === CheckState.PartiallyChecked;
             hasChecked = hasChecked || item.checkState === CheckState.Checked;
 
             if (hasPartiallyChecked) return CheckState.PartiallyChecked;
@@ -70,12 +68,12 @@ export function useTreeItem(name: string) {
             __DEV__ && console.error('Unexpect value');
             return;
           }
-          this.items.forEach((item: any) => item.checkState = val);
+          this.items.forEach((item: any) => (item.checkState = val));
         },
       },
     },
 
-    watch : {
+    watch: {
       checkState(val) {
         if (!this.tristate) return;
         this.checked = val === CheckState.Checked;
@@ -83,17 +81,16 @@ export function useTreeItem(name: string) {
 
       checked(val) {
         if (!this.tristate) return;
-        this.checkState = val
-          ? CheckState.Checked
-          : CheckState.Unchecked;
+        this.checkState = val ? CheckState.Checked : CheckState.Unchecked;
       },
     },
 
-    methods : {
+    methods: {
       toggle() {
-        const nextCheckState = this.checkState === CheckState.Checked
-          ? CheckState.Unchecked
-          : CheckState.Checked;
+        const nextCheckState =
+          this.checkState === CheckState.Checked
+            ? CheckState.Unchecked
+            : CheckState.Checked;
 
         this.checkState = nextCheckState;
       },
@@ -108,10 +105,10 @@ export function useTreeItem(name: string) {
       }
       this.itemDeep = deep;
 
-      this.checked = this.checked || (
-        isDef(this.$attrs.checked)
-          && (this.$attrs.checked as string | boolean) !== false
-      );
+      this.checked =
+        this.checked ||
+        (isDef(this.$attrs.checked) &&
+          (this.$attrs.checked as string | boolean) !== false);
     },
   });
 }

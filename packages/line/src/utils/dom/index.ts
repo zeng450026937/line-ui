@@ -19,7 +19,9 @@ let supportsVars: boolean | undefined;
 export const isSupportsVars = () => {
   if (supportsVars === undefined) {
     supportsVars = !!(
-      window.CSS && window.CSS.supports && window.CSS.supports('--a: 0')
+      window.CSS &&
+      window.CSS.supports &&
+      window.CSS.supports('--a: 0')
     );
   }
   return supportsVars;
@@ -29,5 +31,7 @@ export const now = (ev: UIEvent) => ev.timeStamp || Date.now();
 
 const APP_SELECTOR = '[line-app]';
 export const getApp = (el: Element, selector = APP_SELECTOR) => {
-  return el.closest(selector) || document.querySelector(selector) || document.body;
+  return (
+    el.closest(selector) || document.querySelector(selector) || document.body
+  );
 };

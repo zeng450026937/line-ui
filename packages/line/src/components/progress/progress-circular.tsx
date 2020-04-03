@@ -1,44 +1,46 @@
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
 
-const { createComponent, bem } = /*#__PURE__*/ createNamespace('progress-circular');
+const { createComponent, bem } = /*#__PURE__*/ createNamespace(
+  'progress-circular'
+);
 
 export default /*#__PURE__*/ createComponent({
-  props : {
-    from : {
-      type    : Number,
-      default : 0,
+  props: {
+    from: {
+      type: Number,
+      default: 0,
     },
-    to : {
-      type    : Number,
-      default : 100,
+    to: {
+      type: Number,
+      default: 100,
     },
-    value : {
-      type    : Number,
-      default : 0,
+    value: {
+      type: Number,
+      default: 0,
     },
-    indeterminate : {
-      type    : Boolean,
-      default : false,
+    indeterminate: {
+      type: Boolean,
+      default: false,
     },
-    size : {
-      type    : Number,
-      default : 32,
+    size: {
+      type: Number,
+      default: 32,
     },
-    width : {
-      type    : [Number, String],
-      default : 4,
+    width: {
+      type: [Number, String],
+      default: 4,
     },
-    rotate : {
-      type    : [Number, String],
-      default : 0,
+    rotate: {
+      type: [Number, String],
+      default: 0,
     },
-    color : {
-      type    : String,
-      default : '#10c29b',
+    color: {
+      type: String,
+      default: '#10c29b',
     },
   },
 
-  computed : {
+  computed: {
     position(): number {
       let normalizedValue = this.value;
       const { from, to } = this;
@@ -56,11 +58,11 @@ export default /*#__PURE__*/ createComponent({
     },
 
     strokeDashOffset(): string {
-      return `${ (1 - this.position) * this.circumference }px`;
+      return `${(1 - this.position) * this.circumference}px`;
     },
 
     strokeWidth(): number {
-      return Number(this.width) / (+this.size) * this.viewBoxSize * 2;
+      return (Number(this.width) / +this.size) * this.viewBoxSize * 2;
     },
 
     classes(): object {
@@ -69,16 +71,16 @@ export default /*#__PURE__*/ createComponent({
 
     styles(): object {
       return {
-        height        : `${ this.size }px`,
-        width         : `${ this.size }px`,
-        color         : this.color,
-        'caret-color' : this.color,
+        height: `${this.size}px`,
+        width: `${this.size}px`,
+        color: this.color,
+        'caret-color': this.color,
       };
     },
 
     svgStyles(): object {
       return {
-        transform : `rotate(${ Number(this.rotate) }deg)`,
+        transform: `rotate(${Number(this.rotate)}deg)`,
       };
     },
 
@@ -95,40 +97,46 @@ export default /*#__PURE__*/ createComponent({
 
   render() {
     const {
-      classes, styles, value, viewBoxSize, indeterminate, radius, strokeWidth, strokeDashArray, strokeDashOffset,
+      classes,
+      styles,
+      value,
+      viewBoxSize,
+      indeterminate,
+      radius,
+      strokeWidth,
+      strokeDashArray,
+      strokeDashOffset,
     } = this;
 
     return (
-      <div
-        class={[bem(), classes]}
-        style={styles}
-        on={this.$listeners}>
+      <div class={[bem(), classes]} style={styles} on={this.$listeners}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          viewBox={`${ viewBoxSize } ${ viewBoxSize } ${ 2 * viewBoxSize } ${ 2 * viewBoxSize }`}>
+          viewBox={`${viewBoxSize} ${viewBoxSize} ${2 * viewBoxSize} ${
+            2 * viewBoxSize
+          }`}
+        >
           {[0, 1].map((item, index) => {
             if (!indeterminate || index === 2) {
               return (
-                  <circle
-                    class={index === 1 ? 'underlay' : 'overlay'}
-                    key={index}
-                    fill='transparent'
-                    cx={2 * viewBoxSize}
-                    cy={2 * viewBoxSize}
-                    r={radius}
-                    stroke-width={strokeWidth}
-                    stroke-dasharray={strokeDashArray}
-                    stroke-dashoffset={index === 1 ? 0 : strokeDashOffset}
-                  ></circle>);
+                <circle
+                  class={index === 1 ? 'underlay' : 'overlay'}
+                  key={index}
+                  fill="transparent"
+                  cx={2 * viewBoxSize}
+                  cy={2 * viewBoxSize}
+                  r={radius}
+                  stroke-width={strokeWidth}
+                  stroke-dasharray={strokeDashArray}
+                  stroke-dashoffset={index === 1 ? 0 : strokeDashOffset}
+                ></circle>
+              );
             }
             return null;
           })}
         </svg>
-      <div class="info">
-        {this.slots() ? this.slots : value}
+        <div class="info">{this.slots() ? this.slots : value}</div>
       </div>
-    </div>
     );
   },
-
 });

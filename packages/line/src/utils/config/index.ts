@@ -1,9 +1,6 @@
 import { Mode } from '@line-ui/line/src/types';
 import { isPlatform } from '@line-ui/line/src/utils/platform';
-import {
-  hasDocument,
-  hasWindow,
-} from '@line-ui/line/src/utils/dom';
+import { hasDocument, hasWindow } from '@line-ui/line/src/utils/dom';
 import {
   config,
   configFromSession,
@@ -45,7 +42,7 @@ export function setupConfig(configObj?: SkylinConfig) {
   configObj = {
     ...configObj,
     ...(hasWindow && configFromSession(win)),
-    persistConfig : false,
+    persistConfig: false,
     ...Line.config,
     ...(hasWindow && configFromURL(win)),
   };
@@ -59,11 +56,9 @@ export function setupConfig(configObj?: SkylinConfig) {
   const getModeFallback = () => {
     let fallback = 'ios';
     if (hasDocument && hasWindow) {
-      fallback = (
-        doc.documentElement.getAttribute('mode')
-      ) || (
-        isPlatform(win, 'android') ? 'md' : 'ios'
-      );
+      fallback =
+        doc.documentElement.getAttribute('mode') ||
+        (isPlatform(win, 'android') ? 'md' : 'ios');
     }
     return fallback;
   };

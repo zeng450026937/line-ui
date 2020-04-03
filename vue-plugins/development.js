@@ -1,7 +1,7 @@
 const fs = require('fs');
 
 module.exports = (api, options) => {
-  api.chainWebpack(config => {
+  api.chainWebpack((config) => {
     // disable typescipt checker if you think it's ignoring
     // we will fix it out later
     if (api.hasPlugin('typescript')) {
@@ -10,17 +10,18 @@ module.exports = (api, options) => {
 
     if (process.env.TARGET) {
       const packagesDir = api.resolve('packages');
-      const packageDir = `${ packagesDir }/${ process.env.TARGET }`;
+      const packageDir = `${packagesDir}/${process.env.TARGET}`;
 
       const tapBabel = (rule) => {
-        config.module.rule(rule)
+        config.module
+          .rule(rule)
           .use('babel-loader')
           .tap((options) => {
             return {
               ...options,
-              babelrc  : false,
-              root     : packageDir,
-              rootMode : 'upward',
+              babelrc: false,
+              root: packageDir,
+              rootMode: 'upward',
             };
           });
       };
@@ -35,21 +36,20 @@ module.exports = (api, options) => {
       }
 
       const outputDir = api.resolve(options.outputDir);
-      const publicDir = `${ packageDir }/public/`;
+      const publicDir = `${packageDir}/public/`;
       const tapCopy = () => {
-        config.plugin('copy')
-          .tap(options => {
-            return [
-              [
-                ...options[0],
-                {
-                  from   : publicDir,
-                  to     : outputDir,
-                  toType : 'dir',
-                },
-              ],
-            ];
-          });
+        config.plugin('copy').tap((options) => {
+          return [
+            [
+              ...options[0],
+              {
+                from: publicDir,
+                to: outputDir,
+                toType: 'dir',
+              },
+            ],
+          ];
+        });
       };
 
       if (fs.existsSync(publicDir)) {
@@ -58,14 +58,15 @@ module.exports = (api, options) => {
 
       // line config
       const line = {
-        autoimport   : true,
-        svgsprite    : true,
-        svgcomponent : false,
-        i18n         : true,
+        autoimport: true,
+        svgsprite: true,
+        svgcomponent: false,
+        i18n: true,
       };
 
       if (line.autoimport) {
-        config.module.rule('vue')
+        config.module
+          .rule('vue')
           .use('line-auto-import')
           .loader(require.resolve('@line-ui/webpack-loader-auto-import'))
           .options(require('@line-ui/line/import.config'))
@@ -79,7 +80,9 @@ module.exports = (api, options) => {
           .rule('svg')
           .test(/\.(svg)(\?.*)?$/)
           .use('svg-sprite')
-          .loader(require.resolve('@line-ui/webpack-plugin-svg-sprite/lib/loader'));
+          .loader(
+            require.resolve('@line-ui/webpack-plugin-svg-sprite/lib/loader')
+          );
 
         config
           .plugin('svg-sprite')
@@ -97,16 +100,12 @@ module.exports = (api, options) => {
             .use('svg-component')
             .loader(require.resolve('@line-ui/webpack-loader-svg-component'));
         } else {
-          console.log(
-            'svg-component require babel-loader with jsx support.',
-          );
+          console.log('svg-component require babel-loader with jsx support.');
         }
       }
 
       if (line.i18n) {
-        config
-          .plugin('i18n')
-          .use(require('@line-ui/webpack-plugin-i18n'));
+        config.plugin('i18n').use(require('@line-ui/webpack-plugin-i18n'));
       }
     }
   });

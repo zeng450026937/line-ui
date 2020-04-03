@@ -17,16 +17,14 @@ export const isCancel = (role: string | undefined): boolean => {
 };
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ usePopup(),
-  ],
+  mixins: [/*#__PURE__*/ usePopup()],
 
-  props : {
-    header    : String,
-    subHeader : String,
-    message   : String,
-    inputs    : Array,
-    buttons   : Array,
+  props: {
+    header: String,
+    subHeader: String,
+    message: String,
+    inputs: Array,
+    buttons: Array,
   },
 
   beforeMount() {
@@ -41,12 +39,15 @@ export default /*#__PURE__*/ createComponent({
     });
   },
 
-  computed : {
+  computed: {
     normalizedButtons() {
       const { buttons = [] } = this as { buttons: (string | AlertButton)[] };
-      return buttons.map(btn => {
-        return (typeof btn === 'string')
-          ? { text: btn, role: btn.toLowerCase() === 'cancel' ? 'cancel' : undefined }
+      return buttons.map((btn) => {
+        return typeof btn === 'string'
+          ? {
+              text: btn,
+              role: btn.toLowerCase() === 'cancel' ? 'cancel' : undefined,
+            }
           : btn;
       });
     },
@@ -55,53 +56,55 @@ export default /*#__PURE__*/ createComponent({
       const { inputs = [] } = this as { inputs: AlertInput[] };
       // An alert can be created with several different inputs. Radios,
       // checkboxes and inputs are all accepted, but they cannot be mixed.
-      const inputTypes = new Set(inputs.map(i => i.type));
+      const inputTypes = new Set(inputs.map((i) => i.type));
       if (inputTypes.has('checkbox') && inputTypes.has('radio')) {
-        __DEV__ && console.warn(`Alert cannot mix input types: ${ (Array.from(inputTypes.values()).join('/')) }. Please see alert docs for more info.`);
+        __DEV__ &&
+          console.warn(
+            `Alert cannot mix input types: ${Array.from(
+              inputTypes.values()
+            ).join('/')}. Please see alert docs for more info.`
+          );
       }
-      return inputs.map((i, index) => ({
-        type        : i.type || 'text',
-        name        : i.name || `${ index }`,
-        placeholder : i.placeholder || '',
-        value       : i.value,
-        label       : i.label,
-        checked     : !!i.checked,
-        disabled    : !!i.disabled,
-        handler     : i.handler,
-        min         : i.min,
-        max         : i.max,
-      }) as AlertInput);
+      return inputs.map(
+        (i, index) =>
+          ({
+            type: i.type || 'text',
+            name: i.name || `${index}`,
+            placeholder: i.placeholder || '',
+            value: i.value,
+            label: i.label,
+            checked: !!i.checked,
+            disabled: !!i.disabled,
+            handler: i.handler,
+            min: i.min,
+            max: i.max,
+          } as AlertInput)
+      );
     },
 
     cachedButtons() {
       return (
         <div
-          class={bem('button-group', { vertical: this.normalizedButtons.length > 2 })}
+          class={bem('button-group', {
+            vertical: this.normalizedButtons.length > 2,
+          })}
         >
-          {
-            this.normalizedButtons.map((button) => (
-              <button
-                type="button"
-                tabIndex={0}
-                class={[
-                  bem('button'),
-                  'line-focusable',
-                  'line-activatable',
-                ]}
-                onClick={() => this.onButtonClick(button)}
-              >
-                <span class={bem('button-inner')}>
-                  {button.text}
-                </span>
-              </button>
-            ))
-          }
+          {this.normalizedButtons.map((button) => (
+            <button
+              type="button"
+              tabIndex={0}
+              class={[bem('button'), 'line-focusable', 'line-activatable']}
+              onClick={() => this.onButtonClick(button)}
+            >
+              <span class={bem('button-inner')}>{button.text}</span>
+            </button>
+          ))}
         </div>
       );
     },
   },
 
-  methods : {
+  methods: {
     onTap() {
       this.$emit('overlay-tap');
     },
@@ -137,30 +140,18 @@ export default /*#__PURE__*/ createComponent({
         role="dialog"
         aria-modal="true"
         class={bem({
-          translucent : this.translucent,
+          translucent: this.translucent,
         })}
       >
-        <Overlay
-          visible={this.dim}
-          onTap={this.onTap}
-        >
-        </Overlay>
+        <Overlay visible={this.dim} onTap={this.onTap}></Overlay>
 
-        <div
-          class={bem('wrapper')}
-        >
-          <div
-            class={bem('head')}
-          >
+        <div class={bem('wrapper')}>
+          <div class={bem('head')}>
             {header && <h2 class={bem('title')}>{header}</h2>}
             {subHeader && <h2 class={bem('sub-title')}>{subHeader}</h2>}
           </div>
 
-          <div
-            class={bem('message')}
-          >
-            {this.message}
-          </div>
+          <div class={bem('message')}>{this.message}</div>
 
           {/* <div
             class={bem('checkbox-group')}

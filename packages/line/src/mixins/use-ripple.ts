@@ -4,23 +4,23 @@ import ripple from '@line-ui/line/src/directives/ripple';
 
 export function useRipple() {
   return createMixins({
-    directives : {
+    directives: {
       ripple,
     },
 
-    props : {
-      ripple : {
-        type    : Boolean,
+    props: {
+      ripple: {
+        type: Boolean,
         // default should be platform specified
-        default : false,
+        default: false,
       },
     },
 
     afterRender(vnode: VNode) {
       vnode.data = vnode.data || {};
       (vnode.data.directives || (vnode.data.directives = [])).push({
-        name  : 'ripple',
-        value : this.ripple,
+        name: 'ripple',
+        value: this.ripple,
       });
     },
   });

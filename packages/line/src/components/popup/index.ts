@@ -4,7 +4,4 @@
 import PopupLegacy from '@line-ui/line/src/components/popup/popup-legacy';
 import Popup from '@line-ui/line/src/components/popup/popup';
 
-export {
-  PopupLegacy,
-  Popup,
-};
+export { PopupLegacy, Popup };

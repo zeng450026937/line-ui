@@ -2,23 +2,23 @@ import { createMixins } from '@line-ui/line/src/utils/mixins';
 
 export function usePopupDelay() {
   return createMixins({
-    props : {
+    props: {
       // This property holds the delay (milliseconds) after which the tool tip is shown.
       // A tooltip with a negative delay is shown immediately.
       // The default value is 0.
-      delay : {
-        type    : Number,
-        default : 0,
+      delay: {
+        type: Number,
+        default: 0,
       },
     },
 
     data() {
       return {
-        delayedVisible : this.visible,
+        delayedVisible: this.visible,
       };
     },
 
-    watch : {
+    watch: {
       visible(val: boolean) {
         if (this.appearTimer) {
           clearTimeout(this.appearTimer);
@@ -33,7 +33,7 @@ export function usePopupDelay() {
 
         const delay = Math.max(this.delay, 0);
 
-        this.appearTimer = setTimeout(() => this.delayedVisible = val, delay);
+        this.appearTimer = setTimeout(() => (this.delayedVisible = val), delay);
       },
     },
   });

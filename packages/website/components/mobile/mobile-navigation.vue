@@ -1,24 +1,25 @@
 <template>
   <div class="mobile-navigation">
-    <line-collapse v-model="value"
-                   :exclusive="false">
-      <line-collapse-item v-for="(item, index) in list"
-                          :key="index"
-                          :modelValue="item.value">
+    <line-collapse v-model="value" :exclusive="false">
+      <line-collapse-item
+        v-for="(item, index) in list"
+        :key="index"
+        :modelValue="item.value"
+      >
         <template slot="title">
-          {{item['label-cn']}}
+          {{ item['label-cn'] }}
           <!-- {{ item.label }} -->
         </template>
         <template slot="icon">
-          <line-icon :name="item.icon"
-                     width="24"></line-icon>
+          <line-icon :name="item.icon" width="24"></line-icon>
         </template>
         <template>
-          <div v-for="(child, index) in item.children"
-               :key="index">
-            <line-cell :title="child.label"
-                       arrow
-                       @click="onRouter(child.value)">
+          <div v-for="(child, index) in item.children" :key="index">
+            <line-cell
+              :title="child.label"
+              arrow
+              @click="onRouter(child.value)"
+            >
             </line-cell>
           </div>
         </template>
@@ -30,52 +31,47 @@
 <script>
 import { Cell as LineCell } from '@/components/cell';
 import { Icon as LineIcon } from '@/components/icon';
-import { Collapse as LineCollapse, CollapseItem as LineCollapseItem } from '@/components/collapse';
+import {
+  Collapse as LineCollapse,
+  CollapseItem as LineCollapseItem,
+} from '@/components/collapse';
 
 export default {
-  name : 'MobileNavigation',
+  name: 'MobileNavigation',
 
-  components : {
+  components: {
     LineCell,
     LineIcon,
     LineCollapse,
     LineCollapseItem,
   },
 
-  props : {
-    list : {
-      type    : Array,
-      default : () => [],
+  props: {
+    list: {
+      type: Array,
+      default: () => [],
     },
   },
 
   data() {
     return {
-      value : [],
+      value: [],
     };
   },
 
-  computed : {
+  computed: {},
 
-  },
+  created() {},
 
-  created() {
+  mounted() {},
 
-  },
-
-  mounted() {
-
-  },
-
-  methods : {
+  methods: {
     onRouter(name) {
-      this.$router.push({ name: `demo-${ name }` });
+      this.$router.push({ name: `demo-${name}` });
     },
   },
 
-  watch : {
-
-  },
+  watch: {},
 };
 </script>
 

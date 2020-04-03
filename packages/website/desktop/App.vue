@@ -18,12 +18,11 @@ Vue.use(Header);
 Vue.use(Content);
 
 export default Vue.extend({
-  name : 'App',
+  name: 'App',
 });
 </script>
 
 <style lang="scss">
-
 .logo {
   display: flex;
 
@@ -35,7 +34,7 @@ export default Vue.extend({
 
   color: #fff;
 
-  font-family: "Montserrat";
+  font-family: 'Montserrat';
   font-size: 50px;
 
   line-height: 40px;

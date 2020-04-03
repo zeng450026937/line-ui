@@ -1,6 +1,5 @@
 module.exports = (api, options) => {
   // TBD
-
   // auto import
   // config.module.rule('vue')
   //   .use('line-auto-import')

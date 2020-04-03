@@ -27,8 +27,10 @@ export const getOffsetParent = (element?: Element): Element => {
 
   // .offsetParent will return the closest TH, TD or TABLE in case
   // no offsetParent is present, I hate this job...
-  if (['TH', 'TD', 'TABLE'].indexOf(offsetParent.nodeName) !== -1
-  && window.getComputedStyle(offsetParent).position === 'static') {
+  if (
+    ['TH', 'TD', 'TABLE'].indexOf(offsetParent.nodeName) !== -1 &&
+    window.getComputedStyle(offsetParent).position === 'static'
+  ) {
     return getOffsetParent(offsetParent);
   }
 

@@ -7,18 +7,16 @@
     </line-header>
     <line-content class="line-padding">
       <line-action-sheet
-        header='ActionSheet'
+        header="ActionSheet"
         sub-header="ActionSheetSubHeader"
-        :actions='actions'
+        :actions="actions"
         v-model="visible"
       >
         <line-action-sheet-group>
           <line-action-sheet-title sub-header="sub-header">
             action-sheet
           </line-action-sheet-title>
-          <line-action-sheet-button
-            :option="{'role': 'destructive'}"
-          >
+          <line-action-sheet-button :option="{ role: 'destructive' }">
             Delete
           </line-action-sheet-button>
           <line-action-sheet-button>
@@ -33,17 +31,12 @@
           </line-action-sheet-button>
         </line-action-sheet-group>
         <line-action-sheet-group cancel>
-          <line-action-sheet-button
-            :option="{'role': 'cancel'}"
-          >
+          <line-action-sheet-button :option="{ role: 'cancel' }">
             Cancel
           </line-action-sheet-button>
         </line-action-sheet-group>
       </line-action-sheet>
-      <line-button
-        expand="block"
-        @click="open"
-      >
+      <line-button expand="block" @click="open">
         Show ActionSheet
       </line-button>
     </line-content>
@@ -56,18 +49,18 @@ import Vue from 'vue';
 export default Vue.extend({
   data() {
     return {
-      actions : [],
-      visible : false,
+      actions: [],
+      visible: false,
     };
   },
 
-  methods : {
+  methods: {
     open() {
       this.visible = !this.visible;
     },
   },
 
-  watch : {
+  watch: {
     visible(val, oldVal) {
       console.log('visible', val, oldVal);
     },
@@ -76,25 +69,24 @@ export default Vue.extend({
   mounted() {
     this.actions = [
       {
-        text    : 'Delete',
-        role    : 'destructive',
-        handler : () => {
+        text: 'Delete',
+        role: 'destructive',
+        handler: () => {
           console.log('Delete clicked');
         },
       },
       {
-        text : 'Share',
+        text: 'Share',
       },
       { text: 'Play' },
       { text: 'Favorite' },
       {
-        text : 'Cancel',
-        role : 'cancel',
+        text: 'Cancel',
+        role: 'cancel',
       },
     ];
   },
 });
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

@@ -79,12 +79,12 @@ export class BoxLayout extends Layout {
       current = next;
     }
 
-    console.log(`layout all right. count: ${ this.count }`, this);
+    console.log(`layout all right. count: ${this.count}`, this);
   }
 
   update(
     item: number | LayoutItem | null,
-    shouldUpdateNext = DefaultShouldUpdateNext,
+    shouldUpdateNext = DefaultShouldUpdateNext
   ) {
     if (isNumber(item)) {
       item = this.itemAt(item as number);

@@ -1,8 +1,5 @@
 import Vue from 'vue';
-import {
-  popupContext,
-  PopupInterface,
-} from '@line-ui/line/src/utils/popup';
+import { popupContext, PopupInterface } from '@line-ui/line/src/utils/popup';
 import { getApp } from '@line-ui/line/src/utils/dom';
 
 export function createFactory(sfc: any) {
@@ -10,7 +7,7 @@ export function createFactory(sfc: any) {
 
   const create = (props: any, destroyWhenClose = true) => {
     return new Component({
-      propsData : props,
+      propsData: props,
       mounted() {
         (this as any).destroyWhenClose = destroyWhenClose;
         const { $el } = this;
@@ -35,7 +32,7 @@ export function createController(sfc: any) {
   };
 
   const getTop = () => {
-    return popupContext.findPopup(p => {
+    return popupContext.findPopup((p) => {
       if (!sfc.name) return true;
       return p.$options.name === sfc.name;
     });

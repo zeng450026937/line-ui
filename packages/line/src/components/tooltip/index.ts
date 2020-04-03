@@ -3,6 +3,4 @@
 
 import Tooltip from '@line-ui/line/src/components/tooltip/tooltip';
 
-export {
-  Tooltip,
-};
+export { Tooltip };

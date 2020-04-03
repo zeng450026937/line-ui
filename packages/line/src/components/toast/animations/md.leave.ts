@@ -9,9 +9,7 @@ export const mdLeaveAnimation = (baseEl: HTMLElement): Animation => {
 
   const wrapperEl = baseEl.querySelector('.line-toast__wrapper') as HTMLElement;
 
-  wrapperAnimation
-    .addElement(wrapperEl)
-    .fromTo('opacity', 0.99, 0);
+  wrapperAnimation.addElement(wrapperEl).fromTo('opacity', 0.99, 0);
 
   return baseAnimation
     .addElement(baseEl)

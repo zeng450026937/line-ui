@@ -15,34 +15,34 @@ const NAMESPACE = 'Segment';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('segment');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
+  mixins: [
     /*#__PURE__*/ useCheckGroupWithModel(NAMESPACE),
     /*#__PURE__*/ useColor(),
   ],
 
-  inject : {
-    Item : { default: undefined },
+  inject: {
+    Item: { default: undefined },
   },
 
-  props : {
-    disabled   : Boolean,
-    scrollable : Boolean,
-    exclusive  : {
-      type    : Boolean,
-      default : true,
+  props: {
+    disabled: Boolean,
+    scrollable: Boolean,
+    exclusive: {
+      type: Boolean,
+      default: true,
     },
   },
 
   data() {
     return {
-      activated      : false,
-      inToolbar      : false,
-      inToolbarColor : false,
+      activated: false,
+      inToolbar: false,
+      inToolbarColor: false,
 
-      gesture : {} as Gesture,
-      didInit : false,
+      gesture: {} as Gesture,
+      didInit: false,
 
-      valueAfterGesture : null as any,
+      valueAfterGesture: null as any,
     };
   },
 
@@ -55,14 +55,14 @@ export default /*#__PURE__*/ createComponent({
     this.setCheckedClasses();
 
     this.gesture = createGesture({
-      el              : this.$el,
-      gestureName     : 'segment',
-      gesturePriority : 100,
-      threshold       : 0,
-      passive         : false,
-      onStart         : ev => this.onStart(ev),
-      onMove          : ev => this.onMove(ev),
-      onEnd           : ev => this.onEnd(ev),
+      el: this.$el,
+      gestureName: 'segment',
+      gesturePriority: 100,
+      threshold: 0,
+      passive: false,
+      onStart: (ev) => this.onStart(ev),
+      onMove: (ev) => this.onMove(ev),
+      onEnd: (ev) => this.onEnd(ev),
     });
     this.gesture.enable(!this.scrollable);
     this.gestureChanged();
@@ -73,7 +73,7 @@ export default /*#__PURE__*/ createComponent({
     this.didInit = true;
   },
 
-  methods : {
+  methods: {
     disabledChanged() {
       this.gestureChanged();
 
@@ -116,16 +116,24 @@ export default /*#__PURE__*/ createComponent({
      * and where the cursor ended.
      */
     addRipple(detail: GestureDetail) {
-      const useRippleEffect = config.getBoolean('animated', true) && config.getBoolean('rippleEffect', true);
-      if (!useRippleEffect) { return; }
+      const useRippleEffect =
+        config.getBoolean('animated', true) &&
+        config.getBoolean('rippleEffect', true);
+      if (!useRippleEffect) {
+        return;
+      }
 
       const { items } = this;
-      const checked = items.find((item: any) => item.modelValue === this.value)!;
+      const checked = items.find(
+        (item: any) => item.modelValue === this.value
+      )!;
 
       const root = checked.shadowRoot || checked;
       const ripple = root.querySelector('.line-ripple-effect');
 
-      if (!ripple) { return; }
+      if (!ripple) {
+        return;
+      }
 
       const { x, y } = pointerCoord(detail.event);
 
@@ -157,7 +165,10 @@ export default /*#__PURE__*/ createComponent({
       }
 
       // If there are no checked buttons, set the current button to checked
-      if ((isArray(checkedItemValue) && !checkedItemValue.length) || !checkedItemValue) {
+      if (
+        (isArray(checkedItemValue) && !checkedItemValue.length) ||
+        !checkedItemValue
+      ) {
         clicked.updateState();
       }
 
@@ -184,18 +195,22 @@ export default /*#__PURE__*/ createComponent({
 
       // Scale the indicator width to match the previous indicator width
       // and translate it on top of the previous indicator
-      const transform = `translate3d(${ xPosition }px, 0, 0) scaleX(${ widthDelta })`;
+      const transform = `translate3d(${xPosition}px, 0, 0) scaleX(${widthDelta})`;
 
       this.$nextTick(() => {
         // Remove the transition before positioning on top of the previous indicator
-        currentIndicator.classList.remove('line-segment-button__indicator--animated');
+        currentIndicator.classList.remove(
+          'line-segment-button__indicator--animated'
+        );
         currentIndicator.style.setProperty('transform', transform);
 
         // Force a repaint to ensure the transform happens
         currentIndicator.getBoundingClientRect();
 
         // Add the transition to move the indicator into place
-        currentIndicator.classList.add('line-segment-button__indicator--animated');
+        currentIndicator.classList.add(
+          'line-segment-button__indicator--animated'
+        );
 
         // Remove the transform to slide the indicator back to the button clicked
         currentIndicator.style.setProperty('transform', '');
@@ -249,11 +264,14 @@ export default /*#__PURE__*/ createComponent({
       // can move up and down off of the segment
       const { currentX } = detail;
 
-      const previousY = rect.top + (rect.height / 2);
-      const nextEl = document.elementFromPoint(currentX, previousY) as HTMLElement;
+      const previousY = rect.top + rect.height / 2;
+      const nextEl = document.elementFromPoint(
+        currentX,
+        previousY
+      ) as HTMLElement;
 
-      const decreaseIndex = isRTL ? currentX > (left + width) : currentX < left;
-      const increaseIndex = isRTL ? currentX < left : currentX > (left + width);
+      const decreaseIndex = isRTL ? currentX > left + width : currentX < left;
+      const increaseIndex = isRTL ? currentX < left : currentX > left + width;
 
       // If the indicator is currently activated then we have started the gesture
       // on top of the checked button so we need to slide the indicator
@@ -266,7 +284,7 @@ export default /*#__PURE__*/ createComponent({
           if (newIndex >= 0) {
             nextIndex = newIndex;
           }
-        // Increase index, moves right in LTR & left in RTL
+          // Increase index, moves right in LTR & left in RTL
         } else if (increaseIndex) {
           if (activated && !isEnd) {
             const newIndex = index + 1;
@@ -308,12 +326,10 @@ export default /*#__PURE__*/ createComponent({
     },
 
     emitStyle() {
-      this.Item && this.Item.itemStyle(
-        'segment',
-        {
-          segment : true,
-        },
-      );
+      this.Item &&
+        this.Item.itemStyle('segment', {
+          segment: true,
+        });
     },
 
     onClick(ev: Event) {
@@ -334,16 +350,14 @@ export default /*#__PURE__*/ createComponent({
     },
   },
 
-  watch : {
+  watch: {
     disabled() {
       this.disabledChanged();
     },
   },
 
   render() {
-    const {
-      inToolbar, inToolbarColor, activated, disabled, scrollable,
-    } = this;
+    const { inToolbar, inToolbarColor, activated, disabled, scrollable } = this;
 
     return (
       <div
@@ -354,8 +368,8 @@ export default /*#__PURE__*/ createComponent({
             scrollable,
           }),
           {
-            'in-toolbar'       : inToolbar,
-            'in-toolbar-color' : inToolbarColor,
+            'in-toolbar': inToolbar,
+            'in-toolbar-color': inToolbarColor,
           },
         ]}
         onClick={this.onClick}

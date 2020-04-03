@@ -6,34 +6,34 @@ const {
 } = require('svg-mixer/schemas/defs');
 
 const emit = {
-  type    : 'boolean',
-  default : true,
+  type: 'boolean',
+  default: true,
 };
 
 const filename = {
-  instanceof : ['String', 'Function'],
+  instanceof: ['String', 'Function'],
 };
 
 const publicPath = {
-  type : 'string',
+  type: 'string',
 };
 
 const runtimeGenerator = {
-  instanceof : ['Function'],
+  instanceof: ['Function'],
 };
 
 const selector = {
-  type : 'string',
+  type: 'string',
 };
 
 const symbolId = {
-  instanceof : ['Function', 'String'],
+  instanceof: ['Function', 'String'],
 };
 
 module.exports.plugin = {
-  type                 : 'object',
-  additionalProperties : false,
-  properties           : {
+  type: 'object',
+  additionalProperties: false,
+  properties: {
     emit,
     filename,
     publicPath,
@@ -50,9 +50,9 @@ module.exports.plugin = {
 module.exports.loader = module.exports.plugin;
 
 module.exports.cssLoader = {
-  type                 : 'object',
-  additionalProperties : false,
-  properties           : {
+  type: 'object',
+  additionalProperties: false,
+  properties: {
     selector,
   },
 };

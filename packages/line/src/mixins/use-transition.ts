@@ -5,10 +5,10 @@ export function useTransition(appear: boolean = true) {
   const props = { appear, css: false };
 
   return createMixins({
-    props : {
-      transition : {
-        type    : Boolean,
-        default : undefined,
+    props: {
+      transition: {
+        type: Boolean,
+        default: undefined,
       },
     },
 
@@ -18,9 +18,9 @@ export function useTransition(appear: boolean = true) {
         'transition',
         {
           props,
-          on : createTransitionHooks(this),
+          on: createTransitionHooks(this),
         },
-        [vnode],
+        [vnode]
       );
     },
   });

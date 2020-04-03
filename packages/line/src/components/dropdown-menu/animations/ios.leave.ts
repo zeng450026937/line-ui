@@ -1,7 +1,4 @@
-import {
-  Animation,
-  createAnimation,
-} from '@line-ui/line/src/utils/animation';
+import { Animation, createAnimation } from '@line-ui/line/src/utils/animation';
 
 /**
  * iOS Popover Leave Animation
@@ -14,7 +11,7 @@ export const iosLeaveAnimation = (baseEl: HTMLElement): Animation => {
   const { style } = baseEl;
 
   let transformY = 'translateY(-100%)';
-  if (style && (!style.top && style.bottom)) {
+  if (style && !style.top && style.bottom) {
     transformY = 'translateY(100%)';
   }
 

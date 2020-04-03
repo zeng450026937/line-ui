@@ -5,21 +5,19 @@ import { isDef } from '@line-ui/line/src/utils/helpers';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('label');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ useColor(),
-  ],
+  mixins: [/*#__PURE__*/ useColor()],
 
-  inject : {
-    Item : { default: undefined },
+  inject: {
+    Item: { default: undefined },
   },
 
-  props : {
+  props: {
     // 'fixed' | 'stacked' | 'floating' | undefined
-    position : String,
+    position: String,
   },
 
-  watch : {
-    position : 'emitStyle',
+  watch: {
+    position: 'emitStyle',
   },
 
   mounted() {
@@ -31,17 +29,14 @@ export default /*#__PURE__*/ createComponent({
     this.emitStyle();
   },
 
-  methods : {
+  methods: {
     emitStyle() {
       const { Item, position } = this;
       if (!Item) return;
-      Item.itemStyle(
-        'label',
-        {
-          label                   : true,
-          [`label-${ position }`] : isDef(position),
-        },
-      );
+      Item.itemStyle('label', {
+        label: true,
+        [`label-${position}`]: isDef(position),
+      });
     },
   },
 
@@ -51,12 +46,10 @@ export default /*#__PURE__*/ createComponent({
 
     return (
       <div
-        class={
-          bem({
-            [position]   : isDef(position),
-            'no-animate' : this.noAnimate,
-          })
-        }
+        class={bem({
+          [position]: isDef(position),
+          'no-animate': this.noAnimate,
+        })}
         on={this.$listeners}
       >
         {this.slots()}

@@ -3,15 +3,20 @@ import { Animation, createAnimation } from '@line-ui/line/src/utils/animation';
 /**
  * Md Popover Enter Animation
  */
-export const mdEnterAnimation = (baseEl: HTMLElement, ev?: Event): Animation => {
+export const mdEnterAnimation = (
+  baseEl: HTMLElement,
+  ev?: Event
+): Animation => {
   const POPOVER_MD_BODY_PADDING = 12;
-  const doc = (baseEl.ownerDocument as any);
+  const doc = baseEl.ownerDocument as any;
   const isRTL = doc.dir === 'rtl';
 
   let originY = 'top';
   let originX = isRTL ? 'right' : 'left';
 
-  const contentEl = baseEl.querySelector('.line-popover__content') as HTMLElement;
+  const contentEl = baseEl.querySelector(
+    '.line-popover__content'
+  ) as HTMLElement;
   const contentDimentions = contentEl.getBoundingClientRect();
   const contentWidth = contentDimentions.width;
   const contentHeight = contentDimentions.height;
@@ -20,24 +25,27 @@ export const mdEnterAnimation = (baseEl: HTMLElement, ev?: Event): Animation => 
   const bodyHeight = doc.defaultView.innerHeight;
 
   // If ev was passed, use that for target element
-  const targetDim = ev && ev.target && (ev.target as HTMLElement).getBoundingClientRect();
+  const targetDim =
+    ev && ev.target && (ev.target as HTMLElement).getBoundingClientRect();
 
   // As per MD spec, by default position the popover below the target (trigger) element
-  const targetTop = targetDim != null && 'bottom' in targetDim
-    ? targetDim.bottom
-    : bodyHeight / 2 - contentHeight / 2;
+  const targetTop =
+    targetDim != null && 'bottom' in targetDim
+      ? targetDim.bottom
+      : bodyHeight / 2 - contentHeight / 2;
 
-  const targetLeft = targetDim != null && 'left' in targetDim
-    ? isRTL
-      ? targetDim.left - contentWidth + targetDim.width
-      : targetDim.left
-    : bodyWidth / 2 - contentWidth / 2;
+  const targetLeft =
+    targetDim != null && 'left' in targetDim
+      ? isRTL
+        ? targetDim.left - contentWidth + targetDim.width
+        : targetDim.left
+      : bodyWidth / 2 - contentWidth / 2;
 
   const targetHeight = (targetDim && targetDim.height) || 0;
 
   const popoverCSS: { top: any; left: any } = {
-    top  : targetTop,
-    left : targetLeft,
+    top: targetTop,
+    left: targetLeft,
   };
 
   // If the popover left is less than the padding it is off screen
@@ -50,8 +58,8 @@ export const mdEnterAnimation = (baseEl: HTMLElement, ev?: Event): Animation => 
     // Note: in LTR, originX is already 'left'
     originX = 'left';
   } else if (
-    contentWidth + POPOVER_MD_BODY_PADDING + popoverCSS.left
-    > bodyWidth
+    contentWidth + POPOVER_MD_BODY_PADDING + popoverCSS.left >
+    bodyWidth
   ) {
     popoverCSS.left = bodyWidth - contentWidth - POPOVER_MD_BODY_PADDING;
 
@@ -63,15 +71,15 @@ export const mdEnterAnimation = (baseEl: HTMLElement, ev?: Event): Animation => 
   // If the popover when popped down stretches past bottom of screen,
   // make it pop up if there's room above
   if (
-    targetTop + targetHeight + contentHeight > bodyHeight
-    && targetTop - contentHeight > 0
+    targetTop + targetHeight + contentHeight > bodyHeight &&
+    targetTop - contentHeight > 0
   ) {
     popoverCSS.top = targetTop - contentHeight - targetHeight;
     baseEl.className += ' line-popover--bottom';
     originY = 'bottom';
     // If there isn't room for it to pop up above the target cut it off
   } else if (targetTop + targetHeight + contentHeight > bodyHeight) {
-    contentEl.style.bottom = `${ POPOVER_MD_BODY_PADDING }px`;
+    contentEl.style.bottom = `${POPOVER_MD_BODY_PADDING}px`;
   }
 
   const baseAnimation = createAnimation();
@@ -91,9 +99,9 @@ export const mdEnterAnimation = (baseEl: HTMLElement, ev?: Event): Animation => 
   contentAnimation
     .addElement(contentEl)
     .beforeStyles({
-      top                : `${ popoverCSS.top }px`,
-      left               : `${ popoverCSS.left }px`,
-      'transform-origin' : `${ originY } ${ originX }`,
+      top: `${popoverCSS.top}px`,
+      left: `${popoverCSS.left}px`,
+      'transform-origin': `${originY} ${originX}`,
     })
     .fromTo('transform', 'scale(0.01)', 'scale(1)');
 
@@ -105,5 +113,10 @@ export const mdEnterAnimation = (baseEl: HTMLElement, ev?: Event): Animation => 
     .addElement(baseEl)
     .easing('cubic-bezier(0.36,0.66,0.04,1)')
     .duration(300)
-    .addAnimation([backdropAnimation, wrapperAnimation, contentAnimation, viewportAnimation]);
+    .addAnimation([
+      backdropAnimation,
+      wrapperAnimation,
+      contentAnimation,
+      viewportAnimation,
+    ]);
 };

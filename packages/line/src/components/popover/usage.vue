@@ -14,17 +14,10 @@
           <line-item button>Documentation</line-item>
           <line-item button>Showcase</line-item>
           <line-item button>GitHub Repo</line-item>
-          <line-item
-            lines="none"
-            detail="false"
-            button
-          >Close</line-item>
+          <line-item lines="none" detail="false" button>Close</line-item>
         </line-list>
       </line-popover>
-      <line-button
-        expand="block"
-        @click="onClick"
-      >
+      <line-button expand="block" @click="onClick">
         Show Popover
       </line-button>
     </line-content>
@@ -37,11 +30,11 @@ import Vue from 'vue';
 export default Vue.extend({
   data() {
     return {
-      event : null,
+      event: null,
     };
   },
 
-  methods : {
+  methods: {
     onClick(ev) {
       this.event = ev;
       this.$refs.popover.open(ev);
@@ -50,5 +43,4 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

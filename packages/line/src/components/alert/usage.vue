@@ -6,10 +6,7 @@
       </line-toolbar>
     </line-header>
     <line-content class="line-padding">
-      <line-button
-        expand="block"
-        @click="open"
-      >
+      <line-button expand="block" @click="open">
         Show Alert
       </line-button>
     </line-content>
@@ -23,24 +20,25 @@ import { AlertController } from '@line-ui/skyline/src/controller/alert';
 const controller = new AlertController();
 
 export default Vue.extend({
-  methods : {
+  methods: {
     open() {
-      controller.create({
-        header  : 'Alert',
-        message : 'Alert successfully',
-        buttons : [
-          {
-            text : 'Disagree',
-          },
-          {
-            text : 'Agree',
-          },
-        ],
-      }).open();
+      controller
+        .create({
+          header: 'Alert',
+          message: 'Alert successfully',
+          buttons: [
+            {
+              text: 'Disagree',
+            },
+            {
+              text: 'Agree',
+            },
+          ],
+        })
+        .open();
     },
   },
 });
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

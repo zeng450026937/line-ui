@@ -1,21 +1,18 @@
 /* eslint-disable-next-line */
 import { Vue } from 'vue/types/vue';
 import { createMixins } from '@line-ui/line/src/utils/mixins';
-import {
-  isArray,
-  isString,
-} from '@line-ui/line/src/utils/helpers';
+import { isArray, isString } from '@line-ui/line/src/utils/helpers';
 
 export const isVue = (val: any): val is Vue => val && val._isVue;
 
 export function useTrigger() {
   return createMixins({
-    props : {
+    props: {
       // string or Element
-      trigger : null as any,
+      trigger: null as any,
     },
 
-    computed : {
+    computed: {
       // TODO
       // Evaluate before mounted may resolve $refs uncorrectly
       $trigger(): Vue | Element | undefined | null {
@@ -23,18 +20,19 @@ export function useTrigger() {
 
         if (!trigger) return;
 
-        const baseEl = (($vnode && $vnode.context!.$el) || document) as HTMLElement;
+        const baseEl = (($vnode && $vnode.context!.$el) ||
+          document) as HTMLElement;
 
         if (!$vnode) {
           return isString(trigger)
             ? baseEl.querySelector(trigger)
-            : trigger as HTMLElement;
+            : (trigger as HTMLElement);
         }
 
         const refs = $vnode.context!.$refs;
         const resolved = isString(trigger)
           ? refs[trigger] || baseEl.querySelector(trigger)
-          : trigger as HTMLElement;
+          : (trigger as HTMLElement);
 
         if (__DEV__ && isArray(resolved)) {
           console.warn(`
@@ -43,15 +41,11 @@ export function useTrigger() {
           `);
         }
 
-        return isArray(resolved)
-          ? resolved[0]
-          : resolved;
+        return isArray(resolved) ? resolved[0] : resolved;
       },
       $triggerEl(): Element | undefined | null {
         const trigger = this.$trigger;
-        return isVue(trigger)
-          ? trigger.$el
-          : trigger;
+        return isVue(trigger) ? trigger.$el : trigger;
       },
     },
   });

@@ -6,22 +6,31 @@ import { isPlatform } from '@line-ui/line/src/utils/platform';
 // Utils
 // -----------------------------
 
-export const shouldUseNativeRefresher = (referenceEl: HTMLElement, mode: string) => {
-  const pullingSpinner = referenceEl.querySelector('.line-refresher-content .refresher-pulling .line-spinner');
-  const refreshingSpinner = referenceEl.querySelector('.line-refresher-content .refresher-refreshing .line-spinner');
+export const shouldUseNativeRefresher = (
+  referenceEl: HTMLElement,
+  mode: string
+) => {
+  const pullingSpinner = referenceEl.querySelector(
+    '.line-refresher-content .refresher-pulling .line-spinner'
+  );
+  const refreshingSpinner = referenceEl.querySelector(
+    '.line-refresher-content .refresher-refreshing .line-spinner'
+  );
 
   return (
-    pullingSpinner !== null
-    && refreshingSpinner !== null
-    && (
-      (mode === 'ios' && isPlatform('mobile') && (referenceEl.style as any).webkitOverflowScrolling !== undefined)
-      || mode === 'md'
-    )
-
+    pullingSpinner !== null &&
+    refreshingSpinner !== null &&
+    ((mode === 'ios' &&
+      isPlatform('mobile') &&
+      (referenceEl.style as any).webkitOverflowScrolling !== undefined) ||
+      mode === 'md')
   );
 };
 
-const transitionEnd = (el: HTMLElement | null, callback: (ev?: TransitionEvent) => void) => {
+const transitionEnd = (
+  el: HTMLElement | null,
+  callback: (ev?: TransitionEvent) => void
+) => {
   let unRegTrans: (() => void) | undefined;
   const opts: any = { passive: true };
 
@@ -52,26 +61,31 @@ const transitionEnd = (el: HTMLElement | null, callback: (ev?: TransitionEvent) 
 };
 
 export const transitionEndAsync = (el: HTMLElement | null) => {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     transitionEnd(el, resolve);
   });
 };
-
 
 // MD Native Refresher
 // -----------------------------
 type RefresherAnimationType = 'scale' | 'translate';
 
 const createBaseAnimation = (pullingRefresherIcon: HTMLElement) => {
-  const spinner = pullingRefresherIcon.querySelector('.line-spinner') as HTMLElement;
+  const spinner = pullingRefresherIcon.querySelector(
+    '.line-spinner'
+  ) as HTMLElement;
   const circle = spinner!.shadowRoot!.querySelector('circle') as any;
-  const spinnerArrowContainer = pullingRefresherIcon.querySelector('.spinner-arrow-container') as HTMLElement;
-  const arrowContainer = pullingRefresherIcon!.querySelector('.arrow-container');
-  const arrow = (arrowContainer) ? arrowContainer!.querySelector('.line-icon') as HTMLElement : null;
+  const spinnerArrowContainer = pullingRefresherIcon.querySelector(
+    '.spinner-arrow-container'
+  ) as HTMLElement;
+  const arrowContainer = pullingRefresherIcon!.querySelector(
+    '.arrow-container'
+  );
+  const arrow = arrowContainer
+    ? (arrowContainer!.querySelector('.line-icon') as HTMLElement)
+    : null;
 
-  const baseAnimation = createAnimation()
-    .duration(1000)
-    .easing('ease-out');
+  const baseAnimation = createAnimation().duration(1000).easing('ease-out');
 
   const spinnerArrowContainerAnimation = createAnimation()
     .addElement(spinnerArrowContainer)
@@ -86,7 +100,7 @@ const createBaseAnimation = (pullingRefresherIcon: HTMLElement) => {
     .addElement(circle)
     .keyframes([
       { offset: 0, strokeDasharray: '1px, 200px' },
-      { offset: 0.20, strokeDasharray: '1px, 200px' },
+      { offset: 0.2, strokeDasharray: '1px, 200px' },
       { offset: 0.55, strokeDasharray: '100px, 200px' },
       { offset: 1, strokeDasharray: '100px, 200px' },
     ]);
@@ -108,7 +122,7 @@ const createBaseAnimation = (pullingRefresherIcon: HTMLElement) => {
       .addElement(arrowContainer)
       .keyframes([
         { offset: 0, transform: 'rotate(0deg)' },
-        { offset: 0.30, transform: 'rotate(0deg)' },
+        { offset: 0.3, transform: 'rotate(0deg)' },
         { offset: 0.55, transform: 'rotate(280deg)' },
         { offset: 1, transform: 'rotate(400deg)' },
       ]);
@@ -117,7 +131,7 @@ const createBaseAnimation = (pullingRefresherIcon: HTMLElement) => {
       .addElement(arrow)
       .keyframes([
         { offset: 0, transform: 'translateX(2px) scale(0)' },
-        { offset: 0.30, transform: 'translateX(2px) scale(0)' },
+        { offset: 0.3, transform: 'translateX(2px) scale(0)' },
         { offset: 0.55, transform: 'translateX(-1.5px) scale(1)' },
         { offset: 1, transform: 'translateX(-1.5px) scale(1)' },
       ]);
@@ -125,7 +139,11 @@ const createBaseAnimation = (pullingRefresherIcon: HTMLElement) => {
     baseAnimation.addAnimation([arrowContainerAnimation, arrowAnimation]);
   }
 
-  return baseAnimation.addAnimation([spinnerArrowContainerAnimation, circleInnerAnimation, circleOuterAnimation]);
+  return baseAnimation.addAnimation([
+    spinnerArrowContainerAnimation,
+    circleInnerAnimation,
+    circleOuterAnimation,
+  ]);
 };
 
 const createScaleAnimation = (pullingRefresherIcon: HTMLElement) => {
@@ -133,11 +151,13 @@ const createScaleAnimation = (pullingRefresherIcon: HTMLElement) => {
   const spinnerAnimation = createAnimation()
     .addElement(pullingRefresherIcon)
     .keyframes([
-      { offset: 0, transform: `scale(0) translateY(-${ height + 20 }px)` },
+      { offset: 0, transform: `scale(0) translateY(-${height + 20}px)` },
       { offset: 1, transform: 'scale(1) translateY(100px)' },
     ]);
 
-  return createBaseAnimation(pullingRefresherIcon).addAnimation([spinnerAnimation]);
+  return createBaseAnimation(pullingRefresherIcon).addAnimation([
+    spinnerAnimation,
+  ]);
 };
 
 const createTranslateAnimation = (pullingRefresherIcon: HTMLElement) => {
@@ -145,31 +165,44 @@ const createTranslateAnimation = (pullingRefresherIcon: HTMLElement) => {
   const spinnerAnimation = createAnimation()
     .addElement(pullingRefresherIcon)
     .keyframes([
-      { offset: 0, transform: `translateY(-${ height + 20 }px)` },
+      { offset: 0, transform: `translateY(-${height + 20}px)` },
       { offset: 1, transform: 'translateY(100px)' },
     ]);
 
-  return createBaseAnimation(pullingRefresherIcon).addAnimation([spinnerAnimation]);
+  return createBaseAnimation(pullingRefresherIcon).addAnimation([
+    spinnerAnimation,
+  ]);
 };
 
-export const createPullingAnimation = (type: RefresherAnimationType, pullingSpinner: HTMLElement) => {
-  return type === 'scale' ? createScaleAnimation(pullingSpinner) : createTranslateAnimation(pullingSpinner);
+export const createPullingAnimation = (
+  type: RefresherAnimationType,
+  pullingSpinner: HTMLElement
+) => {
+  return type === 'scale'
+    ? createScaleAnimation(pullingSpinner)
+    : createTranslateAnimation(pullingSpinner);
 };
 
 export const createSnapBackAnimation = (pullingRefresherIcon: HTMLElement) => {
   return createAnimation()
     .duration(125)
     .addElement(pullingRefresherIcon)
-    .fromTo('transform', 'translateY(var(--line-pulling-refresher-translate, 100px))', 'translateY(0px)');
+    .fromTo(
+      'transform',
+      'translateY(var(--line-pulling-refresher-translate, 100px))',
+      'translateY(0px)'
+    );
 };
 
-export const getRefresherAnimationType = (contentEl: HTMLElement): RefresherAnimationType => {
+export const getRefresherAnimationType = (
+  contentEl: HTMLElement
+): RefresherAnimationType => {
   const previousSibling = contentEl.previousElementSibling;
-  const hasHeader = previousSibling !== null && previousSibling.tagName === 'ION-HEADER';
+  const hasHeader =
+    previousSibling !== null && previousSibling.tagName === 'ION-HEADER';
 
   return hasHeader ? 'translate' : 'scale';
 };
-
 
 // iOS Native Refresher
 // -----------------------------
@@ -182,27 +215,34 @@ export const handleScrollWhilePulling = (
   spinner: HTMLElement,
   ticks: NodeListOf<SVGElement>,
   opacity: number,
-  currentTickToShow: number,
+  currentTickToShow: number
 ) => {
   Vue.nextTick(() => {
     setSpinnerOpacity(spinner, opacity);
-    ticks.forEach((el, i) => el.style.setProperty('opacity', (i <= currentTickToShow) ? '0.99' : '0'));
+    ticks.forEach((el, i) =>
+      el.style.setProperty('opacity', i <= currentTickToShow ? '0.99' : '0')
+    );
   });
 };
 
 export const handleScrollWhileRefreshing = (
   spinner: HTMLElement,
-  lastVelocityY: number,
+  lastVelocityY: number
 ) => {
   Vue.nextTick(() => {
     // If user pulls down quickly, the spinner should spin faster
-    spinner.style.setProperty('--refreshing-rotation-duration', (lastVelocityY >= 1.0) ? '0.5s' : '2s');
+    spinner.style.setProperty(
+      '--refreshing-rotation-duration',
+      lastVelocityY >= 1.0 ? '0.5s' : '2s'
+    );
     spinner.style.setProperty('opacity', '1');
   });
 };
 
 export const translateElement = (el?: HTMLElement, value?: string) => {
-  if (!el) { return Promise.resolve(); }
+  if (!el) {
+    return Promise.resolve();
+  }
 
   const trans = transitionEndAsync(el);
 
@@ -212,7 +252,7 @@ export const translateElement = (el?: HTMLElement, value?: string) => {
     if (value === undefined) {
       el.style.removeProperty('transform');
     } else {
-      el.style.setProperty('transform', `translate3d(0px, ${ value }, 0px)`);
+      el.style.setProperty('transform', `translate3d(0px, ${value}, 0px)`);
     }
   });
 

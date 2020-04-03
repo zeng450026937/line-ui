@@ -1,13 +1,10 @@
-import {
-  DirectiveOptions,
-  VNodeDirective,
-} from 'vue';
+import { DirectiveOptions, VNodeDirective } from 'vue';
 import { createElementProxy } from '@line-ui/line/src/utils/dom/element-proxy';
 
 export function createDirective(
   directive: DirectiveOptions,
   element: HTMLElement,
-  binding: VNodeDirective,
+  binding: VNodeDirective
 ) {
   const el = createElementProxy(element);
   let vnode: any;

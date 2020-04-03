@@ -15,10 +15,7 @@
         <line-item>
           <line-range :value="20">
             <template #start>
-              <line-icon
-                size="small"
-                name="wb_sunny"
-              ></line-icon>
+              <line-icon size="small" name="wb_sunny"></line-icon>
             </template>
             <template #end>
               <line-icon name="wb_sunny"></line-icon>
@@ -27,17 +24,9 @@
         </line-item>
 
         <line-item>
-          <line-range
-            :min="-200"
-            :max="200"
-            pin
-            color="secondary"
-          >
+          <line-range :min="-200" :max="200" pin color="secondary">
             <template #start>
-              <line-icon
-                size="small"
-                name="ac_unit"
-              ></line-icon>
+              <line-icon size="small" name="ac_unit"></line-icon>
             </template>
             <template #end>
               <line-icon name="ac_unit"></line-icon>
@@ -46,17 +35,9 @@
         </line-item>
 
         <line-item>
-          <line-range
-            id="dual-range"
-            dual-knobs
-            pin
-            color="dark"
-          >
+          <line-range id="dual-range" dual-knobs pin color="dark">
             <template #start>
-              <line-icon
-                size="small"
-                name="brush"
-              ></line-icon>
+              <line-icon size="small" name="brush"></line-icon>
             </template>
             <template #end>
               <line-icon name="brush"></line-icon>
@@ -82,12 +63,8 @@
               ></line-icon>
             </template>
             <template #end>
-              <line-icon
-                color="danger"
-                name="flash_on"
-              ></line-icon>
+              <line-icon color="danger" name="flash_on"></line-icon>
             </template>
-
           </line-range>
         </line-item>
       </line-list>
@@ -101,12 +78,12 @@ import Vue from 'vue';
 export default Vue.extend({
   data() {
     return {
-      checked : true,
-      value   : true,
+      checked: true,
+      value: true,
     };
   },
 
-  methods : {
+  methods: {
     toggled(value) {
       this.value = value;
     },
@@ -114,5 +91,4 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

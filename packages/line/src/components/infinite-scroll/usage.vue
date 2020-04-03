@@ -8,10 +8,9 @@
 
     <line-content>
       <line-list id="list">
-        <line-item
-          v-for="(item, index) in list"
-          :key="index"
-        >{{item.text}}</line-item>
+        <line-item v-for="(item, index) in list" :key="index">{{
+          item.text
+        }}</line-item>
       </line-list>
 
       <line-infinite-scroll
@@ -33,8 +32,8 @@ import Vue from 'vue';
 export default Vue.extend({
   data() {
     return {
-      list     : [],
-      disabled : false,
+      list: [],
+      disabled: false,
     };
   },
 
@@ -44,7 +43,7 @@ export default Vue.extend({
     }
   },
 
-  methods : {
+  methods: {
     async onInfinite(data: any) {
       const { complete } = data;
       const { length } = this.list;
@@ -61,7 +60,7 @@ export default Vue.extend({
     },
 
     wait(time: number) {
-      return new Promise(resolve => {
+      return new Promise((resolve) => {
         setTimeout(() => {
           resolve();
         }, time);
@@ -71,5 +70,4 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

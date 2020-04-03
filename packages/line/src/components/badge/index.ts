@@ -3,6 +3,4 @@
 
 import Badge from '@line-ui/line/src/components/badge/badge';
 
-export {
-  Badge,
-};
+export { Badge };

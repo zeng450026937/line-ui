@@ -3,14 +3,11 @@ import { createNamespace } from '@line-ui/line/src/utils/namespace';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('avatar');
 
 export default /*#__PURE__*/ createComponent({
-  functional : true,
+  functional: true,
 
   render(h, ctx) {
     return (
-      <div
-        class={bem()}
-        {...ctx.data}
-      >
+      <div class={bem()} {...ctx.data}>
         {ctx.slots()}
       </div>
     );

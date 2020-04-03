@@ -3,6 +3,4 @@
 
 import ItemOption from '@line-ui/line/src/components/item-option/item-option';
 
-export {
-  ItemOption,
-};
+export { ItemOption };

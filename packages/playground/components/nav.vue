@@ -28,12 +28,11 @@
 import Vue from 'vue';
 
 export default Vue.extend({
-  name : 'line-nav',
+  name: 'line-nav',
 });
 </script>
 
 <style lang="scss">
-
 .nav-wrapper {
   position: absolute;
 
@@ -43,5 +42,4 @@ export default Vue.extend({
 
   overflow-y: auto;
 }
-
 </style>

@@ -37,8 +37,8 @@ function inserted(el: HTMLElement, binding: ResizeVNodeDirective) {
   if (!value) return;
 
   (el as any).vResize = createResize({
-    ...modifiers as any,
-    callback : value,
+    ...(modifiers as any),
+    callback: value,
   });
 }
 
@@ -66,7 +66,7 @@ function update(el: HTMLElement, binding: ResizeVNodeDirective) {
 }
 
 export const vResize = /*#__PURE__*/ defineDirective({
-  name : 'resize',
+  name: 'resize',
   inserted,
   unbind,
   update,

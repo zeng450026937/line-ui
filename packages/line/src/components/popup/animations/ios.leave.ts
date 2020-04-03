@@ -17,7 +17,14 @@ export const iosLeaveAnimation = (baseEl: HTMLElement): Animation => {
   wrapperAnimation
     .addElement(wrapperEl!)
     .beforeStyles({ opacity: 1 })
-    .fromTo('transform', 'translateY(0%)', `translateY(${ (baseEl.ownerDocument as any).defaultView.innerHeight - wrapperElRect.top }px)`);
+    .fromTo(
+      'transform',
+      'translateY(0%)',
+      `translateY(${
+        (baseEl.ownerDocument as any).defaultView.innerHeight -
+        wrapperElRect.top
+      }px)`
+    );
 
   return baseAnimation
     .addElement(baseEl)

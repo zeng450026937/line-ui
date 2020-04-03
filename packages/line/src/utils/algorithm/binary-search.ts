@@ -1,13 +1,7 @@
-
 export type CompareFunc<T> = (val: T, wanted: any, index?: number) => number;
 
-export const DefaultCompare: CompareFunc<any> = (val, wanted) => (
-  val < wanted
-    ? -1
-    : val > wanted
-      ? 1
-      : 0
-);
+export const DefaultCompare: CompareFunc<any> = (val, wanted) =>
+  val < wanted ? -1 : val > wanted ? 1 : 0;
 
 /**
  * @param array sorted array with compare func
@@ -23,7 +17,7 @@ export function binarySearch<T = any>(
   compare: CompareFunc<T> = DefaultCompare,
   from = 0,
   to: number = array.length - 1,
-  bound = 0,
+  bound = 0
 ): number {
   if (from >= to) return to;
   const initFrom = from;
@@ -36,7 +30,7 @@ export function binarySearch<T = any>(
   /* eslint-disable no-continue */
   while (from <= to) {
     /* eslint-disable-next-line */
-    mid = from + to >>> 1;
+    mid = (from + to) >>> 1;
     try {
       result = compare(array[mid], wanted, mid);
     } catch (e) {

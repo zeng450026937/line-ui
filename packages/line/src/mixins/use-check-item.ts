@@ -2,10 +2,7 @@
 import { Vue } from 'vue/types/vue';
 import { createMixins } from '@line-ui/line/src/utils/mixins';
 import { useGroupItem } from '@line-ui/line/src/mixins/use-group-item';
-import {
-  ModelOptions,
-  useModel,
-} from '@line-ui/line/src/mixins/use-model';
+import { ModelOptions, useModel } from '@line-ui/line/src/mixins/use-model';
 import { isDef } from '@line-ui/line/src/utils/helpers';
 
 export type CheckItemProps = {
@@ -17,23 +14,23 @@ export type CheckItemMixin = Vue & CheckItemProps;
 
 export function useCheckItem(name: string) {
   return createMixins({
-    mixins : [useGroupItem(name)],
+    mixins: [useGroupItem(name)],
 
-    props : {
-      checkable : {
-        type    : Boolean,
-        default : true,
+    props: {
+      checkable: {
+        type: Boolean,
+        default: true,
       },
-      disabled : Boolean,
+      disabled: Boolean,
     },
 
     data() {
       return {
-        checked : false,
+        checked: false,
       };
     },
 
-    methods : {
+    methods: {
       toggle() {
         if (this.disabled) return;
         this.$emit('clicked');
@@ -44,23 +41,20 @@ export function useCheckItem(name: string) {
     },
 
     beforeMount() {
-      this.checked = this.checked || (
-        isDef(this.$attrs.checked)
-          && (this.$attrs.checked as string | boolean) !== false
-      );
+      this.checked =
+        this.checked ||
+        (isDef(this.$attrs.checked) &&
+          (this.$attrs.checked as string | boolean) !== false);
     },
   });
 }
 
 export function useCheckItemWithModel(name: string, options?: ModelOptions) {
   return createMixins({
-    mixins : [
-      useCheckItem(name),
-      useModel('checked', options),
-    ],
+    mixins: [useCheckItem(name), useModel('checked', options)],
 
-    props : {
-      modelValue : null as any,
+    props: {
+      modelValue: null as any,
     },
   });
 }

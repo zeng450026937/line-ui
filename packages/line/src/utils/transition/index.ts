@@ -31,7 +31,8 @@ export function createTransitionHooks(delegate: Vue, appear = false) {
     // Vue check hook funcion's argments length with Function.length
     // While ...args will left Function.length to be 0
     // and the hook will not work right
-    prev[val] = (el: HTMLElement, done: Function) => delegate.$emit(val, el, done || NOOP);
+    prev[val] = (el: HTMLElement, done: Function) =>
+      delegate.$emit(val, el, done || NOOP);
     return prev;
   }, {} as Record<string, any>);
 }

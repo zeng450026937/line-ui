@@ -14,166 +14,166 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('list-view');
 export default /*#__PURE__*/ createComponent({
   provide() {
     return {
-      [NAMESPACE] : this,
+      [NAMESPACE]: this,
     };
   },
 
-  props : {
-    add : {
-      type    : String,
-      default : '',
+  props: {
+    add: {
+      type: String,
+      default: '',
     },
-    addDisplaced : {
-      type    : String,
-      default : '',
+    addDisplaced: {
+      type: String,
+      default: '',
     },
-    cacheBuffer : {
-      type    : Number,
-      default : 3,
+    cacheBuffer: {
+      type: Number,
+      default: 3,
     },
-    count : {
-      type    : Number,
-      default : 0,
+    count: {
+      type: Number,
+      default: 0,
     },
-    currentIndex : {
-      type    : Number,
-      default : -1,
+    currentIndex: {
+      type: Number,
+      default: -1,
     },
-    delegate : {
-      type    : Object,
-      default : () => ({}),
+    delegate: {
+      type: Object,
+      default: () => ({}),
     },
-    displaced : {
-      type    : String,
-      default : '',
+    displaced: {
+      type: String,
+      default: '',
     },
-    displayMarginBeginning : {
-      type    : Number,
-      default : 0,
+    displayMarginBeginning: {
+      type: Number,
+      default: 0,
     },
-    displayMarginEnd : {
-      type    : Number,
-      default : 0,
+    displayMarginEnd: {
+      type: Number,
+      default: 0,
     },
-    footer : {
-      type    : Object,
-      default : () => ({}),
+    footer: {
+      type: Object,
+      default: () => ({}),
     },
-    footerPositioning : {
-      type    : Number,
-      default : 0,
+    footerPositioning: {
+      type: Number,
+      default: 0,
     },
-    header : {
-      type    : Object,
-      default : () => ({}),
+    header: {
+      type: Object,
+      default: () => ({}),
     },
-    headerPositioning : {
-      type    : Number,
-      default : 0,
+    headerPositioning: {
+      type: Number,
+      default: 0,
     },
-    highlight : {
-      type    : Object,
-      default : () => ({}),
+    highlight: {
+      type: Object,
+      default: () => ({}),
     },
-    highlightFollowsCurrentItem : {
-      type    : Boolean,
-      default : true,
+    highlightFollowsCurrentItem: {
+      type: Boolean,
+      default: true,
     },
-    highlightMoveDuration : {
-      type    : Number,
-      default : 1000,
+    highlightMoveDuration: {
+      type: Number,
+      default: 1000,
     },
-    highlightMoveVelocity : {
-      type    : Number,
-      default : -1,
+    highlightMoveVelocity: {
+      type: Number,
+      default: -1,
     },
-    highlightRangeMode : {
-      type    : Number,
-      default : 0,
+    highlightRangeMode: {
+      type: Number,
+      default: 0,
     },
-    highlightResizeDuration : {
-      type    : Number,
-      default : 0,
+    highlightResizeDuration: {
+      type: Number,
+      default: 0,
     },
-    highlightResizeVelocity : {
-      type    : Number,
-      default : 0,
+    highlightResizeVelocity: {
+      type: Number,
+      default: 0,
     },
-    keyNavigationEnabled : {
-      type    : Boolean,
-      default : true,
+    keyNavigationEnabled: {
+      type: Boolean,
+      default: true,
     },
-    keyNavigationWraps : {
-      type    : Boolean,
-      default : false,
+    keyNavigationWraps: {
+      type: Boolean,
+      default: false,
     },
-    layoutDirection : {
-      type    : Number,
-      default : 0,
+    layoutDirection: {
+      type: Number,
+      default: 0,
     },
-    model : {
-      type    : [Object, Number, Array],
-      default : () => ([]),
+    model: {
+      type: [Object, Number, Array],
+      default: () => [],
     },
-    move : {
-      type    : String,
-      default : '',
+    move: {
+      type: String,
+      default: '',
     },
-    moveDisplaced : {
-      type    : String,
-      default : '',
+    moveDisplaced: {
+      type: String,
+      default: '',
     },
-    orientation : {
-      type    : Number,
-      default : Orientation.Vertical,
+    orientation: {
+      type: Number,
+      default: Orientation.Vertical,
       validator(val) {
         return val === Orientation.Vertical || val === Orientation.Horizontal;
       },
     },
-    populate : {
-      type    : String,
-      default : '',
+    populate: {
+      type: String,
+      default: '',
     },
-    preferredHighlightBegin : {
-      type    : Number,
-      default : 0,
+    preferredHighlightBegin: {
+      type: Number,
+      default: 0,
     },
-    preferredHighlightEnd : {
-      type    : Number,
-      default : 0,
+    preferredHighlightEnd: {
+      type: Number,
+      default: 0,
     },
-    remove : {
-      type    : String,
-      default : '',
+    remove: {
+      type: String,
+      default: '',
     },
-    removeDisplaced : {
-      type    : String,
-      default : '',
+    removeDisplaced: {
+      type: String,
+      default: '',
     },
-    section : {
-      type    : Object,
-      default : () => ({
-        property         : '',
-        criteria         : 0,
-        delegate         : null,
-        labelPositioning : 0,
+    section: {
+      type: Object,
+      default: () => ({
+        property: '',
+        criteria: 0,
+        delegate: null,
+        labelPositioning: 0,
       }),
     },
-    snapMode : {
-      type    : Number,
-      default : 0,
+    snapMode: {
+      type: Number,
+      default: 0,
     },
-    spacing : {
-      type    : Number,
-      default : 0,
+    spacing: {
+      type: Number,
+      default: 0,
     },
-    verticalLayoutDirection : {
-      type    : String,
-      default : '',
+    verticalLayoutDirection: {
+      type: String,
+      default: '',
     },
   },
 
-  computed : {
+  computed: {
     currentItem() {
       return null;
     },
@@ -208,24 +208,32 @@ export default /*#__PURE__*/ createComponent({
     },
   },
 
-  methods : {
-    decrementCurrentIndex() { /* TBD */ },
-    forceLayout() { /* TBD */ },
-    incrementCurrentIndex() { /* TBD */ },
+  methods: {
+    decrementCurrentIndex() {
+      /* TBD */
+    },
+    forceLayout() {
+      /* TBD */
+    },
+    incrementCurrentIndex() {
+      /* TBD */
+    },
     indexAt(x: number, y: number) {
       const index = binarySearch(
         this.layout.items,
         this.horizontal ? x : y,
         (item, wanted) => {
-          const {
-            left, right, top, bottom,
-          } = item.geometry;
+          const { left, right, top, bottom } = item.geometry;
           const leftBoundary = this.horizontal ? left : top;
           const rightBoundary = this.horizontal ? right : bottom;
-          if (rightBoundary < wanted) { return -1; }
-          if (leftBoundary > wanted) { return 1; }
+          if (rightBoundary < wanted) {
+            return -1;
+          }
+          if (leftBoundary > wanted) {
+            return 1;
+          }
           return 0;
-        },
+        }
       );
 
       return index;
@@ -240,10 +248,15 @@ export default /*#__PURE__*/ createComponent({
       }
       return index;
     },
-    positionViewAtBeginning() { /* TBD */ },
-    positionViewAtEnd() { /* TBD */ },
+    positionViewAtBeginning() {
+      /* TBD */
+    },
+    positionViewAtEnd() {
+      /* TBD */
+    },
     positionViewAtIndex(index: number, mode: number) {
-      index; mode;
+      index;
+      mode;
     },
 
     itemLayoutAt(x: number, y: number) {
@@ -256,10 +269,10 @@ export default /*#__PURE__*/ createComponent({
     itemStyleAtIndex(index: number) {
       const { geometry } = this.layout.itemAt(index);
       return Object.freeze({
-        left   : `${ geometry.left }px`,
-        top    : `${ geometry.top }px`,
-        width  : this.horizontal ? 'auto' : '100%',
-        height : this.horizontal ? '100%' : 'auto',
+        left: `${geometry.left}px`,
+        top: `${geometry.top}px`,
+        width: this.horizontal ? 'auto' : '100%',
+        height: this.horizontal ? '100%' : 'auto',
       });
     },
     mapToItemIndex(visibleIndex: number) {
@@ -270,7 +283,9 @@ export default /*#__PURE__*/ createComponent({
       return this.views[id];
     },
     itemViewAtIndex(index: number) {
-      const viewId = Object.keys(this.views).find(id => this.views[id].index === index);
+      const viewId = Object.keys(this.views).find(
+        (id) => this.views[id].index === index
+      );
       return this.itemViewAt(viewId as string);
     },
 
@@ -295,8 +310,9 @@ export default /*#__PURE__*/ createComponent({
 
       const threshold = this.minimumItemSize;
       // const threshold = 16;
-      if (Math.abs(this.scrollLeft - scrollLeft) >= threshold
-      || Math.abs(this.scrollTop - scrollTop) >= threshold
+      if (
+        Math.abs(this.scrollLeft - scrollLeft) >= threshold ||
+        Math.abs(this.scrollTop - scrollTop) >= threshold
       ) {
         // const dx = scrollLeft - this.scrollLeft;
         // const dy = scrollTop - this.scrollTop;
@@ -318,10 +334,12 @@ export default /*#__PURE__*/ createComponent({
       item.setSize(offsetWidth, offsetHeight);
 
       this.minimumItemSize = Math.min(
-        this.minimumItemSize, this.horizontal ? offsetWidth : offsetHeight,
+        this.minimumItemSize,
+        this.horizontal ? offsetWidth : offsetHeight
       );
       this.maximumItemSize = Math.max(
-        this.maximumItemSize, this.horizontal ? offsetWidth : offsetHeight,
+        this.maximumItemSize,
+        this.horizontal ? offsetWidth : offsetHeight
       );
 
       this.dirtyIndex = Math.min(this.dirtyIndex, index);
@@ -362,19 +380,23 @@ export default /*#__PURE__*/ createComponent({
         this.layout.items,
         leftBoundary,
         (item, wanted) => {
-          const {
-            left, right, top, bottom,
-          } = item.geometry;
+          const { left, right, top, bottom } = item.geometry;
           const leftBound = this.horizontal ? left : top;
           const rightBound = this.horizontal ? right : bottom;
-          if (rightBound < wanted) { return -1; }
-          if (leftBound > wanted) { return 1; }
+          if (rightBound < wanted) {
+            return -1;
+          }
+          if (leftBound > wanted) {
+            return 1;
+          }
           return 0;
         },
-        this.incremental ? lastFrom : Math.floor(leftBoundary / this.maximumItemSize),
-        this.incremental ? Math.min(
-          count - 1, Math.ceil(leftBoundary / this.minimumItemSize),
-        ) : lastTo,
+        this.incremental
+          ? lastFrom
+          : Math.floor(leftBoundary / this.maximumItemSize),
+        this.incremental
+          ? Math.min(count - 1, Math.ceil(leftBoundary / this.minimumItemSize))
+          : lastTo
       );
 
       if (total > rightBoundary) {
@@ -382,17 +404,19 @@ export default /*#__PURE__*/ createComponent({
           this.layout.items,
           rightBoundary,
           (item: any, wanted: any) => {
-            const {
-              left, right, top, bottom,
-            } = item.geometry;
+            const { left, right, top, bottom } = item.geometry;
             const leftBound = this.horizontal ? left : top;
             const rightBound = this.horizontal ? right : bottom;
-            if (rightBound < wanted) { return -1; }
-            if (leftBound > wanted) { return 1; }
+            if (rightBound < wanted) {
+              return -1;
+            }
+            if (leftBound > wanted) {
+              return 1;
+            }
             return 0;
           },
           newFrom,
-          count - 1,
+          count - 1
         );
       } else {
         newTo = count - 1;
@@ -436,7 +460,7 @@ export default /*#__PURE__*/ createComponent({
         }
       }
 
-      if (force || (newFrom !== lastFrom || newTo !== lastTo)) {
+      if (force || newFrom !== lastFrom || newTo !== lastTo) {
         this.from = newFrom;
         this.to = newTo;
         this.$forceUpdate();
@@ -473,9 +497,9 @@ export default /*#__PURE__*/ createComponent({
     for (let index = this.from; index <= this.to; index++) {
       this.addView({
         index,
-        layout : this.layout.itemAt(index),
-        item   : this.itemAtIndex(index),
-        style  : this.itemStyleAtIndex(index),
+        layout: this.layout.itemAt(index),
+        item: this.itemAtIndex(index),
+        style: this.itemStyleAtIndex(index),
       });
     }
   },
@@ -493,42 +517,32 @@ export default /*#__PURE__*/ createComponent({
 
   render() {
     return (
-      <div
-        class={bem()}
-        ref="viewport"
-        onScroll={this.onScroll}
-      >
+      <div class={bem()} ref="viewport" onScroll={this.onScroll}>
         <div
           class={bem('spacer')}
           style={{
-            width  : `${ this.layout.geometry.width }px`,
-            height : `${ this.layout.geometry.height }px`,
+            width: `${this.layout.geometry.width}px`,
+            height: `${this.layout.geometry.height}px`,
           }}
         ></div>
 
-        <transition-group
-          tag={'div'}
-          class={bem('content')}
-        >
-          {
-            Object.keys(this.views).map((index: any) => {
-              const view = this.views[index];
-              return (
-                <ListItem
-                  key={view.id}
-                  index={view.index}
-                  item={view.item}
-                  style={view.style}
-                  scopedSlots={{
-                    default : () => {
-                      return this.slots('delegate') || view.index;
-                    },
-                  }}
-                >
-                </ListItem>
-              );
-            })
-          }
+        <transition-group tag={'div'} class={bem('content')}>
+          {Object.keys(this.views).map((index: any) => {
+            const view = this.views[index];
+            return (
+              <ListItem
+                key={view.id}
+                index={view.index}
+                item={view.item}
+                style={view.style}
+                scopedSlots={{
+                  default: () => {
+                    return this.slots('delegate') || view.index;
+                  },
+                }}
+              ></ListItem>
+            );
+          })}
         </transition-group>
       </div>
     );

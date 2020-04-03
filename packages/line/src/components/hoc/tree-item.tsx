@@ -4,11 +4,9 @@ import { useTreeItem } from '@line-ui/line/src/mixins/use-tree-item';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('tree-item');
 
 export default /*#__PURE__*/ createComponent({
-  mixins : [
-    /*#__PURE__*/ useTreeItem('Tree'),
-  ],
+  mixins: [/*#__PURE__*/ useTreeItem('Tree')],
 
-  methods : {
+  methods: {
     onClick(e: UIEvent) {
       e.stopPropagation();
       this.toggle();
@@ -18,7 +16,7 @@ export default /*#__PURE__*/ createComponent({
   render() {
     return (
       <div class={bem()} onClick={this.onClick}>
-        { this.slots() }
+        {this.slots()}
       </div>
     );
   },

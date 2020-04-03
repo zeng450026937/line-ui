@@ -63,7 +63,7 @@ export class PopupContext {
     return popup;
   }
   getActiveFocusPopup() {
-    return this.findPopup(p => p.activeFocus);
+    return this.findPopup((p) => p.activeFocus);
   }
   getOverlayIndex() {
     return this.base + this.index;
@@ -85,7 +85,7 @@ export class PopupContext {
 export const popupContext = new PopupContext(popupStack);
 
 export function setupPopup(doc: Document = document) {
-  doc.addEventListener('focusin', ev => {
+  doc.addEventListener('focusin', (ev) => {
     const lastPopup = popupContext.getActiveFocusPopup();
     if (!lastPopup) return;
     if (lastPopup.closeOnClickOutside) return;
@@ -94,20 +94,15 @@ export function setupPopup(doc: Document = document) {
   });
 
   // handle back-button click
-  doc.addEventListener('lineBackButton', ev => {
+  doc.addEventListener('lineBackButton', (ev) => {
     const lastPopup = popupContext.getPopup();
     if (!lastPopup) return;
     if (!lastPopup.closeOnClickOutside) return;
-    (ev as BackButtonEvent)
-      .detail
-      .register(
-        100,
-        () => lastPopup.close(),
-      );
+    (ev as BackButtonEvent).detail.register(100, () => lastPopup.close());
   });
 
   // handle ESC to close popup
-  doc.addEventListener('keyup', ev => {
+  doc.addEventListener('keyup', (ev) => {
     if (ev.key === 'Escape') {
       const lastPopup = popupContext.getPopup();
       if (!lastPopup) return;

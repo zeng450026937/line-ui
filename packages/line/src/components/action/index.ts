@@ -4,7 +4,4 @@
 import ActionGroup from '@line-ui/line/src/components/action/action-group';
 import Action from '@line-ui/line/src/components/action/action';
 
-export {
-  ActionGroup,
-  Action,
-};
+export { ActionGroup, Action };
