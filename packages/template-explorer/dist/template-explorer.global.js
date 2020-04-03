@@ -19,8 +19,8 @@
   </line-content>
 
   <line-footer style="text-align: center">
-    <p>Skyline Team</p>
-    <p>©2019 Skyline Terms Privacy</p>
+    <p>LINE-UI Team</p>
+    <p>©2019 LINE-UI Terms Privacy</p>
   </line-footer>
 </line-app>
 `.trim();

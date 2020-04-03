@@ -283,7 +283,7 @@ module.exports = (api, options) => {
         `${ chalk.bold(chalk.bgBlue(' SSR ')) }${ chalk.bgGray(' DONE ') }`,
       );
       log(
-        `Running SSR with SKYLINE ${ require('@line-ui/line/package.json').version }`,
+        `Running SSR with LINE-UI ${ require('@line-ui/line/package.json').version }`,
         `${ chalk.green('🍺') }`,
       );
     },

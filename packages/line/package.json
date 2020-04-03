@@ -37,7 +37,6 @@
     ],
     "babel": true
   },
-  "private": false,
   "author": "Yealink Inc",
   "license": "MIT",
   "devDependencies": {

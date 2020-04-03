@@ -99,11 +99,11 @@ interface IsPlatformSignature {
 const detectPlatforms = (win: Window) => (Object.keys(PLATFORMS_MAP) as Platforms[]).filter(p => PLATFORMS_MAP[p](win));
 
 export const setupPlatforms = (win: any = window) => {
-  win.Skyline = win.Skyline || {};
+  win.Line = win.Line || {};
 
-  let { platforms } = win.Skyline;
+  let { platforms } = win.Line;
   if (platforms == null) {
-    platforms = win.Skyline.platforms = detectPlatforms(win);
+    platforms = win.Line.platforms = detectPlatforms(win);
     platforms.forEach((p: Platforms) => win.document.documentElement.classList.add(`plt-${ p }`));
   }
   return platforms;

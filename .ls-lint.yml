@@ -1,0 +1,16 @@
+ls:
+  src:
+  packages/**/{src}:
+    .js: kebab-case | point.case | lowercase
+    .jsx: kebab-case | point.case | lowercase
+    .ts: kebab-case | point.case | lowercase
+    .tsx: kebab-case | point.case | lowercase
+    .d.ts: kebab-case | point.case | lowercase
+    .spec.js: kebab-case | point.case | lowercase
+    .spec.ts: kebab-case | point.case | lowercase
+    .mock.ts: kebab-case | point.case | lowercase
+    .scss: kebab-case | point.case | lowercase
+    .vue: kebab-case | point.case  | PascalCase
+
+ignore:
+  - packages/line/src/locale/lang

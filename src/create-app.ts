@@ -1,10 +1,10 @@
 import Vue from 'vue';
-import Skyline from '@line-ui/line';
+import Line from '@line-ui/line';
 import { createRouter } from './router';
 
-Vue.use(Skyline);
+Vue.use(Line);
 
-const { version } = Skyline;
+const { version } = Line;
 
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 export function createApp(context?: any /* ssr context */) {
@@ -14,7 +14,7 @@ export function createApp(context?: any /* ssr context */) {
     render : h => h(
       'div',
       { domProps: { id: 'app' } },
-      [`SKYLINE ${ version }`, h('router-view')],
+      [`LINE-UI ${ version }`, h('router-view')],
     ),
   });
 

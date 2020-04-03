@@ -18,7 +18,7 @@ export * from '@line-ui/line/src/utils/component';
 export * from '@line-ui/line/src/utils/namespace';
 
 
-export const Skyline = {
+export const Line = {
   install,
   version : __VERSION__,
 };

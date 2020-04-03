@@ -34,19 +34,19 @@ export function setupConfig(configObj?: SkylinConfig) {
   const win = (hasWindow && window) as Window;
   const doc = (hasDocument && document) as Document;
 
-  let Skyline = {} as any;
+  let Line = {} as any;
 
   if (hasWindow) {
-    Skyline = (win as any).Skyline || Skyline;
+    Line = (win as any).Line || Line;
   }
 
-  // create the Skyline.config from raw config object (if it exists)
-  // and convert Skyline.config into a ConfigApi that has a get() fn
+  // create the Line.config from raw config object (if it exists)
+  // and convert Line.config into a ConfigApi that has a get() fn
   configObj = {
     ...configObj,
     ...(hasWindow && configFromSession(win)),
     persistConfig : false,
-    ...Skyline.config,
+    ...Line.config,
     ...(hasWindow && configFromURL(win)),
   };
 
@@ -71,8 +71,8 @@ export function setupConfig(configObj?: SkylinConfig) {
   // first see if the mode was set as an attribute on <html>
   // which could have been set by the user, or by pre-rendering
   // otherwise get the mode via config settings, and fallback to ios
-  Skyline.config = config;
-  Skyline.mode = defaultMode = config.get('mode', getModeFallback());
+  Line.config = config;
+  Line.mode = defaultMode = config.get('mode', getModeFallback());
 
   config.set('mode', defaultMode);
 

@@ -3,7 +3,7 @@ import * as m from 'monaco-editor';
 declare global {
   interface Window {
     Vue: Vue;
-    Skyline: any;
+    Line: any;
     monaco: typeof m;
     init: () => void;
   }
@@ -28,8 +28,8 @@ window.init = () => {
   </line-content>
 
   <line-footer style="text-align: center">
-    <p>Skyline Team</p>
-    <p>©2019 Skyline Terms Privacy</p>
+    <p>LINE-UI Team</p>
+    <p>©2019 LINE-UI Terms Privacy</p>
   </line-footer>
 </line-app>
 `.trim();

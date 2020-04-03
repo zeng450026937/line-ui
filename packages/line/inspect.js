@@ -11,7 +11,7 @@ const basename = p => path.basename(p, path.extname(p));
 
 const { matchWIP, camelize, debounce } = require('./scripts/utils');
 
-const isDev = `${ process.env.SKYLINE_DEV }` === 'true';
+const isDev = `${ process.env.LINE_DEV }` === 'true';
 
 const imports = new Map();
 const effects = new Map();

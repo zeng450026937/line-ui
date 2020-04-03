@@ -31,7 +31,7 @@
     "lint:style": "stylelint 'src/**/*.scss'"
   },
   "gitHooks": {
-    "pre-commit": "",
+    "pre-commit": "lint-staged",
     "commit-msg": "node scripts/verify-commit.js"
   },
   "lint-staged": {
@@ -40,7 +40,7 @@
       "git add"
     ],
     "*.{vue,css,less}": [
-      "stylelint 'src/**/*.scss' -- --fix",
+      "stylelint 'packages/src/**/*.scss' -- --fix",
       "git add"
     ]
   },
@@ -89,6 +89,7 @@
     "memory-fs": "^0.5.0",
     "minimist": "^1.2.0",
     "postcss": "^7.0.26",
+    "prettier": "^2.0.2",
     "rollup": "^1.31.0",
     "rollup-plugin-babel": "^4.3.3",
     "rollup-plugin-terser": "^5.2.0",
