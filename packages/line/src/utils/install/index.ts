@@ -24,6 +24,8 @@ export function createInstall<V extends Vue = Vue>(key: AssertsKey) {
       (target as VueConstructor)[key](name, this);
       return;
     }
+    // should use Object.create() instead of object destruct
+    // as Vue may do this, which lead to some properties leave in prototype
     const { [propKey]: asserts } = target;
     target[propKey] = { [name]: this, ...asserts };
   };

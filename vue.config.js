@@ -14,7 +14,7 @@ module.exports = {
     });
   },
 
-  transpileDependencies: ['@line-ui'],
+  transpileDependencies: ['@line-ui/line'],
   /*
   chainWebpack : (config) => {
     // support markdown file

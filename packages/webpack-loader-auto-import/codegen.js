@@ -23,7 +23,7 @@ module.exports = (parsed, options) => {
       const imports = [].concat(components, directives);
 
       return `
-  import { ${imports.join(',')} } from '${name}';
+  import { ${imports.join(', ')} } from '${name}';
     `.trim();
     });
 
@@ -32,30 +32,20 @@ module.exports = (parsed, options) => {
     (() => {
       const componentPart = hasComponents
         ? `
-  const components = {
-    ${components
-      .map((component) => `[${component}.name]: ${component},`)
-      .join('\n    ')}
-  };
-  options.components = Object.assign(
-    components,
-    options.components,
-  );  
-      `.trim()
+  const components = options.components = Object.create(options.components || {});
+  ${components
+    .map((component) => `components[${component}.name] = ${component};`)
+    .join('\n  ')}
+          `.trim()
         : '';
 
       const directivePart = hasDirectives
         ? `
-  const directives = {
-    ${directives
-      .map((directive) => `[${directive}.name]: ${directive},`)
-      .join('\n    ')}
-  };
-  options.directives = Object.assign(
-    directives,
-    options.directives,
-  );  
-      `.trim()
+  const directives = options.directives = Object.create(options.directives || {});
+  ${directives
+    .map((directive) => `directives[${directive}.name] = ${directive};`)
+    .join('\n  ')}
+          `.trim()
         : '';
 
       return `

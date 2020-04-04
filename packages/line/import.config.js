@@ -28,7 +28,7 @@ ${directives
   return `
 import { ${[].concat(components, directives).join(', ')} } from '${
     inspect.name
-  };';
+  }';
   `.trim();
 };
 

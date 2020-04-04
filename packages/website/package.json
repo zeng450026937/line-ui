@@ -1,11 +1,23 @@
 {
   "name": "@line-ui/website",
   "version": "1.0.0-alpha.0",
-  "description": "skyline website",
-  "publishConfig": {
-    "access": "public"
-  },
+  "description": "@line-ui/website",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "keywords": [
+    "line-ui"
+  ],
   "private": true,
+  "author": "Yealink Inc",
   "license": "MIT",
-  "dependencies": {}
+  "devDependencies": {
+    "@line-ui/icons": "^1.0.0-alpha"
+  },
+  "dependencies": {
+    "vue": "^2.6.11",
+    "vue-router": "^3.1.5"
+  }
 }

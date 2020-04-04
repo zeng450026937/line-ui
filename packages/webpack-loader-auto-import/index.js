@@ -45,7 +45,7 @@ module.exports = function autoImport(content) {
   const parsed = parse(template, options);
 
   // gen code
-  const code = codegen(parsed, options);
+  const code = codegen(parsed, options) || trigger;
 
   return content + code;
 };

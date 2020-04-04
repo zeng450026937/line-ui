@@ -26,5 +26,5 @@ module.exports = (api, options) => {
 };
 
 module.exports.defaultModes = {
-  quickstart: 'development',
+  'quick-start': 'development',
 };

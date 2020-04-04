@@ -12,6 +12,8 @@ module.exports = (api, options) => {
       const packagesDir = api.resolve('packages');
       const packageDir = `${packagesDir}/${process.env.TARGET}`;
 
+      config.resolve.alias.set('@', packageDir);
+
       const tapBabel = (rule) => {
         config.module
           .rule(rule)

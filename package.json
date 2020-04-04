@@ -20,18 +20,14 @@
     "ssr": "vue-cli-service ssr",
     "quick-start": "vue-cli-service quick-start",
     "icons-explorer": "vue-cli-service icons-explorer",
-    "playground": "yarn serve:playground",
-    "serve:playground": "vue-cli-service serve:playground",
-    "build:playground": "vue-cli-service build:playground",
-    "website": "yarn serve:website",
-    "serve:website": "vue-cli-service serve:website",
-    "build:website": "vue-cli-service build:website",
+    "playground": "vue-cli-service serve:playground",
+    "website": "vue-cli-service website",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint src scripts vue-plugins tests packages *.js .*.js",
     "lint:style": "stylelint 'packages/src/**/*.scss' --fix"
   },
   "gitHooks": {
-    "pre-commit": "",
+    "pre-commit": "lint-staged",
     "commit-msg": "node scripts/verify-commit.js"
   },
   "lint-staged": {

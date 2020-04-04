@@ -13,6 +13,7 @@ export * from '@line-ui/line/src/mixins';
 export * from '@line-ui/line/src/utils/bem';
 export * from '@line-ui/line/src/utils/component';
 export * from '@line-ui/line/src/utils/namespace';
+export * from '@line-ui/line/src/utils/animation';
 
 export const Line = {
   install,
