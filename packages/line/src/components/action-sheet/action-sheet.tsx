@@ -1,9 +1,9 @@
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
 import { usePopup } from '@line-ui/line/src/mixins/use-popup';
 import { Overlay } from '@line-ui/line/src/components/overlay';
-import ActionSheetButton from '@line-ui/line/src/components/action-sheet/action-sheet-button';
+import Action from '@line-ui/line/src/components/action-sheet/action';
+import ActionGroup from '@line-ui/line/src/components/action-sheet/action-group';
 import ActionSheetTitle from '@line-ui/line/src/components/action-sheet/action-sheet-title';
-import ActionSheetGroup from '@line-ui/line/src/components/action-sheet/action-sheet-group';
 
 import { iosEnterAnimation } from '@line-ui/line/src/components/action-sheet/animations/ios.enter';
 import { iosLeaveAnimation } from '@line-ui/line/src/components/action-sheet/animations/ios.leave';
@@ -84,7 +84,7 @@ export default /*#__PURE__*/ createComponent({
             <div class={bem('container')}>{this.slots()}</div>
           ) : (
             <div class={bem('container')}>
-              <ActionSheetGroup>
+              <ActionGroup>
                 {this.header && (
                   <ActionSheetTitle
                     header={this.header}
@@ -93,13 +93,13 @@ export default /*#__PURE__*/ createComponent({
                 )}
 
                 {optionActions.map((action) => (
-                  <ActionSheetButton option={action}></ActionSheetButton>
+                  <Action option={action}></Action>
                 ))}
-              </ActionSheetGroup>
+              </ActionGroup>
               {cancelAction && (
-                <ActionSheetGroup cancel={true}>
-                  <ActionSheetButton option={cancelAction}></ActionSheetButton>
-                </ActionSheetGroup>
+                <ActionGroup cancel={true}>
+                  <Action option={cancelAction}></Action>
+                </ActionGroup>
               )}
             </div>
           )}

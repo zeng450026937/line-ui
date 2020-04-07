@@ -12,29 +12,29 @@
         :actions="actions"
         v-model="visible"
       >
-        <line-action-sheet-group>
+        <line-action-group>
           <line-action-sheet-title sub-header="sub-header">
             action-sheet
           </line-action-sheet-title>
-          <line-action-sheet-button :option="{ role: 'destructive' }">
+          <line-action :option="{ role: 'destructive' }">
             Delete
-          </line-action-sheet-button>
-          <line-action-sheet-button>
+          </line-action>
+          <line-action>
             Share
             <line-icon name="share"></line-icon>
-          </line-action-sheet-button>
-          <line-action-sheet-button>
+          </line-action>
+          <line-action>
             Play
-          </line-action-sheet-button>
-          <line-action-sheet-button>
+          </line-action>
+          <line-action>
             Favorite
-          </line-action-sheet-button>
-        </line-action-sheet-group>
-        <line-action-sheet-group cancel>
-          <line-action-sheet-button :option="{ role: 'cancel' }">
+          </line-action>
+        </line-action-group>
+        <line-action-group cancel>
+          <line-action :option="{ role: 'cancel' }">
             Cancel
-          </line-action-sheet-button>
-        </line-action-sheet-group>
+          </line-action>
+        </line-action-group>
       </line-action-sheet>
       <line-button expand="block" @click="open">
         Show ActionSheet
@@ -89,4 +89,12 @@ export default Vue.extend({
 });
 </script>
 
+<<<<<<< Updated upstream
 <style lang="scss" scoped></style>
+=======
+<style lang="scss">
+.back-button .line-button__content {
+  padding-inline-start: 0;
+}
+</style>
+>>>>>>> Stashed changes

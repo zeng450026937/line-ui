@@ -1,8 +1,6 @@
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
 
-const { createComponent, bem } = /*#__PURE__*/ createNamespace(
-  'action-sheet-group'
-);
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('action-group');
 
 export default /*#__PURE__*/ createComponent({
   functional: true,

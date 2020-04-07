@@ -42,11 +42,11 @@
 // Material Design Action Sheet Group
 // -----------------------------------------
 
-.line-action-sheet .line-action-sheet-group:first-child {
+.line-action-sheet .line-action-group:first-child {
   @include padding($action-sheet-md-padding-top, null, null, null);
 }
 
-.line-action-sheet .line-action-sheet-group:last-child {
+.line-action-sheet .line-action-group:last-child {
   @include padding(null, null, $action-sheet-md-padding-bottom, null);
 }
 
@@ -54,7 +54,7 @@
 // Material Design Action Sheet Buttons
 // -----------------------------------------
 
-.line-action-sheet .line-action-sheet-button {
+.line-action-sheet .line-action {
   @include padding($action-sheet-md-button-padding-top, $action-sheet-md-button-padding-end, $action-sheet-md-button-padding-bottom, $action-sheet-md-button-padding-start);
 
   position: relative;
@@ -78,10 +78,10 @@
   font-size: $action-sheet-md-icon-font-size;
 }
 
-.line-action-sheet .line-action-sheet-button-inner {
+.line-action-sheet .line-action__inner {
   justify-content: flex-start;
 }
 
-.line-action-sheet .line-action-sheet-button--selected {
+.line-action-sheet .line-action--selected {
   font-weight: bold;
 }

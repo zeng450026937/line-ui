@@ -1,11 +1,8 @@
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
-// TODO
 import { safeCall } from '@line-ui/line/src/utils/helpers';
 import { ActionSheetButtonOption } from '@line-ui/line/src/components/action-sheet/action-sheet-interface';
 
-const { createComponent, bem } = /*#__PURE__*/ createNamespace(
-  'action-sheet-button'
-);
+const { createComponent, bem } = /*#__PURE__*/ createNamespace('action');
 
 export default /*#__PURE__*/ createComponent({
   inject: {
