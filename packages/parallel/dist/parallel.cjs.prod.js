@@ -8,7 +8,6 @@ async function parallel(pool = [], concurrency = 8, pipe = false) {
   let finished = 0;
   let index = 0;
   concurrency = Math.min(concurrency, pool.length);
-
   async function maybeNext(resolve, reject, flushed) {
     const cusor = index;
     const next = pool.length < index ? null : pool[index];
@@ -19,7 +18,6 @@ async function parallel(pool = [], concurrency = 8, pipe = false) {
     finished++;
     maybeNext(resolve, reject, flushed);
   }
-
   const final = await new Promise((resolve, reject) => {
     while (concurrency > 0) {
       maybeNext(resolve, reject);
