@@ -9,22 +9,20 @@
     <line-content>
       <line-list>
         <line-list-header>Characters</line-list-header>
-        <line-item>
-          <template #start>
-            <line-check-box
-              :checked="value"
-              color="primary"
-              @toggled="toggled"
-            ></line-check-box>
-          </template>
-          <line-label>Jon Snow</line-label>
-        </line-item>
-        <line-item>
-          <template #start>
-            <line-check-box color="secondary" checked></line-check-box>
-          </template>
-          <line-label>Daenerys Targaryen</line-label>
-        </line-item>
+        <line-check-box-group v-model="groupValue" @change="onChange">
+          <line-item>
+            <template #start>
+              <line-check-box modelValue="1" color="primary"></line-check-box>
+            </template>
+            <line-label>Jon Snow</line-label>
+          </line-item>
+          <line-item>
+            <template #start>
+              <line-check-box modelValue="2" color="secondary"></line-check-box>
+            </template>
+            <line-label>Daenerys Targaryen</line-label>
+          </line-item>
+        </line-check-box-group>
         <line-item>
           <template #start>
             <line-check-box checked color="tertiary" disabled></line-check-box>
@@ -33,7 +31,7 @@
         </line-item>
         <line-item>
           <template #start>
-            <line-check-box color="success" :checked="value"></line-check-box>
+            <line-check-box v-model="value" color="success"></line-check-box>
           </template>
           <line-label>Tyrion Lannister</line-label>
         </line-item>
@@ -80,6 +78,8 @@ export default Vue.extend({
     return {
       checked: true,
       value: true,
+
+      groupValue: ['1', '2'],
     };
   },
 
@@ -88,11 +88,19 @@ export default Vue.extend({
       this.value = value;
       this.test = value;
     },
+
+    onChange(val) {
+      console.log('onChange', val);
+    },
   },
 
   watch: {
     value(val) {
       console.log('val', val);
+    },
+
+    groupValue(val) {
+      console.log('groupValue', val);
     },
   },
 });

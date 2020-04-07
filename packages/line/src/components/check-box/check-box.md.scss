@@ -24,23 +24,6 @@
   height: var(--size);
 }
 
-.line-check-box__icon path {
-  stroke-dasharray: 30;
-  stroke-dashoffset: 30;
-  stroke-width: 3;
-}
-
-// Material Design Checkbox: Checked / Indeterminate
-// --------------------------------------------------------
-
-.line-check-box--checked .line-check-box__icon path,
-.line-check-box--indeterminate .line-check-box__icon path {
-  stroke-dashoffset: 0;
-
-  transition: stroke-dashoffset 90ms linear 90ms;
-}
-
-
 // Material Design Checkbox: Disabled
 // --------------------------------------------------------
 

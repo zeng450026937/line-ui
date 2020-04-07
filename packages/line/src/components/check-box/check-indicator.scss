@@ -1,43 +1,48 @@
-.line {
-  &-check-indicator {
-    margin-right: 4px;
 
-    // border: 2px solid #999999;
-    // border-radius: 2px;
+@import "../../themes/line.globals";
 
-    // background-color: transparent;
+// Checkbox-Indeterminate
+// --------------------------------------------------
 
-    cursor: pointer;
+.line-check-indicator {
+  @include border-radius(var(--border-radius));
 
-    svg {
-      path {
-        fill: none;
-        stroke: #ffffff;
+  display: block;
+  position: relative;
 
-        stroke-width: 3;
+  width: 100%;
+  height: 100%;
 
-        transform: scale(0, 0);
-        transform-origin: center;
-      }
-    }
+  transition: var(--transition);
 
-    &--checked {
-      // border-color: #10c29b;
+  border-width: var(--border-width);
+  border-style: var(--border-style);
+  border-color: var(--border-color);
 
-      // background-color: #10c29b;
+  background: var(--background);
 
-      svg {
-        path {
-          transform: scale(0.8, 0.8);
+  box-sizing: border-box;
+}
 
-          transition: transform 90ms linear 80ms;
-          transition-timing-function: cubic-bezier(0.4, 0, 1, 1), cubic-bezier(0.18, 0.89, 0.32, 1.28);
-        }
-      }
-    }
+.line-check-indicator path {
+  fill: none;
+  stroke: var(--checkmark-color);
+  stroke-width: 1;
 
-    &--disabled {
-      border-color: #afafaf;
-    }
-  }
+  opacity: 0;
+}
+
+// Checked / Indeterminate Checkbox
+// ---------------------------------------------
+
+.line-check-indicator--checked.line-check-indicator,
+.line-check-indicator--indeterminate.line-check-indicator {
+  border-color: var(--border-color-checked);
+
+  background: var(--background-checked);
+}
+
+.line-check-indicator--checked.line-check-indicator path,
+.line-check-indicator--indeterminate.line-check-indicator path {
+  opacity: 1;
 }

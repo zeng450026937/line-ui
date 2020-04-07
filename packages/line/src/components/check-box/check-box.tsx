@@ -1,5 +1,5 @@
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
-import { useCheckItem } from '@line-ui/line/src/mixins/use-check-item';
+import { useCheckItemWithModel } from '@line-ui/line/src/mixins/use-check-item';
 import { useRipple } from '@line-ui/line/src/mixins/use-ripple';
 import { useColor } from '@line-ui/line/src/mixins/use-color';
 import CheckIndicator from '@line-ui/line/src/components/check-box/check-indicator';
@@ -9,7 +9,7 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('check-box');
 
 export default /*#__PURE__*/ createComponent({
   mixins: [
-    /*#__PURE__*/ useCheckItem(NAMESPACE),
+    /*#__PURE__*/ useCheckItemWithModel(NAMESPACE),
     /*#__PURE__*/ useRipple(),
     /*#__PURE__*/ useColor(),
   ],
