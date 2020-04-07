@@ -1,8 +1,8 @@
 # .gitlab-ci.yml
 image: node:latest
 
-line:
-  image: cr.yealinkops.com/common/yarn:1.19.1
+package line:
+  image: cr.yealinkops.com/common/yarn:1.22.4
   stage: build
   tags:
     - devops_docker_runner
@@ -19,7 +19,7 @@ line:
     - master
 
 pages:
-  image: cr.yealinkops.com/common/yarn:1.19.1
+  image: cr.yealinkops.com/common/yarn:1.22.4
   stage: deploy
   tags:
     - devops_docker_runner
