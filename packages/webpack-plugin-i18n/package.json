@@ -5,12 +5,11 @@
   "main": "lib/plugin.js",
   "files": [
     "index.js",
-    "dist"
+    "lib"
   ],
   "keywords": [
     "line-ui"
   ],
-  "private": true,
   "author": "Yealink Inc",
   "license": "MIT"
 }

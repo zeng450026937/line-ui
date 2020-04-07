@@ -4,13 +4,14 @@
   "description": "@line-ui/icons",
   "main": "index.js",
   "files": [
-    "dist"
+    "dist",
+    "scripts",
+    "tasks",
+    "gulpfile.js"
   ],
   "keywords": [
     "line-ui"
   ],
-  "sideEffects": false,
-  "private": true,
   "author": "Yealink Inc",
   "license": "MIT",
   "devDependencies": {

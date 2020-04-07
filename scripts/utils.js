@@ -9,6 +9,9 @@ const targets = (exports.targets = fs.readdirSync('packages').filter((f) => {
   if (pkg.private && !pkg.buildOptions) {
     return false;
   }
+  if (!pkg.buildOptions && !fs.existsSync(`packages/${f}/src/index.ts`)) {
+    return false;
+  }
   return true;
 }));
 

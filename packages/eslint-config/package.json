@@ -3,10 +3,13 @@
   "version": "1.0.0-alpha.0",
   "description": "eslint config of line-ui",
   "main": "index.prettier.js",
-  "publishConfig": {
-    "access": "public"
-  },
-  "private": true,
+  "files": [
+    "index.airbnb.js",
+    "index.prettier.js"
+  ],
+  "keywords": [
+    "line-ui"
+  ],
   "license": "MIT",
   "peerDependencies": {
     "@vue/cli-plugin-eslint": ">4.2.0",

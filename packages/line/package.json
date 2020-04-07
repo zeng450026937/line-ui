@@ -7,7 +7,7 @@
   "unpkg": "dist/line.global.js",
   "files": [
     "dist",
-    "scripts/utils.js",
+    "scripts",
     "src",
     ".wip",
     "import.config.js",

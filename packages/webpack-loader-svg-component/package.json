@@ -3,16 +3,14 @@
   "version": "1.0.0-alpha.0",
   "description": "@line-ui/webpack-loader-svg-component",
   "main": "index.js",
-  "module": "dist/webpack-loader-svg-component.esm-bundler.js",
   "files": [
     "index.js",
-    "dist"
+    "optimize.js",
+    "pitcher.js"
   ],
-  "types": "dist/webpack-loader-svg-component.d.ts",
   "keywords": [
     "line-ui"
   ],
-  "private": true,
   "author": "Yealink Inc",
   "license": "MIT",
   "dependencies": {

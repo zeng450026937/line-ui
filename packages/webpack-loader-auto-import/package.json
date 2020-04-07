@@ -4,12 +4,14 @@
   "description": "@line-ui/webpack-loader-auto-import",
   "main": "index.js",
   "files": [
-    "index.js"
+    "codegen.js",
+    "index.js",
+    "parse.js",
+    "transform.js"
   ],
   "keywords": [
     "line-ui"
   ],
-  "private": true,
   "author": "Yealink Inc",
   "license": "MIT",
   "dependencies": {

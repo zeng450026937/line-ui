@@ -3,13 +3,21 @@
   "version": "1.0.0-alpha.0",
   "description": "@line-ui/themify-icons",
   "files": [
-    "index.js",
-    "dist"
+    "css",
+    "demo-files",
+    "fonts",
+    "ie7",
+    "SVG",
+    "index.html",
+    "Themify IconFonts 5-23-2014.json"
   ],
   "keywords": [
     "line-ui"
   ],
-  "private": true,
-  "author": "Yealink Inc",
+  "author": {
+    "name": "lykmapipo",
+    "email": "lallyelias87@gmail.com",
+    "url": "https://github.com/lykmapipo/themify-icons"
+  },
   "license": "MIT"
 }
