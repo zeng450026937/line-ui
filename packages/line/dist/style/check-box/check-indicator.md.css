@@ -29,3 +29,15 @@
 .line-check-indicator--indeterminate.line-check-indicator path {
   opacity: 1;
 }
+
+.line-check-indicator path {
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  stroke-width: 3;
+}
+
+.line-check-indicator--checked.line-check-indicator path,
+.line-check-indicator--indeterminate.line-check-indicator path {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 90ms linear 90ms;
+}

@@ -7,26 +7,30 @@ import * as mixins from '@line-ui/line/src/mixins';
 import { VueConstructor } from 'vue';
 
 declare const _default: {
-    install(Vue: VueConstructor<import("vue").default>, opts?: LineOptions | undefined): void;
-    components: typeof components;
-    directives: typeof directives;
-    controllers: typeof controllers;
-    mixins: typeof mixins;
-    version: string;
+  install(
+    Vue: VueConstructor<import('vue').default>,
+    opts?: LineOptions | undefined
+  ): void;
+  components: typeof components;
+  directives: typeof directives;
+  controllers: typeof controllers;
+  mixins: typeof mixins;
+  version: string;
 };
 export default _default;
 
-export declare const Skyline: {
-    install: typeof install;
-    version: string;
+export declare const Line: {
+  install: typeof install;
+  version: string;
 };
 
-export * from "@line-ui/line/src/components";
-export * from "@line-ui/line/src/controllers";
-export * from "@line-ui/line/src/directives";
-export * from "@line-ui/line/src/mixins";
-export * from "@line-ui/line/src/utils/bem";
-export * from "@line-ui/line/src/utils/component";
-export * from "@line-ui/line/src/utils/namespace";
+export * from '@line-ui/line/src/components';
+export * from '@line-ui/line/src/controllers';
+export * from '@line-ui/line/src/directives';
+export * from '@line-ui/line/src/mixins';
+export * from '@line-ui/line/src/utils/animation';
+export * from '@line-ui/line/src/utils/bem';
+export * from '@line-ui/line/src/utils/component';
+export * from '@line-ui/line/src/utils/namespace';
 
-export { }
+export {};

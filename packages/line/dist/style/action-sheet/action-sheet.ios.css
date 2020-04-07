@@ -87,7 +87,7 @@
   }
 }
 
-.line-action-sheet .line-action-sheet-button {
+.line-action-sheet .line-action {
   display: block;
   position: relative;
   width: 100%;
@@ -99,7 +99,7 @@
   overflow: hidden;
 }
 
-.line-action-sheet .line-action-sheet-button__inner {
+.line-action-sheet .line-action__inner {
   display: flex;
   position: relative;
   flex-flow: row nowrap;
@@ -119,7 +119,7 @@
   max-height: 100%;
 }
 
-.line-action-sheet .line-action-sheet-group {
+.line-action-sheet .line-action-group {
   flex-shrink: 2;
   overscroll-behavior-y: contain;
   overflow-y: auto;
@@ -128,16 +128,16 @@
   background: var(--background);
 }
 
-.line-action-sheet .line-action-sheet-group::-webkit-scrollbar {
+.line-action-sheet .line-action-group::-webkit-scrollbar {
   display: none;
 }
 
-.line-action-sheet .line-action-sheet-group--cancel {
+.line-action-sheet .line-action-group--cancel {
   flex-shrink: 0;
   overflow: hidden;
 }
 
-.line-action-sheet .line-action-sheet-button::after {
+.line-action-sheet .line-action::after {
   right: 0;
   left: 0;
   top: 0;
@@ -147,35 +147,35 @@
   opacity: 0;
 }
 
-.line-action-sheet .line-action-sheet-button--selected {
+.line-action-sheet .line-action--selected {
   color: var(--button-color-selected);
 }
-.line-action-sheet .line-action-sheet-button--selected::after {
+.line-action-sheet .line-action--selected::after {
   background: var(--button-background-selected);
   opacity: var(--button-background-selected-opacity);
 }
 
-.line-action-sheet .line-action-sheet-button.line-activated {
+.line-action-sheet .line-action.line-activated {
   color: var(--button-color-activated);
 }
-.line-action-sheet .line-action-sheet-button.line-activated::after {
+.line-action-sheet .line-action.line-activated::after {
   background: var(--button-background-activated);
   opacity: var(--button-background-activated-opacity);
 }
 
-.line-action-sheet .line-action-sheet-button.line-focused {
+.line-action-sheet .line-action.line-focused {
   color: var(--button-color-focused);
 }
-.line-action-sheet .line-action-sheet-button.line-focused::after {
+.line-action-sheet .line-action.line-focused::after {
   background: var(--button-background-focused);
   opacity: var(--button-background-focused-opacity);
 }
 
 @media (any-hover: hover) {
-  .line-action-sheet .line-action-sheet-button:hover {
+  .line-action-sheet .line-action:hover {
     color: var(--button-color-hover);
   }
-  .line-action-sheet .line-action-sheet-button:hover::after {
+  .line-action-sheet .line-action:hover::after {
     background: var(--button-background-hover);
     opacity: var(--button-background-hover-opacity);
   }
@@ -227,24 +227,24 @@
   }
 }
 
-.line-action-sheet .line-action-sheet-group {
+.line-action-sheet .line-action-group {
   border-radius: 13px;
   margin-bottom: 8px;
 }
-.line-action-sheet .line-action-sheet-group:first-child {
+.line-action-sheet .line-action-group:first-child {
   margin-top: 10px;
 }
-.line-action-sheet .line-action-sheet-group:last-child {
+.line-action-sheet .line-action-group:last-child {
   margin-bottom: 10px;
 }
 @supports (backdrop-filter: blur(0)) {
-  .line-action-sheet.line-action-sheet--translucent .line-action-sheet-group {
+  .line-action-sheet.line-action-sheet--translucent .line-action-group {
     background-color: transparent;
     backdrop-filter: saturate(280%) blur(20px);
   }
 
   .line-action-sheet.line-action-sheet--translucent .line-action-sheet-title,
-.line-action-sheet.line-action-sheet--translucent .line-action-sheet-button {
+.line-action-sheet.line-action-sheet--translucent .line-action {
     background-color: transparent;
     background-image: linear-gradient(0deg, rgba(var(--line-background-color-rgb, 255, 255, 255), 0.8), rgba(var(--line-background-color-rgb, 255, 255, 255), 0.8) 100%), linear-gradient(0deg, rgba(var(--line-background-color-rgb, 255, 255, 255), 0.4), rgba(var(--line-background-color-rgb, 255, 255, 255), 0.4) 50%, rgba(var(--line-background-color-rgb, 255, 255, 255), 0.8) 50%);
     background-repeat: no-repeat;
@@ -254,12 +254,12 @@
     backdrop-filter: saturate(120%);
   }
 
-  .line-action-sheet.line-action-sheet--translucent .line-action-sheet-button.line-activated {
+  .line-action-sheet.line-action-sheet--translucent .line-action.line-activated {
     background-color: rgba(var(--line-background-color-rgb, 255, 255, 255), 0.7);
     background-image: none;
   }
 
-  .line-action-sheet.line-action-sheet--translucent .line-action-sheet-button--cancel {
+  .line-action-sheet.line-action-sheet--translucent .line-action--cancel {
     background: var(--button-background-selected);
   }
 }
@@ -294,7 +294,7 @@
   font-size: 12px;
 }
 
-.line-action-sheet .line-action-sheet-button {
+.line-action-sheet .line-action {
   padding-left: 18px;
   padding-right: 18px;
   padding-top: 18px;
@@ -304,7 +304,7 @@
   contain: strict;
 }
 @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
-  .line-action-sheet .line-action-sheet-button {
+  .line-action-sheet .line-action {
     padding-left: unset;
     padding-right: unset;
     padding-inline-start: 18px;
@@ -312,41 +312,41 @@
   }
 }
 
-.line-action-sheet .line-action-sheet-button .line-action-sheet__icon {
+.line-action-sheet .line-action .line-action-sheet__icon {
   margin-right: 0.1em;
   font-size: 28px;
 }
 @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
-  .line-action-sheet .line-action-sheet-button .line-action-sheet__icon {
+  .line-action-sheet .line-action .line-action-sheet__icon {
     margin-right: unset;
     margin-inline-end: 0.1em;
   }
 }
 
-.line-action-sheet .line-action-sheet-button:last-child {
+.line-action-sheet .line-action:last-child {
   background-image: none;
 }
 
-.line-action-sheet .line-action-sheet-button--selected {
+.line-action-sheet .line-action--selected {
   font-weight: bold;
 }
 
-.line-action-sheet .line-action-sheet-button--cancel {
+.line-action-sheet .line-action--cancel {
   font-weight: 600;
 }
-.line-action-sheet .line-action-sheet-button--cancel::after {
+.line-action-sheet .line-action--cancel::after {
   background: var(--button-background-selected);
   opacity: var(--button-background-selected-opacity);
 }
 
-.line-action-sheet .line-action-sheet-button--destructive,
-.line-action-sheet .line-action-sheet-button--destructive.line-activated,
-.line-action-sheet .line-action-sheet-button--destructive.line-focused {
+.line-action-sheet .line-action--destructive,
+.line-action-sheet .line-action--destructive.line-activated,
+.line-action-sheet .line-action--destructive.line-focused {
   color: var(--line-color-danger, #eb445a);
 }
 
 @media (any-hover: hover) {
-  .line-action-sheet .line-action-sheet-button--destructive:hover {
+  .line-action-sheet .line-action--destructive:hover {
     color: var(--line-color-danger, #eb445a);
   }
 }

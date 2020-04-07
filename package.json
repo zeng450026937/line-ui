@@ -24,7 +24,7 @@
     "website": "vue-cli-service website",
     "test:unit": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint src scripts vue-plugins tests packages *.js .*.js",
-    "lint:style": "stylelint 'packages/src/**/*.scss' --fix"
+    "lint:style": "stylelint 'packages/src/**/*.scss' --fix --allow-empty-input"
   },
   "gitHooks": {
     "pre-commit": "lint-staged",
@@ -36,7 +36,7 @@
       "git add"
     ],
     "*.{vue,scss}": [
-      "stylelint --fix",
+      "stylelint --fix --allow-empty-input",
       "git add"
     ]
   },

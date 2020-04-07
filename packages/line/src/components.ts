@@ -1,7 +1,6 @@
 // Auto Generated
 // This file is auto generated, do not modify directly.
 
-export * from '@line-ui/line/src/components/action';
 export * from '@line-ui/line/src/components/action-sheet';
 export * from '@line-ui/line/src/components/alert';
 export * from '@line-ui/line/src/components/app';

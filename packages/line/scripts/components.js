@@ -83,9 +83,7 @@ async function generate(patterns, folder, dist) {
 ${warning}
 ${components.map((comp) => comp.toImport()).join('\n')}
 
-export {
-  ${components.map((comp) => `${comp.name},`).join('\n  ')}
-};
+export { ${components.map((comp) => `${comp.name}`).join(', ')} };
 `.trimLeft()
     );
   }

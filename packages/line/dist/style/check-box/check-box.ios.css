@@ -59,57 +59,8 @@
   border: 0;
 }
 
-.line-check-indicator {
-  border-radius: var(--border-radius);
-  display: block;
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transition: var(--transition);
-  border-width: var(--border-width);
-  border-style: var(--border-style);
-  border-color: var(--border-color);
-  background: var(--background);
-  box-sizing: border-box;
-}
-
-.line-check-indicator path {
-  fill: none;
-  stroke: var(--checkmark-color);
-  stroke-width: 1;
-  opacity: 0;
-}
-
-.line-check-box--checked .line-check-indicator,
-.line-check-box--indeterminate .line-check-indicator {
-  border-color: var(--border-color-checked);
-  background: var(--background-checked);
-}
-
-.line-check-box--checked .line-check-indicator path,
-.line-check-box--indeterminate .line-check-indicator path {
-  opacity: 1;
-}
-
 .line-check-box--disabled {
   pointer-events: none;
-}
-
-.line-check-box .line-check-indicator {
-  margin-right: 4px;
-  transition: none;
-  cursor: pointer;
-}
-.line-check-box .line-check-indicator path {
-  fill: none;
-  stroke-width: 3;
-  transform: scale(0, 0);
-  transform-origin: center;
-}
-.line-check-box .line-check-indicator--checked path {
-  transform: scale(0.8, 0.8);
-  transition: transform 60ms linear 40ms;
-  transition-timing-function: cubic-bezier(0.4, 0, 1, 1), cubic-bezier(0.18, 0.89, 0.32, 1.28);
 }
 
 .line-check-box {
