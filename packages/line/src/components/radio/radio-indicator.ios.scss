@@ -1,0 +1,48 @@
+@import "./radio-indicator";
+@import "./radio.ios.vars";
+
+// iOS Radio
+// --------------------------------------------------
+
+.line-color .line-radio-indicator--checked .line-radio-indicator__inner{
+  border-color: current-color(base);
+}
+
+
+// iOS Radio Checkmark: Checked
+// -----------------------------------------
+
+.line-radio-indicator__inner {
+  width: 33%;
+  height: 50%;
+}
+
+.line-radio-indicator--checked .line-radio-indicator__inner {
+  transform: rotate(45deg);
+
+  border-width: $radio-ios-icon-border-width;
+  border-top-width: 0;
+  border-left-width: 0;
+  border-style: $radio-ios-icon-border-style;
+  border-color: var(--color-checked);
+}
+
+
+// iOS Radio: Keyboard Focus
+// -----------------------------------------
+
+.line-focused .line-radio-indicator::after {
+  @include border-radius(50%);
+  @include position(-8px, null, null, -9px);
+
+  display: block;
+  position: absolute;
+
+  width: 36px;
+  height: 36px;
+
+  background: $radio-ios-background-color-focused;
+
+  content: "";
+  opacity: .2;
+}

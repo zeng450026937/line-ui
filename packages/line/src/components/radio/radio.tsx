@@ -1,7 +1,9 @@
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
-import { useCheckItem } from '@line-ui/line/src/mixins/use-check-item';
+import { useCheckItemWithModel } from '@line-ui/line/src/mixins/use-check-item';
 import { useRipple } from '@line-ui/line/src/mixins/use-ripple';
 import { useColor } from '@line-ui/line/src/mixins/use-color';
+
+import RadioIndicator from '@line-ui/line/src/components/radio/radio-indicator';
 
 const NAMESPACE = 'RadioGroup';
 
@@ -9,7 +11,7 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('radio');
 
 export default /*#__PURE__*/ createComponent({
   mixins: [
-    /*#__PURE__*/ useCheckItem(NAMESPACE),
+    /*#__PURE__*/ useCheckItemWithModel(NAMESPACE),
     /*#__PURE__*/ useRipple(),
     /*#__PURE__*/ useColor(),
   ],
@@ -37,6 +39,20 @@ export default /*#__PURE__*/ createComponent({
         'radio-checked': this.checked,
         'interactive-disabled': this.disabled,
       });
+    },
+
+    onClick() {
+      if (this.disabled) return;
+
+      this.$emit('clicked');
+
+      if (!this.checkable) return;
+
+      if (this.RadioGroup && this.checked) return;
+
+      this.checked = !this.checked;
+
+      this.$emit('change', this.checked);
     },
   },
 
@@ -67,12 +83,10 @@ export default /*#__PURE__*/ createComponent({
           { 'in-item': inItem },
         ]}
         role="radio"
-        onClick={this.toggle}
+        onClick={this.onClick}
         on={this.$listeners}
       >
-        <div class={bem('icon')}>
-          <div class={bem('inner')} />
-        </div>
+        <RadioIndicator checked={checked} disabled={disabled}></RadioIndicator>
 
         {this.slots()}
 

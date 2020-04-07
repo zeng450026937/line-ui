@@ -9,28 +9,31 @@
     <line-content>
       <line-list>
         <line-list-header>Fruit</line-list-header>
-        <line-item>
-          <template #start>
-            <line-radio
-              :checked="value"
-              color="primary"
-              @toggled="toggled"
-            ></line-radio>
-          </template>
-          <line-label>Apple</line-label>
-        </line-item>
-        <line-item>
-          <template #start>
-            <line-radio color="dark"></line-radio>
-          </template>
-          <line-label>Grape</line-label>
-        </line-item>
-        <line-item disabled>
-          <template #start>
-            <line-radio></line-radio>
-          </template>
-          <line-label>Cherry</line-label>
-        </line-item>
+        <line-radio-group v-model="groupValue" @change="onChange">
+          <line-item>
+            <template #start>
+              <line-radio
+                modelValue="Apple"
+                :checked="value"
+                color="primary"
+                @change="toggled"
+              ></line-radio>
+            </template>
+            <line-label>Apple</line-label>
+          </line-item>
+          <line-item>
+            <template #start>
+              <line-radio modelValue="Grape" color="dark"></line-radio>
+            </template>
+            <line-label>Grape</line-label>
+          </line-item>
+          <line-item>
+            <template #start>
+              <line-radio disabled modelValue="Cherry"></line-radio>
+            </template>
+            <line-label>Cherry</line-label>
+          </line-item>
+        </line-radio-group>
         <line-list-header>Pizza Topping</line-list-header>
         <line-item>
           <template #start>
@@ -75,12 +78,24 @@ export default Vue.extend({
     return {
       checked: true,
       value: true,
+
+      groupValue: 'Apple',
     };
   },
 
   methods: {
     toggled(value) {
       this.value = value;
+    },
+
+    onChange(value) {
+      console.log('onChange', value);
+    },
+  },
+
+  watch: {
+    groupValue(val, oldVal) {
+      console.log(val, oldVal);
     },
   },
 });

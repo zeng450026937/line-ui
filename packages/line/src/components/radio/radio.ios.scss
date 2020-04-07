@@ -11,31 +11,8 @@
   height: $radio-ios-icon-height;
 }
 
-.line-radio--checked.line-color .line-radio__inner {
-  border-color: current-color(base);
-}
-
 .item-radio.item-ios .line-label {
   @include margin-horizontal(0, null);
-}
-
-
-// iOS Radio Checkmark: Checked
-// -----------------------------------------
-
-.line-radio__inner {
-  width: 33%;
-  height: 50%;
-}
-
-.line-radio--checked .line-radio__inner {
-  transform: rotate(45deg);
-
-  border-width: $radio-ios-icon-border-width;
-  border-top-width: 0;
-  border-left-width: 0;
-  border-style: $radio-ios-icon-border-style;
-  border-color: var(--color-checked);
 }
 
 
@@ -45,25 +22,6 @@
   opacity: $radio-ios-disabled-opacity;
 }
 
-
-// iOS Radio: Keyboard Focus
-// -----------------------------------------
-
-.line-focused .line-radio__icon::after {
-  @include border-radius(50%);
-  @include position(-8px, null, null, -9px);
-
-  display: block;
-  position: absolute;
-
-  width: 36px;
-  height: 36px;
-
-  background: $radio-ios-background-color-focused;
-
-  content: "";
-  opacity: .2;
-}
 
 // iOS Radio Within An Item
 // -----------------------------------------
