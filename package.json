@@ -45,7 +45,6 @@
     "core-js": "^3.6.4"
   },
   "devDependencies": {
-    "@ls-lint/ls-lint": "^1.8.0",
     "@microsoft/api-extractor": "^7.7.8",
     "@rollup/plugin-alias": "^3.0.1",
     "@rollup/plugin-buble": "^0.21.1",

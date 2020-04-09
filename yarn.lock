@@ -997,11 +997,6 @@
     "@types/istanbul-reports" "^1.1.1"
     "@types/yargs" "^13.0.0"
 
-"@ls-lint/ls-lint@^1.8.0":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@ls-lint/ls-lint/-/ls-lint-1.8.0.tgz#508fe32d4dbdd90d61c8ea156c20af33c294a22e"
-  integrity sha512-XaItB+/qOMdCJbTuT/mT6yDlzUSClOtPx9S/dUBETUHxmcOlvdLOXoIiSvZBlpmux81qtz6pVvkmzWNK0SpojQ==
-
 "@mdi/svg@^4.9.95":
   version "4.9.95"
   resolved "https://registry.yarnpkg.com/@mdi/svg/-/svg-4.9.95.tgz#4e9d2b26b12e22f751336b35ba3cb763817e4c45"

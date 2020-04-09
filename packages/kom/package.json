@@ -1,0 +1,29 @@
+{
+  "name": "@line-ui/kom",
+  "version": "1.0.0-alpha.0",
+  "description": "@line-ui/kom",
+  "main": "index.js",
+  "module": "dist/kom.esm-bundler.js",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "types": "dist/kom.d.ts",
+  "keywords": [
+    "line-ui"
+  ],
+  "buildOptions": {
+    "name": "Kom",
+    "formats": [
+      "esm-bundler",
+      "cjs",
+      "global",
+      "esm"
+    ]
+  },
+  "author": "line-ui team",
+  "license": "MIT",
+  "devDependencies": {
+    "vue": "^2.6.11"
+  }
+}
