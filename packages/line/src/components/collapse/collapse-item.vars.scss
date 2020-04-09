@@ -1,0 +1,25 @@
+@import "../../themes/line.globals.ios";
+
+//  Collapse Item
+// --------------------------------------------------
+
+/// @prop - Height size of the collapse item title
+$collapse-item-height:                              48px !default;
+
+/// @prop - Padding of the collapse item title
+$collapse-item-padding:                             12px !default;
+
+/// @prop - Font size end of the collapse item title
+$collapse-item-font-size:                           14px !default;
+
+/// @prop - Color of the collapse item title
+$collapse-item-title-color:                       #333333 !default;
+
+/// @prop - Color of the collapse item icon
+$collapse-item-icon-color:                        #666666 !default;
+
+/// @prop - Disabled color of the collapse item title
+$collapse-item-title-disabled-color:              #999999 !default;
+
+/// @prop - Disabled color of the collapse item icon
+$collapse-item-icon-diasabled-color:              #9f9f9f !default;

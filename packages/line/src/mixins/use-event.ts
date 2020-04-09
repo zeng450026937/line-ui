@@ -22,13 +22,14 @@ export function useEvent(options: EventOptions) {
       const target = global ? getApp($el) : $el;
 
       const offs = arrayify(event).map((name) => {
-        let dismiss = false;
+        let dismiss: boolean | undefined;
 
         const prevent = () => (dismiss = true);
 
         const maybe = (ev: Event) => {
+          dismiss = false;
           this.$emit('event-condition', { ev, name, prevent });
-          if (!dismiss) return;
+          if (dismiss) return;
           this.$emit('event-handler', ev, name);
         };
 
