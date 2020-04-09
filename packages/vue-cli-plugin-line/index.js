@@ -1,14 +1,13 @@
 module.exports = (api, options) => {
   api.chainWebpack((config) => {
-    // line config
-    const line = {
-      autoimport: true,
-      svgsprite: true,
-      svgcomponent: false,
-      i18n: true,
-    };
+    const {
+      autoimport = true,
+      svgsprite = true,
+      svgcomponent = false,
+      i18n = true,
+    } = options['line-ui'] || {};
 
-    if (line.autoimport) {
+    if (autoimport) {
       config.module
         .rule('vue')
         .use('line-auto-import')
@@ -17,7 +16,7 @@ module.exports = (api, options) => {
         .after('vue-loader');
     }
 
-    if (line.svgsprite) {
+    if (svgsprite) {
       config.module.rules.delete('svg');
 
       config.module
@@ -31,7 +30,7 @@ module.exports = (api, options) => {
       config
         .plugin('svg-sprite')
         .use(require('@line-ui/webpack-plugin-svg-sprite'));
-    } else if (line.svgcomponent) {
+    } else if (svgcomponent) {
       if (api.hasPlugin('babel')) {
         config.module.rules.delete('svg');
 
@@ -48,7 +47,7 @@ module.exports = (api, options) => {
       }
     }
 
-    if (line.i18n) {
+    if (i18n) {
       config.plugin('i18n').use(require('@line-ui/webpack-plugin-i18n'));
     }
   });
