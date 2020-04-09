@@ -6,7 +6,7 @@
     "jsx": "preserve",
     "importHelpers": true,
     "moduleResolution": "node",
-    "allowJs": true,
+    "allowJs": false,
     "noUnusedLocals": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
@@ -20,7 +20,7 @@
     // "declaration": true,
     "baseUrl": ".",
     "rootDir": ".",
-    "outDir": "./out",
+    "outDir": "dist",
     "types": ["webpack-env", "jest"],
     "paths": {
       "@/*": ["src/*"],
