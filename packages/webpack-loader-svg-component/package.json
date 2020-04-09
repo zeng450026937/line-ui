@@ -1,6 +1,6 @@
 {
   "name": "@line-ui/webpack-loader-svg-component",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "@line-ui/webpack-loader-svg-component",
   "main": "index.js",
   "files": [

@@ -6,6 +6,7 @@ export * from '@line-ui/line/src/mixins/use-breakpoint';
 export * from '@line-ui/line/src/mixins/use-check-group';
 export * from '@line-ui/line/src/mixins/use-check-item';
 export * from '@line-ui/line/src/mixins/use-click-outside';
+export * from '@line-ui/line/src/mixins/use-collapse-transiton';
 export * from '@line-ui/line/src/mixins/use-color';
 export * from '@line-ui/line/src/mixins/use-event';
 export * from '@line-ui/line/src/mixins/use-group-item';

@@ -11335,11 +11335,12 @@ var Line = (function (exports, Vue) {
         const { $el } = this;
         const target = global ? getApp($el) : $el;
         const offs = arrayify(event).map((name) => {
-          let dismiss = false;
+          let dismiss;
           const prevent = () => (dismiss = true);
           const maybe = (ev) => {
+            dismiss = false;
             this.$emit('event-condition', { ev, name, prevent });
-            if (!dismiss) return;
+            if (dismiss) return;
             this.$emit('event-handler', ev, name);
           };
           return on(target, name, maybe, options);
@@ -31366,6 +31367,138 @@ var Line = (function (exports, Vue) {
     });
   }
 
+  /**
+   * Enter Animation
+   */
+  const enterAnimation = (baseEl, paddingTop, paddingBottom) => {
+    const height = baseEl.scrollHeight || '';
+    const baseAnimation = createAnimation();
+    baseAnimation
+      .addElement(baseEl)
+      .easing('ease-in-out')
+      .duration(300)
+      // .afterClearStyles(['height'])
+      .fromTo('padding-top', '0px', `${paddingTop}px`)
+      .fromTo('padding-bottom', '0px', `${paddingBottom}px`)
+      .fromTo('height', '0px', `${height}px`);
+    return baseAnimation;
+  };
+
+  /**
+   * Leave Animation
+   */
+  const leaveAnimation = (baseEl, paddingTop, paddingBottom) => {
+    const height = baseEl.scrollHeight || '';
+    const baseAnimation = createAnimation();
+    baseAnimation
+      .addElement(baseEl)
+      .easing('ease-in-out')
+      .duration(300)
+      .fromTo('padding-top', `${paddingTop}px`, '0px')
+      .fromTo('padding-bottom', `${paddingBottom}px`, '0px')
+      .fromTo('height', `${height}px`, '0px');
+    return baseAnimation;
+  };
+
+  function useCollapseTransition() {
+    return createMixins({
+      mixins: [
+        // Popup lifecycle events depend on Transition mechanism
+        // Transition should not be disabled
+        useTransition(),
+      ],
+      beforeMount() {
+        const onBeforeEnter = async (el) => {
+          this.overflow = el.style.overflow;
+          this.paddingTop = el.style.paddingTop;
+          this.paddingBottom = el.style.paddingBottom;
+          el.style.height = '0px';
+          el.style.paddingTop = '0px';
+          el.style.paddingBottom = '0px';
+          el.style.overflow = 'hidden';
+          this.$emit('aboutToShow', el);
+        };
+        const onAfterEnter = (el) => {
+          el.style.height = '';
+          el.style.paddingTop = '';
+          el.style.paddingBottom = '';
+          el.style.animationTimingFunction = '';
+          el.style.animationFillMode = '';
+          el.style.animationDirection = '';
+          el.style.animationIterationCount = '';
+          el.style.animationName = '';
+          el.style.overflow = this.overflow;
+          this.$emit('opened');
+        };
+        const onBeforeLeave = (el) => {
+          this.overflow = el.style.overflow;
+          this.paddingTop = el.style.paddingTop;
+          this.paddingBottom = el.style.paddingBottom;
+          el.style.height = `${el.scrollHeight}px`;
+          el.style.overflow = 'hidden';
+          this.$emit('aboutToHide', el);
+        };
+        const onAfterLeave = (el) => {
+          el.style.height = '';
+          el.style.paddingTop = '';
+          el.style.paddingBottom = '';
+          el.style.animationTimingFunction = '';
+          el.style.animationFillMode = '';
+          el.style.animationDirection = '';
+          el.style.animationIterationCount = '';
+          el.style.animationName = '';
+          el.style.overflow = this.overflow;
+          el.style.paddingTop = this.paddingTop;
+          el.style.paddingBottom = this.paddingBottom;
+          this.$emit('closed');
+        };
+        const onEnter = async (el, done) => {
+          await this.$nextTick();
+          this.animation = enterAnimation(
+            el,
+            this.paddingTop,
+            this.paddingBottom
+          );
+          if (!config.getBoolean('animated', true)) {
+            this.animation.duration(0);
+          }
+          this.$emit('animation-enter', el, this.animation);
+          await this.animation.play().catch((e) => console.error(e));
+          done();
+        };
+        const onLeave = async (el, done) => {
+          await this.$nextTick();
+          this.animation = leaveAnimation(
+            el,
+            this.paddingTop,
+            this.paddingBottom
+          );
+          if (!config.getBoolean('animated', true)) {
+            this.animation.duration(0);
+          }
+          this.$emit('animation-leave', el, this.animation);
+          await this.animation.play().catch((e) => console.error(e));
+          done();
+        };
+        const onCancel = () => {
+          if (this.animation) {
+            this.animation.stop();
+            this.animation = null;
+          }
+          this.$emit('canceled');
+        };
+        this.$on('before-enter', onBeforeEnter);
+        this.$on('after-enter', onAfterEnter);
+        this.$on('before-leave', onBeforeLeave);
+        this.$on('after-leave', onAfterLeave);
+        this.$on('enter', onEnter);
+        this.$on('enter-cancelled', onCancel);
+        this.$on('leave', onLeave);
+        this.$on('leave-cancelled', onCancel);
+      },
+    });
+  }
+
   function useOptions(options, namsespace = 'options') {
     return createMixins({
       props: options.reduce(
@@ -31421,6 +31554,7 @@ var Line = (function (exports, Vue) {
     useCheckItem: useCheckItem,
     useCheckItemWithModel: useCheckItemWithModel,
     useClickOutside: useClickOutside,
+    useCollapseTransition: useCollapseTransition,
     createColorClasses: createColorClasses,
     useColor: useColor,
     useEvent: useEvent,
@@ -31447,7 +31581,7 @@ var Line = (function (exports, Vue) {
 
   const Line = {
     install,
-    version: '1.0.0-alpha.0',
+    version: '1.0.0-alpha.1',
   };
   function defaulExport() {
     // auto install for umd build
@@ -31469,7 +31603,7 @@ var Line = (function (exports, Vue) {
       directives,
       controllers,
       mixins,
-      version: '1.0.0-alpha.0',
+      version: '1.0.0-alpha.1',
     };
   }
   var index$1 = /*#__PURE__*/ defaulExport();
@@ -31602,6 +31736,7 @@ var Line = (function (exports, Vue) {
   exports.useCheckItem = useCheckItem;
   exports.useCheckItemWithModel = useCheckItemWithModel;
   exports.useClickOutside = useClickOutside;
+  exports.useCollapseTransition = useCollapseTransition;
   exports.useColor = useColor;
   exports.useEvent = useEvent;
   exports.useGroup = useGroup;

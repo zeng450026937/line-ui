@@ -1,3 +1,19 @@
+# [1.0.0-alpha.1](http://gitcode.yealink.com/server/client/web_app/line-ui/compare/v1.0.0-alpha.0...v1.0.0-alpha.1) (2020-04-09)
+
+
+### Bug Fixes
+
+* **use-event:** fix dismiss error ([2de7950](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/2de7950da2555c1fcfc9c038b091137413dd8c90))
+* **vue-cli-line:** read config from line-ui ([42e7869](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/42e786939a631216c836179ec77e372d305a1489))
+
+
+### Features
+
+* **collapse:** update collapse & add use-collapse-transition ([ace693c](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/ace693cbe4e2b132843bb1b813fe7d08657e4fed))
+* **kom:** init ([26b757e](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/26b757e62ac45dc08b024fcb38f1c8327244ec13))
+
+
+
 # 1.0.0-alpha.0 (2020-04-07)
 
 

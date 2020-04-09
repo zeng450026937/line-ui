@@ -120,7 +120,7 @@ const S = (e, t) => (t ? (e ? [e, t] : t) : e),
       : l(e)
       ? e
       : '';
-function C(e, t) {
+function $(e, t) {
   if (!t) return e;
   if (!e) return t;
   const i = { ...e };
@@ -131,7 +131,7 @@ function C(e, t) {
   }
   return i;
 }
-function $(e, t) {
+function C(e, t) {
   if (!t) return e;
   if (!e) return t;
   const i = { ...e };
@@ -147,7 +147,7 @@ function $(e, t) {
         break;
       case 'on':
       case 'nativeOn':
-        i[s] = C(n, a);
+        i[s] = $(n, a);
         break;
       default:
         i[s] = r(n) ? n.concat(a) : d(a) ? { ...n, ...a } : a;
@@ -178,10 +178,10 @@ function k(e, t = !0) {
           e.tag &&
             ((e.data = e.data || {}),
             e.data.__slotted ||
-              ((e.data = $(e.data, { class: t })), (e.data.__slotted = !0)),
+              ((e.data = C(e.data, { class: t })), (e.data.__slotted = !0)),
             i &&
               (e.data.__patched ||
-                ((e.data = $(e.data, o(i) ? i(e.data, s) : i)),
+                ((e.data = C(e.data, o(i) ? i(e.data, s) : i)),
                 (e.data.__patched = !0))));
         });
       }
@@ -573,7 +573,7 @@ class Te {
     this.release(), (this.ctrl = void 0);
   }
 }
-class Ce {
+class $e {
   constructor(e, t, i, s) {
     (this.id = t),
       (this.disable = i),
@@ -598,7 +598,7 @@ class Ce {
     this.unblock(), (this.ctrl = void 0);
   }
 }
-const $e = 'backdrop-no-scroll',
+const Ce = 'backdrop-no-scroll',
   ke = new (class {
     constructor() {
       (this.gestureId = 0),
@@ -616,7 +616,7 @@ const $e = 'backdrop-no-scroll',
       );
     }
     createBlocker(e = {}) {
-      return new Ce(this, this.newID(), e.disable, !!e.disableScroll);
+      return new $e(this, this.newID(), e.disable, !!e.disableScroll);
     }
     start(e, t, i) {
       return this.canStart(e)
@@ -656,11 +656,11 @@ const $e = 'backdrop-no-scroll',
     }
     disableScroll(e) {
       this.disabledScroll.add(e),
-        1 === this.disabledScroll.size && document.body.classList.add($e);
+        1 === this.disabledScroll.size && document.body.classList.add(Ce);
     }
     enableScroll(e) {
       this.disabledScroll.delete(e),
-        0 === this.disabledScroll.size && document.body.classList.remove($e);
+        0 === this.disabledScroll.size && document.body.classList.remove(Ce);
     }
     canStart(e) {
       return void 0 === this.capturedId && !this.isDisabled(e);
@@ -1098,8 +1098,8 @@ const Je = (e) => {
       S = 0,
       E = !1,
       T = !1,
-      C = !0,
-      $ = !1,
+      $ = !0,
+      C = !1,
       k = !0;
     const M = e,
       I = [],
@@ -1167,7 +1167,7 @@ const Je = (e) => {
           0 === S &&
             ((() => {
               le(), D.forEach((e) => e()), N.forEach((e) => e());
-              const e = C ? 1 : 0,
+              const e = $ ? 1 : 0,
                 t = y,
                 i = w,
                 s = x;
@@ -1180,8 +1180,8 @@ const Je = (e) => {
                 A.forEach((t) => t.c(e, u)),
                 (A.length = 0),
                 (k = !0),
-                C && ($ = !0),
-                (C = !0);
+                $ && (C = !0),
+                ($ = !0);
             })(),
             o && o.animationFinish()));
       },
@@ -1373,7 +1373,7 @@ const Je = (e) => {
         new Promise((t) => {
           e && e.sync && ((T = !0), q(() => (T = !1), { oneTimeCallback: !0 })),
             v || ee(),
-            $ && (V ? (te(0), ie()) : se(), ($ = !1)),
+            C && (V ? (te(0), ie()) : se(), (C = !1)),
             k && ((S = P.length + 1), (k = !1)),
             q(() => t(), { oneTimeCallback: !0 }),
             P.forEach((e) => {
@@ -1550,11 +1550,11 @@ const Je = (e) => {
           s.progressEnd(e, t, i);
         }),
         void 0 !== i && (c = i),
-        ($ = !1),
-        (C = !0),
+        (C = !1),
+        ($ = !0),
         0 === e
           ? ((d = 'reverse' === j() ? 'normal' : 'reverse'),
-            'reverse' === d && (C = !1),
+            'reverse' === d && ($ = !1),
             V ? (ae(), te(1 - t)) : ((h = (1 - t) * U() * -1), ae(!1, !1)))
           : 1 === e && (V ? (ae(), te(t)) : ((h = t * U() * -1), ae(!1, !1))),
         void 0 !== e &&
@@ -1996,7 +1996,7 @@ const St = (e) => {
       t.addElement(e).easing('ease-in-out').duration(150).addAnimation([i, s])
     );
   },
-  Ct = (e) => {
+  $t = (e) => {
     const t = it(),
       i = it(),
       s = it();
@@ -2010,8 +2010,8 @@ const St = (e) => {
       t.addElement(e).easing('ease-in-out').duration(150).addAnimation([i, s])
     );
   },
-  { createComponent: $t, bem: kt } = R('alert');
-var Mt = $t({
+  { createComponent: Ct, bem: kt } = R('alert');
+var Mt = Ct({
   mixins: [ot()],
   props: {
     header: String,
@@ -2026,7 +2026,7 @@ var Mt = $t({
       i(('md' === e ? Tt : St)(t));
     }),
       this.$on('animation-leave', (t, i) => {
-        i(('md' === e ? Ct : Et)(t));
+        i(('md' === e ? $t : Et)(t));
       });
   },
   computed: {
@@ -2829,24 +2829,24 @@ function Ti(e) {
     },
   });
 }
-function Ci(e) {
+function $i(e) {
   const { modelValue: t, itemIndex: i } = e;
   return c(t) ? t : i;
 }
-function $i(e, t) {
+function Ci(e, t) {
   return P({
     mixins: [Ti(e), U('checkedItemValue', t, !0)],
     computed: {
       checkedItemValue: {
         get() {
           const { checkedItem: e } = this;
-          return r(e) ? e.map((e) => Ci(e)) : e && Ci(e);
+          return r(e) ? e.map((e) => $i(e)) : e && $i(e);
         },
         async set(e) {
           e &&
             (await this.$nextTick(),
             this.items.forEach((t) => {
-              t.checked = Array.isArray(e) ? e.includes(Ci(t)) : Ci(t) === e;
+              t.checked = Array.isArray(e) ? e.includes($i(t)) : $i(t) === e;
             }));
         },
       },
@@ -2855,7 +2855,7 @@ function $i(e, t) {
 }
 const { createComponent: ki, bem: Mi } = R('check-box-group');
 var Ii = ki({
-  mixins: [$i('CheckBoxGroup')],
+  mixins: [Ci('CheckBoxGroup')],
   render() {
     return (0, arguments[0])('div', { class: Mi() }, [this.slots()]);
   },
@@ -4046,19 +4046,19 @@ const Es = (e, t) => {
       (n.style.transformOrigin = `${i} ${s}`);
     const E = it(),
       T = it(),
-      C = it();
+      $ = it();
     return (
       T.addElement(e.querySelector('.line-overlay')).fromTo(
         'opacity',
         0.01,
         'var(--backdrop-opacity)'
       ),
-      C.addElement(e.querySelector('.line-popover__wrapper')).fromTo(
+      $.addElement(e.querySelector('.line-popover__wrapper')).fromTo(
         'opacity',
         0.01,
         1
       ),
-      E.addElement(e).easing('ease').duration(100).addAnimation([T, C])
+      E.addElement(e).easing('ease').duration(100).addAnimation([T, $])
     );
   },
   Ts = (e) => {
@@ -4075,7 +4075,7 @@ const Es = (e, t) => {
       t.addElement(e).easing('ease').duration(500).addAnimation([i, s])
     );
   },
-  Cs = (e, t) => {
+  $s = (e, t) => {
     const i = e.ownerDocument,
       s = 'rtl' === i.dir;
     let n = 'top',
@@ -4136,7 +4136,7 @@ const Es = (e, t) => {
         .addAnimation([v, b, y, w])
     );
   },
-  $s = (e) => {
+  Cs = (e) => {
     const t = it(),
       i = it(),
       s = it();
@@ -4156,10 +4156,10 @@ var Is = ks({
   beforeMount() {
     const { mode: e } = this;
     this.$on('animation-enter', (t, i) => {
-      i(('md' === e ? Cs : Es)(t, this.event));
+      i(('md' === e ? $s : Es)(t, this.event));
     }),
       this.$on('animation-leave', (t, i) => {
-        i(('md' === e ? $s : Ts)(t));
+        i(('md' === e ? Cs : Ts)(t));
       });
   },
   methods: {
@@ -4689,10 +4689,10 @@ function Sn(e) {
 var En =
     'Popper: modifier "%s" provided an invalid %s property, expected %s but got %s',
   Tn = ['name', 'enabled', 'phase', 'fn', 'effect', 'requires', 'options'];
-function Cn(e) {
+function $n(e) {
   return e.split('-')[0];
 }
-var $n =
+var Cn =
     'Popper: Invalid reference or popper argument provided. They must be either a DOM element or virtual element.',
   kn = { placement: 'bottom', modifiers: [], strategy: 'absolute' };
 function Mn() {
@@ -4901,7 +4901,7 @@ function In(e) {
                   if (!d.has(t)) return d.add(t), !0;
                 }))
               ),
-              'auto' === Cn(o.options.placement))
+              'auto' === $n(o.options.placement))
             )
               o.orderedModifiers.find(function (e) {
                 return 'flip' === e.name;
@@ -4981,7 +4981,7 @@ function In(e) {
                       }) || o);
                 } else (o.reset = !1), (n = -1);
               }
-            } else 'production' !== process.env.NODE_ENV && console.error($n);
+            } else 'production' !== process.env.NODE_ENV && console.error(Cn);
           }
         },
         update:
@@ -5006,7 +5006,7 @@ function In(e) {
         },
       };
     if (!Mn(e, t))
-      return 'production' !== process.env.NODE_ENV && console.error($n), c;
+      return 'production' !== process.env.NODE_ENV && console.error(Cn), c;
     function h() {
       l.forEach(function (e) {
         return e();
@@ -5033,7 +5033,7 @@ function Ln(e) {
     i = e.reference,
     s = e.element,
     n = e.placement,
-    a = n ? Cn(n) : null,
+    a = n ? $n(n) : null,
     r = n ? On(n) : null,
     o = i.x + i.width / 2 - s.width / 2,
     l = i.y + i.height / 2 - s.height / 2;
@@ -5279,11 +5279,11 @@ function _n(e, t) {
     },
     T = e.modifiersData.offset;
   if ('popper' === d && T) {
-    var C = T[s];
+    var $ = T[s];
     Object.keys(E).forEach(function (e) {
       var t = [fn, mn].indexOf(e) >= 0 ? 1 : -1,
         i = [un, mn].indexOf(e) >= 0 ? 'y' : 'x';
-      E[e] += C[i] * t;
+      E[e] += $[i] * t;
     });
   }
   return E;
@@ -5389,7 +5389,7 @@ var Zn = In({
             );
         }
         var l = {
-          placement: Cn(t.placement),
+          placement: $n(t.placement),
           popper: t.elements.popper,
           popperRect: t.rects.popper,
           gpuAcceleration: n,
@@ -5490,7 +5490,7 @@ var Zn = In({
           a = yn.reduce(function (e, i) {
             return (
               (e[i] = (function (e, t, i) {
-                var s = Cn(e),
+                var s = $n(e),
                   n = [gn, un].indexOf(s) >= 0 ? -1 : 1,
                   a =
                     'function' == typeof i
@@ -5532,19 +5532,19 @@ var Zn = In({
               d = i.flipVariations,
               c = void 0 === d || d,
               h = t.options.placement,
-              p = Cn(h),
+              p = $n(h),
               u =
                 n ||
                 (p === h || !c
                   ? [Nn(h)]
                   : (function (e) {
-                      if ('auto' === Cn(e)) return [];
+                      if ('auto' === $n(e)) return [];
                       var t = Nn(e);
                       return [Rn(e), t, Rn(t)];
                     })(h)),
               m = [h].concat(u).reduce(function (e, i) {
                 return e.concat(
-                  'auto' === Cn(i)
+                  'auto' === $n(i)
                     ? (function (e, t) {
                         void 0 === t && (t = {});
                         var i = t.boundary,
@@ -5566,7 +5566,7 @@ var Zn = In({
                                 boundary: i,
                                 rootBoundary: s,
                                 padding: n,
-                              })[Cn(a)]),
+                              })[$n(a)]),
                               t
                             );
                           }, {});
@@ -5593,11 +5593,11 @@ var Zn = In({
             w++
           ) {
             var x = m[w],
-              S = Cn(x),
+              S = $n(x),
               E = 'start' === On(x),
               T = [un, mn].indexOf(S) >= 0,
-              C = T ? 'width' : 'height',
-              $ = _n(t, {
+              $ = T ? 'width' : 'height',
+              C = _n(t, {
                 placement: x,
                 boundary: r,
                 rootBoundary: o,
@@ -5605,9 +5605,9 @@ var Zn = In({
                 padding: a,
               }),
               k = T ? (E ? fn : gn) : E ? mn : un;
-            f[C] > g[C] && (k = Nn(k));
+            f[$] > g[$] && (k = Nn(k));
             var M = Nn(k),
-              I = [$[S] <= 0, $[k] <= 0, $[M] <= 0];
+              I = [C[S] <= 0, C[k] <= 0, C[M] <= 0];
             if (
               I.every(function (e) {
                 return e;
@@ -5667,7 +5667,7 @@ var Zn = In({
             padding: i.padding,
             altBoundary: i.altBoundary,
           }),
-          u = Cn(t.placement),
+          u = $n(t.placement),
           m = On(t.placement),
           f = !m,
           g = Pn(u),
@@ -5683,13 +5683,13 @@ var Zn = In({
         if (a) {
           var E = 'y' === g ? un : gn,
             T = 'y' === g ? mn : fn,
-            C = 'y' === g ? 'height' : 'width',
-            $ = b[g],
+            $ = 'y' === g ? 'height' : 'width',
+            C = b[g],
             k = b[g] + p[E],
             M = b[g] - p[T],
-            I = d ? -w[C] / 2 : 0,
-            A = 'start' === m ? y[C] : w[C],
-            O = 'start' === m ? -w[C] : -y[C],
+            I = d ? -w[$] / 2 : 0,
+            A = 'start' === m ? y[$] : w[$],
+            O = 'start' === m ? -w[$] : -y[$],
             P = t.elements.arrow,
             L = d && P ? rn(P) : { width: 0, height: 0 },
             z = t.modifiersData['arrow#persistent']
@@ -5697,9 +5697,9 @@ var Zn = In({
               : { top: 0, right: 0, bottom: 0, left: 0 },
             B = z[E],
             D = z[T],
-            N = Un(0, y[C], L[C]),
-            H = f ? y[C] / 2 - I - N - B - x : A - N - B - x,
-            R = f ? -y[C] / 2 + I + N + D + x : O + N + D + x,
+            N = Un(0, y[$], L[$]),
+            H = f ? y[$] / 2 - I - N - B - x : A - N - B - x,
+            R = f ? -y[$] / 2 + I + N + D + x : O + N + D + x,
             V = t.elements.arrow && pn(t.elements.arrow),
             Y = t.modifiersData.offset
               ? t.modifiersData.offset[t.placement][g]
@@ -5719,10 +5719,10 @@ var Zn = In({
                         : 0)
                   )
                 : k,
-              $,
+              C,
               d ? Math.max(M, q) : M
             );
-          (b[g] = F), (S[g] = F - $);
+          (b[g] = F), (S[g] = F - C);
         }
         if (o) {
           var G = b[v],
@@ -5743,7 +5743,7 @@ var Zn = In({
           s = e.name,
           n = i.elements.arrow,
           a = i.modifiersData.popperOffsets,
-          r = Cn(i.placement),
+          r = $n(i.placement),
           o = Pn(r),
           l = [gn, fn].indexOf(r) >= 0 ? 'height' : 'width';
         if (n) {
@@ -6139,7 +6139,7 @@ const ga = (e, t, i, s) => {
     else for (const t in e) e.hasOwnProperty(t) && delete e[t];
     return e;
   },
-  Ca = (e, t) =>
+  $a = (e, t) =>
     t === Ja || t === Za
       ? e.hour < 12
         ? 'am'
@@ -6150,8 +6150,8 @@ const ga = (e, t, i, s) => {
         : 0 === e.hour
         ? 12
         : e.hour
-      : e[$a(t)],
-  $a = (e) => {
+      : e[Ca(t)],
+  Ca = (e) => {
     for (const t in Qa) if (Qa[t].f === e) return Qa[t].k;
   },
   ka = (e) => {
@@ -6472,7 +6472,7 @@ var lr = ar({
             t
           );
         })(e).map((e) => {
-          const t = $a(e);
+          const t = Ca(e);
           let i;
           i = this[`${t}Values`]
             ? Ia(this[`${t}Values`])
@@ -6507,10 +6507,10 @@ var lr = ar({
               text: ga(e, t, void 0, this.locale),
             })),
             n = ((e, t) => {
-              const i = Ca(e, t);
+              const i = $a(e, t);
               if (void 0 !== i) return i;
               const s = Sa(new Date().toISOString());
-              return Ca(s, t);
+              return $a(s, t);
             })(this.datetimeValue, e),
             a = s.findIndex((e) => e.value === n);
           return { name: t, selectedIndex: a >= 0 ? a : 0, options: s };
@@ -6752,14 +6752,15 @@ function dr(e) {
       const { $el: s } = this,
         n = i ? pe(s) : s,
         a = ((o = t), r(o) ? o : [o]).map((t) => {
-          let i = !1;
+          let i;
           const s = () => (i = !0);
           return ie(
             n,
             t,
             (e) => {
-              this.$emit('event-condition', { ev: e, name: t, prevent: s }),
-                i && this.$emit('event-handler', e, t);
+              (i = !1),
+                this.$emit('event-condition', { ev: e, name: t, prevent: s }),
+                i || this.$emit('event-handler', e, t);
             },
             e
           );
@@ -7001,12 +7002,12 @@ var Er = xr({
     );
   },
 });
-const { createComponent: Tr, bem: Cr } = R('grid');
-var $r = Tr({
+const { createComponent: Tr, bem: $r } = R('grid');
+var Cr = Tr({
   functional: !0,
   props: { fixed: Boolean },
   render: (e, { props: t, data: i, slots: s }) =>
-    e('div', b([{ class: Cr({ fixed: t.fixed }) }, i]), [s()]),
+    e('div', b([{ class: $r({ fixed: t.fixed }) }, i]), [s()]),
 });
 const { createComponent: kr, bem: Mr } = R('header');
 var Ir = kr({
@@ -7039,7 +7040,7 @@ var Ir = kr({
 });
 const { createComponent: Ar, bem: Or } = R('check-group');
 var Pr = Ar({
-  mixins: [$i('Group')],
+  mixins: [Ci('Group')],
   render() {
     return (0, arguments[0])('div', { class: Or() }, [this.slots()]);
   },
@@ -7826,7 +7827,7 @@ var So = wo({
   },
 });
 const { createComponent: Eo, bem: To } = R('item-options');
-var Co = Eo({
+var $o = Eo({
   inject: { ItemSliding: { default: void 0 } },
   props: { side: { type: String, default: 'end' } },
   methods: {
@@ -7858,7 +7859,7 @@ var Co = Eo({
     ]);
   },
 });
-const { createComponent: $o, bem: ko } = R('item-sliding');
+const { createComponent: Co, bem: ko } = R('item-sliding');
 let Mo;
 const Io = (e) => {
   const t = 'rtl' === document.dir;
@@ -7873,7 +7874,7 @@ const Io = (e) => {
       );
   }
 };
-var Ao = $o({
+var Ao = Co({
   provide() {
     return { ItemSliding: this };
   },
@@ -9447,7 +9448,7 @@ var wl = fl({
 });
 const { createComponent: xl, bem: Sl } = R('radio-group');
 var El = xl({
-  mixins: [$i('RadioGroup')],
+  mixins: [Ci('RadioGroup')],
   props: { exclusive: { type: Boolean, default: !0 } },
   render() {
     return (0, arguments[0])(
@@ -9457,14 +9458,14 @@ var El = xl({
     );
   },
 });
-const { createComponent: Tl, bem: Cl } = R('radio-indicator');
-var $l = Tl({
+const { createComponent: Tl, bem: $l } = R('radio-indicator');
+var Cl = Tl({
   functional: !0,
   props: { checked: Boolean, disabled: Boolean },
   render(e, { props: t, data: i }) {
     const { checked: s, disabled: n } = t;
-    return e('div', b([{ class: Cl({ checked: s, disabled: n }) }, i]), [
-      e('div', { class: Cl('inner') }),
+    return e('div', b([{ class: $l({ checked: s, disabled: n }) }, i]), [
+      e('div', { class: $l('inner') }),
     ]);
   },
 });
@@ -9519,7 +9520,7 @@ var Il = kl({
         { on: this.$listeners },
       ]),
       [
-        e($l, { attrs: { checked: t, disabled: i } }),
+        e(Cl, { attrs: { checked: t, disabled: i } }),
         this.slots(),
         e('button', { attrs: { type: 'button', disabled: i } }),
       ]
@@ -10714,7 +10715,7 @@ var cd = ld({
 });
 const { createComponent: hd, bem: pd } = R('segment');
 var ud = hd({
-  mixins: [$i('Segment'), Gt()],
+  mixins: [Ci('Segment'), Gt()],
   inject: { Item: { default: void 0 } },
   props: {
     disabled: Boolean,
@@ -11086,17 +11087,17 @@ var Sd = wd({
           clearTimeout: function () {},
         }
       : window;
-class Cd {
+class $d {
   constructor(e) {
     const t = this;
     for (let i = 0; i < e.length; i += 1) t[i] = e[i];
     return (t.length = e.length), this;
   }
 }
-function $d(e, t) {
+function Cd(e, t) {
   const i = [];
   let s = 0;
-  if (e && !t && e instanceof Cd) return e;
+  if (e && !t && e instanceof $d) return e;
   if (e)
     if ('string' == typeof e) {
       let n, a;
@@ -11130,14 +11131,14 @@ function $d(e, t) {
     } else if (e.nodeType || e === Td || e === Ed) i.push(e);
     else if (e.length > 0 && e[0].nodeType)
       for (s = 0; s < e.length; s += 1) i.push(e[s]);
-  return new Cd(i);
+  return new $d(i);
 }
 function kd(e) {
   const t = [];
   for (let i = 0; i < e.length; i += 1) -1 === t.indexOf(e[i]) && t.push(e[i]);
   return t;
 }
-($d.fn = Cd.prototype), ($d.Class = Cd), ($d.Dom7 = Cd);
+(Cd.fn = $d.prototype), (Cd.Class = $d), (Cd.Dom7 = $d);
 const Md = {
   addClass: function (e) {
     if (void 0 === e) return this;
@@ -11220,11 +11221,11 @@ const Md = {
       const t = e.target;
       if (!t) return;
       const n = e.target.dom7EventData || [];
-      if ((n.indexOf(e) < 0 && n.unshift(e), $d(t).is(i))) s.apply(t, n);
+      if ((n.indexOf(e) < 0 && n.unshift(e), Cd(t).is(i))) s.apply(t, n);
       else {
-        const e = $d(t).parents();
+        const e = Cd(t).parents();
         for (let t = 0; t < e.length; t += 1)
-          $d(e[t]).is(i) && s.apply(e[t], n);
+          Cd(e[t]).is(i) && s.apply(e[t], n);
       }
     }
     function r(e) {
@@ -11404,12 +11405,12 @@ const Md = {
       if (t.matches) return t.matches(e);
       if (t.webkitMatchesSelector) return t.webkitMatchesSelector(e);
       if (t.msMatchesSelector) return t.msMatchesSelector(e);
-      for (i = $d(e), s = 0; s < i.length; s += 1) if (i[s] === t) return !0;
+      for (i = Cd(e), s = 0; s < i.length; s += 1) if (i[s] === t) return !0;
       return !1;
     }
     if (e === Ed) return t === Ed;
     if (e === Td) return t === Td;
-    if (e.nodeType || e instanceof Cd) {
+    if (e.nodeType || e instanceof $d) {
       for (i = e.nodeType ? [e] : e, s = 0; s < i.length; s += 1)
         if (i[s] === t) return !0;
       return !1;
@@ -11430,10 +11431,10 @@ const Md = {
     const t = this.length;
     let i;
     return e > t - 1
-      ? new Cd([])
+      ? new $d([])
       : e < 0
-      ? ((i = t + e), new Cd(i < 0 ? [] : [this[i]]))
-      : new Cd([this[e]]);
+      ? ((i = t + e), new $d(i < 0 ? [] : [this[i]]))
+      : new $d([this[e]]);
   },
   append: function (...e) {
     let t;
@@ -11444,7 +11445,7 @@ const Md = {
           const i = Ed.createElement('div');
           for (i.innerHTML = t; i.firstChild; )
             this[e].appendChild(i.firstChild);
-        } else if (t instanceof Cd)
+        } else if (t instanceof $d)
           for (let i = 0; i < t.length; i += 1) this[e].appendChild(t[i]);
         else this[e].appendChild(t);
     }
@@ -11457,7 +11458,7 @@ const Md = {
         const s = Ed.createElement('div');
         for (s.innerHTML = e, i = s.childNodes.length - 1; i >= 0; i -= 1)
           this[t].insertBefore(s.childNodes[i], this[t].childNodes[0]);
-      } else if (e instanceof Cd)
+      } else if (e instanceof $d)
         for (i = 0; i < e.length; i += 1)
           this[t].insertBefore(e[i], this[t].childNodes[0]);
       else this[t].insertBefore(e, this[t].childNodes[0]);
@@ -11466,63 +11467,63 @@ const Md = {
   next: function (e) {
     return this.length > 0
       ? e
-        ? this[0].nextElementSibling && $d(this[0].nextElementSibling).is(e)
-          ? new Cd([this[0].nextElementSibling])
-          : new Cd([])
-        : new Cd(this[0].nextElementSibling ? [this[0].nextElementSibling] : [])
-      : new Cd([]);
+        ? this[0].nextElementSibling && Cd(this[0].nextElementSibling).is(e)
+          ? new $d([this[0].nextElementSibling])
+          : new $d([])
+        : new $d(this[0].nextElementSibling ? [this[0].nextElementSibling] : [])
+      : new $d([]);
   },
   nextAll: function (e) {
     const t = [];
     let i = this[0];
-    if (!i) return new Cd([]);
+    if (!i) return new $d([]);
     for (; i.nextElementSibling; ) {
       const s = i.nextElementSibling;
-      e ? $d(s).is(e) && t.push(s) : t.push(s), (i = s);
+      e ? Cd(s).is(e) && t.push(s) : t.push(s), (i = s);
     }
-    return new Cd(t);
+    return new $d(t);
   },
   prev: function (e) {
     if (this.length > 0) {
       const t = this[0];
       return e
-        ? t.previousElementSibling && $d(t.previousElementSibling).is(e)
-          ? new Cd([t.previousElementSibling])
-          : new Cd([])
-        : new Cd(t.previousElementSibling ? [t.previousElementSibling] : []);
+        ? t.previousElementSibling && Cd(t.previousElementSibling).is(e)
+          ? new $d([t.previousElementSibling])
+          : new $d([])
+        : new $d(t.previousElementSibling ? [t.previousElementSibling] : []);
     }
-    return new Cd([]);
+    return new $d([]);
   },
   prevAll: function (e) {
     const t = [];
     let i = this[0];
-    if (!i) return new Cd([]);
+    if (!i) return new $d([]);
     for (; i.previousElementSibling; ) {
       const s = i.previousElementSibling;
-      e ? $d(s).is(e) && t.push(s) : t.push(s), (i = s);
+      e ? Cd(s).is(e) && t.push(s) : t.push(s), (i = s);
     }
-    return new Cd(t);
+    return new $d(t);
   },
   parent: function (e) {
     const t = [];
     for (let i = 0; i < this.length; i += 1)
       null !== this[i].parentNode &&
         (e
-          ? $d(this[i].parentNode).is(e) && t.push(this[i].parentNode)
+          ? Cd(this[i].parentNode).is(e) && t.push(this[i].parentNode)
           : t.push(this[i].parentNode));
-    return $d(kd(t));
+    return Cd(kd(t));
   },
   parents: function (e) {
     const t = [];
     for (let i = 0; i < this.length; i += 1) {
       let s = this[i].parentNode;
-      for (; s; ) e ? $d(s).is(e) && t.push(s) : t.push(s), (s = s.parentNode);
+      for (; s; ) e ? Cd(s).is(e) && t.push(s) : t.push(s), (s = s.parentNode);
     }
-    return $d(kd(t));
+    return Cd(kd(t));
   },
   closest: function (e) {
     let t = this;
-    return void 0 === e ? new Cd([]) : (t.is(e) || (t = t.parents(e).eq(0)), t);
+    return void 0 === e ? new $d([]) : (t.is(e) || (t = t.parents(e).eq(0)), t);
   },
   find: function (e) {
     const t = [];
@@ -11530,7 +11531,7 @@ const Md = {
       const s = this[i].querySelectorAll(e);
       for (let e = 0; e < s.length; e += 1) t.push(s[e]);
     }
-    return new Cd(t);
+    return new $d(t);
   },
   children: function (e) {
     const t = [];
@@ -11538,16 +11539,16 @@ const Md = {
       const s = this[i].childNodes;
       for (let i = 0; i < s.length; i += 1)
         e
-          ? 1 === s[i].nodeType && $d(s[i]).is(e) && t.push(s[i])
+          ? 1 === s[i].nodeType && Cd(s[i]).is(e) && t.push(s[i])
           : 1 === s[i].nodeType && t.push(s[i]);
     }
-    return new Cd(kd(t));
+    return new $d(kd(t));
   },
   filter: function (e) {
     const t = [],
       i = this;
     for (let s = 0; s < i.length; s += 1) e.call(i[s], s, i[s]) && t.push(i[s]);
-    return new Cd(t);
+    return new $d(t);
   },
   remove: function () {
     for (let e = 0; e < this.length; e += 1)
@@ -11558,7 +11559,7 @@ const Md = {
     const t = this;
     let i, s;
     for (i = 0; i < e.length; i += 1) {
-      const n = $d(e[i]);
+      const n = Cd(e[i]);
       for (s = 0; s < n.length; s += 1) (t[t.length] = n[s]), (t.length += 1);
     }
     return t;
@@ -11568,7 +11569,7 @@ const Md = {
   },
 };
 Object.keys(Md).forEach((e) => {
-  $d.fn[e] = $d.fn[e] || Md[e];
+  Cd.fn[e] = Cd.fn[e] || Md[e];
 });
 const Id = {
     deleteProps(e) {
@@ -11885,8 +11886,8 @@ var Pd = {
           'row' === t.slidesPerColumnFill &&
           (b = Math.max(b, t.slidesPerView * t.slidesPerColumn)));
     const T = t.slidesPerColumn,
-      C = b / T,
-      $ = Math.floor(d / t.slidesPerColumn);
+      $ = b / T,
+      C = Math.floor(d / t.slidesPerColumn);
     for (let i = 0; i < d; i += 1) {
       y = 0;
       const n = l.eq(i);
@@ -11916,9 +11917,9 @@ var Pd = {
           'column' === t.slidesPerColumnFill
             ? ((a = Math.floor(i / T)),
               (r = i - a * T),
-              (a > $ || (a === $ && r === T - 1)) &&
+              (a > C || (a === C && r === T - 1)) &&
                 ((r += 1), r >= T && ((r = 0), (a += 1))))
-            : ((r = Math.floor(i / C)), (a = i - r * C));
+            : ((r = Math.floor(i / $)), (a = i - r * $));
         n.css(
           `margin-${e.isHorizontal() ? 'top' : 'left'}`,
           0 !== r && t.spaceBetween && `${t.spaceBetween}px`
@@ -12131,7 +12132,7 @@ var Pd = {
       }
       r.progress = n ? -o : o;
     }
-    t.visibleSlides = $d(t.visibleSlides);
+    t.visibleSlides = Cd(t.visibleSlides);
   },
   updateProgress: function (e) {
     const t = this;
@@ -12269,7 +12270,7 @@ var Pd = {
   updateClickedSlide: function (e) {
     const t = this,
       i = t.params,
-      s = $d(e.target).closest(`.${i.slideClass}`)[0];
+      s = Cd(e.target).closest(`.${i.slideClass}`)[0];
     let n = !1;
     if (s)
       for (let e = 0; e < t.slides.length; e += 1)
@@ -12279,8 +12280,8 @@ var Pd = {
     (t.clickedSlide = s),
       (t.clickedIndex =
         t.virtual && t.params.virtual.enabled
-          ? parseInt($d(s).attr('data-swiper-slide-index'), 10)
-          : $d(s).index()),
+          ? parseInt(Cd(s).attr('data-swiper-slide-index'), 10)
+          : Cd(s).index()),
       i.slideToClickedSlide &&
         void 0 !== t.clickedIndex &&
         t.clickedIndex !== t.activeIndex &&
@@ -12614,7 +12615,7 @@ var Bd = {
       a = e.clickedIndex;
     if (t.loop) {
       if (e.animating) return;
-      (n = parseInt($d(e.clickedSlide).attr('data-swiper-slide-index'), 10)),
+      (n = parseInt(Cd(e.clickedSlide).attr('data-swiper-slide-index'), 10)),
         t.centeredSlides
           ? a < e.loopedSlides - s / 2 ||
             a > e.slides.length - e.loopedSlides + s / 2
@@ -12654,7 +12655,7 @@ var Dd = {
       const e = t.slidesPerGroup - (s.length % t.slidesPerGroup);
       if (e !== t.slidesPerGroup) {
         for (let s = 0; s < e; s += 1) {
-          const e = $d(Ed.createElement('div')).addClass(
+          const e = Cd(Ed.createElement('div')).addClass(
             `${t.slideClass} ${t.slideBlankClass}`
           );
           i.append(e);
@@ -12671,15 +12672,15 @@ var Dd = {
     const n = [],
       a = [];
     s.each((t, i) => {
-      const r = $d(i);
+      const r = Cd(i);
       t < e.loopedSlides && a.push(i),
         t < s.length && t >= s.length - e.loopedSlides && n.push(i),
         r.attr('data-swiper-slide-index', t);
     });
     for (let e = 0; e < a.length; e += 1)
-      i.append($d(a[e].cloneNode(!0)).addClass(t.slideDuplicateClass));
+      i.append(Cd(a[e].cloneNode(!0)).addClass(t.slideDuplicateClass));
     for (let e = n.length - 1; e >= 0; e -= 1)
-      i.prepend($d(n[e].cloneNode(!0)).addClass(t.slideDuplicateClass));
+      i.prepend(Cd(n[e].cloneNode(!0)).addClass(t.slideDuplicateClass));
   },
   loopFix: function () {
     const e = this;
@@ -12906,7 +12907,7 @@ function Vd(e) {
   if (t.animating && s.preventInteractionOnTransition) return;
   let a = e;
   a.originalEvent && (a = a.originalEvent);
-  const r = $d(a.target);
+  const r = Cd(a.target);
   if ('wrapper' === s.touchEventsTarget && !r.closest(t.wrapperEl).length)
     return;
   if (
@@ -12953,7 +12954,7 @@ function Vd(e) {
       let e = !0;
       r.is(i.formElements) && (e = !1),
         Ed.activeElement &&
-          $d(Ed.activeElement).is(i.formElements) &&
+          Cd(Ed.activeElement).is(i.formElements) &&
           Ed.activeElement !== r[0] &&
           Ed.activeElement.blur();
       const n = e && t.allowTouchMove && s.touchStartPreventDefault;
@@ -13006,7 +13007,7 @@ function Yd(e) {
     i.isTouchEvent &&
     Ed.activeElement &&
     r.target === Ed.activeElement &&
-    $d(r.target).is(i.formElements)
+    Cd(r.target).is(i.formElements)
   )
     return (i.isMoved = !0), void (t.allowClick = !1);
   if (
@@ -13756,8 +13757,8 @@ class Jd extends Od {
       (s.params = Id.extend({}, n, Kd, i)),
       (s.originalParams = Id.extend({}, s.params)),
       (s.passedParams = Id.extend({}, i)),
-      (s.$ = $d);
-    const a = $d(s.params.el);
+      (s.$ = Cd);
+    const a = Cd(s.params.el);
     if (((t = a[0]), !t)) return;
     if (a.length > 1) {
       const e = [];
@@ -13774,7 +13775,7 @@ class Jd extends Od {
       (t.swiper = s),
       a.data('swiper', s),
       t && t.shadowRoot && t.shadowRoot.querySelector
-        ? ((r = $d(t.shadowRoot.querySelector(`.${s.params.wrapperClass}`))),
+        ? ((r = Cd(t.shadowRoot.querySelector(`.${s.params.wrapperClass}`))),
           (r.children = (e) => a.children(e)))
         : (r = a.children(`.${s.params.wrapperClass}`)),
       Id.extend(s, {
@@ -13783,7 +13784,7 @@ class Jd extends Od {
         $wrapperEl: r,
         wrapperEl: r[0],
         classNames: [],
-        slides: $d(),
+        slides: Cd(),
         slidesGrid: [],
         snapGrid: [],
         slidesSizesGrid: [],
@@ -14005,7 +14006,7 @@ class Jd extends Od {
     return Od;
   }
   static get $() {
-    return $d;
+    return Cd;
   }
 }
 var Zd = { name: 'device', proto: { device: Rd }, static: { device: Rd } },
@@ -14206,7 +14207,7 @@ const ac = {
     const i = this,
       s = i.params.virtual;
     if (s.cache && i.virtual.cache[t]) return i.virtual.cache[t];
-    const n = $d(
+    const n = Cd(
       s.renderSlide
         ? s.renderSlide.call(i, e, t)
         : `<div class="${i.params.slideClass}" data-swiper-slide-index="${t}">${e}</div>`
@@ -14389,12 +14390,12 @@ const oc = {
   },
   enable() {
     this.keyboard.enabled ||
-      ($d(Ed).on('keydown', this.keyboard.handle),
+      (Cd(Ed).on('keydown', this.keyboard.handle),
       (this.keyboard.enabled = !0));
   },
   disable() {
     this.keyboard.enabled &&
-      ($d(Ed).off('keydown', this.keyboard.handle),
+      (Cd(Ed).off('keydown', this.keyboard.handle),
       (this.keyboard.enabled = !1));
   },
 };
@@ -14485,7 +14486,7 @@ const dc = {
     let n = i.$el;
     if (
       ('container' !== i.params.mousewheel.eventsTarged &&
-        (n = $d(i.params.mousewheel.eventsTarged)),
+        (n = Cd(i.params.mousewheel.eventsTarged)),
       !i.mouseEntered && !n[0].contains(t.target) && !s.releaseOnEdges)
     )
       return !0;
@@ -14622,7 +14623,7 @@ const dc = {
     let i = e.$el;
     return (
       'container' !== e.params.mousewheel.eventsTarged &&
-        (i = $d(e.params.mousewheel.eventsTarged)),
+        (i = Cd(e.params.mousewheel.eventsTarged)),
       i.on('mouseenter', e.mousewheel.handleMouseEnter),
       i.on('mouseleave', e.mousewheel.handleMouseLeave),
       i.on(t, e.mousewheel.handle),
@@ -14640,7 +14641,7 @@ const dc = {
     let i = e.$el;
     return (
       'container' !== e.params.mousewheel.eventsTarged &&
-        (i = $d(e.params.mousewheel.eventsTarged)),
+        (i = Cd(e.params.mousewheel.eventsTarged)),
       i.off(t, e.mousewheel.handle),
       (e.mousewheel.enabled = !1),
       !0
@@ -14681,14 +14682,14 @@ const cc = {
     if (!t.nextEl && !t.prevEl) return;
     let i, s;
     t.nextEl &&
-      ((i = $d(t.nextEl)),
+      ((i = Cd(t.nextEl)),
       e.params.uniqueNavElements &&
         'string' == typeof t.nextEl &&
         i.length > 1 &&
         1 === e.$el.find(t.nextEl).length &&
         (i = e.$el.find(t.nextEl))),
       t.prevEl &&
-        ((s = $d(t.prevEl)),
+        ((s = Cd(t.prevEl)),
         e.params.uniqueNavElements &&
           'string' == typeof t.prevEl &&
           s.length > 1 &&
@@ -14777,7 +14778,7 @@ const hc = {
         n.length > 1)
       )
         s.each((e, t) => {
-          const s = $d(t),
+          const s = Cd(t),
             n = s.index();
           n === a && s.addClass(i.bulletActiveClass),
             i.dynamicBullets &&
@@ -14920,7 +14921,7 @@ const hc = {
     const e = this,
       t = e.params.pagination;
     if (!t.el) return;
-    let i = $d(t.el);
+    let i = Cd(t.el);
     0 !== i.length &&
       (e.params.uniqueNavElements &&
         'string' == typeof t.el &&
@@ -14940,7 +14941,7 @@ const hc = {
       t.clickable &&
         i.on('click', `.${t.bulletClass}`, function (t) {
           t.preventDefault();
-          let i = $d(this).index() * e.params.slidesPerGroup;
+          let i = Cd(this).index() * e.params.slidesPerGroup;
           e.params.loop && (i += e.loopedSlides), e.slideTo(i);
         }),
       Id.extend(e.pagination, { $el: i, el: i[0] }));
@@ -15151,7 +15152,7 @@ const pc = {
     if (!e.params.scrollbar.el) return;
     const { scrollbar: t, $el: i } = e,
       s = e.params.scrollbar;
-    let n = $d(s.el);
+    let n = Cd(s.el);
     e.params.uniqueNavElements &&
       'string' == typeof s.el &&
       n.length > 1 &&
@@ -15159,7 +15160,7 @@ const pc = {
       (n = i.find(s.el));
     let a = n.find(`.${e.params.scrollbar.dragClass}`);
     0 === a.length &&
-      ((a = $d(`<div class="${e.params.scrollbar.dragClass}"></div>`)),
+      ((a = Cd(`<div class="${e.params.scrollbar.dragClass}"></div>`)),
       n.append(a)),
       Id.extend(t, { $el: n, el: n[0], $dragEl: a, dragEl: a[0] }),
       s.draggable && t.enableDraggable();
@@ -15171,7 +15172,7 @@ const pc = {
 const uc = {
   setTransform(e, t) {
     const { rtl: i } = this,
-      s = $d(e),
+      s = Cd(e),
       n = i ? -1 : 1,
       a = s.attr('data-swiper-parallax') || '0';
     let r = s.attr('data-swiper-parallax-x'),
@@ -15214,7 +15215,7 @@ const uc = {
           'auto' !== e.params.slidesPerView &&
           (a += Math.ceil(t / 2) - s * (n.length - 1)),
           (a = Math.min(Math.max(a, -1), 1)),
-          $d(i)
+          Cd(i)
             .find(
               '[data-swiper-parallax], [data-swiper-parallax-x], [data-swiper-parallax-y], [data-swiper-parallax-opacity], [data-swiper-parallax-scale]'
             )
@@ -15228,7 +15229,7 @@ const uc = {
     t.find(
       '[data-swiper-parallax], [data-swiper-parallax-x], [data-swiper-parallax-y], [data-swiper-parallax-opacity], [data-swiper-parallax-scale]'
     ).each((t, i) => {
-      const s = $d(i);
+      const s = Cd(i);
       let n = parseInt(s.attr('data-swiper-parallax-duration'), 10) || e;
       0 === e && (n = 0), s.transition(n);
     });
@@ -15259,7 +15260,7 @@ const mc = {
         (n.scaleStart = mc.getDistanceBetweenTouches(e));
     }
     (n.$slideEl && n.$slideEl.length) ||
-    ((n.$slideEl = $d(e.target).closest(`.${t.params.slideClass}`)),
+    ((n.$slideEl = Cd(e.target).closest(`.${t.params.slideClass}`)),
     0 === n.$slideEl.length && (n.$slideEl = t.slides.eq(t.activeIndex)),
     (n.$imageEl = n.$slideEl.find(
       'img, svg, canvas, picture, .swiper-zoom-target'
@@ -15603,7 +15604,7 @@ const fc = {
       (a = a.add(n[0])),
       0 !== a.length &&
         a.each((e, a) => {
-          const r = $d(a);
+          const r = Cd(a);
           r.addClass(s.loadingClass);
           const o = r.attr('data-background'),
             l = r.attr('data-src'),
@@ -15658,7 +15659,7 @@ const fc = {
       return !1;
     }
     function d(e) {
-      return a ? $d(e).attr('data-swiper-slide-index') : $d(e).index();
+      return a ? Cd(e).attr('data-swiper-slide-index') : Cd(e).index();
     }
     if (
       ('auto' === o && (o = 0),
@@ -15666,7 +15667,7 @@ const fc = {
       e.params.watchSlidesVisibility)
     )
       t.children(`.${i.slideVisibleClass}`).each((t, i) => {
-        const s = a ? $d(i).attr('data-swiper-slide-index') : $d(i).index();
+        const s = a ? Cd(i).attr('data-swiper-slide-index') : Cd(i).index();
         e.lazy.loadInSlide(s);
       });
     else if (o > 1)
@@ -15783,7 +15784,7 @@ const vc = {
     const t = this,
       i = t.params.a11y;
     if (13 !== e.keyCode) return;
-    const s = $d(e.target);
+    const s = Cd(e.target);
     t.navigation &&
       t.navigation.$nextEl &&
       s.is(t.navigation.$nextEl) &&
@@ -15821,7 +15822,7 @@ const vc = {
       e.pagination.bullets &&
       e.pagination.bullets.length &&
       e.pagination.bullets.each((i, s) => {
-        const n = $d(s);
+        const n = Cd(s);
         e.a11y.makeElFocusable(n),
           e.a11y.addElRole(n, 'button'),
           e.a11y.addElLabel(
@@ -16005,12 +16006,12 @@ const yc = {
       }
     }
     e.params.hashNavigation.watchState &&
-      $d(Td).on('hashchange', e.hashNavigation.onHashCange);
+      Cd(Td).on('hashchange', e.hashNavigation.onHashCange);
   },
   destroy() {
     const e = this;
     e.params.hashNavigation.watchState &&
-      $d(Td).off('hashchange', e.hashNavigation.onHashCange);
+      Cd(Td).off('hashchange', e.hashNavigation.onHashCange);
   },
 };
 const wc = {
@@ -16136,11 +16137,11 @@ const Sc = {
       (l
         ? ((c = t.find('.swiper-cube-shadow')),
           0 === c.length &&
-            ((c = $d('<div class="swiper-cube-shadow"></div>')), t.append(c)),
+            ((c = Cd('<div class="swiper-cube-shadow"></div>')), t.append(c)),
           c.css({ height: `${s}px` }))
         : ((c = e.find('.swiper-cube-shadow')),
           0 === c.length &&
-            ((c = $d('<div class="swiper-cube-shadow"></div>')), e.append(c))));
+            ((c = Cd('<div class="swiper-cube-shadow"></div>')), e.append(c))));
     for (let e = 0; e < i.length; e += 1) {
       const t = i.eq(e);
       let s = e;
@@ -16178,12 +16179,12 @@ const Sc = {
             l ? '.swiper-slide-shadow-right' : '.swiper-slide-shadow-bottom'
           );
         0 === e.length &&
-          ((e = $d(
+          ((e = Cd(
             `<div class="swiper-slide-shadow-${l ? 'left' : 'top'}"></div>`
           )),
           t.append(e)),
           0 === i.length &&
-            ((i = $d(
+            ((i = Cd(
               `<div class="swiper-slide-shadow-${
                 l ? 'right' : 'bottom'
               }"></div>`
@@ -16269,14 +16270,14 @@ const Ec = {
             ? n.find('.swiper-slide-shadow-right')
             : n.find('.swiper-slide-shadow-bottom');
         0 === t.length &&
-          ((t = $d(
+          ((t = Cd(
             `<div class="swiper-slide-shadow-${
               e.isHorizontal() ? 'left' : 'top'
             }"></div>`
           )),
           n.append(t)),
           0 === i.length &&
-            ((i = $d(
+            ((i = Cd(
               `<div class="swiper-slide-shadow-${
                 e.isHorizontal() ? 'right' : 'bottom'
               }"></div>`
@@ -16360,12 +16361,12 @@ const Tc = {
             r ? '.swiper-slide-shadow-right' : '.swiper-slide-shadow-bottom'
           );
         0 === e.length &&
-          ((e = $d(
+          ((e = Cd(
             `<div class="swiper-slide-shadow-${r ? 'left' : 'top'}"></div>`
           )),
           t.append(e)),
           0 === i.length &&
-            ((i = $d(
+            ((i = Cd(
               `<div class="swiper-slide-shadow-${
                 r ? 'right' : 'bottom'
               }"></div>`
@@ -16388,7 +16389,7 @@ const Tc = {
       .transition(e);
   },
 };
-const Cc = {
+const $c = {
   init() {
     const e = this,
       { thumbs: t } = e.params,
@@ -16421,12 +16422,12 @@ const Cc = {
     if (!t) return;
     const i = t.clickedIndex,
       s = t.clickedSlide;
-    if (s && $d(s).hasClass(e.params.thumbs.slideThumbActiveClass)) return;
+    if (s && Cd(s).hasClass(e.params.thumbs.slideThumbActiveClass)) return;
     if (null == i) return;
     let n;
     if (
       ((n = t.params.loop
-        ? parseInt($d(t.clickedSlide).attr('data-swiper-slide-index'), 10)
+        ? parseInt(Cd(t.clickedSlide).attr('data-swiper-slide-index'), 10)
         : i),
       e.params.loop)
     ) {
@@ -16512,7 +16513,7 @@ const Cc = {
       for (let e = 0; e < n; e += 1) i.slides.eq(t.realIndex + e).addClass(a);
   },
 };
-const $c = [
+const Cc = [
   Zd,
   Qd,
   tc,
@@ -16605,8 +16606,8 @@ const $c = [
           { $nextEl: i, $prevEl: s } = t.navigation;
         if (
           t.params.navigation.hideOnClick &&
-          !$d(e.target).is(s) &&
-          !$d(e.target).is(i)
+          !Cd(e.target).is(s) &&
+          !Cd(e.target).is(i)
         ) {
           let e;
           i
@@ -16691,7 +16692,7 @@ const $c = [
           t.params.pagination.el &&
           t.params.pagination.hideOnClick &&
           t.pagination.$el.length > 0 &&
-          !$d(e.target).hasClass(t.params.pagination.bulletClass)
+          !Cd(e.target).hasClass(t.params.pagination.bulletClass)
         ) {
           const e = t.pagination.$el.hasClass(t.params.pagination.hiddenClass);
           t.emit(!0 === e ? 'paginationShow' : 'paginationHide', t),
@@ -17022,7 +17023,7 @@ const $c = [
       const e = this;
       Id.extend(e, {
         a11y: {
-          liveRegion: $d(
+          liveRegion: Cd(
             `<span class="${e.params.a11y.notificationClass}" aria-live="assertive" aria-atomic="true"></span>`
           ),
         },
@@ -17376,9 +17377,9 @@ const $c = [
       Id.extend(this, {
         thumbs: {
           swiper: null,
-          init: Cc.init.bind(this),
-          update: Cc.update.bind(this),
-          onThumbClick: Cc.onThumbClick.bind(this),
+          init: $c.init.bind(this),
+          update: $c.update.bind(this),
+          onThumbClick: $c.onThumbClick.bind(this),
         },
       });
     },
@@ -17412,7 +17413,7 @@ const $c = [
 ];
 void 0 === Jd.use &&
   ((Jd.use = Jd.Class.use), (Jd.installModule = Jd.Class.installModule)),
-  Jd.use($c);
+  Jd.use(Cc);
 const { createComponent: kc, bem: Mc } = R('slides');
 var Ic = kc({
   props: { options: Object, pager: Boolean, scrollbar: Boolean },
@@ -17753,7 +17754,7 @@ var Hc = Dc({
 });
 const { createComponent: Rc, bem: Vc } = R('tab-bar');
 var Yc = Rc({
-  mixins: [$i('TabBar'), Gt()],
+  mixins: [Ci('TabBar'), Gt()],
   props: {
     exclusive: { type: Boolean, default: !0 },
     value: String,
@@ -17873,7 +17874,7 @@ var jc = Xc({
 });
 const { createComponent: _c, bem: Uc } = R('tabs');
 var Kc = _c({
-  mixins: [$i('Tabs')],
+  mixins: [Ci('Tabs')],
   props: { exclusive: { type: Boolean, default: !0 } },
   render() {
     const e = arguments[0];
@@ -18110,7 +18111,7 @@ var dh = oh({
     FabButton: wr,
     FabGroup: ur,
     Footer: Er,
-    Grid: $r,
+    Grid: Cr,
     Header: Ir,
     CheckGroup: Pr,
     CheckItem: Br,
@@ -18127,7 +18128,7 @@ var dh = oh({
     ItemDivider: go,
     ItemGroup: yo,
     ItemOption: So,
-    ItemOptions: Co,
+    ItemOptions: $o,
     ItemSliding: Ao,
     Label: Lo,
     List: Do,
@@ -18145,7 +18146,7 @@ var dh = oh({
     Popup: Rs,
     ProgressBar: wl,
     RadioGroup: El,
-    RadioIndicator: $l,
+    RadioIndicator: Cl,
     Radio: Il,
     Range: Dl,
     Refresher: Wl,
@@ -18309,17 +18310,17 @@ const Eh = J({
 function Th(e, t) {
   t.value && (e.vGesture = Ie({ ...t.value, el: e }));
 }
-function Ch(e) {
+function $h(e) {
   const { vGesture: t } = e;
   t && (t.destroy(), delete e.vGesture);
 }
-const $h = J({
+const Ch = J({
   name: 'gesture',
   inserted: Th,
-  unbind: Ch,
+  unbind: $h,
   update: function (e, t) {
     const { value: i, oldValue: s } = t;
-    i !== s && (s && Ch(e), Th(e, t));
+    i !== s && (s && $h(e), Th(e, t));
   },
 });
 function kh(e, t) {
@@ -18728,7 +18729,7 @@ var cp = Object.freeze({
   vAutoRepeat: yh,
   createClickOutside: wh,
   vClickOutside: Eh,
-  vGesture: $h,
+  vGesture: Ch,
   createHover: Qn,
   vHover: ia,
   createIntersect: kh,
@@ -18769,7 +18770,106 @@ function hp() {
     },
   });
 }
-function pp(e, t = 'options') {
+function pp() {
+  return P({
+    mixins: [Se()],
+    beforeMount() {
+      const e = () => {
+        this.animation && (this.animation.stop(), (this.animation = null)),
+          this.$emit('canceled');
+      };
+      this.$on('before-enter', async (e) => {
+        (this.overflow = e.style.overflow),
+          (this.paddingTop = e.style.paddingTop),
+          (this.paddingBottom = e.style.paddingBottom),
+          (e.style.height = '0px'),
+          (e.style.paddingTop = '0px'),
+          (e.style.paddingBottom = '0px'),
+          (e.style.overflow = 'hidden'),
+          this.$emit('aboutToShow', e);
+      }),
+        this.$on('after-enter', (e) => {
+          (e.style.height = ''),
+            (e.style.paddingTop = ''),
+            (e.style.paddingBottom = ''),
+            (e.style.animationTimingFunction = ''),
+            (e.style.animationFillMode = ''),
+            (e.style.animationDirection = ''),
+            (e.style.animationIterationCount = ''),
+            (e.style.animationName = ''),
+            (e.style.overflow = this.overflow),
+            this.$emit('opened');
+        }),
+        this.$on('before-leave', (e) => {
+          (this.overflow = e.style.overflow),
+            (this.paddingTop = e.style.paddingTop),
+            (this.paddingBottom = e.style.paddingBottom),
+            (e.style.height = `${e.scrollHeight}px`),
+            (e.style.overflow = 'hidden'),
+            this.$emit('aboutToHide', e);
+        }),
+        this.$on('after-leave', (e) => {
+          (e.style.height = ''),
+            (e.style.paddingTop = ''),
+            (e.style.paddingBottom = ''),
+            (e.style.animationTimingFunction = ''),
+            (e.style.animationFillMode = ''),
+            (e.style.animationDirection = ''),
+            (e.style.animationIterationCount = ''),
+            (e.style.animationName = ''),
+            (e.style.overflow = this.overflow),
+            (e.style.paddingTop = this.paddingTop),
+            (e.style.paddingBottom = this.paddingBottom),
+            this.$emit('closed');
+        }),
+        this.$on('enter', async (e, t) => {
+          await this.$nextTick(),
+            (this.animation = ((e, t, i) => {
+              const s = e.scrollHeight || '',
+                n = it();
+              return (
+                n
+                  .addElement(e)
+                  .easing('ease-in-out')
+                  .duration(300)
+                  .fromTo('padding-top', '0px', `${t}px`)
+                  .fromTo('padding-bottom', '0px', `${i}px`)
+                  .fromTo('height', '0px', `${s}px`),
+                n
+              );
+            })(e, this.paddingTop, this.paddingBottom)),
+            Fe.getBoolean('animated', !0) || this.animation.duration(0),
+            this.$emit('animation-enter', e, this.animation),
+            await this.animation.play().catch(i),
+            t();
+        }),
+        this.$on('enter-cancelled', e),
+        this.$on('leave', async (e, t) => {
+          await this.$nextTick(),
+            (this.animation = ((e, t, i) => {
+              const s = e.scrollHeight || '',
+                n = it();
+              return (
+                n
+                  .addElement(e)
+                  .easing('ease-in-out')
+                  .duration(300)
+                  .fromTo('padding-top', `${t}px`, '0px')
+                  .fromTo('padding-bottom', `${i}px`, '0px')
+                  .fromTo('height', `${s}px`, '0px'),
+                n
+              );
+            })(e, this.paddingTop, this.paddingBottom)),
+            Fe.getBoolean('animated', !0) || this.animation.duration(0),
+            this.$emit('animation-leave', e, this.animation),
+            await this.animation.play().catch(i),
+            t();
+        }),
+        this.$on('leave-cancelled', e);
+    },
+  });
+}
+function up(e, t = 'options') {
   return P({
     props: e.reduce((e, t) => ((e[t] = Boolean), e), {
       [t]: { type: String, validator: (t) => e.includes(t) },
@@ -18782,7 +18882,7 @@ function pp(e, t = 'options') {
     },
   });
 }
-function up(e) {
+function mp(e) {
   const { event: t = 'popstate', global: i = !0 } = e || {};
   return P({
     mixins: [dr({ global: i, event: t })],
@@ -18793,16 +18893,17 @@ function up(e) {
     },
   });
 }
-var mp = Object.freeze({
+var fp = Object.freeze({
   __proto__: null,
   useAsyncRender: hp,
   useBreakPoint: It,
   useCheckGroup: Ti,
-  getItemValue: Ci,
-  useCheckGroupWithModel: $i,
+  getItemValue: $i,
+  useCheckGroupWithModel: Ci,
   useCheckItem: Ai,
   useCheckItemWithModel: Oi,
   useClickOutside: cr,
+  useCollapseTransition: pp,
   createColorClasses: Ft,
   useColor: Gt,
   useEvent: dr,
@@ -18812,8 +18913,8 @@ var mp = Object.freeze({
   createModeClasses: D,
   useMode: N,
   useModel: U,
-  useOptions: pp,
-  usePopstateClose: up,
+  useOptions: up,
+  usePopstateClose: mp,
   usePopupDelay: js,
   usePopupDuration: ts,
   usePopup: ot,
@@ -18826,8 +18927,8 @@ var mp = Object.freeze({
   isVue: _s,
   useTrigger: Us,
 });
-const fp = { install: p, version: '1.0.0-alpha.0' };
-function gp() {
+const gp = { install: p, version: '1.0.0-alpha.1' };
+function vp() {
   return (
     'undefined' != typeof window &&
       window.Vue &&
@@ -18839,13 +18940,13 @@ function gp() {
       components: ch,
       directives: cp,
       controllers: fa,
-      mixins: mp,
-      version: '1.0.0-alpha.0',
+      mixins: fp,
+      version: '1.0.0-alpha.1',
     }
   );
 }
-var vp = gp();
-export default vp;
+var bp = vp();
+export default bp;
 export {
   mt as Action,
   q as ActionGroup,
@@ -18879,7 +18980,7 @@ export {
   ur as FabGroup,
   Xr as FontIcon,
   Er as Footer,
-  $r as Grid,
+  Cr as Grid,
   Ir as Header,
   Kr as Icon,
   Qr as Image,
@@ -18890,11 +18991,11 @@ export {
   go as ItemDivider,
   yo as ItemGroup,
   So as ItemOption,
-  Co as ItemOptions,
+  $o as ItemOptions,
   Ao as ItemSliding,
   Lo as Label,
   Hr as Lazy,
-  fp as Line,
+  gp as Line,
   Do as List,
   Ro as ListHeader,
   qo as ListItem,
@@ -18915,7 +19016,7 @@ export {
   wl as ProgressBar,
   Il as Radio,
   El as RadioGroup,
-  $l as RadioIndicator,
+  Cl as RadioIndicator,
   Dl as Range,
   Wl as Refresher,
   ed as RefresherContent,
@@ -18964,16 +19065,17 @@ export {
   Zh as createTouch,
   rp as createWaterfall,
   H as defineComponent,
-  Ci as getItemValue,
+  $i as getItemValue,
   st as getTimeGivenProgression,
   _s as isVue,
   hp as useAsyncRender,
   It as useBreakPoint,
   Ti as useCheckGroup,
-  $i as useCheckGroupWithModel,
+  Ci as useCheckGroupWithModel,
   Ai as useCheckItem,
   Oi as useCheckItemWithModel,
   cr as useClickOutside,
+  pp as useCollapseTransition,
   Gt as useColor,
   dr as useEvent,
   Jt as useGroup,
@@ -18981,8 +19083,8 @@ export {
   W as useLazy,
   N as useMode,
   U as useModel,
-  pp as useOptions,
-  up as usePopstateClose,
+  up as useOptions,
+  mp as usePopstateClose,
   ot as usePopup,
   js as usePopupDelay,
   ts as usePopupDuration,
@@ -18996,7 +19098,7 @@ export {
   mh as vActivatable,
   yh as vAutoRepeat,
   Eh as vClickOutside,
-  $h as vGesture,
+  Ch as vGesture,
   ia as vHover,
   Ah as vIntersect,
   zh as vMutate,

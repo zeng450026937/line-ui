@@ -1,6 +1,6 @@
 {
   "name": "@line-ui/swiper",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "@line-ui/swiper",
   "main": "index.js",
   "module": "dist/swiper.esm-bundler.js",

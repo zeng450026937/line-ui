@@ -1,6 +1,6 @@
 {
   "name": "@line-ui/quick-start",
-  "version": "1.0.0-alpha.0",
+  "version": "1.0.0-alpha.1",
   "description": "line-ui quick-start",
   "publishConfig": {
     "access": "public"
@@ -8,7 +8,7 @@
   "private": true,
   "license": "MIT",
   "dependencies": {
-    "@line-ui/line": "1.0.0-alpha.0",
+    "@line-ui/line": "1.0.0-alpha.1",
     "vue": "^2.6.11"
   }
 }
