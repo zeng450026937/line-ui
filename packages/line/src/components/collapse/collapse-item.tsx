@@ -1,6 +1,7 @@
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
 import { useCheckItem } from '@line-ui/line/src/mixins/use-check-item';
 import { Icon } from '@line-ui/line/src/components/icon';
+import CollapseItemContent from '@line-ui/line/src/components/collapse/collapse-item-content';
 
 const NAMESPACE = 'Collapse';
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('collapse-item');
@@ -36,7 +37,9 @@ export default /*#__PURE__*/ createComponent({
             ></Icon>
           )}
         </div>
-        {checked && <div class={bem('content')}>{this.slots()}</div>}
+        <CollapseItemContent checked={checked}>
+          {this.slots()}
+        </CollapseItemContent>
       </div>
     );
   },
