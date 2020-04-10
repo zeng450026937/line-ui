@@ -1,7 +1,16 @@
 var Kom = (function (t, s) {
   'use strict';
+  function e(t) {
+    return function (s, e) {
+      const i = async (r) => {
+        let o = t[r];
+        if ((r === t.length && (o = e), o)) return o(s, i.bind(null, r + 1));
+      };
+      return i(0);
+    };
+  }
   s = s && Object.prototype.hasOwnProperty.call(s, 'default') ? s.default : s;
-  class e {
+  class i {
     constructor(t = '') {
       (this.ns = t), (this.middleware = []);
     }
@@ -13,22 +22,12 @@ var Kom = (function (t, s) {
       return this.middleware.push(i), this;
     }
     callback() {
-      return (t, s) => {
-        return this.match(i(t.ns, t.path))
-          ? ((e = this.middleware),
-            function (t, s) {
-              const i = async (r) => {
-                let o = e[r];
-                if ((r === e.length && (o = s), o))
-                  return o(t, i.bind(null, r + 1));
-              };
-              return i(0);
-            })(t, s)
+      return (t, s) =>
+        this.match(r(t.ns, t.path))
+          ? e(this.middleware)(t, s)
           : s
           ? s()
           : Promise.resolve();
-        var e;
-      };
     }
     dispatch(t, s) {
       const e = this.createContext();
@@ -38,13 +37,13 @@ var Kom = (function (t, s) {
       return { ns: t };
     }
     createHandler(t, s, e) {
-      return (r, o) =>
-        i(this.ns, t) !== i(r.ns, r.path) ? o() : s.call(e, r, o);
+      return (i, o) =>
+        r(this.ns, t) !== r(i.ns, i.path) ? o() : s.call(e, i, o);
     }
   }
-  const i = (...t) => t.join('/').split('/').filter(Boolean).join('/');
-  let r;
-  class o extends e {
+  const r = (...t) => t.join('/').split('/').filter(Boolean).join('/');
+  let o;
+  class n extends i {
     constructor(t) {
       super(t),
         (this.submodel = {}),
@@ -54,12 +53,12 @@ var Kom = (function (t, s) {
         (this.watch = {}),
         (this.events = {}),
         (this.d = {}),
-        r ||
+        o ||
           (!(function () {
             const t = s.config.optionMergeStrategies;
             (t.middleware = t.methods), (t.subscribe = t.methods);
           })(),
-          (r = !0));
+          (o = !0));
     }
     get(t) {
       return this.d[t];
@@ -81,7 +80,7 @@ var Kom = (function (t, s) {
     model(t) {
       if (!t) return this;
       let s = this.submodel[t];
-      return s || ((s = new o()), this.mount(t, s)), s;
+      return s || ((s = new n()), this.mount(t, s)), s;
     }
     up() {
       return this.parent || this;
@@ -116,11 +115,11 @@ var Kom = (function (t, s) {
     }
     getModel(t) {
       const { submodel: s } = this;
-      return t ? n(t, s) : s;
+      return t ? a(t, s) : s;
     }
     getStore(t) {
       const { store: s } = this;
-      return t ? n(t, s) : s;
+      return t ? a(t, s) : s;
     }
     setNS(t = '') {
       (this.ns = t),
@@ -132,7 +131,7 @@ var Kom = (function (t, s) {
       this.parent = t;
     }
     genNS(t = '') {
-      return i(this.ns, t);
+      return r(this.ns, t);
     }
     genVM(t) {
       const e = this;
@@ -194,8 +193,8 @@ var Kom = (function (t, s) {
     }
   }
   const h = (t) => Object.keys(t),
-    n = (t, s) => t.split('/').reduce((t, s) => t && t[s], s),
-    a = (t, s = !1) => {
+    a = (t, s) => t.split('/').reduce((t, s) => t && t[s], s),
+    c = (t, s = !1) => {
       const e = {};
       return (
         Array.isArray(t) || (t = [t]),
@@ -225,7 +224,7 @@ var Kom = (function (t, s) {
         e
       );
     },
-    c = (t = s) => {
+    d = (t = s) => {
       t.__kom__ ||
         (t.mixin({
           beforeCreate() {
@@ -251,7 +250,7 @@ var Kom = (function (t, s) {
               }),
                 (this.__komDispose__ = t);
             }
-            i && (t.computed = { ...t.computed, ...a(i) });
+            i && (t.computed = { ...t.computed, ...c(i) });
           },
           beforeDestroy() {
             const t = this.__komDispose__;
@@ -260,23 +259,20 @@ var Kom = (function (t, s) {
         }),
         (t.__kom__ = !0));
     };
-  function d() {
+  function u() {
     return (
-      'undefined' != typeof window && window.Vue && c(window.Vue),
-      { install: c }
+      'undefined' != typeof window && window.Vue && d(window.Vue),
+      { install: d }
     );
   }
-  var u = d();
+  var l = u();
   return (
-    (t.Layer = e),
-    (t.Model = o),
-    (t.SEPARATOR = '/'),
-    (t.chainget = n),
-    (t.default = u),
-    (t.install = c),
-    (t.keys = h),
-    (t.mapStore = a),
-    (t.resolvePath = i),
+    (t.Layer = i),
+    (t.Model = n),
+    (t.compose = e),
+    (t.default = l),
+    (t.install = d),
+    (t.mapStore = c),
     t
   );
 })({}, Vue);

@@ -1,7 +1,15 @@
 import Vue, { VueConstructor, ComponentOptions } from 'vue';
 import { Model, keys } from './model';
 
-export * from './model';
+export { compose, MiddlewareFn, ComposedMiddlewareFn } from './compose';
+export { LayerContext, Payload, LayerMiddlewareFn, Layer } from './layer';
+export {
+  ModelContext,
+  ModelMiddlewareFn,
+  ModelInjection,
+  ModelDefines,
+  Model,
+} from './model';
 
 declare module 'vue/types/options' {
   type StoreMap = {
@@ -32,7 +40,7 @@ declare module 'vue/types/vue' {
 type ObjectState = { [key: string]: string | ((store: Vue) => any) };
 type ArrayState = string[];
 
-type StoreMap = {
+export type StoreMap = {
   ns?: string;
   state: ObjectState | ArrayState;
 };

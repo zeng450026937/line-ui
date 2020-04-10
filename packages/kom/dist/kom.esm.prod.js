@@ -1,5 +1,13 @@
 import t from 'vue';
-const s = '/';
+function s(t) {
+  return function (s, e) {
+    const i = async (r) => {
+      let o = t[r];
+      if ((r === t.length && (o = e), o)) return o(s, i.bind(null, r + 1));
+    };
+    return i(0);
+  };
+}
 class e {
   constructor(t = '') {
     (this.ns = t), (this.middleware = []);
@@ -12,22 +20,12 @@ class e {
     return this.middleware.push(i), this;
   }
   callback() {
-    return (t, s) => {
-      return this.match(i(t.ns, t.path))
-        ? ((e = this.middleware),
-          function (t, s) {
-            const i = async (r) => {
-              let o = e[r];
-              if ((r === e.length && (o = s), o))
-                return o(t, i.bind(null, r + 1));
-            };
-            return i(0);
-          })(t, s)
-        : s
-        ? s()
+    return (t, e) =>
+      this.match(i(t.ns, t.path))
+        ? s(this.middleware)(t, e)
+        : e
+        ? e()
         : Promise.resolve();
-      var e;
-    };
   }
   dispatch(t, s) {
     const e = this.createContext();
@@ -260,13 +258,4 @@ function d() {
 }
 var u = d();
 export default u;
-export {
-  e as Layer,
-  o as Model,
-  s as SEPARATOR,
-  n as chainget,
-  c as install,
-  h as keys,
-  a as mapStore,
-  i as resolvePath,
-};
+export { e as Layer, o as Model, s as compose, c as install, a as mapStore };

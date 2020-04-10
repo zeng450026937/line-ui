@@ -7,8 +7,6 @@ import {
 import { Layer, LayerContext, resolvePath, SEPARATOR } from './layer';
 import { MiddlewareFn } from './compose';
 
-export * from './layer';
-
 let hasStrategies: boolean | undefined;
 
 function setupStrategies() {
@@ -25,6 +23,10 @@ export interface ModelContext extends LayerContext {
   get: (key: any) => any;
   set: (key: any, val: any) => void;
 }
+
+export type ModelMiddlewareFn<
+  T extends ModelContext = ModelContext
+> = MiddlewareFn<T>;
 
 export type ModelInjection = {
   $kom: Model;

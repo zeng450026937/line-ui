@@ -355,13 +355,4 @@ function defaulExport() {
 var index = /*#__PURE__*/ defaulExport();
 
 export default index;
-export {
-  Layer,
-  Model,
-  SEPARATOR,
-  chainget,
-  install,
-  keys,
-  mapStore,
-  resolvePath,
-};
+export { Layer, Model, compose, install, mapStore };

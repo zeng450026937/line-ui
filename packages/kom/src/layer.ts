@@ -11,6 +11,10 @@ export interface Payload {
   [key: string]: any;
 }
 
+export type LayerMiddlewareFn<
+  T extends LayerContext = LayerContext
+> = MiddlewareFn<T>;
+
 export const SEPARATOR = '/';
 
 export class Layer<T extends LayerContext = LayerContext> {

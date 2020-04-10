@@ -364,10 +364,7 @@ var index = /*#__PURE__*/ defaulExport();
 
 exports.Layer = Layer;
 exports.Model = Model;
-exports.SEPARATOR = SEPARATOR;
-exports.chainget = chainget;
+exports.compose = compose;
 exports.default = index;
 exports.install = install;
-exports.keys = keys;
 exports.mapStore = mapStore;
-exports.resolvePath = resolvePath;

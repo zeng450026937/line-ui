@@ -5,9 +5,11 @@ import { VueConstructor } from 'vue';
 
 declare type ArrayState = string[];
 
-export declare const chainget: (ns: string, delegate: any) => any;
+export declare function compose<T>(
+  middleware: MiddlewareFn[]
+): ComposedMiddlewareFn<T>;
 
-declare type ComposedMiddlewareFn<T = any> = (
+export declare type ComposedMiddlewareFn<T = any> = (
   context: T,
   next?: () => void
 ) => any;
@@ -18,8 +20,6 @@ declare const _default: {
 export default _default;
 
 export declare const install: (target?: VueConstructor<Vue_2>) => void;
-
-export declare const keys: <T extends Record<string, any>>(o: T) => (keyof T)[];
 
 export declare class Layer<T extends LayerContext = LayerContext> {
   ns: string;
@@ -51,6 +51,10 @@ export declare interface LayerContext<P extends Payload = Payload> {
   payload: P;
 }
 
+export declare type LayerMiddlewareFn<
+  T extends LayerContext = LayerContext
+> = MiddlewareFn<T>;
+
 export declare const mapStore: (
   store: StoreMap | StoreMap[],
   exportNS?: boolean
@@ -58,7 +62,10 @@ export declare const mapStore: (
   import('vue/types/options').DefaultComputed
 >;
 
-declare type MiddlewareFn<T = any> = (context: T, next: () => void) => any;
+export declare type MiddlewareFn<T = any> = (
+  context: T,
+  next: () => void
+) => any;
 
 export declare class Model extends Layer<ModelContext> {
   parent?: Model;
@@ -148,6 +155,10 @@ export declare type ModelInjection = {
   $subscribe: Model['subscribe'];
 };
 
+export declare type ModelMiddlewareFn<
+  T extends ModelContext = ModelContext
+> = MiddlewareFn<T>;
+
 declare type ObjectState = {
   [key: string]: string | ((store: Vue_2) => any);
 };
@@ -156,11 +167,7 @@ export declare interface Payload {
   [key: string]: any;
 }
 
-export declare const resolvePath: (...args: string[]) => string;
-
-export declare const SEPARATOR = '/';
-
-declare type StoreMap = {
+export declare type StoreMap = {
   ns?: string;
   state: ObjectState | ArrayState;
 };
