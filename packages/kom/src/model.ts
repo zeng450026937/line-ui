@@ -234,9 +234,9 @@ export class Model extends Layer<ModelContext> {
         this.$kom = model.root;
         this.$model = model;
         this.$store = model.store!;
-        this.$getModel = model.getModel.bind(model);
-        this.$getStore = model.getStore.bind(model);
-        this.$dispatch = model.dispatch.bind(model);
+        this.$getModel = model.getModel.bind(model.root);
+        this.$getStore = model.getStore.bind(model.root);
+        this.$dispatch = model.dispatch.bind(model.root);
         this.$broadcast = model.broadcast.bind(model);
         this.$subscribe = model.subscribe.bind(model);
       },
