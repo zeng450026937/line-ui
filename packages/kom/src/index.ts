@@ -9,6 +9,7 @@ export {
   ModelInjection,
   ModelDefines,
   Model,
+  nextTick,
 } from './model';
 
 declare module 'vue/types/options' {

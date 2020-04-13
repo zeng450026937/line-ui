@@ -1,13 +1,16 @@
-export type MiddlewareFn<T = any> = (context: T, next: () => void) => any;
+export type MiddlewareFn<T = any> = (
+  context: T,
+  next: () => Promise<any>
+) => Promise<any>;
 export type ComposedMiddlewareFn<T = any> = (
   context: T,
-  next?: () => void
-) => any;
+  next?: () => any
+) => Promise<any>;
 
 export function compose<T>(
   middleware: MiddlewareFn[]
 ): ComposedMiddlewareFn<T> {
-  return function composedMiddleware(context: T, next?: () => void) {
+  return function composedMiddleware(context: T, next?: () => any) {
     const dispatch = async (i: number): Promise<any> => {
       if (__DEV__ && i <= index) {
         console.warn('next() called multiple times');

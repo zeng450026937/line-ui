@@ -1,22 +1,16 @@
 import Vue from 'vue';
-/* eslint-disable-next-line import/no-extraneous-dependencies */
-import Line from '@line-ui/line';
 import { createRouter } from './router';
+import { createModel } from './model';
+// import App from './components/App.vue';
 
-Vue.use(Line);
-
-const { version } = Line;
+createModel();
 
 /* eslint-disable-next-line @typescript-eslint/no-unused-vars */
 export function createApp(context?: any /* ssr context */) {
   const router = createRouter();
   const app = new Vue({
     router,
-    render: (h) =>
-      h('div', { domProps: { id: 'app' } }, [
-        `LINE-UI ${version}`,
-        h('router-view'),
-      ]),
+    render: (h) => h('div'),
   });
 
   return {

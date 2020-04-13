@@ -13,8 +13,10 @@ package line:
   script:
     - yarn install -f
     - yarn run build line --release
-    - mkdir -p public/line
-    - mv packages/line/dist public/line/dist
+  artifacts:
+    paths:
+      - packages/line/dist
+    expire_in: 3 days
   only:
     - master
 
@@ -31,6 +33,9 @@ pages:
     - yarn install -f
     - yarn run build template-explorer
     - mv packages/template-explorer public/template-explorer
+    # copy line
+    - mkdir -p public/line
+    - mv packages/line/dist public/line/dist
 #    - mv public public-bak # GitLab Pages 的钩子设置在 public 文件夹
 #    - mv dist/website public # 重命名 dist 文件夹 (yarn run build:website 之后的输出位置)
   artifacts:

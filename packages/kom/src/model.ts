@@ -4,8 +4,11 @@ import {
   ComponentOptions,
   ThisTypedComponentOptionsWithRecordProps,
 } from 'vue/types/options';
-import { Layer, LayerContext, resolvePath, SEPARATOR } from './layer';
+import { Layer, LayerContext, SEPARATOR } from './layer';
 import { MiddlewareFn } from './compose';
+
+/* eslint-disable-next-line prefer-destructuring */
+export const nextTick = Vue.nextTick;
 
 let hasStrategies: boolean | undefined;
 
@@ -105,26 +108,28 @@ export class Model extends Layer<ModelContext> {
 
   mount(key: string, model: Model) {
     if (__DEV__ && this.submodel[key]) {
-      console.warn(`already has model for ${key}`);
-      return;
+      console.warn(`redefinition model: ${key}`);
     }
-
-    model.setNS(this.genNS(key));
-    model.setParent(this);
-
+    model.setNS(key);
     this.submodel[key] = model;
-
     return this;
   }
 
-  model(key?: string) {
+  model(key?: string, val?: Model) {
     if (!key) return this;
 
     let model = this.submodel[key];
 
+    if (__DEV__ && model && val) {
+      console.warn(`model: ${key} was previously definded`);
+      return model;
+    }
+
     if (!model) {
-      model = new Model();
-      this.mount(key, model);
+      model = val || new Model();
+      model.setNS(key);
+      model.setParent(this);
+      this.submodel[key] = model;
     }
 
     return model;
@@ -146,7 +151,7 @@ export class Model extends Layer<ModelContext> {
     if (!key) return this;
 
     if (__DEV__ && this.computed![key as string]) {
-      console.warn('duplicate provided key');
+      console.warn(`redefinition key: ${key}`);
     }
 
     if (typeof val === 'function') {
@@ -190,9 +195,8 @@ export class Model extends Layer<ModelContext> {
     return this;
   }
 
-  getModel(ns?: string) {
-    const { submodel } = this;
-    return ns ? chainget(ns, submodel) : submodel;
+  getModel(ns?: string): Model {
+    return ns ? chainget(ns, this, (m) => m.submodel) : this;
   }
 
   getStore(ns?: string): Vue | undefined {
@@ -206,18 +210,10 @@ export class Model extends Layer<ModelContext> {
 
   setNS(ns: string = '') {
     this.ns = ns;
-
-    Object.keys(this.submodel).forEach((key) => {
-      this.submodel[key].setNS(this.genNS(key));
-    });
   }
 
   setParent(parent?: Model) {
     this.parent = parent;
-  }
-
-  genNS(key: string = '') {
-    return resolvePath(this.ns, key);
   }
 
   genVM(parent?: Vue): Vue {
@@ -313,6 +309,18 @@ export const keys = <T extends Record<string, any>>(o: T) => {
   return Object.keys(o) as (keyof T)[];
 };
 
-export const chainget = (ns: string, delegate: any) => {
-  return ns.split(SEPARATOR).reduce((acc, val) => acc && acc[val], delegate);
+export const chainget = (
+  ns: string,
+  delegate: any,
+  getter?: (delegate: any, key: string) => any
+) => {
+  return ns.split(SEPARATOR).reduce((acc, key) => {
+    if (getter) {
+      acc = getter(acc, key);
+    }
+    if (acc) {
+      return acc[key];
+    }
+    return false;
+  }, delegate);
 };
