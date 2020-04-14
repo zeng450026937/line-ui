@@ -160,7 +160,7 @@ export default /*#__PURE__*/ createComponent({
 
       // Make sure we are only checking for activation on a segment button
       // since disabled buttons will get the click on the segment
-      if (clicked.$options.name !== 'line-segment-button') {
+      if (clicked && clicked.$options.name !== 'line-segment-button') {
         return;
       }
 

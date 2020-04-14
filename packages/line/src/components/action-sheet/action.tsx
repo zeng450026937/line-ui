@@ -32,10 +32,14 @@ export default /*#__PURE__*/ createComponent({
       if (button) {
         // a handler has been provided, execute it
         // pass the handler the values from the inputs
-        const rtn = await safeCall(button.handler);
-        if (rtn === false) {
-          // if the return value of the handler is false then do not dismiss
-          return false;
+        try {
+          const rtn = await safeCall(button.handler);
+          if (rtn === false) {
+            // if the return value of the handler is false then do not dismiss
+            return false;
+          }
+        } catch (error) {
+          __DEV__ && console.error(error);
         }
       }
 

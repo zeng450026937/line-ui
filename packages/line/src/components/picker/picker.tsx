@@ -1,7 +1,6 @@
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
 import { usePopup } from '@line-ui/line/src/mixins/use-popup';
 import { Overlay } from '@line-ui/line/src/components/overlay';
-// TODO
 import { safeCall } from '@line-ui/line/src/utils/helpers';
 import { PickerColumn } from '@line-ui/line/src/components/picker-column';
 import { PickerButton } from '@line-ui/line/src/components/picker/picker-interface';
@@ -82,12 +81,17 @@ export default /*#__PURE__*/ createComponent({
       if (button) {
         // a handler has been provided, execute it
         // pass the handler the values from the inputs
-        const rtn = await safeCall(button.handler, this.getSelected());
-        if (rtn === false) {
-          // if the return value of the handler is false then do not dismiss
-          return false;
+        try {
+          const rtn = await safeCall(button.handler, this.getSelected());
+          if (rtn === false) {
+            // if the return value of the handler is false then do not dismiss
+            return false;
+          }
+        } catch (error) {
+          __DEV__ && console.error(error);
         }
       }
+
       return true;
     },
 

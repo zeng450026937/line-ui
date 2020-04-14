@@ -40,12 +40,12 @@ export default /*#__PURE__*/ createComponent({
           }),
           createColorClasses(color),
         ]}
+        {...data}
       >
         <svg
           role="img"
           aria-hidden={!attrs['aria-label']}
           aria-label={attrs['aria-label'] || text}
-          {...data}
         >
           {text || href ? <use xlinkHref={finalHref}></use> : slots('content')}
         </svg>

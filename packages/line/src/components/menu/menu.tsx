@@ -243,12 +243,8 @@ export default /*#__PURE__*/ createComponent({
       }
       if (this.isOpen) {
         return true;
-        // TODO error
       }
-      // TODO
-      // if (menuController._getOpenSync()) {
-      //   return false;
-      // }
+
       return checkEdgeSide(
         window,
         detail.currentX,

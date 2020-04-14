@@ -1,6 +1,7 @@
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
 import { usePopup } from '@line-ui/line/src/mixins/use-popup';
 import { Overlay } from '@line-ui/line/src/components/overlay';
+import { safeCall } from '@line-ui/line/src/utils/helpers';
 import { iosEnterAnimation } from '@line-ui/line/src/components/alert/animations/ios.enter';
 import { iosLeaveAnimation } from '@line-ui/line/src/components/alert/animations/ios.leave';
 import { mdEnterAnimation } from '@line-ui/line/src/components/alert/animations/md.enter';
@@ -11,10 +12,6 @@ import {
 } from '@line-ui/line/src/components/alert/alert-interface';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('alert');
-
-export const isCancel = (role: string | undefined): boolean => {
-  return role === 'cancel' || role === 'overlay';
-};
 
 export default /*#__PURE__*/ createComponent({
   mixins: [/*#__PURE__*/ usePopup()],
@@ -94,7 +91,7 @@ export default /*#__PURE__*/ createComponent({
               type="button"
               tabIndex={0}
               class={[bem('button'), 'line-focusable', 'line-activatable']}
-              onClick={() => this.onButtonClick(button)}
+              onClick={() => this.buttonClick(button)}
             >
               <span class={bem('button-inner')}>{button.text}</span>
             </button>
@@ -109,26 +106,36 @@ export default /*#__PURE__*/ createComponent({
       this.$emit('overlay-tap');
     },
 
-    /* eslint-disable-next-line consistent-return */
-    onButtonClick(button: AlertButton) {
+    async buttonClick(button: any) {
       const { role } = button;
-      // const values = this.getValues();
-      if (isCancel(role)) {
+      if (role === 'cancel') {
         return this.close(role);
       }
-      let returnData;
-      if (button && button.handler) {
+
+      const shouldClose = await this.callButtonHandler(button);
+      if (shouldClose) {
+        return this.close(button.role);
+      }
+
+      return Promise.resolve();
+    },
+
+    async callButtonHandler(button: AlertButton | undefined) {
+      if (button) {
         // a handler has been provided, execute it
         // pass the handler the values from the inputs
         try {
-          returnData = button.handler(role);
+          const rtn = await safeCall(button.handler);
+          if (rtn === false) {
+            // if the return value of the handler is false then do not dismiss
+            return false;
+          }
         } catch (error) {
           __DEV__ && console.error(error);
         }
       }
-      if (returnData !== false) {
-        return this.close(role);
-      }
+
+      return true;
     },
   },
 

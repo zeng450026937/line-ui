@@ -2,6 +2,7 @@ import { createNamespace } from '@line-ui/line/src/utils/namespace';
 import { config } from '@line-ui/line/src/utils/config';
 import { isPlatform } from '@line-ui/line/src/utils/platform';
 import { sanitizeDOMString } from '@line-ui/line/src/utils/sanitization';
+import { Spinner } from '@line-ui/line/src/components/spinner';
 import {
   SPINNERS,
   SpinnerTypes,
@@ -71,10 +72,7 @@ export default /*#__PURE__*/ createComponent({
           {pullingIcon && hasSpinner && (
             <div class="refresher-pulling-icon">
               <div class="spinner-arrow-container">
-                <line-spinner
-                  type={pullingIcon as SpinnerTypes}
-                  paused
-                ></line-spinner>
+                <Spinner type={pullingIcon as SpinnerTypes} paused></Spinner>
                 {mode === 'md' && pullingIcon === 'circular' && (
                   <div class="arrow-container">
                     <line-icon name="caret-back-sharp"></line-icon>
@@ -98,7 +96,7 @@ export default /*#__PURE__*/ createComponent({
         <div class="refresher-refreshing">
           {refreshingSpinner && (
             <div class="refresher-refreshing-icon">
-              <line-spinner type={refreshingSpinner}></line-spinner>
+              <Spinner type={refreshingSpinner}></Spinner>
             </div>
           )}
           {refreshingText && (

@@ -8,14 +8,8 @@ export default /*#__PURE__*/ createComponent({
   functional: true,
 
   props: {
-    checked: {
-      type: Boolean,
-      default: false,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
+    checked: Boolean,
+    disabled: Boolean,
   },
 
   render(h, { props, data, slots }) {
