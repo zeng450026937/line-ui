@@ -10,6 +10,7 @@
       <line-toast
         color="dark"
         :duration="2000"
+        position="top"
         message="Paired successfully"
         v-model="visible"
       >
@@ -30,16 +31,45 @@
 <script lang="ts">
 import Vue from 'vue';
 
+import { ToastController } from '@line-ui/line/src/controllers';
+
 export default Vue.extend({
   data() {
     return {
       visible: false,
+      index: 1,
     };
   },
 
   methods: {
     open() {
-      this.visible = !this.visible;
+      this.toast = ToastController.create({
+        color: 'dark',
+        duration: 3000,
+        position: 'top',
+        message: 'Paired successfully' + this.index,
+        // header: 'test-header',
+        buttons: [
+          // {
+          //   side: 'start',
+          //   icon: 'add',
+          //   text: 'Favorite',
+          //   handler: () => {
+          //     console.log('Favorite clicked');
+          //   },
+          // },
+          // {
+          //   text: 'Done',
+          //   role: 'cancel',
+          //   handler: () => {
+          //     console.log('Cancel clicked');
+          //   },
+          // },
+        ],
+      });
+      this.toast.open();
+
+      this.index++;
     },
   },
 });

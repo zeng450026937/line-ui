@@ -3,86 +3,93 @@
 
 // iOS Toast
 // --------------------------------------------------
-.line {
-  &-toast {
-    --background: #{$toast-ios-background-color};
-    --border-radius: #{$toast-ios-border-radius};
-    --button-color: #{$toast-ios-button-color};
-    --color: #{$toast-ios-title-color};
-    --max-width: #{$toast-max-width};
-    --start: 10px;
-    --end: 10px;
 
-    font-size: $toast-ios-content-font-size;
-  }
+.line-toast {
+  --background: #{$toast-ios-background-color};
+  --border-radius: #{$toast-ios-border-radius};
+  --button-color: #{$toast-ios-button-color};
+  --color: #{$toast-ios-title-color};
+  --max-width: #{$toast-max-width};
+  --start: 10px;
+  --end: 10px;
 
-  &-toast__wrapper {
-    @include margin(auto);
+  font-size: $toast-ios-content-font-size;
+}
 
-    display: block;
-    position: absolute;
+.line-toast__wrapper {
+  @include margin(auto);
 
-    z-index: $z-index-overlay-wrapper;
-  }
+  display: block;
+  position: absolute;
 
-  &-toast__wrapper.line-toast__wrapper--top {
-    @include transform(translate3d(0, -100%, 0));
+  z-index: $z-index-overlay-wrapper;
+}
 
-    top: 0;
-  }
+.line-toast__wrapper.line-toast__wrapper--top {
+  @include transform(translate3d(0, -100%, 0));
 
-  &-toast__wrapper.line-toast__wrapper--middle {
-    opacity: .01;
-  }
+  top: 0;
+}
 
-  &-toast__wrapper.line-toast__wrapper--bottom {
-    @include transform(translate3d(0, 100%, 0));
+.line-toast__wrapper.line-toast__wrapper--middle {
+  opacity: 0.01;
+}
 
-    bottom: 0;
-  }
+.line-toast__wrapper.line-toast__wrapper--bottom {
+  @include transform(translate3d(0, 100%, 0));
 
-  &-toast__content {
-    @include padding($toast-ios-content-padding-top, $toast-ios-content-padding-end, $toast-ios-content-padding-bottom, $toast-ios-content-padding-start);
-  }
+  bottom: 0;
+}
 
-  &-toast__header {
-    margin-bottom: $toast-ios-header-margin-bottom;
+.line-toast__content {
+  @include padding(
+    $toast-ios-content-padding-top,
+    $toast-ios-content-padding-end,
+    $toast-ios-content-padding-bottom,
+    $toast-ios-content-padding-start
+  );
+}
 
-    font-weight: $toast-ios-header-font-weight;
-  }
+.line-toast__header {
+  margin-bottom: $toast-ios-header-margin-bottom;
 
-  // iOS Toast Button
-  // --------------------------------------------------
+  font-weight: $toast-ios-header-font-weight;
+}
 
-  &-toast-button {
-    @include padding($toast-ios-button-padding-top, $toast-ios-button-padding-end, $toast-ios-button-padding-bottom, $toast-ios-button-padding-start);
+// iOS Toast Button
+// --------------------------------------------------
 
-    height: $toast-ios-button-min-height;
+.line-toast-button {
+  @include padding(
+    $toast-ios-button-padding-top,
+    $toast-ios-button-padding-end,
+    $toast-ios-button-padding-bottom,
+    $toast-ios-button-padding-start
+  );
 
-    transition: background-color, opacity 100ms linear;
+  height: $toast-ios-button-min-height;
 
-    border: 0;
+  transition: background-color, opacity 100ms linear;
 
-    background-color: $toast-ios-button-background-color;
+  border: 0;
 
-    font-family: var(--line-font-family);
-    font-size: $toast-ios-button-font-size;
-    font-weight: $toast-ios-button-font-weight;
+  background-color: $toast-ios-button-background-color;
 
-    overflow: hidden;
-  }
+  font-family: var(--line-font-family);
+  font-size: $toast-ios-button-font-size;
+  font-weight: $toast-ios-button-font-weight;
 
-  &-toast-button.line-activated {
-    opacity: $toast-ios-button-opacity-activated;
-  }
+  overflow: hidden;
+}
+
+.line-toast-button.line-activated {
+  opacity: $toast-ios-button-opacity-activated;
 }
 
 @supports (backdrop-filter: blur(0)) {
-  .line {
-    &-toast.line-toast--translucent .line-toast__wrapper {
-      background: $toast-ios-translucent-background-color;
-      backdrop-filter: $toast-ios-translucent-filter;
-    }
+  .line-toast.line-toast--translucent .line-toast__wrapper {
+    background: $toast-ios-translucent-background-color;
+    backdrop-filter: $toast-ios-translucent-filter;
   }
 }
 
@@ -90,9 +97,7 @@
 // --------------------------------------------------
 
 @media (any-hover: hover) {
-  .line {
-    &-toast-button:hover {
-      opacity: .6;
-    }
+  .line-toast-button:hover {
+    opacity: 0.6;
   }
 }
