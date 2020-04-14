@@ -1,7 +1,6 @@
 /* eslint-disable */
 
 export class GestureController {
-
   private gestureId = 0;
   private requestedStart = new Map<number, number>();
   private disabledGestures = new Map<string, Set<number>>();
@@ -49,7 +48,7 @@ export class GestureController {
     const requestedStart = this.requestedStart;
     let maxPriority = -10000;
 
-    requestedStart.forEach(value => {
+    requestedStart.forEach((value) => {
       maxPriority = Math.max(maxPriority, value);
     });
 
@@ -57,7 +56,9 @@ export class GestureController {
       this.capturedId = id;
       requestedStart.clear();
 
-      const event = new CustomEvent('ionGestureCaptured', { detail: { gestureName } });
+      const event = new CustomEvent('lineGestureCaptured', {
+        detail: { gestureName },
+      });
       document.dispatchEvent(event);
       return true;
     }
@@ -200,7 +201,6 @@ class GestureDelegate {
 }
 
 export class BlockerDelegate {
-
   private ctrl?: GestureController;
 
   constructor(

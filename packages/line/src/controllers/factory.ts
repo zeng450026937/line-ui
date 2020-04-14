@@ -8,7 +8,8 @@ export function createFactory(sfc: any) {
   const create = (props: any, destroyWhenClose = true) => {
     return new Component({
       propsData: props,
-      mounted() {
+      async mounted() {
+        await this.$nextTick();
         (this as any).destroyWhenClose = destroyWhenClose;
         const { $el } = this;
         getApp($el).appendChild($el);
