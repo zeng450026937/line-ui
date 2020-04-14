@@ -1,32 +1,20 @@
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
 import { ActionSheetButtonOption } from '@line-ui/line/src/components/action-sheet/action-sheet-interface';
+import { safeCall } from '@line-ui/line/src/utils/helpers';
 
-const { createComponent, bem } = /*#__PURE__*/ createNamespace('dropdown-item');
-
-// TODO
-const safeCall = (handler: any, arg?: any) => {
-  if (typeof handler === 'function') {
-    try {
-      return handler(arg);
-    } catch (e) {
-      __DEV__ && console.error(e);
-    }
-  }
-
-  return undefined;
-};
+const { createComponent, bem } = /*#__PURE__*/ createNamespace(
+  'combo-box-item'
+);
 
 export default /*#__PURE__*/ createComponent({
   props: {
-    option: {
-      type: Object,
-    },
+    option: Object,
   },
 
   methods: {
     async buttonClick(button: ActionSheetButtonOption) {
       const parent =
-        this.$parent.$options.name === 'line-dropdown' ? this.$parent : null;
+        this.$parent.$options.name === 'line-combo-box' ? this.$parent : null;
 
       if (!parent) return;
 
@@ -53,10 +41,14 @@ export default /*#__PURE__*/ createComponent({
       if (button) {
         // a handler has been provided, execute it
         // pass the handler the values from the inputs
-        const rtn = await safeCall(button.handler);
-        if (rtn === false) {
-          // if the return value of the handler is false then do not dismiss
-          return false;
+        try {
+          const rtn = await safeCall(button.handler);
+          if (rtn === false) {
+            // if the return value of the handler is false then do not dismiss
+            return false;
+          }
+        } catch (error) {
+          __DEV__ && console.error(error);
         }
       }
 

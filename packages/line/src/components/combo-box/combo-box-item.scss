@@ -1,0 +1,70 @@
+@import "./combo-box-item.vars";
+
+//  ComboBox Item
+// --------------------------------------------------
+
+.line-combo-box-item {
+  --height: 48px;
+  --color: #606266;
+  --padding-top: 0;
+  --padding-end: 26px;
+  --padding-bottom: 0;
+  --padding-start: 26px;
+  --background-activated: rgba(#eeeeee, 0.7);
+  --combo-box-font-size: 14px;
+  // --line-height: 1;
+
+  @include padding(var(--padding-top), var(--padding-end), var(--padding-bottom), var(--padding-start));
+
+  position: relative;
+
+  height: var(--height);
+
+  margin: 0;
+
+  outline: none;
+
+  color: var(--color);
+
+  font-size: var(--combo-box-font-size);
+
+  // line-height: var(--line-height);
+
+  list-style: none;
+
+  cursor: pointer;
+}
+
+.line-combo-box-item__inner {
+  display: flex;
+
+  align-items: center;
+  justify-content: flex-start;
+
+  width: 100%;
+  height: 100%;
+}
+
+.line-combo-box-item::after {
+  @include button-state();
+}
+
+// ComboBox Item: Hover
+// --------------------------------------------------
+
+@media (any-hover: hover) {
+  .line-combo-box .line-combo-box-item:hover {
+    color: var(--button-color-hover);
+
+    &::after {
+      background: var(--button-background-hover);
+
+      opacity: var(--button-background-hover-opacity);
+    }
+  }
+}
+
+.line-combo-box .line-combo-box-item.line-activated {
+  background-color: var(--background-activated);
+  background-image: none;
+}

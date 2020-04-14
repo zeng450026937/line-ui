@@ -6,46 +6,26 @@
       </line-toolbar>
     </line-header>
     <line-content class="line-padding">
-      <line-button ref="button" expand="block" @click="open"
-        >show Dropdown</line-button
+      <line-button
+        ref="button"
+        expand="block"
+        @click="open"
+        style="width: 200px;
+
+ margin-top: 200px; margin-left: 100px;"
       >
-      <line-dropdown
-        :trigger="trigger"
-        v-model="visible"
-        :options="options"
-        @optionChange="onChange"
-      >
-      </line-dropdown>
-      <div style="height: 400px;"></div>
-      <line-button ref="triggerButton" expand="block" @click="openDropDown"
-        >show Dropdown</line-button
-      >
-      <line-dropdown
-        :trigger="triggerButton"
-        v-model="buttonVisible"
-        @optionChange="onButtonChange"
-      >
-        <line-dropdown-item :option="{ number: 1 }">
-          <line-icon name="settings_voice"></line-icon>
-          Voice
-        </line-dropdown-item>
-        <line-dropdown-item :option="{ number: 2 }">
-          <line-icon name="date_range"></line-icon>
-          DateRange
-        </line-dropdown-item>
-        <line-dropdown-item :option="{ number: 3 }">
-          <line-icon name="map"></line-icon>
-          Map
-        </line-dropdown-item>
-        <line-dropdown-item :option="{ number: 4 }">
-          <line-icon name="theaters"></line-icon>
-          Theaters
-        </line-dropdown-item>
-        <line-dropdown-item :option="{ number: 5 }">
-          <line-icon name="redeem"></line-icon>
-          Redeem
-        </line-dropdown-item>
-      </line-dropdown>
+        show Combo Box
+      </line-button>
+
+      <line-combo-box v-model="visible" trigger="button" expand>
+        <line-combo-box-item> combo-box-item - 1 </line-combo-box-item>
+        <line-combo-box-item> combo-box-item - 1 </line-combo-box-item>
+        <line-combo-box-item> combo-box-item - 1 </line-combo-box-item>
+        <line-combo-box-item> combo-box-item - 1 </line-combo-box-item>
+        <line-combo-box-item> combo-box-item - 1 </line-combo-box-item>
+        <!-- <line-combo-box-item> combo-box-item - 1 </line-combo-box-item> -->
+        <!-- <line-combo-box-item> combo-box-item - 1 </line-combo-box-item> -->
+      </line-combo-box>
     </line-content>
   </line-app>
 </template>
@@ -70,6 +50,7 @@ export default Vue.extend({
   methods: {
     open() {
       this.visible = !this.visible;
+      console.log('open:', this.visible);
     },
 
     openDropDown() {
@@ -77,17 +58,21 @@ export default Vue.extend({
     },
 
     onChange(option) {
-      console.log('option', option);
+      console.log('option: ', option);
     },
 
     onButtonChange(option) {
-      console.log('option', option);
+      console.log('option: ', option);
+    },
+
+    onGoBack() {
+      this.$router.back();
     },
   },
 
   watch: {
     test(val, oldVal) {
-      console.log(val, oldVal);
+      console.log('test: ', val, oldVal);
     },
 
     visible(val) {
