@@ -167,4 +167,10 @@
     --background-hover: var(--background-activated);
     --color-hover: var(--color-activated);
   }
+  .line-button--clear.line-activated:hover {
+    --opacity: #{$button-ios-clear-opacity-activated};
+  }
+  .line-button--solid.line-activated:hover {
+    --opacity: #{$button-ios-opacity-activated};
+  }
 }
