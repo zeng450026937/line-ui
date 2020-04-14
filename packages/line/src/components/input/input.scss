@@ -61,7 +61,7 @@
 // Native Text Input
 // --------------------------------------------------
 
-.line-input > .native-input {
+.line-input > .line-input__content {
   @include border-radius(var(--border-radius));
   @include padding(var(--padding-top), var(--padding-end), var(--padding-bottom), var(--padding-start));
   @include text-inherit();
@@ -106,7 +106,7 @@
   }
 }
 
-.line-input .native-input[disabled] {
+.line-input .line-input__content[disabled] {
   opacity: .4;
 }
 

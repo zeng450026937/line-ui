@@ -250,7 +250,9 @@ export default /*#__PURE__*/ createComponent({
     return (
       <div
         class={[
-          bem(),
+          bem({
+            suffix: this.slots('suffix'),
+          }),
           {
             'has-value': nativeValue && (nativeValue as string).length,
             'has-focus': hasFocus,
@@ -259,7 +261,7 @@ export default /*#__PURE__*/ createComponent({
         on={this.$listeners}
       >
         <input
-          class="native-input"
+          class={bem('content')}
           ref="nativeInput"
           accept={accept}
           type={type}
@@ -280,6 +282,7 @@ export default /*#__PURE__*/ createComponent({
           onBlur={this.onBlur}
           onChange={this.onChange}
         ></input>
+        {this.slots('suffix')}
         {this.clearInput && !readonly && !disabled && (
           <button
             type="button"
