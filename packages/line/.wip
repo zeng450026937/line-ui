@@ -1,8 +1,5 @@
-components/collapse/
-components/combo-box/
 components/dialog/
 components/dialog-button-box/
-components/dropdown/
 components/dropdown-menu/
 components/flickable/
 components/flickable/
@@ -17,7 +14,6 @@ components/progress/
 components/scroll-bar/
 components/scroll-view/
 components/select/
-components/select-option/
 components/stepper/
 components/table-view/
 components/tool-button/
