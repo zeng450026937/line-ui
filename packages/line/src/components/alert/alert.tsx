@@ -154,24 +154,13 @@ export default /*#__PURE__*/ createComponent({
 
         <div class={bem('wrapper')}>
           <div class={bem('head')}>
-            {header && <h2 class={bem('title')}>{header}</h2>}
-            {subHeader && <h2 class={bem('sub-title')}>{subHeader}</h2>}
+            {this.slots('header') ||
+              (header && <h2 class={bem('title')}>{header}</h2>)}
+            {this.slots('subHeader') ||
+              (subHeader && <h2 class={bem('sub-title')}>{subHeader}</h2>)}
           </div>
 
-          <div class={bem('message')}>{this.message}</div>
-
-          {/* <div
-            class={bem('checkbox-group')}
-          >
-          </div>
-          <div
-            class={bem('radio-group')}
-          >
-          </div>
-          <div
-            class={bem('input-group')}
-          >
-          </div> */}
+          <div class={bem('message')}>{this.slots() || this.message}</div>
 
           {this.cachedButtons}
         </div>
