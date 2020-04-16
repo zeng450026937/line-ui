@@ -503,14 +503,14 @@
   }
 }
 
-.line-item .slotted.line-label {
+.line-item .line-label {
   margin-left: 0;
   margin-right: 8px;
   margin-top: 10px;
   margin-bottom: 10px;
 }
 @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
-  .line-item .slotted.line-label {
+  .line-item .line-label {
     margin-left: unset;
     margin-right: unset;
     margin-inline-start: 0;

@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import { createPopper } from '@popperjs/core';
 import Swiper from 'swiper';
 
 const debounce = (fn, delay = 300) => {
@@ -978,7 +979,7 @@ class GestureController {
     if (maxPriority === priority) {
       this.capturedId = id;
       requestedStart.clear();
-      const event = new CustomEvent('ionGestureCaptured', {
+      const event = new CustomEvent('lineGestureCaptured', {
         detail: { gestureName },
       });
       document.dispatchEvent(event);
@@ -3172,11 +3173,15 @@ var Action = /*#__PURE__*/ createComponent$3({
       if (button) {
         // a handler has been provided, execute it
         // pass the handler the values from the inputs
-        const rtn = await safeCall(button.handler);
+        try {
+          const rtn = await safeCall(button.handler);
 
-        if (rtn === false) {
-          // if the return value of the handler is false then do not dismiss
-          return false;
+          if (rtn === false) {
+            // if the return value of the handler is false then do not dismiss
+            return false;
+          }
+        } catch (error) {
+          process.env.NODE_ENV !== 'production' && console.error(error);
         }
       }
 
@@ -3545,9 +3550,6 @@ const {
   createComponent: createComponent$5,
   bem: bem$5,
 } = /*#__PURE__*/ createNamespace('alert');
-const isCancel = (role) => {
-  return role === 'cancel' || role === 'overlay';
-};
 var Alert = /*#__PURE__*/ createComponent$5({
   mixins: [/*#__PURE__*/ usePopup()],
   props: {
@@ -3632,7 +3634,7 @@ var Alert = /*#__PURE__*/ createComponent$5({
                 },
                 class: [bem$5('button'), 'line-focusable', 'line-activatable'],
                 on: {
-                  click: () => this.onButtonClick(button),
+                  click: () => this.buttonClick(button),
                 },
               },
               [
@@ -3655,29 +3657,39 @@ var Alert = /*#__PURE__*/ createComponent$5({
       this.$emit('overlay-tap');
     },
 
-    /* eslint-disable-next-line consistent-return */
-    onButtonClick(button) {
-      const { role } = button; // const values = this.getValues();
+    async buttonClick(button) {
+      const { role } = button;
 
-      if (isCancel(role)) {
+      if (role === 'cancel') {
         return this.close(role);
       }
 
-      let returnData;
+      const shouldClose = await this.callButtonHandler(button);
 
-      if (button && button.handler) {
+      if (shouldClose) {
+        return this.close(button.role);
+      }
+
+      return Promise.resolve();
+    },
+
+    async callButtonHandler(button) {
+      if (button) {
         // a handler has been provided, execute it
         // pass the handler the values from the inputs
         try {
-          returnData = button.handler(role);
+          const rtn = await safeCall(button.handler);
+
+          if (rtn === false) {
+            // if the return value of the handler is false then do not dismiss
+            return false;
+          }
         } catch (error) {
           process.env.NODE_ENV !== 'production' && console.error(error);
         }
       }
 
-      if (returnData !== false) {
-        return this.close(role);
-      }
+      return true;
     },
   },
 
@@ -3722,22 +3734,24 @@ var Alert = /*#__PURE__*/ createComponent$5({
                 class: bem$5('head'),
               },
               [
-                header &&
-                  h(
-                    'h2',
-                    {
-                      class: bem$5('title'),
-                    },
-                    [header]
-                  ),
-                subHeader &&
-                  h(
-                    'h2',
-                    {
-                      class: bem$5('sub-title'),
-                    },
-                    [subHeader]
-                  ),
+                this.slots('header') ||
+                  (header &&
+                    h(
+                      'h2',
+                      {
+                        class: bem$5('title'),
+                      },
+                      [header]
+                    )),
+                this.slots('subHeader') ||
+                  (subHeader &&
+                    h(
+                      'h2',
+                      {
+                        class: bem$5('sub-title'),
+                      },
+                      [subHeader]
+                    )),
               ]
             ),
             h(
@@ -3745,7 +3759,7 @@ var Alert = /*#__PURE__*/ createComponent$5({
               {
                 class: bem$5('message'),
               },
-              [this.message]
+              [this.slots() || this.message]
             ),
             this.cachedButtons,
           ]
@@ -5305,6 +5319,753 @@ var col = /*#__PURE__*/ createComponent$l({
   },
 });
 
+/**
+ * Enter Animation
+ */
+const enterAnimation = (baseEl, paddingTop, paddingBottom) => {
+  const height = baseEl.scrollHeight || '';
+  const baseAnimation = createAnimation();
+  baseAnimation
+    .addElement(baseEl)
+    .easing('ease-in-out')
+    .duration(300)
+    // .afterClearStyles(['height'])
+    .fromTo('padding-top', '0px', `${paddingTop}px`)
+    .fromTo('padding-bottom', '0px', `${paddingBottom}px`)
+    .fromTo('height', '0px', `${height}px`);
+  return baseAnimation;
+};
+
+/**
+ * Leave Animation
+ */
+const leaveAnimation = (baseEl, paddingTop, paddingBottom) => {
+  const height = baseEl.scrollHeight || '';
+  const baseAnimation = createAnimation();
+  baseAnimation
+    .addElement(baseEl)
+    .easing('ease-in-out')
+    .duration(300)
+    .fromTo('padding-top', `${paddingTop}px`, '0px')
+    .fromTo('padding-bottom', `${paddingBottom}px`, '0px')
+    .fromTo('height', `${height}px`, '0px');
+  return baseAnimation;
+};
+
+function useCollapseTransition() {
+  return createMixins({
+    mixins: [
+      // Popup lifecycle events depend on Transition mechanism
+      // Transition should not be disabled
+      useTransition(),
+    ],
+    beforeMount() {
+      const onBeforeEnter = async (el) => {
+        this.overflow = el.style.overflow;
+        this.paddingTop = el.style.paddingTop;
+        this.paddingBottom = el.style.paddingBottom;
+        el.style.height = '0px';
+        el.style.paddingTop = '0px';
+        el.style.paddingBottom = '0px';
+        el.style.overflow = 'hidden';
+        this.$emit('aboutToShow', el);
+      };
+      const onAfterEnter = (el) => {
+        el.style.height = '';
+        el.style.paddingTop = '';
+        el.style.paddingBottom = '';
+        el.style.animationTimingFunction = '';
+        el.style.animationFillMode = '';
+        el.style.animationDirection = '';
+        el.style.animationIterationCount = '';
+        el.style.animationName = '';
+        el.style.overflow = this.overflow;
+        this.$emit('opened');
+      };
+      const onBeforeLeave = (el) => {
+        this.overflow = el.style.overflow;
+        this.paddingTop = el.style.paddingTop;
+        this.paddingBottom = el.style.paddingBottom;
+        el.style.height = `${el.scrollHeight}px`;
+        el.style.overflow = 'hidden';
+        this.$emit('aboutToHide', el);
+      };
+      const onAfterLeave = (el) => {
+        el.style.height = '';
+        el.style.paddingTop = '';
+        el.style.paddingBottom = '';
+        el.style.animationTimingFunction = '';
+        el.style.animationFillMode = '';
+        el.style.animationDirection = '';
+        el.style.animationIterationCount = '';
+        el.style.animationName = '';
+        el.style.overflow = this.overflow;
+        el.style.paddingTop = this.paddingTop;
+        el.style.paddingBottom = this.paddingBottom;
+        this.$emit('closed');
+      };
+      const onEnter = async (el, done) => {
+        await this.$nextTick();
+        this.animation = enterAnimation(
+          el,
+          this.paddingTop,
+          this.paddingBottom
+        );
+        if (!config.getBoolean('animated', true)) {
+          this.animation.duration(0);
+        }
+        this.$emit('animation-enter', el, this.animation);
+        await this.animation
+          .play()
+          .catch(
+            process.env.NODE_ENV !== 'production'
+              ? (e) => console.error(e)
+              : NOOP
+          );
+        done();
+      };
+      const onLeave = async (el, done) => {
+        await this.$nextTick();
+        this.animation = leaveAnimation(
+          el,
+          this.paddingTop,
+          this.paddingBottom
+        );
+        if (!config.getBoolean('animated', true)) {
+          this.animation.duration(0);
+        }
+        this.$emit('animation-leave', el, this.animation);
+        await this.animation
+          .play()
+          .catch(
+            process.env.NODE_ENV !== 'production'
+              ? (e) => console.error(e)
+              : NOOP
+          );
+        done();
+      };
+      const onCancel = () => {
+        if (this.animation) {
+          this.animation.stop();
+          this.animation = null;
+        }
+        this.$emit('canceled');
+      };
+      this.$on('before-enter', onBeforeEnter);
+      this.$on('after-enter', onAfterEnter);
+      this.$on('before-leave', onBeforeLeave);
+      this.$on('after-leave', onAfterLeave);
+      this.$on('enter', onEnter);
+      this.$on('enter-cancelled', onCancel);
+      this.$on('leave', onLeave);
+      this.$on('leave-cancelled', onCancel);
+    },
+  });
+}
+
+const { createComponent: createComponent$m } = /*#__PURE__*/ createNamespace(
+  'collapse-item-content'
+);
+var CollapseItemContent = /*#__PURE__*/ createComponent$m({
+  mixins: [/*#__PURE__*/ useCollapseTransition()],
+  props: {
+    checked: Boolean,
+  },
+
+  render() {
+    const h = arguments[0];
+    const { checked } = this;
+    return h(
+      'div',
+      {
+        class: 'line-collapse-item__wrapper',
+        directives: [
+          {
+            name: 'show',
+            value: checked,
+          },
+        ],
+      },
+      [
+        h(
+          'div',
+          {
+            class: 'line-collapse-item__content',
+          },
+          [this.slots()]
+        ),
+      ]
+    );
+  },
+});
+
+const {
+  createComponent: createComponent$n,
+  bem: bem$m,
+} = /*#__PURE__*/ createNamespace('font-icon');
+
+function getDefaultText(slots) {
+  const nodes = slots();
+  const text = (nodes && nodes[0].text) || '';
+  return text.trim();
+}
+
+var FontIcon = /*#__PURE__*/ createComponent$n({
+  functional: true,
+  props: {
+    name: String,
+    source: String,
+    size: String,
+    color: String,
+  },
+
+  render(h, { props, data, slots }) {
+    const { attrs = {} } = data;
+    const { name, size, color } = props;
+    const text = name || getDefaultText(slots);
+    return h(
+      'i',
+      helper([
+        {
+          class: [
+            'line-icon',
+            bem$m({
+              [`${size}`]: !!size,
+            }),
+            createColorClasses(color),
+          ],
+          attrs: {
+            'aria-hidden': !attrs['aria-label'],
+            'aria-label': attrs['aria-label'] || text,
+          },
+        },
+        data,
+      ]),
+      [text]
+    );
+  },
+});
+
+const {
+  createComponent: createComponent$o,
+  bem: bem$n,
+} = /*#__PURE__*/ createNamespace('svg-icon');
+
+const getDefaultText$1 = (slots) => {
+  const nodes = slots();
+  const text = (nodes && nodes[0].text) || '';
+  return text.trim();
+};
+
+var SvgIcon = /*#__PURE__*/ createComponent$o({
+  functional: true,
+  props: {
+    name: String,
+    href: String,
+    src: String,
+    size: String,
+    color: String,
+    fill: {
+      type: Boolean,
+      default: true,
+    },
+    stroke: Boolean,
+  },
+
+  render(h, { props, data, slots }) {
+    const { attrs = {} } = data;
+    const { name, href, src, size, color, fill, stroke } = props;
+    const text = name || getDefaultText$1(slots);
+    const finalHref = href || `${src || ''}#${text}`;
+    return h(
+      'div',
+      helper([
+        {
+          class: [
+            bem$n({
+              [`${size}`]: !!size,
+              'fill-none': !fill,
+              'stroke-width': stroke,
+            }),
+            createColorClasses(color),
+          ],
+        },
+        data,
+      ]),
+      [
+        h(
+          'svg',
+          {
+            attrs: {
+              role: 'img',
+              'aria-hidden': !attrs['aria-label'],
+              'aria-label': attrs['aria-label'] || text,
+            },
+          },
+          [
+            text || href
+              ? h('use', {
+                  attrs: {
+                    'xlink:href': finalHref,
+                  },
+                })
+              : slots('content'),
+          ]
+        ),
+      ]
+    );
+  },
+});
+
+const { createComponent: createComponent$p } = /*#__PURE__*/ createNamespace(
+  'icon'
+);
+var Icon = /*#__PURE__*/ createComponent$p({
+  functional: true,
+
+  render(h, { data, children }) {
+    const { attrs } = data;
+    const hasSrc = attrs && ('src' in attrs || 'href' in attrs);
+
+    if (hasSrc) {
+      return h(SvgIcon, data, children);
+    }
+
+    return h(FontIcon, data, children);
+  },
+});
+
+const NAMESPACE$4 = 'Collapse';
+const {
+  createComponent: createComponent$q,
+  bem: bem$o,
+} = /*#__PURE__*/ createNamespace('collapse-item');
+var collapseItem = /*#__PURE__*/ createComponent$q({
+  mixins: [/*#__PURE__*/ useCheckItem(NAMESPACE$4)],
+  props: {
+    title: String,
+    disabled: Boolean,
+  },
+  methods: {
+    onClick() {
+      if (this.checkable && !this.disabled) {
+        this.checked = !this.checked;
+      }
+    },
+  },
+
+  render() {
+    const h = arguments[0];
+    const { checked, disabled, title } = this;
+    return h(
+      'div',
+      {
+        class: bem$o({
+          active: checked,
+        }),
+      },
+      [
+        h(
+          'div',
+          {
+            class: bem$o('title', {
+              disabled,
+            }),
+            on: {
+              click: this.onClick,
+            },
+          },
+          [
+            this.slots('title') || title,
+            this.slots('icon') ||
+              h(Icon, {
+                class: bem$o('title-icon', {
+                  rotate: checked,
+                }),
+                attrs: {
+                  name: 'expand_more',
+                  width: '18',
+                  height: '18',
+                },
+              }),
+          ]
+        ),
+        h(
+          CollapseItemContent,
+          {
+            attrs: {
+              checked: checked,
+            },
+          },
+          [this.slots()]
+        ),
+      ]
+    );
+  },
+});
+
+const NAMESPACE$5 = 'Collapse';
+const {
+  createComponent: createComponent$r,
+  bem: bem$p,
+} = /*#__PURE__*/ createNamespace('collapse');
+var collapse = /*#__PURE__*/ createComponent$r({
+  mixins: [/*#__PURE__*/ useCheckGroup(NAMESPACE$5)],
+  props: {
+    exclusive: {
+      type: Boolean,
+      default: true,
+    },
+  },
+
+  render() {
+    const h = arguments[0];
+    return h(
+      'div',
+      {
+        class: bem$p(),
+      },
+      [this.slots()]
+    );
+  },
+});
+
+const {
+  createComponent: createComponent$s,
+  bem: bem$q,
+} = /*#__PURE__*/ createNamespace('combo-box-item');
+var ComboBoxItem = /*#__PURE__*/ createComponent$s({
+  props: {
+    option: Object,
+  },
+  methods: {
+    async buttonClick(button) {
+      const parent =
+        this.$parent.$options.name === 'line-combo-box' ? this.$parent : null;
+      if (!parent) return;
+
+      if (!button) {
+        return parent.close();
+      }
+
+      const { role } = button;
+
+      if (role === 'cancel') {
+        return parent.close();
+      }
+
+      const shouldClose = await this.callButtonHandler(button);
+
+      if (shouldClose) {
+        parent.$emit('optionChange', button);
+        return parent.close();
+      }
+
+      return Promise.resolve();
+    },
+
+    async callButtonHandler(button) {
+      if (button) {
+        // a handler has been provided, execute it
+        // pass the handler the values from the inputs
+        try {
+          const rtn = await safeCall(button.handler);
+
+          if (rtn === false) {
+            // if the return value of the handler is false then do not dismiss
+            return false;
+          }
+        } catch (error) {
+          process.env.NODE_ENV !== 'production' && console.error(error);
+        }
+      }
+
+      return true;
+    },
+  },
+
+  render() {
+    const h = arguments[0];
+    const { option = {} } = this;
+    return h(
+      'li',
+      {
+        class: [bem$q(''), 'line-activatable'],
+        on: {
+          click: () => this.buttonClick(option),
+        },
+      },
+      [
+        h(
+          'span',
+          {
+            class: bem$q('inner'),
+          },
+          [this.slots() || option.text]
+        ),
+      ]
+    );
+  },
+});
+
+const isVue = (val) => val && val._isVue;
+function useTrigger() {
+  return createMixins({
+    props: {
+      // string or Element
+      trigger: null,
+    },
+    computed: {
+      // TODO
+      // Evaluate before mounted may resolve $refs uncorrectly
+      $trigger() {
+        const { trigger, $vnode } = this;
+        if (!trigger) return;
+        const baseEl = ($vnode && $vnode.context.$el) || document;
+        if (!$vnode) {
+          return isString(trigger) ? baseEl.querySelector(trigger) : trigger;
+        }
+        const refs = $vnode.context.$refs;
+        const resolved = isString(trigger)
+          ? refs[trigger] || baseEl.querySelector(trigger)
+          : trigger;
+        if (process.env.NODE_ENV !== 'production' && isArray(resolved)) {
+          console.warn(`
+            There are more than one triggers in the context.
+            Trigger element should be only one.
+          `);
+        }
+        return isArray(resolved) ? resolved[0] : resolved;
+      },
+      $triggerEl() {
+        const trigger = this.$trigger;
+        return isVue(trigger) ? trigger.$el : trigger;
+      },
+    },
+  });
+}
+
+function useEvent(options) {
+  const { event, global = false } = options;
+  return createMixins({
+    mounted() {
+      const { $el } = this;
+      const target = global ? getApp($el) : $el;
+      const offs = arrayify(event).map((name) => {
+        let dismiss;
+        const prevent = () => (dismiss = true);
+        const maybe = (ev) => {
+          dismiss = false;
+          this.$emit('event-condition', { ev, name, prevent });
+          if (dismiss) return;
+          this.$emit('event-handler', ev, name);
+        };
+        return on(target, name, maybe, options);
+      });
+      const teardown = () => offs.forEach((off) => off());
+      this.useEvent = { teardown };
+    },
+    beforeDestroy() {
+      this.useEvent.teardown();
+    },
+  });
+}
+
+function useClickOutside(options) {
+  const { global = true, event = ['mouseup', 'touchend'] } = options || {};
+  return createMixins({
+    mixins: [useEvent({ global, event })],
+    mounted() {
+      this.$on('event-condition', (condition) => {
+        const { ev, prevent } = condition;
+        // If click was triggered programmaticaly (domEl.click()) then
+        // it shouldn't be treated as click-outside
+        // Chrome/Firefox support isTrusted property
+        // IE/Edge support pointerType property (empty if not triggered
+        // by pointing device)
+        if (
+          ('isTrusted' in ev && !ev.isTrusted) ||
+          ('pointerType' in ev && !ev.pointerType)
+        )
+          return false;
+        let elements = [this.$el];
+        const include = (el) => {
+          elements = elements.concat(el);
+        };
+        this.$emit('event-include', include);
+        if (elements.some((el) => el && el.contains(ev.target))) {
+          prevent();
+        }
+      });
+      this.$on('event-handler', () => this.$emit('clickoutside'));
+    },
+  });
+}
+
+const {
+  createComponent: createComponent$t,
+  bem: bem$r,
+} = /*#__PURE__*/ createNamespace('combo-box');
+var comboBox = /*#__PURE__*/ createComponent$t({
+  mixins: [
+    /*#__PURE__*/ useModel('visible'),
+    /*#__PURE__*/ useColor(),
+    /*#__PURE__*/ useTrigger(),
+    /*#__PURE__*/ useClickOutside(),
+    /*#__PURE__*/ useCollapseTransition(),
+  ],
+  props: {
+    options: Array,
+    showDuration: Number,
+    hideDuration: Number,
+    expand: Boolean,
+    size: String,
+  },
+
+  data() {
+    return {
+      placement: 'bottom',
+    };
+  },
+
+  methods: {
+    close() {
+      this.$emit('change', false);
+    },
+
+    createPopper() {
+      if (this.popper) return;
+
+      const getBoundingClientRect = () =>
+        this.$triggerEl.getBoundingClientRect();
+
+      const $trigger = {
+        getBoundingClientRect,
+      };
+      const { $el, placement } = this;
+      const offset = 2;
+      this.popper = createPopper($trigger, $el, {
+        placement,
+        strategy: 'fixed',
+        modifiers: [
+          {
+            name: 'offset',
+            options: {
+              offset: [0, offset],
+            },
+          },
+          {
+            name: 'preventOverflow',
+            options: {
+              mainAxis: false,
+              altAxis: true,
+              padding: offset,
+            },
+          },
+          {
+            name: 'flip',
+            options: {
+              padding: offset,
+            },
+          },
+        ],
+      });
+    },
+  },
+
+  beforeMount() {
+    this.$on('aboutToShow', (baseEl) => {
+      if (this.expand && this.$triggerEl) {
+        const { width } = this.$triggerEl.getBoundingClientRect();
+        baseEl.style.width = `${width}px`;
+      }
+
+      this.createPopper();
+      this.popper.update();
+      popupContext.push(this);
+    });
+    this.$on('animation-enter', async (baseEl, animation) => {
+      const { showDuration = 250 } = this;
+      await this.$nextTick(); // update zIndex
+
+      baseEl.style.zIndex = `${popupContext.getOverlayIndex()}`;
+      animation.easing('ease').duration(showDuration);
+    });
+    this.$on('animation-leave', (baseEl, animation) => {
+      const { hideDuration = 150 } = this;
+      animation.easing('ease').duration(hideDuration);
+    });
+    this.$on('closed', () => {
+      popupContext.pop(this);
+    });
+    this.$on('canceled', () => {
+      popupContext.pop(this);
+    });
+    this.$on('event-include', (include) => {
+      return include(this.$triggerEl);
+    });
+
+    const onClickOutside = () => {
+      this.close();
+    };
+
+    this.$on('clickoutside', onClickOutside);
+  },
+
+  beforeDestroy() {
+    if (this.popper) {
+      this.popper.destroy();
+    } // TODO
+    // if (this.vHover) {
+    //   this.vHover.unbind();
+    // }
+  },
+
+  render() {
+    const h = arguments[0];
+    const { visible, options } = this;
+    return h(
+      'div',
+      helper([
+        {
+          class: bem$r(),
+          directives: [
+            {
+              name: 'show',
+              value: visible,
+            },
+          ],
+        },
+        {
+          on: this.$listeners,
+        },
+      ]),
+      [
+        h(
+          'ul',
+          {
+            class: bem$r('content'),
+          },
+          [
+            this.slots() ||
+              options.map((option) =>
+                h(
+                  ComboBoxItem,
+                  {
+                    attrs: {
+                      option: option,
+                    },
+                  },
+                  [option.text]
+                )
+              ),
+          ]
+        ),
+      ]
+    );
+  },
+});
+
 async function scrollToPoint(
   scrollEl = document.scrollingElement ||
     document.body ||
@@ -5422,8 +6183,8 @@ const updateScrollDetail = (detail, el, timestamp, shouldStart) => {
 };
 
 const {
-  createComponent: createComponent$m,
-  bem: bem$m,
+  createComponent: createComponent$u,
+  bem: bem$s,
 } = /*#__PURE__*/ createNamespace('content');
 
 const getParentElement = (el) => {
@@ -5456,7 +6217,7 @@ const getPageElement = (el) => {
   return getParentElement(el);
 };
 
-var content = /*#__PURE__*/ createComponent$m({
+var content = /*#__PURE__*/ createComponent$u({
   mixins: [/*#__PURE__*/ useColor()],
 
   provide() {
@@ -5626,7 +6387,7 @@ var content = /*#__PURE__*/ createComponent$m({
       'div',
       helper([
         {
-          class: [bem$m(), false, shouldForceOverscroll && 'overscroll'],
+          class: [bem$s(), false, shouldForceOverscroll && 'overscroll'],
           style: {
             '--offset-top': `${this.cTop || 0}px`,
             '--offset-bottom': `${this.cBottom || 0}px`,
@@ -5805,8 +6566,8 @@ const spinners = {
 const SPINNERS = spinners;
 
 const {
-  createComponent: createComponent$n,
-  bem: bem$n,
+  createComponent: createComponent$v,
+  bem: bem$t,
 } = /*#__PURE__*/ createNamespace('spinner');
 
 function getSpinnerName(name) {
@@ -5872,7 +6633,7 @@ function buildLine(h, spinner, duration, index, total) {
   );
 }
 
-var Spinner = /*#__PURE__*/ createComponent$n({
+var Spinner = /*#__PURE__*/ createComponent$v({
   functional: true,
   props: {
     color: String,
@@ -5902,7 +6663,7 @@ var Spinner = /*#__PURE__*/ createComponent$n({
       helper([
         {
           class: [
-            bem$n({
+            bem$t({
               [spinnerName]: true,
               paused: !!props.paused || config.getBoolean('testing'),
             }),
@@ -6015,10 +6776,10 @@ const mdLeaveAnimation$2 = (baseEl) => {
 };
 
 const {
-  createComponent: createComponent$o,
-  bem: bem$o,
+  createComponent: createComponent$w,
+  bem: bem$u,
 } = /*#__PURE__*/ createNamespace('loading');
-var Loading = /*#__PURE__*/ createComponent$o({
+var Loading = /*#__PURE__*/ createComponent$w({
   mixins: [/*#__PURE__*/ usePopup(), /*#__PURE__*/ usePopupDuration()],
   props: {
     message: String,
@@ -6060,7 +6821,7 @@ var Loading = /*#__PURE__*/ createComponent$o({
             role: 'dialog',
             'aria-modal': 'true',
           },
-          class: bem$o({
+          class: bem$u({
             translucent: this.translucent,
           }),
         },
@@ -6083,14 +6844,14 @@ var Loading = /*#__PURE__*/ createComponent$o({
             attrs: {
               role: 'dialog',
             },
-            class: bem$o('wrapper'),
+            class: bem$u('wrapper'),
           },
           [
             spinner &&
               h(
                 'div',
                 {
-                  class: bem$o('spinner'),
+                  class: bem$u('spinner'),
                 },
                 [
                   h(Spinner, {
@@ -6104,7 +6865,7 @@ var Loading = /*#__PURE__*/ createComponent$o({
               h(
                 'div',
                 {
-                  class: bem$o('content'),
+                  class: bem$u('content'),
                 },
                 [message]
               ),
@@ -6116,8 +6877,8 @@ var Loading = /*#__PURE__*/ createComponent$o({
 });
 
 const {
-  createComponent: createComponent$p,
-  bem: bem$p,
+  createComponent: createComponent$x,
+  bem: bem$v,
 } = /*#__PURE__*/ createNamespace('picker-column');
 
 const clamp = (min, n, max) => {
@@ -6128,7 +6889,7 @@ const PICKER_OPT_SELECTED = 'line-picker-column__opt--selected';
 const DECELERATION_FRICTION = 0.97;
 const MAX_PICKER_SPEED = 90;
 const TRANSITION_DURATION = 150;
-var PickerColumn = /*#__PURE__*/ createComponent$p({
+var PickerColumn = /*#__PURE__*/ createComponent$x({
   props: {
     col: Object,
   },
@@ -6469,7 +7230,7 @@ var PickerColumn = /*#__PURE__*/ createComponent$p({
     return h(
       'div',
       {
-        class: bem$p({
+        class: bem$v({
           col: true,
           'opts-left': col.align === 'left',
           'opts-right': col.align === 'right',
@@ -6483,7 +7244,7 @@ var PickerColumn = /*#__PURE__*/ createComponent$p({
           h(
             'div',
             {
-              class: bem$p('prefix'),
+              class: bem$v('prefix'),
               style: {
                 width: col.prefixWidth,
               },
@@ -6493,7 +7254,7 @@ var PickerColumn = /*#__PURE__*/ createComponent$p({
         h(
           'div',
           {
-            class: bem$p('opts'),
+            class: bem$v('opts'),
             style: {
               maxWidth: col.optionsWidth,
             },
@@ -6508,7 +7269,7 @@ var PickerColumn = /*#__PURE__*/ createComponent$p({
                     type: 'button',
                     'opt-index': index,
                   },
-                  class: bem$p('opt', {
+                  class: bem$v('opt', {
                     disabled: !!o.disabled,
                   }),
                 },
@@ -6521,7 +7282,7 @@ var PickerColumn = /*#__PURE__*/ createComponent$p({
           h(
             'div',
             {
-              class: bem$p('suffix'),
+              class: bem$v('suffix'),
               style: {
                 width: col.suffixWidth,
               },
@@ -6574,8 +7335,8 @@ const iosLeaveAnimation$3 = (baseEl) => {
 };
 
 const {
-  createComponent: createComponent$q,
-  bem: bem$q,
+  createComponent: createComponent$y,
+  bem: bem$w,
 } = /*#__PURE__*/ createNamespace('picker');
 
 const buttonWrapperClass = (button) => {
@@ -6585,7 +7346,7 @@ const buttonWrapperClass = (button) => {
   };
 };
 
-var Picker = /*#__PURE__*/ createComponent$q({
+var Picker = /*#__PURE__*/ createComponent$y({
   mixins: [/*#__PURE__*/ usePopup()],
   props: {
     overlayIndex: Number,
@@ -6650,11 +7411,15 @@ var Picker = /*#__PURE__*/ createComponent$q({
       if (button) {
         // a handler has been provided, execute it
         // pass the handler the values from the inputs
-        const rtn = await safeCall(button.handler, this.getSelected());
+        try {
+          const rtn = await safeCall(button.handler, this.getSelected());
 
-        if (rtn === false) {
-          // if the return value of the handler is false then do not dismiss
-          return false;
+          if (rtn === false) {
+            // if the return value of the handler is false then do not dismiss
+            return false;
+          }
+        } catch (error) {
+          process.env.NODE_ENV !== 'production' && console.error(error);
         }
       }
 
@@ -6709,7 +7474,7 @@ var Picker = /*#__PURE__*/ createComponent$q({
           },
         ],
         class: [
-          bem$q({
+          bem$w({
             mode: true,
           }),
           {
@@ -6734,7 +7499,7 @@ var Picker = /*#__PURE__*/ createComponent$q({
         h(
           'div',
           {
-            class: bem$q('wrapper'),
+            class: bem$w('wrapper'),
             attrs: {
               role: 'dialog',
             },
@@ -6743,7 +7508,7 @@ var Picker = /*#__PURE__*/ createComponent$q({
             h(
               'div',
               {
-                class: bem$q('toolbar'),
+                class: bem$w('toolbar'),
               },
               [
                 this.buttons.map((b) =>
@@ -6763,7 +7528,7 @@ var Picker = /*#__PURE__*/ createComponent$q({
                             click: () => this.buttonClick(b),
                           },
                           class: [
-                            bem$q('button'),
+                            bem$w('button'),
                             {
                               'line-activatable': true,
                             },
@@ -6779,11 +7544,11 @@ var Picker = /*#__PURE__*/ createComponent$q({
             h(
               'div',
               {
-                class: bem$q('columns'),
+                class: bem$w('columns'),
               },
               [
                 h('div', {
-                  class: bem$q('above-highlight'),
+                  class: bem$w('above-highlight'),
                 }),
                 visible &&
                   columns.map((c) =>
@@ -6797,7 +7562,7 @@ var Picker = /*#__PURE__*/ createComponent$q({
                     })
                   ),
                 h('div', {
-                  class: bem$q('below-highlight'),
+                  class: bem$w('below-highlight'),
                 }),
               ]
             ),
@@ -7049,10 +7814,10 @@ const mdLeaveAnimation$3 = (baseEl) => {
 };
 
 const {
-  createComponent: createComponent$r,
-  bem: bem$r,
+  createComponent: createComponent$z,
+  bem: bem$x,
 } = /*#__PURE__*/ createNamespace('popover');
-var Popover = /*#__PURE__*/ createComponent$r({
+var Popover = /*#__PURE__*/ createComponent$z({
   mixins: [/*#__PURE__*/ usePopup()],
 
   beforeMount() {
@@ -7088,7 +7853,7 @@ var Popover = /*#__PURE__*/ createComponent$r({
           attrs: {
             'aria-modal': 'true',
           },
-          class: bem$r({
+          class: bem$x({
             translucent: this.translucent,
           }),
         },
@@ -7108,16 +7873,16 @@ var Popover = /*#__PURE__*/ createComponent$r({
         h(
           'div',
           {
-            class: bem$r('wrapper'),
+            class: bem$x('wrapper'),
           },
           [
             h('div', {
-              class: bem$r('arrow'),
+              class: bem$x('arrow'),
             }),
             h(
               'div',
               {
-                class: bem$r('content'),
+                class: bem$x('content'),
               },
               [this.slots()]
             ),
@@ -7129,11 +7894,11 @@ var Popover = /*#__PURE__*/ createComponent$r({
 });
 
 const {
-  createComponent: createComponent$s,
-  bem: bem$s,
+  createComponent: createComponent$A,
+  bem: bem$y,
 } = /*#__PURE__*/ createNamespace('popup');
 const CONTENT_ELEMENT = 'content';
-var popupLegacy = /*#__PURE__*/ createComponent$s({
+var popupLegacy = /*#__PURE__*/ createComponent$A({
   mixins: [/*#__PURE__*/ usePopup()],
 
   render() {
@@ -7151,7 +7916,7 @@ var popupLegacy = /*#__PURE__*/ createComponent$s({
           'aria-modal': 'true',
           role: 'dialog',
         },
-        class: bem$s(),
+        class: bem$y(),
       },
       [
         h(
@@ -7160,7 +7925,7 @@ var popupLegacy = /*#__PURE__*/ createComponent$s({
             attrs: {
               role: 'dialog',
             },
-            class: bem$s(CONTENT_ELEMENT),
+            class: bem$y(CONTENT_ELEMENT),
             ref: CONTENT_ELEMENT,
           },
           [this.slots()]
@@ -7266,10 +8031,10 @@ const mdLeaveAnimation$4 = (baseEl) => {
 };
 
 const {
-  createComponent: createComponent$t,
-  bem: bem$t,
+  createComponent: createComponent$B,
+  bem: bem$z,
 } = /*#__PURE__*/ createNamespace('popup');
-var Popup = /*#__PURE__*/ createComponent$t({
+var Popup = /*#__PURE__*/ createComponent$B({
   mixins: [/*#__PURE__*/ usePopup()],
 
   beforeMount() {
@@ -7306,7 +8071,7 @@ var Popup = /*#__PURE__*/ createComponent$t({
             'aria-modal': 'true',
             role: 'dialog',
           },
-          class: bem$t(),
+          class: bem$z(),
         },
         {
           on: this.$listeners,
@@ -7324,7 +8089,7 @@ var Popup = /*#__PURE__*/ createComponent$t({
             attrs: {
               role: 'dialog',
             },
-            class: bem$t('wrapper'),
+            class: bem$z('wrapper'),
           },
           [this.slots()]
         ),
@@ -7461,10 +8226,22 @@ const mdLeaveAnimation$5 = (baseEl) => {
 };
 
 const {
-  createComponent: createComponent$u,
-  bem: bem$u,
+  createComponent: createComponent$C,
+  bem: bem$A,
 } = /*#__PURE__*/ createNamespace('toast');
-var Toast = /*#__PURE__*/ createComponent$u({
+
+const buttonClass = (button) => {
+  return {
+    'line-toast-button': true,
+    'line-toast-button--icon-only':
+      button.icon !== undefined && button.text === undefined,
+    [`line-toast-button--${button.role}`]: button.role !== undefined,
+    'line-focusable': true,
+    'line-activatable': true,
+  };
+};
+
+var Toast = /*#__PURE__*/ createComponent$C({
   mixins: [
     /*#__PURE__*/ usePopup(),
     /*#__PURE__*/ usePopupDuration(),
@@ -7477,6 +8254,131 @@ var Toast = /*#__PURE__*/ createComponent$u({
     // top | bottom | middle
     position: String,
     message: String,
+    header: String,
+    buttons: Array,
+  },
+  methods: {
+    getButtons() {
+      const buttons = this.buttons
+        ? this.buttons.map((b) => {
+            return typeof b === 'string'
+              ? {
+                  text: b,
+                }
+              : b;
+          })
+        : [];
+      return buttons;
+    },
+
+    async buttonClick(button) {
+      const { role } = button;
+
+      if (role === 'cancel') {
+        return this.close(role);
+      }
+
+      const shouldClose = await this.callButtonHandler(button);
+
+      if (shouldClose) {
+        return this.close(button.role);
+      }
+
+      return Promise.resolve();
+    },
+
+    async callButtonHandler(button) {
+      if (button) {
+        // a handler has been provided, execute it
+        // pass the handler the values from the inputs
+        try {
+          const rtn = await safeCall(button.handler);
+
+          if (rtn === false) {
+            // if the return value of the handler is false then do not dismiss
+            return false;
+          }
+        } catch (error) {
+          process.env.NODE_ENV !== 'production' && console.error(error);
+        }
+      }
+
+      return true;
+    },
+
+    dispatchCancelHandler(ev) {
+      const { role } = ev.detail;
+
+      if (role === 'cancel' || role === 'overlay') {
+        const cancelButton = this.getButtons().find((b) => b.role === 'cancel');
+        this.callButtonHandler(cancelButton);
+      }
+    },
+
+    renderButtons(buttons, side) {
+      const h = this.$createElement;
+
+      if (buttons.length === 0) {
+        return;
+      } // TODO md ripple
+      // const { mode } = this;
+
+      const buttonGroupsClasses = {
+        'line-toast-button-group': true,
+        [`line-toast-button-group--${side}`]: true,
+      };
+      return h(
+        'div',
+        {
+          class: buttonGroupsClasses,
+        },
+        [
+          buttons.map((b) =>
+            h(
+              'button',
+              {
+                attrs: {
+                  type: 'button',
+                  tabIndex: 0,
+                  part: 'button',
+                },
+                class: buttonClass(b),
+                on: {
+                  click: () => this.buttonClick(b),
+                },
+              },
+              [
+                h(
+                  'div',
+                  {
+                    class: 'line-toast-button__inner',
+                  },
+                  [
+                    b.icon && isObject(b.icon)
+                      ? h(Icon, {
+                          class: 'line-toast-icon',
+                          slot: b.text === undefined ? 'icon-only' : undefined,
+                          attrs: {
+                            name: b.icon.name || '',
+                            src: b.icon.src || '',
+                          },
+                        })
+                      : h(Icon, {
+                          class: 'line-toast-icon',
+                          slot: b.text === undefined ? 'icon-only' : undefined,
+                          attrs: {
+                            name: b.icon,
+                          },
+                        }),
+                    b.text,
+                  ]
+                ),
+              ]
+            )
+          ),
+        ]
+      );
+    },
   },
 
   beforeMount() {
@@ -7507,6 +8409,9 @@ var Toast = /*#__PURE__*/ createComponent$u({
   render() {
     const h = arguments[0];
     const { position = 'bottom' } = this;
+    const allButtons = this.getButtons();
+    const startButtons = allButtons.filter((b) => b.side === 'start');
+    const endButtons = allButtons.filter((b) => b.side !== 'start');
     return h(
       'div',
       helper([
@@ -7517,7 +8422,7 @@ var Toast = /*#__PURE__*/ createComponent$u({
               value: this.visible,
             },
           ],
-          class: [bem$u()],
+          class: [bem$A()],
         },
         {
           on: this.$listeners,
@@ -7527,7 +8432,7 @@ var Toast = /*#__PURE__*/ createComponent$u({
         h(
           'div',
           {
-            class: bem$u('wrapper', {
+            class: bem$A('wrapper', {
               [position]: true,
             }),
           },
@@ -7535,25 +8440,33 @@ var Toast = /*#__PURE__*/ createComponent$u({
             h(
               'div',
               {
-                class: bem$u('container'),
+                class: bem$A('container'),
               },
               [
+                this.renderButtons(startButtons, 'start'),
                 h(
                   'div',
                   {
-                    class: bem$u('content'),
+                    class: bem$A('content'),
                   },
                   [
-                    h(
-                      'div',
-                      {
-                        class: bem$u('message'),
+                    this.header !== undefined &&
+                      h(
+                        'div',
+                        {
+                          class: bem$A('header'),
+                        },
+                        [this.header]
+                      ),
+                    h('div', {
+                      class: bem$A('message'),
+                      domProps: {
+                        innerHTML: this.message,
                       },
-                      [this.message]
-                    ),
-                    h('div'),
+                    }),
                   ]
                 ),
+                this.renderButtons(endButtons, 'end'),
               ]
             ),
           ]
@@ -7596,43 +8509,6 @@ function usePopupDelay() {
   });
 }
 
-const isVue = (val) => val && val._isVue;
-function useTrigger() {
-  return createMixins({
-    props: {
-      // string or Element
-      trigger: null,
-    },
-    computed: {
-      // TODO
-      // Evaluate before mounted may resolve $refs uncorrectly
-      $trigger() {
-        const { trigger, $vnode } = this;
-        if (!trigger) return;
-        const baseEl = ($vnode && $vnode.context.$el) || document;
-        if (!$vnode) {
-          return isString(trigger) ? baseEl.querySelector(trigger) : trigger;
-        }
-        const refs = $vnode.context.$refs;
-        const resolved = isString(trigger)
-          ? refs[trigger] || baseEl.querySelector(trigger)
-          : trigger;
-        if (process.env.NODE_ENV !== 'production' && isArray(resolved)) {
-          console.warn(`
-            There are more than one triggers in the context.
-            Trigger element should be only one.
-          `);
-        }
-        return isArray(resolved) ? resolved[0] : resolved;
-      },
-      $triggerEl() {
-        const trigger = this.$trigger;
-        return isVue(trigger) ? trigger.$el : trigger;
-      },
-    },
-  });
-}
-
 /**
  * iOS Tooltip Enter Animation
  */
@@ -7656,2111 +8532,6 @@ const iosLeaveAnimation$7 = (baseEl) => {
     .duration(500)
     .fromTo('opacity', 0.99, 0);
 };
-
-function getBoundingClientRect(element) {
-  var rect = element.getBoundingClientRect();
-  return {
-    width: rect.width,
-    height: rect.height,
-    top: rect.top,
-    right: rect.right,
-    bottom: rect.bottom,
-    left: rect.left,
-    x: rect.left,
-    y: rect.top,
-  };
-}
-
-/*:: import type { Window } from '../types'; */
-
-/*:: declare function getWindow(node: Node | Window): Window; */
-function getWindow(node) {
-  if (node.toString() !== '[object Window]') {
-    var ownerDocument = node.ownerDocument;
-    return ownerDocument ? ownerDocument.defaultView : window;
-  }
-
-  return node;
-}
-
-function getWindowScroll(node) {
-  var win = getWindow(node);
-  var scrollLeft = win.pageXOffset;
-  var scrollTop = win.pageYOffset;
-  return {
-    scrollLeft: scrollLeft,
-    scrollTop: scrollTop,
-  };
-}
-
-/*:: declare function isElement(node: mixed): boolean %checks(node instanceof
-  Element); */
-
-function isElement(node) {
-  var OwnElement = getWindow(node).Element;
-  return node instanceof OwnElement || node instanceof Element;
-}
-/*:: declare function isHTMLElement(node: mixed): boolean %checks(node instanceof
-  HTMLElement); */
-
-function isHTMLElement(node) {
-  var OwnElement = getWindow(node).HTMLElement;
-  return node instanceof OwnElement || node instanceof HTMLElement;
-}
-
-function getHTMLElementScroll(element) {
-  return {
-    scrollLeft: element.scrollLeft,
-    scrollTop: element.scrollTop,
-  };
-}
-
-function getNodeScroll(node) {
-  if (node === getWindow(node) || !isHTMLElement(node)) {
-    return getWindowScroll(node);
-  } else {
-    return getHTMLElementScroll(node);
-  }
-}
-
-function getNodeName(element) {
-  return element ? (element.nodeName || '').toLowerCase() : null;
-}
-
-function getDocumentElement(element) {
-  // $FlowFixMe: assume body is always available
-  return (isElement(element) ? element.ownerDocument : element.document)
-    .documentElement;
-}
-
-function getWindowScrollBarX(element) {
-  // If <html> has a CSS width greater than the viewport, then this will be
-  // incorrect for RTL.
-  // Popper 1 is broken in this case and never had a bug report so let's assume
-  // it's not an issue. I don't think anyone ever specifies width on <html>
-  // anyway.
-  // Browsers where the left scrollbar doesn't cause an issue report `0` for
-  // this (e.g. Edge 2019, IE11, Safari)
-  return (
-    getBoundingClientRect(getDocumentElement(element)).left +
-    getWindowScroll(element).scrollLeft
-  );
-}
-
-// Composite means it takes into account transforms as well as layout.
-
-function getCompositeRect(elementOrVirtualElement, offsetParent, isFixed) {
-  if (isFixed === void 0) {
-    isFixed = false;
-  }
-
-  var documentElement;
-  var rect = getBoundingClientRect(elementOrVirtualElement);
-  var scroll = {
-    scrollLeft: 0,
-    scrollTop: 0,
-  };
-  var offsets = {
-    x: 0,
-    y: 0,
-  };
-
-  if (!isFixed) {
-    if (getNodeName(offsetParent) !== 'body') {
-      scroll = getNodeScroll(offsetParent);
-    }
-
-    if (isHTMLElement(offsetParent)) {
-      offsets = getBoundingClientRect(offsetParent);
-      offsets.x += offsetParent.clientLeft;
-      offsets.y += offsetParent.clientTop;
-    } else if ((documentElement = getDocumentElement(offsetParent))) {
-      offsets.x = getWindowScrollBarX(documentElement);
-    }
-  }
-
-  return {
-    x: rect.left + scroll.scrollLeft - offsets.x,
-    y: rect.top + scroll.scrollTop - offsets.y,
-    width: rect.width,
-    height: rect.height,
-  };
-}
-
-// Returns the layout rect of an element relative to its offsetParent. Layout
-// means it doesn't take into account transforms.
-function getLayoutRect(element) {
-  return {
-    x: element.offsetLeft,
-    y: element.offsetTop,
-    width: element.offsetWidth,
-    height: element.offsetHeight,
-  };
-}
-
-function getParentNode(element) {
-  if (getNodeName(element) === 'html') {
-    return element;
-  }
-
-  return (
-    element.parentNode || // DOM Element detected
-    // $FlowFixMe: need a better way to handle this...
-    element.host || // ShadowRoot detected
-    document.ownerDocument || // Fallback to ownerDocument if available
-    document.documentElement // Or to documentElement if everything else fails
-  );
-}
-
-function getComputedStyle(element) {
-  return getWindow(element).getComputedStyle(element);
-}
-
-function getScrollParent$1(node) {
-  if (['html', 'body', '#document'].indexOf(getNodeName(node)) >= 0) {
-    // $FlowFixMe: assume body is always available
-    return node.ownerDocument.body;
-  }
-
-  if (isHTMLElement(node)) {
-    // Firefox wants us to check `-x` and `-y` variations as well
-    var _getComputedStyle = getComputedStyle(node),
-      overflow = _getComputedStyle.overflow,
-      overflowX = _getComputedStyle.overflowX,
-      overflowY = _getComputedStyle.overflowY;
-
-    if (/auto|scroll|overlay|hidden/.test(overflow + overflowY + overflowX)) {
-      return node;
-    }
-  }
-
-  return getScrollParent$1(getParentNode(node));
-}
-
-function listScrollParents(element, list) {
-  if (list === void 0) {
-    list = [];
-  }
-
-  var scrollParent = getScrollParent$1(element);
-  var isBody = getNodeName(scrollParent) === 'body';
-  var target = isBody ? getWindow(scrollParent) : scrollParent;
-  var updatedList = list.concat(target);
-  return isBody
-    ? updatedList // $FlowFixMe: isBody tells us target will be an HTMLElement here
-    : updatedList.concat(listScrollParents(getParentNode(target)));
-}
-
-function isTableElement(element) {
-  return ['table', 'td', 'th'].indexOf(getNodeName(element)) >= 0;
-}
-
-var isFirefox = function isFirefox() {
-  return typeof window.InstallTrigger !== 'undefined';
-};
-
-function getTrueOffsetParent(element) {
-  var offsetParent;
-
-  if (
-    !isHTMLElement(element) ||
-    !(offsetParent = element.offsetParent) || // https://github.com/popperjs/popper-core/issues/837
-    (isFirefox() && getComputedStyle(offsetParent).position === 'fixed')
-  ) {
-    return null;
-  }
-
-  return offsetParent;
-}
-
-function getOffsetParent(element) {
-  var window = getWindow(element);
-  var offsetParent = getTrueOffsetParent(element); // Find the nearest non-table offsetParent
-
-  while (offsetParent && isTableElement(offsetParent)) {
-    offsetParent = getTrueOffsetParent(offsetParent);
-  }
-
-  if (
-    offsetParent &&
-    getNodeName(offsetParent) === 'body' &&
-    getComputedStyle(offsetParent).position === 'static'
-  ) {
-    return window;
-  }
-
-  return offsetParent || window;
-}
-
-var top = 'top';
-var bottom = 'bottom';
-var right = 'right';
-var left = 'left';
-var auto = 'auto';
-var basePlacements = [top, bottom, right, left];
-var start = 'start';
-var end = 'end';
-var clippingParents = 'clippingParents';
-var viewport = 'viewport';
-var popper = 'popper';
-var reference = 'reference';
-var variationPlacements =
-  /*#__PURE__*/
-  basePlacements.reduce(function (acc, placement) {
-    return acc.concat([placement + '-' + start, placement + '-' + end]);
-  }, []);
-var placements =
-  /*#__PURE__*/
-  [].concat(basePlacements, [auto]).reduce(function (acc, placement) {
-    return acc.concat([
-      placement,
-      placement + '-' + start,
-      placement + '-' + end,
-    ]);
-  }, []); // modifiers that need to read the DOM
-
-var beforeRead = 'beforeRead';
-var read = 'read';
-var afterRead = 'afterRead'; // pure-logic modifiers
-
-var beforeMain = 'beforeMain';
-var main = 'main';
-var afterMain = 'afterMain'; // modifier with the purpose to write to the DOM (or write into a framework state)
-
-var beforeWrite = 'beforeWrite';
-var write = 'write';
-var afterWrite = 'afterWrite';
-var modifierPhases = [
-  beforeRead,
-  read,
-  afterRead,
-  beforeMain,
-  main,
-  afterMain,
-  beforeWrite,
-  write,
-  afterWrite,
-];
-
-function order(modifiers) {
-  var map = new Map();
-  var visited = new Set();
-  var result = [];
-  modifiers.forEach(function (modifier) {
-    map.set(modifier.name, modifier);
-  }); // On visiting object, check for its dependencies and visit them recursively
-
-  function sort(modifier) {
-    visited.add(modifier.name);
-    var requires = [].concat(
-      modifier.requires || [],
-      modifier.requiresIfExists || []
-    );
-    requires.forEach(function (dep) {
-      if (!visited.has(dep)) {
-        var depModifier = map.get(dep);
-
-        if (depModifier) {
-          sort(depModifier);
-        }
-      }
-    });
-    result.push(modifier);
-  }
-
-  modifiers.forEach(function (modifier) {
-    if (!visited.has(modifier.name)) {
-      // check for visited object
-      sort(modifier);
-    }
-  });
-  return result;
-}
-
-function orderModifiers(modifiers) {
-  // order based on dependencies
-  var orderedModifiers = order(modifiers); // order based on phase
-
-  return modifierPhases.reduce(function (acc, phase) {
-    return acc.concat(
-      orderedModifiers.filter(function (modifier) {
-        return modifier.phase === phase;
-      })
-    );
-  }, []);
-}
-
-function debounce$1(fn) {
-  var pending;
-  return function () {
-    if (!pending) {
-      pending = new Promise(function (resolve) {
-        Promise.resolve().then(function () {
-          pending = undefined;
-          resolve(fn());
-        });
-      });
-    }
-
-    return pending;
-  };
-}
-
-function format(str) {
-  for (
-    var _len = arguments.length,
-      args = new Array(_len > 1 ? _len - 1 : 0),
-      _key = 1;
-    _key < _len;
-    _key++
-  ) {
-    args[_key - 1] = arguments[_key];
-  }
-
-  return [].concat(args).reduce(function (p, c) {
-    return p.replace(/%s/, c);
-  }, str);
-}
-
-var INVALID_MODIFIER_ERROR =
-  'Popper: modifier "%s" provided an invalid %s property, expected %s but got %s';
-var MISSING_DEPENDENCY_ERROR =
-  'Popper: modifier "%s" requires "%s", but "%s" modifier is not available';
-var VALID_PROPERTIES = [
-  'name',
-  'enabled',
-  'phase',
-  'fn',
-  'effect',
-  'requires',
-  'options',
-];
-function validateModifiers(modifiers) {
-  modifiers.forEach(function (modifier) {
-    Object.keys(modifier).forEach(function (key) {
-      switch (key) {
-        case 'name':
-          if (typeof modifier.name !== 'string') {
-            console.error(
-              format(
-                INVALID_MODIFIER_ERROR,
-                String(modifier.name),
-                '"name"',
-                '"string"',
-                '"' + String(modifier.name) + '"'
-              )
-            );
-          }
-
-          break;
-
-        case 'enabled':
-          if (typeof modifier.enabled !== 'boolean') {
-            console.error(
-              format(
-                INVALID_MODIFIER_ERROR,
-                modifier.name,
-                '"enabled"',
-                '"boolean"',
-                '"' + String(modifier.enabled) + '"'
-              )
-            );
-          }
-
-        case 'phase':
-          if (modifierPhases.indexOf(modifier.phase) < 0) {
-            console.error(
-              format(
-                INVALID_MODIFIER_ERROR,
-                modifier.name,
-                '"phase"',
-                'either ' + modifierPhases.join(', '),
-                '"' + String(modifier.phase) + '"'
-              )
-            );
-          }
-
-          break;
-
-        case 'fn':
-          if (typeof modifier.fn !== 'function') {
-            console.error(
-              format(
-                INVALID_MODIFIER_ERROR,
-                modifier.name,
-                '"fn"',
-                '"function"',
-                '"' + String(modifier.fn) + '"'
-              )
-            );
-          }
-
-          break;
-
-        case 'effect':
-          if (typeof modifier.effect !== 'function') {
-            console.error(
-              format(
-                INVALID_MODIFIER_ERROR,
-                modifier.name,
-                '"effect"',
-                '"function"',
-                '"' + String(modifier.fn) + '"'
-              )
-            );
-          }
-
-          break;
-
-        case 'requires':
-          if (!Array.isArray(modifier.requires)) {
-            console.error(
-              format(
-                INVALID_MODIFIER_ERROR,
-                modifier.name,
-                '"requires"',
-                '"array"',
-                '"' + String(modifier.requires) + '"'
-              )
-            );
-          }
-
-          break;
-
-        case 'requiresIfExists':
-          if (!Array.isArray(modifier.requiresIfExists)) {
-            console.error(
-              format(
-                INVALID_MODIFIER_ERROR,
-                modifier.name,
-                '"requiresIfExists"',
-                '"array"',
-                '"' + String(modifier.requiresIfExists) + '"'
-              )
-            );
-          }
-
-          break;
-
-        case 'options':
-        case 'data':
-          break;
-
-        default:
-          console.error(
-            'PopperJS: an invalid property has been provided to the "' +
-              modifier.name +
-              '" modifier, valid properties are ' +
-              VALID_PROPERTIES.map(function (s) {
-                return '"' + s + '"';
-              }).join(', ') +
-              '; but "' +
-              key +
-              '" was provided.'
-          );
-      }
-
-      modifier.requires &&
-        modifier.requires.forEach(function (requirement) {
-          if (
-            modifiers.find(function (mod) {
-              return mod.name === requirement;
-            }) == null
-          ) {
-            console.error(
-              format(
-                MISSING_DEPENDENCY_ERROR,
-                String(modifier.name),
-                requirement,
-                requirement
-              )
-            );
-          }
-        });
-    });
-  });
-}
-
-function uniqueBy(arr, fn) {
-  var identifiers = new Set();
-  return arr.filter(function (item) {
-    var identifier = fn(item);
-
-    if (!identifiers.has(identifier)) {
-      identifiers.add(identifier);
-      return true;
-    }
-  });
-}
-
-function getBasePlacement(placement) {
-  return placement.split('-')[0];
-}
-
-function mergeByName(modifiers) {
-  var merged = modifiers.reduce(function (merged, current) {
-    var existing = merged[current.name];
-    merged[current.name] = existing
-      ? Object.assign({}, existing, {}, current, {
-          options: Object.assign({}, existing.options, {}, current.options),
-          data: Object.assign({}, existing.data, {}, current.data),
-        })
-      : current;
-    return merged;
-  }, {}); // IE11 does not support Object.values
-
-  return Object.keys(merged).map(function (key) {
-    return merged[key];
-  });
-}
-
-var INVALID_ELEMENT_ERROR =
-  'Popper: Invalid reference or popper argument provided. They must be either a DOM element or virtual element.';
-var INFINITE_LOOP_ERROR =
-  'Popper: An infinite loop in the modifiers cycle has been detected! The cycle has been interrupted to prevent a browser crash.';
-var DEFAULT_OPTIONS = {
-  placement: 'bottom',
-  modifiers: [],
-  strategy: 'absolute',
-};
-
-function areValidElements() {
-  for (
-    var _len = arguments.length, args = new Array(_len), _key = 0;
-    _key < _len;
-    _key++
-  ) {
-    args[_key] = arguments[_key];
-  }
-
-  return !args.some(function (element) {
-    return !(element && typeof element.getBoundingClientRect === 'function');
-  });
-}
-
-function popperGenerator(generatorOptions) {
-  if (generatorOptions === void 0) {
-    generatorOptions = {};
-  }
-
-  var _generatorOptions = generatorOptions,
-    _generatorOptions$def = _generatorOptions.defaultModifiers,
-    defaultModifiers =
-      _generatorOptions$def === void 0 ? [] : _generatorOptions$def,
-    _generatorOptions$def2 = _generatorOptions.defaultOptions,
-    defaultOptions =
-      _generatorOptions$def2 === void 0
-        ? DEFAULT_OPTIONS
-        : _generatorOptions$def2;
-  return function createPopper(reference, popper, options) {
-    if (options === void 0) {
-      options = defaultOptions;
-    }
-
-    var state = {
-      placement: 'bottom',
-      orderedModifiers: [],
-      options: Object.assign({}, DEFAULT_OPTIONS, {}, defaultOptions),
-      modifiersData: {},
-      elements: {
-        reference: reference,
-        popper: popper,
-      },
-      attributes: {},
-      styles: {},
-    };
-    var effectCleanupFns = [];
-    var isDestroyed = false;
-    var instance = {
-      state: state,
-      setOptions: function setOptions(options) {
-        cleanupModifierEffects();
-        state.options = Object.assign(
-          {},
-          defaultOptions,
-          {},
-          state.options,
-          {},
-          options
-        );
-        state.scrollParents = {
-          reference: isElement(reference) ? listScrollParents(reference) : [],
-          popper: listScrollParents(popper),
-        }; // Orders the modifiers based on their dependencies and `phase`
-        // properties
-
-        var orderedModifiers = orderModifiers(
-          mergeByName([].concat(defaultModifiers, state.options.modifiers))
-        ); // Strip out disabled modifiers
-
-        state.orderedModifiers = orderedModifiers.filter(function (m) {
-          return m.enabled;
-        }); // Validate the provided modifiers so that the consumer will get warned
-        // if one of the modifiers is invalid for any reason
-
-        if (process.env.NODE_ENV !== 'production') {
-          var modifiers = uniqueBy(
-            [].concat(orderedModifiers, state.options.modifiers),
-            function (_ref) {
-              var name = _ref.name;
-              return name;
-            }
-          );
-          validateModifiers(modifiers);
-
-          if (getBasePlacement(state.options.placement) === auto) {
-            var flipModifier = state.orderedModifiers.find(function (_ref2) {
-              var name = _ref2.name;
-              return name === 'flip';
-            });
-
-            if (!flipModifier) {
-              console.error(
-                [
-                  'Popper: "auto" placements require the "flip" modifier be',
-                  'present and enabled to work.',
-                ].join(' ')
-              );
-            }
-          }
-
-          var _getComputedStyle = getComputedStyle(popper),
-            marginTop = _getComputedStyle.marginTop,
-            marginRight = _getComputedStyle.marginRight,
-            marginBottom = _getComputedStyle.marginBottom,
-            marginLeft = _getComputedStyle.marginLeft; // We no longer take into account `margins` on the popper, and it can
-          // cause bugs with positioning, so we'll warn the consumer
-
-          if (
-            [marginTop, marginRight, marginBottom, marginLeft].some(function (
-              margin
-            ) {
-              return parseFloat(margin);
-            })
-          ) {
-            console.warn(
-              [
-                'Popper: CSS "margin" styles cannot be used to apply padding',
-                'between the popper and its reference element or boundary.',
-                'To replicate margin, use the `offset` modifier, as well as',
-                'the `padding` option in the `preventOverflow` and `flip`',
-                'modifiers.',
-              ].join(' ')
-            );
-          }
-        }
-
-        runModifierEffects();
-        return instance.update();
-      },
-      // Sync update – it will always be executed, even if not necessary. This
-      // is useful for low frequency updates where sync behavior simplifies the
-      // logic.
-      // For high frequency updates (e.g. `resize` and `scroll` events), always
-      // prefer the async Popper#update method
-      forceUpdate: function forceUpdate() {
-        if (isDestroyed) {
-          return;
-        }
-
-        var _state$elements = state.elements,
-          reference = _state$elements.reference,
-          popper = _state$elements.popper; // Don't proceed if `reference` or `popper` are not valid elements
-        // anymore
-
-        if (!areValidElements(reference, popper)) {
-          if (process.env.NODE_ENV !== 'production') {
-            console.error(INVALID_ELEMENT_ERROR);
-          }
-
-          return;
-        } // Store the reference and popper rects to be read by modifiers
-
-        state.rects = {
-          reference: getCompositeRect(
-            reference,
-            getOffsetParent(popper),
-            state.options.strategy === 'fixed'
-          ),
-          popper: getLayoutRect(popper),
-        }; // Modifiers have the ability to reset the current update cycle. The
-        // most common use case for this is the `flip` modifier changing the
-        // placement, which then needs to re-run all the modifiers, because the
-        // logic was previously ran for the previous placement and is therefore
-        // stale/incorrect
-
-        state.reset = false;
-        state.placement = state.options.placement; // On each update cycle, the `modifiersData` property for each modifier
-        // is filled with the initial data specified by the modifier. This means
-        // it doesn't persist and is fresh on each update.
-        // To ensure persistent data, use `${name}#persistent`
-
-        state.orderedModifiers.forEach(function (modifier) {
-          return (state.modifiersData[modifier.name] = Object.assign(
-            {},
-            modifier.data
-          ));
-        });
-        var __debug_loops__ = 0;
-
-        for (var index = 0; index < state.orderedModifiers.length; index++) {
-          if (process.env.NODE_ENV !== 'production') {
-            __debug_loops__ += 1;
-
-            if (__debug_loops__ > 100) {
-              console.error(INFINITE_LOOP_ERROR);
-              break;
-            }
-          }
-
-          if (state.reset === true) {
-            state.reset = false;
-            index = -1;
-            continue;
-          }
-
-          var _state$orderedModifie = state.orderedModifiers[index],
-            fn = _state$orderedModifie.fn,
-            _state$orderedModifie2 = _state$orderedModifie.options,
-            _options =
-              _state$orderedModifie2 === void 0 ? {} : _state$orderedModifie2,
-            name = _state$orderedModifie.name;
-
-          if (typeof fn === 'function') {
-            state =
-              fn({
-                state: state,
-                options: _options,
-                name: name,
-                instance: instance,
-              }) || state;
-          }
-        }
-      },
-      // Async and optimistically optimized update – it will not be executed if
-      // not necessary (debounced to run at most once-per-tick)
-      update: debounce$1(function () {
-        return new Promise(function (resolve) {
-          instance.forceUpdate();
-          resolve(state);
-        });
-      }),
-      destroy: function destroy() {
-        cleanupModifierEffects();
-        isDestroyed = true;
-      },
-    };
-
-    if (!areValidElements(reference, popper)) {
-      if (process.env.NODE_ENV !== 'production') {
-        console.error(INVALID_ELEMENT_ERROR);
-      }
-
-      return instance;
-    }
-
-    instance.setOptions(options).then(function (state) {
-      if (!isDestroyed && options.onFirstUpdate) {
-        options.onFirstUpdate(state);
-      }
-    }); // Modifiers have the ability to execute arbitrary code before the first
-    // update cycle runs. They will be executed in the same order as the update
-    // cycle. This is useful when a modifier adds some persistent data that
-    // other modifiers need to use, but the modifier is run after the dependent
-    // one.
-
-    function runModifierEffects() {
-      state.orderedModifiers.forEach(function (_ref3) {
-        var name = _ref3.name,
-          _ref3$options = _ref3.options,
-          options = _ref3$options === void 0 ? {} : _ref3$options,
-          effect = _ref3.effect;
-
-        if (typeof effect === 'function') {
-          var cleanupFn = effect({
-            state: state,
-            name: name,
-            instance: instance,
-            options: options,
-          });
-
-          var noopFn = function noopFn() {};
-
-          effectCleanupFns.push(cleanupFn || noopFn);
-        }
-      });
-    }
-
-    function cleanupModifierEffects() {
-      effectCleanupFns.forEach(function (fn) {
-        return fn();
-      });
-      effectCleanupFns = [];
-    }
-
-    return instance;
-  };
-}
-
-var passive = {
-  passive: true,
-};
-
-function effect(_ref) {
-  var state = _ref.state,
-    instance = _ref.instance,
-    options = _ref.options;
-  var _options$scroll = options.scroll,
-    scroll = _options$scroll === void 0 ? true : _options$scroll,
-    _options$resize = options.resize,
-    resize = _options$resize === void 0 ? true : _options$resize;
-  var window = getWindow(state.elements.popper);
-  var scrollParents = [].concat(
-    state.scrollParents.reference,
-    state.scrollParents.popper
-  );
-
-  if (scroll) {
-    scrollParents.forEach(function (scrollParent) {
-      scrollParent.addEventListener('scroll', instance.update, passive);
-    });
-  }
-
-  if (resize) {
-    window.addEventListener('resize', instance.update, passive);
-  }
-
-  return function () {
-    if (scroll) {
-      scrollParents.forEach(function (scrollParent) {
-        scrollParent.removeEventListener('scroll', instance.update, passive);
-      });
-    }
-
-    if (resize) {
-      window.removeEventListener('resize', instance.update, passive);
-    }
-  };
-}
-
-var eventListeners = {
-  name: 'eventListeners',
-  enabled: true,
-  phase: 'write',
-  fn: function fn() {},
-  effect: effect,
-  data: {},
-};
-
-function getVariation(placement) {
-  return placement.split('-')[1];
-}
-
-function getMainAxisFromPlacement(placement) {
-  return ['top', 'bottom'].indexOf(placement) >= 0 ? 'x' : 'y';
-}
-
-function computeOffsets(_ref) {
-  var reference = _ref.reference,
-    element = _ref.element,
-    placement = _ref.placement;
-  var basePlacement = placement ? getBasePlacement(placement) : null;
-  var variation = placement ? getVariation(placement) : null;
-  var commonX = reference.x + reference.width / 2 - element.width / 2;
-  var commonY = reference.y + reference.height / 2 - element.height / 2;
-  var offsets;
-
-  switch (basePlacement) {
-    case top:
-      offsets = {
-        x: commonX,
-        y: reference.y - element.height,
-      };
-      break;
-
-    case bottom:
-      offsets = {
-        x: commonX,
-        y: reference.y + reference.height,
-      };
-      break;
-
-    case right:
-      offsets = {
-        x: reference.x + reference.width,
-        y: commonY,
-      };
-      break;
-
-    case left:
-      offsets = {
-        x: reference.x - element.width,
-        y: commonY,
-      };
-      break;
-
-    default:
-      offsets = {
-        x: reference.x,
-        y: reference.y,
-      };
-  }
-
-  var mainAxis = basePlacement ? getMainAxisFromPlacement(basePlacement) : null;
-
-  if (mainAxis != null) {
-    var len = mainAxis === 'y' ? 'height' : 'width';
-
-    switch (variation) {
-      case start:
-        offsets[mainAxis] =
-          Math.floor(offsets[mainAxis]) -
-          Math.floor(reference[len] / 2 - element[len] / 2);
-        break;
-
-      case end:
-        offsets[mainAxis] =
-          Math.floor(offsets[mainAxis]) +
-          Math.ceil(reference[len] / 2 - element[len] / 2);
-        break;
-    }
-  }
-
-  return offsets;
-}
-
-function popperOffsets(_ref) {
-  var state = _ref.state,
-    name = _ref.name;
-  // Offsets are the actual position the popper needs to have to be
-  // properly positioned near its reference element
-  // This is the most basic placement, and will be adjusted by
-  // the modifiers in the next step
-  state.modifiersData[name] = computeOffsets({
-    reference: state.rects.reference,
-    element: state.rects.popper,
-    strategy: 'absolute',
-    placement: state.placement,
-  });
-}
-
-var popperOffsets$1 = {
-  name: 'popperOffsets',
-  enabled: true,
-  phase: 'read',
-  fn: popperOffsets,
-  data: {},
-};
-
-var unsetSides = {
-  top: 'auto',
-  right: 'auto',
-  bottom: 'auto',
-  left: 'auto',
-}; // Round the offsets to the nearest suitable subpixel based on the DPR.
-// Zooming can change the DPR, but it seems to report a value that will
-// cleanly divide the values into the appropriate subpixels.
-
-function roundOffsets(_ref) {
-  var x = _ref.x,
-    y = _ref.y;
-  var win = window;
-  var dpr = win.devicePixelRatio || 1;
-  return {
-    x: Math.round(x * dpr) / dpr || 0,
-    y: Math.round(y * dpr) / dpr || 0,
-  };
-}
-
-function mapToStyles(_ref2) {
-  var _Object$assign2;
-
-  var popper = _ref2.popper,
-    popperRect = _ref2.popperRect,
-    placement = _ref2.placement,
-    offsets = _ref2.offsets,
-    position = _ref2.position,
-    gpuAcceleration = _ref2.gpuAcceleration,
-    adaptive = _ref2.adaptive;
-
-  var _roundOffsets = roundOffsets(offsets),
-    x = _roundOffsets.x,
-    y = _roundOffsets.y;
-
-  var hasX = offsets.hasOwnProperty('x');
-  var hasY = offsets.hasOwnProperty('y');
-  var sideX = left;
-  var sideY = top;
-  var win = window;
-
-  if (adaptive) {
-    var offsetParent = getOffsetParent(popper);
-
-    if (offsetParent === getWindow(popper)) {
-      offsetParent = getDocumentElement(popper);
-    } // $FlowFixMe: force type refinement, we compare offsetParent with window above, but Flow doesn't detect it
-
-    /*:: offsetParent = (offsetParent: Element); */
-
-    if (placement === top) {
-      sideY = bottom;
-      y -= offsetParent.clientHeight - popperRect.height;
-      y *= gpuAcceleration ? 1 : -1;
-    }
-
-    if (placement === left) {
-      sideX = right;
-      x -= offsetParent.clientWidth - popperRect.width;
-      x *= gpuAcceleration ? 1 : -1;
-    }
-  }
-
-  var commonStyles = Object.assign(
-    {
-      position: position,
-    },
-    adaptive && unsetSides
-  );
-
-  if (gpuAcceleration) {
-    var _Object$assign;
-
-    return Object.assign(
-      {},
-      commonStyles,
-      ((_Object$assign = {}),
-      (_Object$assign[sideY] = hasY ? '0' : ''),
-      (_Object$assign[sideX] = hasX ? '0' : ''),
-      (_Object$assign.transform =
-        (win.devicePixelRatio || 1) < 2
-          ? 'translate(' + x + 'px, ' + y + 'px)'
-          : 'translate3d(' + x + 'px, ' + y + 'px, 0)'),
-      _Object$assign)
-    );
-  }
-
-  return Object.assign(
-    {},
-    commonStyles,
-    ((_Object$assign2 = {}),
-    (_Object$assign2[sideY] = hasY ? y + 'px' : ''),
-    (_Object$assign2[sideX] = hasX ? x + 'px' : ''),
-    (_Object$assign2.transform = ''),
-    _Object$assign2)
-  );
-}
-
-function computeStyles(_ref3) {
-  var state = _ref3.state,
-    options = _ref3.options;
-  var _options$gpuAccelerat = options.gpuAcceleration,
-    gpuAcceleration =
-      _options$gpuAccelerat === void 0 ? true : _options$gpuAccelerat,
-    _options$adaptive = options.adaptive,
-    adaptive = _options$adaptive === void 0 ? true : _options$adaptive;
-
-  if (process.env.NODE_ENV !== 'production') {
-    var _getComputedStyle = getComputedStyle(state.elements.popper),
-      transitionProperty = _getComputedStyle.transitionProperty;
-
-    if (
-      adaptive &&
-      ['transform', 'top', 'right', 'bottom', 'left'].some(function (property) {
-        return transitionProperty.indexOf(property) >= 0;
-      })
-    ) {
-      console.warn(
-        [
-          'Popper: Detected CSS transitions on at least one of the following',
-          'CSS properties: "transform", "top", "right", "bottom", "left".',
-          '\n\n',
-          'Disable the "computeStyles" modifier\'s `adaptive` option to allow',
-          'for smooth transitions, or remove these properties from the CSS',
-          'transition declaration on the popper element if only transitioning',
-          'opacity or background-color for example.',
-          '\n\n',
-          'We recommend using the popper element as a wrapper around an inner',
-          'element that can have any CSS property transitioned for animations.',
-        ].join(' ')
-      );
-    }
-  }
-
-  var commonStyles = {
-    placement: getBasePlacement(state.placement),
-    popper: state.elements.popper,
-    popperRect: state.rects.popper,
-    gpuAcceleration: gpuAcceleration,
-  }; // popper offsets are always available
-
-  state.styles.popper = Object.assign(
-    {},
-    state.styles.popper,
-    {},
-    mapToStyles(
-      Object.assign({}, commonStyles, {
-        offsets: state.modifiersData.popperOffsets,
-        position: state.options.strategy,
-        adaptive: adaptive,
-      })
-    )
-  ); // arrow offsets may not be available
-
-  if (state.modifiersData.arrow != null) {
-    state.styles.arrow = Object.assign(
-      {},
-      state.styles.arrow,
-      {},
-      mapToStyles(
-        Object.assign({}, commonStyles, {
-          offsets: state.modifiersData.arrow,
-          position: 'absolute',
-          adaptive: false,
-        })
-      )
-    );
-  }
-
-  state.attributes.popper = Object.assign({}, state.attributes.popper, {
-    'data-popper-placement': state.placement,
-  });
-}
-
-var computeStyles$1 = {
-  name: 'computeStyles',
-  enabled: true,
-  phase: 'beforeWrite',
-  fn: computeStyles,
-  data: {},
-};
-
-// and applies them to the HTMLElements such as popper and arrow
-
-function applyStyles(_ref) {
-  var state = _ref.state;
-  Object.keys(state.elements).forEach(function (name) {
-    var style = state.styles[name] || {};
-    var attributes = state.attributes[name] || {};
-    var element = state.elements[name]; // arrow is optional + virtual elements
-
-    if (!isHTMLElement(element) || !getNodeName(element)) {
-      return;
-    } // Flow doesn't support to extend this property, but it's the most
-    // effective way to apply styles to an HTMLElement
-    // $FlowFixMe
-
-    Object.assign(element.style, style);
-    Object.keys(attributes).forEach(function (name) {
-      var value = attributes[name];
-
-      if (value === false) {
-        element.removeAttribute(name);
-      } else {
-        element.setAttribute(name, value === true ? '' : value);
-      }
-    });
-  });
-}
-
-function effect$1(_ref2) {
-  var state = _ref2.state;
-  var initialStyles = {
-    popper: {
-      position: 'absolute',
-      left: '0',
-      top: '0',
-      margin: '0',
-    },
-    arrow: {
-      position: 'absolute',
-    },
-    reference: {},
-  };
-  Object.assign(state.elements.popper.style, initialStyles.popper);
-
-  if (state.elements.arrow) {
-    Object.assign(state.elements.arrow.style, initialStyles.arrow);
-  }
-
-  return function () {
-    Object.keys(state.elements).forEach(function (name) {
-      var element = state.elements[name];
-      var attributes = state.attributes[name] || {};
-      var styleProperties = Object.keys(
-        state.styles.hasOwnProperty(name)
-          ? state.styles[name]
-          : initialStyles[name]
-      ); // Set all values to an empty string to unset them
-
-      var style = styleProperties.reduce(function (style, property) {
-        style[property] = '';
-        return style;
-      }, {}); // arrow is optional + virtual elements
-
-      if (!isHTMLElement(element) || !getNodeName(element)) {
-        return;
-      } // Flow doesn't support to extend this property, but it's the most
-      // effective way to apply styles to an HTMLElement
-      // $FlowFixMe
-
-      Object.assign(element.style, style);
-      Object.keys(attributes).forEach(function (attribute) {
-        element.removeAttribute(attribute);
-      });
-    });
-  };
-}
-
-var applyStyles$1 = {
-  name: 'applyStyles',
-  enabled: true,
-  phase: 'write',
-  fn: applyStyles,
-  effect: effect$1,
-  requires: ['computeStyles'],
-};
-
-function distanceAndSkiddingToXY(placement, rects, offset) {
-  var basePlacement = getBasePlacement(placement);
-  var invertDistance = [left, top].indexOf(basePlacement) >= 0 ? -1 : 1;
-
-  var _ref =
-      typeof offset === 'function'
-        ? offset(
-            Object.assign({}, rects, {
-              placement: placement,
-            })
-          )
-        : offset,
-    skidding = _ref[0],
-    distance = _ref[1];
-
-  skidding = skidding || 0;
-  distance = (distance || 0) * invertDistance;
-  return [left, right].indexOf(basePlacement) >= 0
-    ? {
-        x: distance,
-        y: skidding,
-      }
-    : {
-        x: skidding,
-        y: distance,
-      };
-}
-
-function offset(_ref2) {
-  var state = _ref2.state,
-    options = _ref2.options,
-    name = _ref2.name;
-  var _options$offset = options.offset,
-    offset = _options$offset === void 0 ? [0, 0] : _options$offset;
-  var data = placements.reduce(function (acc, placement) {
-    acc[placement] = distanceAndSkiddingToXY(placement, state.rects, offset);
-    return acc;
-  }, {});
-  var _data$state$placement = data[state.placement],
-    x = _data$state$placement.x,
-    y = _data$state$placement.y;
-  state.modifiersData.popperOffsets.x += x;
-  state.modifiersData.popperOffsets.y += y;
-  state.modifiersData[name] = data;
-}
-
-var offset$1 = {
-  name: 'offset',
-  enabled: true,
-  phase: 'main',
-  requires: ['popperOffsets'],
-  fn: offset,
-};
-
-var hash = {
-  left: 'right',
-  right: 'left',
-  bottom: 'top',
-  top: 'bottom',
-};
-function getOppositePlacement(placement) {
-  return placement.replace(/left|right|bottom|top/g, function (matched) {
-    return hash[matched];
-  });
-}
-
-var hash$1 = {
-  start: 'end',
-  end: 'start',
-};
-function getOppositeVariationPlacement(placement) {
-  return placement.replace(/start|end/g, function (matched) {
-    return hash$1[matched];
-  });
-}
-
-function getViewportRect(element) {
-  var win = getWindow(element);
-  return {
-    width: win.innerWidth,
-    height: win.innerHeight,
-    x: 0,
-    y: 0,
-  };
-}
-
-function getDocumentRect(element) {
-  var win = getWindow(element);
-  var winScroll = getWindowScroll(element);
-  var documentRect = getCompositeRect(getDocumentElement(element), win);
-  documentRect.height = Math.max(documentRect.height, win.innerHeight);
-  documentRect.width = Math.max(documentRect.width, win.innerWidth);
-  documentRect.x = -winScroll.scrollLeft;
-  documentRect.y = -winScroll.scrollTop;
-  return documentRect;
-}
-
-function toNumber(cssValue) {
-  return parseFloat(cssValue) || 0;
-}
-
-function getBorders(element) {
-  var computedStyle = isHTMLElement(element) ? getComputedStyle(element) : {};
-  return {
-    top: toNumber(computedStyle.borderTopWidth),
-    right: toNumber(computedStyle.borderRightWidth),
-    bottom: toNumber(computedStyle.borderBottomWidth),
-    left: toNumber(computedStyle.borderLeftWidth),
-  };
-}
-
-function getDecorations(element) {
-  var win = getWindow(element);
-  var borders = getBorders(element);
-  var isHTML = getNodeName(element) === 'html';
-  var winScrollBarX = getWindowScrollBarX(element);
-  var x = element.clientWidth + borders.right;
-  var y = element.clientHeight + borders.bottom; // HACK:
-  // document.documentElement.clientHeight on iOS reports the height of the
-  // viewport including the bottom bar, even if the bottom bar isn't visible.
-  // If the difference between window innerHeight and html clientHeight is more
-  // than 50, we assume it's a mobile bottom bar and ignore scrollbars.
-  // * A 50px thick scrollbar is likely non-existent (macOS is 15px and Windows
-  //   is about 17px)
-  // * The mobile bar is 114px tall
-
-  if (isHTML && win.innerHeight - element.clientHeight > 50) {
-    y = win.innerHeight - borders.bottom;
-  }
-
-  return {
-    top: isHTML ? 0 : element.clientTop,
-    // RTL scrollbar (scrolling containers only)
-    right:
-      element.clientLeft > borders.left
-        ? borders.right // LTR scrollbar
-        : isHTML
-        ? win.innerWidth - x - winScrollBarX
-        : element.offsetWidth - x,
-    bottom: isHTML ? win.innerHeight - y : element.offsetHeight - y,
-    left: isHTML ? winScrollBarX : element.clientLeft,
-  };
-}
-
-function contains(parent, child) {
-  // $FlowFixMe: hasOwnProperty doesn't seem to work in tests
-  var isShadow = Boolean(child.getRootNode && child.getRootNode().host); // First, attempt with faster native method
-
-  if (parent.contains(child)) {
-    return true;
-  } // then fallback to custom implementation with Shadow DOM support
-  else if (isShadow) {
-    var next = child;
-
-    do {
-      if (next && parent.isSameNode(next)) {
-        return true;
-      } // $FlowFixMe: need a better way to handle this...
-
-      next = next.parentNode || next.host;
-    } while (next);
-  } // Give up, the result is false
-
-  return false;
-}
-
-function rectToClientRect(rect) {
-  return Object.assign({}, rect, {
-    left: rect.x,
-    top: rect.y,
-    right: rect.x + rect.width,
-    bottom: rect.y + rect.height,
-  });
-}
-
-function getClientRectFromMixedType(element, clippingParent) {
-  return clippingParent === viewport
-    ? rectToClientRect(getViewportRect(element))
-    : isHTMLElement(clippingParent)
-    ? getBoundingClientRect(clippingParent)
-    : rectToClientRect(getDocumentRect(getDocumentElement(element)));
-} // A "clipping parent" is an overflowable container with the characteristic of
-// clipping (or hiding) overflowing elements with a position different from
-// `initial`
-
-function getClippingParents(element) {
-  var clippingParents = listScrollParents(element);
-  var canEscapeClipping =
-    ['absolute', 'fixed'].indexOf(getComputedStyle(element).position) >= 0;
-  var clipperElement =
-    canEscapeClipping && isHTMLElement(element)
-      ? getOffsetParent(element)
-      : element;
-
-  if (!isElement(clipperElement)) {
-    return [];
-  } // $FlowFixMe: https://github.com/facebook/flow/issues/1414
-
-  return clippingParents.filter(function (clippingParent) {
-    return (
-      isElement(clippingParent) && contains(clippingParent, clipperElement)
-    );
-  });
-} // Gets the maximum area that the element is visible in due to any number of
-// clipping parents
-
-function getClippingRect(element, boundary, rootBoundary) {
-  var mainClippingParents =
-    boundary === 'clippingParents'
-      ? getClippingParents(element)
-      : [].concat(boundary);
-  var clippingParents = [].concat(mainClippingParents, [rootBoundary]);
-  var firstClippingParent = clippingParents[0];
-  var clippingRect = clippingParents.reduce(function (accRect, clippingParent) {
-    var rect = getClientRectFromMixedType(element, clippingParent);
-    var decorations = getDecorations(
-      isHTMLElement(clippingParent)
-        ? clippingParent
-        : getDocumentElement(element)
-    );
-    accRect.top = Math.max(rect.top + decorations.top, accRect.top);
-    accRect.right = Math.min(rect.right - decorations.right, accRect.right);
-    accRect.bottom = Math.min(rect.bottom - decorations.bottom, accRect.bottom);
-    accRect.left = Math.max(rect.left + decorations.left, accRect.left);
-    return accRect;
-  }, getClientRectFromMixedType(element, firstClippingParent));
-  clippingRect.width = clippingRect.right - clippingRect.left;
-  clippingRect.height = clippingRect.bottom - clippingRect.top;
-  clippingRect.x = clippingRect.left;
-  clippingRect.y = clippingRect.top;
-  return clippingRect;
-}
-
-function getFreshSideObject() {
-  return {
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-  };
-}
-
-function mergePaddingObject(paddingObject) {
-  return Object.assign({}, getFreshSideObject(), {}, paddingObject);
-}
-
-function expandToHashMap(value, keys) {
-  return keys.reduce(function (hashMap, key) {
-    hashMap[key] = value;
-    return hashMap;
-  }, {});
-}
-
-function detectOverflow(state, options) {
-  if (options === void 0) {
-    options = {};
-  }
-
-  var _options = options,
-    _options$placement = _options.placement,
-    placement =
-      _options$placement === void 0 ? state.placement : _options$placement,
-    _options$boundary = _options.boundary,
-    boundary =
-      _options$boundary === void 0 ? clippingParents : _options$boundary,
-    _options$rootBoundary = _options.rootBoundary,
-    rootBoundary =
-      _options$rootBoundary === void 0 ? viewport : _options$rootBoundary,
-    _options$elementConte = _options.elementContext,
-    elementContext =
-      _options$elementConte === void 0 ? popper : _options$elementConte,
-    _options$altBoundary = _options.altBoundary,
-    altBoundary =
-      _options$altBoundary === void 0 ? false : _options$altBoundary,
-    _options$padding = _options.padding,
-    padding = _options$padding === void 0 ? 0 : _options$padding;
-  var paddingObject = mergePaddingObject(
-    typeof padding !== 'number'
-      ? padding
-      : expandToHashMap(padding, basePlacements)
-  );
-  var altContext = elementContext === popper ? reference : popper;
-  var referenceElement = state.elements.reference;
-  var popperRect = state.rects.popper;
-  var element = state.elements[altBoundary ? altContext : elementContext];
-  var clippingClientRect = getClippingRect(
-    isElement(element) ? element : getDocumentElement(state.elements.popper),
-    boundary,
-    rootBoundary
-  );
-  var referenceClientRect = getBoundingClientRect(referenceElement);
-  var popperOffsets = computeOffsets({
-    reference: referenceClientRect,
-    element: popperRect,
-    strategy: 'absolute',
-    placement: placement,
-  });
-  var popperClientRect = rectToClientRect(
-    Object.assign({}, popperRect, {}, popperOffsets)
-  );
-  var elementClientRect =
-    elementContext === popper ? popperClientRect : referenceClientRect; // positive = overflowing the clipping rect
-  // 0 or negative = within the clipping rect
-
-  var overflowOffsets = {
-    top: clippingClientRect.top - elementClientRect.top + paddingObject.top,
-    bottom:
-      elementClientRect.bottom -
-      clippingClientRect.bottom +
-      paddingObject.bottom,
-    left: clippingClientRect.left - elementClientRect.left + paddingObject.left,
-    right:
-      elementClientRect.right - clippingClientRect.right + paddingObject.right,
-  };
-  var offsetData = state.modifiersData.offset; // Offsets can be applied only to the popper element
-
-  if (elementContext === popper && offsetData) {
-    var offset = offsetData[placement];
-    Object.keys(overflowOffsets).forEach(function (key) {
-      var multiply = [right, bottom].indexOf(key) >= 0 ? 1 : -1;
-      var axis = [top, bottom].indexOf(key) >= 0 ? 'y' : 'x';
-      overflowOffsets[key] += offset[axis] * multiply;
-    });
-  }
-
-  return overflowOffsets;
-}
-
-function computeAutoPlacement(state, options) {
-  if (options === void 0) {
-    options = {};
-  }
-
-  var _options = options,
-    placement = _options.placement,
-    boundary = _options.boundary,
-    rootBoundary = _options.rootBoundary,
-    padding = _options.padding,
-    flipVariations = _options.flipVariations;
-  var variation = getVariation(placement);
-  var placements = variation
-    ? flipVariations
-      ? variationPlacements
-      : variationPlacements.filter(function (placement) {
-          return getVariation(placement) === variation;
-        })
-    : basePlacements; // $FlowFixMe: Flow seems to have problems with two array unions...
-
-  var overflows = placements.reduce(function (acc, placement) {
-    acc[placement] = detectOverflow(state, {
-      placement: placement,
-      boundary: boundary,
-      rootBoundary: rootBoundary,
-      padding: padding,
-    })[getBasePlacement(placement)];
-    return acc;
-  }, {});
-  return Object.keys(overflows).sort(function (a, b) {
-    return overflows[a] - overflows[b];
-  });
-}
-
-function getExpandedFallbackPlacements(placement) {
-  if (getBasePlacement(placement) === auto) {
-    return [];
-  }
-
-  var oppositePlacement = getOppositePlacement(placement);
-  return [
-    getOppositeVariationPlacement(placement),
-    oppositePlacement,
-    getOppositeVariationPlacement(oppositePlacement),
-  ];
-}
-
-function flip(_ref) {
-  var state = _ref.state,
-    options = _ref.options,
-    name = _ref.name;
-
-  if (state.modifiersData[name]._skip) {
-    return;
-  }
-
-  var specifiedFallbackPlacements = options.fallbackPlacements,
-    padding = options.padding,
-    boundary = options.boundary,
-    rootBoundary = options.rootBoundary,
-    altBoundary = options.altBoundary,
-    _options$flipVariatio = options.flipVariations,
-    flipVariations =
-      _options$flipVariatio === void 0 ? true : _options$flipVariatio;
-  var preferredPlacement = state.options.placement;
-  var basePlacement = getBasePlacement(preferredPlacement);
-  var isBasePlacement = basePlacement === preferredPlacement;
-  var fallbackPlacements =
-    specifiedFallbackPlacements ||
-    (isBasePlacement || !flipVariations
-      ? [getOppositePlacement(preferredPlacement)]
-      : getExpandedFallbackPlacements(preferredPlacement));
-  var placements = [preferredPlacement]
-    .concat(fallbackPlacements)
-    .reduce(function (acc, placement) {
-      return acc.concat(
-        getBasePlacement(placement) === auto
-          ? computeAutoPlacement(state, {
-              placement: placement,
-              boundary: boundary,
-              rootBoundary: rootBoundary,
-              padding: padding,
-              flipVariations: flipVariations,
-            })
-          : placement
-      );
-    }, []);
-  var referenceRect = state.rects.reference;
-  var popperRect = state.rects.popper;
-  var checksMap = new Map();
-  var makeFallbackChecks = true;
-  var firstFittingPlacement = placements[0];
-
-  for (var i = 0; i < placements.length; i++) {
-    var placement = placements[i];
-
-    var _basePlacement = getBasePlacement(placement);
-
-    var isStartVariation = getVariation(placement) === start;
-    var isVertical = [top, bottom].indexOf(_basePlacement) >= 0;
-    var len = isVertical ? 'width' : 'height';
-    var overflow = detectOverflow(state, {
-      placement: placement,
-      boundary: boundary,
-      rootBoundary: rootBoundary,
-      altBoundary: altBoundary,
-      padding: padding,
-    });
-    var mainVariationSide = isVertical
-      ? isStartVariation
-        ? right
-        : left
-      : isStartVariation
-      ? bottom
-      : top;
-
-    if (referenceRect[len] > popperRect[len]) {
-      mainVariationSide = getOppositePlacement(mainVariationSide);
-    }
-
-    var altVariationSide = getOppositePlacement(mainVariationSide);
-    var checks = [
-      overflow[_basePlacement] <= 0,
-      overflow[mainVariationSide] <= 0,
-      overflow[altVariationSide] <= 0,
-    ];
-
-    if (
-      checks.every(function (check) {
-        return check;
-      })
-    ) {
-      firstFittingPlacement = placement;
-      makeFallbackChecks = false;
-      break;
-    }
-
-    checksMap.set(placement, checks);
-  }
-
-  if (makeFallbackChecks) {
-    // `2` may be desired in some cases – research later
-    var numberOfChecks = flipVariations ? 3 : 1;
-
-    var _loop = function _loop(_i) {
-      var fittingPlacement = placements.find(function (placement) {
-        var checks = checksMap.get(placement);
-
-        if (checks) {
-          return checks.slice(0, _i).every(function (check) {
-            return check;
-          });
-        }
-      });
-
-      if (fittingPlacement) {
-        firstFittingPlacement = fittingPlacement;
-        return 'break';
-      }
-    };
-
-    for (var _i = numberOfChecks; _i > 0; _i--) {
-      var _ret = _loop(_i);
-
-      if (_ret === 'break') break;
-    }
-  }
-
-  if (state.placement !== firstFittingPlacement) {
-    state.modifiersData[name]._skip = true;
-    state.placement = firstFittingPlacement;
-    state.reset = true;
-  }
-}
-
-var flip$1 = {
-  name: 'flip',
-  enabled: true,
-  phase: 'main',
-  fn: flip,
-  requiresIfExists: ['offset'],
-  data: {
-    _skip: false,
-  },
-};
-
-function getAltAxis(axis) {
-  return axis === 'x' ? 'y' : 'x';
-}
-
-function within(min, value, max) {
-  return Math.max(min, Math.min(value, max));
-}
-
-function preventOverflow(_ref) {
-  var state = _ref.state,
-    options = _ref.options,
-    name = _ref.name;
-  var _options$mainAxis = options.mainAxis,
-    checkMainAxis = _options$mainAxis === void 0 ? true : _options$mainAxis,
-    _options$altAxis = options.altAxis,
-    checkAltAxis = _options$altAxis === void 0 ? false : _options$altAxis,
-    boundary = options.boundary,
-    rootBoundary = options.rootBoundary,
-    altBoundary = options.altBoundary,
-    padding = options.padding,
-    _options$tether = options.tether,
-    tether = _options$tether === void 0 ? true : _options$tether,
-    _options$tetherOffset = options.tetherOffset,
-    tetherOffset = _options$tetherOffset === void 0 ? 0 : _options$tetherOffset;
-  var overflow = detectOverflow(state, {
-    boundary: boundary,
-    rootBoundary: rootBoundary,
-    padding: padding,
-    altBoundary: altBoundary,
-  });
-  var basePlacement = getBasePlacement(state.placement);
-  var variation = getVariation(state.placement);
-  var isBasePlacement = !variation;
-  var mainAxis = getMainAxisFromPlacement(basePlacement);
-  var altAxis = getAltAxis(mainAxis);
-  var popperOffsets = state.modifiersData.popperOffsets;
-  var referenceRect = state.rects.reference;
-  var popperRect = state.rects.popper;
-  var tetherOffsetValue =
-    typeof tetherOffset === 'function'
-      ? tetherOffset(
-          Object.assign({}, state.rects, {
-            placement: state.placement,
-          })
-        )
-      : tetherOffset;
-  var data = {
-    x: 0,
-    y: 0,
-  };
-
-  if (checkMainAxis) {
-    var mainSide = mainAxis === 'y' ? top : left;
-    var altSide = mainAxis === 'y' ? bottom : right;
-    var len = mainAxis === 'y' ? 'height' : 'width';
-    var offset = popperOffsets[mainAxis];
-    var min = popperOffsets[mainAxis] + overflow[mainSide];
-    var max = popperOffsets[mainAxis] - overflow[altSide];
-    var additive = tether ? -popperRect[len] / 2 : 0;
-    var minLen = variation === start ? referenceRect[len] : popperRect[len];
-    var maxLen = variation === start ? -popperRect[len] : -referenceRect[len]; // We need to include the arrow in the calculation so the arrow doesn't go
-    // outside the reference bounds
-
-    var arrowElement = state.elements.arrow;
-    var arrowRect =
-      tether && arrowElement
-        ? getLayoutRect(arrowElement)
-        : {
-            width: 0,
-            height: 0,
-          };
-    var arrowPaddingObject = state.modifiersData['arrow#persistent']
-      ? state.modifiersData['arrow#persistent'].padding
-      : getFreshSideObject();
-    var arrowPaddingMin = arrowPaddingObject[mainSide];
-    var arrowPaddingMax = arrowPaddingObject[altSide]; // If the reference length is smaller than the arrow length, we don't want
-    // to include its full size in the calculation. If the reference is small
-    // and near the edge of a boundary, the popper can overflow even if the
-    // reference is not overflowing as well (e.g. virtual elements with no
-    // width or height)
-
-    var arrowLen = within(0, referenceRect[len], arrowRect[len]);
-    var minOffset = isBasePlacement
-      ? referenceRect[len] / 2 -
-        additive -
-        arrowLen -
-        arrowPaddingMin -
-        tetherOffsetValue
-      : minLen - arrowLen - arrowPaddingMin - tetherOffsetValue;
-    var maxOffset = isBasePlacement
-      ? -referenceRect[len] / 2 +
-        additive +
-        arrowLen +
-        arrowPaddingMax +
-        tetherOffsetValue
-      : maxLen + arrowLen + arrowPaddingMax + tetherOffsetValue;
-    var arrowOffsetParent =
-      state.elements.arrow && getOffsetParent(state.elements.arrow);
-    var clientOffset = arrowOffsetParent
-      ? mainAxis === 'y'
-        ? arrowOffsetParent.clientTop || 0
-        : arrowOffsetParent.clientLeft || 0
-      : 0;
-    var offsetModifierValue = state.modifiersData.offset
-      ? state.modifiersData.offset[state.placement][mainAxis]
-      : 0;
-    var tetherMin =
-      popperOffsets[mainAxis] + minOffset - offsetModifierValue - clientOffset;
-    var tetherMax = popperOffsets[mainAxis] + maxOffset - offsetModifierValue;
-    var preventedOffset = within(
-      tether ? Math.min(min, tetherMin) : min,
-      offset,
-      tether ? Math.max(max, tetherMax) : max
-    );
-    popperOffsets[mainAxis] = preventedOffset;
-    data[mainAxis] = preventedOffset - offset;
-  }
-
-  if (checkAltAxis) {
-    var _mainSide = mainAxis === 'x' ? top : left;
-
-    var _altSide = mainAxis === 'x' ? bottom : right;
-
-    var _offset = popperOffsets[altAxis];
-
-    var _min = _offset + overflow[_mainSide];
-
-    var _max = _offset - overflow[_altSide];
-
-    var _preventedOffset = within(_min, _offset, _max);
-
-    state.modifiersData.popperOffsets[altAxis] = _preventedOffset;
-    data[altAxis] = _preventedOffset - _offset;
-  }
-
-  state.modifiersData[name] = data;
-}
-
-var preventOverflow$1 = {
-  name: 'preventOverflow',
-  enabled: true,
-  phase: 'main',
-  fn: preventOverflow,
-  requiresIfExists: ['offset'],
-};
-
-function arrow(_ref) {
-  var _state$modifiersData$;
-
-  var state = _ref.state,
-    name = _ref.name;
-  var arrowElement = state.elements.arrow;
-  var popperOffsets = state.modifiersData.popperOffsets;
-  var basePlacement = getBasePlacement(state.placement);
-  var axis = getMainAxisFromPlacement(basePlacement);
-  var isVertical = [left, right].indexOf(basePlacement) >= 0;
-  var len = isVertical ? 'height' : 'width';
-
-  if (!arrowElement) {
-    return;
-  }
-
-  var paddingObject = state.modifiersData[name + '#persistent'].padding;
-  var arrowRect = getLayoutRect(arrowElement);
-  var minProp = axis === 'y' ? top : left;
-  var maxProp = axis === 'y' ? bottom : right;
-  var endDiff =
-    state.rects.reference[len] +
-    state.rects.reference[axis] -
-    popperOffsets[axis] -
-    state.rects.popper[len];
-  var startDiff = popperOffsets[axis] - state.rects.reference[axis];
-  var arrowOffsetParent =
-    state.elements.arrow && getOffsetParent(state.elements.arrow);
-  var clientOffset = arrowOffsetParent
-    ? axis === 'y'
-      ? arrowOffsetParent.clientLeft || 0
-      : arrowOffsetParent.clientTop || 0
-    : 0;
-  var centerToReference = endDiff / 2 - startDiff / 2 - clientOffset; // Make sure the arrow doesn't overflow the popper if the center point is
-  // outside of the popper bounds
-
-  var center = within(
-    paddingObject[minProp],
-    state.rects.popper[len] / 2 - arrowRect[len] / 2 + centerToReference,
-    state.rects.popper[len] - arrowRect[len] - paddingObject[maxProp]
-  ); // Prevents breaking syntax highlighting...
-
-  var axisProp = axis;
-  state.modifiersData[name] =
-    ((_state$modifiersData$ = {}),
-    (_state$modifiersData$[axisProp] = center),
-    _state$modifiersData$);
-}
-
-function effect$2(_ref2) {
-  var state = _ref2.state,
-    options = _ref2.options,
-    name = _ref2.name;
-  var _options$element = options.element,
-    arrowElement =
-      _options$element === void 0 ? '[data-popper-arrow]' : _options$element,
-    _options$padding = options.padding,
-    padding = _options$padding === void 0 ? 0 : _options$padding; // CSS selector
-
-  if (typeof arrowElement === 'string') {
-    arrowElement = state.elements.popper.querySelector(arrowElement);
-
-    if (!arrowElement) {
-      return;
-    }
-  }
-
-  if (!contains(state.elements.popper, arrowElement)) {
-    if (process.env.NODE_ENV !== 'production') {
-      console.error(
-        [
-          'Popper: "arrow" modifier\'s `element` must be a child of the popper',
-          'element.',
-        ].join(' ')
-      );
-    }
-
-    return;
-  }
-
-  state.elements.arrow = arrowElement;
-  state.modifiersData[name + '#persistent'] = {
-    padding: mergePaddingObject(
-      typeof padding !== 'number'
-        ? padding
-        : expandToHashMap(padding, basePlacements)
-    ),
-  };
-}
-
-var arrow$1 = {
-  name: 'arrow',
-  enabled: true,
-  phase: 'main',
-  fn: arrow,
-  effect: effect$2,
-  requires: ['popperOffsets'],
-  requiresIfExists: ['preventOverflow'],
-};
-
-function getSideOffsets(overflow, rect, preventedOffsets) {
-  if (preventedOffsets === void 0) {
-    preventedOffsets = {
-      x: 0,
-      y: 0,
-    };
-  }
-
-  return {
-    top: overflow.top - rect.height - preventedOffsets.y,
-    right: overflow.right - rect.width + preventedOffsets.x,
-    bottom: overflow.bottom - rect.height + preventedOffsets.y,
-    left: overflow.left - rect.width - preventedOffsets.x,
-  };
-}
-
-function isAnySideFullyClipped(overflow) {
-  return [top, right, bottom, left].some(function (side) {
-    return overflow[side] >= 0;
-  });
-}
-
-function hide(_ref) {
-  var state = _ref.state,
-    name = _ref.name;
-  var referenceRect = state.rects.reference;
-  var popperRect = state.rects.popper;
-  var preventedOffsets = state.modifiersData.preventOverflow;
-  var referenceOverflow = detectOverflow(state, {
-    elementContext: 'reference',
-  });
-  var popperAltOverflow = detectOverflow(state, {
-    altBoundary: true,
-  });
-  var referenceClippingOffsets = getSideOffsets(
-    referenceOverflow,
-    referenceRect
-  );
-  var popperEscapeOffsets = getSideOffsets(
-    popperAltOverflow,
-    popperRect,
-    preventedOffsets
-  );
-  var isReferenceHidden = isAnySideFullyClipped(referenceClippingOffsets);
-  var hasPopperEscaped = isAnySideFullyClipped(popperEscapeOffsets);
-  state.modifiersData[name] = {
-    referenceClippingOffsets: referenceClippingOffsets,
-    popperEscapeOffsets: popperEscapeOffsets,
-    isReferenceHidden: isReferenceHidden,
-    hasPopperEscaped: hasPopperEscaped,
-  };
-  state.attributes.popper = Object.assign({}, state.attributes.popper, {
-    'data-popper-reference-hidden': isReferenceHidden,
-    'data-popper-escaped': hasPopperEscaped,
-  });
-}
-
-var hide$1 = {
-  name: 'hide',
-  enabled: true,
-  phase: 'main',
-  requiresIfExists: ['preventOverflow'],
-  fn: hide,
-};
-
-var defaultModifiers = [
-  eventListeners,
-  popperOffsets$1,
-  computeStyles$1,
-  applyStyles$1,
-  offset$1,
-  flip$1,
-  preventOverflow$1,
-  arrow$1,
-  hide$1,
-];
-var createPopper =
-  /*#__PURE__*/
-  popperGenerator({
-    defaultModifiers: defaultModifiers,
-  }); // eslint-disable-next-line import/no-unused-modules
 
 function createHover(el, options) {
   const { callback } = options;
@@ -9816,10 +8587,10 @@ const vHover = /*#__PURE__*/ defineDirective({
 });
 
 const {
-  createComponent: createComponent$v,
-  bem: bem$v,
+  createComponent: createComponent$D,
+  bem: bem$B,
 } = /*#__PURE__*/ createNamespace('tooltip');
-var Tooltip = /*#__PURE__*/ createComponent$v({
+var Tooltip = /*#__PURE__*/ createComponent$D({
   mixins: [
     /*#__PURE__*/ useColor(),
     /*#__PURE__*/ usePopup({
@@ -9952,7 +8723,7 @@ var Tooltip = /*#__PURE__*/ createComponent$v({
           attrs: {
             role: 'tooltip',
           },
-          class: bem$v({
+          class: bem$B({
             translucent: this.translucent,
           }),
         },
@@ -9962,7 +8733,7 @@ var Tooltip = /*#__PURE__*/ createComponent$v({
       ]),
       [
         h('div', {
-          class: bem$v('arrow'),
+          class: bem$B('arrow'),
           attrs: {
             'data-popper-arrow': true,
           },
@@ -9970,7 +8741,7 @@ var Tooltip = /*#__PURE__*/ createComponent$v({
         h(
           'div',
           {
-            class: bem$v('content'),
+            class: bem$B('content'),
           },
           [this.slots() || text]
         ),
@@ -9984,7 +8755,8 @@ function createFactory(sfc) {
   const create = (props, destroyWhenClose = true) => {
     return new Component({
       propsData: props,
-      mounted() {
+      async mounted() {
+        await this.$nextTick();
         this.destroyWhenClose = destroyWhenClose;
         const { $el } = this;
         getApp($el).appendChild($el);
@@ -10656,8 +9428,8 @@ const VALID_AMPM_PREFIX = [
 ];
 
 const {
-  createComponent: createComponent$w,
-  bem: bem$w,
+  createComponent: createComponent$E,
+  bem: bem$C,
 } = /*#__PURE__*/ createNamespace('datetime');
 
 const clamp$1 = (min, n, max) => {
@@ -10710,7 +9482,7 @@ const divyColumns = (columns) => {
 
 const DEFAULT_FORMAT = 'MMM D, YYYY';
 let datetimeIds = 0;
-var datetime = /*#__PURE__*/ createComponent$w({
+var datetime = /*#__PURE__*/ createComponent$E({
   mixins: [/*#__PURE__*/ useModel('dateValue')],
   inject: {
     Item: {
@@ -11219,7 +9991,7 @@ var datetime = /*#__PURE__*/ createComponent$w({
           'aria-labelledby': labelId,
         },
         class: [
-          bem$w({
+          bem$C({
             disabled,
             readonly,
             placeholder: addPlaceholderClass,
@@ -11233,7 +10005,7 @@ var datetime = /*#__PURE__*/ createComponent$w({
         h(
           'div',
           {
-            class: bem$w('text'),
+            class: bem$C('text'),
           },
           [datetimeText]
         ),
@@ -11253,71 +10025,14 @@ var datetime = /*#__PURE__*/ createComponent$w({
   },
 });
 
-function useEvent(options) {
-  const { event, global = false } = options;
-  return createMixins({
-    mounted() {
-      const { $el } = this;
-      const target = global ? getApp($el) : $el;
-      const offs = arrayify(event).map((name) => {
-        let dismiss;
-        const prevent = () => (dismiss = true);
-        const maybe = (ev) => {
-          dismiss = false;
-          this.$emit('event-condition', { ev, name, prevent });
-          if (dismiss) return;
-          this.$emit('event-handler', ev, name);
-        };
-        return on(target, name, maybe, options);
-      });
-      const teardown = () => offs.forEach((off) => off());
-      this.useEvent = { teardown };
-    },
-    beforeDestroy() {
-      this.useEvent.teardown();
-    },
-  });
-}
-
-function useClickOutside(options) {
-  const { global = true, event = ['mouseup', 'touchend'] } = options || {};
-  return createMixins({
-    mixins: [useEvent({ global, event })],
-    mounted() {
-      this.$on('event-condition', (condition) => {
-        const { ev, prevent } = condition;
-        // If click was triggered programmaticaly (domEl.click()) then
-        // it shouldn't be treated as click-outside
-        // Chrome/Firefox support isTrusted property
-        // IE/Edge support pointerType property (empty if not triggered
-        // by pointing device)
-        if (
-          ('isTrusted' in ev && !ev.isTrusted) ||
-          ('pointerType' in ev && !ev.pointerType)
-        )
-          return false;
-        let elements = [this.$el];
-        const include = (el) => {
-          elements = elements.concat(el);
-        };
-        this.$emit('event-include', include);
-        if (elements.some((el) => el && el.contains(ev.target))) {
-          prevent();
-        }
-      });
-      this.$on('event-handler', () => this.$emit('clickoutside'));
-    },
-  });
-}
-
-const NAMESPACE$4 = 'FabGroup';
+const NAMESPACE$6 = 'FabGroup';
 const {
-  createComponent: createComponent$x,
-  bem: bem$x,
+  createComponent: createComponent$F,
+  bem: bem$D,
 } = /*#__PURE__*/ createNamespace('fab-group');
-var FabGroup = /*#__PURE__*/ createComponent$x({
+var FabGroup = /*#__PURE__*/ createComponent$F({
   mixins: [
-    /*#__PURE__*/ useGroup(NAMESPACE$4),
+    /*#__PURE__*/ useGroup(NAMESPACE$6),
     /*#__PURE__*/ useLazy('visible'),
     /*#__PURE__*/ useModel('visible'),
   ],
@@ -11356,7 +10071,7 @@ var FabGroup = /*#__PURE__*/ createComponent$x({
             tag: 'div',
             appear: true,
           },
-          class: bem$x({
+          class: bem$D({
             [`side-${side}`]: true,
           }),
         },
@@ -11384,11 +10099,11 @@ var FabGroup = /*#__PURE__*/ createComponent$x({
 });
 
 const {
-  createComponent: createComponent$y,
-  bem: bem$y,
+  createComponent: createComponent$G,
+  bem: bem$E,
 } = /*#__PURE__*/ createNamespace('fab');
 const FAB_SIDES = ['start', 'end', 'top', 'bottom'];
-var fab = /*#__PURE__*/ createComponent$y({
+var fab = /*#__PURE__*/ createComponent$G({
   mixins: [
     /*#__PURE__*/ useModel('activated'),
     /*#__PURE__*/ useClickOutside(),
@@ -11430,7 +10145,7 @@ var fab = /*#__PURE__*/ createComponent$y({
       'div',
       helper([
         {
-          class: bem$y({
+          class: bem$E({
             [`horizontal-${horizontal}`]: isDef(horizontal),
             [`vertical-${vertical}`]: isDef(vertical),
             edge,
@@ -11479,13 +10194,13 @@ var fab = /*#__PURE__*/ createComponent$y({
   },
 });
 
-const NAMESPACE$5 = 'FabGroup';
+const NAMESPACE$7 = 'FabGroup';
 const {
-  createComponent: createComponent$z,
-  bem: bem$z,
+  createComponent: createComponent$H,
+  bem: bem$F,
 } = /*#__PURE__*/ createNamespace('fab-button');
-var fabButton = /*#__PURE__*/ createComponent$z({
-  mixins: [/*#__PURE__*/ useColor(), /*#__PURE__*/ useGroupItem(NAMESPACE$5)],
+var fabButton = /*#__PURE__*/ createComponent$H({
+  mixins: [/*#__PURE__*/ useColor(), /*#__PURE__*/ useGroupItem(NAMESPACE$7)],
   directives: {
     ripple: vRipple,
   },
@@ -11531,7 +10246,7 @@ var fabButton = /*#__PURE__*/ createComponent$z({
           class: [
             'activatable',
             'line-focusable',
-            bem$z({
+            bem$F({
               [size]: isDef(size),
               'in-list': inList,
               'translucent-in-list': inList && translucent,
@@ -11557,7 +10272,7 @@ var fabButton = /*#__PURE__*/ createComponent$z({
                 value: this.ripple,
               },
             ],
-            class: bem$z('content', {
+            class: bem$F('content', {
               vertical,
             }),
           },
@@ -11565,14 +10280,14 @@ var fabButton = /*#__PURE__*/ createComponent$z({
             h(
               'span',
               {
-                class: bem$z('indicator'),
+                class: bem$F('indicator'),
               },
               [this.slots('indicator')]
             ),
             h(
               'span',
               {
-                class: bem$z('inner'),
+                class: bem$F('inner'),
               },
               [this.slots() || text]
             ),
@@ -11584,10 +10299,10 @@ var fabButton = /*#__PURE__*/ createComponent$z({
 });
 
 const {
-  createComponent: createComponent$A,
-  bem: bem$A,
+  createComponent: createComponent$I,
+  bem: bem$G,
 } = /*#__PURE__*/ createNamespace('footer');
-var footer = /*#__PURE__*/ createComponent$A({
+var footer = /*#__PURE__*/ createComponent$I({
   inject: {
     App: {
       default: undefined,
@@ -11617,7 +10332,7 @@ var footer = /*#__PURE__*/ createComponent$A({
           attrs: {
             role: 'contentinfo',
           },
-          class: bem$A({
+          class: bem$G({
             translucent,
           }),
         },
@@ -11631,10 +10346,10 @@ var footer = /*#__PURE__*/ createComponent$A({
 });
 
 const {
-  createComponent: createComponent$B,
-  bem: bem$B,
+  createComponent: createComponent$J,
+  bem: bem$H,
 } = /*#__PURE__*/ createNamespace('grid');
-var grid = /*#__PURE__*/ createComponent$B({
+var grid = /*#__PURE__*/ createComponent$J({
   functional: true,
   props: {
     fixed: Boolean,
@@ -11645,7 +10360,7 @@ var grid = /*#__PURE__*/ createComponent$B({
       'div',
       helper([
         {
-          class: bem$B({
+          class: bem$H({
             fixed: props.fixed,
           }),
         },
@@ -11657,10 +10372,10 @@ var grid = /*#__PURE__*/ createComponent$B({
 });
 
 const {
-  createComponent: createComponent$C,
-  bem: bem$C,
+  createComponent: createComponent$K,
+  bem: bem$I,
 } = /*#__PURE__*/ createNamespace('header');
-var header = /*#__PURE__*/ createComponent$C({
+var header = /*#__PURE__*/ createComponent$K({
   inject: {
     App: {
       default: undefined,
@@ -11693,7 +10408,7 @@ var header = /*#__PURE__*/ createComponent$C({
             role: 'banner',
           },
           class: [
-            bem$C(),
+            bem$I(),
             `line-header-${mode}`,
             `line-header-collapse-${collapse}`,
             this.translucent && 'line-header-translucent',
@@ -11710,10 +10425,10 @@ var header = /*#__PURE__*/ createComponent$C({
 });
 
 const {
-  createComponent: createComponent$D,
-  bem: bem$D,
+  createComponent: createComponent$L,
+  bem: bem$J,
 } = /*#__PURE__*/ createNamespace('check-group');
-var checkGroup = /*#__PURE__*/ createComponent$D({
+var checkGroup = /*#__PURE__*/ createComponent$L({
   mixins: [/*#__PURE__*/ useCheckGroupWithModel('Group')],
 
   render() {
@@ -11721,7 +10436,7 @@ var checkGroup = /*#__PURE__*/ createComponent$D({
     return h(
       'div',
       {
-        class: bem$D(),
+        class: bem$J(),
       },
       [this.slots()]
     );
@@ -11729,10 +10444,10 @@ var checkGroup = /*#__PURE__*/ createComponent$D({
 });
 
 const {
-  createComponent: createComponent$E,
-  bem: bem$E,
+  createComponent: createComponent$M,
+  bem: bem$K,
 } = /*#__PURE__*/ createNamespace('check-item');
-var checkItem = /*#__PURE__*/ createComponent$E({
+var checkItem = /*#__PURE__*/ createComponent$M({
   mixins: [/*#__PURE__*/ useCheckItemWithModel('Group')],
 
   render() {
@@ -11740,7 +10455,7 @@ var checkItem = /*#__PURE__*/ createComponent$E({
     return h(
       'div',
       {
-        class: bem$E(),
+        class: bem$K(),
         on: {
           click: this.toggle,
         },
@@ -11751,10 +10466,10 @@ var checkItem = /*#__PURE__*/ createComponent$E({
 });
 
 const {
-  createComponent: createComponent$F,
-  bem: bem$F,
+  createComponent: createComponent$N,
+  bem: bem$L,
 } = /*#__PURE__*/ createNamespace('lazy');
-var lazy = /*#__PURE__*/ createComponent$F({
+var lazy = /*#__PURE__*/ createComponent$N({
   mixins: [/*#__PURE__*/ useLazy()],
 
   render() {
@@ -11762,7 +10477,7 @@ var lazy = /*#__PURE__*/ createComponent$F({
     return h(
       'div',
       {
-        class: bem$F(),
+        class: bem$L(),
       },
       [this.slots()]
     );
@@ -11857,10 +10572,10 @@ function useTreeItem(name) {
 }
 
 const {
-  createComponent: createComponent$G,
-  bem: bem$G,
+  createComponent: createComponent$O,
+  bem: bem$M,
 } = /*#__PURE__*/ createNamespace('tree-item');
-var treeItem = /*#__PURE__*/ createComponent$G({
+var treeItem = /*#__PURE__*/ createComponent$O({
   mixins: [/*#__PURE__*/ useTreeItem('Tree')],
   methods: {
     onClick(e) {
@@ -11874,7 +10589,7 @@ var treeItem = /*#__PURE__*/ createComponent$G({
     return h(
       'div',
       {
-        class: bem$G(),
+        class: bem$M(),
         on: {
           click: this.onClick,
         },
@@ -11885,146 +10600,10 @@ var treeItem = /*#__PURE__*/ createComponent$G({
 });
 
 const {
-  createComponent: createComponent$H,
-  bem: bem$H,
-} = /*#__PURE__*/ createNamespace('font-icon');
-
-function getDefaultText(slots) {
-  const nodes = slots();
-  const text = (nodes && nodes[0].text) || '';
-  return text.trim();
-}
-
-var FontIcon = /*#__PURE__*/ createComponent$H({
-  functional: true,
-  props: {
-    name: String,
-    source: String,
-    size: String,
-    color: String,
-  },
-
-  render(h, { props, data, slots }) {
-    const { attrs = {} } = data;
-    const { name, size, color } = props;
-    const text = name || getDefaultText(slots);
-    return h(
-      'i',
-      helper([
-        {
-          class: [
-            'line-icon',
-            bem$H({
-              [`${size}`]: !!size,
-            }),
-            createColorClasses(color),
-          ],
-          attrs: {
-            'aria-hidden': !attrs['aria-label'],
-            'aria-label': attrs['aria-label'] || text,
-          },
-        },
-        data,
-      ]),
-      [text]
-    );
-  },
-});
-
-const {
-  createComponent: createComponent$I,
-  bem: bem$I,
-} = /*#__PURE__*/ createNamespace('svg-icon');
-
-const getDefaultText$1 = (slots) => {
-  const nodes = slots();
-  const text = (nodes && nodes[0].text) || '';
-  return text.trim();
-};
-
-var SvgIcon = /*#__PURE__*/ createComponent$I({
-  functional: true,
-  props: {
-    name: String,
-    href: String,
-    src: String,
-    size: String,
-    color: String,
-    fill: {
-      type: Boolean,
-      default: true,
-    },
-    stroke: Boolean,
-  },
-
-  render(h, { props, data, slots }) {
-    const { attrs = {} } = data;
-    const { name, href, src, size, color, fill, stroke } = props;
-    const text = name || getDefaultText$1(slots);
-    const finalHref = href || `${src || ''}#${text}`;
-    return h(
-      'div',
-      {
-        class: [
-          bem$I({
-            [`${size}`]: !!size,
-            'fill-none': !fill,
-            'stroke-width': stroke,
-          }),
-          createColorClasses(color),
-        ],
-      },
-      [
-        h(
-          'svg',
-          helper([
-            {
-              attrs: {
-                role: 'img',
-                'aria-hidden': !attrs['aria-label'],
-                'aria-label': attrs['aria-label'] || text,
-              },
-            },
-            data,
-          ]),
-          [
-            text || href
-              ? h('use', {
-                  attrs: {
-                    'xlink:href': finalHref,
-                  },
-                })
-              : slots('content'),
-          ]
-        ),
-      ]
-    );
-  },
-});
-
-const { createComponent: createComponent$J } = /*#__PURE__*/ createNamespace(
-  'icon'
-);
-var Icon = /*#__PURE__*/ createComponent$J({
-  functional: true,
-
-  render(h, { data, children }) {
-    const { attrs } = data;
-    const hasSrc = attrs && ('src' in attrs || 'href' in attrs);
-
-    if (hasSrc) {
-      return h(SvgIcon, data, children);
-    }
-
-    return h(FontIcon, data, children);
-  },
-});
-
-const {
-  createComponent: createComponent$K,
-  bem: bem$J,
+  createComponent: createComponent$P,
+  bem: bem$N,
 } = /*#__PURE__*/ createNamespace('img');
-var image = /*#__PURE__*/ createComponent$K({
+var image = /*#__PURE__*/ createComponent$P({
   props: {
     alt: String,
     src: String,
@@ -12108,7 +10687,7 @@ var image = /*#__PURE__*/ createComponent$K({
       'div',
       helper([
         {
-          class: bem$J(),
+          class: bem$N(),
         },
         {
           on: this.$listeners,
@@ -12132,10 +10711,10 @@ var image = /*#__PURE__*/ createComponent$K({
 });
 
 const {
-  createComponent: createComponent$L,
-  bem: bem$K,
+  createComponent: createComponent$Q,
+  bem: bem$O,
 } = /*#__PURE__*/ createNamespace('infinite-scroll');
-var infiniteScroll = /*#__PURE__*/ createComponent$L({
+var infiniteScroll = /*#__PURE__*/ createComponent$Q({
   inject: {
     Content: {
       default: undefined,
@@ -12347,7 +10926,7 @@ var infiniteScroll = /*#__PURE__*/ createComponent$L({
       'div',
       {
         class: [
-          bem$K({
+          bem$O({
             loading: isLoading,
             enabled: !disabled,
           }),
@@ -12359,10 +10938,10 @@ var infiniteScroll = /*#__PURE__*/ createComponent$L({
 });
 
 const {
-  createComponent: createComponent$M,
-  bem: bem$L,
+  createComponent: createComponent$R,
+  bem: bem$P,
 } = /*#__PURE__*/ createNamespace('infinite-scroll-content');
-var infiniteScrollContent = /*#__PURE__*/ createComponent$M({
+var infiniteScrollContent = /*#__PURE__*/ createComponent$R({
   props: {
     loadingSpinner: String,
     loadingText: String,
@@ -12395,7 +10974,7 @@ var infiniteScrollContent = /*#__PURE__*/ createComponent$M({
       'div',
       {
         class: [
-          bem$L(), // Used internally for styling
+          bem$P(), // Used internally for styling
           `line-infinite-scroll-content-${mode}`,
         ],
       },
@@ -12436,8 +11015,8 @@ var infiniteScrollContent = /*#__PURE__*/ createComponent$M({
 });
 
 const {
-  createComponent: createComponent$N,
-  bem: bem$M,
+  createComponent: createComponent$S,
+  bem: bem$Q,
 } = /*#__PURE__*/ createNamespace('input');
 
 const findItemLabel$1 = (componentEl) => {
@@ -12451,7 +11030,7 @@ const findItemLabel$1 = (componentEl) => {
 };
 
 let inputIds = 0;
-var input = /*#__PURE__*/ createComponent$N({
+var input = /*#__PURE__*/ createComponent$S({
   mixins: [
     /*#__PURE__*/ useModel('nativeValue', {
       event: 'inputChange',
@@ -12685,7 +11264,9 @@ var input = /*#__PURE__*/ createComponent$N({
       helper([
         {
           class: [
-            bem$M(),
+            bem$Q({
+              suffix: this.slots('suffix'),
+            }),
             {
               'has-value': nativeValue && nativeValue.length,
               'has-focus': hasFocus,
@@ -12698,7 +11279,7 @@ var input = /*#__PURE__*/ createComponent$N({
       ]),
       [
         h('input', {
-          class: 'native-input',
+          class: bem$Q('content'),
           ref: 'nativeInput',
           attrs: {
             accept: accept,
@@ -12725,6 +11306,7 @@ var input = /*#__PURE__*/ createComponent$N({
             change: this.onChange,
           },
         }),
+        this.slots('suffix'),
         this.clearInput &&
           !readonly &&
           !disabled &&
@@ -12746,10 +11328,10 @@ var input = /*#__PURE__*/ createComponent$N({
 });
 
 const {
-  createComponent: createComponent$O,
-  bem: bem$N,
+  createComponent: createComponent$T,
+  bem: bem$R,
 } = /*#__PURE__*/ createNamespace('item');
-var item = /*#__PURE__*/ createComponent$O({
+var item = /*#__PURE__*/ createComponent$T({
   mixins: [/*#__PURE__*/ useColor()],
   directives: {
     ripple: vRipple,
@@ -12892,7 +11474,7 @@ var item = /*#__PURE__*/ createComponent$O({
             'aria-disabled': disabled ? 'true' : null,
           },
           class: [
-            bem$N({
+            bem$R({
               disabled,
             }),
             {
@@ -12956,10 +11538,10 @@ var item = /*#__PURE__*/ createComponent$O({
 });
 
 const {
-  createComponent: createComponent$P,
-  bem: bem$O,
+  createComponent: createComponent$U,
+  bem: bem$S,
 } = /*#__PURE__*/ createNamespace('item-divider');
-var itemDivider = /*#__PURE__*/ createComponent$P({
+var itemDivider = /*#__PURE__*/ createComponent$U({
   mixins: [/*#__PURE__*/ useColor()],
   props: {
     sticky: Boolean,
@@ -12972,7 +11554,7 @@ var itemDivider = /*#__PURE__*/ createComponent$P({
       'div',
       helper([
         {
-          class: bem$O({
+          class: bem$S({
             sticky,
           }),
         },
@@ -12985,13 +11567,13 @@ var itemDivider = /*#__PURE__*/ createComponent$P({
         h(
           'div',
           {
-            class: bem$O('inner'),
+            class: bem$S('inner'),
           },
           [
             h(
               'div',
               {
-                class: bem$O('wrapper'),
+                class: bem$S('wrapper'),
               },
               [this.slots()]
             ),
@@ -13004,10 +11586,10 @@ var itemDivider = /*#__PURE__*/ createComponent$P({
 });
 
 const {
-  createComponent: createComponent$Q,
-  bem: bem$P,
+  createComponent: createComponent$V,
+  bem: bem$T,
 } = /*#__PURE__*/ createNamespace('item-group');
-var itemGroup = /*#__PURE__*/ createComponent$Q({
+var itemGroup = /*#__PURE__*/ createComponent$V({
   render() {
     const h = arguments[0];
     const { mode } = this;
@@ -13015,7 +11597,7 @@ var itemGroup = /*#__PURE__*/ createComponent$Q({
       'div',
       {
         class: [
-          bem$P({
+          bem$T({
             // Used internally for styling
             [`${mode}`]: true,
           }),
@@ -13027,10 +11609,10 @@ var itemGroup = /*#__PURE__*/ createComponent$Q({
 });
 
 const {
-  createComponent: createComponent$R,
-  bem: bem$Q,
+  createComponent: createComponent$W,
+  bem: bem$U,
 } = /*#__PURE__*/ createNamespace('item-option');
-var itemOption = /*#__PURE__*/ createComponent$R({
+var itemOption = /*#__PURE__*/ createComponent$W({
   mixins: [/*#__PURE__*/ useColor()],
   props: {
     disabled: Boolean,
@@ -13072,7 +11654,7 @@ var itemOption = /*#__PURE__*/ createComponent$R({
       'div',
       {
         class: [
-          bem$Q({
+          bem$U({
             disabled,
             expandable,
           }),
@@ -13089,7 +11671,7 @@ var itemOption = /*#__PURE__*/ createComponent$R({
             {},
             attrs,
             {
-              class: bem$Q('button-native'),
+              class: bem$U('button-native'),
               attrs: {
                 disabled: disabled,
               },
@@ -13099,7 +11681,7 @@ var itemOption = /*#__PURE__*/ createComponent$R({
             h(
               'span',
               {
-                class: bem$Q('button-inner'),
+                class: bem$U('button-inner'),
               },
               [
                 this.slots('top'),
@@ -13127,8 +11709,8 @@ var itemOption = /*#__PURE__*/ createComponent$R({
 });
 
 const {
-  createComponent: createComponent$S,
-  bem: bem$R,
+  createComponent: createComponent$X,
+  bem: bem$V,
 } = /*#__PURE__*/ createNamespace('item-options');
 
 const isEndSide = (side) => {
@@ -13148,7 +11730,7 @@ const isEndSide = (side) => {
   }
 };
 
-var itemOptions = /*#__PURE__*/ createComponent$S({
+var itemOptions = /*#__PURE__*/ createComponent$X({
   inject: {
     ItemSliding: {
       default: undefined,
@@ -13181,7 +11763,7 @@ var itemOptions = /*#__PURE__*/ createComponent$S({
     return h(
       'div',
       {
-        class: bem$R({
+        class: bem$V({
           [mode]: true,
           start: !isEnd,
           end: isEnd,
@@ -13193,8 +11775,8 @@ var itemOptions = /*#__PURE__*/ createComponent$S({
 });
 
 const {
-  createComponent: createComponent$T,
-  bem: bem$S,
+  createComponent: createComponent$Y,
+  bem: bem$W,
 } = /*#__PURE__*/ createNamespace('item-sliding');
 const SWIPE_MARGIN = 30;
 const ELASTIC_FACTOR = 0.55;
@@ -13235,7 +11817,7 @@ const swipeShouldReset = (isResetDirection, isMovingFast, isOnResetZone) => {
   return (!isMovingFast && isOnResetZone) || (isResetDirection && isMovingFast);
 };
 
-var itemSliding = /*#__PURE__*/ createComponent$T({
+var itemSliding = /*#__PURE__*/ createComponent$Y({
   provide() {
     return {
       ItemSliding: this,
@@ -13651,7 +12233,7 @@ var itemSliding = /*#__PURE__*/ createComponent$T({
     return h(
       'div',
       {
-        class: bem$S({
+        class: bem$W({
           'active-slide': this.state !== 2,
           /* Disabled */
           'active-options-end':
@@ -13678,10 +12260,10 @@ var itemSliding = /*#__PURE__*/ createComponent$T({
 });
 
 const {
-  createComponent: createComponent$U,
-  bem: bem$T,
+  createComponent: createComponent$Z,
+  bem: bem$X,
 } = /*#__PURE__*/ createNamespace('label');
-var label = /*#__PURE__*/ createComponent$U({
+var label = /*#__PURE__*/ createComponent$Z({
   mixins: [/*#__PURE__*/ useColor()],
   inject: {
     Item: {
@@ -13725,7 +12307,7 @@ var label = /*#__PURE__*/ createComponent$U({
       'div',
       helper([
         {
-          class: bem$T({
+          class: bem$X({
             [position]: isDef(position),
             'no-animate': this.noAnimate,
           }),
@@ -13740,10 +12322,10 @@ var label = /*#__PURE__*/ createComponent$U({
 });
 
 const {
-  createComponent: createComponent$V,
-  bem: bem$U,
+  createComponent: createComponent$_,
+  bem: bem$Y,
 } = /*#__PURE__*/ createNamespace('list');
-var list = /*#__PURE__*/ createComponent$V({
+var list = /*#__PURE__*/ createComponent$_({
   props: {
     // 'full' | 'inset' | 'none' | undefined
     lines: String,
@@ -13757,7 +12339,7 @@ var list = /*#__PURE__*/ createComponent$V({
       'div',
       helper([
         {
-          class: bem$U({
+          class: bem$Y({
             [`lines-${lines}`]: isDef(lines),
             inset,
           }),
@@ -13772,10 +12354,10 @@ var list = /*#__PURE__*/ createComponent$V({
 });
 
 const {
-  createComponent: createComponent$W,
-  bem: bem$V,
+  createComponent: createComponent$$,
+  bem: bem$Z,
 } = /*#__PURE__*/ createNamespace('list-header');
-var listHeader = /*#__PURE__*/ createComponent$W({
+var listHeader = /*#__PURE__*/ createComponent$$({
   mixins: [/*#__PURE__*/ useColor()],
   props: {
     // 'full' | 'inset' | 'none' | undefined
@@ -13789,7 +12371,7 @@ var listHeader = /*#__PURE__*/ createComponent$W({
       'div',
       helper([
         {
-          class: bem$V({
+          class: bem$Z({
             [`lines-${lines}`]: isDef(lines),
           }),
         },
@@ -13810,13 +12392,13 @@ var listHeader = /*#__PURE__*/ createComponent$W({
   },
 });
 
-const NAMESPACE$6 = 'ListView';
+const NAMESPACE$8 = 'ListView';
 const {
-  createComponent: createComponent$X,
-  bem: bem$W,
+  createComponent: createComponent$10,
+  bem: bem$_,
 } = /*#__PURE__*/ createNamespace('list-item');
-var ListItem = /*#__PURE__*/ createComponent$X({
-  inject: [NAMESPACE$6],
+var ListItem = /*#__PURE__*/ createComponent$10({
+  inject: [NAMESPACE$8],
   props: {
     index: {
       type: Number,
@@ -13831,12 +12413,12 @@ var ListItem = /*#__PURE__*/ createComponent$X({
   },
   methods: {
     onLayoutChanged() {
-      const { itemLayoutAtIndex } = this[NAMESPACE$6];
+      const { itemLayoutAtIndex } = this[NAMESPACE$8];
       const item = itemLayoutAtIndex(this.index);
       this.offsetWidth = item.geometry.width;
       this.offsetHeight = item.geometry.height;
       const { offsetWidth, offsetHeight } = this.$el;
-      const { onLayout, horizontal, vertical } = this[NAMESPACE$6];
+      const { onLayout, horizontal, vertical } = this[NAMESPACE$8];
       if (!offsetWidth || !offsetHeight) return;
 
       if (
@@ -13863,7 +12445,7 @@ var ListItem = /*#__PURE__*/ createComponent$X({
     return h(
       'div',
       {
-        class: bem$W(),
+        class: bem$_(),
       },
       [this.cachedNode]
     );
@@ -14470,15 +13052,15 @@ function exponentialSearch(array = [], wanted, compare, from, to, bound) {
   );
 }
 
-const NAMESPACE$7 = 'ListView';
+const NAMESPACE$9 = 'ListView';
 const {
-  createComponent: createComponent$Y,
-  bem: bem$X,
+  createComponent: createComponent$11,
+  bem: bem$$,
 } = /*#__PURE__*/ createNamespace('list-view');
-var listView = /*#__PURE__*/ createComponent$Y({
+var listView = /*#__PURE__*/ createComponent$11({
   provide() {
     return {
-      [NAMESPACE$7]: this,
+      [NAMESPACE$9]: this,
     };
   },
 
@@ -15008,7 +13590,7 @@ var listView = /*#__PURE__*/ createComponent$Y({
     return h(
       'div',
       {
-        class: bem$X(),
+        class: bem$$(),
         ref: 'viewport',
         on: {
           scroll: this.onScroll,
@@ -15016,7 +13598,7 @@ var listView = /*#__PURE__*/ createComponent$Y({
       },
       [
         h('div', {
-          class: bem$X('spacer'),
+          class: bem$$('spacer'),
           style: {
             width: `${this.layout.geometry.width}px`,
             height: `${this.layout.geometry.height}px`,
@@ -15028,7 +13610,7 @@ var listView = /*#__PURE__*/ createComponent$Y({
             attrs: {
               tag: 'div',
             },
-            class: bem$X('content'),
+            class: bem$$('content'),
           },
           [
             Object.keys(this.views).map((index) => {
@@ -15149,140 +13731,8 @@ const menuRevealAnimation = (menu) => {
 
 const createMenuController = () => {
   const menuAnimations = new Map();
-  const menus = [];
-  const waitUntilReady = () => {
-    return Promise.all(
-      Array.from(document.querySelectorAll('.line-menu')).map((menu) => {
-        // menu.componentOnReady()
-        // TODO
-        console.log(menu);
-        return true;
-      })
-    );
-  };
-  const getMenusSync = () => {
-    return menus.map((menu) => menu.el);
-  };
-  const isAnimatingSync = () => {
-    return menus.some((menu) => menu.isAnimating);
-  };
-  const _setActiveMenu = (menu) => {
-    // if this menu should be enabled
-    // then find all the other menus on this same side
-    // and automatically disable other same side menus
-    const { side } = menu;
-    menus
-      .filter((m) => m.side === side && m !== menu)
-      .forEach((m) => (m.disabled = true));
-  };
-  const find = (predicate) => {
-    const instance = menus.find(predicate);
-    if (instance !== undefined) {
-      return instance.el;
-    }
-    return undefined;
-  };
-  const get = async (menu) => {
-    await waitUntilReady();
-    if (menu === 'start' || menu === 'end') {
-      // there could be more than one menu on the same side
-      // so first try to get the enabled one
-      const menuRef = find((m) => m.side === menu && !m.disabled);
-      console.log('menuRef', menuRef);
-      if (menuRef) {
-        return menuRef;
-      }
-      // didn't find a menu side that is enabled
-      // so try to get the first menu side found
-      console.log(
-        'find',
-        find((m) => m.side === menu)
-      );
-      return find((m) => m.side === menu);
-    }
-    if (menu != null) {
-      // the menuId was not left or right
-      // so try to get the menu by its "id"
-      return find((m) => m.menuId === menu);
-    }
-    // return the first enabled menu
-    const menuEl = find((m) => !m.disabled);
-    if (menuEl) {
-      return menuEl;
-    }
-    // get the first menu in the array, if one exists
-    return menus.length > 0 ? menus[0] : undefined;
-  };
-  const _getOpenSync = () => {
-    return find((m) => m._isOpen);
-  };
-  /**
-   * Get the instance of the opened menu. Returns `null` if a menu is not found.
-   */
-  const getOpen = async () => {
-    await waitUntilReady();
-    return _getOpenSync();
-  };
-  const open = async (menu) => {
-    const menuEl = await get(menu);
-    if (menuEl) {
-      return menuEl.open();
-    }
-    return false;
-  };
-  const close = async (menu) => {
-    const menuEl = await (menu !== undefined ? get(menu) : getOpen());
-    if (menuEl !== undefined) {
-      return menuEl.close();
-    }
-    return false;
-  };
-  const toggle = async (menu) => {
-    const menuEl = await get(menu);
-    if (menuEl) {
-      return menuEl.toggle();
-    }
-    return false;
-  };
-  const enable = async (shouldEnable, menu) => {
-    const menuEl = await get(menu);
-    if (menuEl) {
-      menuEl.disabled = !shouldEnable;
-    }
-    return menuEl;
-  };
-  const swipeGesture = async (shouldEnable, menu) => {
-    const menuEl = await get(menu);
-    if (menuEl) {
-      menuEl.swipeGesture = shouldEnable;
-    }
-    return menuEl;
-  };
-  const isEnabled = async (menu) => {
-    const menuEl = await get(menu);
-    if (menuEl) {
-      return !menuEl.disabled;
-    }
-    return false;
-  };
   const registerAnimation = (name, animation) => {
     menuAnimations.set(name, animation);
-  };
-  const _register = (menu) => {
-    console.log('menu', menu);
-    if (menus.indexOf(menu) < 0) {
-      if (!menu.disabled) {
-        _setActiveMenu(menu);
-      }
-      menus.push(menu);
-    }
-    console.log(menus);
-  };
-  const _unregister = (menu) => {
-    const index = menus.indexOf(menu);
-    if (index > -1) {
-      menus.splice(index, 1);
-    }
   };
   const _createAnimation = (type, menuCmp) => {
     const animationBuilder = menuAnimations.get(type);
@@ -15292,70 +13742,19 @@ const createMenuController = () => {
     const animation = animationBuilder(menuCmp);
     return animation;
   };
-  /**
-   * Get all menu instances.
-   */
-  const getMenus = async () => {
-    await waitUntilReady();
-    return getMenusSync();
-  };
-  const isOpen = async (menu) => {
-    if (menu != null) {
-      const menuEl = await get(menu);
-      return menuEl !== undefined && menuEl.isOpen();
-    }
-    const menuEl = await getOpen();
-    return menuEl !== undefined;
-  };
-  /**
-   * Get whether or not a menu is animating. Returns `true` if any
-   * menu is currently animating.
-   */
-  const isAnimating = async () => {
-    await waitUntilReady();
-    return isAnimatingSync();
-  };
-  const _setOpen = async (menu, shouldOpen, animated) => {
-    if (isAnimatingSync()) {
-      return false;
-    }
-    if (shouldOpen) {
-      const openedMenu = await getOpen();
-      if (openedMenu && menu.el !== openedMenu) {
-        await openedMenu.setOpen(false, false);
-      }
-    }
-    return menu._setOpen(shouldOpen, animated);
-  };
   registerAnimation('reveal', menuRevealAnimation);
   registerAnimation('push', menuPushAnimation);
   registerAnimation('overlay', menuOverlayAnimation);
   return {
     registerAnimation,
-    get,
-    getMenus,
-    getOpen,
-    isEnabled,
-    swipeGesture,
-    isAnimating,
-    isOpen,
-    enable,
-    toggle,
-    close,
-    open,
-    _getOpenSync,
     _createAnimation,
-    _register,
-    _unregister,
-    _setOpen,
-    _setActiveMenu,
   };
 };
 const menuController = /* @__PURE__ */ createMenuController();
 
 const {
-  createComponent: createComponent$Z,
-  bem: bem$Y,
+  createComponent: createComponent$12,
+  bem: bem$10,
 } = /*#__PURE__*/ createNamespace('menu');
 const iosEasing = 'cubic-bezier(0.32,0.72,0,1)';
 const iosEasingReverse = 'cubic-bezier(1, 0, 0.68, 0.28)';
@@ -15406,7 +13805,7 @@ const isEnd = (side) => {
 const SHOW_MENU = 'show-menu';
 const SHOW_BACKDROP = 'show-overlay';
 const MENU_CONTENT_OPEN = 'line-menu__content-open';
-var menu = /*#__PURE__*/ createComponent$Z({
+var menu = /*#__PURE__*/ createComponent$12({
   mixins: [/*#__PURE__*/ useModel('actived')],
   props: {
     contentId: {
@@ -15568,11 +13967,8 @@ var menu = /*#__PURE__*/ createComponent$Z({
       }
 
       if (this.isOpen) {
-        return true; // TODO error
-      } // TODO
-      // if (menuController._getOpenSync()) {
-      //   return false;
-      // }
+        return true;
+      }
 
       return checkEdgeSide(
         window,
@@ -15921,7 +14317,7 @@ var menu = /*#__PURE__*/ createComponent$Z({
       'div',
       {
         class: [
-          bem$Y({
+          bem$10({
             [`type-${type}`]: true,
             enabled: !disabled,
             'side-end': isEndSide,
@@ -15937,13 +14333,13 @@ var menu = /*#__PURE__*/ createComponent$Z({
         h(
           'div',
           {
-            class: bem$Y('inner'),
+            class: bem$10('inner'),
             ref: 'menuInnerEl',
           },
           [this.slots()]
         ),
         h(Overlay, {
-          class: bem$Y('backdrop'),
+          class: bem$10('backdrop'),
           ref: 'backdropEl',
           attrs: {
             tappable: false,
@@ -15956,10 +14352,10 @@ var menu = /*#__PURE__*/ createComponent$Z({
 });
 
 const {
-  createComponent: createComponent$_,
-  bem: bem$Z,
+  createComponent: createComponent$13,
+  bem: bem$11,
 } = /*#__PURE__*/ createNamespace('note');
-var note = /*#__PURE__*/ createComponent$_({
+var note = /*#__PURE__*/ createComponent$13({
   functional: true,
   props: {
     color: String,
@@ -15971,7 +14367,7 @@ var note = /*#__PURE__*/ createComponent$_({
       'div',
       helper([
         {
-          class: [bem$Z(), createColorClasses(color)],
+          class: [bem$11(), createColorClasses(color)],
         },
         data,
       ]),
@@ -15981,8 +14377,8 @@ var note = /*#__PURE__*/ createComponent$_({
 });
 
 const {
-  createComponent: createComponent$$,
-  bem: bem$_,
+  createComponent: createComponent$14,
+  bem: bem$12,
 } = /*#__PURE__*/ createNamespace('progress-bar');
 
 const clamp$3 = (min, n, max) => {
@@ -16040,7 +14436,7 @@ const renderProgress = (h, value, buffer) => {
   ];
 };
 
-var progressBar = /*#__PURE__*/ createComponent$$({
+var progressBar = /*#__PURE__*/ createComponent$14({
   mixins: [/*#__PURE__*/ useColor()],
   props: {
     type: {
@@ -16070,7 +14466,7 @@ var progressBar = /*#__PURE__*/ createComponent$$({
           'aria-valuemax': '1',
         },
         class: [
-          bem$_(),
+          bem$12(),
           {
             [`progress-bar-${type}`]: true,
             'progress-paused': paused,
@@ -16088,13 +14484,13 @@ var progressBar = /*#__PURE__*/ createComponent$$({
   },
 });
 
-const NAMESPACE$8 = 'RadioGroup';
+const NAMESPACE$a = 'RadioGroup';
 const {
-  createComponent: createComponent$10,
-  bem: bem$$,
+  createComponent: createComponent$15,
+  bem: bem$13,
 } = /*#__PURE__*/ createNamespace('radio-group');
-var radioGroup = /*#__PURE__*/ createComponent$10({
-  mixins: [/*#__PURE__*/ useCheckGroupWithModel(NAMESPACE$8)],
+var radioGroup = /*#__PURE__*/ createComponent$15({
+  mixins: [/*#__PURE__*/ useCheckGroupWithModel(NAMESPACE$a)],
   props: {
     exclusive: {
       type: Boolean,
@@ -16108,7 +14504,7 @@ var radioGroup = /*#__PURE__*/ createComponent$10({
       'div',
       helper([
         {
-          class: bem$$(),
+          class: bem$13(),
         },
         {
           on: this.$listeners,
@@ -16120,10 +14516,10 @@ var radioGroup = /*#__PURE__*/ createComponent$10({
 });
 
 const {
-  createComponent: createComponent$11,
-  bem: bem$10,
+  createComponent: createComponent$16,
+  bem: bem$14,
 } = /*#__PURE__*/ createNamespace('radio-indicator');
-var RadioIndicator = /*#__PURE__*/ createComponent$11({
+var RadioIndicator = /*#__PURE__*/ createComponent$16({
   functional: true,
   props: {
     checked: Boolean,
@@ -16136,7 +14532,7 @@ var RadioIndicator = /*#__PURE__*/ createComponent$11({
       'div',
       helper([
         {
-          class: bem$10({
+          class: bem$14({
             checked,
             disabled,
           }),
@@ -16145,21 +14541,21 @@ var RadioIndicator = /*#__PURE__*/ createComponent$11({
       ]),
       [
         h('div', {
-          class: bem$10('inner'),
+          class: bem$14('inner'),
         }),
       ]
     );
   },
 });
 
-const NAMESPACE$9 = 'RadioGroup';
+const NAMESPACE$b = 'RadioGroup';
 const {
-  createComponent: createComponent$12,
-  bem: bem$11,
+  createComponent: createComponent$17,
+  bem: bem$15,
 } = /*#__PURE__*/ createNamespace('radio');
-var radio = /*#__PURE__*/ createComponent$12({
+var radio = /*#__PURE__*/ createComponent$17({
   mixins: [
-    /*#__PURE__*/ useCheckItemWithModel(NAMESPACE$9),
+    /*#__PURE__*/ useCheckItemWithModel(NAMESPACE$b),
     /*#__PURE__*/ useRipple(),
     /*#__PURE__*/ useColor(),
   ],
@@ -16221,7 +14617,7 @@ var radio = /*#__PURE__*/ createComponent$12({
       helper([
         {
           class: [
-            bem$11({
+            bem$15({
               checked,
               disabled,
             }),
@@ -16260,8 +14656,8 @@ var radio = /*#__PURE__*/ createComponent$12({
 });
 
 const {
-  createComponent: createComponent$13,
-  bem: bem$12,
+  createComponent: createComponent$18,
+  bem: bem$16,
 } = /*#__PURE__*/ createNamespace('range');
 
 function clamp$4(value, min, max) {
@@ -16287,7 +14683,7 @@ const renderKnob = (
     'div',
     {
       class: [
-        bem$12('knob-handle', {
+        bem$16('knob-handle', {
           min: value === min,
           max: value === max,
         }),
@@ -16327,7 +14723,7 @@ const renderKnob = (
         h(
           'div',
           {
-            class: bem$12('pin'),
+            class: bem$16('pin'),
             attrs: {
               role: 'presentation',
             },
@@ -16335,7 +14731,7 @@ const renderKnob = (
           [Math.round(value)]
         ),
       h('div', {
-        class: bem$12('knob'),
+        class: bem$16('knob'),
         attrs: {
           role: 'presentation',
         },
@@ -16358,7 +14754,7 @@ const valueToRatio = (value, min, max) => {
   return clamp$4(0, (value - min) / (max - min), 1);
 };
 
-var range = /*#__PURE__*/ createComponent$13({
+var range = /*#__PURE__*/ createComponent$18({
   mixins: [/*#__PURE__*/ useColor()],
   inject: {
     Item: {
@@ -16701,7 +15097,7 @@ var range = /*#__PURE__*/ createComponent$13({
     return h(
       'div',
       {
-        class: bem$12({
+        class: bem$16({
           disabled,
           pressed: pressedKnob !== undefined,
           'has-pin': pin,
@@ -16716,7 +15112,7 @@ var range = /*#__PURE__*/ createComponent$13({
         h(
           'div',
           {
-            class: bem$12('slider'),
+            class: bem$16('slider'),
             ref: 'rangeSlider',
           },
           [
@@ -16726,19 +15122,19 @@ var range = /*#__PURE__*/ createComponent$13({
                 attrs: {
                   role: 'presentation',
                 },
-                class: bem$12('tick', {
+                class: bem$16('tick', {
                   active: tick.active,
                 }),
               })
             ),
             h('div', {
-              class: bem$12('bar'),
+              class: bem$16('bar'),
               attrs: {
                 role: 'presentation',
               },
             }),
             h('div', {
-              class: bem$12('bar', {
+              class: bem$16('bar', {
                 active: true,
               }),
               attrs: {
@@ -16977,15 +15373,15 @@ const translateElement = (el, value) => {
 };
 
 const {
-  createComponent: createComponent$14,
-  bem: bem$13,
+  createComponent: createComponent$19,
+  bem: bem$17,
 } = /*#__PURE__*/ createNamespace('refresher');
 
 const clamp$5 = (min, n, max) => {
   return Math.max(min, Math.min(n, max));
 };
 
-var refresher = /*#__PURE__*/ createComponent$14({
+var refresher = /*#__PURE__*/ createComponent$19({
   props: {
     pullMin: {
       type: Number,
@@ -17729,7 +16125,7 @@ var refresher = /*#__PURE__*/ createComponent$14({
       'div',
       {
         class: [
-          bem$13(),
+          bem$17(),
           {
             // Used internally for styling
             [`refresher-${mode}`]: true,
@@ -17884,10 +16280,10 @@ const blockedTags = [
 ];
 
 const {
-  createComponent: createComponent$15,
-  bem: bem$14,
+  createComponent: createComponent$1a,
+  bem: bem$18,
 } = /*#__PURE__*/ createNamespace('refresher-content');
-var refresherContent = /*#__PURE__*/ createComponent$15({
+var refresherContent = /*#__PURE__*/ createComponent$1a({
   props: {
     pullingIcon: String,
     pullingText: String,
@@ -17945,7 +16341,7 @@ var refresherContent = /*#__PURE__*/ createComponent$15({
     return h(
       'div',
       {
-        class: bem$14(),
+        class: bem$18(),
       },
       [
         h(
@@ -17968,7 +16364,7 @@ var refresherContent = /*#__PURE__*/ createComponent$15({
                       class: 'spinner-arrow-container',
                     },
                     [
-                      h('line-spinner', {
+                      h(Spinner, {
                         attrs: {
                           type: pullingIcon,
                           paused: true,
@@ -18031,7 +16427,7 @@ var refresherContent = /*#__PURE__*/ createComponent$15({
                   class: 'refresher-refreshing-icon',
                 },
                 [
-                  h('line-spinner', {
+                  h(Spinner, {
                     attrs: {
                       type: refreshingSpinner,
                     },
@@ -18053,10 +16449,10 @@ var refresherContent = /*#__PURE__*/ createComponent$15({
 });
 
 const {
-  createComponent: createComponent$16,
-  bem: bem$15,
+  createComponent: createComponent$1b,
+  bem: bem$19,
 } = /*#__PURE__*/ createNamespace('reorder');
-var reorder = /*#__PURE__*/ createComponent$16({
+var reorder = /*#__PURE__*/ createComponent$1b({
   data() {
     return {
       reorderIndex: -1,
@@ -18069,12 +16465,12 @@ var reorder = /*#__PURE__*/ createComponent$16({
     return h(
       'div',
       {
-        class: bem$15(),
+        class: bem$19(),
       },
       [
         this.slots() ||
           h('line-icon', {
-            class: bem$15('icon'),
+            class: bem$19('icon'),
             attrs: {
               size: 'small',
               name: reorderIcon,
@@ -18087,8 +16483,8 @@ var reorder = /*#__PURE__*/ createComponent$16({
 });
 
 const {
-  createComponent: createComponent$17,
-  bem: bem$16,
+  createComponent: createComponent$1c,
+  bem: bem$1a,
 } = /*#__PURE__*/ createNamespace('reorder-group');
 
 const indexForItem = (element) => {
@@ -18122,7 +16518,7 @@ const reorderArray = (array, from, to) => {
   return array.slice();
 };
 
-var reorderGroup = /*#__PURE__*/ createComponent$17({
+var reorderGroup = /*#__PURE__*/ createComponent$1c({
   inject: {
     Content: {
       default: undefined,
@@ -18433,7 +16829,7 @@ var reorderGroup = /*#__PURE__*/ createComponent$17({
     return h(
       'div',
       {
-        class: bem$16({
+        class: bem$1a({
           enabled: !disabled,
           'list-active': state !== 0,
           /* Idle */
@@ -18445,10 +16841,10 @@ var reorderGroup = /*#__PURE__*/ createComponent$17({
 });
 
 const {
-  createComponent: createComponent$18,
-  bem: bem$17,
+  createComponent: createComponent$1d,
+  bem: bem$1b,
 } = /*#__PURE__*/ createNamespace('row');
-var row = /*#__PURE__*/ createComponent$18({
+var row = /*#__PURE__*/ createComponent$1d({
   functional: true,
 
   render(h, { data, slots }) {
@@ -18456,7 +16852,7 @@ var row = /*#__PURE__*/ createComponent$18({
       'div',
       helper([
         {
-          class: bem$17(),
+          class: bem$1b(),
         },
         data,
       ]),
@@ -18465,14 +16861,14 @@ var row = /*#__PURE__*/ createComponent$18({
   },
 });
 
-const NAMESPACE$a = 'Segment';
+const NAMESPACE$c = 'Segment';
 const {
-  createComponent: createComponent$19,
-  bem: bem$18,
+  createComponent: createComponent$1e,
+  bem: bem$1c,
 } = /*#__PURE__*/ createNamespace('segment');
-var segment = /*#__PURE__*/ createComponent$19({
+var segment = /*#__PURE__*/ createComponent$1e({
   mixins: [
-    /*#__PURE__*/ useCheckGroupWithModel(NAMESPACE$a),
+    /*#__PURE__*/ useCheckGroupWithModel(NAMESPACE$c),
     /*#__PURE__*/ useColor(),
   ],
   inject: {
@@ -18600,7 +16996,7 @@ var segment = /*#__PURE__*/ createComponent$19({
       const clicked = items.find((item) => item.$el === targetEl); // Make sure we are only checking for activation on a segment button
       // since disabled buttons will get the click on the segment
 
-      if (clicked.$options.name !== 'line-segment-button') {
+      if (clicked && clicked.$options.name !== 'line-segment-button') {
         return;
       } // If there are no checked buttons, set the current button to checked
 
@@ -18782,7 +17178,7 @@ var segment = /*#__PURE__*/ createComponent$19({
       'div',
       {
         class: [
-          bem$18({
+          bem$1c({
             activated,
             disabled,
             scrollable,
@@ -18801,13 +17197,13 @@ var segment = /*#__PURE__*/ createComponent$19({
   },
 });
 
-const NAMESPACE$b = 'Segment';
+const NAMESPACE$d = 'Segment';
 const {
-  createComponent: createComponent$1a,
-  bem: bem$19,
+  createComponent: createComponent$1f,
+  bem: bem$1d,
 } = /*#__PURE__*/ createNamespace('segment-button');
-var segmentButton = /*#__PURE__*/ createComponent$1a({
-  mixins: [/*#__PURE__*/ useCheckItemWithModel(NAMESPACE$b)],
+var segmentButton = /*#__PURE__*/ createComponent$1f({
+  mixins: [/*#__PURE__*/ useCheckItemWithModel(NAMESPACE$d)],
   props: {
     layout: {
       type: String,
@@ -18873,7 +17269,7 @@ var segmentButton = /*#__PURE__*/ createComponent$1a({
           'aria-disabled': disabled ? 'true' : null,
         },
         class: [
-          bem$19({
+          bem$1d({
             'has-label': hasLabel,
             'has-icon': hasIcon,
             'has-label-only': hasLabel && !hasIcon,
@@ -18904,13 +17300,13 @@ var segmentButton = /*#__PURE__*/ createComponent$1a({
               'aria-pressed': checked ? 'true' : null,
               disabled: disabled,
             },
-            class: bem$19('button-native'),
+            class: bem$1d('button-native'),
           },
           [
             h(
               'span',
               {
-                class: bem$19('button-inner'),
+                class: bem$1d('button-inner'),
               },
               [this.slots()]
             ),
@@ -18923,7 +17319,7 @@ var segmentButton = /*#__PURE__*/ createComponent$1a({
             attrs: {
               part: 'indicator',
             },
-            class: bem$19('indicator', {
+            class: bem$1d('indicator', {
               animated: true,
             }),
             ref: 'indicatorEl',
@@ -18933,7 +17329,7 @@ var segmentButton = /*#__PURE__*/ createComponent$1a({
               attrs: {
                 part: 'indicator-background',
               },
-              class: bem$19('indicator-background'),
+              class: bem$1d('indicator-background'),
             }),
           ]
         ),
@@ -18943,10 +17339,10 @@ var segmentButton = /*#__PURE__*/ createComponent$1a({
 });
 
 const {
-  createComponent: createComponent$1b,
-  bem: bem$1a,
+  createComponent: createComponent$1g,
+  bem: bem$1e,
 } = /*#__PURE__*/ createNamespace('skeleton-text');
-var skeletonText = /*#__PURE__*/ createComponent$1b({
+var skeletonText = /*#__PURE__*/ createComponent$1g({
   props: {
     animated: Boolean,
   },
@@ -18961,7 +17357,7 @@ var skeletonText = /*#__PURE__*/ createComponent$1b({
       'div',
       {
         class: [
-          bem$1a({
+          bem$1e({
             animated,
           }),
           {
@@ -18975,10 +17371,10 @@ var skeletonText = /*#__PURE__*/ createComponent$1b({
 });
 
 const {
-  createComponent: createComponent$1c,
-  bem: bem$1b,
+  createComponent: createComponent$1h,
+  bem: bem$1f,
 } = /*#__PURE__*/ createNamespace('slide');
-var slide = /*#__PURE__*/ createComponent$1c({
+var slide = /*#__PURE__*/ createComponent$1h({
   functional: true,
 
   render(h, { data, slots }) {
@@ -18987,7 +17383,7 @@ var slide = /*#__PURE__*/ createComponent$1c({
       helper([
         {
           class: [
-            bem$1b(),
+            bem$1f(),
             {
               'swiper-slide': true,
               'swiper-zoom-container': true,
@@ -19002,10 +17398,10 @@ var slide = /*#__PURE__*/ createComponent$1c({
 });
 
 const {
-  createComponent: createComponent$1d,
-  bem: bem$1c,
+  createComponent: createComponent$1i,
+  bem: bem$1g,
 } = /*#__PURE__*/ createNamespace('slides');
-var slides = /*#__PURE__*/ createComponent$1d({
+var slides = /*#__PURE__*/ createComponent$1i({
   props: {
     options: Object,
     pager: Boolean,
@@ -19388,7 +17784,7 @@ var slides = /*#__PURE__*/ createComponent$1d({
       'div',
       {
         class: [
-          bem$1c(),
+          bem$1g(),
           {
             // Used internally for styling
             [`slides-${mode}`]: true,
@@ -19419,20 +17815,20 @@ var slides = /*#__PURE__*/ createComponent$1d({
   },
 });
 
-const NAMESPACE$c = 'SwitchGroup';
+const NAMESPACE$e = 'SwitchGroup';
 const {
-  createComponent: createComponent$1e,
-  bem: bem$1d,
+  createComponent: createComponent$1j,
+  bem: bem$1h,
 } = /*#__PURE__*/ createNamespace('switch-group');
-var switchGroup = /*#__PURE__*/ createComponent$1e({
-  mixins: [/*#__PURE__*/ useGroup(NAMESPACE$c)],
+var switchGroup = /*#__PURE__*/ createComponent$1j({
+  mixins: [/*#__PURE__*/ useGroup(NAMESPACE$e)],
 
   render() {
     const h = arguments[0];
     return h(
       'div',
       {
-        class: bem$1d(),
+        class: bem$1h(),
       },
       [this.slots()]
     );
@@ -19440,20 +17836,14 @@ var switchGroup = /*#__PURE__*/ createComponent$1e({
 });
 
 const {
-  createComponent: createComponent$1f,
-  bem: bem$1e,
+  createComponent: createComponent$1k,
+  bem: bem$1i,
 } = /*#__PURE__*/ createNamespace('switch-indicator');
-var switchIndicator = /*#__PURE__*/ createComponent$1f({
+var switchIndicator = /*#__PURE__*/ createComponent$1k({
   functional: true,
   props: {
-    checked: {
-      type: Boolean,
-      default: false,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
+    checked: Boolean,
+    disabled: Boolean,
   },
 
   render(h, { props, data, slots }) {
@@ -19462,7 +17852,7 @@ var switchIndicator = /*#__PURE__*/ createComponent$1f({
       Tag,
       helper([
         {
-          class: bem$1e({
+          class: bem$1i({
             'is-checked': props.checked,
             'is-disabled': props.disabled,
           }),
@@ -19473,7 +17863,7 @@ var switchIndicator = /*#__PURE__*/ createComponent$1f({
         h(
           'div',
           {
-            class: bem$1e('thumb'),
+            class: bem$1i('thumb'),
           },
           [slots()]
         ),
@@ -19482,14 +17872,14 @@ var switchIndicator = /*#__PURE__*/ createComponent$1f({
   },
 });
 
-const NAMESPACE$d = 'SwitchGroup';
+const NAMESPACE$f = 'SwitchGroup';
 const {
-  createComponent: createComponent$1g,
-  bem: bem$1f,
+  createComponent: createComponent$1l,
+  bem: bem$1j,
 } = /*#__PURE__*/ createNamespace('switch');
 let gesture;
-var _switch = /*#__PURE__*/ createComponent$1g({
-  mixins: [/*#__PURE__*/ useCheckItem(NAMESPACE$d), /*#__PURE__*/ useColor()],
+var _switch = /*#__PURE__*/ createComponent$1l({
+  mixins: [/*#__PURE__*/ useCheckItem(NAMESPACE$f), /*#__PURE__*/ useColor()],
 
   data() {
     return {
@@ -19600,7 +17990,7 @@ var _switch = /*#__PURE__*/ createComponent$1g({
           attrs: {
             role: 'checkbox',
           },
-          class: bem$1f({
+          class: bem$1j({
             disabled,
             checked,
             activated,
@@ -19617,11 +18007,11 @@ var _switch = /*#__PURE__*/ createComponent$1g({
         h(
           'div',
           {
-            class: bem$1f('icon'),
+            class: bem$1j('icon'),
           },
           [
             h('div', {
-              class: bem$1f('inner'),
+              class: bem$1j('inner'),
             }),
           ]
         ),
@@ -19637,14 +18027,14 @@ var _switch = /*#__PURE__*/ createComponent$1g({
   },
 });
 
-const NAMESPACE$e = 'TabBar';
+const NAMESPACE$g = 'TabBar';
 const {
-  createComponent: createComponent$1h,
-  bem: bem$1g,
+  createComponent: createComponent$1m,
+  bem: bem$1k,
 } = /*#__PURE__*/ createNamespace('tab-bar');
-var tabBar = /*#__PURE__*/ createComponent$1h({
+var tabBar = /*#__PURE__*/ createComponent$1m({
   mixins: [
-    /*#__PURE__*/ useCheckGroupWithModel(NAMESPACE$e),
+    /*#__PURE__*/ useCheckGroupWithModel(NAMESPACE$g),
     /*#__PURE__*/ useColor(),
   ],
   props: {
@@ -19683,7 +18073,7 @@ var tabBar = /*#__PURE__*/ createComponent$1h({
       'div',
       helper([
         {
-          class: bem$1g({
+          class: bem$1k({
             translucent,
             hidden: keyboardVisible,
           }),
@@ -19697,14 +18087,14 @@ var tabBar = /*#__PURE__*/ createComponent$1h({
   },
 });
 
-const NAMESPACE$f = 'TabBar';
+const NAMESPACE$h = 'TabBar';
 const {
-  createComponent: createComponent$1i,
-  bem: bem$1h,
+  createComponent: createComponent$1n,
+  bem: bem$1l,
 } = /*#__PURE__*/ createNamespace('tab-button');
-var tabButton = /*#__PURE__*/ createComponent$1i({
+var tabButton = /*#__PURE__*/ createComponent$1n({
   mixins: [
-    /*#__PURE__*/ useCheckItemWithModel(NAMESPACE$f),
+    /*#__PURE__*/ useCheckItemWithModel(NAMESPACE$h),
     /*#__PURE__*/ useRipple(),
   ],
   props: {
@@ -19743,7 +18133,7 @@ var tabButton = /*#__PURE__*/ createComponent$1i({
       helper([
         {
           class: [
-            bem$1h({
+            bem$1l({
               'has-label': hasLabel,
               'has-icon': hasIcon,
               'has-label-only': hasLabel && !hasIcon,
@@ -19795,13 +18185,13 @@ var tabButton = /*#__PURE__*/ createComponent$1i({
   },
 });
 
-const NAMESPACE$g = 'Tabs';
+const NAMESPACE$i = 'Tabs';
 const {
-  createComponent: createComponent$1j,
-  bem: bem$1i,
+  createComponent: createComponent$1o,
+  bem: bem$1m,
 } = /*#__PURE__*/ createNamespace('tab');
-var tab = /*#__PURE__*/ createComponent$1j({
-  mixins: [/*#__PURE__*/ useCheckItemWithModel(NAMESPACE$g)],
+var tab = /*#__PURE__*/ createComponent$1o({
+  mixins: [/*#__PURE__*/ useCheckItemWithModel(NAMESPACE$i)],
   props: {
     title: String,
     tab: String,
@@ -19831,7 +18221,7 @@ var tab = /*#__PURE__*/ createComponent$1j({
       helper([
         {
           class: [
-            bem$1i({
+            bem$1m({
               hidden: !checked,
             }),
           ],
@@ -19850,13 +18240,13 @@ var tab = /*#__PURE__*/ createComponent$1j({
   },
 });
 
-const NAMESPACE$h = 'Tabs';
+const NAMESPACE$j = 'Tabs';
 const {
-  createComponent: createComponent$1k,
-  bem: bem$1j,
+  createComponent: createComponent$1p,
+  bem: bem$1n,
 } = /*#__PURE__*/ createNamespace('tabs');
-var tabs = /*#__PURE__*/ createComponent$1k({
-  mixins: [/*#__PURE__*/ useCheckGroupWithModel(NAMESPACE$h)],
+var tabs = /*#__PURE__*/ createComponent$1p({
+  mixins: [/*#__PURE__*/ useCheckGroupWithModel(NAMESPACE$j)],
   props: {
     exclusive: {
       type: Boolean,
@@ -19870,7 +18260,7 @@ var tabs = /*#__PURE__*/ createComponent$1k({
       'div',
       helper([
         {
-          class: bem$1j(),
+          class: bem$1n(),
         },
         {
           on: this.$listeners,
@@ -19881,7 +18271,7 @@ var tabs = /*#__PURE__*/ createComponent$1k({
         h(
           'div',
           {
-            class: bem$1j('inner'),
+            class: bem$1n('inner'),
           },
           [this.slots()]
         ),
@@ -19892,8 +18282,8 @@ var tabs = /*#__PURE__*/ createComponent$1k({
 });
 
 const {
-  createComponent: createComponent$1l,
-  bem: bem$1k,
+  createComponent: createComponent$1q,
+  bem: bem$1o,
 } = /*#__PURE__*/ createNamespace('textarea');
 
 const findItemLabel$2 = (componentEl) => {
@@ -19907,7 +18297,7 @@ const findItemLabel$2 = (componentEl) => {
 };
 
 let textareaIds = 0;
-var textarea = /*#__PURE__*/ createComponent$1l({
+var textarea = /*#__PURE__*/ createComponent$1q({
   mixins: [
     /*#__PURE__*/ useModel('nativeValue', {
       event: 'textareaChange',
@@ -20103,7 +18493,7 @@ var textarea = /*#__PURE__*/ createComponent$1l({
       'div',
       helper([
         {
-          class: [bem$1k()],
+          class: [bem$1o()],
         },
         {
           on: this.$listeners,
@@ -20143,10 +18533,10 @@ var textarea = /*#__PURE__*/ createComponent$1l({
 });
 
 const {
-  createComponent: createComponent$1m,
-  bem: bem$1l,
+  createComponent: createComponent$1r,
+  bem: bem$1p,
 } = /*#__PURE__*/ createNamespace('thumbnail');
-var thumbnail = /*#__PURE__*/ createComponent$1m({
+var thumbnail = /*#__PURE__*/ createComponent$1r({
   functional: true,
 
   render(h, { data, slots }) {
@@ -20154,7 +18544,7 @@ var thumbnail = /*#__PURE__*/ createComponent$1m({
       'div',
       helper([
         {
-          class: bem$1l(),
+          class: bem$1p(),
         },
         data,
       ]),
@@ -20164,10 +18554,10 @@ var thumbnail = /*#__PURE__*/ createComponent$1m({
 });
 
 const {
-  createComponent: createComponent$1n,
-  bem: bem$1m,
+  createComponent: createComponent$1s,
+  bem: bem$1q,
 } = /*#__PURE__*/ createNamespace('toolbar');
-var toolbar = /*#__PURE__*/ createComponent$1n({
+var toolbar = /*#__PURE__*/ createComponent$1s({
   functional: true,
   props: {
     color: String,
@@ -20179,18 +18569,18 @@ var toolbar = /*#__PURE__*/ createComponent$1n({
       'div',
       helper([
         {
-          class: [bem$1m(), createColorClasses(color)],
+          class: [bem$1q(), createColorClasses(color)],
         },
         data,
       ]),
       [
         h('div', {
-          class: bem$1m('background'),
+          class: bem$1q('background'),
         }),
         h(
           'div',
           {
-            class: bem$1m('container'),
+            class: bem$1q('container'),
           },
           [
             slots('start'),
@@ -20198,7 +18588,7 @@ var toolbar = /*#__PURE__*/ createComponent$1n({
             h(
               'div',
               {
-                class: bem$1m('content'),
+                class: bem$1q('content'),
               },
               [slots()]
             ),
@@ -20212,10 +18602,10 @@ var toolbar = /*#__PURE__*/ createComponent$1n({
 });
 
 const {
-  createComponent: createComponent$1o,
-  bem: bem$1n,
+  createComponent: createComponent$1t,
+  bem: bem$1r,
 } = /*#__PURE__*/ createNamespace('title');
-var title = /*#__PURE__*/ createComponent$1o({
+var title = /*#__PURE__*/ createComponent$1t({
   mixins: [/*#__PURE__*/ useColor()],
   props: {
     // large | small | default
@@ -20229,7 +18619,7 @@ var title = /*#__PURE__*/ createComponent$1o({
       'div',
       helper([
         {
-          class: bem$1n({
+          class: bem$1r({
             [size]: isDef(size),
           }),
         },
@@ -20241,7 +18631,7 @@ var title = /*#__PURE__*/ createComponent$1o({
         h(
           'div',
           {
-            class: bem$1n('inner'),
+            class: bem$1r('inner'),
           },
           [this.slots()]
         ),
@@ -20275,6 +18665,11 @@ var components = /*#__PURE__*/ Object.freeze({
   CheckIndicator: CheckIndicator,
   Chip: chip,
   Col: col,
+  CollapseItemContent: CollapseItemContent,
+  CollapseItem: collapseItem,
+  Collapse: collapse,
+  ComboBoxItem: ComboBoxItem,
+  ComboBox: comboBox,
   Content: content,
   Datetime: datetime,
   Fab: fab,
@@ -21249,150 +19644,6 @@ function useAsyncRender() {
   });
 }
 
-/**
- * Enter Animation
- */
-const enterAnimation = (baseEl, paddingTop, paddingBottom) => {
-  const height = baseEl.scrollHeight || '';
-  const baseAnimation = createAnimation();
-  baseAnimation
-    .addElement(baseEl)
-    .easing('ease-in-out')
-    .duration(300)
-    // .afterClearStyles(['height'])
-    .fromTo('padding-top', '0px', `${paddingTop}px`)
-    .fromTo('padding-bottom', '0px', `${paddingBottom}px`)
-    .fromTo('height', '0px', `${height}px`);
-  return baseAnimation;
-};
-
-/**
- * Leave Animation
- */
-const leaveAnimation = (baseEl, paddingTop, paddingBottom) => {
-  const height = baseEl.scrollHeight || '';
-  const baseAnimation = createAnimation();
-  baseAnimation
-    .addElement(baseEl)
-    .easing('ease-in-out')
-    .duration(300)
-    .fromTo('padding-top', `${paddingTop}px`, '0px')
-    .fromTo('padding-bottom', `${paddingBottom}px`, '0px')
-    .fromTo('height', `${height}px`, '0px');
-  return baseAnimation;
-};
-
-function useCollapseTransition() {
-  return createMixins({
-    mixins: [
-      // Popup lifecycle events depend on Transition mechanism
-      // Transition should not be disabled
-      useTransition(),
-    ],
-    beforeMount() {
-      const onBeforeEnter = async (el) => {
-        this.overflow = el.style.overflow;
-        this.paddingTop = el.style.paddingTop;
-        this.paddingBottom = el.style.paddingBottom;
-        el.style.height = '0px';
-        el.style.paddingTop = '0px';
-        el.style.paddingBottom = '0px';
-        el.style.overflow = 'hidden';
-        this.$emit('aboutToShow', el);
-      };
-      const onAfterEnter = (el) => {
-        el.style.height = '';
-        el.style.paddingTop = '';
-        el.style.paddingBottom = '';
-        el.style.animationTimingFunction = '';
-        el.style.animationFillMode = '';
-        el.style.animationDirection = '';
-        el.style.animationIterationCount = '';
-        el.style.animationName = '';
-        el.style.overflow = this.overflow;
-        this.$emit('opened');
-      };
-      const onBeforeLeave = (el) => {
-        this.overflow = el.style.overflow;
-        this.paddingTop = el.style.paddingTop;
-        this.paddingBottom = el.style.paddingBottom;
-        el.style.height = `${el.scrollHeight}px`;
-        el.style.overflow = 'hidden';
-        this.$emit('aboutToHide', el);
-      };
-      const onAfterLeave = (el) => {
-        el.style.height = '';
-        el.style.paddingTop = '';
-        el.style.paddingBottom = '';
-        el.style.animationTimingFunction = '';
-        el.style.animationFillMode = '';
-        el.style.animationDirection = '';
-        el.style.animationIterationCount = '';
-        el.style.animationName = '';
-        el.style.overflow = this.overflow;
-        el.style.paddingTop = this.paddingTop;
-        el.style.paddingBottom = this.paddingBottom;
-        this.$emit('closed');
-      };
-      const onEnter = async (el, done) => {
-        await this.$nextTick();
-        this.animation = enterAnimation(
-          el,
-          this.paddingTop,
-          this.paddingBottom
-        );
-        if (!config.getBoolean('animated', true)) {
-          this.animation.duration(0);
-        }
-        this.$emit('animation-enter', el, this.animation);
-        await this.animation
-          .play()
-          .catch(
-            process.env.NODE_ENV !== 'production'
-              ? (e) => console.error(e)
-              : NOOP
-          );
-        done();
-      };
-      const onLeave = async (el, done) => {
-        await this.$nextTick();
-        this.animation = leaveAnimation(
-          el,
-          this.paddingTop,
-          this.paddingBottom
-        );
-        if (!config.getBoolean('animated', true)) {
-          this.animation.duration(0);
-        }
-        this.$emit('animation-leave', el, this.animation);
-        await this.animation
-          .play()
-          .catch(
-            process.env.NODE_ENV !== 'production'
-              ? (e) => console.error(e)
-              : NOOP
-          );
-        done();
-      };
-      const onCancel = () => {
-        if (this.animation) {
-          this.animation.stop();
-          this.animation = null;
-        }
-        this.$emit('canceled');
-      };
-      this.$on('before-enter', onBeforeEnter);
-      this.$on('after-enter', onAfterEnter);
-      this.$on('before-leave', onBeforeLeave);
-      this.$on('after-leave', onAfterLeave);
-      this.$on('enter', onEnter);
-      this.$on('enter-cancelled', onCancel);
-      this.$on('leave', onLeave);
-      this.$on('leave-cancelled', onCancel);
-    },
-  });
-}
-
 function useOptions(options, namsespace = 'options') {
   return createMixins({
     props: options.reduce(
@@ -21475,7 +19726,7 @@ var mixins = /*#__PURE__*/ Object.freeze({
 
 const Line = {
   install,
-  version: '1.0.0-alpha.1',
+  version: '1.0.0-alpha.2',
 };
 function defaulExport() {
   // auto install for umd build
@@ -21497,7 +19748,7 @@ function defaulExport() {
     directives,
     controllers,
     mixins,
-    version: '1.0.0-alpha.1',
+    version: '1.0.0-alpha.2',
   };
 }
 var index = /*#__PURE__*/ defaulExport();
@@ -21529,6 +19780,11 @@ export {
   checkItem as CheckItem,
   chip as Chip,
   col as Col,
+  collapse as Collapse,
+  collapseItem as CollapseItem,
+  CollapseItemContent,
+  comboBox as ComboBox,
+  ComboBoxItem,
   content as Content,
   datetime as Datetime,
   fab as Fab,

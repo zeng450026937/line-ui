@@ -31,50 +31,64 @@ var Kom = (function (exports, Vue) {
       this.ns = ns;
       this.middleware = [];
     }
-    match(path = '') {
-      if (!this.ns) return true;
-      return path.startsWith(this.ns);
-    }
     use(pathOrFn, fn, thisArg) {
-      const handler = fn ? this.createHandler(pathOrFn, fn, thisArg) : pathOrFn;
+      const handler = fn ? createHandler(pathOrFn, fn, thisArg) : pathOrFn;
       this.middleware.push(handler);
       return this;
     }
     callback() {
       return (ctx, next) => {
-        if (!this.match(resolvePath(ctx.ns, ctx.path))) {
-          return next ? next() : Promise.resolve();
+        const pop = ctx.push(this.ns);
+        if (pop) {
+          const wrappedNext = next
+            ? async () => {
+                pop();
+                return next();
+              }
+            : next;
+          return compose(this.middleware)(ctx, wrappedNext);
         }
-        return compose(this.middleware)(ctx, next);
+        return next ? next() : Promise.resolve();
       };
     }
     dispatch(path, payload) {
       const ctx = this.createContext();
       ctx.path = path;
       ctx.payload = payload || {};
+      const stack = `${this.ns}/${path}`.split(SEPARATOR).filter(Boolean);
+      let deep = 0;
+      ctx.push = (ns) => {
+        if (!ns || !stack.length) {
+          return () => {};
+        }
+        if (deep < stack.length && ns === stack[deep]) {
+          deep++;
+          return () => {
+            deep--;
+          };
+        }
+      };
+      ctx.match = (name) => {
+        return stack[deep] === name && deep === stack.length - 1;
+      };
       return this.callback()(ctx);
     }
     createContext(ns = this.ns) {
       return { ns };
     }
-    createHandler(path, fn, thisArg) {
-      return (ctx, next) => {
-        if (resolvePath(this.ns, path) !== resolvePath(ctx.ns, ctx.path)) {
-          return next();
-        }
-        return fn.call(thisArg, ctx, next);
-      };
-    }
   }
-  const resolvePath = (...args) => {
-    return args
-      .join(SEPARATOR)
-      .split(SEPARATOR)
-      .filter(Boolean)
-      .join(SEPARATOR);
+  const createHandler = (name, fn, thisArg) => {
+    return (ctx, next) => {
+      if (ctx.match(name)) {
+        return fn.call(thisArg, ctx, next);
+      }
+      return next();
+    };
   };
 
   /* eslint-disable import/extensions */
+  /* eslint-disable-next-line prefer-destructuring */
+  const nextTick = Vue.nextTick;
   let hasStrategies;
   function setupStrategies() {
     const strategies = Vue.config.optionMergeStrategies;
@@ -110,20 +124,24 @@ var Kom = (function (exports, Vue) {
     }
     mount(key, model) {
       if (this.submodel[key]) {
-        console.warn(`already has model for ${key}`);
-        return;
+        console.warn(`redefinition model: ${key}`);
       }
-      model.setNS(this.genNS(key));
-      model.setParent(this);
+      model.setNS(key);
       this.submodel[key] = model;
       return this;
     }
-    model(key) {
+    model(key, val) {
       if (!key) return this;
       let model = this.submodel[key];
+      if (model && val) {
+        console.warn(`model: ${key} was previously definded`);
+        return model;
+      }
       if (!model) {
-        model = new Model();
-        this.mount(key, model);
+        model = val || new Model();
+        model.setNS(key);
+        model.setParent(this);
+        this.submodel[key] = model;
       }
       return model;
     }
@@ -137,7 +155,7 @@ var Kom = (function (exports, Vue) {
       }
       if (!key) return this;
       if (this.computed[key]) {
-        console.warn('duplicate provided key');
+        console.warn(`redefinition key: ${key}`);
       }
       if (typeof val === 'function') {
         this.computed[key] = val;
@@ -174,8 +192,7 @@ var Kom = (function (exports, Vue) {
       return this;
     }
     getModel(ns) {
-      const { submodel } = this;
-      return ns ? chainget(ns, submodel) : submodel;
+      return ns ? chainget(ns, this, (m) => m.submodel) : this;
     }
     getStore(ns) {
       if (!this.initialized()) {
@@ -187,15 +204,9 @@ var Kom = (function (exports, Vue) {
     }
     setNS(ns = '') {
       this.ns = ns;
-      Object.keys(this.submodel).forEach((key) => {
-        this.submodel[key].setNS(this.genNS(key));
-      });
     }
     setParent(parent) {
       this.parent = parent;
-    }
-    genNS(key = '') {
-      return resolvePath(this.ns, key);
     }
     genVM(parent) {
       const model = this;
@@ -209,9 +220,9 @@ var Kom = (function (exports, Vue) {
           this.$kom = model.root;
           this.$model = model;
           this.$store = model.store;
-          this.$getModel = model.getModel.bind(model);
-          this.$getStore = model.getStore.bind(model);
-          this.$dispatch = model.dispatch.bind(model);
+          this.$getModel = model.getModel.bind(model.root);
+          this.$getStore = model.getStore.bind(model.root);
+          this.$dispatch = model.dispatch.bind(model.root);
           this.$broadcast = model.broadcast.bind(model);
           this.$subscribe = model.subscribe.bind(model);
         },
@@ -267,8 +278,16 @@ var Kom = (function (exports, Vue) {
   const keys = (o) => {
     return Object.keys(o);
   };
-  const chainget = (ns, delegate) => {
-    return ns.split(SEPARATOR).reduce((acc, val) => acc && acc[val], delegate);
+  const chainget = (ns, delegate, getter) => {
+    return ns.split(SEPARATOR).reduce((acc, key) => {
+      if (getter) {
+        acc = getter(acc, key);
+      }
+      if (acc) {
+        return acc[key];
+      }
+      return false;
+    }, delegate);
   };
 
   const normalizeState = (state) => {
@@ -374,6 +393,7 @@ var Kom = (function (exports, Vue) {
   exports.default = index;
   exports.install = install;
   exports.mapStore = mapStore;
+  exports.nextTick = nextTick;
 
   return exports;
 })({}, Vue);

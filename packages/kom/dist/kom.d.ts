@@ -11,8 +11,8 @@ export declare function compose<T>(
 
 export declare type ComposedMiddlewareFn<T = any> = (
   context: T,
-  next?: () => void
-) => any;
+  next?: () => any
+) => Promise<any>;
 
 declare const _default: {
   install: (target?: VueConstructor<Vue_2>) => void;
@@ -25,7 +25,6 @@ export declare class Layer<T extends LayerContext = LayerContext> {
   ns: string;
   middleware: MiddlewareFn<T>[];
   constructor(ns?: string);
-  match(path?: string): boolean;
   use(
     pathOrFn: string | MiddlewareFn<T>,
     fn?: MiddlewareFn<T>,
@@ -37,11 +36,6 @@ export declare class Layer<T extends LayerContext = LayerContext> {
     payload?: P
   ): Promise<R>;
   createContext(ns?: string): T;
-  createHandler(
-    path: string,
-    fn: MiddlewareFn<T>,
-    thisArg?: any
-  ): (ctx: T, next: () => void) => any;
 }
 
 export declare interface LayerContext<P extends Payload = Payload> {
@@ -49,6 +43,8 @@ export declare interface LayerContext<P extends Payload = Payload> {
   ns: string;
   path: string;
   payload: P;
+  push: (ns: string) => (() => void) | undefined;
+  match: (name: string) => boolean;
 }
 
 export declare type LayerMiddlewareFn<
@@ -64,8 +60,8 @@ export declare const mapStore: (
 
 export declare type MiddlewareFn<T = any> = (
   context: T,
-  next: () => void
-) => any;
+  next: () => Promise<any>
+) => Promise<any>;
 
 export declare class Model extends Layer<ModelContext> {
   parent?: Model;
@@ -94,8 +90,8 @@ export declare class Model extends Layer<ModelContext> {
   set(key: string | number, val: any): void;
   get root(): Model;
   initialized(): boolean;
-  mount(key: string, model: Model): this | undefined;
-  model(key?: string): Model;
+  mount(key: string, model: Model): this;
+  model(key?: string, val?: Model): Model;
   up(): Model;
   provide<Data, Computed, Methods, Props>(
     key: string | ModelDefines<Data, Computed, Methods, Props>,
@@ -104,11 +100,10 @@ export declare class Model extends Layer<ModelContext> {
   hook(key: string, fn: () => any): this;
   subscribe(key: string, fn: () => void): this;
   broadcast(event: string, ...args: any[]): this;
-  getModel(ns?: string): any;
+  getModel(ns?: string): Model;
   getStore(ns?: string): Vue_2 | undefined;
   setNS(ns?: string): void;
   setParent(parent?: Model): void;
-  genNS(key?: string): string;
   genVM(parent?: Vue_2): Vue_2;
   init(): this;
   destroy(): void;
@@ -158,6 +153,11 @@ export declare type ModelInjection = {
 export declare type ModelMiddlewareFn<
   T extends ModelContext = ModelContext
 > = MiddlewareFn<T>;
+
+export declare const nextTick: {
+  <T>(callback: (this: T) => void, context?: T | undefined): void;
+  (): Promise<void>;
+};
 
 declare type ObjectState = {
   [key: string]: string | ((store: Vue_2) => any);

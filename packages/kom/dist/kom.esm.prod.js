@@ -12,36 +12,47 @@ class e {
   constructor(t = '') {
     (this.ns = t), (this.middleware = []);
   }
-  match(t = '') {
-    return !this.ns || t.startsWith(this.ns);
-  }
   use(t, s, e) {
-    const i = s ? this.createHandler(t, s, e) : t;
-    return this.middleware.push(i), this;
+    const r = s ? i(t, s, e) : t;
+    return this.middleware.push(r), this;
   }
   callback() {
-    return (t, e) =>
-      this.match(i(t.ns, t.path))
-        ? s(this.middleware)(t, e)
-        : e
-        ? e()
-        : Promise.resolve();
+    return (t, e) => {
+      const i = t.push(this.ns);
+      if (i) {
+        const r = e ? async () => (i(), e()) : e;
+        return s(this.middleware)(t, r);
+      }
+      return e ? e() : Promise.resolve();
+    };
   }
   dispatch(t, s) {
     const e = this.createContext();
-    return (e.path = t), (e.payload = s || {}), this.callback()(e);
+    (e.path = t), (e.payload = s || {});
+    const i = `${this.ns}/${t}`.split('/').filter(Boolean);
+    let r = 0;
+    return (
+      (e.push = (t) =>
+        t && i.length
+          ? r < i.length && t === i[r]
+            ? (r++,
+              () => {
+                r--;
+              })
+            : void 0
+          : () => {}),
+      (e.match = (t) => i[r] === t && r === i.length - 1),
+      this.callback()(e)
+    );
   }
   createContext(t = this.ns) {
     return { ns: t };
   }
-  createHandler(t, s, e) {
-    return (r, o) =>
-      i(this.ns, t) !== i(r.ns, r.path) ? o() : s.call(e, r, o);
-  }
 }
-const i = (...t) => t.join('/').split('/').filter(Boolean).join('/');
-let r;
-class o extends e {
+const i = (t, s, e) => (i, r) => (i.match(t) ? s.call(e, i, r) : r()),
+  r = t.nextTick;
+let o;
+class h extends e {
   constructor(s) {
     super(s),
       (this.submodel = {}),
@@ -51,12 +62,12 @@ class o extends e {
       (this.watch = {}),
       (this.events = {}),
       (this.d = {}),
-      r ||
+      o ||
         (!(function () {
           const s = t.config.optionMergeStrategies;
           (s.middleware = s.methods), (s.subscribe = s.methods);
         })(),
-        (r = !0));
+        (o = !0));
   }
   get(t) {
     return this.d[t];
@@ -71,14 +82,19 @@ class o extends e {
     return !!this.store;
   }
   mount(t, s) {
-    return (
-      s.setNS(this.genNS(t)), s.setParent(this), (this.submodel[t] = s), this
-    );
+    return s.setNS(t), (this.submodel[t] = s), this;
   }
-  model(t) {
+  model(t, s) {
     if (!t) return this;
-    let s = this.submodel[t];
-    return s || ((s = new o()), this.mount(t, s)), s;
+    let e = this.submodel[t];
+    return (
+      e ||
+        ((e = s || new h()),
+        e.setNS(t),
+        e.setParent(this),
+        (this.submodel[t] = e)),
+      e
+    );
   }
   up() {
     return this.parent || this;
@@ -106,24 +122,17 @@ class o extends e {
     return this.initialized() ? (this.store.$root.$emit(t, ...s), this) : this;
   }
   getModel(t) {
-    const { submodel: s } = this;
-    return t ? n(t, s) : s;
+    return t ? c(t, this, (t) => t.submodel) : this;
   }
   getStore(t) {
     const { store: s } = this;
-    return t ? n(t, s) : s;
+    return t ? c(t, s) : s;
   }
   setNS(t = '') {
-    (this.ns = t),
-      Object.keys(this.submodel).forEach((t) => {
-        this.submodel[t].setNS(this.genNS(t));
-      });
+    this.ns = t;
   }
   setParent(t) {
     this.parent = t;
-  }
-  genNS(t = '') {
-    return i(this.ns, t);
   }
   genVM(s) {
     const e = this;
@@ -137,9 +146,9 @@ class o extends e {
         (this.$kom = e.root),
           (this.$model = e),
           (this.$store = e.store),
-          (this.$getModel = e.getModel.bind(e)),
-          (this.$getStore = e.getStore.bind(e)),
-          (this.$dispatch = e.dispatch.bind(e)),
+          (this.$getModel = e.getModel.bind(e.root)),
+          (this.$getStore = e.getStore.bind(e.root)),
+          (this.$dispatch = e.dispatch.bind(e.root)),
           (this.$broadcast = e.broadcast.bind(e)),
           (this.$subscribe = e.subscribe.bind(e));
       },
@@ -154,9 +163,9 @@ class o extends e {
       (this.store = this.genVM(this.parent && this.parent.store));
     const { middleware: s, subscribe: e } = this.store.$options;
     return (
-      s && h(s).forEach((t) => this.use(t, s[t], this.store)),
-      e && h(e).forEach((t) => this.subscribe(t, e[t])),
-      h(this.events).forEach((t) => {
+      s && n(s).forEach((t) => this.use(t, s[t], this.store)),
+      e && n(e).forEach((t) => this.subscribe(t, e[t])),
+      n(this.events).forEach((t) => {
         this.events[t].forEach((s) => this.subscribe(t, s));
       }),
       t.forEach((t) => {
@@ -184,8 +193,9 @@ class o extends e {
     );
   }
 }
-const h = (t) => Object.keys(t),
-  n = (t, s) => t.split('/').reduce((t, s) => t && t[s], s),
+const n = (t) => Object.keys(t),
+  c = (t, s, e) =>
+    t.split('/').reduce((t, s) => (e && (t = e(t, s)), !!t && t[s]), s),
   a = (t, s = !1) => {
     const e = {};
     return (
@@ -200,7 +210,7 @@ const h = (t) => Object.keys(t),
         const o = ((t) => (
           Array.isArray(t) && (t = t.reduce((t, s) => ((t[s] = s), t), {})), t
         ))(r);
-        h(o).forEach((t) => {
+        n(o).forEach((t) => {
           const s = o[t];
           e[t] = {
             get() {
@@ -216,7 +226,7 @@ const h = (t) => Object.keys(t),
       e
     );
   },
-  c = (s = t) => {
+  d = (s = t) => {
     s.__kom__ ||
       (s.mixin({
         beforeCreate() {
@@ -235,7 +245,7 @@ const h = (t) => Object.keys(t),
           const { subscribe: e, store: i } = t;
           if (e) {
             const t = [];
-            h(e).forEach((i) => {
+            n(e).forEach((i) => {
               const r = e[i].bind(this);
               t.push(() => ((t, e) => s.store.$root.$off(t, e))(i, r)),
                 this.$subscribe(i, r);
@@ -251,11 +261,18 @@ const h = (t) => Object.keys(t),
       }),
       (s.__kom__ = !0));
   };
-function d() {
+function u() {
   return (
-    'undefined' != typeof window && window.Vue && c(window.Vue), { install: c }
+    'undefined' != typeof window && window.Vue && d(window.Vue), { install: d }
   );
 }
-var u = d();
-export default u;
-export { e as Layer, o as Model, s as compose, c as install, a as mapStore };
+var l = u();
+export default l;
+export {
+  e as Layer,
+  h as Model,
+  s as compose,
+  d as install,
+  a as mapStore,
+  r as nextTick,
+};

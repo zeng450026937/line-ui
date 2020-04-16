@@ -1,3 +1,25 @@
+# [1.0.0-alpha.2](http://gitcode.yealink.com/server/client/web_app/line-ui/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2020-04-16)
+
+
+### Bug Fixes
+
+* **components:** fix error ([3cdab9d](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/3cdab9d524a2f473506ceff7f7ce7059c9857a0c))
+* **kom:** injected $getModel,$getStore,$dispatch is now binded to model.root ([7ac26fe](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/7ac26fe4840f4706c86224b037bea269ef0263b6))
+* **style:** update & fix error ([49e887f](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/49e887f92cd20cb697fce7e82abd20a4f5bee7b0))
+* **toast:** update ([fed3da8](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/fed3da86b23ef730edc5ad50eb4e44bb3c85fb37))
+* **utils & controllers:** fix error ([7522419](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/7522419f12ed7820a44b0b398afe27780e3bbe42))
+
+
+### Features
+
+* **alert:** support slots ([f87d357](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/f87d357da0e75e4e13d4b5550a7e5ac29bc80ec8))
+* **combo-box:** add ([6f053f6](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/6f053f6833b5dc9c9f60639bef389b7649c5c52a))
+* **i18n-plugin:** support string token replacement ([458989e](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/458989e7d8084c6775185ce8562a34ea51b1b36e))
+* **input:** add suffix slot ([e3fc2df](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/e3fc2df1cc261b1e6ee48b7f0c92d6ccf14112cc))
+* **kom:** model is isolated by mount() ([f7f8542](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/f7f8542c83ff9058a0f7cea3b39957b83e96a7ee))
+
+
+
 # [1.0.0-alpha.1](http://gitcode.yealink.com/server/client/web_app/line-ui/compare/v1.0.0-alpha.0...v1.0.0-alpha.1) (2020-04-09)
 
 

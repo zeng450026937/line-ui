@@ -407,4 +407,12 @@
     --background-hover: var(--background-activated);
     --color-hover: var(--color-activated);
   }
+
+  .line-button--clear.line-activated:hover {
+    --opacity: 0.4;
+  }
+
+  .line-button--solid.line-activated:hover {
+    --opacity: 1;
+  }
 }

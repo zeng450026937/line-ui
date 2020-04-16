@@ -1,28 +1,28 @@
 .line-toast {
   /**
-  * @prop --background: Background of the toast
-  * @prop --color: Color of the toast text
-  *
-  * @prop --border-color: Border color of the toast
-  * @prop --border-radius: Border radius of the toast
-  * @prop --border-width: Border width of the toast
-  * @prop --border-style: Border style of the toast
-  *
-  * @prop --box-shadow: Box shadow of the toast
-  *
-  * @prop --min-width: Minimum width of the toast
-  * @prop --width: Width of the toast
-  * @prop --max-width: Maximum width of the toast
-  *
-  * @prop --min-height: Minimum height of the toast
-  * @prop --height: Height of the toast
-  * @prop --max-height: Maximum height of the toast
-  *
-  * @prop --button-color: Color of the button text
-  *
-  * @prop --start: Position from the left if direction is left-to-right, and from the right if direction is right-to-left
-  * @prop --end: Position from the right if direction is left-to-right, and from the left if direction is right-to-left
-  */
+    * @prop --background: Background of the toast
+    * @prop --color: Color of the toast text
+    *
+    * @prop --border-color: Border color of the toast
+    * @prop --border-radius: Border radius of the toast
+    * @prop --border-width: Border width of the toast
+    * @prop --border-style: Border style of the toast
+    *
+    * @prop --box-shadow: Box shadow of the toast
+    *
+    * @prop --min-width: Minimum width of the toast
+    * @prop --width: Width of the toast
+    * @prop --max-width: Maximum width of the toast
+    *
+    * @prop --min-height: Minimum height of the toast
+    * @prop --height: Height of the toast
+    * @prop --max-height: Maximum height of the toast
+    *
+    * @prop --button-color: Color of the button text
+    *
+    * @prop --start: Position from the left if direction is left-to-right, and from the right if direction is right-to-left
+    * @prop --end: Position from the right if direction is left-to-right, and from the left if direction is right-to-left
+    */
   --border-width: 0;
   --border-style: none;
   --border-color: initial;
@@ -48,6 +48,19 @@
   right: unset;
   right: 0;
   left: unset;
+}
+
+.line-toast.line-color {
+  --button-color: inherit;
+  color: var(--line-color-contrast);
+}
+
+.line-toast.line-color .linetoast-button--cancel {
+  color: inherit;
+}
+
+.line-toast.line-color .line-toast__wrapper {
+  background: var(--line-color-base);
 }
 
 .line-toast__wrapper {
@@ -82,40 +95,37 @@
   max-height: inherit;
   contain: content;
 }
+
 .line-toast__content {
   display: flex;
   flex: 1;
   flex-direction: column;
   justify-content: center;
 }
+
 .line-toast__message {
   flex: 1;
   white-space: pre-wrap;
 }
+
 .line-toast-button-group {
   display: flex;
 }
+
 .line-toast-button {
   border: 0;
   outline: none;
   color: var(--button-color);
   z-index: 0;
 }
+
 .line-toast-icon {
   font-size: 1.4em;
 }
-.line-toast-button-inner {
+
+.line-toast-button__inner {
   display: flex;
   align-items: center;
-}
-
-.line-toast.line-color {
-  --button-color: inherit;
-  color: var(--line-color-contrast);
-}
-
-.line-toast.line-color .line-toast__wrapper {
-  background: var(--line-color-base);
 }
 
 @media (any-hover: hover) {

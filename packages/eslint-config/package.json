@@ -1,6 +1,6 @@
 {
   "name": "@line-ui/eslint-config",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0-alpha.2",
   "description": "eslint config of line-ui",
   "main": "index.prettier.js",
   "files": [

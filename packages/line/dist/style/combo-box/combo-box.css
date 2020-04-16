@@ -1,0 +1,29 @@
+.line-combo-box {
+  --color: initial;
+  --background: #ffffff;
+  --backdrop-opacity: var(--line-backdrop-opacity, 0.4);
+  --border-color: #ebeef5;
+  --border-radius: 4px;
+  --button-background-hover: currentColor;
+  --button-background-hover-opacity: 0.04;
+  --button-color: var(--line-color-primary, #3880ff);
+  --button-color-hover: var(--button-color);
+  display: flex;
+  position: fixed;
+  flex-direction: column;
+  max-width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: var(--background);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+.line-combo-box__content {
+  list-style-type: none;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  padding: 5px 0;
+  padding-inline-start: 0;
+}

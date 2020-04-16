@@ -12,6 +12,8 @@ export * from '@line-ui/line/src/components/card';
 export * from '@line-ui/line/src/components/check-box';
 export * from '@line-ui/line/src/components/chip';
 export * from '@line-ui/line/src/components/col';
+export * from '@line-ui/line/src/components/collapse';
+export * from '@line-ui/line/src/components/combo-box';
 export * from '@line-ui/line/src/components/content';
 export * from '@line-ui/line/src/components/datetime';
 export * from '@line-ui/line/src/components/fab';

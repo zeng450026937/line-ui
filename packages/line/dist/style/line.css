@@ -1318,6 +1318,147 @@ html.plt-mobile .line-app {
   }
 }
 
+.line-collapse-item {
+  width: 100%;
+  transition: all 0.3s;
+  border-bottom: 1px solid #ebebeb;
+  background-color: #ffffff;
+}
+.line-collapse-item .line-collapse-item__title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  height: 48px;
+  padding: 12px;
+  color: #333333;
+  font-size: 14px;
+  cursor: pointer;
+}
+.line-collapse-item .line-collapse-item__title-icon {
+  transition: transform 0.3s;
+  color: #666666;
+  user-select: none;
+}
+.line-collapse-item .line-collapse-item__title-icon--rotate {
+  transform: rotate(-180deg);
+}
+.line-collapse-item .line-collapse-item__title--disabled {
+  color: #999999;
+  cursor: not-allowed;
+}
+.line-collapse-item .line-collapse-item__title--disabled .line-collapse-item__title-icon {
+  color: #9f9f9f;
+}
+.line-collapse-item .line-collapse-item__wrapper {
+  width: 100%;
+  will-change: height;
+  overflow: hidden;
+}
+.line-collapse-item .line-collapse-item__content {
+  padding: 10px 16px;
+  background-color: #fff;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.line-collapse {
+  width: 100%;
+}
+
+.line-combo-box-item {
+  --height: 48px;
+  --color: #606266;
+  --padding-top: 0;
+  --padding-end: 26px;
+  --padding-bottom: 0;
+  --padding-start: 26px;
+  --background-activated: rgba(#eeeeee, 0.7);
+  --combo-box-font-size: 14px;
+  padding-left: var(--padding-start);
+  padding-right: var(--padding-end);
+  padding-top: var(--padding-top);
+  padding-bottom: var(--padding-bottom);
+  position: relative;
+  height: var(--height);
+  margin: 0;
+  outline: none;
+  color: var(--color);
+  font-size: var(--combo-box-font-size);
+  list-style: none;
+  cursor: pointer;
+}
+@supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
+  .line-combo-box-item {
+    padding-left: unset;
+    padding-right: unset;
+    padding-inline-start: var(--padding-start);
+    padding-inline-end: var(--padding-end);
+  }
+}
+
+.line-combo-box-item__inner {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: 100%;
+}
+
+.line-combo-box-item::after {
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  content: "";
+  opacity: 0;
+}
+
+@media (any-hover: hover) {
+  .line-combo-box .line-combo-box-item:hover {
+    color: var(--button-color-hover);
+  }
+  .line-combo-box .line-combo-box-item:hover::after {
+    background: var(--button-background-hover);
+    opacity: var(--button-background-hover-opacity);
+  }
+}
+.line-combo-box .line-combo-box-item.line-activated {
+  background-color: var(--background-activated);
+  background-image: none;
+}
+
+.line-combo-box {
+  --color: initial;
+  --background: #ffffff;
+  --backdrop-opacity: var(--line-backdrop-opacity, 0.4);
+  --border-color: #ebeef5;
+  --border-radius: 4px;
+  --button-background-hover: currentColor;
+  --button-background-hover-opacity: 0.04;
+  --button-color: var(--line-color-primary, #3880ff);
+  --button-color-hover: var(--button-color);
+  display: flex;
+  position: fixed;
+  flex-direction: column;
+  max-width: 100%;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  background-color: var(--background);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+
+.line-combo-box__content {
+  list-style-type: none;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  padding: 5px 0;
+  padding-inline-start: 0;
+}
+
 .line-content {
   /**
    * @prop --background: Background of the content
@@ -2144,6 +2285,76 @@ html.plt-mobile .line-app {
   font-size: 48px !important;
 }
 
+.line-font-icon {
+  font-size: 24px;
+  user-select: none;
+}
+
+.line-font-icon.line-color {
+  color: var(--line-color-base);
+}
+
+.line-font-icon.line-font-icon--small {
+  /* stylelint-disable-next-line declaration-no-important */
+  font-size: 18px !important;
+}
+
+.line-font-icon.line-font-icon--large {
+  /* stylelint-disable-next-line declaration-no-important */
+  font-size: 32px !important;
+}
+
+.line-font-icon.line-font-icon--xlarge {
+  /* stylelint-disable-next-line declaration-no-important */
+  font-size: 48px !important;
+}
+
+.line-svg-icon {
+  --stroke-width: 32px;
+  display: inline-block;
+  width: 1em;
+  min-width: 1em;
+  height: 1em;
+  min-height: 1em;
+  font-size: 24px;
+  contain: strict;
+  fill: currentColor;
+}
+.line-svg-icon svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: all 0.6s ease-in-out;
+}
+
+.line-svg-icon.line-color {
+  color: var(--line-color-base);
+}
+
+.line-svg-icon.line-svg-icon--small {
+  /* stylelint-disable-next-line declaration-no-important */
+  font-size: 18px !important;
+}
+
+.line-svg-icon.line-svg-icon--large {
+  /* stylelint-disable-next-line declaration-no-important */
+  font-size: 32px !important;
+}
+
+.line-svg-icon.line-svg-icon--xlarge {
+  /* stylelint-disable-next-line declaration-no-important */
+  font-size: 48px !important;
+}
+
+.line-svg-icon.line-svg-icon--fill-none {
+  fill: none;
+}
+
+.line-svg-icon.line-svg-icon--stroke-width {
+  stroke: currentColor;
+  stroke-width: var(--stroke-width, 32px);
+}
+
 .line-svg-icon {
   --stroke-width: 32px;
   display: inline-block;
@@ -2296,7 +2507,7 @@ html.plt-mobile .line-app {
   color: var(--line-color-base);
 }
 
-.line-input > .native-input {
+.line-input > .line-input__content {
   border-radius: var(--border-radius);
   padding-left: var(--padding-start);
   padding-right: var(--padding-end);
@@ -2327,31 +2538,31 @@ html.plt-mobile .line-app {
           appearance: none;
 }
 @supports (margin-inline-start: 0) or (-webkit-margin-start: 0) {
-  .line-input > .native-input {
+  .line-input > .line-input__content {
     padding-left: unset;
     padding-right: unset;
     padding-inline-start: var(--padding-start);
     padding-inline-end: var(--padding-end);
   }
 }
-.line-input > .native-input::placeholder {
+.line-input > .line-input__content::placeholder {
   color: var(--placeholder-color);
   font-family: inherit;
   font-style: var(--placeholder-font-style);
   font-weight: var(--placeholder-font-weight);
   opacity: var(--placeholder-opacity);
 }
-.line-input > .native-input:-webkit-autofill {
+.line-input > .line-input__content:-webkit-autofill {
   background-color: transparent;
 }
-.line-input > .native-input:invalid {
+.line-input > .line-input__content:invalid {
   box-shadow: none;
 }
-.line-input > .native-input::-ms-clear {
+.line-input > .line-input__content::-ms-clear {
   display: none;
 }
 
-.line-input .native-input[disabled] {
+.line-input .line-input__content[disabled] {
   opacity: 0.4;
 }
 
@@ -5547,29 +5758,29 @@ html.plt-mobile .line-app {
 
 .line-toast {
   /**
-  * @prop --background: Background of the toast
-  * @prop --color: Color of the toast text
-  *
-  * @prop --border-color: Border color of the toast
-  * @prop --border-radius: Border radius of the toast
-  * @prop --border-width: Border width of the toast
-  * @prop --border-style: Border style of the toast
-  *
-  * @prop --box-shadow: Box shadow of the toast
-  *
-  * @prop --min-width: Minimum width of the toast
-  * @prop --width: Width of the toast
-  * @prop --max-width: Maximum width of the toast
-  *
-  * @prop --min-height: Minimum height of the toast
-  * @prop --height: Height of the toast
-  * @prop --max-height: Maximum height of the toast
-  *
-  * @prop --button-color: Color of the button text
-  *
-  * @prop --start: Position from the left if direction is left-to-right, and from the right if direction is right-to-left
-  * @prop --end: Position from the right if direction is left-to-right, and from the left if direction is right-to-left
-  */
+    * @prop --background: Background of the toast
+    * @prop --color: Color of the toast text
+    *
+    * @prop --border-color: Border color of the toast
+    * @prop --border-radius: Border radius of the toast
+    * @prop --border-width: Border width of the toast
+    * @prop --border-style: Border style of the toast
+    *
+    * @prop --box-shadow: Box shadow of the toast
+    *
+    * @prop --min-width: Minimum width of the toast
+    * @prop --width: Width of the toast
+    * @prop --max-width: Maximum width of the toast
+    *
+    * @prop --min-height: Minimum height of the toast
+    * @prop --height: Height of the toast
+    * @prop --max-height: Maximum height of the toast
+    *
+    * @prop --button-color: Color of the button text
+    *
+    * @prop --start: Position from the left if direction is left-to-right, and from the right if direction is right-to-left
+    * @prop --end: Position from the right if direction is left-to-right, and from the left if direction is right-to-left
+    */
   --border-width: 0;
   --border-style: none;
   --border-color: initial;
@@ -5595,6 +5806,19 @@ html.plt-mobile .line-app {
   right: unset;
   right: 0;
   left: unset;
+}
+
+.line-toast.line-color {
+  --button-color: inherit;
+  color: var(--line-color-contrast);
+}
+
+.line-toast.line-color .linetoast-button--cancel {
+  color: inherit;
+}
+
+.line-toast.line-color .line-toast__wrapper {
+  background: var(--line-color-base);
 }
 
 .line-toast__wrapper {
@@ -5629,40 +5853,37 @@ html.plt-mobile .line-app {
   max-height: inherit;
   contain: content;
 }
+
 .line-toast__content {
   display: flex;
   flex: 1;
   flex-direction: column;
   justify-content: center;
 }
+
 .line-toast__message {
   flex: 1;
   white-space: pre-wrap;
 }
+
 .line-toast-button-group {
   display: flex;
 }
+
 .line-toast-button {
   border: 0;
   outline: none;
   color: var(--button-color);
   z-index: 0;
 }
+
 .line-toast-icon {
   font-size: 1.4em;
 }
-.line-toast-button-inner {
+
+.line-toast-button__inner {
   display: flex;
   align-items: center;
-}
-
-.line-toast.line-color {
-  --button-color: inherit;
-  color: var(--line-color-contrast);
-}
-
-.line-toast.line-color .line-toast__wrapper {
-  background: var(--line-color-base);
 }
 
 @media (any-hover: hover) {

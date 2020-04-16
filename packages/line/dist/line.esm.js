@@ -976,7 +976,7 @@ class GestureController {
     if (maxPriority === priority) {
       this.capturedId = id;
       requestedStart.clear();
-      const event = new CustomEvent('ionGestureCaptured', {
+      const event = new CustomEvent('lineGestureCaptured', {
         detail: { gestureName },
       });
       document.dispatchEvent(event);
@@ -3157,11 +3157,15 @@ var Action = /*#__PURE__*/ createComponent$3({
       if (button) {
         // a handler has been provided, execute it
         // pass the handler the values from the inputs
-        const rtn = await safeCall(button.handler);
+        try {
+          const rtn = await safeCall(button.handler);
 
-        if (rtn === false) {
-          // if the return value of the handler is false then do not dismiss
-          return false;
+          if (rtn === false) {
+            // if the return value of the handler is false then do not dismiss
+            return false;
+          }
+        } catch (error) {
+          console.error(error);
         }
       }
 
@@ -3530,9 +3534,6 @@ const {
   createComponent: createComponent$5,
   bem: bem$5,
 } = /*#__PURE__*/ createNamespace('alert');
-const isCancel = (role) => {
-  return role === 'cancel' || role === 'overlay';
-};
 var Alert = /*#__PURE__*/ createComponent$5({
   mixins: [/*#__PURE__*/ usePopup()],
   props: {
@@ -3616,7 +3617,7 @@ var Alert = /*#__PURE__*/ createComponent$5({
                 },
                 class: [bem$5('button'), 'line-focusable', 'line-activatable'],
                 on: {
-                  click: () => this.onButtonClick(button),
+                  click: () => this.buttonClick(button),
                 },
               },
               [
@@ -3639,29 +3640,39 @@ var Alert = /*#__PURE__*/ createComponent$5({
       this.$emit('overlay-tap');
     },
 
-    /* eslint-disable-next-line consistent-return */
-    onButtonClick(button) {
-      const { role } = button; // const values = this.getValues();
+    async buttonClick(button) {
+      const { role } = button;
 
-      if (isCancel(role)) {
+      if (role === 'cancel') {
         return this.close(role);
       }
 
-      let returnData;
+      const shouldClose = await this.callButtonHandler(button);
 
-      if (button && button.handler) {
+      if (shouldClose) {
+        return this.close(button.role);
+      }
+
+      return Promise.resolve();
+    },
+
+    async callButtonHandler(button) {
+      if (button) {
         // a handler has been provided, execute it
         // pass the handler the values from the inputs
         try {
-          returnData = button.handler(role);
+          const rtn = await safeCall(button.handler);
+
+          if (rtn === false) {
+            // if the return value of the handler is false then do not dismiss
+            return false;
+          }
         } catch (error) {
           console.error(error);
         }
       }
 
-      if (returnData !== false) {
-        return this.close(role);
-      }
+      return true;
     },
   },
 
@@ -3706,22 +3717,24 @@ var Alert = /*#__PURE__*/ createComponent$5({
                 class: bem$5('head'),
               },
               [
-                header &&
-                  h(
-                    'h2',
-                    {
-                      class: bem$5('title'),
-                    },
-                    [header]
-                  ),
-                subHeader &&
-                  h(
-                    'h2',
-                    {
-                      class: bem$5('sub-title'),
-                    },
-                    [subHeader]
-                  ),
+                this.slots('header') ||
+                  (header &&
+                    h(
+                      'h2',
+                      {
+                        class: bem$5('title'),
+                      },
+                      [header]
+                    )),
+                this.slots('subHeader') ||
+                  (subHeader &&
+                    h(
+                      'h2',
+                      {
+                        class: bem$5('sub-title'),
+                      },
+                      [subHeader]
+                    )),
               ]
             ),
             h(
@@ -3729,7 +3742,7 @@ var Alert = /*#__PURE__*/ createComponent$5({
               {
                 class: bem$5('message'),
               },
-              [this.message]
+              [this.slots() || this.message]
             ),
             this.cachedButtons,
           ]
@@ -5289,809 +5302,285 @@ var col = /*#__PURE__*/ createComponent$l({
   },
 });
 
-async function scrollToPoint(
-  scrollEl = document.scrollingElement ||
-    document.body ||
-    document.documentElement,
-  x,
-  y,
-  duration = 0
-) {
-  if (duration < 32) {
-    if (y != null) {
-      scrollEl.scrollTop = y;
-    }
-    if (x != null) {
-      scrollEl.scrollLeft = x;
-    }
-    return;
-  }
-  let resolve;
-  let startTime = 0;
-  const promise = new Promise((r) => (resolve = r));
-  const fromY = scrollEl.scrollTop;
-  const fromX = scrollEl.scrollLeft;
-  const deltaY = y != null ? y - fromY : 0;
-  const deltaX = x != null ? x - fromX : 0;
-  // scroll loop
-  const step = (timeStamp) => {
-    const linearTime = Math.min(1, (timeStamp - startTime) / duration) - 1;
-    /* eslint-disable-next-line */
-    const easedT = Math.pow(linearTime, 3) + 1;
-    if (deltaY !== 0) {
-      scrollEl.scrollTop = Math.floor(easedT * deltaY + fromY);
-    }
-    if (deltaX !== 0) {
-      scrollEl.scrollLeft = Math.floor(easedT * deltaX + fromX);
-    }
-    if (easedT < 1) {
-      // do not use DomController here
-      // must use nativeRaf in order to fire in the next frame
-      // TODO: remove as any
-      requestAnimationFrame(step);
-    } else {
-      resolve();
-    }
-  };
-  // chill out for a frame first
-  requestAnimationFrame((ts) => {
-    startTime = ts;
-    step(ts);
-  });
-  await promise;
-}
-async function scrollToTop(scrollEl, duration) {
-  await scrollToPoint(scrollEl, undefined, 0, duration);
-}
-async function scrollToBottom(scrollEl, duration) {
-  const y = scrollEl.scrollHeight - scrollEl.clientHeight;
-  await scrollToPoint(scrollEl, undefined, y, duration);
-}
-async function scrollByPoint(scrollEl, x, y, duration) {
-  await scrollToPoint(
-    scrollEl,
-    x + scrollEl.scrollLeft,
-    y + scrollEl.scrollTop,
-    duration
-  );
-}
-const getOffsetX = (el) => {
-  let offset = 0;
-  while (el) {
-    offset += el.offsetLeft;
-    el = el.offsetParent;
-  }
-  return offset;
-};
-const getOffsetY = (el) => {
-  let offset = 0;
-  while (el) {
-    offset += el.offsetTop;
-    el = el.offsetParent;
-  }
-  return offset;
-};
-async function scrollToElement(scrollEl, el, duration) {
-  if (!el) return;
-  const x = getOffsetX(el) - getOffsetX(scrollEl);
-  const y = getOffsetY(el) - getOffsetY(scrollEl);
-  await scrollByPoint(scrollEl, x, y, duration);
-}
-
-const updateScrollDetail = (detail, el, timestamp, shouldStart) => {
-  const prevX = detail.currentX;
-  const prevY = detail.currentY;
-  const prevT = detail.currentTime;
-  const currentX = el.scrollLeft;
-  const currentY = el.scrollTop;
-  const timeDelta = timestamp - prevT;
-  if (shouldStart) {
-    // remember the start positions
-    detail.startTime = timestamp;
-    detail.startX = currentX;
-    detail.startY = currentY;
-    detail.velocityX = detail.velocityY = 0;
-  }
-  detail.currentTime = timestamp;
-  detail.currentX = detail.scrollLeft = currentX;
-  detail.currentY = detail.scrollTop = currentY;
-  detail.deltaX = currentX - detail.startX;
-  detail.deltaY = currentY - detail.startY;
-  if (timeDelta > 0 && timeDelta < 100) {
-    const velocityX = (currentX - prevX) / timeDelta;
-    const velocityY = (currentY - prevY) / timeDelta;
-    detail.velocityX = velocityX * 0.7 + detail.velocityX * 0.3;
-    detail.velocityY = velocityY * 0.7 + detail.velocityY * 0.3;
-  }
+/**
+ * Enter Animation
+ */
+const enterAnimation = (baseEl, paddingTop, paddingBottom) => {
+  const height = baseEl.scrollHeight || '';
+  const baseAnimation = createAnimation();
+  baseAnimation
+    .addElement(baseEl)
+    .easing('ease-in-out')
+    .duration(300)
+    // .afterClearStyles(['height'])
+    .fromTo('padding-top', '0px', `${paddingTop}px`)
+    .fromTo('padding-bottom', '0px', `${paddingBottom}px`)
+    .fromTo('height', '0px', `${height}px`);
+  return baseAnimation;
 };
 
-const {
-  createComponent: createComponent$m,
-  bem: bem$m,
-} = /*#__PURE__*/ createNamespace('content');
-
-const getParentElement = (el) => {
-  if (el.parentElement) {
-    // normal element with a parent element
-    return el.parentElement;
-  }
-
-  if (el.parentNode && el.parentNode.host) {
-    // shadow dom's document fragment
-    return el.parentNode.host;
-  }
-
-  return null;
+/**
+ * Leave Animation
+ */
+const leaveAnimation = (baseEl, paddingTop, paddingBottom) => {
+  const height = baseEl.scrollHeight || '';
+  const baseAnimation = createAnimation();
+  baseAnimation
+    .addElement(baseEl)
+    .easing('ease-in-out')
+    .duration(300)
+    .fromTo('padding-top', `${paddingTop}px`, '0px')
+    .fromTo('padding-bottom', `${paddingBottom}px`, '0px')
+    .fromTo('height', `${height}px`, '0px');
+  return baseAnimation;
 };
 
-const getPageElement = (el) => {
-  const tabs = el.closest('.line-tabs');
-
-  if (tabs) {
-    return tabs;
-  }
-
-  const page = el.closest('.line-app,.line-page,page-inner');
-
-  if (page) {
-    return page;
-  }
-
-  return getParentElement(el);
-};
-
-var content = /*#__PURE__*/ createComponent$m({
-  mixins: [/*#__PURE__*/ useColor()],
-
-  provide() {
-    return {
-      Content: this,
-    };
-  },
-
-  props: {
-    forceOverscroll: Boolean,
-    fullscreen: Boolean,
-    scrollX: Boolean,
-    scrollY: {
-      type: Boolean,
-      default: true,
-    },
-    scrollEvents: Boolean,
-    value: Boolean,
-  },
-
-  data() {
-    return {
-      cTop: 0,
-      cBottom: 0,
-    };
-  },
-
-  computed: {
-    shouldForceOverscroll() {
-      const { forceOverscroll, mode } = this;
-      return forceOverscroll === undefined
-        ? mode === 'ios' && isPlatform('ios')
-        : forceOverscroll;
-    },
-  },
-  watch: {
-    fullscreen(val) {
-      if (val) {
-        this.readDimensions();
-      } else {
-        this.cTop = this.cBottom = 0;
-      }
-    },
-  },
-
-  async mounted() {
-    if (this.fullscreen) {
-      await this.$nextTick();
-      this.readDimensions();
-    }
-  },
-
-  methods: {
-    readDimensions() {
-      const el = this.$el;
-      const page = getPageElement(el);
-      const top = Math.max(el.offsetTop, 0);
-      const bottom = Math.max(page.offsetHeight - top - el.offsetHeight, 0);
-      const dirty = top !== this.cTop || bottom !== this.cBottom;
-
-      if (dirty) {
-        this.cTop = top;
-        this.cBottom = bottom;
-      }
-    },
-
-    getScrollElement() {
-      return this.$refs.scrollEl;
-    },
-
-    getBackgroundContent() {
-      return this.$refs.backgroundContentEl;
-    },
-
-    async scrollByPoint(x, y, duration) {
-      const { scrollEl } = this.$refs;
-      if (!scrollEl) return;
-      await scrollByPoint(scrollEl, x, y, duration);
-    },
-
-    async scrollToElement(el) {
-      const { scrollEl } = this.$refs;
-      if (!scrollEl) return;
-      const target = isString(el) ? scrollEl.querySelector(el) : el;
-      await scrollToElement(scrollEl, target);
-    },
-
-    async scrollToBottom(duration) {
-      const { scrollEl } = this.$refs;
-      if (!scrollEl) return;
-      await scrollToBottom(scrollEl, duration);
-    },
-
-    async scrollToPoint(x, y, duration) {
-      const { scrollEl } = this.$refs;
-      if (!scrollEl) return;
-      await scrollToPoint(scrollEl, x, y, duration);
-    },
-
-    async scrollToTop(duration) {
-      const { scrollEl } = this.$refs;
-      if (!scrollEl) return;
-      await scrollToTop(scrollEl, duration);
-    },
-
-    onClick(ev) {
-      if (this.isScrolling) {
-        ev.preventDefault();
-        ev.stopPropagation();
-      }
-    },
-
-    async onScroll(ev) {
-      const timeStamp = Date.now();
-      const shouldStart = !this.isScrolling;
-      this.lastScroll = timeStamp;
-
-      if (shouldStart) {
-        this.onScrollStart();
-      }
-
-      if (!this.queued && this.scrollEvents) {
-        this.queued = true;
+function useCollapseTransition() {
+  return createMixins({
+    mixins: [
+      // Popup lifecycle events depend on Transition mechanism
+      // Transition should not be disabled
+      useTransition(),
+    ],
+    beforeMount() {
+      const onBeforeEnter = async (el) => {
+        this.overflow = el.style.overflow;
+        this.paddingTop = el.style.paddingTop;
+        this.paddingBottom = el.style.paddingBottom;
+        el.style.height = '0px';
+        el.style.paddingTop = '0px';
+        el.style.paddingBottom = '0px';
+        el.style.overflow = 'hidden';
+        this.$emit('aboutToShow', el);
+      };
+      const onAfterEnter = (el) => {
+        el.style.height = '';
+        el.style.paddingTop = '';
+        el.style.paddingBottom = '';
+        el.style.animationTimingFunction = '';
+        el.style.animationFillMode = '';
+        el.style.animationDirection = '';
+        el.style.animationIterationCount = '';
+        el.style.animationName = '';
+        el.style.overflow = this.overflow;
+        this.$emit('opened');
+      };
+      const onBeforeLeave = (el) => {
+        this.overflow = el.style.overflow;
+        this.paddingTop = el.style.paddingTop;
+        this.paddingBottom = el.style.paddingBottom;
+        el.style.height = `${el.scrollHeight}px`;
+        el.style.overflow = 'hidden';
+        this.$emit('aboutToHide', el);
+      };
+      const onAfterLeave = (el) => {
+        el.style.height = '';
+        el.style.paddingTop = '';
+        el.style.paddingBottom = '';
+        el.style.animationTimingFunction = '';
+        el.style.animationFillMode = '';
+        el.style.animationDirection = '';
+        el.style.animationIterationCount = '';
+        el.style.animationName = '';
+        el.style.overflow = this.overflow;
+        el.style.paddingTop = this.paddingTop;
+        el.style.paddingBottom = this.paddingBottom;
+        this.$emit('closed');
+      };
+      const onEnter = async (el, done) => {
         await this.$nextTick();
-        this.queued = false;
-        this.detail.event = ev;
-        updateScrollDetail(this.detail, this.scrollEl, Date.now(), shouldStart);
-        this.ionScroll.emit(this.detail);
-        this.$emit('scroll', this.detail);
-      }
-    },
-
-    onScrollStart() {
-      this.isScrolling = true;
-      this.$emit('scrollstart', {
-        isScrolling: true,
-      });
-
-      if (this.watchDog) {
-        clearInterval(this.watchDog);
-      } // watchdog
-
-      this.watchDog = setInterval(() => {
-        if (this.lastScroll < Date.now() - 120) {
-          this.onScrollEnd();
+        this.animation = enterAnimation(
+          el,
+          this.paddingTop,
+          this.paddingBottom
+        );
+        if (!config.getBoolean('animated', true)) {
+          this.animation.duration(0);
         }
-      }, 100);
+        this.$emit('animation-enter', el, this.animation);
+        await this.animation.play().catch((e) => console.error(e));
+        done();
+      };
+      const onLeave = async (el, done) => {
+        await this.$nextTick();
+        this.animation = leaveAnimation(
+          el,
+          this.paddingTop,
+          this.paddingBottom
+        );
+        if (!config.getBoolean('animated', true)) {
+          this.animation.duration(0);
+        }
+        this.$emit('animation-leave', el, this.animation);
+        await this.animation.play().catch((e) => console.error(e));
+        done();
+      };
+      const onCancel = () => {
+        if (this.animation) {
+          this.animation.stop();
+          this.animation = null;
+        }
+        this.$emit('canceled');
+      };
+      this.$on('before-enter', onBeforeEnter);
+      this.$on('after-enter', onAfterEnter);
+      this.$on('before-leave', onBeforeLeave);
+      this.$on('after-leave', onAfterLeave);
+      this.$on('enter', onEnter);
+      this.$on('enter-cancelled', onCancel);
+      this.$on('leave', onLeave);
+      this.$on('leave-cancelled', onCancel);
     },
+  });
+}
 
-    onScrollEnd() {
-      clearInterval(this.watchDog);
-      this.watchDog = null;
-
-      if (this.isScrolling) {
-        this.isScrolling = false;
-        this.$emit('scrollend', {
-          isScrolling: false,
-        });
-      }
-    },
+const { createComponent: createComponent$m } = /*#__PURE__*/ createNamespace(
+  'collapse-item-content'
+);
+var CollapseItemContent = /*#__PURE__*/ createComponent$m({
+  mixins: [/*#__PURE__*/ useCollapseTransition()],
+  props: {
+    checked: Boolean,
   },
 
   render() {
     const h = arguments[0];
-    const { scrollX, scrollY, shouldForceOverscroll } = this;
+    const { checked } = this;
     return h(
       'div',
-      helper([
-        {
-          class: [bem$m(), false, shouldForceOverscroll && 'overscroll'],
-          style: {
-            '--offset-top': `${this.cTop || 0}px`,
-            '--offset-bottom': `${this.cBottom || 0}px`,
-          },
-        },
-        {
-          on: {
-            '!click': this.onClick,
-          },
-        },
-      ]),
-      [
-        h('div', {
-          ref: 'backgroundContentEl',
-          attrs: {
-            id: 'background-content',
-          },
-        }),
-        this.slots('header'),
-        h(
-          'main',
+      {
+        class: 'line-collapse-item__wrapper',
+        directives: [
           {
-            class: {
-              'inner-scroll': true,
-              'scroll-x': scrollX,
-              'scroll-y': scrollY,
-              overscroll: (scrollX || scrollY) && shouldForceOverscroll,
-            },
-            ref: 'scrollEl',
-            on: {
-              scroll: this.onScroll,
-            },
+            name: 'show',
+            value: checked,
+          },
+        ],
+      },
+      [
+        h(
+          'div',
+          {
+            class: 'line-collapse-item__content',
           },
           [this.slots()]
         ),
-        this.slots('footer'),
-        this.slots('fixed'),
       ]
     );
   },
 });
 
-function usePopupDuration() {
-  return createMixins({
-    props: {
-      // This property holds the timeout (milliseconds) after which the tool tip is hidden.
-      // A tooltip with a negative timeout does not hide automatically.
-      // The default value is -1.
-      duration: Number,
-    },
-    beforeMount() {
-      this.$on('opened', () => {
-        if (this.duration > 0) {
-          this.durationTimeout = setTimeout(
-            () => this.close('timeout'),
-            this.duration
-          );
-        }
-      });
-      this.$on('aboutToHide', () => {
-        if (this.durationTimeout) {
-          clearTimeout(this.durationTimeout);
-        }
-      });
-    },
-  });
-}
-
-const spinners = {
-  bubbles: {
-    dur: 1000,
-    circles: 9,
-    fn: (dur, index, total) => {
-      const animationDelay = `${(dur * index) / total - dur}ms`;
-      const angle = (2 * Math.PI * index) / total;
-      return {
-        r: 5,
-        style: {
-          top: `${9 * Math.sin(angle)}px`,
-          left: `${9 * Math.cos(angle)}px`,
-          'animation-delay': animationDelay,
-        },
-      };
-    },
-  },
-  circles: {
-    dur: 1000,
-    circles: 8,
-    fn: (dur, index, total) => {
-      const step = index / total;
-      const animationDelay = `${dur * step - dur}ms`;
-      const angle = 2 * Math.PI * step;
-      return {
-        r: 5,
-        style: {
-          top: `${9 * Math.sin(angle)}px`,
-          left: `${9 * Math.cos(angle)}px`,
-          'animation-delay': animationDelay,
-        },
-      };
-    },
-  },
-  circular: {
-    dur: 1400,
-    elmDuration: true,
-    circles: 1,
-    fn: () => {
-      return {
-        r: 20,
-        cx: 44,
-        cy: 44,
-        fill: 'none',
-        viewBox: '22 22 44 44',
-        transform: 'translate(0,0)',
-        style: {},
-      };
-    },
-  },
-  crescent: {
-    dur: 750,
-    circles: 1,
-    fn: () => {
-      return {
-        r: 26,
-        style: {},
-      };
-    },
-  },
-  dots: {
-    dur: 750,
-    circles: 3,
-    fn: (_, index) => {
-      const animationDelay = `${-(110 * index)}ms`;
-      return {
-        r: 6,
-        style: {
-          left: `${9 - 9 * index}px`,
-          'animation-delay': animationDelay,
-        },
-      };
-    },
-  },
-  lines: {
-    dur: 1000,
-    lines: 12,
-    fn: (dur, index, total) => {
-      const transform = `rotate(${30 * index + (index < 6 ? 180 : -180)}deg)`;
-      const animationDelay = `${(dur * index) / total - dur}ms`;
-      return {
-        y1: 17,
-        y2: 29,
-        style: {
-          transform,
-          'animation-delay': animationDelay,
-        },
-      };
-    },
-  },
-  'lines-small': {
-    dur: 1000,
-    lines: 12,
-    fn: (dur, index, total) => {
-      const transform = `rotate(${30 * index + (index < 6 ? 180 : -180)}deg)`;
-      const animationDelay = `${(dur * index) / total - dur}ms`;
-      return {
-        y1: 12,
-        y2: 20,
-        style: {
-          transform,
-          'animation-delay': animationDelay,
-        },
-      };
-    },
-  },
-};
-const SPINNERS = spinners;
-
 const {
   createComponent: createComponent$n,
-  bem: bem$n,
-} = /*#__PURE__*/ createNamespace('spinner');
+  bem: bem$m,
+} = /*#__PURE__*/ createNamespace('font-icon');
 
-function getSpinnerName(name) {
-  const spinnerName = name || config.get('spinner');
-  const mode = getMode();
-
-  if (spinnerName) {
-    return spinnerName;
-  }
-
-  return mode === 'ios' ? 'lines' : 'circular';
+function getDefaultText(slots) {
+  const nodes = slots();
+  const text = (nodes && nodes[0].text) || '';
+  return text.trim();
 }
 
-function buildCircle(h, spinner, duration, index, total) {
-  const data = spinner.fn(duration, index, total);
-  data.style['animation-duration'] = `${duration}ms`;
-  return h(
-    'svg',
-    {
-      attrs: {
-        viewBox: data.viewBox || '0 0 64 64',
-      },
-      style: data.style,
-    },
-    [
-      h('circle', {
-        attrs: {
-          transform: data.transform || 'translate(32,32)',
-          cx: data.cx,
-          cy: data.cy,
-          r: data.r,
-        },
-        style: spinner.elmDuration
-          ? {
-              animationDuration: `${duration}ms`,
-            }
-          : {},
-      }),
-    ]
-  );
-}
-
-function buildLine(h, spinner, duration, index, total) {
-  const data = spinner.fn(duration, index, total);
-  data.style['animation-duration'] = `${duration}ms`;
-  return h(
-    'svg',
-    {
-      attrs: {
-        viewBox: data.viewBox || '0 0 64 64',
-      },
-      style: data.style,
-    },
-    [
-      h('line', {
-        attrs: {
-          transform: 'translate(32,32)',
-          y1: data.y1,
-          y2: data.y2,
-        },
-      }),
-    ]
-  );
-}
-
-var Spinner = /*#__PURE__*/ createComponent$n({
+var FontIcon = /*#__PURE__*/ createComponent$n({
   functional: true,
   props: {
+    name: String,
+    source: String,
+    size: String,
     color: String,
-    duration: Number,
-    type: String,
-    paused: Boolean,
   },
 
-  render(h, { props, data }) {
-    const spinnerName = getSpinnerName(props.type);
-    const spinner = SPINNERS[spinnerName] || SPINNERS.lines;
-    const duration = props.duration > 10 ? props.duration : spinner.dur;
-    const svgs = [];
+  render(h, { props, data, slots }) {
+    const { attrs = {} } = data;
+    const { name, size, color } = props;
+    const text = name || getDefaultText(slots);
+    return h(
+      'i',
+      helper([
+        {
+          class: [
+            'line-icon',
+            bem$m({
+              [`${size}`]: !!size,
+            }),
+            createColorClasses(color),
+          ],
+          attrs: {
+            'aria-hidden': !attrs['aria-label'],
+            'aria-label': attrs['aria-label'] || text,
+          },
+        },
+        data,
+      ]),
+      [text]
+    );
+  },
+});
 
-    if (spinner.circles !== undefined) {
-      for (let i = 0; i < spinner.circles; i++) {
-        svgs.push(buildCircle(h, spinner, duration, i, spinner.circles));
-      }
-    } else if (spinner.lines !== undefined) {
-      for (let i = 0; i < spinner.lines; i++) {
-        svgs.push(buildLine(h, spinner, duration, i, spinner.lines));
-      }
-    }
+const {
+  createComponent: createComponent$o,
+  bem: bem$n,
+} = /*#__PURE__*/ createNamespace('svg-icon');
 
+const getDefaultText$1 = (slots) => {
+  const nodes = slots();
+  const text = (nodes && nodes[0].text) || '';
+  return text.trim();
+};
+
+var SvgIcon = /*#__PURE__*/ createComponent$o({
+  functional: true,
+  props: {
+    name: String,
+    href: String,
+    src: String,
+    size: String,
+    color: String,
+    fill: {
+      type: Boolean,
+      default: true,
+    },
+    stroke: Boolean,
+  },
+
+  render(h, { props, data, slots }) {
+    const { attrs = {} } = data;
+    const { name, href, src, size, color, fill, stroke } = props;
+    const text = name || getDefaultText$1(slots);
+    const finalHref = href || `${src || ''}#${text}`;
     return h(
       'div',
       helper([
         {
           class: [
             bem$n({
-              [spinnerName]: true,
-              paused: !!props.paused || config.getBoolean('testing'),
+              [`${size}`]: !!size,
+              'fill-none': !fill,
+              'stroke-width': stroke,
             }),
-            createColorClasses(props.color),
+            createColorClasses(color),
           ],
-          attrs: {
-            role: 'progressbar',
-          },
-          style: spinner.elmDuration && {
-            animationDuration: `${duration}ms`,
-          },
         },
         data,
       ]),
-      [svgs]
-    );
-  },
-});
-
-/**
- * iOS Loading Enter Animation
- */
-const iosEnterAnimation$2 = (baseEl) => {
-  const baseAnimation = createAnimation();
-  const backdropAnimation = createAnimation();
-  const wrapperAnimation = createAnimation();
-  backdropAnimation
-    .addElement(baseEl.querySelector('.line-overlay'))
-    .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
-  wrapperAnimation
-    .addElement(baseEl.querySelector('.line-loading__wrapper'))
-    .keyframes([
-      { offset: 0, opacity: 0.01, transform: 'scale(1.1)' },
-      { offset: 1, opacity: 1, transform: 'scale(1)' },
-    ]);
-  return baseAnimation
-    .addElement(baseEl)
-    .easing('ease-in-out')
-    .duration(200)
-    .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-/**
- * iOS Loading Leave Animation
- */
-const iosLeaveAnimation$2 = (baseEl) => {
-  const baseAnimation = createAnimation();
-  const backdropAnimation = createAnimation();
-  const wrapperAnimation = createAnimation();
-  backdropAnimation
-    .addElement(baseEl.querySelector('.line-overlay'))
-    .fromTo('opacity', 'var(--backdrop-opacity)', 0);
-  wrapperAnimation
-    .addElement(baseEl.querySelector('.line-loading__wrapper'))
-    .keyframes([
-      { offset: 0, opacity: 0.99, transform: 'scale(1)' },
-      { offset: 1, opacity: 0, transform: 'scale(0.9)' },
-    ]);
-  return baseAnimation
-    .addElement(baseEl)
-    .easing('ease-in-out')
-    .duration(200)
-    .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-/**
- * Md Loading Enter Animation
- */
-const mdEnterAnimation$2 = (baseEl) => {
-  const baseAnimation = createAnimation();
-  const backdropAnimation = createAnimation();
-  const wrapperAnimation = createAnimation();
-  backdropAnimation
-    .addElement(baseEl.querySelector('.line-overlay'))
-    .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
-  wrapperAnimation
-    .addElement(baseEl.querySelector('.line-loading__wrapper'))
-    .keyframes([
-      { offset: 0, opacity: 0.01, transform: 'scale(1.1)' },
-      { offset: 1, opacity: 1, transform: 'scale(1)' },
-    ]);
-  return baseAnimation
-    .addElement(baseEl)
-    .easing('ease-in-out')
-    .duration(200)
-    .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-/**
- * Md Loading Leave Animation
- */
-const mdLeaveAnimation$2 = (baseEl) => {
-  const baseAnimation = createAnimation();
-  const backdropAnimation = createAnimation();
-  const wrapperAnimation = createAnimation();
-  backdropAnimation
-    .addElement(baseEl.querySelector('.line-overlay'))
-    .fromTo('opacity', 'var(--backdrop-opacity)', 0);
-  wrapperAnimation
-    .addElement(baseEl.querySelector('.line-loading__wrapper'))
-    .keyframes([
-      { offset: 0, opacity: 0.99, transform: 'scale(1)' },
-      { offset: 1, opacity: 0, transform: 'scale(0.9)' },
-    ]);
-  return baseAnimation
-    .addElement(baseEl)
-    .easing('ease-in-out')
-    .duration(200)
-    .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-const {
-  createComponent: createComponent$o,
-  bem: bem$o,
-} = /*#__PURE__*/ createNamespace('loading');
-var Loading = /*#__PURE__*/ createComponent$o({
-  mixins: [/*#__PURE__*/ usePopup(), /*#__PURE__*/ usePopupDuration()],
-  props: {
-    message: String,
-    spinner: String,
-  },
-
-  beforeMount() {
-    const { mode } = this;
-    this.$on('animation-enter', (baseEl, animate) => {
-      const builder = mode === 'md' ? mdEnterAnimation$2 : iosEnterAnimation$2;
-      animate(builder(baseEl));
-    });
-    this.$on('animation-leave', (baseEl, animate) => {
-      const builder = mode === 'md' ? mdLeaveAnimation$2 : iosLeaveAnimation$2;
-      animate(builder(baseEl));
-    });
-  },
-
-  methods: {
-    onTap() {
-      this.$emit('overlay-tap');
-    },
-  },
-
-  render() {
-    const h = arguments[0];
-    const { message, spinner } = this;
-    return h(
-      'div',
-      helper([
-        {
-          directives: [
-            {
-              name: 'show',
-              value: this.visible,
-            },
-          ],
-          attrs: {
-            role: 'dialog',
-            'aria-modal': 'true',
-          },
-          class: bem$o({
-            translucent: this.translucent,
-          }),
-        },
-        {
-          on: this.$listeners,
-        },
-      ]),
       [
-        h(Overlay, {
-          attrs: {
-            visible: this.dim,
-          },
-          on: {
-            tap: this.onTap,
-          },
-        }),
         h(
-          'div',
+          'svg',
           {
             attrs: {
-              role: 'dialog',
+              role: 'img',
+              'aria-hidden': !attrs['aria-label'],
+              'aria-label': attrs['aria-label'] || text,
             },
-            class: bem$o('wrapper'),
           },
           [
-            spinner &&
-              h(
-                'div',
-                {
-                  class: bem$o('spinner'),
-                },
-                [
-                  h(Spinner, {
-                    attrs: {
-                      type: spinner,
-                    },
-                  }),
-                ]
-              ),
-            message &&
-              h(
-                'div',
-                {
-                  class: bem$o('content'),
-                },
-                [message]
-              ),
+            text || href
+              ? h('use', {
+                  attrs: {
+                    'xlink:href': finalHref,
+                  },
+                })
+              : slots('content'),
           ]
         ),
       ]
@@ -6099,532 +5588,148 @@ var Loading = /*#__PURE__*/ createComponent$o({
   },
 });
 
+const { createComponent: createComponent$p } = /*#__PURE__*/ createNamespace(
+  'icon'
+);
+var Icon = /*#__PURE__*/ createComponent$p({
+  functional: true,
+
+  render(h, { data, children }) {
+    const { attrs } = data;
+    const hasSrc = attrs && ('src' in attrs || 'href' in attrs);
+
+    if (hasSrc) {
+      return h(SvgIcon, data, children);
+    }
+
+    return h(FontIcon, data, children);
+  },
+});
+
+const NAMESPACE$4 = 'Collapse';
 const {
-  createComponent: createComponent$p,
-  bem: bem$p,
-} = /*#__PURE__*/ createNamespace('picker-column');
-
-const clamp = (min, n, max) => {
-  return Math.max(min, Math.min(n, max));
-};
-
-const PICKER_OPT_SELECTED = 'line-picker-column__opt--selected';
-const DECELERATION_FRICTION = 0.97;
-const MAX_PICKER_SPEED = 90;
-const TRANSITION_DURATION = 150;
-var PickerColumn = /*#__PURE__*/ createComponent$p({
+  createComponent: createComponent$q,
+  bem: bem$o,
+} = /*#__PURE__*/ createNamespace('collapse-item');
+var collapseItem = /*#__PURE__*/ createComponent$q({
+  mixins: [/*#__PURE__*/ useCheckItem(NAMESPACE$4)],
   props: {
-    col: Object,
+    title: String,
+    disabled: Boolean,
   },
-
-  data() {
-    return {
-      optHeight: 0,
-      rotateFactor: 0,
-      scaleFactor: 1,
-      velocity: 0,
-      y: 0,
-      noAnimate: true,
-    };
-  },
-
-  async mounted() {
-    let pickerRotateFactor = 0;
-    let pickerScaleFactor = 0.81;
-    const { mode } = this;
-    const { optsEl } = this.$refs;
-    this.optsEl = optsEl;
-
-    if (mode === 'ios') {
-      pickerRotateFactor = -0.46;
-      pickerScaleFactor = 1;
-    }
-
-    this.rotateFactor = pickerRotateFactor;
-    this.scaleFactor = pickerScaleFactor;
-    this.gesture = createGesture({
-      el: this.$el,
-      gestureName: 'picker-swipe',
-      gesturePriority: 100,
-      threshold: 0,
-      onStart: (ev) => this.onStart(ev),
-      onMove: (ev) => this.onMove(ev),
-      onEnd: (ev) => this.onEnd(ev),
-    });
-    this.gesture.enable();
-    this.tmrId = setTimeout(() => {
-      this.noAnimate = false;
-      this.refresh(true);
-    }, 250);
-
-    if (optsEl) {
-      // DOM READ
-      // We perfom a DOM read over a rendered item, this needs to happen after the first render
-      this.optHeight = optsEl.firstElementChild
-        ? optsEl.firstElementChild.clientHeight
-        : 0;
-    }
-
-    this.refresh();
-  },
-
   methods: {
-    colChanged() {
-      this.refresh();
-    },
-
-    emitColChange() {
-      this.$emit('colChange', this.col);
-    },
-
-    setSelected(selectedIndex, duration) {
-      // if there is a selected index, then figure out it's y position
-      // if there isn't a selected index, then just use the top y position
-      const y = selectedIndex > -1 ? -(selectedIndex * this.optHeight) : 0;
-      this.velocity = 0; // set what y position we're at
-
-      cancelAnimationFrame(this.rafId);
-      this.update(y, duration, true);
-      this.emitColChange();
-    },
-
-    update(y, duration, saveY) {
-      if (!this.optsEl) {
-        return;
-      } // ensure we've got a good round number :)
-
-      let translateY = 0;
-      let translateZ = 0;
-      const { col, rotateFactor } = this;
-      const selectedIndex = (col.selectedIndex = this.indexForY(-y));
-      const durationStr = duration === 0 ? '' : `${duration}ms`;
-      const scaleStr = `scale(${this.scaleFactor})`;
-      const { children } = this.optsEl;
-
-      for (let i = 0; i < children.length; i++) {
-        const button = children[i];
-        const opt = col.options[i];
-        const optOffset = i * this.optHeight + y;
-        let transform = '';
-
-        if (rotateFactor !== 0) {
-          const rotateX = optOffset * rotateFactor;
-
-          if (Math.abs(rotateX) <= 90) {
-            translateY = 0;
-            translateZ = 90;
-            transform = `rotateX(${rotateX}deg) `;
-          } else {
-            translateY = -9999;
-          }
-        } else {
-          translateZ = 0;
-          translateY = optOffset;
-        }
-
-        const selected = selectedIndex === i;
-        transform += `translate3d(0px,${translateY}px,${translateZ}px) `;
-
-        if (this.scaleFactor !== 1 && !selected) {
-          transform += scaleStr;
-        } // Update transition duration
-
-        if (this.noAnimate) {
-          opt.duration = 0;
-          button.style.transitionDuration = '';
-        } else if (duration !== opt.duration) {
-          opt.duration = duration;
-          button.style.transitionDuration = durationStr;
-        } // Update transform
-
-        if (transform !== opt.transform) {
-          opt.transform = transform;
-          button.style.transform = transform;
-        } // Update selected item
-
-        if (selected !== opt.selected) {
-          opt.selected = selected;
-
-          if (selected) {
-            button.classList.add(PICKER_OPT_SELECTED);
-          } else {
-            button.classList.remove(PICKER_OPT_SELECTED);
-          }
-        }
+    onClick() {
+      if (this.checkable && !this.disabled) {
+        this.checked = !this.checked;
       }
-
-      this.col.prevSelected = selectedIndex;
-
-      if (saveY) {
-        this.y = y;
-      }
-
-      if (this.lastIndex !== selectedIndex) {
-        // have not set a last index yet
-        // TODO
-        // hapticSelectionChanged();
-        this.lastIndex = selectedIndex;
-      }
-    },
-
-    decelerate() {
-      if (this.velocity !== 0) {
-        // still decelerating
-        this.velocity *= DECELERATION_FRICTION; // do not let it go slower than a velocity of 1
-
-        this.velocity =
-          this.velocity > 0
-            ? Math.max(this.velocity, 1)
-            : Math.min(this.velocity, -1);
-        let y = this.y + this.velocity;
-
-        if (y > this.minY) {
-          // whoops, it's trying to scroll up farther than the options we have!
-          y = this.minY;
-          this.velocity = 0;
-        } else if (y < this.maxY) {
-          // gahh, it's trying to scroll down farther than we can!
-          y = this.maxY;
-          this.velocity = 0;
-        }
-
-        this.update(y, 0, true);
-        const notLockedIn =
-          Math.round(y) % this.optHeight !== 0 || Math.abs(this.velocity) > 1;
-
-        if (notLockedIn) {
-          // isn't locked in yet, keep decelerating until it is
-          this.rafId = requestAnimationFrame(() => this.decelerate());
-        } else {
-          this.velocity = 0;
-          this.emitColChange();
-        }
-      } else if (this.y % this.optHeight !== 0) {
-        // needs to still get locked into a position so options line up
-        const currentPos = Math.abs(this.y % this.optHeight); // create a velocity in the direction it needs to scroll
-
-        this.velocity = currentPos > this.optHeight / 2 ? 1 : -1;
-        this.decelerate();
-      }
-    },
-
-    indexForY(y) {
-      return Math.min(
-        Math.max(Math.abs(Math.round(y / this.optHeight)), 0),
-        this.col.options.length - 1
-      );
-    },
-
-    // TODO should this check disabled?
-    onStart(detail) {
-      // We have to prevent default in order to block scrolling under the picker
-      // but we DO NOT have to stop propagation, since we still want
-      // some "click" events to capture
-      detail.event.preventDefault();
-      detail.event.stopPropagation(); // reset everything
-
-      cancelAnimationFrame(this.rafId);
-      const { options } = this.col;
-      let minY = options.length - 1;
-      let maxY = 0;
-
-      for (let i = 0; i < options.length; i++) {
-        if (!options[i].disabled) {
-          minY = Math.min(minY, i);
-          maxY = Math.max(maxY, i);
-        }
-      }
-
-      this.minY = -(minY * this.optHeight);
-      this.maxY = -(maxY * this.optHeight);
-    },
-
-    onMove(detail) {
-      detail.event.preventDefault();
-      detail.event.stopPropagation(); // update the scroll position relative to pointer start position
-
-      let y = this.y + detail.deltaY;
-
-      if (y > this.minY) {
-        // scrolling up higher than scroll area
-        y **= 0.8;
-        this.bounceFrom = y;
-      } else if (y < this.maxY) {
-        // scrolling down below scroll area
-        y += (this.maxY - y) ** 0.9;
-        this.bounceFrom = y;
-      } else {
-        this.bounceFrom = 0;
-      }
-
-      this.update(y, 0, false);
-    },
-
-    onEnd(detail) {
-      if (this.bounceFrom > 0) {
-        // bounce back up
-        this.update(this.minY, 100, true);
-        this.emitColChange();
-        return;
-      }
-
-      if (this.bounceFrom < 0) {
-        // bounce back down
-        this.update(this.maxY, 100, true);
-        this.emitColChange();
-        return;
-      }
-
-      this.velocity = clamp(
-        -MAX_PICKER_SPEED,
-        detail.velocityY * 23,
-        MAX_PICKER_SPEED
-      );
-
-      if (this.velocity === 0 && detail.deltaY === 0) {
-        const opt = detail.event.target.closest('.picker-opt');
-
-        if (opt && opt.hasAttribute('opt-index')) {
-          this.setSelected(
-            parseInt(opt.getAttribute('opt-index'), 10),
-            TRANSITION_DURATION
-          );
-        }
-      } else {
-        this.y += detail.deltaY;
-
-        if (Math.abs(detail.velocityY) < 0.05) {
-          const isScrollingUp = detail.deltaY > 0;
-          const optHeightFraction =
-            (Math.abs(this.y) % this.optHeight) / this.optHeight;
-
-          if (isScrollingUp && optHeightFraction > 0.5) {
-            this.velocity = Math.abs(this.velocity) * -1;
-          } else if (!isScrollingUp && optHeightFraction <= 0.5) {
-            this.velocity = Math.abs(this.velocity);
-          }
-        }
-
-        this.decelerate();
-      }
-    },
-
-    refresh(forceRefresh) {
-      let min = this.col.options.length - 1;
-      let max = 0;
-      const { options } = this.col;
-
-      for (let i = 0; i < options.length; i++) {
-        if (!options[i].disabled) {
-          min = Math.min(min, i);
-          max = Math.max(max, i);
-        }
-      }
-      /**
-       * Only update selected value if column has a
-       * velocity of 0. If it does not, then the
-       * column is animating might land on
-       * a value different than the value at
-       * selectedIndex
-       */
-
-      if (this.velocity !== 0) {
-        return;
-      }
-
-      const selectedIndex = clamp(min, this.col.selectedIndex || 0, max);
-
-      if (this.col.prevSelected !== selectedIndex || forceRefresh) {
-        const y = selectedIndex * this.optHeight * -1;
-        this.velocity = 0;
-        this.update(y, TRANSITION_DURATION, true);
-      }
-    },
-  },
-  watch: {
-    col() {
-      this.colChanged();
     },
   },
 
   render() {
     const h = arguments[0];
-    const { col } = this;
+    const { checked, disabled, title } = this;
     return h(
       'div',
       {
-        class: bem$p({
-          col: true,
-          'opts-left': col.align === 'left',
-          'opts-right': col.align === 'right',
+        class: bem$o({
+          active: checked,
         }),
-        style: {
-          'max-width': this.col.columnWidth,
-        },
       },
       [
-        col.prefix &&
-          h(
-            'div',
-            {
-              class: bem$p('prefix'),
-              style: {
-                width: col.prefixWidth,
-              },
-            },
-            [col.prefix]
-          ),
         h(
           'div',
           {
-            class: bem$p('opts'),
-            style: {
-              maxWidth: col.optionsWidth,
+            class: bem$o('title', {
+              disabled,
+            }),
+            on: {
+              click: this.onClick,
             },
-            ref: 'optsEl',
           },
           [
-            col.options.map((o, index) =>
-              h(
-                'button',
-                {
-                  attrs: {
-                    type: 'button',
-                    'opt-index': index,
-                  },
-                  class: bem$p('opt', {
-                    disabled: !!o.disabled,
-                  }),
+            this.slots('title') || title,
+            this.slots('icon') ||
+              h(Icon, {
+                class: bem$o('title-icon', {
+                  rotate: checked,
+                }),
+                attrs: {
+                  name: 'expand_more',
+                  width: '18',
+                  height: '18',
                 },
-                [o.text]
-              )
-            ),
+              }),
           ]
         ),
-        col.suffix &&
-          h(
-            'div',
-            {
-              class: bem$p('suffix'),
-              style: {
-                width: col.suffixWidth,
-              },
+        h(
+          CollapseItemContent,
+          {
+            attrs: {
+              checked: checked,
             },
-            [col.suffix]
-          ),
+          },
+          [this.slots()]
+        ),
       ]
     );
   },
 });
 
-/**
- * iOS Picker Enter Animation
- */
-const iosEnterAnimation$3 = (baseEl) => {
-  const baseAnimation = createAnimation();
-  const backdropAnimation = createAnimation();
-  const wrapperAnimation = createAnimation();
-  backdropAnimation
-    .addElement(baseEl.querySelector('.line-overlay'))
-    .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
-  wrapperAnimation
-    .addElement(baseEl.querySelector('.line-picker__wrapper'))
-    .fromTo('transform', 'translateY(100%)', 'translateY(0%)');
-  return baseAnimation
-    .addElement(baseEl)
-    .easing('cubic-bezier(.36,.66,.04,1)')
-    .duration(400)
-    .addAnimation([backdropAnimation, wrapperAnimation]);
-};
+const NAMESPACE$5 = 'Collapse';
+const {
+  createComponent: createComponent$r,
+  bem: bem$p,
+} = /*#__PURE__*/ createNamespace('collapse');
+var collapse = /*#__PURE__*/ createComponent$r({
+  mixins: [/*#__PURE__*/ useCheckGroup(NAMESPACE$5)],
+  props: {
+    exclusive: {
+      type: Boolean,
+      default: true,
+    },
+  },
 
-/**
- * iOS Picker Leave Animation
- */
-const iosLeaveAnimation$3 = (baseEl) => {
-  const baseAnimation = createAnimation();
-  const backdropAnimation = createAnimation();
-  const wrapperAnimation = createAnimation();
-  backdropAnimation
-    .addElement(baseEl.querySelector('.line-overlay'))
-    .fromTo('opacity', 'var(--backdrop-opacity)', 0.01);
-  wrapperAnimation
-    .addElement(baseEl.querySelector('.line-picker__wrapper'))
-    .fromTo('transform', 'translateY(0%)', 'translateY(100%)');
-  return baseAnimation
-    .addElement(baseEl)
-    .easing('cubic-bezier(.36,.66,.04,1)')
-    .duration(400)
-    .addAnimation([backdropAnimation, wrapperAnimation]);
-};
+  render() {
+    const h = arguments[0];
+    return h(
+      'div',
+      {
+        class: bem$p(),
+      },
+      [this.slots()]
+    );
+  },
+});
 
 const {
-  createComponent: createComponent$q,
+  createComponent: createComponent$s,
   bem: bem$q,
-} = /*#__PURE__*/ createNamespace('picker');
-
-const buttonWrapperClass = (button) => {
-  return {
-    [`line-picker__toolbar-${button.role}`]: button.role !== undefined,
-    'line-picker__toolbar-button': true,
-  };
-};
-
-var Picker = /*#__PURE__*/ createComponent$q({
-  mixins: [/*#__PURE__*/ usePopup()],
+} = /*#__PURE__*/ createNamespace('combo-box-item');
+var ComboBoxItem = /*#__PURE__*/ createComponent$s({
   props: {
-    overlayIndex: Number,
-    keyboardClose: {
-      type: Boolean,
-      default: true,
-    },
-    buttons: Array,
-    columns: Array,
-    cssClass: Array,
-    duration: {
-      type: Number,
-      default: 0,
-    },
-    showBackdrop: {
-      type: Boolean,
-      default: true,
-    },
-    backdropDismiss: {
-      type: Boolean,
-      default: true,
-    },
-    animated: {
-      type: Boolean,
-      default: true,
-    },
+    option: Object,
   },
-
-  data() {
-    return {
-      presented: true,
-    };
-  },
-
-  beforeMount() {
-    this.$on('animation-enter', (baseEl, animate) => {
-      animate(iosEnterAnimation$3(baseEl));
-    });
-    this.$on('animation-leave', (baseEl, animate) => {
-      animate(iosLeaveAnimation$3(baseEl));
-    });
-  },
-
   methods: {
     async buttonClick(button) {
+      const parent =
+        this.$parent.$options.name === 'line-combo-box' ? this.$parent : null;
+      if (!parent) return;
+
+      if (!button) {
+        return parent.close();
+      }
+
       const { role } = button;
 
       if (role === 'cancel') {
-        return this.close(role);
+        return parent.close();
       }
 
       const shouldClose = await this.callButtonHandler(button);
 
       if (shouldClose) {
-        return this.close(button.role);
+        parent.$emit('optionChange', button);
+        return parent.close();
       }
 
       return Promise.resolve();
@@ -6634,951 +5739,45 @@ var Picker = /*#__PURE__*/ createComponent$q({
       if (button) {
         // a handler has been provided, execute it
         // pass the handler the values from the inputs
-        const rtn = await safeCall(button.handler, this.getSelected());
+        try {
+          const rtn = await safeCall(button.handler);
 
-        if (rtn === false) {
-          // if the return value of the handler is false then do not dismiss
-          return false;
+          if (rtn === false) {
+            // if the return value of the handler is false then do not dismiss
+            return false;
+          }
+        } catch (error) {
+          console.error(error);
         }
       }
 
       return true;
     },
-
-    getSelected() {
-      const selected = {};
-      this.columns.forEach((col, index) => {
-        const selectedColumn =
-          col.selectedIndex !== undefined
-            ? col.options[col.selectedIndex]
-            : undefined;
-        selected[col.name] = {
-          text: selectedColumn ? selectedColumn.text : undefined,
-          value: selectedColumn ? selectedColumn.value : undefined,
-          columnIndex: index,
-        };
-      });
-      return selected;
-    },
-
-    onTap() {
-      this.$emit('overlay-tap');
-    },
-
-    colChange(data) {
-      this.$emit('colChange', data);
-    },
   },
 
   render() {
     const h = arguments[0];
-    const {
-      mode,
-      overlayIndex,
-      showBackdrop,
-      backdropDismiss,
-      visible,
-      columns,
-    } = this;
+    const { option = {} } = this;
     return h(
-      'div',
+      'li',
       {
-        attrs: {
-          'aria-modal': 'true',
-        },
-        directives: [
-          {
-            name: 'show',
-            value: visible,
-          },
-        ],
-        class: [
-          bem$q({
-            mode: true,
-          }),
-          {
-            // Used internally for styling
-            [`picker-${mode}`]: true,
-          },
-        ],
-        style: {
-          zIndex: `${20000 + overlayIndex}`,
+        class: [bem$q(''), 'line-activatable'],
+        on: {
+          click: () => this.buttonClick(option),
         },
       },
       [
-        h(Overlay, {
-          attrs: {
-            visible: showBackdrop,
-            tappable: backdropDismiss,
-          },
-          on: {
-            tap: this.onTap,
-          },
-        }),
         h(
-          'div',
+          'span',
           {
-            class: bem$q('wrapper'),
-            attrs: {
-              role: 'dialog',
-            },
+            class: bem$q('inner'),
           },
-          [
-            h(
-              'div',
-              {
-                class: bem$q('toolbar'),
-              },
-              [
-                this.buttons.map((b) =>
-                  h(
-                    'div',
-                    {
-                      class: buttonWrapperClass(b),
-                    },
-                    [
-                      h(
-                        'button',
-                        {
-                          attrs: {
-                            type: 'button',
-                          },
-                          on: {
-                            click: () => this.buttonClick(b),
-                          },
-                          class: [
-                            bem$q('button'),
-                            {
-                              'line-activatable': true,
-                            },
-                          ],
-                        },
-                        [b.text]
-                      ),
-                    ]
-                  )
-                ),
-              ]
-            ),
-            h(
-              'div',
-              {
-                class: bem$q('columns'),
-              },
-              [
-                h('div', {
-                  class: bem$q('above-highlight'),
-                }),
-                visible &&
-                  columns.map((c) =>
-                    h(PickerColumn, {
-                      on: {
-                        colChange: this.colChange,
-                      },
-                      attrs: {
-                        col: c,
-                      },
-                    })
-                  ),
-                h('div', {
-                  class: bem$q('below-highlight'),
-                }),
-              ]
-            ),
-          ]
+          [this.slots() || option.text]
         ),
       ]
     );
   },
 });
-
-/**
- * iOS Popover Enter Animation
- */
-const POPOVER_IOS_BODY_PADDING = 5;
-const iosEnterAnimation$4 = (baseEl, ev) => {
-  let originY = 'top';
-  let originX = 'left';
-  const contentEl = baseEl.querySelector('.line-popover__content');
-  const contentDimentions = contentEl.getBoundingClientRect();
-  const contentWidth = contentDimentions.width;
-  const contentHeight = contentDimentions.height;
-  const bodyWidth = baseEl.ownerDocument.defaultView.innerWidth;
-  const bodyHeight = baseEl.ownerDocument.defaultView.innerHeight;
-  // If ev was passed, use that for target element
-  const targetDim = ev && ev.target && ev.target.getBoundingClientRect();
-  const targetTop =
-    targetDim != null && 'top' in targetDim
-      ? targetDim.top
-      : bodyHeight / 2 - contentHeight / 2;
-  const targetLeft =
-    targetDim != null && 'left' in targetDim ? targetDim.left : bodyWidth / 2;
-  const targetWidth = (targetDim && targetDim.width) || 0;
-  const targetHeight = (targetDim && targetDim.height) || 0;
-  const arrowEl = baseEl.querySelector('.line-popover__arrow');
-  const arrowDim = arrowEl.getBoundingClientRect();
-  const arrowWidth = arrowDim.width;
-  const arrowHeight = arrowDim.height;
-  if (targetDim == null) {
-    arrowEl.style.display = 'none';
-  }
-  const arrowCSS = {
-    top: targetTop + targetHeight,
-    left: targetLeft + targetWidth / 2 - arrowWidth / 2,
-  };
-  const popoverCSS = {
-    top: targetTop + targetHeight + (arrowHeight - 1),
-    left: targetLeft + targetWidth / 2 - contentWidth / 2,
-  };
-  // If the popover left is less than the padding it is off screen
-  // to the left so adjust it, else if the width of the popover
-  // exceeds the body width it is off screen to the right so adjust
-  //
-  let checkSafeAreaLeft = false;
-  let checkSafeAreaRight = false;
-  // If the popover left is less than the padding it is off screen
-  // to the left so adjust it, else if the width of the popover
-  // exceeds the body width it is off screen to the right so adjust
-  // 25 is a random/arbitrary number. It seems to work fine for ios11
-  // and iPhoneX. Is it perfect? No. Does it work? Yes.
-  if (popoverCSS.left < POPOVER_IOS_BODY_PADDING + 25) {
-    checkSafeAreaLeft = true;
-    popoverCSS.left = POPOVER_IOS_BODY_PADDING;
-  } else if (
-    contentWidth + POPOVER_IOS_BODY_PADDING + popoverCSS.left + 25 >
-    bodyWidth
-  ) {
-    // Ok, so we're on the right side of the screen,
-    // but now we need to make sure we're still a bit further right
-    // cus....notchurally... Again, 25 is random. It works tho
-    checkSafeAreaRight = true;
-    popoverCSS.left = bodyWidth - contentWidth - POPOVER_IOS_BODY_PADDING;
-    originX = 'right';
-  }
-  // make it pop up if there's room above
-  if (
-    targetTop + targetHeight + contentHeight > bodyHeight &&
-    targetTop - contentHeight > 0
-  ) {
-    arrowCSS.top = targetTop - (arrowHeight + 1);
-    popoverCSS.top = targetTop - contentHeight - (arrowHeight - 1);
-    baseEl.className += ' line-popover--bottom';
-    originY = 'bottom';
-    // If there isn't room for it to pop up above the target cut it off
-  } else if (targetTop + targetHeight + contentHeight > bodyHeight) {
-    contentEl.style.bottom = `${POPOVER_IOS_BODY_PADDING}%`;
-  }
-  arrowEl.style.top = `${arrowCSS.top}px`;
-  arrowEl.style.left = `${arrowCSS.left}px`;
-  contentEl.style.top = `${popoverCSS.top}px`;
-  contentEl.style.left = `${popoverCSS.left}px`;
-  if (checkSafeAreaLeft) {
-    contentEl.style.left = `calc(${popoverCSS.left}px + var(--line-safe-area-left, 0px))`;
-  }
-  if (checkSafeAreaRight) {
-    contentEl.style.left = `calc(${popoverCSS.left}px - var(--line-safe-area-right, 0px))`;
-  }
-  contentEl.style.transformOrigin = `${originY} ${originX}`;
-  const baseAnimation = createAnimation();
-  const backdropAnimation = createAnimation();
-  const wrapperAnimation = createAnimation();
-  backdropAnimation
-    .addElement(baseEl.querySelector('.line-overlay'))
-    .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
-  wrapperAnimation
-    .addElement(baseEl.querySelector('.line-popover__wrapper'))
-    .fromTo('opacity', 0.01, 1);
-  return baseAnimation
-    .addElement(baseEl)
-    .easing('ease')
-    .duration(100)
-    .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-/**
- * iOS Popover Leave Animation
- */
-const iosLeaveAnimation$4 = (baseEl) => {
-  const baseAnimation = createAnimation();
-  const backdropAnimation = createAnimation();
-  const wrapperAnimation = createAnimation();
-  backdropAnimation
-    .addElement(baseEl.querySelector('.line-overlay'))
-    .fromTo('opacity', 'var(--backdrop-opacity)', 0);
-  wrapperAnimation
-    .addElement(baseEl.querySelector('.line-popover__wrapper'))
-    .fromTo('opacity', 0.99, 0);
-  return baseAnimation
-    .addElement(baseEl)
-    .easing('ease')
-    .duration(500)
-    .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-/**
- * Md Popover Enter Animation
- */
-const mdEnterAnimation$3 = (baseEl, ev) => {
-  const POPOVER_MD_BODY_PADDING = 12;
-  const doc = baseEl.ownerDocument;
-  const isRTL = doc.dir === 'rtl';
-  let originY = 'top';
-  let originX = isRTL ? 'right' : 'left';
-  const contentEl = baseEl.querySelector('.line-popover__content');
-  const contentDimentions = contentEl.getBoundingClientRect();
-  const contentWidth = contentDimentions.width;
-  const contentHeight = contentDimentions.height;
-  const bodyWidth = doc.defaultView.innerWidth;
-  const bodyHeight = doc.defaultView.innerHeight;
-  // If ev was passed, use that for target element
-  const targetDim = ev && ev.target && ev.target.getBoundingClientRect();
-  // As per MD spec, by default position the popover below the target (trigger) element
-  const targetTop =
-    targetDim != null && 'bottom' in targetDim
-      ? targetDim.bottom
-      : bodyHeight / 2 - contentHeight / 2;
-  const targetLeft =
-    targetDim != null && 'left' in targetDim
-      ? isRTL
-        ? targetDim.left - contentWidth + targetDim.width
-        : targetDim.left
-      : bodyWidth / 2 - contentWidth / 2;
-  const targetHeight = (targetDim && targetDim.height) || 0;
-  const popoverCSS = {
-    top: targetTop,
-    left: targetLeft,
-  };
-  // If the popover left is less than the padding it is off screen
-  // to the left so adjust it, else if the width of the popover
-  // exceeds the body width it is off screen to the right so adjust
-  if (popoverCSS.left < POPOVER_MD_BODY_PADDING) {
-    popoverCSS.left = POPOVER_MD_BODY_PADDING;
-    // Same origin in this case for both LTR & RTL
-    // Note: in LTR, originX is already 'left'
-    originX = 'left';
-  } else if (
-    contentWidth + POPOVER_MD_BODY_PADDING + popoverCSS.left >
-    bodyWidth
-  ) {
-    popoverCSS.left = bodyWidth - contentWidth - POPOVER_MD_BODY_PADDING;
-    // Same origin in this case for both LTR & RTL
-    // Note: in RTL, originX is already 'right'
-    originX = 'right';
-  }
-  // If the popover when popped down stretches past bottom of screen,
-  // make it pop up if there's room above
-  if (
-    targetTop + targetHeight + contentHeight > bodyHeight &&
-    targetTop - contentHeight > 0
-  ) {
-    popoverCSS.top = targetTop - contentHeight - targetHeight;
-    baseEl.className += ' line-popover--bottom';
-    originY = 'bottom';
-    // If there isn't room for it to pop up above the target cut it off
-  } else if (targetTop + targetHeight + contentHeight > bodyHeight) {
-    contentEl.style.bottom = `${POPOVER_MD_BODY_PADDING}px`;
-  }
-  const baseAnimation = createAnimation();
-  const backdropAnimation = createAnimation();
-  const wrapperAnimation = createAnimation();
-  const contentAnimation = createAnimation();
-  const viewportAnimation = createAnimation();
-  backdropAnimation
-    .addElement(baseEl.querySelector('.line-overlay'))
-    .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
-  wrapperAnimation
-    .addElement(baseEl.querySelector('.line-popover__wrapper'))
-    .fromTo('opacity', 0.01, 1);
-  contentAnimation
-    .addElement(contentEl)
-    .beforeStyles({
-      top: `${popoverCSS.top}px`,
-      left: `${popoverCSS.left}px`,
-      'transform-origin': `${originY} ${originX}`,
-    })
-    .fromTo('transform', 'scale(0.01)', 'scale(1)');
-  viewportAnimation
-    .addElement(baseEl.querySelector('.popover-viewport'))
-    .fromTo('opacity', 0.01, 1);
-  return baseAnimation
-    .addElement(baseEl)
-    .easing('cubic-bezier(0.36,0.66,0.04,1)')
-    .duration(300)
-    .addAnimation([
-      backdropAnimation,
-      wrapperAnimation,
-      contentAnimation,
-      viewportAnimation,
-    ]);
-};
-
-/**
- * Md Popover Leave Animation
- */
-const mdLeaveAnimation$3 = (baseEl) => {
-  const baseAnimation = createAnimation();
-  const backdropAnimation = createAnimation();
-  const wrapperAnimation = createAnimation();
-  backdropAnimation
-    .addElement(baseEl.querySelector('.line-overlay'))
-    .fromTo('opacity', 'var(--backdrop-opacity)', 0);
-  wrapperAnimation
-    .addElement(baseEl.querySelector('.line-popover__wrapper'))
-    .fromTo('opacity', 0.99, 0);
-  return baseAnimation
-    .addElement(baseEl)
-    .easing('ease')
-    .duration(500)
-    .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-const {
-  createComponent: createComponent$r,
-  bem: bem$r,
-} = /*#__PURE__*/ createNamespace('popover');
-var Popover = /*#__PURE__*/ createComponent$r({
-  mixins: [/*#__PURE__*/ usePopup()],
-
-  beforeMount() {
-    const { mode } = this;
-    this.$on('animation-enter', (baseEl, animate) => {
-      const builder = mode === 'md' ? mdEnterAnimation$3 : iosEnterAnimation$4;
-      animate(builder(baseEl, this.event));
-    });
-    this.$on('animation-leave', (baseEl, animate) => {
-      const builder = mode === 'md' ? mdLeaveAnimation$3 : iosLeaveAnimation$4;
-      animate(builder(baseEl));
-    });
-  },
-
-  methods: {
-    onTap() {
-      this.$emit('overlay-tap');
-    },
-  },
-
-  render() {
-    const h = arguments[0];
-    return h(
-      'div',
-      helper([
-        {
-          directives: [
-            {
-              name: 'show',
-              value: this.visible,
-            },
-          ],
-          attrs: {
-            'aria-modal': 'true',
-          },
-          class: bem$r({
-            translucent: this.translucent,
-          }),
-        },
-        {
-          on: this.$listeners,
-        },
-      ]),
-      [
-        h(Overlay, {
-          attrs: {
-            visible: this.dim,
-          },
-          on: {
-            tap: this.onTap,
-          },
-        }),
-        h(
-          'div',
-          {
-            class: bem$r('wrapper'),
-          },
-          [
-            h('div', {
-              class: bem$r('arrow'),
-            }),
-            h(
-              'div',
-              {
-                class: bem$r('content'),
-              },
-              [this.slots()]
-            ),
-          ]
-        ),
-      ]
-    );
-  },
-});
-
-const {
-  createComponent: createComponent$s,
-  bem: bem$s,
-} = /*#__PURE__*/ createNamespace('popup');
-const CONTENT_ELEMENT = 'content';
-var popupLegacy = /*#__PURE__*/ createComponent$s({
-  mixins: [/*#__PURE__*/ usePopup()],
-
-  render() {
-    const h = arguments[0];
-    return h(
-      'div',
-      {
-        directives: [
-          {
-            name: 'show',
-            value: this.visible,
-          },
-        ],
-        attrs: {
-          'aria-modal': 'true',
-          role: 'dialog',
-        },
-        class: bem$s(),
-      },
-      [
-        h(
-          'div',
-          {
-            attrs: {
-              role: 'dialog',
-            },
-            class: bem$s(CONTENT_ELEMENT),
-            ref: CONTENT_ELEMENT,
-          },
-          [this.slots()]
-        ),
-      ]
-    );
-  },
-});
-
-/**
- * iOS Modal Enter Animation
- */
-const iosEnterAnimation$5 = (baseEl) => {
-  const baseAnimation = createAnimation();
-  const backdropAnimation = createAnimation();
-  const wrapperAnimation = createAnimation();
-  backdropAnimation
-    .addElement(baseEl.querySelector('.line-overlay'))
-    .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
-  wrapperAnimation
-    .addElement(baseEl.querySelector('.line-popup__wrapper'))
-    .beforeStyles({ opacity: 1 })
-    .fromTo('transform', 'translateY(100%)', 'translateY(0%)');
-  return baseAnimation
-    .addElement(baseEl)
-    .easing('cubic-bezier(0.36,0.66,0.04,1)')
-    .duration(400)
-    .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-/**
- * iOS Modal Leave Animation
- */
-const iosLeaveAnimation$5 = (baseEl) => {
-  const baseAnimation = createAnimation();
-  const backdropAnimation = createAnimation();
-  const wrapperAnimation = createAnimation();
-  const wrapperEl = baseEl.querySelector('.line-popup__wrapper');
-  const wrapperElRect = wrapperEl.getBoundingClientRect();
-  backdropAnimation
-    .addElement(baseEl.querySelector('.line-overlay'))
-    .fromTo('opacity', 'var(--backdrop-opacity)', 0.0);
-  wrapperAnimation
-    .addElement(wrapperEl)
-    .beforeStyles({ opacity: 1 })
-    .fromTo(
-      'transform',
-      'translateY(0%)',
-      `translateY(${
-        baseEl.ownerDocument.defaultView.innerHeight - wrapperElRect.top
-      }px)`
-    );
-  return baseAnimation
-    .addElement(baseEl)
-    .easing('ease-out')
-    .duration(250)
-    .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-/**
- * Md Modal Enter Animation
- */
-const mdEnterAnimation$4 = (baseEl) => {
-  const baseAnimation = createAnimation();
-  const backdropAnimation = createAnimation();
-  const wrapperAnimation = createAnimation();
-  backdropAnimation
-    .addElement(baseEl.querySelector('.line-overlay'))
-    .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
-  wrapperAnimation
-    .addElement(baseEl.querySelector('.line-popup__wrapper'))
-    .keyframes([
-      { offset: 0, opacity: 0.01, transform: 'translateY(40px)' },
-      { offset: 1, opacity: 1, transform: 'translateY(0px)' },
-    ]);
-  return baseAnimation
-    .addElement(baseEl)
-    .easing('cubic-bezier(0.36,0.66,0.04,1)')
-    .duration(280)
-    .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-/**
- * Md Modal Leave Animation
- */
-const mdLeaveAnimation$4 = (baseEl) => {
-  const baseAnimation = createAnimation();
-  const backdropAnimation = createAnimation();
-  const wrapperAnimation = createAnimation();
-  const wrapperEl = baseEl.querySelector('.line-popup__wrapper');
-  backdropAnimation
-    .addElement(baseEl.querySelector('.line-overlay'))
-    .fromTo('opacity', 'var(--backdrop-opacity)', 0.0);
-  wrapperAnimation.addElement(wrapperEl).keyframes([
-    { offset: 0, opacity: 0.99, transform: 'translateY(0px)' },
-    { offset: 1, opacity: 0, transform: 'translateY(40px)' },
-  ]);
-  return baseAnimation
-    .addElement(baseEl)
-    .easing('cubic-bezier(0.47,0,0.745,0.715)')
-    .duration(200)
-    .addAnimation([backdropAnimation, wrapperAnimation]);
-};
-
-const {
-  createComponent: createComponent$t,
-  bem: bem$t,
-} = /*#__PURE__*/ createNamespace('popup');
-var Popup = /*#__PURE__*/ createComponent$t({
-  mixins: [/*#__PURE__*/ usePopup()],
-
-  beforeMount() {
-    const { mode } = this;
-    this.$on('animation-enter', (baseEl, animate) => {
-      const builder = mode === 'md' ? mdEnterAnimation$4 : iosEnterAnimation$5;
-      animate(builder(baseEl));
-    });
-    this.$on('animation-leave', (baseEl, animate) => {
-      const builder = mode === 'md' ? mdLeaveAnimation$4 : iosLeaveAnimation$5;
-      animate(builder(baseEl));
-    });
-  },
-
-  methods: {
-    onTap() {
-      this.$emit('overlay-tap');
-    },
-  },
-
-  render() {
-    const h = arguments[0];
-    return h(
-      'div',
-      helper([
-        {
-          directives: [
-            {
-              name: 'show',
-              value: this.visible,
-            },
-          ],
-          attrs: {
-            'aria-modal': 'true',
-            role: 'dialog',
-          },
-          class: bem$t(),
-        },
-        {
-          on: this.$listeners,
-        },
-      ]),
-      [
-        h(Overlay, {
-          on: {
-            tap: this.onTap,
-          },
-        }),
-        h(
-          'div',
-          {
-            attrs: {
-              role: 'dialog',
-            },
-            class: bem$t('wrapper'),
-          },
-          [this.slots()]
-        ),
-      ]
-    );
-  },
-});
-
-/**
- * iOS Toast Enter Animation
- */
-const iosEnterAnimation$6 = (baseEl, position) => {
-  const baseAnimation = createAnimation();
-  const wrapperAnimation = createAnimation();
-  const wrapperEl = baseEl.querySelector('.line-toast__wrapper');
-  const bottom = 'calc(-10px - var(--line-safe-area-bottom, 0px))';
-  const top = 'calc(10px + var(--line-safe-area-top, 0px))';
-  wrapperAnimation.addElement(wrapperEl);
-  switch (position) {
-    case 'top':
-      wrapperAnimation.fromTo(
-        'transform',
-        'translateY(-100%)',
-        `translateY(${top})`
-      );
-      break;
-    case 'middle':
-      /* eslint-disable-next-line */
-      const topPosition = Math.floor(
-        baseEl.clientHeight / 2 - wrapperEl.clientHeight / 2
-      );
-      wrapperEl.style.top = `${topPosition}px`;
-      wrapperAnimation.fromTo('opacity', 0.01, 1);
-      break;
-    default:
-      wrapperAnimation.fromTo(
-        'transform',
-        'translateY(100%)',
-        `translateY(${bottom})`
-      );
-      break;
-  }
-  return baseAnimation
-    .addElement(baseEl)
-    .easing('cubic-bezier(.155,1.105,.295,1.12)')
-    .duration(400)
-    .addAnimation(wrapperAnimation);
-};
-
-/**
- * iOS Toast Leave Animation
- */
-const iosLeaveAnimation$6 = (baseEl, position) => {
-  const baseAnimation = createAnimation();
-  const wrapperAnimation = createAnimation();
-  const wrapperEl = baseEl.querySelector('.line-toast__wrapper');
-  const bottom = 'calc(-10px - var(--line-safe-area-bottom, 0px))';
-  const top = 'calc(10px + var(--line-safe-area-top, 0px))';
-  wrapperAnimation.addElement(wrapperEl);
-  switch (position) {
-    case 'top':
-      wrapperAnimation.fromTo(
-        'transform',
-        `translateY(${top})`,
-        'translateY(-100%)'
-      );
-      break;
-    case 'middle':
-      wrapperAnimation.fromTo('opacity', 0.99, 0);
-      break;
-    default:
-      wrapperAnimation.fromTo(
-        'transform',
-        `translateY(${bottom})`,
-        'translateY(100%)'
-      );
-      break;
-  }
-  return baseAnimation
-    .addElement(baseEl)
-    .easing('cubic-bezier(.36,.66,.04,1)')
-    .duration(300)
-    .addAnimation(wrapperAnimation);
-};
-
-/**
- * MD Toast Enter Animation
- */
-const mdEnterAnimation$5 = (baseEl, position) => {
-  const baseAnimation = createAnimation();
-  const wrapperAnimation = createAnimation();
-  const wrapperEl = baseEl.querySelector('.line-toast__wrapper');
-  const bottom = 'calc(8px + var(--line-safe-area-bottom, 0px))';
-  const top = 'calc(8px + var(--line-safe-area-top, 0px))';
-  wrapperAnimation.addElement(wrapperEl);
-  switch (position) {
-    case 'top':
-      wrapperEl.style.top = top;
-      wrapperAnimation.fromTo('opacity', 0.01, 1);
-      break;
-    case 'middle':
-      /* eslint-disable-next-line */
-      const topPosition = Math.floor(
-        baseEl.clientHeight / 2 - wrapperEl.clientHeight / 2
-      );
-      wrapperEl.style.top = `${topPosition}px`;
-      wrapperAnimation.fromTo('opacity', 0.01, 1);
-      break;
-    default:
-      wrapperEl.style.bottom = bottom;
-      wrapperAnimation.fromTo('opacity', 0.01, 1);
-      break;
-  }
-  return baseAnimation
-    .addElement(baseEl)
-    .easing('cubic-bezier(.36,.66,.04,1)')
-    .duration(400)
-    .addAnimation(wrapperAnimation);
-};
-
-/**
- * md Toast Leave Animation
- */
-const mdLeaveAnimation$5 = (baseEl) => {
-  const baseAnimation = createAnimation();
-  const wrapperAnimation = createAnimation();
-  const wrapperEl = baseEl.querySelector('.line-toast__wrapper');
-  wrapperAnimation.addElement(wrapperEl).fromTo('opacity', 0.99, 0);
-  return baseAnimation
-    .addElement(baseEl)
-    .easing('cubic-bezier(.36,.66,.04,1)')
-    .duration(300)
-    .addAnimation(wrapperAnimation);
-};
-
-const {
-  createComponent: createComponent$u,
-  bem: bem$u,
-} = /*#__PURE__*/ createNamespace('toast');
-var Toast = /*#__PURE__*/ createComponent$u({
-  mixins: [
-    /*#__PURE__*/ usePopup(),
-    /*#__PURE__*/ usePopupDuration(),
-    /*#__PURE__*/ useColor(),
-  ],
-  props: {
-    /**
-     * The position of the toast on the screen.
-     */
-    // top | bottom | middle
-    position: String,
-    message: String,
-  },
-
-  beforeMount() {
-    const { mode } = this;
-    this.$on('animation-enter', (baseEl, animate) => {
-      const builder = mode === 'md' ? mdEnterAnimation$5 : iosEnterAnimation$6;
-      animate(builder(baseEl, this.position));
-    });
-    this.$on('animation-leave', (baseEl, animate) => {
-      const builder = mode === 'md' ? mdLeaveAnimation$5 : iosLeaveAnimation$6;
-      animate(builder(baseEl, this.position));
-    });
-    this.$on('opened', () => {
-      if (this.duration > 0) {
-        this.durationTimeout = setTimeout(
-          () => this.close('timeout'),
-          this.duration
-        );
-      }
-    });
-    this.$on('aboutToHide', () => {
-      if (this.durationTimeout) {
-        clearTimeout(this.durationTimeout);
-      }
-    });
-  },
-
-  render() {
-    const h = arguments[0];
-    const { position = 'bottom' } = this;
-    return h(
-      'div',
-      helper([
-        {
-          directives: [
-            {
-              name: 'show',
-              value: this.visible,
-            },
-          ],
-          class: [bem$u()],
-        },
-        {
-          on: this.$listeners,
-        },
-      ]),
-      [
-        h(
-          'div',
-          {
-            class: bem$u('wrapper', {
-              [position]: true,
-            }),
-          },
-          [
-            h(
-              'div',
-              {
-                class: bem$u('container'),
-              },
-              [
-                h(
-                  'div',
-                  {
-                    class: bem$u('content'),
-                  },
-                  [
-                    h(
-                      'div',
-                      {
-                        class: bem$u('message'),
-                      },
-                      [this.message]
-                    ),
-                    h('div'),
-                  ]
-                ),
-              ]
-            ),
-          ]
-        ),
-      ]
-    );
-  },
-});
-
-function usePopupDelay() {
-  return createMixins({
-    props: {
-      // This property holds the delay (milliseconds) after which the tool tip is shown.
-      // A tooltip with a negative delay is shown immediately.
-      // The default value is 0.
-      delay: {
-        type: Number,
-        default: 0,
-      },
-    },
-    data() {
-      return {
-        delayedVisible: this.visible,
-      };
-    },
-    watch: {
-      visible(val) {
-        if (this.appearTimer) {
-          clearTimeout(this.appearTimer);
-        }
-        if (val === this.delayedVisible) return;
-        if (!val) {
-          this.delayedVisible = val;
-          return;
-        }
-        const delay = Math.max(this.delay, 0);
-        this.appearTimer = setTimeout(() => (this.delayedVisible = val), delay);
-      },
-    },
-  });
-}
 
 const isVue = (val) => val && val._isVue;
 function useTrigger() {
@@ -7617,29 +5816,62 @@ function useTrigger() {
   });
 }
 
-/**
- * iOS Tooltip Enter Animation
- */
-const iosEnterAnimation$7 = (baseEl) => {
-  const baseAnimation = createAnimation();
-  return baseAnimation
-    .addElement(baseEl)
-    .easing('ease')
-    .duration(100)
-    .fromTo('opacity', 0.01, 1);
-};
+function useEvent(options) {
+  const { event, global = false } = options;
+  return createMixins({
+    mounted() {
+      const { $el } = this;
+      const target = global ? getApp($el) : $el;
+      const offs = arrayify(event).map((name) => {
+        let dismiss;
+        const prevent = () => (dismiss = true);
+        const maybe = (ev) => {
+          dismiss = false;
+          this.$emit('event-condition', { ev, name, prevent });
+          if (dismiss) return;
+          this.$emit('event-handler', ev, name);
+        };
+        return on(target, name, maybe, options);
+      });
+      const teardown = () => offs.forEach((off) => off());
+      this.useEvent = { teardown };
+    },
+    beforeDestroy() {
+      this.useEvent.teardown();
+    },
+  });
+}
 
-/**
- * iOS Popover Leave Animation
- */
-const iosLeaveAnimation$7 = (baseEl) => {
-  const baseAnimation = createAnimation();
-  return baseAnimation
-    .addElement(baseEl)
-    .easing('ease')
-    .duration(500)
-    .fromTo('opacity', 0.99, 0);
-};
+function useClickOutside(options) {
+  const { global = true, event = ['mouseup', 'touchend'] } = options || {};
+  return createMixins({
+    mixins: [useEvent({ global, event })],
+    mounted() {
+      this.$on('event-condition', (condition) => {
+        const { ev, prevent } = condition;
+        // If click was triggered programmaticaly (domEl.click()) then
+        // it shouldn't be treated as click-outside
+        // Chrome/Firefox support isTrusted property
+        // IE/Edge support pointerType property (empty if not triggered
+        // by pointing device)
+        if (
+          ('isTrusted' in ev && !ev.isTrusted) ||
+          ('pointerType' in ev && !ev.pointerType)
+        )
+          return false;
+        let elements = [this.$el];
+        const include = (el) => {
+          elements = elements.concat(el);
+        };
+        this.$emit('event-include', include);
+        if (elements.some((el) => el && el.contains(ev.target))) {
+          prevent();
+        }
+      });
+      this.$on('event-handler', () => this.$emit('clickoutside'));
+    },
+  });
+}
 
 function getBoundingClientRect(element) {
   var rect = element.getBoundingClientRect();
@@ -9746,6 +7978,2637 @@ var createPopper =
     defaultModifiers: defaultModifiers,
   }); // eslint-disable-next-line import/no-unused-modules
 
+const {
+  createComponent: createComponent$t,
+  bem: bem$r,
+} = /*#__PURE__*/ createNamespace('combo-box');
+var comboBox = /*#__PURE__*/ createComponent$t({
+  mixins: [
+    /*#__PURE__*/ useModel('visible'),
+    /*#__PURE__*/ useColor(),
+    /*#__PURE__*/ useTrigger(),
+    /*#__PURE__*/ useClickOutside(),
+    /*#__PURE__*/ useCollapseTransition(),
+  ],
+  props: {
+    options: Array,
+    showDuration: Number,
+    hideDuration: Number,
+    expand: Boolean,
+    size: String,
+  },
+
+  data() {
+    return {
+      placement: 'bottom',
+    };
+  },
+
+  methods: {
+    close() {
+      this.$emit('change', false);
+    },
+
+    createPopper() {
+      if (this.popper) return;
+
+      const getBoundingClientRect = () =>
+        this.$triggerEl.getBoundingClientRect();
+
+      const $trigger = {
+        getBoundingClientRect,
+      };
+      const { $el, placement } = this;
+      const offset = 2;
+      this.popper = createPopper($trigger, $el, {
+        placement,
+        strategy: 'fixed',
+        modifiers: [
+          {
+            name: 'offset',
+            options: {
+              offset: [0, offset],
+            },
+          },
+          {
+            name: 'preventOverflow',
+            options: {
+              mainAxis: false,
+              altAxis: true,
+              padding: offset,
+            },
+          },
+          {
+            name: 'flip',
+            options: {
+              padding: offset,
+            },
+          },
+        ],
+      });
+    },
+  },
+
+  beforeMount() {
+    this.$on('aboutToShow', (baseEl) => {
+      if (this.expand && this.$triggerEl) {
+        const { width } = this.$triggerEl.getBoundingClientRect();
+        baseEl.style.width = `${width}px`;
+      }
+
+      this.createPopper();
+      this.popper.update();
+      popupContext.push(this);
+    });
+    this.$on('animation-enter', async (baseEl, animation) => {
+      const { showDuration = 250 } = this;
+      await this.$nextTick(); // update zIndex
+
+      baseEl.style.zIndex = `${popupContext.getOverlayIndex()}`;
+      animation.easing('ease').duration(showDuration);
+    });
+    this.$on('animation-leave', (baseEl, animation) => {
+      const { hideDuration = 150 } = this;
+      animation.easing('ease').duration(hideDuration);
+    });
+    this.$on('closed', () => {
+      popupContext.pop(this);
+    });
+    this.$on('canceled', () => {
+      popupContext.pop(this);
+    });
+    this.$on('event-include', (include) => {
+      return include(this.$triggerEl);
+    });
+
+    const onClickOutside = () => {
+      this.close();
+    };
+
+    this.$on('clickoutside', onClickOutside);
+  },
+
+  beforeDestroy() {
+    if (this.popper) {
+      this.popper.destroy();
+    } // TODO
+    // if (this.vHover) {
+    //   this.vHover.unbind();
+    // }
+  },
+
+  render() {
+    const h = arguments[0];
+    const { visible, options } = this;
+    return h(
+      'div',
+      helper([
+        {
+          class: bem$r(),
+          directives: [
+            {
+              name: 'show',
+              value: visible,
+            },
+          ],
+        },
+        {
+          on: this.$listeners,
+        },
+      ]),
+      [
+        h(
+          'ul',
+          {
+            class: bem$r('content'),
+          },
+          [
+            this.slots() ||
+              options.map((option) =>
+                h(
+                  ComboBoxItem,
+                  {
+                    attrs: {
+                      option: option,
+                    },
+                  },
+                  [option.text]
+                )
+              ),
+          ]
+        ),
+      ]
+    );
+  },
+});
+
+async function scrollToPoint(
+  scrollEl = document.scrollingElement ||
+    document.body ||
+    document.documentElement,
+  x,
+  y,
+  duration = 0
+) {
+  if (duration < 32) {
+    if (y != null) {
+      scrollEl.scrollTop = y;
+    }
+    if (x != null) {
+      scrollEl.scrollLeft = x;
+    }
+    return;
+  }
+  let resolve;
+  let startTime = 0;
+  const promise = new Promise((r) => (resolve = r));
+  const fromY = scrollEl.scrollTop;
+  const fromX = scrollEl.scrollLeft;
+  const deltaY = y != null ? y - fromY : 0;
+  const deltaX = x != null ? x - fromX : 0;
+  // scroll loop
+  const step = (timeStamp) => {
+    const linearTime = Math.min(1, (timeStamp - startTime) / duration) - 1;
+    /* eslint-disable-next-line */
+    const easedT = Math.pow(linearTime, 3) + 1;
+    if (deltaY !== 0) {
+      scrollEl.scrollTop = Math.floor(easedT * deltaY + fromY);
+    }
+    if (deltaX !== 0) {
+      scrollEl.scrollLeft = Math.floor(easedT * deltaX + fromX);
+    }
+    if (easedT < 1) {
+      // do not use DomController here
+      // must use nativeRaf in order to fire in the next frame
+      // TODO: remove as any
+      requestAnimationFrame(step);
+    } else {
+      resolve();
+    }
+  };
+  // chill out for a frame first
+  requestAnimationFrame((ts) => {
+    startTime = ts;
+    step(ts);
+  });
+  await promise;
+}
+async function scrollToTop(scrollEl, duration) {
+  await scrollToPoint(scrollEl, undefined, 0, duration);
+}
+async function scrollToBottom(scrollEl, duration) {
+  const y = scrollEl.scrollHeight - scrollEl.clientHeight;
+  await scrollToPoint(scrollEl, undefined, y, duration);
+}
+async function scrollByPoint(scrollEl, x, y, duration) {
+  await scrollToPoint(
+    scrollEl,
+    x + scrollEl.scrollLeft,
+    y + scrollEl.scrollTop,
+    duration
+  );
+}
+const getOffsetX = (el) => {
+  let offset = 0;
+  while (el) {
+    offset += el.offsetLeft;
+    el = el.offsetParent;
+  }
+  return offset;
+};
+const getOffsetY = (el) => {
+  let offset = 0;
+  while (el) {
+    offset += el.offsetTop;
+    el = el.offsetParent;
+  }
+  return offset;
+};
+async function scrollToElement(scrollEl, el, duration) {
+  if (!el) return;
+  const x = getOffsetX(el) - getOffsetX(scrollEl);
+  const y = getOffsetY(el) - getOffsetY(scrollEl);
+  await scrollByPoint(scrollEl, x, y, duration);
+}
+
+const updateScrollDetail = (detail, el, timestamp, shouldStart) => {
+  const prevX = detail.currentX;
+  const prevY = detail.currentY;
+  const prevT = detail.currentTime;
+  const currentX = el.scrollLeft;
+  const currentY = el.scrollTop;
+  const timeDelta = timestamp - prevT;
+  if (shouldStart) {
+    // remember the start positions
+    detail.startTime = timestamp;
+    detail.startX = currentX;
+    detail.startY = currentY;
+    detail.velocityX = detail.velocityY = 0;
+  }
+  detail.currentTime = timestamp;
+  detail.currentX = detail.scrollLeft = currentX;
+  detail.currentY = detail.scrollTop = currentY;
+  detail.deltaX = currentX - detail.startX;
+  detail.deltaY = currentY - detail.startY;
+  if (timeDelta > 0 && timeDelta < 100) {
+    const velocityX = (currentX - prevX) / timeDelta;
+    const velocityY = (currentY - prevY) / timeDelta;
+    detail.velocityX = velocityX * 0.7 + detail.velocityX * 0.3;
+    detail.velocityY = velocityY * 0.7 + detail.velocityY * 0.3;
+  }
+};
+
+const {
+  createComponent: createComponent$u,
+  bem: bem$s,
+} = /*#__PURE__*/ createNamespace('content');
+
+const getParentElement = (el) => {
+  if (el.parentElement) {
+    // normal element with a parent element
+    return el.parentElement;
+  }
+
+  if (el.parentNode && el.parentNode.host) {
+    // shadow dom's document fragment
+    return el.parentNode.host;
+  }
+
+  return null;
+};
+
+const getPageElement = (el) => {
+  const tabs = el.closest('.line-tabs');
+
+  if (tabs) {
+    return tabs;
+  }
+
+  const page = el.closest('.line-app,.line-page,page-inner');
+
+  if (page) {
+    return page;
+  }
+
+  return getParentElement(el);
+};
+
+var content = /*#__PURE__*/ createComponent$u({
+  mixins: [/*#__PURE__*/ useColor()],
+
+  provide() {
+    return {
+      Content: this,
+    };
+  },
+
+  props: {
+    forceOverscroll: Boolean,
+    fullscreen: Boolean,
+    scrollX: Boolean,
+    scrollY: {
+      type: Boolean,
+      default: true,
+    },
+    scrollEvents: Boolean,
+    value: Boolean,
+  },
+
+  data() {
+    return {
+      cTop: 0,
+      cBottom: 0,
+    };
+  },
+
+  computed: {
+    shouldForceOverscroll() {
+      const { forceOverscroll, mode } = this;
+      return forceOverscroll === undefined
+        ? mode === 'ios' && isPlatform('ios')
+        : forceOverscroll;
+    },
+  },
+  watch: {
+    fullscreen(val) {
+      if (val) {
+        this.readDimensions();
+      } else {
+        this.cTop = this.cBottom = 0;
+      }
+    },
+  },
+
+  async mounted() {
+    if (this.fullscreen) {
+      await this.$nextTick();
+      this.readDimensions();
+    }
+  },
+
+  methods: {
+    readDimensions() {
+      const el = this.$el;
+      const page = getPageElement(el);
+      const top = Math.max(el.offsetTop, 0);
+      const bottom = Math.max(page.offsetHeight - top - el.offsetHeight, 0);
+      const dirty = top !== this.cTop || bottom !== this.cBottom;
+
+      if (dirty) {
+        this.cTop = top;
+        this.cBottom = bottom;
+      }
+    },
+
+    getScrollElement() {
+      return this.$refs.scrollEl;
+    },
+
+    getBackgroundContent() {
+      return this.$refs.backgroundContentEl;
+    },
+
+    async scrollByPoint(x, y, duration) {
+      const { scrollEl } = this.$refs;
+      if (!scrollEl) return;
+      await scrollByPoint(scrollEl, x, y, duration);
+    },
+
+    async scrollToElement(el) {
+      const { scrollEl } = this.$refs;
+      if (!scrollEl) return;
+      const target = isString(el) ? scrollEl.querySelector(el) : el;
+      await scrollToElement(scrollEl, target);
+    },
+
+    async scrollToBottom(duration) {
+      const { scrollEl } = this.$refs;
+      if (!scrollEl) return;
+      await scrollToBottom(scrollEl, duration);
+    },
+
+    async scrollToPoint(x, y, duration) {
+      const { scrollEl } = this.$refs;
+      if (!scrollEl) return;
+      await scrollToPoint(scrollEl, x, y, duration);
+    },
+
+    async scrollToTop(duration) {
+      const { scrollEl } = this.$refs;
+      if (!scrollEl) return;
+      await scrollToTop(scrollEl, duration);
+    },
+
+    onClick(ev) {
+      if (this.isScrolling) {
+        ev.preventDefault();
+        ev.stopPropagation();
+      }
+    },
+
+    async onScroll(ev) {
+      const timeStamp = Date.now();
+      const shouldStart = !this.isScrolling;
+      this.lastScroll = timeStamp;
+
+      if (shouldStart) {
+        this.onScrollStart();
+      }
+
+      if (!this.queued && this.scrollEvents) {
+        this.queued = true;
+        await this.$nextTick();
+        this.queued = false;
+        this.detail.event = ev;
+        updateScrollDetail(this.detail, this.scrollEl, Date.now(), shouldStart);
+        this.ionScroll.emit(this.detail);
+        this.$emit('scroll', this.detail);
+      }
+    },
+
+    onScrollStart() {
+      this.isScrolling = true;
+      this.$emit('scrollstart', {
+        isScrolling: true,
+      });
+
+      if (this.watchDog) {
+        clearInterval(this.watchDog);
+      } // watchdog
+
+      this.watchDog = setInterval(() => {
+        if (this.lastScroll < Date.now() - 120) {
+          this.onScrollEnd();
+        }
+      }, 100);
+    },
+
+    onScrollEnd() {
+      clearInterval(this.watchDog);
+      this.watchDog = null;
+
+      if (this.isScrolling) {
+        this.isScrolling = false;
+        this.$emit('scrollend', {
+          isScrolling: false,
+        });
+      }
+    },
+  },
+
+  render() {
+    const h = arguments[0];
+    const { scrollX, scrollY, shouldForceOverscroll } = this;
+    return h(
+      'div',
+      helper([
+        {
+          class: [bem$s(), false, shouldForceOverscroll && 'overscroll'],
+          style: {
+            '--offset-top': `${this.cTop || 0}px`,
+            '--offset-bottom': `${this.cBottom || 0}px`,
+          },
+        },
+        {
+          on: {
+            '!click': this.onClick,
+          },
+        },
+      ]),
+      [
+        h('div', {
+          ref: 'backgroundContentEl',
+          attrs: {
+            id: 'background-content',
+          },
+        }),
+        this.slots('header'),
+        h(
+          'main',
+          {
+            class: {
+              'inner-scroll': true,
+              'scroll-x': scrollX,
+              'scroll-y': scrollY,
+              overscroll: (scrollX || scrollY) && shouldForceOverscroll,
+            },
+            ref: 'scrollEl',
+            on: {
+              scroll: this.onScroll,
+            },
+          },
+          [this.slots()]
+        ),
+        this.slots('footer'),
+        this.slots('fixed'),
+      ]
+    );
+  },
+});
+
+function usePopupDuration() {
+  return createMixins({
+    props: {
+      // This property holds the timeout (milliseconds) after which the tool tip is hidden.
+      // A tooltip with a negative timeout does not hide automatically.
+      // The default value is -1.
+      duration: Number,
+    },
+    beforeMount() {
+      this.$on('opened', () => {
+        if (this.duration > 0) {
+          this.durationTimeout = setTimeout(
+            () => this.close('timeout'),
+            this.duration
+          );
+        }
+      });
+      this.$on('aboutToHide', () => {
+        if (this.durationTimeout) {
+          clearTimeout(this.durationTimeout);
+        }
+      });
+    },
+  });
+}
+
+const spinners = {
+  bubbles: {
+    dur: 1000,
+    circles: 9,
+    fn: (dur, index, total) => {
+      const animationDelay = `${(dur * index) / total - dur}ms`;
+      const angle = (2 * Math.PI * index) / total;
+      return {
+        r: 5,
+        style: {
+          top: `${9 * Math.sin(angle)}px`,
+          left: `${9 * Math.cos(angle)}px`,
+          'animation-delay': animationDelay,
+        },
+      };
+    },
+  },
+  circles: {
+    dur: 1000,
+    circles: 8,
+    fn: (dur, index, total) => {
+      const step = index / total;
+      const animationDelay = `${dur * step - dur}ms`;
+      const angle = 2 * Math.PI * step;
+      return {
+        r: 5,
+        style: {
+          top: `${9 * Math.sin(angle)}px`,
+          left: `${9 * Math.cos(angle)}px`,
+          'animation-delay': animationDelay,
+        },
+      };
+    },
+  },
+  circular: {
+    dur: 1400,
+    elmDuration: true,
+    circles: 1,
+    fn: () => {
+      return {
+        r: 20,
+        cx: 44,
+        cy: 44,
+        fill: 'none',
+        viewBox: '22 22 44 44',
+        transform: 'translate(0,0)',
+        style: {},
+      };
+    },
+  },
+  crescent: {
+    dur: 750,
+    circles: 1,
+    fn: () => {
+      return {
+        r: 26,
+        style: {},
+      };
+    },
+  },
+  dots: {
+    dur: 750,
+    circles: 3,
+    fn: (_, index) => {
+      const animationDelay = `${-(110 * index)}ms`;
+      return {
+        r: 6,
+        style: {
+          left: `${9 - 9 * index}px`,
+          'animation-delay': animationDelay,
+        },
+      };
+    },
+  },
+  lines: {
+    dur: 1000,
+    lines: 12,
+    fn: (dur, index, total) => {
+      const transform = `rotate(${30 * index + (index < 6 ? 180 : -180)}deg)`;
+      const animationDelay = `${(dur * index) / total - dur}ms`;
+      return {
+        y1: 17,
+        y2: 29,
+        style: {
+          transform,
+          'animation-delay': animationDelay,
+        },
+      };
+    },
+  },
+  'lines-small': {
+    dur: 1000,
+    lines: 12,
+    fn: (dur, index, total) => {
+      const transform = `rotate(${30 * index + (index < 6 ? 180 : -180)}deg)`;
+      const animationDelay = `${(dur * index) / total - dur}ms`;
+      return {
+        y1: 12,
+        y2: 20,
+        style: {
+          transform,
+          'animation-delay': animationDelay,
+        },
+      };
+    },
+  },
+};
+const SPINNERS = spinners;
+
+const {
+  createComponent: createComponent$v,
+  bem: bem$t,
+} = /*#__PURE__*/ createNamespace('spinner');
+
+function getSpinnerName(name) {
+  const spinnerName = name || config.get('spinner');
+  const mode = getMode();
+
+  if (spinnerName) {
+    return spinnerName;
+  }
+
+  return mode === 'ios' ? 'lines' : 'circular';
+}
+
+function buildCircle(h, spinner, duration, index, total) {
+  const data = spinner.fn(duration, index, total);
+  data.style['animation-duration'] = `${duration}ms`;
+  return h(
+    'svg',
+    {
+      attrs: {
+        viewBox: data.viewBox || '0 0 64 64',
+      },
+      style: data.style,
+    },
+    [
+      h('circle', {
+        attrs: {
+          transform: data.transform || 'translate(32,32)',
+          cx: data.cx,
+          cy: data.cy,
+          r: data.r,
+        },
+        style: spinner.elmDuration
+          ? {
+              animationDuration: `${duration}ms`,
+            }
+          : {},
+      }),
+    ]
+  );
+}
+
+function buildLine(h, spinner, duration, index, total) {
+  const data = spinner.fn(duration, index, total);
+  data.style['animation-duration'] = `${duration}ms`;
+  return h(
+    'svg',
+    {
+      attrs: {
+        viewBox: data.viewBox || '0 0 64 64',
+      },
+      style: data.style,
+    },
+    [
+      h('line', {
+        attrs: {
+          transform: 'translate(32,32)',
+          y1: data.y1,
+          y2: data.y2,
+        },
+      }),
+    ]
+  );
+}
+
+var Spinner = /*#__PURE__*/ createComponent$v({
+  functional: true,
+  props: {
+    color: String,
+    duration: Number,
+    type: String,
+    paused: Boolean,
+  },
+
+  render(h, { props, data }) {
+    const spinnerName = getSpinnerName(props.type);
+    const spinner = SPINNERS[spinnerName] || SPINNERS.lines;
+    const duration = props.duration > 10 ? props.duration : spinner.dur;
+    const svgs = [];
+
+    if (spinner.circles !== undefined) {
+      for (let i = 0; i < spinner.circles; i++) {
+        svgs.push(buildCircle(h, spinner, duration, i, spinner.circles));
+      }
+    } else if (spinner.lines !== undefined) {
+      for (let i = 0; i < spinner.lines; i++) {
+        svgs.push(buildLine(h, spinner, duration, i, spinner.lines));
+      }
+    }
+
+    return h(
+      'div',
+      helper([
+        {
+          class: [
+            bem$t({
+              [spinnerName]: true,
+              paused: !!props.paused || config.getBoolean('testing'),
+            }),
+            createColorClasses(props.color),
+          ],
+          attrs: {
+            role: 'progressbar',
+          },
+          style: spinner.elmDuration && {
+            animationDuration: `${duration}ms`,
+          },
+        },
+        data,
+      ]),
+      [svgs]
+    );
+  },
+});
+
+/**
+ * iOS Loading Enter Animation
+ */
+const iosEnterAnimation$2 = (baseEl) => {
+  const baseAnimation = createAnimation();
+  const backdropAnimation = createAnimation();
+  const wrapperAnimation = createAnimation();
+  backdropAnimation
+    .addElement(baseEl.querySelector('.line-overlay'))
+    .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
+  wrapperAnimation
+    .addElement(baseEl.querySelector('.line-loading__wrapper'))
+    .keyframes([
+      { offset: 0, opacity: 0.01, transform: 'scale(1.1)' },
+      { offset: 1, opacity: 1, transform: 'scale(1)' },
+    ]);
+  return baseAnimation
+    .addElement(baseEl)
+    .easing('ease-in-out')
+    .duration(200)
+    .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+/**
+ * iOS Loading Leave Animation
+ */
+const iosLeaveAnimation$2 = (baseEl) => {
+  const baseAnimation = createAnimation();
+  const backdropAnimation = createAnimation();
+  const wrapperAnimation = createAnimation();
+  backdropAnimation
+    .addElement(baseEl.querySelector('.line-overlay'))
+    .fromTo('opacity', 'var(--backdrop-opacity)', 0);
+  wrapperAnimation
+    .addElement(baseEl.querySelector('.line-loading__wrapper'))
+    .keyframes([
+      { offset: 0, opacity: 0.99, transform: 'scale(1)' },
+      { offset: 1, opacity: 0, transform: 'scale(0.9)' },
+    ]);
+  return baseAnimation
+    .addElement(baseEl)
+    .easing('ease-in-out')
+    .duration(200)
+    .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+/**
+ * Md Loading Enter Animation
+ */
+const mdEnterAnimation$2 = (baseEl) => {
+  const baseAnimation = createAnimation();
+  const backdropAnimation = createAnimation();
+  const wrapperAnimation = createAnimation();
+  backdropAnimation
+    .addElement(baseEl.querySelector('.line-overlay'))
+    .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
+  wrapperAnimation
+    .addElement(baseEl.querySelector('.line-loading__wrapper'))
+    .keyframes([
+      { offset: 0, opacity: 0.01, transform: 'scale(1.1)' },
+      { offset: 1, opacity: 1, transform: 'scale(1)' },
+    ]);
+  return baseAnimation
+    .addElement(baseEl)
+    .easing('ease-in-out')
+    .duration(200)
+    .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+/**
+ * Md Loading Leave Animation
+ */
+const mdLeaveAnimation$2 = (baseEl) => {
+  const baseAnimation = createAnimation();
+  const backdropAnimation = createAnimation();
+  const wrapperAnimation = createAnimation();
+  backdropAnimation
+    .addElement(baseEl.querySelector('.line-overlay'))
+    .fromTo('opacity', 'var(--backdrop-opacity)', 0);
+  wrapperAnimation
+    .addElement(baseEl.querySelector('.line-loading__wrapper'))
+    .keyframes([
+      { offset: 0, opacity: 0.99, transform: 'scale(1)' },
+      { offset: 1, opacity: 0, transform: 'scale(0.9)' },
+    ]);
+  return baseAnimation
+    .addElement(baseEl)
+    .easing('ease-in-out')
+    .duration(200)
+    .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+const {
+  createComponent: createComponent$w,
+  bem: bem$u,
+} = /*#__PURE__*/ createNamespace('loading');
+var Loading = /*#__PURE__*/ createComponent$w({
+  mixins: [/*#__PURE__*/ usePopup(), /*#__PURE__*/ usePopupDuration()],
+  props: {
+    message: String,
+    spinner: String,
+  },
+
+  beforeMount() {
+    const { mode } = this;
+    this.$on('animation-enter', (baseEl, animate) => {
+      const builder = mode === 'md' ? mdEnterAnimation$2 : iosEnterAnimation$2;
+      animate(builder(baseEl));
+    });
+    this.$on('animation-leave', (baseEl, animate) => {
+      const builder = mode === 'md' ? mdLeaveAnimation$2 : iosLeaveAnimation$2;
+      animate(builder(baseEl));
+    });
+  },
+
+  methods: {
+    onTap() {
+      this.$emit('overlay-tap');
+    },
+  },
+
+  render() {
+    const h = arguments[0];
+    const { message, spinner } = this;
+    return h(
+      'div',
+      helper([
+        {
+          directives: [
+            {
+              name: 'show',
+              value: this.visible,
+            },
+          ],
+          attrs: {
+            role: 'dialog',
+            'aria-modal': 'true',
+          },
+          class: bem$u({
+            translucent: this.translucent,
+          }),
+        },
+        {
+          on: this.$listeners,
+        },
+      ]),
+      [
+        h(Overlay, {
+          attrs: {
+            visible: this.dim,
+          },
+          on: {
+            tap: this.onTap,
+          },
+        }),
+        h(
+          'div',
+          {
+            attrs: {
+              role: 'dialog',
+            },
+            class: bem$u('wrapper'),
+          },
+          [
+            spinner &&
+              h(
+                'div',
+                {
+                  class: bem$u('spinner'),
+                },
+                [
+                  h(Spinner, {
+                    attrs: {
+                      type: spinner,
+                    },
+                  }),
+                ]
+              ),
+            message &&
+              h(
+                'div',
+                {
+                  class: bem$u('content'),
+                },
+                [message]
+              ),
+          ]
+        ),
+      ]
+    );
+  },
+});
+
+const {
+  createComponent: createComponent$x,
+  bem: bem$v,
+} = /*#__PURE__*/ createNamespace('picker-column');
+
+const clamp = (min, n, max) => {
+  return Math.max(min, Math.min(n, max));
+};
+
+const PICKER_OPT_SELECTED = 'line-picker-column__opt--selected';
+const DECELERATION_FRICTION = 0.97;
+const MAX_PICKER_SPEED = 90;
+const TRANSITION_DURATION = 150;
+var PickerColumn = /*#__PURE__*/ createComponent$x({
+  props: {
+    col: Object,
+  },
+
+  data() {
+    return {
+      optHeight: 0,
+      rotateFactor: 0,
+      scaleFactor: 1,
+      velocity: 0,
+      y: 0,
+      noAnimate: true,
+    };
+  },
+
+  async mounted() {
+    let pickerRotateFactor = 0;
+    let pickerScaleFactor = 0.81;
+    const { mode } = this;
+    const { optsEl } = this.$refs;
+    this.optsEl = optsEl;
+
+    if (mode === 'ios') {
+      pickerRotateFactor = -0.46;
+      pickerScaleFactor = 1;
+    }
+
+    this.rotateFactor = pickerRotateFactor;
+    this.scaleFactor = pickerScaleFactor;
+    this.gesture = createGesture({
+      el: this.$el,
+      gestureName: 'picker-swipe',
+      gesturePriority: 100,
+      threshold: 0,
+      onStart: (ev) => this.onStart(ev),
+      onMove: (ev) => this.onMove(ev),
+      onEnd: (ev) => this.onEnd(ev),
+    });
+    this.gesture.enable();
+    this.tmrId = setTimeout(() => {
+      this.noAnimate = false;
+      this.refresh(true);
+    }, 250);
+
+    if (optsEl) {
+      // DOM READ
+      // We perfom a DOM read over a rendered item, this needs to happen after the first render
+      this.optHeight = optsEl.firstElementChild
+        ? optsEl.firstElementChild.clientHeight
+        : 0;
+    }
+
+    this.refresh();
+  },
+
+  methods: {
+    colChanged() {
+      this.refresh();
+    },
+
+    emitColChange() {
+      this.$emit('colChange', this.col);
+    },
+
+    setSelected(selectedIndex, duration) {
+      // if there is a selected index, then figure out it's y position
+      // if there isn't a selected index, then just use the top y position
+      const y = selectedIndex > -1 ? -(selectedIndex * this.optHeight) : 0;
+      this.velocity = 0; // set what y position we're at
+
+      cancelAnimationFrame(this.rafId);
+      this.update(y, duration, true);
+      this.emitColChange();
+    },
+
+    update(y, duration, saveY) {
+      if (!this.optsEl) {
+        return;
+      } // ensure we've got a good round number :)
+
+      let translateY = 0;
+      let translateZ = 0;
+      const { col, rotateFactor } = this;
+      const selectedIndex = (col.selectedIndex = this.indexForY(-y));
+      const durationStr = duration === 0 ? '' : `${duration}ms`;
+      const scaleStr = `scale(${this.scaleFactor})`;
+      const { children } = this.optsEl;
+
+      for (let i = 0; i < children.length; i++) {
+        const button = children[i];
+        const opt = col.options[i];
+        const optOffset = i * this.optHeight + y;
+        let transform = '';
+
+        if (rotateFactor !== 0) {
+          const rotateX = optOffset * rotateFactor;
+
+          if (Math.abs(rotateX) <= 90) {
+            translateY = 0;
+            translateZ = 90;
+            transform = `rotateX(${rotateX}deg) `;
+          } else {
+            translateY = -9999;
+          }
+        } else {
+          translateZ = 0;
+          translateY = optOffset;
+        }
+
+        const selected = selectedIndex === i;
+        transform += `translate3d(0px,${translateY}px,${translateZ}px) `;
+
+        if (this.scaleFactor !== 1 && !selected) {
+          transform += scaleStr;
+        } // Update transition duration
+
+        if (this.noAnimate) {
+          opt.duration = 0;
+          button.style.transitionDuration = '';
+        } else if (duration !== opt.duration) {
+          opt.duration = duration;
+          button.style.transitionDuration = durationStr;
+        } // Update transform
+
+        if (transform !== opt.transform) {
+          opt.transform = transform;
+          button.style.transform = transform;
+        } // Update selected item
+
+        if (selected !== opt.selected) {
+          opt.selected = selected;
+
+          if (selected) {
+            button.classList.add(PICKER_OPT_SELECTED);
+          } else {
+            button.classList.remove(PICKER_OPT_SELECTED);
+          }
+        }
+      }
+
+      this.col.prevSelected = selectedIndex;
+
+      if (saveY) {
+        this.y = y;
+      }
+
+      if (this.lastIndex !== selectedIndex) {
+        // have not set a last index yet
+        // TODO
+        // hapticSelectionChanged();
+        this.lastIndex = selectedIndex;
+      }
+    },
+
+    decelerate() {
+      if (this.velocity !== 0) {
+        // still decelerating
+        this.velocity *= DECELERATION_FRICTION; // do not let it go slower than a velocity of 1
+
+        this.velocity =
+          this.velocity > 0
+            ? Math.max(this.velocity, 1)
+            : Math.min(this.velocity, -1);
+        let y = this.y + this.velocity;
+
+        if (y > this.minY) {
+          // whoops, it's trying to scroll up farther than the options we have!
+          y = this.minY;
+          this.velocity = 0;
+        } else if (y < this.maxY) {
+          // gahh, it's trying to scroll down farther than we can!
+          y = this.maxY;
+          this.velocity = 0;
+        }
+
+        this.update(y, 0, true);
+        const notLockedIn =
+          Math.round(y) % this.optHeight !== 0 || Math.abs(this.velocity) > 1;
+
+        if (notLockedIn) {
+          // isn't locked in yet, keep decelerating until it is
+          this.rafId = requestAnimationFrame(() => this.decelerate());
+        } else {
+          this.velocity = 0;
+          this.emitColChange();
+        }
+      } else if (this.y % this.optHeight !== 0) {
+        // needs to still get locked into a position so options line up
+        const currentPos = Math.abs(this.y % this.optHeight); // create a velocity in the direction it needs to scroll
+
+        this.velocity = currentPos > this.optHeight / 2 ? 1 : -1;
+        this.decelerate();
+      }
+    },
+
+    indexForY(y) {
+      return Math.min(
+        Math.max(Math.abs(Math.round(y / this.optHeight)), 0),
+        this.col.options.length - 1
+      );
+    },
+
+    // TODO should this check disabled?
+    onStart(detail) {
+      // We have to prevent default in order to block scrolling under the picker
+      // but we DO NOT have to stop propagation, since we still want
+      // some "click" events to capture
+      detail.event.preventDefault();
+      detail.event.stopPropagation(); // reset everything
+
+      cancelAnimationFrame(this.rafId);
+      const { options } = this.col;
+      let minY = options.length - 1;
+      let maxY = 0;
+
+      for (let i = 0; i < options.length; i++) {
+        if (!options[i].disabled) {
+          minY = Math.min(minY, i);
+          maxY = Math.max(maxY, i);
+        }
+      }
+
+      this.minY = -(minY * this.optHeight);
+      this.maxY = -(maxY * this.optHeight);
+    },
+
+    onMove(detail) {
+      detail.event.preventDefault();
+      detail.event.stopPropagation(); // update the scroll position relative to pointer start position
+
+      let y = this.y + detail.deltaY;
+
+      if (y > this.minY) {
+        // scrolling up higher than scroll area
+        y **= 0.8;
+        this.bounceFrom = y;
+      } else if (y < this.maxY) {
+        // scrolling down below scroll area
+        y += (this.maxY - y) ** 0.9;
+        this.bounceFrom = y;
+      } else {
+        this.bounceFrom = 0;
+      }
+
+      this.update(y, 0, false);
+    },
+
+    onEnd(detail) {
+      if (this.bounceFrom > 0) {
+        // bounce back up
+        this.update(this.minY, 100, true);
+        this.emitColChange();
+        return;
+      }
+
+      if (this.bounceFrom < 0) {
+        // bounce back down
+        this.update(this.maxY, 100, true);
+        this.emitColChange();
+        return;
+      }
+
+      this.velocity = clamp(
+        -MAX_PICKER_SPEED,
+        detail.velocityY * 23,
+        MAX_PICKER_SPEED
+      );
+
+      if (this.velocity === 0 && detail.deltaY === 0) {
+        const opt = detail.event.target.closest('.picker-opt');
+
+        if (opt && opt.hasAttribute('opt-index')) {
+          this.setSelected(
+            parseInt(opt.getAttribute('opt-index'), 10),
+            TRANSITION_DURATION
+          );
+        }
+      } else {
+        this.y += detail.deltaY;
+
+        if (Math.abs(detail.velocityY) < 0.05) {
+          const isScrollingUp = detail.deltaY > 0;
+          const optHeightFraction =
+            (Math.abs(this.y) % this.optHeight) / this.optHeight;
+
+          if (isScrollingUp && optHeightFraction > 0.5) {
+            this.velocity = Math.abs(this.velocity) * -1;
+          } else if (!isScrollingUp && optHeightFraction <= 0.5) {
+            this.velocity = Math.abs(this.velocity);
+          }
+        }
+
+        this.decelerate();
+      }
+    },
+
+    refresh(forceRefresh) {
+      let min = this.col.options.length - 1;
+      let max = 0;
+      const { options } = this.col;
+
+      for (let i = 0; i < options.length; i++) {
+        if (!options[i].disabled) {
+          min = Math.min(min, i);
+          max = Math.max(max, i);
+        }
+      }
+      /**
+       * Only update selected value if column has a
+       * velocity of 0. If it does not, then the
+       * column is animating might land on
+       * a value different than the value at
+       * selectedIndex
+       */
+
+      if (this.velocity !== 0) {
+        return;
+      }
+
+      const selectedIndex = clamp(min, this.col.selectedIndex || 0, max);
+
+      if (this.col.prevSelected !== selectedIndex || forceRefresh) {
+        const y = selectedIndex * this.optHeight * -1;
+        this.velocity = 0;
+        this.update(y, TRANSITION_DURATION, true);
+      }
+    },
+  },
+  watch: {
+    col() {
+      this.colChanged();
+    },
+  },
+
+  render() {
+    const h = arguments[0];
+    const { col } = this;
+    return h(
+      'div',
+      {
+        class: bem$v({
+          col: true,
+          'opts-left': col.align === 'left',
+          'opts-right': col.align === 'right',
+        }),
+        style: {
+          'max-width': this.col.columnWidth,
+        },
+      },
+      [
+        col.prefix &&
+          h(
+            'div',
+            {
+              class: bem$v('prefix'),
+              style: {
+                width: col.prefixWidth,
+              },
+            },
+            [col.prefix]
+          ),
+        h(
+          'div',
+          {
+            class: bem$v('opts'),
+            style: {
+              maxWidth: col.optionsWidth,
+            },
+            ref: 'optsEl',
+          },
+          [
+            col.options.map((o, index) =>
+              h(
+                'button',
+                {
+                  attrs: {
+                    type: 'button',
+                    'opt-index': index,
+                  },
+                  class: bem$v('opt', {
+                    disabled: !!o.disabled,
+                  }),
+                },
+                [o.text]
+              )
+            ),
+          ]
+        ),
+        col.suffix &&
+          h(
+            'div',
+            {
+              class: bem$v('suffix'),
+              style: {
+                width: col.suffixWidth,
+              },
+            },
+            [col.suffix]
+          ),
+      ]
+    );
+  },
+});
+
+/**
+ * iOS Picker Enter Animation
+ */
+const iosEnterAnimation$3 = (baseEl) => {
+  const baseAnimation = createAnimation();
+  const backdropAnimation = createAnimation();
+  const wrapperAnimation = createAnimation();
+  backdropAnimation
+    .addElement(baseEl.querySelector('.line-overlay'))
+    .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
+  wrapperAnimation
+    .addElement(baseEl.querySelector('.line-picker__wrapper'))
+    .fromTo('transform', 'translateY(100%)', 'translateY(0%)');
+  return baseAnimation
+    .addElement(baseEl)
+    .easing('cubic-bezier(.36,.66,.04,1)')
+    .duration(400)
+    .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+/**
+ * iOS Picker Leave Animation
+ */
+const iosLeaveAnimation$3 = (baseEl) => {
+  const baseAnimation = createAnimation();
+  const backdropAnimation = createAnimation();
+  const wrapperAnimation = createAnimation();
+  backdropAnimation
+    .addElement(baseEl.querySelector('.line-overlay'))
+    .fromTo('opacity', 'var(--backdrop-opacity)', 0.01);
+  wrapperAnimation
+    .addElement(baseEl.querySelector('.line-picker__wrapper'))
+    .fromTo('transform', 'translateY(0%)', 'translateY(100%)');
+  return baseAnimation
+    .addElement(baseEl)
+    .easing('cubic-bezier(.36,.66,.04,1)')
+    .duration(400)
+    .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+const {
+  createComponent: createComponent$y,
+  bem: bem$w,
+} = /*#__PURE__*/ createNamespace('picker');
+
+const buttonWrapperClass = (button) => {
+  return {
+    [`line-picker__toolbar-${button.role}`]: button.role !== undefined,
+    'line-picker__toolbar-button': true,
+  };
+};
+
+var Picker = /*#__PURE__*/ createComponent$y({
+  mixins: [/*#__PURE__*/ usePopup()],
+  props: {
+    overlayIndex: Number,
+    keyboardClose: {
+      type: Boolean,
+      default: true,
+    },
+    buttons: Array,
+    columns: Array,
+    cssClass: Array,
+    duration: {
+      type: Number,
+      default: 0,
+    },
+    showBackdrop: {
+      type: Boolean,
+      default: true,
+    },
+    backdropDismiss: {
+      type: Boolean,
+      default: true,
+    },
+    animated: {
+      type: Boolean,
+      default: true,
+    },
+  },
+
+  data() {
+    return {
+      presented: true,
+    };
+  },
+
+  beforeMount() {
+    this.$on('animation-enter', (baseEl, animate) => {
+      animate(iosEnterAnimation$3(baseEl));
+    });
+    this.$on('animation-leave', (baseEl, animate) => {
+      animate(iosLeaveAnimation$3(baseEl));
+    });
+  },
+
+  methods: {
+    async buttonClick(button) {
+      const { role } = button;
+
+      if (role === 'cancel') {
+        return this.close(role);
+      }
+
+      const shouldClose = await this.callButtonHandler(button);
+
+      if (shouldClose) {
+        return this.close(button.role);
+      }
+
+      return Promise.resolve();
+    },
+
+    async callButtonHandler(button) {
+      if (button) {
+        // a handler has been provided, execute it
+        // pass the handler the values from the inputs
+        try {
+          const rtn = await safeCall(button.handler, this.getSelected());
+
+          if (rtn === false) {
+            // if the return value of the handler is false then do not dismiss
+            return false;
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      return true;
+    },
+
+    getSelected() {
+      const selected = {};
+      this.columns.forEach((col, index) => {
+        const selectedColumn =
+          col.selectedIndex !== undefined
+            ? col.options[col.selectedIndex]
+            : undefined;
+        selected[col.name] = {
+          text: selectedColumn ? selectedColumn.text : undefined,
+          value: selectedColumn ? selectedColumn.value : undefined,
+          columnIndex: index,
+        };
+      });
+      return selected;
+    },
+
+    onTap() {
+      this.$emit('overlay-tap');
+    },
+
+    colChange(data) {
+      this.$emit('colChange', data);
+    },
+  },
+
+  render() {
+    const h = arguments[0];
+    const {
+      mode,
+      overlayIndex,
+      showBackdrop,
+      backdropDismiss,
+      visible,
+      columns,
+    } = this;
+    return h(
+      'div',
+      {
+        attrs: {
+          'aria-modal': 'true',
+        },
+        directives: [
+          {
+            name: 'show',
+            value: visible,
+          },
+        ],
+        class: [
+          bem$w({
+            mode: true,
+          }),
+          {
+            // Used internally for styling
+            [`picker-${mode}`]: true,
+          },
+        ],
+        style: {
+          zIndex: `${20000 + overlayIndex}`,
+        },
+      },
+      [
+        h(Overlay, {
+          attrs: {
+            visible: showBackdrop,
+            tappable: backdropDismiss,
+          },
+          on: {
+            tap: this.onTap,
+          },
+        }),
+        h(
+          'div',
+          {
+            class: bem$w('wrapper'),
+            attrs: {
+              role: 'dialog',
+            },
+          },
+          [
+            h(
+              'div',
+              {
+                class: bem$w('toolbar'),
+              },
+              [
+                this.buttons.map((b) =>
+                  h(
+                    'div',
+                    {
+                      class: buttonWrapperClass(b),
+                    },
+                    [
+                      h(
+                        'button',
+                        {
+                          attrs: {
+                            type: 'button',
+                          },
+                          on: {
+                            click: () => this.buttonClick(b),
+                          },
+                          class: [
+                            bem$w('button'),
+                            {
+                              'line-activatable': true,
+                            },
+                          ],
+                        },
+                        [b.text]
+                      ),
+                    ]
+                  )
+                ),
+              ]
+            ),
+            h(
+              'div',
+              {
+                class: bem$w('columns'),
+              },
+              [
+                h('div', {
+                  class: bem$w('above-highlight'),
+                }),
+                visible &&
+                  columns.map((c) =>
+                    h(PickerColumn, {
+                      on: {
+                        colChange: this.colChange,
+                      },
+                      attrs: {
+                        col: c,
+                      },
+                    })
+                  ),
+                h('div', {
+                  class: bem$w('below-highlight'),
+                }),
+              ]
+            ),
+          ]
+        ),
+      ]
+    );
+  },
+});
+
+/**
+ * iOS Popover Enter Animation
+ */
+const POPOVER_IOS_BODY_PADDING = 5;
+const iosEnterAnimation$4 = (baseEl, ev) => {
+  let originY = 'top';
+  let originX = 'left';
+  const contentEl = baseEl.querySelector('.line-popover__content');
+  const contentDimentions = contentEl.getBoundingClientRect();
+  const contentWidth = contentDimentions.width;
+  const contentHeight = contentDimentions.height;
+  const bodyWidth = baseEl.ownerDocument.defaultView.innerWidth;
+  const bodyHeight = baseEl.ownerDocument.defaultView.innerHeight;
+  // If ev was passed, use that for target element
+  const targetDim = ev && ev.target && ev.target.getBoundingClientRect();
+  const targetTop =
+    targetDim != null && 'top' in targetDim
+      ? targetDim.top
+      : bodyHeight / 2 - contentHeight / 2;
+  const targetLeft =
+    targetDim != null && 'left' in targetDim ? targetDim.left : bodyWidth / 2;
+  const targetWidth = (targetDim && targetDim.width) || 0;
+  const targetHeight = (targetDim && targetDim.height) || 0;
+  const arrowEl = baseEl.querySelector('.line-popover__arrow');
+  const arrowDim = arrowEl.getBoundingClientRect();
+  const arrowWidth = arrowDim.width;
+  const arrowHeight = arrowDim.height;
+  if (targetDim == null) {
+    arrowEl.style.display = 'none';
+  }
+  const arrowCSS = {
+    top: targetTop + targetHeight,
+    left: targetLeft + targetWidth / 2 - arrowWidth / 2,
+  };
+  const popoverCSS = {
+    top: targetTop + targetHeight + (arrowHeight - 1),
+    left: targetLeft + targetWidth / 2 - contentWidth / 2,
+  };
+  // If the popover left is less than the padding it is off screen
+  // to the left so adjust it, else if the width of the popover
+  // exceeds the body width it is off screen to the right so adjust
+  //
+  let checkSafeAreaLeft = false;
+  let checkSafeAreaRight = false;
+  // If the popover left is less than the padding it is off screen
+  // to the left so adjust it, else if the width of the popover
+  // exceeds the body width it is off screen to the right so adjust
+  // 25 is a random/arbitrary number. It seems to work fine for ios11
+  // and iPhoneX. Is it perfect? No. Does it work? Yes.
+  if (popoverCSS.left < POPOVER_IOS_BODY_PADDING + 25) {
+    checkSafeAreaLeft = true;
+    popoverCSS.left = POPOVER_IOS_BODY_PADDING;
+  } else if (
+    contentWidth + POPOVER_IOS_BODY_PADDING + popoverCSS.left + 25 >
+    bodyWidth
+  ) {
+    // Ok, so we're on the right side of the screen,
+    // but now we need to make sure we're still a bit further right
+    // cus....notchurally... Again, 25 is random. It works tho
+    checkSafeAreaRight = true;
+    popoverCSS.left = bodyWidth - contentWidth - POPOVER_IOS_BODY_PADDING;
+    originX = 'right';
+  }
+  // make it pop up if there's room above
+  if (
+    targetTop + targetHeight + contentHeight > bodyHeight &&
+    targetTop - contentHeight > 0
+  ) {
+    arrowCSS.top = targetTop - (arrowHeight + 1);
+    popoverCSS.top = targetTop - contentHeight - (arrowHeight - 1);
+    baseEl.className += ' line-popover--bottom';
+    originY = 'bottom';
+    // If there isn't room for it to pop up above the target cut it off
+  } else if (targetTop + targetHeight + contentHeight > bodyHeight) {
+    contentEl.style.bottom = `${POPOVER_IOS_BODY_PADDING}%`;
+  }
+  arrowEl.style.top = `${arrowCSS.top}px`;
+  arrowEl.style.left = `${arrowCSS.left}px`;
+  contentEl.style.top = `${popoverCSS.top}px`;
+  contentEl.style.left = `${popoverCSS.left}px`;
+  if (checkSafeAreaLeft) {
+    contentEl.style.left = `calc(${popoverCSS.left}px + var(--line-safe-area-left, 0px))`;
+  }
+  if (checkSafeAreaRight) {
+    contentEl.style.left = `calc(${popoverCSS.left}px - var(--line-safe-area-right, 0px))`;
+  }
+  contentEl.style.transformOrigin = `${originY} ${originX}`;
+  const baseAnimation = createAnimation();
+  const backdropAnimation = createAnimation();
+  const wrapperAnimation = createAnimation();
+  backdropAnimation
+    .addElement(baseEl.querySelector('.line-overlay'))
+    .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
+  wrapperAnimation
+    .addElement(baseEl.querySelector('.line-popover__wrapper'))
+    .fromTo('opacity', 0.01, 1);
+  return baseAnimation
+    .addElement(baseEl)
+    .easing('ease')
+    .duration(100)
+    .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+/**
+ * iOS Popover Leave Animation
+ */
+const iosLeaveAnimation$4 = (baseEl) => {
+  const baseAnimation = createAnimation();
+  const backdropAnimation = createAnimation();
+  const wrapperAnimation = createAnimation();
+  backdropAnimation
+    .addElement(baseEl.querySelector('.line-overlay'))
+    .fromTo('opacity', 'var(--backdrop-opacity)', 0);
+  wrapperAnimation
+    .addElement(baseEl.querySelector('.line-popover__wrapper'))
+    .fromTo('opacity', 0.99, 0);
+  return baseAnimation
+    .addElement(baseEl)
+    .easing('ease')
+    .duration(500)
+    .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+/**
+ * Md Popover Enter Animation
+ */
+const mdEnterAnimation$3 = (baseEl, ev) => {
+  const POPOVER_MD_BODY_PADDING = 12;
+  const doc = baseEl.ownerDocument;
+  const isRTL = doc.dir === 'rtl';
+  let originY = 'top';
+  let originX = isRTL ? 'right' : 'left';
+  const contentEl = baseEl.querySelector('.line-popover__content');
+  const contentDimentions = contentEl.getBoundingClientRect();
+  const contentWidth = contentDimentions.width;
+  const contentHeight = contentDimentions.height;
+  const bodyWidth = doc.defaultView.innerWidth;
+  const bodyHeight = doc.defaultView.innerHeight;
+  // If ev was passed, use that for target element
+  const targetDim = ev && ev.target && ev.target.getBoundingClientRect();
+  // As per MD spec, by default position the popover below the target (trigger) element
+  const targetTop =
+    targetDim != null && 'bottom' in targetDim
+      ? targetDim.bottom
+      : bodyHeight / 2 - contentHeight / 2;
+  const targetLeft =
+    targetDim != null && 'left' in targetDim
+      ? isRTL
+        ? targetDim.left - contentWidth + targetDim.width
+        : targetDim.left
+      : bodyWidth / 2 - contentWidth / 2;
+  const targetHeight = (targetDim && targetDim.height) || 0;
+  const popoverCSS = {
+    top: targetTop,
+    left: targetLeft,
+  };
+  // If the popover left is less than the padding it is off screen
+  // to the left so adjust it, else if the width of the popover
+  // exceeds the body width it is off screen to the right so adjust
+  if (popoverCSS.left < POPOVER_MD_BODY_PADDING) {
+    popoverCSS.left = POPOVER_MD_BODY_PADDING;
+    // Same origin in this case for both LTR & RTL
+    // Note: in LTR, originX is already 'left'
+    originX = 'left';
+  } else if (
+    contentWidth + POPOVER_MD_BODY_PADDING + popoverCSS.left >
+    bodyWidth
+  ) {
+    popoverCSS.left = bodyWidth - contentWidth - POPOVER_MD_BODY_PADDING;
+    // Same origin in this case for both LTR & RTL
+    // Note: in RTL, originX is already 'right'
+    originX = 'right';
+  }
+  // If the popover when popped down stretches past bottom of screen,
+  // make it pop up if there's room above
+  if (
+    targetTop + targetHeight + contentHeight > bodyHeight &&
+    targetTop - contentHeight > 0
+  ) {
+    popoverCSS.top = targetTop - contentHeight - targetHeight;
+    baseEl.className += ' line-popover--bottom';
+    originY = 'bottom';
+    // If there isn't room for it to pop up above the target cut it off
+  } else if (targetTop + targetHeight + contentHeight > bodyHeight) {
+    contentEl.style.bottom = `${POPOVER_MD_BODY_PADDING}px`;
+  }
+  const baseAnimation = createAnimation();
+  const backdropAnimation = createAnimation();
+  const wrapperAnimation = createAnimation();
+  const contentAnimation = createAnimation();
+  const viewportAnimation = createAnimation();
+  backdropAnimation
+    .addElement(baseEl.querySelector('.line-overlay'))
+    .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
+  wrapperAnimation
+    .addElement(baseEl.querySelector('.line-popover__wrapper'))
+    .fromTo('opacity', 0.01, 1);
+  contentAnimation
+    .addElement(contentEl)
+    .beforeStyles({
+      top: `${popoverCSS.top}px`,
+      left: `${popoverCSS.left}px`,
+      'transform-origin': `${originY} ${originX}`,
+    })
+    .fromTo('transform', 'scale(0.01)', 'scale(1)');
+  viewportAnimation
+    .addElement(baseEl.querySelector('.popover-viewport'))
+    .fromTo('opacity', 0.01, 1);
+  return baseAnimation
+    .addElement(baseEl)
+    .easing('cubic-bezier(0.36,0.66,0.04,1)')
+    .duration(300)
+    .addAnimation([
+      backdropAnimation,
+      wrapperAnimation,
+      contentAnimation,
+      viewportAnimation,
+    ]);
+};
+
+/**
+ * Md Popover Leave Animation
+ */
+const mdLeaveAnimation$3 = (baseEl) => {
+  const baseAnimation = createAnimation();
+  const backdropAnimation = createAnimation();
+  const wrapperAnimation = createAnimation();
+  backdropAnimation
+    .addElement(baseEl.querySelector('.line-overlay'))
+    .fromTo('opacity', 'var(--backdrop-opacity)', 0);
+  wrapperAnimation
+    .addElement(baseEl.querySelector('.line-popover__wrapper'))
+    .fromTo('opacity', 0.99, 0);
+  return baseAnimation
+    .addElement(baseEl)
+    .easing('ease')
+    .duration(500)
+    .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+const {
+  createComponent: createComponent$z,
+  bem: bem$x,
+} = /*#__PURE__*/ createNamespace('popover');
+var Popover = /*#__PURE__*/ createComponent$z({
+  mixins: [/*#__PURE__*/ usePopup()],
+
+  beforeMount() {
+    const { mode } = this;
+    this.$on('animation-enter', (baseEl, animate) => {
+      const builder = mode === 'md' ? mdEnterAnimation$3 : iosEnterAnimation$4;
+      animate(builder(baseEl, this.event));
+    });
+    this.$on('animation-leave', (baseEl, animate) => {
+      const builder = mode === 'md' ? mdLeaveAnimation$3 : iosLeaveAnimation$4;
+      animate(builder(baseEl));
+    });
+  },
+
+  methods: {
+    onTap() {
+      this.$emit('overlay-tap');
+    },
+  },
+
+  render() {
+    const h = arguments[0];
+    return h(
+      'div',
+      helper([
+        {
+          directives: [
+            {
+              name: 'show',
+              value: this.visible,
+            },
+          ],
+          attrs: {
+            'aria-modal': 'true',
+          },
+          class: bem$x({
+            translucent: this.translucent,
+          }),
+        },
+        {
+          on: this.$listeners,
+        },
+      ]),
+      [
+        h(Overlay, {
+          attrs: {
+            visible: this.dim,
+          },
+          on: {
+            tap: this.onTap,
+          },
+        }),
+        h(
+          'div',
+          {
+            class: bem$x('wrapper'),
+          },
+          [
+            h('div', {
+              class: bem$x('arrow'),
+            }),
+            h(
+              'div',
+              {
+                class: bem$x('content'),
+              },
+              [this.slots()]
+            ),
+          ]
+        ),
+      ]
+    );
+  },
+});
+
+const {
+  createComponent: createComponent$A,
+  bem: bem$y,
+} = /*#__PURE__*/ createNamespace('popup');
+const CONTENT_ELEMENT = 'content';
+var popupLegacy = /*#__PURE__*/ createComponent$A({
+  mixins: [/*#__PURE__*/ usePopup()],
+
+  render() {
+    const h = arguments[0];
+    return h(
+      'div',
+      {
+        directives: [
+          {
+            name: 'show',
+            value: this.visible,
+          },
+        ],
+        attrs: {
+          'aria-modal': 'true',
+          role: 'dialog',
+        },
+        class: bem$y(),
+      },
+      [
+        h(
+          'div',
+          {
+            attrs: {
+              role: 'dialog',
+            },
+            class: bem$y(CONTENT_ELEMENT),
+            ref: CONTENT_ELEMENT,
+          },
+          [this.slots()]
+        ),
+      ]
+    );
+  },
+});
+
+/**
+ * iOS Modal Enter Animation
+ */
+const iosEnterAnimation$5 = (baseEl) => {
+  const baseAnimation = createAnimation();
+  const backdropAnimation = createAnimation();
+  const wrapperAnimation = createAnimation();
+  backdropAnimation
+    .addElement(baseEl.querySelector('.line-overlay'))
+    .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
+  wrapperAnimation
+    .addElement(baseEl.querySelector('.line-popup__wrapper'))
+    .beforeStyles({ opacity: 1 })
+    .fromTo('transform', 'translateY(100%)', 'translateY(0%)');
+  return baseAnimation
+    .addElement(baseEl)
+    .easing('cubic-bezier(0.36,0.66,0.04,1)')
+    .duration(400)
+    .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+/**
+ * iOS Modal Leave Animation
+ */
+const iosLeaveAnimation$5 = (baseEl) => {
+  const baseAnimation = createAnimation();
+  const backdropAnimation = createAnimation();
+  const wrapperAnimation = createAnimation();
+  const wrapperEl = baseEl.querySelector('.line-popup__wrapper');
+  const wrapperElRect = wrapperEl.getBoundingClientRect();
+  backdropAnimation
+    .addElement(baseEl.querySelector('.line-overlay'))
+    .fromTo('opacity', 'var(--backdrop-opacity)', 0.0);
+  wrapperAnimation
+    .addElement(wrapperEl)
+    .beforeStyles({ opacity: 1 })
+    .fromTo(
+      'transform',
+      'translateY(0%)',
+      `translateY(${
+        baseEl.ownerDocument.defaultView.innerHeight - wrapperElRect.top
+      }px)`
+    );
+  return baseAnimation
+    .addElement(baseEl)
+    .easing('ease-out')
+    .duration(250)
+    .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+/**
+ * Md Modal Enter Animation
+ */
+const mdEnterAnimation$4 = (baseEl) => {
+  const baseAnimation = createAnimation();
+  const backdropAnimation = createAnimation();
+  const wrapperAnimation = createAnimation();
+  backdropAnimation
+    .addElement(baseEl.querySelector('.line-overlay'))
+    .fromTo('opacity', 0.01, 'var(--backdrop-opacity)');
+  wrapperAnimation
+    .addElement(baseEl.querySelector('.line-popup__wrapper'))
+    .keyframes([
+      { offset: 0, opacity: 0.01, transform: 'translateY(40px)' },
+      { offset: 1, opacity: 1, transform: 'translateY(0px)' },
+    ]);
+  return baseAnimation
+    .addElement(baseEl)
+    .easing('cubic-bezier(0.36,0.66,0.04,1)')
+    .duration(280)
+    .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+/**
+ * Md Modal Leave Animation
+ */
+const mdLeaveAnimation$4 = (baseEl) => {
+  const baseAnimation = createAnimation();
+  const backdropAnimation = createAnimation();
+  const wrapperAnimation = createAnimation();
+  const wrapperEl = baseEl.querySelector('.line-popup__wrapper');
+  backdropAnimation
+    .addElement(baseEl.querySelector('.line-overlay'))
+    .fromTo('opacity', 'var(--backdrop-opacity)', 0.0);
+  wrapperAnimation.addElement(wrapperEl).keyframes([
+    { offset: 0, opacity: 0.99, transform: 'translateY(0px)' },
+    { offset: 1, opacity: 0, transform: 'translateY(40px)' },
+  ]);
+  return baseAnimation
+    .addElement(baseEl)
+    .easing('cubic-bezier(0.47,0,0.745,0.715)')
+    .duration(200)
+    .addAnimation([backdropAnimation, wrapperAnimation]);
+};
+
+const {
+  createComponent: createComponent$B,
+  bem: bem$z,
+} = /*#__PURE__*/ createNamespace('popup');
+var Popup = /*#__PURE__*/ createComponent$B({
+  mixins: [/*#__PURE__*/ usePopup()],
+
+  beforeMount() {
+    const { mode } = this;
+    this.$on('animation-enter', (baseEl, animate) => {
+      const builder = mode === 'md' ? mdEnterAnimation$4 : iosEnterAnimation$5;
+      animate(builder(baseEl));
+    });
+    this.$on('animation-leave', (baseEl, animate) => {
+      const builder = mode === 'md' ? mdLeaveAnimation$4 : iosLeaveAnimation$5;
+      animate(builder(baseEl));
+    });
+  },
+
+  methods: {
+    onTap() {
+      this.$emit('overlay-tap');
+    },
+  },
+
+  render() {
+    const h = arguments[0];
+    return h(
+      'div',
+      helper([
+        {
+          directives: [
+            {
+              name: 'show',
+              value: this.visible,
+            },
+          ],
+          attrs: {
+            'aria-modal': 'true',
+            role: 'dialog',
+          },
+          class: bem$z(),
+        },
+        {
+          on: this.$listeners,
+        },
+      ]),
+      [
+        h(Overlay, {
+          on: {
+            tap: this.onTap,
+          },
+        }),
+        h(
+          'div',
+          {
+            attrs: {
+              role: 'dialog',
+            },
+            class: bem$z('wrapper'),
+          },
+          [this.slots()]
+        ),
+      ]
+    );
+  },
+});
+
+/**
+ * iOS Toast Enter Animation
+ */
+const iosEnterAnimation$6 = (baseEl, position) => {
+  const baseAnimation = createAnimation();
+  const wrapperAnimation = createAnimation();
+  const wrapperEl = baseEl.querySelector('.line-toast__wrapper');
+  const bottom = 'calc(-10px - var(--line-safe-area-bottom, 0px))';
+  const top = 'calc(10px + var(--line-safe-area-top, 0px))';
+  wrapperAnimation.addElement(wrapperEl);
+  switch (position) {
+    case 'top':
+      wrapperAnimation.fromTo(
+        'transform',
+        'translateY(-100%)',
+        `translateY(${top})`
+      );
+      break;
+    case 'middle':
+      /* eslint-disable-next-line */
+      const topPosition = Math.floor(
+        baseEl.clientHeight / 2 - wrapperEl.clientHeight / 2
+      );
+      wrapperEl.style.top = `${topPosition}px`;
+      wrapperAnimation.fromTo('opacity', 0.01, 1);
+      break;
+    default:
+      wrapperAnimation.fromTo(
+        'transform',
+        'translateY(100%)',
+        `translateY(${bottom})`
+      );
+      break;
+  }
+  return baseAnimation
+    .addElement(baseEl)
+    .easing('cubic-bezier(.155,1.105,.295,1.12)')
+    .duration(400)
+    .addAnimation(wrapperAnimation);
+};
+
+/**
+ * iOS Toast Leave Animation
+ */
+const iosLeaveAnimation$6 = (baseEl, position) => {
+  const baseAnimation = createAnimation();
+  const wrapperAnimation = createAnimation();
+  const wrapperEl = baseEl.querySelector('.line-toast__wrapper');
+  const bottom = 'calc(-10px - var(--line-safe-area-bottom, 0px))';
+  const top = 'calc(10px + var(--line-safe-area-top, 0px))';
+  wrapperAnimation.addElement(wrapperEl);
+  switch (position) {
+    case 'top':
+      wrapperAnimation.fromTo(
+        'transform',
+        `translateY(${top})`,
+        'translateY(-100%)'
+      );
+      break;
+    case 'middle':
+      wrapperAnimation.fromTo('opacity', 0.99, 0);
+      break;
+    default:
+      wrapperAnimation.fromTo(
+        'transform',
+        `translateY(${bottom})`,
+        'translateY(100%)'
+      );
+      break;
+  }
+  return baseAnimation
+    .addElement(baseEl)
+    .easing('cubic-bezier(.36,.66,.04,1)')
+    .duration(300)
+    .addAnimation(wrapperAnimation);
+};
+
+/**
+ * MD Toast Enter Animation
+ */
+const mdEnterAnimation$5 = (baseEl, position) => {
+  const baseAnimation = createAnimation();
+  const wrapperAnimation = createAnimation();
+  const wrapperEl = baseEl.querySelector('.line-toast__wrapper');
+  const bottom = 'calc(8px + var(--line-safe-area-bottom, 0px))';
+  const top = 'calc(8px + var(--line-safe-area-top, 0px))';
+  wrapperAnimation.addElement(wrapperEl);
+  switch (position) {
+    case 'top':
+      wrapperEl.style.top = top;
+      wrapperAnimation.fromTo('opacity', 0.01, 1);
+      break;
+    case 'middle':
+      /* eslint-disable-next-line */
+      const topPosition = Math.floor(
+        baseEl.clientHeight / 2 - wrapperEl.clientHeight / 2
+      );
+      wrapperEl.style.top = `${topPosition}px`;
+      wrapperAnimation.fromTo('opacity', 0.01, 1);
+      break;
+    default:
+      wrapperEl.style.bottom = bottom;
+      wrapperAnimation.fromTo('opacity', 0.01, 1);
+      break;
+  }
+  return baseAnimation
+    .addElement(baseEl)
+    .easing('cubic-bezier(.36,.66,.04,1)')
+    .duration(400)
+    .addAnimation(wrapperAnimation);
+};
+
+/**
+ * md Toast Leave Animation
+ */
+const mdLeaveAnimation$5 = (baseEl) => {
+  const baseAnimation = createAnimation();
+  const wrapperAnimation = createAnimation();
+  const wrapperEl = baseEl.querySelector('.line-toast__wrapper');
+  wrapperAnimation.addElement(wrapperEl).fromTo('opacity', 0.99, 0);
+  return baseAnimation
+    .addElement(baseEl)
+    .easing('cubic-bezier(.36,.66,.04,1)')
+    .duration(300)
+    .addAnimation(wrapperAnimation);
+};
+
+const {
+  createComponent: createComponent$C,
+  bem: bem$A,
+} = /*#__PURE__*/ createNamespace('toast');
+
+const buttonClass = (button) => {
+  return {
+    'line-toast-button': true,
+    'line-toast-button--icon-only':
+      button.icon !== undefined && button.text === undefined,
+    [`line-toast-button--${button.role}`]: button.role !== undefined,
+    'line-focusable': true,
+    'line-activatable': true,
+  };
+};
+
+var Toast = /*#__PURE__*/ createComponent$C({
+  mixins: [
+    /*#__PURE__*/ usePopup(),
+    /*#__PURE__*/ usePopupDuration(),
+    /*#__PURE__*/ useColor(),
+  ],
+  props: {
+    /**
+     * The position of the toast on the screen.
+     */
+    // top | bottom | middle
+    position: String,
+    message: String,
+    header: String,
+    buttons: Array,
+  },
+  methods: {
+    getButtons() {
+      const buttons = this.buttons
+        ? this.buttons.map((b) => {
+            return typeof b === 'string'
+              ? {
+                  text: b,
+                }
+              : b;
+          })
+        : [];
+      return buttons;
+    },
+
+    async buttonClick(button) {
+      const { role } = button;
+
+      if (role === 'cancel') {
+        return this.close(role);
+      }
+
+      const shouldClose = await this.callButtonHandler(button);
+
+      if (shouldClose) {
+        return this.close(button.role);
+      }
+
+      return Promise.resolve();
+    },
+
+    async callButtonHandler(button) {
+      if (button) {
+        // a handler has been provided, execute it
+        // pass the handler the values from the inputs
+        try {
+          const rtn = await safeCall(button.handler);
+
+          if (rtn === false) {
+            // if the return value of the handler is false then do not dismiss
+            return false;
+          }
+        } catch (error) {
+          console.error(error);
+        }
+      }
+
+      return true;
+    },
+
+    dispatchCancelHandler(ev) {
+      const { role } = ev.detail;
+
+      if (role === 'cancel' || role === 'overlay') {
+        const cancelButton = this.getButtons().find((b) => b.role === 'cancel');
+        this.callButtonHandler(cancelButton);
+      }
+    },
+
+    renderButtons(buttons, side) {
+      const h = this.$createElement;
+
+      if (buttons.length === 0) {
+        return;
+      } // TODO md ripple
+      // const { mode } = this;
+
+      const buttonGroupsClasses = {
+        'line-toast-button-group': true,
+        [`line-toast-button-group--${side}`]: true,
+      };
+      return h(
+        'div',
+        {
+          class: buttonGroupsClasses,
+        },
+        [
+          buttons.map((b) =>
+            h(
+              'button',
+              {
+                attrs: {
+                  type: 'button',
+                  tabIndex: 0,
+                  part: 'button',
+                },
+                class: buttonClass(b),
+                on: {
+                  click: () => this.buttonClick(b),
+                },
+              },
+              [
+                h(
+                  'div',
+                  {
+                    class: 'line-toast-button__inner',
+                  },
+                  [
+                    b.icon && isObject(b.icon)
+                      ? h(Icon, {
+                          class: 'line-toast-icon',
+                          slot: b.text === undefined ? 'icon-only' : undefined,
+                          attrs: {
+                            name: b.icon.name || '',
+                            src: b.icon.src || '',
+                          },
+                        })
+                      : h(Icon, {
+                          class: 'line-toast-icon',
+                          slot: b.text === undefined ? 'icon-only' : undefined,
+                          attrs: {
+                            name: b.icon,
+                          },
+                        }),
+                    b.text,
+                  ]
+                ),
+              ]
+            )
+          ),
+        ]
+      );
+    },
+  },
+
+  beforeMount() {
+    const { mode } = this;
+    this.$on('animation-enter', (baseEl, animate) => {
+      const builder = mode === 'md' ? mdEnterAnimation$5 : iosEnterAnimation$6;
+      animate(builder(baseEl, this.position));
+    });
+    this.$on('animation-leave', (baseEl, animate) => {
+      const builder = mode === 'md' ? mdLeaveAnimation$5 : iosLeaveAnimation$6;
+      animate(builder(baseEl, this.position));
+    });
+    this.$on('opened', () => {
+      if (this.duration > 0) {
+        this.durationTimeout = setTimeout(
+          () => this.close('timeout'),
+          this.duration
+        );
+      }
+    });
+    this.$on('aboutToHide', () => {
+      if (this.durationTimeout) {
+        clearTimeout(this.durationTimeout);
+      }
+    });
+  },
+
+  render() {
+    const h = arguments[0];
+    const { position = 'bottom' } = this;
+    const allButtons = this.getButtons();
+    const startButtons = allButtons.filter((b) => b.side === 'start');
+    const endButtons = allButtons.filter((b) => b.side !== 'start');
+    return h(
+      'div',
+      helper([
+        {
+          directives: [
+            {
+              name: 'show',
+              value: this.visible,
+            },
+          ],
+          class: [bem$A()],
+        },
+        {
+          on: this.$listeners,
+        },
+      ]),
+      [
+        h(
+          'div',
+          {
+            class: bem$A('wrapper', {
+              [position]: true,
+            }),
+          },
+          [
+            h(
+              'div',
+              {
+                class: bem$A('container'),
+              },
+              [
+                this.renderButtons(startButtons, 'start'),
+                h(
+                  'div',
+                  {
+                    class: bem$A('content'),
+                  },
+                  [
+                    this.header !== undefined &&
+                      h(
+                        'div',
+                        {
+                          class: bem$A('header'),
+                        },
+                        [this.header]
+                      ),
+                    h('div', {
+                      class: bem$A('message'),
+                      domProps: {
+                        innerHTML: this.message,
+                      },
+                    }),
+                  ]
+                ),
+                this.renderButtons(endButtons, 'end'),
+              ]
+            ),
+          ]
+        ),
+      ]
+    );
+  },
+});
+
+function usePopupDelay() {
+  return createMixins({
+    props: {
+      // This property holds the delay (milliseconds) after which the tool tip is shown.
+      // A tooltip with a negative delay is shown immediately.
+      // The default value is 0.
+      delay: {
+        type: Number,
+        default: 0,
+      },
+    },
+    data() {
+      return {
+        delayedVisible: this.visible,
+      };
+    },
+    watch: {
+      visible(val) {
+        if (this.appearTimer) {
+          clearTimeout(this.appearTimer);
+        }
+        if (val === this.delayedVisible) return;
+        if (!val) {
+          this.delayedVisible = val;
+          return;
+        }
+        const delay = Math.max(this.delay, 0);
+        this.appearTimer = setTimeout(() => (this.delayedVisible = val), delay);
+      },
+    },
+  });
+}
+
+/**
+ * iOS Tooltip Enter Animation
+ */
+const iosEnterAnimation$7 = (baseEl) => {
+  const baseAnimation = createAnimation();
+  return baseAnimation
+    .addElement(baseEl)
+    .easing('ease')
+    .duration(100)
+    .fromTo('opacity', 0.01, 1);
+};
+
+/**
+ * iOS Popover Leave Animation
+ */
+const iosLeaveAnimation$7 = (baseEl) => {
+  const baseAnimation = createAnimation();
+  return baseAnimation
+    .addElement(baseEl)
+    .easing('ease')
+    .duration(500)
+    .fromTo('opacity', 0.99, 0);
+};
+
 function createHover(el, options) {
   const { callback } = options;
   const enter = (ev) => callback(true, ev);
@@ -9800,10 +10663,10 @@ const vHover = /*#__PURE__*/ defineDirective({
 });
 
 const {
-  createComponent: createComponent$v,
-  bem: bem$v,
+  createComponent: createComponent$D,
+  bem: bem$B,
 } = /*#__PURE__*/ createNamespace('tooltip');
-var Tooltip = /*#__PURE__*/ createComponent$v({
+var Tooltip = /*#__PURE__*/ createComponent$D({
   mixins: [
     /*#__PURE__*/ useColor(),
     /*#__PURE__*/ usePopup({
@@ -9936,7 +10799,7 @@ var Tooltip = /*#__PURE__*/ createComponent$v({
           attrs: {
             role: 'tooltip',
           },
-          class: bem$v({
+          class: bem$B({
             translucent: this.translucent,
           }),
         },
@@ -9946,7 +10809,7 @@ var Tooltip = /*#__PURE__*/ createComponent$v({
       ]),
       [
         h('div', {
-          class: bem$v('arrow'),
+          class: bem$B('arrow'),
           attrs: {
             'data-popper-arrow': true,
           },
@@ -9954,7 +10817,7 @@ var Tooltip = /*#__PURE__*/ createComponent$v({
         h(
           'div',
           {
-            class: bem$v('content'),
+            class: bem$B('content'),
           },
           [this.slots() || text]
         ),
@@ -9968,7 +10831,8 @@ function createFactory(sfc) {
   const create = (props, destroyWhenClose = true) => {
     return new Component({
       propsData: props,
-      mounted() {
+      async mounted() {
+        await this.$nextTick();
         this.destroyWhenClose = destroyWhenClose;
         const { $el } = this;
         getApp($el).appendChild($el);
@@ -10637,8 +11501,8 @@ const VALID_AMPM_PREFIX = [
 ];
 
 const {
-  createComponent: createComponent$w,
-  bem: bem$w,
+  createComponent: createComponent$E,
+  bem: bem$C,
 } = /*#__PURE__*/ createNamespace('datetime');
 
 const clamp$1 = (min, n, max) => {
@@ -10691,7 +11555,7 @@ const divyColumns = (columns) => {
 
 const DEFAULT_FORMAT = 'MMM D, YYYY';
 let datetimeIds = 0;
-var datetime = /*#__PURE__*/ createComponent$w({
+var datetime = /*#__PURE__*/ createComponent$E({
   mixins: [/*#__PURE__*/ useModel('dateValue')],
   inject: {
     Item: {
@@ -11197,7 +12061,7 @@ var datetime = /*#__PURE__*/ createComponent$w({
           'aria-labelledby': labelId,
         },
         class: [
-          bem$w({
+          bem$C({
             disabled,
             readonly,
             placeholder: addPlaceholderClass,
@@ -11211,7 +12075,7 @@ var datetime = /*#__PURE__*/ createComponent$w({
         h(
           'div',
           {
-            class: bem$w('text'),
+            class: bem$C('text'),
           },
           [datetimeText]
         ),
@@ -11231,71 +12095,14 @@ var datetime = /*#__PURE__*/ createComponent$w({
   },
 });
 
-function useEvent(options) {
-  const { event, global = false } = options;
-  return createMixins({
-    mounted() {
-      const { $el } = this;
-      const target = global ? getApp($el) : $el;
-      const offs = arrayify(event).map((name) => {
-        let dismiss;
-        const prevent = () => (dismiss = true);
-        const maybe = (ev) => {
-          dismiss = false;
-          this.$emit('event-condition', { ev, name, prevent });
-          if (dismiss) return;
-          this.$emit('event-handler', ev, name);
-        };
-        return on(target, name, maybe, options);
-      });
-      const teardown = () => offs.forEach((off) => off());
-      this.useEvent = { teardown };
-    },
-    beforeDestroy() {
-      this.useEvent.teardown();
-    },
-  });
-}
-
-function useClickOutside(options) {
-  const { global = true, event = ['mouseup', 'touchend'] } = options || {};
-  return createMixins({
-    mixins: [useEvent({ global, event })],
-    mounted() {
-      this.$on('event-condition', (condition) => {
-        const { ev, prevent } = condition;
-        // If click was triggered programmaticaly (domEl.click()) then
-        // it shouldn't be treated as click-outside
-        // Chrome/Firefox support isTrusted property
-        // IE/Edge support pointerType property (empty if not triggered
-        // by pointing device)
-        if (
-          ('isTrusted' in ev && !ev.isTrusted) ||
-          ('pointerType' in ev && !ev.pointerType)
-        )
-          return false;
-        let elements = [this.$el];
-        const include = (el) => {
-          elements = elements.concat(el);
-        };
-        this.$emit('event-include', include);
-        if (elements.some((el) => el && el.contains(ev.target))) {
-          prevent();
-        }
-      });
-      this.$on('event-handler', () => this.$emit('clickoutside'));
-    },
-  });
-}
-
-const NAMESPACE$4 = 'FabGroup';
+const NAMESPACE$6 = 'FabGroup';
 const {
-  createComponent: createComponent$x,
-  bem: bem$x,
+  createComponent: createComponent$F,
+  bem: bem$D,
 } = /*#__PURE__*/ createNamespace('fab-group');
-var FabGroup = /*#__PURE__*/ createComponent$x({
+var FabGroup = /*#__PURE__*/ createComponent$F({
   mixins: [
-    /*#__PURE__*/ useGroup(NAMESPACE$4),
+    /*#__PURE__*/ useGroup(NAMESPACE$6),
     /*#__PURE__*/ useLazy('visible'),
     /*#__PURE__*/ useModel('visible'),
   ],
@@ -11334,7 +12141,7 @@ var FabGroup = /*#__PURE__*/ createComponent$x({
             tag: 'div',
             appear: true,
           },
-          class: bem$x({
+          class: bem$D({
             [`side-${side}`]: true,
           }),
         },
@@ -11362,11 +12169,11 @@ var FabGroup = /*#__PURE__*/ createComponent$x({
 });
 
 const {
-  createComponent: createComponent$y,
-  bem: bem$y,
+  createComponent: createComponent$G,
+  bem: bem$E,
 } = /*#__PURE__*/ createNamespace('fab');
 const FAB_SIDES = ['start', 'end', 'top', 'bottom'];
-var fab = /*#__PURE__*/ createComponent$y({
+var fab = /*#__PURE__*/ createComponent$G({
   mixins: [
     /*#__PURE__*/ useModel('activated'),
     /*#__PURE__*/ useClickOutside(),
@@ -11408,7 +12215,7 @@ var fab = /*#__PURE__*/ createComponent$y({
       'div',
       helper([
         {
-          class: bem$y({
+          class: bem$E({
             [`horizontal-${horizontal}`]: isDef(horizontal),
             [`vertical-${vertical}`]: isDef(vertical),
             edge,
@@ -11457,13 +12264,13 @@ var fab = /*#__PURE__*/ createComponent$y({
   },
 });
 
-const NAMESPACE$5 = 'FabGroup';
+const NAMESPACE$7 = 'FabGroup';
 const {
-  createComponent: createComponent$z,
-  bem: bem$z,
+  createComponent: createComponent$H,
+  bem: bem$F,
 } = /*#__PURE__*/ createNamespace('fab-button');
-var fabButton = /*#__PURE__*/ createComponent$z({
-  mixins: [/*#__PURE__*/ useColor(), /*#__PURE__*/ useGroupItem(NAMESPACE$5)],
+var fabButton = /*#__PURE__*/ createComponent$H({
+  mixins: [/*#__PURE__*/ useColor(), /*#__PURE__*/ useGroupItem(NAMESPACE$7)],
   directives: {
     ripple: vRipple,
   },
@@ -11509,7 +12316,7 @@ var fabButton = /*#__PURE__*/ createComponent$z({
           class: [
             'activatable',
             'line-focusable',
-            bem$z({
+            bem$F({
               [size]: isDef(size),
               'in-list': inList,
               'translucent-in-list': inList && translucent,
@@ -11535,7 +12342,7 @@ var fabButton = /*#__PURE__*/ createComponent$z({
                 value: this.ripple,
               },
             ],
-            class: bem$z('content', {
+            class: bem$F('content', {
               vertical,
             }),
           },
@@ -11543,14 +12350,14 @@ var fabButton = /*#__PURE__*/ createComponent$z({
             h(
               'span',
               {
-                class: bem$z('indicator'),
+                class: bem$F('indicator'),
               },
               [this.slots('indicator')]
             ),
             h(
               'span',
               {
-                class: bem$z('inner'),
+                class: bem$F('inner'),
               },
               [this.slots() || text]
             ),
@@ -11562,10 +12369,10 @@ var fabButton = /*#__PURE__*/ createComponent$z({
 });
 
 const {
-  createComponent: createComponent$A,
-  bem: bem$A,
+  createComponent: createComponent$I,
+  bem: bem$G,
 } = /*#__PURE__*/ createNamespace('footer');
-var footer = /*#__PURE__*/ createComponent$A({
+var footer = /*#__PURE__*/ createComponent$I({
   inject: {
     App: {
       default: undefined,
@@ -11595,7 +12402,7 @@ var footer = /*#__PURE__*/ createComponent$A({
           attrs: {
             role: 'contentinfo',
           },
-          class: bem$A({
+          class: bem$G({
             translucent,
           }),
         },
@@ -11609,10 +12416,10 @@ var footer = /*#__PURE__*/ createComponent$A({
 });
 
 const {
-  createComponent: createComponent$B,
-  bem: bem$B,
+  createComponent: createComponent$J,
+  bem: bem$H,
 } = /*#__PURE__*/ createNamespace('grid');
-var grid = /*#__PURE__*/ createComponent$B({
+var grid = /*#__PURE__*/ createComponent$J({
   functional: true,
   props: {
     fixed: Boolean,
@@ -11623,7 +12430,7 @@ var grid = /*#__PURE__*/ createComponent$B({
       'div',
       helper([
         {
-          class: bem$B({
+          class: bem$H({
             fixed: props.fixed,
           }),
         },
@@ -11635,10 +12442,10 @@ var grid = /*#__PURE__*/ createComponent$B({
 });
 
 const {
-  createComponent: createComponent$C,
-  bem: bem$C,
+  createComponent: createComponent$K,
+  bem: bem$I,
 } = /*#__PURE__*/ createNamespace('header');
-var header = /*#__PURE__*/ createComponent$C({
+var header = /*#__PURE__*/ createComponent$K({
   inject: {
     App: {
       default: undefined,
@@ -11671,7 +12478,7 @@ var header = /*#__PURE__*/ createComponent$C({
             role: 'banner',
           },
           class: [
-            bem$C(),
+            bem$I(),
             `line-header-${mode}`,
             `line-header-collapse-${collapse}`,
             this.translucent && 'line-header-translucent',
@@ -11688,10 +12495,10 @@ var header = /*#__PURE__*/ createComponent$C({
 });
 
 const {
-  createComponent: createComponent$D,
-  bem: bem$D,
+  createComponent: createComponent$L,
+  bem: bem$J,
 } = /*#__PURE__*/ createNamespace('check-group');
-var checkGroup = /*#__PURE__*/ createComponent$D({
+var checkGroup = /*#__PURE__*/ createComponent$L({
   mixins: [/*#__PURE__*/ useCheckGroupWithModel('Group')],
 
   render() {
@@ -11699,7 +12506,7 @@ var checkGroup = /*#__PURE__*/ createComponent$D({
     return h(
       'div',
       {
-        class: bem$D(),
+        class: bem$J(),
       },
       [this.slots()]
     );
@@ -11707,10 +12514,10 @@ var checkGroup = /*#__PURE__*/ createComponent$D({
 });
 
 const {
-  createComponent: createComponent$E,
-  bem: bem$E,
+  createComponent: createComponent$M,
+  bem: bem$K,
 } = /*#__PURE__*/ createNamespace('check-item');
-var checkItem = /*#__PURE__*/ createComponent$E({
+var checkItem = /*#__PURE__*/ createComponent$M({
   mixins: [/*#__PURE__*/ useCheckItemWithModel('Group')],
 
   render() {
@@ -11718,7 +12525,7 @@ var checkItem = /*#__PURE__*/ createComponent$E({
     return h(
       'div',
       {
-        class: bem$E(),
+        class: bem$K(),
         on: {
           click: this.toggle,
         },
@@ -11729,10 +12536,10 @@ var checkItem = /*#__PURE__*/ createComponent$E({
 });
 
 const {
-  createComponent: createComponent$F,
-  bem: bem$F,
+  createComponent: createComponent$N,
+  bem: bem$L,
 } = /*#__PURE__*/ createNamespace('lazy');
-var lazy = /*#__PURE__*/ createComponent$F({
+var lazy = /*#__PURE__*/ createComponent$N({
   mixins: [/*#__PURE__*/ useLazy()],
 
   render() {
@@ -11740,7 +12547,7 @@ var lazy = /*#__PURE__*/ createComponent$F({
     return h(
       'div',
       {
-        class: bem$F(),
+        class: bem$L(),
       },
       [this.slots()]
     );
@@ -11834,10 +12641,10 @@ function useTreeItem(name) {
 }
 
 const {
-  createComponent: createComponent$G,
-  bem: bem$G,
+  createComponent: createComponent$O,
+  bem: bem$M,
 } = /*#__PURE__*/ createNamespace('tree-item');
-var treeItem = /*#__PURE__*/ createComponent$G({
+var treeItem = /*#__PURE__*/ createComponent$O({
   mixins: [/*#__PURE__*/ useTreeItem('Tree')],
   methods: {
     onClick(e) {
@@ -11851,7 +12658,7 @@ var treeItem = /*#__PURE__*/ createComponent$G({
     return h(
       'div',
       {
-        class: bem$G(),
+        class: bem$M(),
         on: {
           click: this.onClick,
         },
@@ -11862,146 +12669,10 @@ var treeItem = /*#__PURE__*/ createComponent$G({
 });
 
 const {
-  createComponent: createComponent$H,
-  bem: bem$H,
-} = /*#__PURE__*/ createNamespace('font-icon');
-
-function getDefaultText(slots) {
-  const nodes = slots();
-  const text = (nodes && nodes[0].text) || '';
-  return text.trim();
-}
-
-var FontIcon = /*#__PURE__*/ createComponent$H({
-  functional: true,
-  props: {
-    name: String,
-    source: String,
-    size: String,
-    color: String,
-  },
-
-  render(h, { props, data, slots }) {
-    const { attrs = {} } = data;
-    const { name, size, color } = props;
-    const text = name || getDefaultText(slots);
-    return h(
-      'i',
-      helper([
-        {
-          class: [
-            'line-icon',
-            bem$H({
-              [`${size}`]: !!size,
-            }),
-            createColorClasses(color),
-          ],
-          attrs: {
-            'aria-hidden': !attrs['aria-label'],
-            'aria-label': attrs['aria-label'] || text,
-          },
-        },
-        data,
-      ]),
-      [text]
-    );
-  },
-});
-
-const {
-  createComponent: createComponent$I,
-  bem: bem$I,
-} = /*#__PURE__*/ createNamespace('svg-icon');
-
-const getDefaultText$1 = (slots) => {
-  const nodes = slots();
-  const text = (nodes && nodes[0].text) || '';
-  return text.trim();
-};
-
-var SvgIcon = /*#__PURE__*/ createComponent$I({
-  functional: true,
-  props: {
-    name: String,
-    href: String,
-    src: String,
-    size: String,
-    color: String,
-    fill: {
-      type: Boolean,
-      default: true,
-    },
-    stroke: Boolean,
-  },
-
-  render(h, { props, data, slots }) {
-    const { attrs = {} } = data;
-    const { name, href, src, size, color, fill, stroke } = props;
-    const text = name || getDefaultText$1(slots);
-    const finalHref = href || `${src || ''}#${text}`;
-    return h(
-      'div',
-      {
-        class: [
-          bem$I({
-            [`${size}`]: !!size,
-            'fill-none': !fill,
-            'stroke-width': stroke,
-          }),
-          createColorClasses(color),
-        ],
-      },
-      [
-        h(
-          'svg',
-          helper([
-            {
-              attrs: {
-                role: 'img',
-                'aria-hidden': !attrs['aria-label'],
-                'aria-label': attrs['aria-label'] || text,
-              },
-            },
-            data,
-          ]),
-          [
-            text || href
-              ? h('use', {
-                  attrs: {
-                    'xlink:href': finalHref,
-                  },
-                })
-              : slots('content'),
-          ]
-        ),
-      ]
-    );
-  },
-});
-
-const { createComponent: createComponent$J } = /*#__PURE__*/ createNamespace(
-  'icon'
-);
-var Icon = /*#__PURE__*/ createComponent$J({
-  functional: true,
-
-  render(h, { data, children }) {
-    const { attrs } = data;
-    const hasSrc = attrs && ('src' in attrs || 'href' in attrs);
-
-    if (hasSrc) {
-      return h(SvgIcon, data, children);
-    }
-
-    return h(FontIcon, data, children);
-  },
-});
-
-const {
-  createComponent: createComponent$K,
-  bem: bem$J,
+  createComponent: createComponent$P,
+  bem: bem$N,
 } = /*#__PURE__*/ createNamespace('img');
-var image = /*#__PURE__*/ createComponent$K({
+var image = /*#__PURE__*/ createComponent$P({
   props: {
     alt: String,
     src: String,
@@ -12085,7 +12756,7 @@ var image = /*#__PURE__*/ createComponent$K({
       'div',
       helper([
         {
-          class: bem$J(),
+          class: bem$N(),
         },
         {
           on: this.$listeners,
@@ -12109,10 +12780,10 @@ var image = /*#__PURE__*/ createComponent$K({
 });
 
 const {
-  createComponent: createComponent$L,
-  bem: bem$K,
+  createComponent: createComponent$Q,
+  bem: bem$O,
 } = /*#__PURE__*/ createNamespace('infinite-scroll');
-var infiniteScroll = /*#__PURE__*/ createComponent$L({
+var infiniteScroll = /*#__PURE__*/ createComponent$Q({
   inject: {
     Content: {
       default: undefined,
@@ -12323,7 +12994,7 @@ var infiniteScroll = /*#__PURE__*/ createComponent$L({
       'div',
       {
         class: [
-          bem$K({
+          bem$O({
             loading: isLoading,
             enabled: !disabled,
           }),
@@ -12335,10 +13006,10 @@ var infiniteScroll = /*#__PURE__*/ createComponent$L({
 });
 
 const {
-  createComponent: createComponent$M,
-  bem: bem$L,
+  createComponent: createComponent$R,
+  bem: bem$P,
 } = /*#__PURE__*/ createNamespace('infinite-scroll-content');
-var infiniteScrollContent = /*#__PURE__*/ createComponent$M({
+var infiniteScrollContent = /*#__PURE__*/ createComponent$R({
   props: {
     loadingSpinner: String,
     loadingText: String,
@@ -12371,7 +13042,7 @@ var infiniteScrollContent = /*#__PURE__*/ createComponent$M({
       'div',
       {
         class: [
-          bem$L(), // Used internally for styling
+          bem$P(), // Used internally for styling
           `line-infinite-scroll-content-${mode}`,
         ],
       },
@@ -12412,8 +13083,8 @@ var infiniteScrollContent = /*#__PURE__*/ createComponent$M({
 });
 
 const {
-  createComponent: createComponent$N,
-  bem: bem$M,
+  createComponent: createComponent$S,
+  bem: bem$Q,
 } = /*#__PURE__*/ createNamespace('input');
 
 const findItemLabel$1 = (componentEl) => {
@@ -12427,7 +13098,7 @@ const findItemLabel$1 = (componentEl) => {
 };
 
 let inputIds = 0;
-var input = /*#__PURE__*/ createComponent$N({
+var input = /*#__PURE__*/ createComponent$S({
   mixins: [
     /*#__PURE__*/ useModel('nativeValue', {
       event: 'inputChange',
@@ -12661,7 +13332,9 @@ var input = /*#__PURE__*/ createComponent$N({
       helper([
         {
           class: [
-            bem$M(),
+            bem$Q({
+              suffix: this.slots('suffix'),
+            }),
             {
               'has-value': nativeValue && nativeValue.length,
               'has-focus': hasFocus,
@@ -12674,7 +13347,7 @@ var input = /*#__PURE__*/ createComponent$N({
       ]),
       [
         h('input', {
-          class: 'native-input',
+          class: bem$Q('content'),
           ref: 'nativeInput',
           attrs: {
             accept: accept,
@@ -12701,6 +13374,7 @@ var input = /*#__PURE__*/ createComponent$N({
             change: this.onChange,
           },
         }),
+        this.slots('suffix'),
         this.clearInput &&
           !readonly &&
           !disabled &&
@@ -12722,10 +13396,10 @@ var input = /*#__PURE__*/ createComponent$N({
 });
 
 const {
-  createComponent: createComponent$O,
-  bem: bem$N,
+  createComponent: createComponent$T,
+  bem: bem$R,
 } = /*#__PURE__*/ createNamespace('item');
-var item = /*#__PURE__*/ createComponent$O({
+var item = /*#__PURE__*/ createComponent$T({
   mixins: [/*#__PURE__*/ useColor()],
   directives: {
     ripple: vRipple,
@@ -12868,7 +13542,7 @@ var item = /*#__PURE__*/ createComponent$O({
             'aria-disabled': disabled ? 'true' : null,
           },
           class: [
-            bem$N({
+            bem$R({
               disabled,
             }),
             {
@@ -12932,10 +13606,10 @@ var item = /*#__PURE__*/ createComponent$O({
 });
 
 const {
-  createComponent: createComponent$P,
-  bem: bem$O,
+  createComponent: createComponent$U,
+  bem: bem$S,
 } = /*#__PURE__*/ createNamespace('item-divider');
-var itemDivider = /*#__PURE__*/ createComponent$P({
+var itemDivider = /*#__PURE__*/ createComponent$U({
   mixins: [/*#__PURE__*/ useColor()],
   props: {
     sticky: Boolean,
@@ -12948,7 +13622,7 @@ var itemDivider = /*#__PURE__*/ createComponent$P({
       'div',
       helper([
         {
-          class: bem$O({
+          class: bem$S({
             sticky,
           }),
         },
@@ -12961,13 +13635,13 @@ var itemDivider = /*#__PURE__*/ createComponent$P({
         h(
           'div',
           {
-            class: bem$O('inner'),
+            class: bem$S('inner'),
           },
           [
             h(
               'div',
               {
-                class: bem$O('wrapper'),
+                class: bem$S('wrapper'),
               },
               [this.slots()]
             ),
@@ -12980,10 +13654,10 @@ var itemDivider = /*#__PURE__*/ createComponent$P({
 });
 
 const {
-  createComponent: createComponent$Q,
-  bem: bem$P,
+  createComponent: createComponent$V,
+  bem: bem$T,
 } = /*#__PURE__*/ createNamespace('item-group');
-var itemGroup = /*#__PURE__*/ createComponent$Q({
+var itemGroup = /*#__PURE__*/ createComponent$V({
   render() {
     const h = arguments[0];
     const { mode } = this;
@@ -12991,7 +13665,7 @@ var itemGroup = /*#__PURE__*/ createComponent$Q({
       'div',
       {
         class: [
-          bem$P({
+          bem$T({
             // Used internally for styling
             [`${mode}`]: true,
           }),
@@ -13003,10 +13677,10 @@ var itemGroup = /*#__PURE__*/ createComponent$Q({
 });
 
 const {
-  createComponent: createComponent$R,
-  bem: bem$Q,
+  createComponent: createComponent$W,
+  bem: bem$U,
 } = /*#__PURE__*/ createNamespace('item-option');
-var itemOption = /*#__PURE__*/ createComponent$R({
+var itemOption = /*#__PURE__*/ createComponent$W({
   mixins: [/*#__PURE__*/ useColor()],
   props: {
     disabled: Boolean,
@@ -13048,7 +13722,7 @@ var itemOption = /*#__PURE__*/ createComponent$R({
       'div',
       {
         class: [
-          bem$Q({
+          bem$U({
             disabled,
             expandable,
           }),
@@ -13065,7 +13739,7 @@ var itemOption = /*#__PURE__*/ createComponent$R({
             {},
             attrs,
             {
-              class: bem$Q('button-native'),
+              class: bem$U('button-native'),
               attrs: {
                 disabled: disabled,
               },
@@ -13075,7 +13749,7 @@ var itemOption = /*#__PURE__*/ createComponent$R({
             h(
               'span',
               {
-                class: bem$Q('button-inner'),
+                class: bem$U('button-inner'),
               },
               [
                 this.slots('top'),
@@ -13103,8 +13777,8 @@ var itemOption = /*#__PURE__*/ createComponent$R({
 });
 
 const {
-  createComponent: createComponent$S,
-  bem: bem$R,
+  createComponent: createComponent$X,
+  bem: bem$V,
 } = /*#__PURE__*/ createNamespace('item-options');
 
 const isEndSide = (side) => {
@@ -13124,7 +13798,7 @@ const isEndSide = (side) => {
   }
 };
 
-var itemOptions = /*#__PURE__*/ createComponent$S({
+var itemOptions = /*#__PURE__*/ createComponent$X({
   inject: {
     ItemSliding: {
       default: undefined,
@@ -13157,7 +13831,7 @@ var itemOptions = /*#__PURE__*/ createComponent$S({
     return h(
       'div',
       {
-        class: bem$R({
+        class: bem$V({
           [mode]: true,
           start: !isEnd,
           end: isEnd,
@@ -13169,8 +13843,8 @@ var itemOptions = /*#__PURE__*/ createComponent$S({
 });
 
 const {
-  createComponent: createComponent$T,
-  bem: bem$S,
+  createComponent: createComponent$Y,
+  bem: bem$W,
 } = /*#__PURE__*/ createNamespace('item-sliding');
 const SWIPE_MARGIN = 30;
 const ELASTIC_FACTOR = 0.55;
@@ -13211,7 +13885,7 @@ const swipeShouldReset = (isResetDirection, isMovingFast, isOnResetZone) => {
   return (!isMovingFast && isOnResetZone) || (isResetDirection && isMovingFast);
 };
 
-var itemSliding = /*#__PURE__*/ createComponent$T({
+var itemSliding = /*#__PURE__*/ createComponent$Y({
   provide() {
     return {
       ItemSliding: this,
@@ -13626,7 +14300,7 @@ var itemSliding = /*#__PURE__*/ createComponent$T({
     return h(
       'div',
       {
-        class: bem$S({
+        class: bem$W({
           'active-slide': this.state !== 2,
           /* Disabled */
           'active-options-end':
@@ -13653,10 +14327,10 @@ var itemSliding = /*#__PURE__*/ createComponent$T({
 });
 
 const {
-  createComponent: createComponent$U,
-  bem: bem$T,
+  createComponent: createComponent$Z,
+  bem: bem$X,
 } = /*#__PURE__*/ createNamespace('label');
-var label = /*#__PURE__*/ createComponent$U({
+var label = /*#__PURE__*/ createComponent$Z({
   mixins: [/*#__PURE__*/ useColor()],
   inject: {
     Item: {
@@ -13700,7 +14374,7 @@ var label = /*#__PURE__*/ createComponent$U({
       'div',
       helper([
         {
-          class: bem$T({
+          class: bem$X({
             [position]: isDef(position),
             'no-animate': this.noAnimate,
           }),
@@ -13715,10 +14389,10 @@ var label = /*#__PURE__*/ createComponent$U({
 });
 
 const {
-  createComponent: createComponent$V,
-  bem: bem$U,
+  createComponent: createComponent$_,
+  bem: bem$Y,
 } = /*#__PURE__*/ createNamespace('list');
-var list = /*#__PURE__*/ createComponent$V({
+var list = /*#__PURE__*/ createComponent$_({
   props: {
     // 'full' | 'inset' | 'none' | undefined
     lines: String,
@@ -13732,7 +14406,7 @@ var list = /*#__PURE__*/ createComponent$V({
       'div',
       helper([
         {
-          class: bem$U({
+          class: bem$Y({
             [`lines-${lines}`]: isDef(lines),
             inset,
           }),
@@ -13747,10 +14421,10 @@ var list = /*#__PURE__*/ createComponent$V({
 });
 
 const {
-  createComponent: createComponent$W,
-  bem: bem$V,
+  createComponent: createComponent$$,
+  bem: bem$Z,
 } = /*#__PURE__*/ createNamespace('list-header');
-var listHeader = /*#__PURE__*/ createComponent$W({
+var listHeader = /*#__PURE__*/ createComponent$$({
   mixins: [/*#__PURE__*/ useColor()],
   props: {
     // 'full' | 'inset' | 'none' | undefined
@@ -13764,7 +14438,7 @@ var listHeader = /*#__PURE__*/ createComponent$W({
       'div',
       helper([
         {
-          class: bem$V({
+          class: bem$Z({
             [`lines-${lines}`]: isDef(lines),
           }),
         },
@@ -13785,13 +14459,13 @@ var listHeader = /*#__PURE__*/ createComponent$W({
   },
 });
 
-const NAMESPACE$6 = 'ListView';
+const NAMESPACE$8 = 'ListView';
 const {
-  createComponent: createComponent$X,
-  bem: bem$W,
+  createComponent: createComponent$10,
+  bem: bem$_,
 } = /*#__PURE__*/ createNamespace('list-item');
-var ListItem = /*#__PURE__*/ createComponent$X({
-  inject: [NAMESPACE$6],
+var ListItem = /*#__PURE__*/ createComponent$10({
+  inject: [NAMESPACE$8],
   props: {
     index: {
       type: Number,
@@ -13806,12 +14480,12 @@ var ListItem = /*#__PURE__*/ createComponent$X({
   },
   methods: {
     onLayoutChanged() {
-      const { itemLayoutAtIndex } = this[NAMESPACE$6];
+      const { itemLayoutAtIndex } = this[NAMESPACE$8];
       const item = itemLayoutAtIndex(this.index);
       this.offsetWidth = item.geometry.width;
       this.offsetHeight = item.geometry.height;
       const { offsetWidth, offsetHeight } = this.$el;
-      const { onLayout, horizontal, vertical } = this[NAMESPACE$6];
+      const { onLayout, horizontal, vertical } = this[NAMESPACE$8];
       if (!offsetWidth || !offsetHeight) return;
 
       if (
@@ -13838,7 +14512,7 @@ var ListItem = /*#__PURE__*/ createComponent$X({
     return h(
       'div',
       {
-        class: bem$W(),
+        class: bem$_(),
       },
       [this.cachedNode]
     );
@@ -14443,15 +15117,15 @@ function exponentialSearch(array = [], wanted, compare, from, to, bound) {
   );
 }
 
-const NAMESPACE$7 = 'ListView';
+const NAMESPACE$9 = 'ListView';
 const {
-  createComponent: createComponent$Y,
-  bem: bem$X,
+  createComponent: createComponent$11,
+  bem: bem$$,
 } = /*#__PURE__*/ createNamespace('list-view');
-var listView = /*#__PURE__*/ createComponent$Y({
+var listView = /*#__PURE__*/ createComponent$11({
   provide() {
     return {
-      [NAMESPACE$7]: this,
+      [NAMESPACE$9]: this,
     };
   },
 
@@ -14981,7 +15655,7 @@ var listView = /*#__PURE__*/ createComponent$Y({
     return h(
       'div',
       {
-        class: bem$X(),
+        class: bem$$(),
         ref: 'viewport',
         on: {
           scroll: this.onScroll,
@@ -14989,7 +15663,7 @@ var listView = /*#__PURE__*/ createComponent$Y({
       },
       [
         h('div', {
-          class: bem$X('spacer'),
+          class: bem$$('spacer'),
           style: {
             width: `${this.layout.geometry.width}px`,
             height: `${this.layout.geometry.height}px`,
@@ -15001,7 +15675,7 @@ var listView = /*#__PURE__*/ createComponent$Y({
             attrs: {
               tag: 'div',
             },
-            class: bem$X('content'),
+            class: bem$$('content'),
           },
           [
             Object.keys(this.views).map((index) => {
@@ -15122,140 +15796,8 @@ const menuRevealAnimation = (menu) => {
 
 const createMenuController = () => {
   const menuAnimations = new Map();
-  const menus = [];
-  const waitUntilReady = () => {
-    return Promise.all(
-      Array.from(document.querySelectorAll('.line-menu')).map((menu) => {
-        // menu.componentOnReady()
-        // TODO
-        console.log(menu);
-        return true;
-      })
-    );
-  };
-  const getMenusSync = () => {
-    return menus.map((menu) => menu.el);
-  };
-  const isAnimatingSync = () => {
-    return menus.some((menu) => menu.isAnimating);
-  };
-  const _setActiveMenu = (menu) => {
-    // if this menu should be enabled
-    // then find all the other menus on this same side
-    // and automatically disable other same side menus
-    const { side } = menu;
-    menus
-      .filter((m) => m.side === side && m !== menu)
-      .forEach((m) => (m.disabled = true));
-  };
-  const find = (predicate) => {
-    const instance = menus.find(predicate);
-    if (instance !== undefined) {
-      return instance.el;
-    }
-    return undefined;
-  };
-  const get = async (menu) => {
-    await waitUntilReady();
-    if (menu === 'start' || menu === 'end') {
-      // there could be more than one menu on the same side
-      // so first try to get the enabled one
-      const menuRef = find((m) => m.side === menu && !m.disabled);
-      console.log('menuRef', menuRef);
-      if (menuRef) {
-        return menuRef;
-      }
-      // didn't find a menu side that is enabled
-      // so try to get the first menu side found
-      console.log(
-        'find',
-        find((m) => m.side === menu)
-      );
-      return find((m) => m.side === menu);
-    }
-    if (menu != null) {
-      // the menuId was not left or right
-      // so try to get the menu by its "id"
-      return find((m) => m.menuId === menu);
-    }
-    // return the first enabled menu
-    const menuEl = find((m) => !m.disabled);
-    if (menuEl) {
-      return menuEl;
-    }
-    // get the first menu in the array, if one exists
-    return menus.length > 0 ? menus[0] : undefined;
-  };
-  const _getOpenSync = () => {
-    return find((m) => m._isOpen);
-  };
-  /**
-   * Get the instance of the opened menu. Returns `null` if a menu is not found.
-   */
-  const getOpen = async () => {
-    await waitUntilReady();
-    return _getOpenSync();
-  };
-  const open = async (menu) => {
-    const menuEl = await get(menu);
-    if (menuEl) {
-      return menuEl.open();
-    }
-    return false;
-  };
-  const close = async (menu) => {
-    const menuEl = await (menu !== undefined ? get(menu) : getOpen());
-    if (menuEl !== undefined) {
-      return menuEl.close();
-    }
-    return false;
-  };
-  const toggle = async (menu) => {
-    const menuEl = await get(menu);
-    if (menuEl) {
-      return menuEl.toggle();
-    }
-    return false;
-  };
-  const enable = async (shouldEnable, menu) => {
-    const menuEl = await get(menu);
-    if (menuEl) {
-      menuEl.disabled = !shouldEnable;
-    }
-    return menuEl;
-  };
-  const swipeGesture = async (shouldEnable, menu) => {
-    const menuEl = await get(menu);
-    if (menuEl) {
-      menuEl.swipeGesture = shouldEnable;
-    }
-    return menuEl;
-  };
-  const isEnabled = async (menu) => {
-    const menuEl = await get(menu);
-    if (menuEl) {
-      return !menuEl.disabled;
-    }
-    return false;
-  };
   const registerAnimation = (name, animation) => {
     menuAnimations.set(name, animation);
-  };
-  const _register = (menu) => {
-    console.log('menu', menu);
-    if (menus.indexOf(menu) < 0) {
-      if (!menu.disabled) {
-        _setActiveMenu(menu);
-      }
-      menus.push(menu);
-    }
-    console.log(menus);
-  };
-  const _unregister = (menu) => {
-    const index = menus.indexOf(menu);
-    if (index > -1) {
-      menus.splice(index, 1);
-    }
   };
   const _createAnimation = (type, menuCmp) => {
     const animationBuilder = menuAnimations.get(type);
@@ -15265,70 +15807,19 @@ const createMenuController = () => {
     const animation = animationBuilder(menuCmp);
     return animation;
   };
-  /**
-   * Get all menu instances.
-   */
-  const getMenus = async () => {
-    await waitUntilReady();
-    return getMenusSync();
-  };
-  const isOpen = async (menu) => {
-    if (menu != null) {
-      const menuEl = await get(menu);
-      return menuEl !== undefined && menuEl.isOpen();
-    }
-    const menuEl = await getOpen();
-    return menuEl !== undefined;
-  };
-  /**
-   * Get whether or not a menu is animating. Returns `true` if any
-   * menu is currently animating.
-   */
-  const isAnimating = async () => {
-    await waitUntilReady();
-    return isAnimatingSync();
-  };
-  const _setOpen = async (menu, shouldOpen, animated) => {
-    if (isAnimatingSync()) {
-      return false;
-    }
-    if (shouldOpen) {
-      const openedMenu = await getOpen();
-      if (openedMenu && menu.el !== openedMenu) {
-        await openedMenu.setOpen(false, false);
-      }
-    }
-    return menu._setOpen(shouldOpen, animated);
-  };
   registerAnimation('reveal', menuRevealAnimation);
   registerAnimation('push', menuPushAnimation);
   registerAnimation('overlay', menuOverlayAnimation);
   return {
     registerAnimation,
-    get,
-    getMenus,
-    getOpen,
-    isEnabled,
-    swipeGesture,
-    isAnimating,
-    isOpen,
-    enable,
-    toggle,
-    close,
-    open,
-    _getOpenSync,
     _createAnimation,
-    _register,
-    _unregister,
-    _setOpen,
-    _setActiveMenu,
   };
 };
 const menuController = /* @__PURE__ */ createMenuController();
 
 const {
-  createComponent: createComponent$Z,
-  bem: bem$Y,
+  createComponent: createComponent$12,
+  bem: bem$10,
 } = /*#__PURE__*/ createNamespace('menu');
 const iosEasing = 'cubic-bezier(0.32,0.72,0,1)';
 const iosEasingReverse = 'cubic-bezier(1, 0, 0.68, 0.28)';
@@ -15379,7 +15870,7 @@ const isEnd = (side) => {
 const SHOW_MENU = 'show-menu';
 const SHOW_BACKDROP = 'show-overlay';
 const MENU_CONTENT_OPEN = 'line-menu__content-open';
-var menu = /*#__PURE__*/ createComponent$Z({
+var menu = /*#__PURE__*/ createComponent$12({
   mixins: [/*#__PURE__*/ useModel('actived')],
   props: {
     contentId: {
@@ -15541,11 +16032,8 @@ var menu = /*#__PURE__*/ createComponent$Z({
       }
 
       if (this.isOpen) {
-        return true; // TODO error
-      } // TODO
-      // if (menuController._getOpenSync()) {
-      //   return false;
-      // }
+        return true;
+      }
 
       return checkEdgeSide(
         window,
@@ -15891,7 +16379,7 @@ var menu = /*#__PURE__*/ createComponent$Z({
       'div',
       {
         class: [
-          bem$Y({
+          bem$10({
             [`type-${type}`]: true,
             enabled: !disabled,
             'side-end': isEndSide,
@@ -15907,13 +16395,13 @@ var menu = /*#__PURE__*/ createComponent$Z({
         h(
           'div',
           {
-            class: bem$Y('inner'),
+            class: bem$10('inner'),
             ref: 'menuInnerEl',
           },
           [this.slots()]
         ),
         h(Overlay, {
-          class: bem$Y('backdrop'),
+          class: bem$10('backdrop'),
           ref: 'backdropEl',
           attrs: {
             tappable: false,
@@ -15926,10 +16414,10 @@ var menu = /*#__PURE__*/ createComponent$Z({
 });
 
 const {
-  createComponent: createComponent$_,
-  bem: bem$Z,
+  createComponent: createComponent$13,
+  bem: bem$11,
 } = /*#__PURE__*/ createNamespace('note');
-var note = /*#__PURE__*/ createComponent$_({
+var note = /*#__PURE__*/ createComponent$13({
   functional: true,
   props: {
     color: String,
@@ -15941,7 +16429,7 @@ var note = /*#__PURE__*/ createComponent$_({
       'div',
       helper([
         {
-          class: [bem$Z(), createColorClasses(color)],
+          class: [bem$11(), createColorClasses(color)],
         },
         data,
       ]),
@@ -15951,8 +16439,8 @@ var note = /*#__PURE__*/ createComponent$_({
 });
 
 const {
-  createComponent: createComponent$$,
-  bem: bem$_,
+  createComponent: createComponent$14,
+  bem: bem$12,
 } = /*#__PURE__*/ createNamespace('progress-bar');
 
 const clamp$3 = (min, n, max) => {
@@ -16010,7 +16498,7 @@ const renderProgress = (h, value, buffer) => {
   ];
 };
 
-var progressBar = /*#__PURE__*/ createComponent$$({
+var progressBar = /*#__PURE__*/ createComponent$14({
   mixins: [/*#__PURE__*/ useColor()],
   props: {
     type: {
@@ -16040,7 +16528,7 @@ var progressBar = /*#__PURE__*/ createComponent$$({
           'aria-valuemax': '1',
         },
         class: [
-          bem$_(),
+          bem$12(),
           {
             [`progress-bar-${type}`]: true,
             'progress-paused': paused,
@@ -16058,13 +16546,13 @@ var progressBar = /*#__PURE__*/ createComponent$$({
   },
 });
 
-const NAMESPACE$8 = 'RadioGroup';
+const NAMESPACE$a = 'RadioGroup';
 const {
-  createComponent: createComponent$10,
-  bem: bem$$,
+  createComponent: createComponent$15,
+  bem: bem$13,
 } = /*#__PURE__*/ createNamespace('radio-group');
-var radioGroup = /*#__PURE__*/ createComponent$10({
-  mixins: [/*#__PURE__*/ useCheckGroupWithModel(NAMESPACE$8)],
+var radioGroup = /*#__PURE__*/ createComponent$15({
+  mixins: [/*#__PURE__*/ useCheckGroupWithModel(NAMESPACE$a)],
   props: {
     exclusive: {
       type: Boolean,
@@ -16078,7 +16566,7 @@ var radioGroup = /*#__PURE__*/ createComponent$10({
       'div',
       helper([
         {
-          class: bem$$(),
+          class: bem$13(),
         },
         {
           on: this.$listeners,
@@ -16090,10 +16578,10 @@ var radioGroup = /*#__PURE__*/ createComponent$10({
 });
 
 const {
-  createComponent: createComponent$11,
-  bem: bem$10,
+  createComponent: createComponent$16,
+  bem: bem$14,
 } = /*#__PURE__*/ createNamespace('radio-indicator');
-var RadioIndicator = /*#__PURE__*/ createComponent$11({
+var RadioIndicator = /*#__PURE__*/ createComponent$16({
   functional: true,
   props: {
     checked: Boolean,
@@ -16106,7 +16594,7 @@ var RadioIndicator = /*#__PURE__*/ createComponent$11({
       'div',
       helper([
         {
-          class: bem$10({
+          class: bem$14({
             checked,
             disabled,
           }),
@@ -16115,21 +16603,21 @@ var RadioIndicator = /*#__PURE__*/ createComponent$11({
       ]),
       [
         h('div', {
-          class: bem$10('inner'),
+          class: bem$14('inner'),
         }),
       ]
     );
   },
 });
 
-const NAMESPACE$9 = 'RadioGroup';
+const NAMESPACE$b = 'RadioGroup';
 const {
-  createComponent: createComponent$12,
-  bem: bem$11,
+  createComponent: createComponent$17,
+  bem: bem$15,
 } = /*#__PURE__*/ createNamespace('radio');
-var radio = /*#__PURE__*/ createComponent$12({
+var radio = /*#__PURE__*/ createComponent$17({
   mixins: [
-    /*#__PURE__*/ useCheckItemWithModel(NAMESPACE$9),
+    /*#__PURE__*/ useCheckItemWithModel(NAMESPACE$b),
     /*#__PURE__*/ useRipple(),
     /*#__PURE__*/ useColor(),
   ],
@@ -16191,7 +16679,7 @@ var radio = /*#__PURE__*/ createComponent$12({
       helper([
         {
           class: [
-            bem$11({
+            bem$15({
               checked,
               disabled,
             }),
@@ -16230,8 +16718,8 @@ var radio = /*#__PURE__*/ createComponent$12({
 });
 
 const {
-  createComponent: createComponent$13,
-  bem: bem$12,
+  createComponent: createComponent$18,
+  bem: bem$16,
 } = /*#__PURE__*/ createNamespace('range');
 
 function clamp$4(value, min, max) {
@@ -16257,7 +16745,7 @@ const renderKnob = (
     'div',
     {
       class: [
-        bem$12('knob-handle', {
+        bem$16('knob-handle', {
           min: value === min,
           max: value === max,
         }),
@@ -16297,7 +16785,7 @@ const renderKnob = (
         h(
           'div',
           {
-            class: bem$12('pin'),
+            class: bem$16('pin'),
             attrs: {
               role: 'presentation',
             },
@@ -16305,7 +16793,7 @@ const renderKnob = (
           [Math.round(value)]
         ),
       h('div', {
-        class: bem$12('knob'),
+        class: bem$16('knob'),
         attrs: {
           role: 'presentation',
         },
@@ -16328,7 +16816,7 @@ const valueToRatio = (value, min, max) => {
   return clamp$4(0, (value - min) / (max - min), 1);
 };
 
-var range = /*#__PURE__*/ createComponent$13({
+var range = /*#__PURE__*/ createComponent$18({
   mixins: [/*#__PURE__*/ useColor()],
   inject: {
     Item: {
@@ -16671,7 +17159,7 @@ var range = /*#__PURE__*/ createComponent$13({
     return h(
       'div',
       {
-        class: bem$12({
+        class: bem$16({
           disabled,
           pressed: pressedKnob !== undefined,
           'has-pin': pin,
@@ -16686,7 +17174,7 @@ var range = /*#__PURE__*/ createComponent$13({
         h(
           'div',
           {
-            class: bem$12('slider'),
+            class: bem$16('slider'),
             ref: 'rangeSlider',
           },
           [
@@ -16696,19 +17184,19 @@ var range = /*#__PURE__*/ createComponent$13({
                 attrs: {
                   role: 'presentation',
                 },
-                class: bem$12('tick', {
+                class: bem$16('tick', {
                   active: tick.active,
                 }),
               })
             ),
             h('div', {
-              class: bem$12('bar'),
+              class: bem$16('bar'),
               attrs: {
                 role: 'presentation',
               },
             }),
             h('div', {
-              class: bem$12('bar', {
+              class: bem$16('bar', {
                 active: true,
               }),
               attrs: {
@@ -16947,15 +17435,15 @@ const translateElement = (el, value) => {
 };
 
 const {
-  createComponent: createComponent$14,
-  bem: bem$13,
+  createComponent: createComponent$19,
+  bem: bem$17,
 } = /*#__PURE__*/ createNamespace('refresher');
 
 const clamp$5 = (min, n, max) => {
   return Math.max(min, Math.min(n, max));
 };
 
-var refresher = /*#__PURE__*/ createComponent$14({
+var refresher = /*#__PURE__*/ createComponent$19({
   props: {
     pullMin: {
       type: Number,
@@ -17698,7 +18186,7 @@ var refresher = /*#__PURE__*/ createComponent$14({
       'div',
       {
         class: [
-          bem$13(),
+          bem$17(),
           {
             // Used internally for styling
             [`refresher-${mode}`]: true,
@@ -17853,10 +18341,10 @@ const blockedTags = [
 ];
 
 const {
-  createComponent: createComponent$15,
-  bem: bem$14,
+  createComponent: createComponent$1a,
+  bem: bem$18,
 } = /*#__PURE__*/ createNamespace('refresher-content');
-var refresherContent = /*#__PURE__*/ createComponent$15({
+var refresherContent = /*#__PURE__*/ createComponent$1a({
   props: {
     pullingIcon: String,
     pullingText: String,
@@ -17914,7 +18402,7 @@ var refresherContent = /*#__PURE__*/ createComponent$15({
     return h(
       'div',
       {
-        class: bem$14(),
+        class: bem$18(),
       },
       [
         h(
@@ -17937,7 +18425,7 @@ var refresherContent = /*#__PURE__*/ createComponent$15({
                       class: 'spinner-arrow-container',
                     },
                     [
-                      h('line-spinner', {
+                      h(Spinner, {
                         attrs: {
                           type: pullingIcon,
                           paused: true,
@@ -18000,7 +18488,7 @@ var refresherContent = /*#__PURE__*/ createComponent$15({
                   class: 'refresher-refreshing-icon',
                 },
                 [
-                  h('line-spinner', {
+                  h(Spinner, {
                     attrs: {
                       type: refreshingSpinner,
                     },
@@ -18022,10 +18510,10 @@ var refresherContent = /*#__PURE__*/ createComponent$15({
 });
 
 const {
-  createComponent: createComponent$16,
-  bem: bem$15,
+  createComponent: createComponent$1b,
+  bem: bem$19,
 } = /*#__PURE__*/ createNamespace('reorder');
-var reorder = /*#__PURE__*/ createComponent$16({
+var reorder = /*#__PURE__*/ createComponent$1b({
   data() {
     return {
       reorderIndex: -1,
@@ -18038,12 +18526,12 @@ var reorder = /*#__PURE__*/ createComponent$16({
     return h(
       'div',
       {
-        class: bem$15(),
+        class: bem$19(),
       },
       [
         this.slots() ||
           h('line-icon', {
-            class: bem$15('icon'),
+            class: bem$19('icon'),
             attrs: {
               size: 'small',
               name: reorderIcon,
@@ -18056,8 +18544,8 @@ var reorder = /*#__PURE__*/ createComponent$16({
 });
 
 const {
-  createComponent: createComponent$17,
-  bem: bem$16,
+  createComponent: createComponent$1c,
+  bem: bem$1a,
 } = /*#__PURE__*/ createNamespace('reorder-group');
 
 const indexForItem = (element) => {
@@ -18091,7 +18579,7 @@ const reorderArray = (array, from, to) => {
   return array.slice();
 };
 
-var reorderGroup = /*#__PURE__*/ createComponent$17({
+var reorderGroup = /*#__PURE__*/ createComponent$1c({
   inject: {
     Content: {
       default: undefined,
@@ -18402,7 +18890,7 @@ var reorderGroup = /*#__PURE__*/ createComponent$17({
     return h(
       'div',
       {
-        class: bem$16({
+        class: bem$1a({
           enabled: !disabled,
           'list-active': state !== 0,
           /* Idle */
@@ -18414,10 +18902,10 @@ var reorderGroup = /*#__PURE__*/ createComponent$17({
 });
 
 const {
-  createComponent: createComponent$18,
-  bem: bem$17,
+  createComponent: createComponent$1d,
+  bem: bem$1b,
 } = /*#__PURE__*/ createNamespace('row');
-var row = /*#__PURE__*/ createComponent$18({
+var row = /*#__PURE__*/ createComponent$1d({
   functional: true,
 
   render(h, { data, slots }) {
@@ -18425,7 +18913,7 @@ var row = /*#__PURE__*/ createComponent$18({
       'div',
       helper([
         {
-          class: bem$17(),
+          class: bem$1b(),
         },
         data,
       ]),
@@ -18434,14 +18922,14 @@ var row = /*#__PURE__*/ createComponent$18({
   },
 });
 
-const NAMESPACE$a = 'Segment';
+const NAMESPACE$c = 'Segment';
 const {
-  createComponent: createComponent$19,
-  bem: bem$18,
+  createComponent: createComponent$1e,
+  bem: bem$1c,
 } = /*#__PURE__*/ createNamespace('segment');
-var segment = /*#__PURE__*/ createComponent$19({
+var segment = /*#__PURE__*/ createComponent$1e({
   mixins: [
-    /*#__PURE__*/ useCheckGroupWithModel(NAMESPACE$a),
+    /*#__PURE__*/ useCheckGroupWithModel(NAMESPACE$c),
     /*#__PURE__*/ useColor(),
   ],
   inject: {
@@ -18569,7 +19057,7 @@ var segment = /*#__PURE__*/ createComponent$19({
       const clicked = items.find((item) => item.$el === targetEl); // Make sure we are only checking for activation on a segment button
       // since disabled buttons will get the click on the segment
 
-      if (clicked.$options.name !== 'line-segment-button') {
+      if (clicked && clicked.$options.name !== 'line-segment-button') {
         return;
       } // If there are no checked buttons, set the current button to checked
 
@@ -18751,7 +19239,7 @@ var segment = /*#__PURE__*/ createComponent$19({
       'div',
       {
         class: [
-          bem$18({
+          bem$1c({
             activated,
             disabled,
             scrollable,
@@ -18770,13 +19258,13 @@ var segment = /*#__PURE__*/ createComponent$19({
   },
 });
 
-const NAMESPACE$b = 'Segment';
+const NAMESPACE$d = 'Segment';
 const {
-  createComponent: createComponent$1a,
-  bem: bem$19,
+  createComponent: createComponent$1f,
+  bem: bem$1d,
 } = /*#__PURE__*/ createNamespace('segment-button');
-var segmentButton = /*#__PURE__*/ createComponent$1a({
-  mixins: [/*#__PURE__*/ useCheckItemWithModel(NAMESPACE$b)],
+var segmentButton = /*#__PURE__*/ createComponent$1f({
+  mixins: [/*#__PURE__*/ useCheckItemWithModel(NAMESPACE$d)],
   props: {
     layout: {
       type: String,
@@ -18842,7 +19330,7 @@ var segmentButton = /*#__PURE__*/ createComponent$1a({
           'aria-disabled': disabled ? 'true' : null,
         },
         class: [
-          bem$19({
+          bem$1d({
             'has-label': hasLabel,
             'has-icon': hasIcon,
             'has-label-only': hasLabel && !hasIcon,
@@ -18873,13 +19361,13 @@ var segmentButton = /*#__PURE__*/ createComponent$1a({
               'aria-pressed': checked ? 'true' : null,
               disabled: disabled,
             },
-            class: bem$19('button-native'),
+            class: bem$1d('button-native'),
           },
           [
             h(
               'span',
               {
-                class: bem$19('button-inner'),
+                class: bem$1d('button-inner'),
               },
               [this.slots()]
             ),
@@ -18892,7 +19380,7 @@ var segmentButton = /*#__PURE__*/ createComponent$1a({
             attrs: {
               part: 'indicator',
             },
-            class: bem$19('indicator', {
+            class: bem$1d('indicator', {
               animated: true,
             }),
             ref: 'indicatorEl',
@@ -18902,7 +19390,7 @@ var segmentButton = /*#__PURE__*/ createComponent$1a({
               attrs: {
                 part: 'indicator-background',
               },
-              class: bem$19('indicator-background'),
+              class: bem$1d('indicator-background'),
             }),
           ]
         ),
@@ -18912,10 +19400,10 @@ var segmentButton = /*#__PURE__*/ createComponent$1a({
 });
 
 const {
-  createComponent: createComponent$1b,
-  bem: bem$1a,
+  createComponent: createComponent$1g,
+  bem: bem$1e,
 } = /*#__PURE__*/ createNamespace('skeleton-text');
-var skeletonText = /*#__PURE__*/ createComponent$1b({
+var skeletonText = /*#__PURE__*/ createComponent$1g({
   props: {
     animated: Boolean,
   },
@@ -18930,7 +19418,7 @@ var skeletonText = /*#__PURE__*/ createComponent$1b({
       'div',
       {
         class: [
-          bem$1a({
+          bem$1e({
             animated,
           }),
           {
@@ -18944,10 +19432,10 @@ var skeletonText = /*#__PURE__*/ createComponent$1b({
 });
 
 const {
-  createComponent: createComponent$1c,
-  bem: bem$1b,
+  createComponent: createComponent$1h,
+  bem: bem$1f,
 } = /*#__PURE__*/ createNamespace('slide');
-var slide = /*#__PURE__*/ createComponent$1c({
+var slide = /*#__PURE__*/ createComponent$1h({
   functional: true,
 
   render(h, { data, slots }) {
@@ -18956,7 +19444,7 @@ var slide = /*#__PURE__*/ createComponent$1c({
       helper([
         {
           class: [
-            bem$1b(),
+            bem$1f(),
             {
               'swiper-slide': true,
               'swiper-zoom-container': true,
@@ -28866,10 +29354,10 @@ if (typeof Swiper.use === 'undefined') {
 Swiper.use(components);
 
 const {
-  createComponent: createComponent$1d,
-  bem: bem$1c,
+  createComponent: createComponent$1i,
+  bem: bem$1g,
 } = /*#__PURE__*/ createNamespace('slides');
-var slides = /*#__PURE__*/ createComponent$1d({
+var slides = /*#__PURE__*/ createComponent$1i({
   props: {
     options: Object,
     pager: Boolean,
@@ -29252,7 +29740,7 @@ var slides = /*#__PURE__*/ createComponent$1d({
       'div',
       {
         class: [
-          bem$1c(),
+          bem$1g(),
           {
             // Used internally for styling
             [`slides-${mode}`]: true,
@@ -29283,20 +29771,20 @@ var slides = /*#__PURE__*/ createComponent$1d({
   },
 });
 
-const NAMESPACE$c = 'SwitchGroup';
+const NAMESPACE$e = 'SwitchGroup';
 const {
-  createComponent: createComponent$1e,
-  bem: bem$1d,
+  createComponent: createComponent$1j,
+  bem: bem$1h,
 } = /*#__PURE__*/ createNamespace('switch-group');
-var switchGroup = /*#__PURE__*/ createComponent$1e({
-  mixins: [/*#__PURE__*/ useGroup(NAMESPACE$c)],
+var switchGroup = /*#__PURE__*/ createComponent$1j({
+  mixins: [/*#__PURE__*/ useGroup(NAMESPACE$e)],
 
   render() {
     const h = arguments[0];
     return h(
       'div',
       {
-        class: bem$1d(),
+        class: bem$1h(),
       },
       [this.slots()]
     );
@@ -29304,20 +29792,14 @@ var switchGroup = /*#__PURE__*/ createComponent$1e({
 });
 
 const {
-  createComponent: createComponent$1f,
-  bem: bem$1e,
+  createComponent: createComponent$1k,
+  bem: bem$1i,
 } = /*#__PURE__*/ createNamespace('switch-indicator');
-var switchIndicator = /*#__PURE__*/ createComponent$1f({
+var switchIndicator = /*#__PURE__*/ createComponent$1k({
   functional: true,
   props: {
-    checked: {
-      type: Boolean,
-      default: false,
-    },
-    disabled: {
-      type: Boolean,
-      default: false,
-    },
+    checked: Boolean,
+    disabled: Boolean,
   },
 
   render(h, { props, data, slots }) {
@@ -29326,7 +29808,7 @@ var switchIndicator = /*#__PURE__*/ createComponent$1f({
       Tag,
       helper([
         {
-          class: bem$1e({
+          class: bem$1i({
             'is-checked': props.checked,
             'is-disabled': props.disabled,
           }),
@@ -29337,7 +29819,7 @@ var switchIndicator = /*#__PURE__*/ createComponent$1f({
         h(
           'div',
           {
-            class: bem$1e('thumb'),
+            class: bem$1i('thumb'),
           },
           [slots()]
         ),
@@ -29346,14 +29828,14 @@ var switchIndicator = /*#__PURE__*/ createComponent$1f({
   },
 });
 
-const NAMESPACE$d = 'SwitchGroup';
+const NAMESPACE$f = 'SwitchGroup';
 const {
-  createComponent: createComponent$1g,
-  bem: bem$1f,
+  createComponent: createComponent$1l,
+  bem: bem$1j,
 } = /*#__PURE__*/ createNamespace('switch');
 let gesture;
-var _switch = /*#__PURE__*/ createComponent$1g({
-  mixins: [/*#__PURE__*/ useCheckItem(NAMESPACE$d), /*#__PURE__*/ useColor()],
+var _switch = /*#__PURE__*/ createComponent$1l({
+  mixins: [/*#__PURE__*/ useCheckItem(NAMESPACE$f), /*#__PURE__*/ useColor()],
 
   data() {
     return {
@@ -29464,7 +29946,7 @@ var _switch = /*#__PURE__*/ createComponent$1g({
           attrs: {
             role: 'checkbox',
           },
-          class: bem$1f({
+          class: bem$1j({
             disabled,
             checked,
             activated,
@@ -29481,11 +29963,11 @@ var _switch = /*#__PURE__*/ createComponent$1g({
         h(
           'div',
           {
-            class: bem$1f('icon'),
+            class: bem$1j('icon'),
           },
           [
             h('div', {
-              class: bem$1f('inner'),
+              class: bem$1j('inner'),
             }),
           ]
         ),
@@ -29501,14 +29983,14 @@ var _switch = /*#__PURE__*/ createComponent$1g({
   },
 });
 
-const NAMESPACE$e = 'TabBar';
+const NAMESPACE$g = 'TabBar';
 const {
-  createComponent: createComponent$1h,
-  bem: bem$1g,
+  createComponent: createComponent$1m,
+  bem: bem$1k,
 } = /*#__PURE__*/ createNamespace('tab-bar');
-var tabBar = /*#__PURE__*/ createComponent$1h({
+var tabBar = /*#__PURE__*/ createComponent$1m({
   mixins: [
-    /*#__PURE__*/ useCheckGroupWithModel(NAMESPACE$e),
+    /*#__PURE__*/ useCheckGroupWithModel(NAMESPACE$g),
     /*#__PURE__*/ useColor(),
   ],
   props: {
@@ -29547,7 +30029,7 @@ var tabBar = /*#__PURE__*/ createComponent$1h({
       'div',
       helper([
         {
-          class: bem$1g({
+          class: bem$1k({
             translucent,
             hidden: keyboardVisible,
           }),
@@ -29561,14 +30043,14 @@ var tabBar = /*#__PURE__*/ createComponent$1h({
   },
 });
 
-const NAMESPACE$f = 'TabBar';
+const NAMESPACE$h = 'TabBar';
 const {
-  createComponent: createComponent$1i,
-  bem: bem$1h,
+  createComponent: createComponent$1n,
+  bem: bem$1l,
 } = /*#__PURE__*/ createNamespace('tab-button');
-var tabButton = /*#__PURE__*/ createComponent$1i({
+var tabButton = /*#__PURE__*/ createComponent$1n({
   mixins: [
-    /*#__PURE__*/ useCheckItemWithModel(NAMESPACE$f),
+    /*#__PURE__*/ useCheckItemWithModel(NAMESPACE$h),
     /*#__PURE__*/ useRipple(),
   ],
   props: {
@@ -29607,7 +30089,7 @@ var tabButton = /*#__PURE__*/ createComponent$1i({
       helper([
         {
           class: [
-            bem$1h({
+            bem$1l({
               'has-label': hasLabel,
               'has-icon': hasIcon,
               'has-label-only': hasLabel && !hasIcon,
@@ -29659,13 +30141,13 @@ var tabButton = /*#__PURE__*/ createComponent$1i({
   },
 });
 
-const NAMESPACE$g = 'Tabs';
+const NAMESPACE$i = 'Tabs';
 const {
-  createComponent: createComponent$1j,
-  bem: bem$1i,
+  createComponent: createComponent$1o,
+  bem: bem$1m,
 } = /*#__PURE__*/ createNamespace('tab');
-var tab = /*#__PURE__*/ createComponent$1j({
-  mixins: [/*#__PURE__*/ useCheckItemWithModel(NAMESPACE$g)],
+var tab = /*#__PURE__*/ createComponent$1o({
+  mixins: [/*#__PURE__*/ useCheckItemWithModel(NAMESPACE$i)],
   props: {
     title: String,
     tab: String,
@@ -29695,7 +30177,7 @@ var tab = /*#__PURE__*/ createComponent$1j({
       helper([
         {
           class: [
-            bem$1i({
+            bem$1m({
               hidden: !checked,
             }),
           ],
@@ -29714,13 +30196,13 @@ var tab = /*#__PURE__*/ createComponent$1j({
   },
 });
 
-const NAMESPACE$h = 'Tabs';
+const NAMESPACE$j = 'Tabs';
 const {
-  createComponent: createComponent$1k,
-  bem: bem$1j,
+  createComponent: createComponent$1p,
+  bem: bem$1n,
 } = /*#__PURE__*/ createNamespace('tabs');
-var tabs = /*#__PURE__*/ createComponent$1k({
-  mixins: [/*#__PURE__*/ useCheckGroupWithModel(NAMESPACE$h)],
+var tabs = /*#__PURE__*/ createComponent$1p({
+  mixins: [/*#__PURE__*/ useCheckGroupWithModel(NAMESPACE$j)],
   props: {
     exclusive: {
       type: Boolean,
@@ -29734,7 +30216,7 @@ var tabs = /*#__PURE__*/ createComponent$1k({
       'div',
       helper([
         {
-          class: bem$1j(),
+          class: bem$1n(),
         },
         {
           on: this.$listeners,
@@ -29745,7 +30227,7 @@ var tabs = /*#__PURE__*/ createComponent$1k({
         h(
           'div',
           {
-            class: bem$1j('inner'),
+            class: bem$1n('inner'),
           },
           [this.slots()]
         ),
@@ -29756,8 +30238,8 @@ var tabs = /*#__PURE__*/ createComponent$1k({
 });
 
 const {
-  createComponent: createComponent$1l,
-  bem: bem$1k,
+  createComponent: createComponent$1q,
+  bem: bem$1o,
 } = /*#__PURE__*/ createNamespace('textarea');
 
 const findItemLabel$2 = (componentEl) => {
@@ -29771,7 +30253,7 @@ const findItemLabel$2 = (componentEl) => {
 };
 
 let textareaIds = 0;
-var textarea = /*#__PURE__*/ createComponent$1l({
+var textarea = /*#__PURE__*/ createComponent$1q({
   mixins: [
     /*#__PURE__*/ useModel('nativeValue', {
       event: 'textareaChange',
@@ -29967,7 +30449,7 @@ var textarea = /*#__PURE__*/ createComponent$1l({
       'div',
       helper([
         {
-          class: [bem$1k()],
+          class: [bem$1o()],
         },
         {
           on: this.$listeners,
@@ -30007,10 +30489,10 @@ var textarea = /*#__PURE__*/ createComponent$1l({
 });
 
 const {
-  createComponent: createComponent$1m,
-  bem: bem$1l,
+  createComponent: createComponent$1r,
+  bem: bem$1p,
 } = /*#__PURE__*/ createNamespace('thumbnail');
-var thumbnail = /*#__PURE__*/ createComponent$1m({
+var thumbnail = /*#__PURE__*/ createComponent$1r({
   functional: true,
 
   render(h, { data, slots }) {
@@ -30018,7 +30500,7 @@ var thumbnail = /*#__PURE__*/ createComponent$1m({
       'div',
       helper([
         {
-          class: bem$1l(),
+          class: bem$1p(),
         },
         data,
       ]),
@@ -30028,10 +30510,10 @@ var thumbnail = /*#__PURE__*/ createComponent$1m({
 });
 
 const {
-  createComponent: createComponent$1n,
-  bem: bem$1m,
+  createComponent: createComponent$1s,
+  bem: bem$1q,
 } = /*#__PURE__*/ createNamespace('toolbar');
-var toolbar = /*#__PURE__*/ createComponent$1n({
+var toolbar = /*#__PURE__*/ createComponent$1s({
   functional: true,
   props: {
     color: String,
@@ -30043,18 +30525,18 @@ var toolbar = /*#__PURE__*/ createComponent$1n({
       'div',
       helper([
         {
-          class: [bem$1m(), createColorClasses(color)],
+          class: [bem$1q(), createColorClasses(color)],
         },
         data,
       ]),
       [
         h('div', {
-          class: bem$1m('background'),
+          class: bem$1q('background'),
         }),
         h(
           'div',
           {
-            class: bem$1m('container'),
+            class: bem$1q('container'),
           },
           [
             slots('start'),
@@ -30062,7 +30544,7 @@ var toolbar = /*#__PURE__*/ createComponent$1n({
             h(
               'div',
               {
-                class: bem$1m('content'),
+                class: bem$1q('content'),
               },
               [slots()]
             ),
@@ -30076,10 +30558,10 @@ var toolbar = /*#__PURE__*/ createComponent$1n({
 });
 
 const {
-  createComponent: createComponent$1o,
-  bem: bem$1n,
+  createComponent: createComponent$1t,
+  bem: bem$1r,
 } = /*#__PURE__*/ createNamespace('title');
-var title = /*#__PURE__*/ createComponent$1o({
+var title = /*#__PURE__*/ createComponent$1t({
   mixins: [/*#__PURE__*/ useColor()],
   props: {
     // large | small | default
@@ -30093,7 +30575,7 @@ var title = /*#__PURE__*/ createComponent$1o({
       'div',
       helper([
         {
-          class: bem$1n({
+          class: bem$1r({
             [size]: isDef(size),
           }),
         },
@@ -30105,7 +30587,7 @@ var title = /*#__PURE__*/ createComponent$1o({
         h(
           'div',
           {
-            class: bem$1n('inner'),
+            class: bem$1r('inner'),
           },
           [this.slots()]
         ),
@@ -30139,6 +30621,11 @@ var components$1 = /*#__PURE__*/ Object.freeze({
   CheckIndicator: CheckIndicator,
   Chip: chip,
   Col: col,
+  CollapseItemContent: CollapseItemContent,
+  CollapseItem: collapseItem,
+  Collapse: collapse,
+  ComboBoxItem: ComboBoxItem,
+  ComboBox: comboBox,
   Content: content,
   Datetime: datetime,
   Fab: fab,
@@ -31113,138 +31600,6 @@ function useAsyncRender() {
   });
 }
 
-/**
- * Enter Animation
- */
-const enterAnimation = (baseEl, paddingTop, paddingBottom) => {
-  const height = baseEl.scrollHeight || '';
-  const baseAnimation = createAnimation();
-  baseAnimation
-    .addElement(baseEl)
-    .easing('ease-in-out')
-    .duration(300)
-    // .afterClearStyles(['height'])
-    .fromTo('padding-top', '0px', `${paddingTop}px`)
-    .fromTo('padding-bottom', '0px', `${paddingBottom}px`)
-    .fromTo('height', '0px', `${height}px`);
-  return baseAnimation;
-};
-
-/**
- * Leave Animation
- */
-const leaveAnimation = (baseEl, paddingTop, paddingBottom) => {
-  const height = baseEl.scrollHeight || '';
-  const baseAnimation = createAnimation();
-  baseAnimation
-    .addElement(baseEl)
-    .easing('ease-in-out')
-    .duration(300)
-    .fromTo('padding-top', `${paddingTop}px`, '0px')
-    .fromTo('padding-bottom', `${paddingBottom}px`, '0px')
-    .fromTo('height', `${height}px`, '0px');
-  return baseAnimation;
-};
-
-function useCollapseTransition() {
-  return createMixins({
-    mixins: [
-      // Popup lifecycle events depend on Transition mechanism
-      // Transition should not be disabled
-      useTransition(),
-    ],
-    beforeMount() {
-      const onBeforeEnter = async (el) => {
-        this.overflow = el.style.overflow;
-        this.paddingTop = el.style.paddingTop;
-        this.paddingBottom = el.style.paddingBottom;
-        el.style.height = '0px';
-        el.style.paddingTop = '0px';
-        el.style.paddingBottom = '0px';
-        el.style.overflow = 'hidden';
-        this.$emit('aboutToShow', el);
-      };
-      const onAfterEnter = (el) => {
-        el.style.height = '';
-        el.style.paddingTop = '';
-        el.style.paddingBottom = '';
-        el.style.animationTimingFunction = '';
-        el.style.animationFillMode = '';
-        el.style.animationDirection = '';
-        el.style.animationIterationCount = '';
-        el.style.animationName = '';
-        el.style.overflow = this.overflow;
-        this.$emit('opened');
-      };
-      const onBeforeLeave = (el) => {
-        this.overflow = el.style.overflow;
-        this.paddingTop = el.style.paddingTop;
-        this.paddingBottom = el.style.paddingBottom;
-        el.style.height = `${el.scrollHeight}px`;
-        el.style.overflow = 'hidden';
-        this.$emit('aboutToHide', el);
-      };
-      const onAfterLeave = (el) => {
-        el.style.height = '';
-        el.style.paddingTop = '';
-        el.style.paddingBottom = '';
-        el.style.animationTimingFunction = '';
-        el.style.animationFillMode = '';
-        el.style.animationDirection = '';
-        el.style.animationIterationCount = '';
-        el.style.animationName = '';
-        el.style.overflow = this.overflow;
-        el.style.paddingTop = this.paddingTop;
-        el.style.paddingBottom = this.paddingBottom;
-        this.$emit('closed');
-      };
-      const onEnter = async (el, done) => {
-        await this.$nextTick();
-        this.animation = enterAnimation(
-          el,
-          this.paddingTop,
-          this.paddingBottom
-        );
-        if (!config.getBoolean('animated', true)) {
-          this.animation.duration(0);
-        }
-        this.$emit('animation-enter', el, this.animation);
-        await this.animation.play().catch((e) => console.error(e));
-        done();
-      };
-      const onLeave = async (el, done) => {
-        await this.$nextTick();
-        this.animation = leaveAnimation(
-          el,
-          this.paddingTop,
-          this.paddingBottom
-        );
-        if (!config.getBoolean('animated', true)) {
-          this.animation.duration(0);
-        }
-        this.$emit('animation-leave', el, this.animation);
-        await this.animation.play().catch((e) => console.error(e));
-        done();
-      };
-      const onCancel = () => {
-        if (this.animation) {
-          this.animation.stop();
-          this.animation = null;
-        }
-        this.$emit('canceled');
-      };
-      this.$on('before-enter', onBeforeEnter);
-      this.$on('after-enter', onAfterEnter);
-      this.$on('before-leave', onBeforeLeave);
-      this.$on('after-leave', onAfterLeave);
-      this.$on('enter', onEnter);
-      this.$on('enter-cancelled', onCancel);
-      this.$on('leave', onLeave);
-      this.$on('leave-cancelled', onCancel);
-    },
-  });
-}
-
 function useOptions(options, namsespace = 'options') {
   return createMixins({
     props: options.reduce(
@@ -31327,7 +31682,7 @@ var mixins = /*#__PURE__*/ Object.freeze({
 
 const Line = {
   install,
-  version: '1.0.0-alpha.1',
+  version: '1.0.0-alpha.2',
 };
 function defaulExport() {
   // auto install for umd build
@@ -31349,7 +31704,7 @@ function defaulExport() {
     directives,
     controllers,
     mixins,
-    version: '1.0.0-alpha.1',
+    version: '1.0.0-alpha.2',
   };
 }
 var index$1 = /*#__PURE__*/ defaulExport();
@@ -31381,6 +31736,11 @@ export {
   checkItem as CheckItem,
   chip as Chip,
   col as Col,
+  collapse as Collapse,
+  collapseItem as CollapseItem,
+  CollapseItemContent,
+  comboBox as ComboBox,
+  ComboBoxItem,
   content as Content,
   datetime as Datetime,
   fab as Fab,
