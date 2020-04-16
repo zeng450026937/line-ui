@@ -1,1 +1,1 @@
-declare const tr: (...args: string[]) => string;
+declare let $t: (...args: string[]) => string;

@@ -15,6 +15,14 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "SPA",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/node_modules/@vue/cli-service/bin/vue-cli-service.js",
+      "args": ["spa"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "SSR",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/node_modules/@vue/cli-service/bin/vue-cli-service.js",

@@ -3,7 +3,12 @@ module.exports = (api, options) => {
     api.chainWebpack((config) => {
       config.entry('app').clear().add(api.resolve('src/app.ts'));
     });
-
-    await api.service.run('serve', args, rawArgs);
+    const { build } = args;
+    const command = build ? 'build' : 'serve';
+    await api.service.run(command, args, rawArgs);
   });
+};
+
+module.exports.defaultModes = {
+  spa: 'development',
 };

@@ -1,6 +1,7 @@
-import { Model } from '@line-ui/kom/src';
+/* eslint-disable-next-line  */
+import { Model } from '@line-ui/kom';
 
-export async function createModel() {
+export function createModel() {
   const model = new Model();
   return model;
 }

@@ -1,32 +1,6 @@
-import { Layer, SEPARATOR } from '../src/layer';
+import { Layer } from '../src/layer';
 
 describe('kom/layer', () => {
-  test('match', () => {
-    let matched = false;
-    const ns = 'dummy';
-    const layer = new Layer();
-
-    matched = layer.match('');
-    expect(matched).toBe(true);
-
-    matched = layer.match('any');
-    expect(matched).toBe(true);
-
-    layer.ns = ns;
-
-    matched = layer.match('');
-    expect(matched).toBe(false);
-
-    matched = layer.match('any');
-    expect(matched).toBe(false);
-
-    matched = layer.match(ns);
-    expect(matched).toBe(true);
-
-    matched = layer.match(`${ns}${SEPARATOR}`);
-    expect(matched).toBe(true);
-  });
-
   test('dispatch with middleware', async () => {
     const layer = new Layer();
     const midSpy = jest.fn(async () => {});

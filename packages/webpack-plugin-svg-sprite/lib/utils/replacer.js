@@ -59,6 +59,8 @@ module.exports = class Replacer {
    * @return {NormalModule}
    */
   static replaceInModuleSource(module, replacements, compilation) {
+    if (!replacements.length) return module;
+
     if (module.type === MINI_EXTRACT_MODULE_TYPE) {
       replacements.forEach(({ token, replaceTo }) => {
         if (module.content.indexOf(token) < 0) {
@@ -76,6 +78,8 @@ module.exports = class Replacer {
     const originalSourceContent = module.originalSource().source();
 
     replacements.forEach(({ token, replaceTo }) => {
+      if (!token) return;
+
       const indexes = Replacer.getAllStringOccurrences(
         originalSourceContent,
         token
@@ -86,7 +90,7 @@ module.exports = class Replacer {
         const end = idx[1] - 1;
 
         const alreadyHasReplacement = source.replacements.find(
-          (r) => r[0] === start && r[1] === end && r[2] === replaceTo
+          (r) => r.start === start && r.end === end && r.content === replaceTo
         );
 
         if (alreadyHasReplacement) {

@@ -31,11 +31,6 @@ export class Layer<T extends LayerContext = LayerContext> {
     this.middleware = [];
   }
 
-  match(path: string = ''): boolean {
-    if (!this.ns) return true;
-    return path.startsWith(`${this.ns}${SEPARATOR}`) || path === this.ns;
-  }
-
   use(pathOrFn: string | MiddlewareFn<T>, fn?: MiddlewareFn<T>, thisArg?: any) {
     const handler = fn
       ? createHandler(pathOrFn as string, fn, thisArg)
@@ -107,8 +102,4 @@ export const createHandler = <T extends LayerContext>(
     }
     return next();
   };
-};
-
-export const resolvePath = (...args: string[]): string => {
-  return args.join(SEPARATOR).split(SEPARATOR).filter(Boolean).join(SEPARATOR);
 };
