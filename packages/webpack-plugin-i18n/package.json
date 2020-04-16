@@ -5,7 +5,8 @@
   "main": "lib/plugin.js",
   "files": [
     "index.js",
-    "lib"
+    "lib",
+    "runtime"
   ],
   "keywords": [
     "line-ui"
