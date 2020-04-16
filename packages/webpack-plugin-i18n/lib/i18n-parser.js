@@ -3,7 +3,6 @@ const NullFactory = require('webpack/lib/NullFactory');
 const BasicEvaluatedExpression = require('webpack/lib/BasicEvaluatedExpression');
 const helper = require('webpack/lib/ParserHelpers');
 const path = require('path');
-const Replacer = require('./replacer');
 
 const NS = 'i18n-parser';
 
@@ -40,16 +39,6 @@ class I18nParser {
         this.seal(modules);
       });
 
-      compilation.hooks.beforeChunkAssets.tap(NS, () => {
-        if (!this.options.replace) return;
-        this.translations.forEach((replacements, module) => {
-          Replacer.replaceInModuleSource(module, replacements, compilation);
-        });
-        this.provides.forEach((replacements, module) => {
-          Replacer.replaceInModuleSource(module, replacements, compilation);
-        });
-      });
-
       compilation.hooks.additionalAssets.tapPromise(NS, async () => {
         if (!this.options.emit) return;
         await this.hookAdditionalAssets(compilation);
@@ -78,6 +67,7 @@ class I18nParser {
           const file = relative(resource);
           const disambiguation = '';
 
+          const dep = toConstantDependency(parser, JSON.stringify(text))(arg);
           const replacements = this.translate(parser.state.current);
 
           replacements.push({
@@ -85,7 +75,12 @@ class I18nParser {
             file,
             disambiguation,
             token: text,
-            replaceTo: '',
+            get replaceTo() {
+              return JSON.parse(dep.expression);
+            },
+            set replaceTo(val) {
+              dep.expression = JSON.stringify(val);
+            },
             start: arg.start,
             end: arg.end - 1,
           });
@@ -128,11 +123,20 @@ class I18nParser {
         });
 
         parser.hooks.expression.for(provide).tap(NS, (expression) => {
+          const dep = toConstantDependency(
+            parser,
+            JSON.stringify([])
+          )(expression);
           const replacements = this.provide(parser.state.current);
 
           replacements.push({
             token: expression.name,
-            replaceTo: '[]',
+            get replaceTo() {
+              return JSON.parse(dep.expression);
+            },
+            set replaceTo(val) {
+              dep.expression = JSON.stringify(val);
+            },
             start: expression.start,
             end: expression.end - 1,
           });
@@ -196,17 +200,19 @@ class I18nParser {
   }
 
   seal(modules) {
+    const { replace } = this.options;
+    const data = [];
     this.translations = new Map();
     this.provides = new Map();
-
-    const data = [];
 
     modules.forEach((module) => {
       const seen = this.seens.get(module);
       if (!seen) return;
       if (seen.translations.length) {
         seen.translations.forEach((r) => {
-          r.replaceTo = JSON.stringify(data.push(r.text) - 1);
+          const index = data.push(r.text);
+          if (!replace) return;
+          r.replaceTo = index - 1;
         });
         this.translations.set(module, seen.translations);
       }
@@ -217,7 +223,8 @@ class I18nParser {
 
     this.provides.forEach((provides) => {
       provides.forEach((r) => {
-        r.replaceTo = JSON.stringify(data);
+        if (!replace) return;
+        r.replaceTo = data;
       });
     });
   }
@@ -228,7 +235,7 @@ class I18nParser {
 
     Array.from(this.translations.keys()).forEach((module) => {
       const replacements = this.translations.get(module) || [];
-      const chunk = Replacer.getModuleChunk(module);
+      const chunk = getModuleChunk(module);
       let filename;
 
       if (options.filename && options.emit) {
@@ -254,6 +261,26 @@ class I18nParser {
     return files;
   }
 }
+
+const toConstantDependency = (parser, value) => {
+  return function constDependency(expr) {
+    const dep = new ConstDependency(value, expr.range, false);
+    dep.loc = expr.loc;
+    parser.state.current.addDependency(dep);
+    return dep;
+  };
+};
+
+const getModuleChunk = (module) => {
+  const chunks = Array.from(module.chunksIterable);
+  if (Array.isArray(chunks) && chunks.length > 0) {
+    return chunks[chunks.length - 1];
+  }
+  if (module.issuer) {
+    return getModuleChunk(module.issuer);
+  }
+  return null;
+};
 
 const SEPARATOR = '/';
 const resolvePath = (...args) => {
