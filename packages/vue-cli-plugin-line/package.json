@@ -9,7 +9,7 @@
   "keywords": [
     "line-ui"
   ],
-  "author": "Yealink Inc",
+  "author": "LINE-UI Team",
   "license": "MIT",
   "dependencies": {
     "@line-ui/babel-preset-line": "1.0.0-alpha.2",

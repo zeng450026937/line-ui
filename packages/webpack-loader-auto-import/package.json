@@ -12,7 +12,7 @@
   "keywords": [
     "line-ui"
   ],
-  "author": "Yealink Inc",
+  "author": "LINE-UI Team",
   "license": "MIT",
   "dependencies": {
     "html-tags": "^3.1.0"

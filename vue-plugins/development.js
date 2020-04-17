@@ -64,6 +64,7 @@ module.exports = (api, options) => {
         svgsprite: true,
         svgcomponent: false,
         i18n: true,
+        config: true,
       };
 
       if (line.autoimport) {
@@ -108,6 +109,9 @@ module.exports = (api, options) => {
 
       if (line.i18n) {
         config.plugin('i18n').use(require('@line-ui/webpack-plugin-i18n'));
+      }
+      if (line.config) {
+        config.plugin('config').use(require('@line-ui/webpack-plugin-config'));
       }
     }
   });

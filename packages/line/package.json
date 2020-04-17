@@ -37,7 +37,7 @@
     ],
     "babel": true
   },
-  "author": "Yealink Inc",
+  "author": "LINE-UI Team",
   "license": "MIT",
   "dependencies": {
     "@popperjs/core": "^2.0.6",

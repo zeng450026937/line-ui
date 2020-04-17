@@ -1,18 +1,17 @@
 {
-  "name": "@line-ui/swiper",
+  "name": "@line-ui/webpack-plugin-config",
   "version": "1.0.0-alpha.2",
-  "description": "@line-ui/swiper",
+  "description": "@line-ui/webpack-plugin-config",
   "main": "index.js",
-  "module": "dist/swiper.esm-bundler.js",
   "files": [
     "index.js",
-    "dist"
+    "lib",
+    "runtime"
   ],
-  "types": "dist/swiper.d.ts",
+  "types": "dist/webpack-plugin-config.d.ts",
   "keywords": [
     "line-ui"
   ],
-  "private": true,
   "author": "LINE-UI Team",
   "license": "MIT"
 }

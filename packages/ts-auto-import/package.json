@@ -13,7 +13,7 @@
     "line-ui"
   ],
   "private": true,
-  "author": "Yealink Inc",
+  "author": "LINE-UI Team",
   "license": "MIT",
   "peerDependencies": {
     "typescript": ">3.7.2"

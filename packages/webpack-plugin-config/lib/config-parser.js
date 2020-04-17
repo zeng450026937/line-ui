@@ -5,9 +5,9 @@ const helper = require('webpack/lib/ParserHelpers');
 const path = require('path');
 const tapable = require('tapable');
 
-const NS = 'i18n-parser';
+const NS = 'config-parser';
 
-class I18NParser {
+class ConfigParser {
   static getHooks(compilation) {
     const names = [
       'beforeOptimize',
@@ -29,11 +29,11 @@ class I18NParser {
 
   apply(compiler) {
     const {
-      manifest = 'i18n/manifest.json',
-      filename = 'i18n/i18n.json',
+      manifest = 'configs/manifest.json',
+      filename = 'configs/configs.json',
       emit = true,
-      method = '$tr',
-      runtime = '@line-ui/webpack-plugin-i18n/runtime',
+      method = '$config',
+      runtime = '@line-ui/webpack-plugin-config/runtime',
       vue = true,
     } = this.options;
 
@@ -130,9 +130,9 @@ class I18NParser {
         optimize: new tapable.AsyncSeriesHook(['manifests', 'helper']),
         afterOptimize: new tapable.AsyncSeriesHook(['manifests', 'helper']),
         // process stage
-        beforeProcess: new tapable.AsyncSeriesHook(['i18n', 'helper']),
-        process: new tapable.AsyncSeriesHook(['i18n', 'helper']),
-        afterProcess: new tapable.AsyncSeriesHook(['i18n', 'helper']),
+        beforeProcess: new tapable.AsyncSeriesHook(['configs', 'helper']),
+        process: new tapable.AsyncSeriesHook(['configs', 'helper']),
+        afterProcess: new tapable.AsyncSeriesHook(['configs', 'helper']),
       };
 
       Object.keys(hooks).forEach((name) => {
@@ -150,7 +150,7 @@ class I18NParser {
         // gen manifest and pass it with hooks
         const manifests = group('manifest');
         const helper = help();
-        const hooks = I18NParser.getHooks(compilation);
+        const hooks = ConfigParser.getHooks(compilation);
         await hooks.beforeOptimize.promise(manifests, helper);
         await hooks.optimize.promise(manifests, helper);
         await hooks.afterOptimize.promise(manifests, helper);
@@ -179,13 +179,13 @@ class I18NParser {
         // turn manifest item into key/value pair
         for (const asset of assets) {
           asset.configs = asset.configs.reduce((configs, config) => {
-            configs[config.replaceTo] = config.key;
+            configs[config.replaceTo] = config.fallback;
             return configs;
           }, {});
         }
 
         const helper = help();
-        const hooks = I18NParser.getHooks(compilation);
+        const hooks = ConfigParser.getHooks(compilation);
         await hooks.beforeProcess.promise(assets, helper);
         await hooks.process.promise(assets, helper);
         await hooks.afterProcess.promise(assets, helper);
@@ -219,6 +219,72 @@ class I18NParser {
         const isVueTemplate = (resource) =>
           /\.vue\?vue&type=template/.test(resource);
 
+        const error = (expr) => {
+          throw new Error(`
+    ${NS}: Only json-like config is supported.
+    ${relative(parser.state.current.resource)}
+    at ${expr.start}~${expr.end} ${expr.type}
+          `);
+        };
+
+        const walk = (expr) => {
+          let value = '';
+          switch (expr.type) {
+            case 'ArrayExpression':
+              value = walkArray(expr);
+              break;
+            case 'ObjectExpression':
+              value = walkObject(expr);
+              break;
+            case 'Identifier':
+              value = expr.name;
+              break;
+            case 'Literal':
+              value = expr.value;
+              break;
+            case 'TemplateLiteral':
+              value = parser.evaluateExpression(expr).string;
+              if (value === null) error(expr);
+              break;
+            default:
+              error(expr);
+              break;
+          }
+          return value;
+        };
+        const walkArray = (expr) => {
+          const value = [];
+          if (expr.elements) {
+            for (const element of expr.elements) {
+              value.push(walk(element));
+            }
+          }
+          return value;
+        };
+        const walkObject = (expr) => {
+          const value = {};
+          for (
+            let propIndex = 0, len = expr.properties.length;
+            propIndex < len;
+            propIndex++
+          ) {
+            const prop = expr.properties[propIndex];
+            if (prop.type === 'SpreadElement') {
+              Object.assign(value, walk(prop.argument));
+              continue;
+            }
+            value[walk(prop.key)] = walk(prop.value);
+          }
+          return value;
+        };
+
+        const parse = (expr) => {
+          if ('value' in expr) {
+            return expr.value;
+          }
+          return walk(expr);
+        };
+
         const call = (expression) => {
           const { resource } = parser.state.current;
           // if comes from node_modules, ignore it
@@ -228,23 +294,10 @@ class I18NParser {
           // config without args
           if (!args.length) return;
 
-          const [arg1] = args;
-
-          const parse = (expr) => {
-            const evaluated = parser.evaluateExpression(expr);
-            // TODO
-            // check key type, number should be parse into string
-            // and fire warning, as only string key is allowed in object
-            if (!evaluated.isString()) {
-              console.warn(
-                `it is recommended alawys using string key for i18n: ${key.name}`
-              );
-              return;
-            }
-            return evaluated.string;
-          };
+          const [arg1, arg2] = args;
 
           const key = parse(arg1);
+          const fallback = parse(arg2);
           const file = relative(resource);
           // if no config key
           if (!key) return;
@@ -253,6 +306,7 @@ class I18NParser {
 
           const config = {
             key,
+            fallback,
             file,
             // for key optimization
             get replaceTo() {
@@ -334,4 +388,4 @@ const resolvePath = (...args) => {
 
 const isFunction = (val) => typeof val === 'function';
 
-module.exports = I18NParser;
+module.exports = ConfigParser;

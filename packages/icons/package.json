@@ -12,7 +12,7 @@
   "keywords": [
     "line-ui"
   ],
-  "author": "Yealink Inc",
+  "author": "LINE-UI Team",
   "license": "MIT",
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.12.1",

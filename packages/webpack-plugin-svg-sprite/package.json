@@ -11,7 +11,7 @@
   "keywords": [
     "line-ui"
   ],
-  "author": "Yealink Inc",
+  "author": "LINE-UI Team",
   "license": "MIT",
   "dependencies": {
     "loader-utils": "^1.1.0",

@@ -11,7 +11,7 @@
     "line-ui"
   ],
   "private": true,
-  "author": "Yealink Inc",
+  "author": "LINE-UI Team",
   "license": "MIT",
   "devDependencies": {
     "@line-ui/icons": "^1.0.0-alpha"

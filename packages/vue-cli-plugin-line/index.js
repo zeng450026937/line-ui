@@ -4,7 +4,8 @@ module.exports = (api, options) => {
       autoimport = true,
       svgsprite = true,
       svgcomponent = false,
-      i18n = true,
+      i18n: i18nParser = true,
+      config: configParser = true,
     } = options['line-ui'] || {};
 
     if (autoimport) {
@@ -47,8 +48,11 @@ module.exports = (api, options) => {
       }
     }
 
-    if (i18n) {
+    if (i18nParser) {
       config.plugin('i18n').use(require('@line-ui/webpack-plugin-i18n'));
+    }
+    if (configParser) {
+      config.plugin('config').use(require('@line-ui/webpack-plugin-config'));
     }
   });
 };

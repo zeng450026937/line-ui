@@ -10,7 +10,7 @@
     "line-ui"
   ],
   "private": true,
-  "author": "Yealink Inc",
+  "author": "LINE-UI Team",
   "license": "MIT",
   "buildOptions": {
     "formats": [

@@ -1,9 +1,9 @@
-const ConfigParser = require('./lib/i18n-parser');
-const ConfigProvide = require('./lib/i18n-provide');
+const ConfigParser = require('./lib/config-parser');
+const ConfigProvide = require('./lib/config-provide');
 
-const NS = 'i18n-plugin';
+const NS = 'config-plugin';
 
-class I18NPlugin {
+class ConfigPlugin {
   constructor(options = {}) {
     this.options = options;
   }
@@ -36,15 +36,15 @@ class I18NPlugin {
 
       hooks.afterOptimize.tap(NS, (manifests) => {
         const configs = {};
-        manifests.forEach((manifest) => {
+        for (const manifest of manifests) {
           manifest.configs.forEach((config) => {
-            configs[config.replaceTo] = config.key;
+            configs[config.replaceTo] = config.fallback;
           });
-        });
+        }
         provide.replace(configs);
       });
     });
   }
 }
 
-module.exports = I18NPlugin;
+module.exports = ConfigPlugin;

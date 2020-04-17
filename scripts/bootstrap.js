@@ -47,7 +47,7 @@ files.forEach((shortName) => {
       files: ['index.js', 'dist'],
       types: `dist/${shortName}.d.ts`,
       keywords: ['line-ui'],
-      author: 'line-ui team',
+      author: 'LINE-UI Team',
       license: 'MIT',
     };
     fs.writeFileSync(pkgPath, JSON.stringify(json, null, 2));
