@@ -29,8 +29,8 @@ class ConfigParser {
 
   apply(compiler) {
     const {
-      manifest = 'configs/manifest.json',
-      filename = 'configs/configs.json',
+      manifest = 'config/manifest.json',
+      filename = 'config/config.json',
       emit = true,
       method = '$config',
       runtime = '@line-ui/webpack-plugin-config/runtime',
