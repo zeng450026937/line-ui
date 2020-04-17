@@ -112,6 +112,9 @@
 
 // Outline Button with Color
 .line-button--outline.line-color .line-button__content {
+  --color-hover: #{current-color(base)};
+  --color-activated: #{current-color(base)};
+  --color-focused: #{current-color(base)};
   border-color: current-color(base);
 
   background: transparent;
@@ -136,6 +139,9 @@
 
 // Clear Button with Color
 .line-button--clear.line-color .line-button__content {
+  --color-hover: #{current-color(base)};
+  --color-activated: #{current-color(base)};
+  --color-focused: #{current-color(base)};
   background: transparent;
   color: current-color(base);
 }
