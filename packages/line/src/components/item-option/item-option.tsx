@@ -1,5 +1,4 @@
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
-
 import { useColor } from '@line-ui/line/src/mixins/use-color';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('item-option');

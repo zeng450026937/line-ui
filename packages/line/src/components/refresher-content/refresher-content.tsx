@@ -7,6 +7,7 @@ import {
   SPINNERS,
   SpinnerTypes,
 } from '@line-ui/line/src/components/spinner/spinner-configs';
+import { Icon } from '@line-ui/line/src/components/icon';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace(
   'refresher-content'
@@ -75,7 +76,7 @@ export default /*#__PURE__*/ createComponent({
                 <Spinner type={pullingIcon as SpinnerTypes} paused></Spinner>
                 {mode === 'md' && pullingIcon === 'circular' && (
                   <div class="arrow-container">
-                    <line-icon name="caret-back-sharp"></line-icon>
+                    <Icon name="caret-back-sharp"></Icon>
                   </div>
                 )}
               </div>
@@ -83,7 +84,7 @@ export default /*#__PURE__*/ createComponent({
           )}
           {pullingIcon && !hasSpinner && (
             <div class="refresher-pulling-icon">
-              <line-icon icon={pullingIcon} lazy={false}></line-icon>
+              <Icon icon={pullingIcon} lazy={false}></Icon>
             </div>
           )}
           {pullingText && (

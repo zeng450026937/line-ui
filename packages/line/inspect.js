@@ -9,14 +9,24 @@ const resolve = (p) => path.resolve(pkgDir, p);
 const relative = (from, to) => path.relative(from, to).split('\\').join('/');
 const basename = (p) => path.basename(p, path.extname(p));
 
-const { matchWIP, camelize, debounce } = require('./scripts/utils');
+const { matchWIP, camelize, hyphenate, debounce } = require('./scripts/utils');
 
 const isDev = `${process.env.LINE_DEV}` === 'true';
 
 const imports = new Map();
 const effects = new Map();
+const dependencies = new Map();
+const nameToFile = new Map();
 let components = [];
 let directives = [];
+
+const themes = ['ios', 'md', ''];
+
+const collect = (issuer, component) => {
+  const components = dependencies.get(issuer) || [];
+  components.push(component);
+  dependencies.set(issuer, components);
+};
 
 const lookup = {
   components: () => {
@@ -49,7 +59,16 @@ const lookup = {
 
           effects.set([name, theme].filter(Boolean).join('.'), style);
           effects.set([file, theme].filter(Boolean).join('.'), style);
+
+          nameToFile.set(
+            [name, theme].filter(Boolean).join('.'),
+            [file, theme].filter(Boolean).join('.')
+          );
         });
+
+        nameToFile.set(name, file);
+
+        collect(`${pkgName}/src/components/${dir}`, name);
       });
 
     components = Array.from(imports.keys()).filter((key) => !/^v/i.test(key));
@@ -80,7 +99,14 @@ const lookup = {
 
           effects.set([name, theme].filter(Boolean).join('.'), style);
           effects.set([file, theme].filter(Boolean).join('.'), style);
+
+          nameToFile.set(
+            [name, theme].filter(Boolean).join('.'),
+            [file, theme].filter(Boolean).join('.')
+          );
         });
+
+        nameToFile.set(name, file);
       });
 
     directives = Array.from(imports.keys()).filter((key) => /^v/i.test(key));
@@ -101,12 +127,99 @@ const lookup = {
       );
     });
   },
+  controllers: () => {
+    const issuer = `${pkgName}/src/controllers`;
+    // find a way to detect controller list dynamiclly
+    const components = [
+      'ActionSheet',
+      'Alert',
+      'Loading',
+      'Picker',
+      'Popover',
+      'Popup',
+      'Toast',
+      'Tooltip',
+    ];
+    components.forEach((component) => {
+      const name = `${component}Controller`;
+      themes.forEach((theme) => {
+        const style = effects.get([component, theme].filter(Boolean).join('.'));
+        if (style) {
+          effects.set([name, theme].filter(Boolean).join('.'), style);
+        }
+      });
+      collect(issuer, component);
+      collect(name, component);
+    });
+  },
+  dependencies: () => {
+    const issuers = {
+      ActionSheet: ['Overlay'],
+      Alert: ['Overlay'],
+      Loading: ['Overlay', 'Spinner'],
+      Picker: ['Overlay', 'PickerColumn'],
+      Popover: ['Overlay'],
+      Popup: ['Overlay'],
+      Toast: ['Icon'],
+      Tooltip: ['Overlay'],
+      // ---- //
+      Button: ['vRipple'],
+      CheckBox: ['vRipple'],
+      Chip: ['vRipple'],
+      CollapseItem: ['Icon'],
+      ComboBox: ['ComboBoxItem'],
+      Datetime: ['PickerController'],
+      DropdownMenu: ['Overlay', 'PickerColumn'],
+      Fab: ['FabGroup'],
+      FabButton: ['vRipple'],
+      Icon: ['FontIcon', 'SvgIcon'],
+      InfiniteScrollContent: ['Spinner'],
+      Item: ['vRipple'],
+      PageIndicator: ['Icon'],
+      Radio: ['vRipple'],
+      RefresherContent: ['Spinner', 'Icon'],
+      Stepper: ['Icon'],
+      TabButton: ['vRipple'],
+    };
+    Object.keys(issuers).forEach((issuer) => {
+      const path = `src/components/${hyphenate(issuer)}/`.toLowerCase();
+      if (matchWIP(path)) return;
+      const file = nameToFile.get(issuer);
+      const components = issuers[issuer];
+      components.forEach((component) => {
+        collect(issuer, component);
+        collect(file, component);
+      });
+    });
+  },
 };
 
 // initial lookup
 lookup.components();
 lookup.directives();
 lookup.styles();
+lookup.controllers();
+lookup.dependencies();
+
+const dedupe = (val) => Array.from(new Set(val));
+const dependence = (issuer, theme) => {
+  const seen = [];
+  const components = dependencies.get(issuer);
+  if (components) {
+    components.forEach((c) => {
+      const effect =
+        effects.get([c, theme].filter(Boolean).join('.')) || effects.get(c);
+      seen.push(effect);
+      seen.push(...dependence(c, theme));
+    });
+  }
+  const effect =
+    effects.get([issuer, theme].filter(Boolean).join('.')) ||
+    effects.get(issuer);
+  seen.push(effect);
+  seen.push(effects.get('bundle'));
+  return dedupe(seen.filter(Boolean));
+};
 
 if (isDev) {
   fs.watch(
@@ -114,7 +227,7 @@ if (isDev) {
     { recursive: true },
     debounce((event) => {
       if (event !== 'rename') return;
-      console.log('watch components', event);
+      console.log('[@line-ui/line] watch components', event);
       lookup.components();
     })
   );
@@ -124,7 +237,7 @@ if (isDev) {
     { recursive: true },
     debounce((event) => {
       if (event !== 'rename') return;
-      console.log('watch directives', event);
+      console.log('[@line-ui/line] watch directives', event);
       lookup.directives();
     })
   );
@@ -138,6 +251,9 @@ module.exports = {
 
   imports,
   effects,
+
+  dedupe,
+  dependence,
 
   get components() {
     return components;

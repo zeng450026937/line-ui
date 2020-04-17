@@ -1,26 +1,24 @@
 @import "./overlay.vars";
 
-.line {
-  &-overlay {
-    @include position(0, 0, 0, 0);
+.line-overlay {
+  @include position(0, 0, 0, 0);
 
-    display: block;
-    position: absolute;
+  display: block;
+  position: absolute;
 
-    transform: translateZ(0);
+  transform: translateZ(0);
 
-    contain: strict;
-    cursor: pointer;
-    opacity: .01;
-    touch-action: none;
-    z-index: $z-index-backdrop;
+  contain: strict;
+  cursor: pointer;
+  opacity: .01;
+  touch-action: none;
+  z-index: $z-index-backdrop;
+}
 
-    &--hide {
-      background: transparent;
-    }
+.line-overlay--hide {
+  background: transparent;
+}
 
-    &--no-tappable {
-      cursor: auto;
-    }
-  }
+.line-overlay--no-tappable {
+  cursor: auto;
 }

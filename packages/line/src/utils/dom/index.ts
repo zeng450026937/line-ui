@@ -30,8 +30,10 @@ export const isSupportsVars = () => {
 export const now = (ev: UIEvent) => ev.timeStamp || Date.now();
 
 const APP_SELECTOR = '[line-app]';
-export const getApp = (el: Element, selector = APP_SELECTOR) => {
+export const getApp = (el?: Element, selector = APP_SELECTOR) => {
   return (
-    el.closest(selector) || document.querySelector(selector) || document.body
+    (el && el.closest && el.closest(selector)) ||
+    document.querySelector(selector) ||
+    document.body
   );
 };

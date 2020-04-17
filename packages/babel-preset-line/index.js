@@ -9,25 +9,11 @@ module.exports = (_, options) => {
   const effect = (importName, isFullImport) => {
     importName = isFullImport ? 'line' : importName;
 
-    const effects = new Set();
+    const effects = themes
+      .map((theme) => inspect.dependence(inspect, theme))
+      .reduce((effects, val) => effects.concat(val), []);
 
-    themes.forEach((theme) => {
-      const effect =
-        inspect.effects.get(`${importName}.${theme}`) ||
-        inspect.effects.get(`${importName}`);
-
-      if (!effect) return;
-
-      effects.add(effect);
-
-      const bundle = inspect.effects.get('bundle');
-
-      if (!bundle) return;
-
-      effects.add(bundle);
-    });
-
-    return Array.from(effects);
+    return inspect.dedupe(effects);
   };
 
   const config = new Proxy(

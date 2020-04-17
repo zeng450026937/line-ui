@@ -1,6 +1,7 @@
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
 import { config } from '@line-ui/line/src/utils/config';
 import { SpinnerTypes } from '@line-ui/line/src/components/spinner/spinner-configs';
+import { Spinner } from '@line-ui/line/src/components/spinner';
 
 const { createComponent, bem } = /*#__PURE__*/ createNamespace(
   'infinite-scroll-content'
@@ -46,7 +47,7 @@ export default /*#__PURE__*/ createComponent({
         <div class="infinite-loading">
           {spinner && (
             <div class="infinite-loading-spinner">
-              <line-spinner type={spinner} />
+              <Spinner type={spinner} />
             </div>
           )}
           {loadingText && (

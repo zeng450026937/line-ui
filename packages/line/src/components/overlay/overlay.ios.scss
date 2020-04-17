@@ -1,8 +1,6 @@
 @import "./overlay";
 @import "./overlay.ios.vars";
 
-.line {
-  &-overlay {
-    background-color: $backdrop-ios-color;
-  }
+.line-overlay {
+  background-color: $backdrop-ios-color;
 }
