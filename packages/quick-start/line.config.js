@@ -3,4 +3,5 @@ module.exports = {
   svgsprite: true,
   svgcomponent: false,
   i18n: true,
+  config: true,
 };

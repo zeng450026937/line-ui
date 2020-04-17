@@ -1,12 +1,18 @@
 module.exports = (api, options) => {
   api.chainWebpack((config) => {
+    let configuration;
+    try {
+      configuration = require(api.resolve('line.config.js'));
+    } catch (error) {
+      configuration = options['line-ui'] || {};
+    }
     const {
       autoimport = true,
       svgsprite = true,
       svgcomponent = false,
       i18n: i18nParser = true,
       config: configParser = true,
-    } = options['line-ui'] || {};
+    } = configuration;
 
     if (autoimport) {
       config.module
