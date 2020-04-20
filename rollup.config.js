@@ -90,10 +90,11 @@ function createConfig(format, output, plugins = []) {
     process.env.__DEV__ === 'false' || /\.prod\.js$/.test(output.file);
   const isBundlerESMBuild = /esm-bundler/.test(format);
   const isBrowserESMBuild = /esm-browser/.test(format);
-  const isNodeBuild = format === 'cjs';
+  const isNodeBuild = /cjs/.test(format);
   const isGlobalBuild = /global/.test(format);
+  const isUMDBuild = /umd/.test(format);
 
-  if (isGlobalBuild) {
+  if (isGlobalBuild || isUMDBuild) {
     output.name = packageOptions.name;
   }
 
@@ -203,7 +204,7 @@ function createConfig(format, output, plugins = []) {
   const entryFile = `src/index.${fileExt}`;
 
   const external =
-    isGlobalBuild || isBrowserESMBuild
+    isGlobalBuild || isUMDBuild || isBrowserESMBuild
       ? []
       : knownExternals.concat(Object.keys(pkg.dependencies || []));
 

@@ -168,9 +168,8 @@ function updateDeps(pkg, depType, version) {
   if (!deps) return;
   Object.keys(deps).forEach((dep) => {
     if (
-      dep === '@line-ui/line' ||
-      (dep.startsWith('@line-ui') &&
-        packages.includes(dep.replace(/^@line-ui\//, '')))
+      dep.startsWith('@line-ui') &&
+      packages.includes(dep.replace(/^@line-ui\//, ''))
     ) {
       console.log(
         chalk.yellow(`${pkg.name} -> ${depType} -> ${dep}@${version}`)
@@ -191,7 +190,8 @@ async function publishPackage(pkgName, version, runIfNotDry) {
     return;
   }
 
-  const releaseTag = semver.prerelease(version)[0] || null;
+  const releaseTags = semver.prerelease(version);
+  const releaseTag = releaseTags && releaseTags[0];
 
   step(`Publishing ${pkgName}...`);
   try {
