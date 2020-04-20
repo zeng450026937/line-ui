@@ -3,7 +3,7 @@ import Vue from 'vue';
 function compose(middleware) {
     return function composedMiddleware(context, next) {
         const dispatch = async (i) => {
-            if ((process.env.NODE_ENV !== 'production') && i <= index) {
+            if ( i <= index) {
                 console.warn('next() called multiple times');
                 return;
             }
@@ -121,7 +121,7 @@ class Model extends Layer {
         return !!this.store;
     }
     mount(key, model) {
-        if ((process.env.NODE_ENV !== 'production') && this.submodel[key]) {
+        if ( this.submodel[key]) {
             console.warn(`redefinition model: ${key}`);
         }
         model.setNS(key);
@@ -132,7 +132,7 @@ class Model extends Layer {
         if (!key)
             return this;
         let model = this.submodel[key];
-        if ((process.env.NODE_ENV !== 'production') && model && val) {
+        if ( model && val) {
             console.warn(`model: ${key} was previously definded`);
             return model;
         }
@@ -154,7 +154,7 @@ class Model extends Layer {
         }
         if (!key)
             return this;
-        if ((process.env.NODE_ENV !== 'production') && this.computed[key]) {
+        if ( this.computed[key]) {
             console.warn(`redefinition key: ${key}`);
         }
         if (typeof val === 'function') {
@@ -187,7 +187,7 @@ class Model extends Layer {
             this.store.$root.$emit(event, ...args);
             return this;
         }
-        if ((process.env.NODE_ENV !== 'production')) {
+        {
             console.warn('broadcast() can only be used when initialized');
         }
         return this;
@@ -196,7 +196,7 @@ class Model extends Layer {
         return ns ? chainget(ns, this, (m) => m.submodel) : this;
     }
     getStore(ns) {
-        if ((process.env.NODE_ENV !== 'production') && !this.initialized()) {
+        if ( !this.initialized()) {
             console.warn('getStore() can only be used when initialized');
             return;
         }
@@ -312,7 +312,7 @@ const mapStore = (store, exportNS = false) => {
         }
         const state = normalizeState(rawState);
         keys(state).forEach((key) => {
-            if ((process.env.NODE_ENV !== 'production') && computed[key]) {
+            if ( computed[key]) {
                 console.warn(`state was definded: ${key}`);
             }
             const val = state[key];
@@ -339,7 +339,7 @@ const install = (target = Vue) => {
             const kom = options.kom || (options.parent && options.parent.$kom);
             if (!kom)
                 return;
-            if ((process.env.NODE_ENV !== 'production') && !(kom instanceof Model)) {
+            if ( !(kom instanceof Model)) {
                 console.warn('invalid kom.');
                 return;
             }

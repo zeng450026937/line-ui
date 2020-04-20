@@ -4,7 +4,7 @@ function commonjsRequire () {
 	throw new Error('Dynamic requires are not currently supported by @rollup/plugin-commonjs');
 }
 
-/* eslint-disable no-extend-native */
+/* eslint-disable */
 
 typeof window !== 'undefined' && (function (window) {
   // from:https://github.com/jserz/js_piece/blob/master/DOM/ChildNode/remove()/remove().md
@@ -28,7 +28,7 @@ typeof window !== 'undefined' && (function (window) {
   }([Element.prototype, CharacterData.prototype, DocumentType.prototype]));
 
   try {
-    new MouseEvent('test'); // eslint-disable-line no-new, no-use-before-define
+    new MouseEvent('test');
   } catch (e) {
     // Polyfills DOM4 MouseEvent
     var MouseEventPolyfill = function (eventType, params) {
@@ -206,7 +206,6 @@ typeof window !== 'undefined' && (function (window) {
   }
 }(window));
 
-/* eslint-disable */
 
 /*!
  * @overview es6-promise - a tiny implementation of Promises/A+.

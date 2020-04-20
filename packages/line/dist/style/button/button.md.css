@@ -85,6 +85,9 @@
 }
 
 .line-button--outline.line-color .line-button__content {
+  --color-hover: var(--line-color-base);
+  --color-activated: var(--line-color-base);
+  --color-focused: var(--line-color-base);
   border-color: var(--line-color-base);
   background: transparent;
   color: var(--line-color-base);
@@ -102,6 +105,9 @@
 }
 
 .line-button--clear.line-color .line-button__content {
+  --color-hover: var(--line-color-base);
+  --color-activated: var(--line-color-base);
+  --color-focused: var(--line-color-base);
   background: transparent;
   color: var(--line-color-base);
 }

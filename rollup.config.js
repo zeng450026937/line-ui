@@ -38,6 +38,10 @@ const outputConfigs = {
     file: resolve(`dist/${name}.esm-bundler.js`),
     format: 'es',
   },
+  'esm-browser': {
+    file: resolve(`dist/${name}.esm-browser.js`),
+    format: `es`,
+  },
   cjs: {
     file: resolve(`dist/${name}.cjs.js`),
     format: 'cjs',
@@ -45,10 +49,6 @@ const outputConfigs = {
   global: {
     file: resolve(`dist/${name}.global.js`),
     format: 'iife',
-  },
-  esm: {
-    file: resolve(`dist/${name}.esm.js`),
-    format: 'es',
   },
   umd: {
     file: resolve(`dist/${name}.umd.js`),
@@ -69,7 +69,7 @@ if (process.env.NODE_ENV === 'production') {
     if (format === 'cjs' && packageOptions.prod !== false) {
       packageConfigs.push(createProductionConfig(format));
     }
-    if (format === 'global' || format === 'esm' || format === 'umd') {
+    if (/^(global|esm-browser|umd)(-runtime)?/.test(format)) {
       packageConfigs.push(createMinifiedConfig(format));
     }
   });
@@ -88,10 +88,10 @@ function createConfig(format, output, plugins = []) {
 
   const isProductionBuild =
     process.env.__DEV__ === 'false' || /\.prod\.js$/.test(output.file);
-  const isGlobalBuild = format === 'global';
-  const isRawESMBuild = format === 'esm';
-  const isNodeBuild = format === 'cjs';
   const isBundlerESMBuild = /esm-bundler/.test(format);
+  const isBrowserESMBuild = /esm-browser/.test(format);
+  const isNodeBuild = format === 'cjs';
+  const isGlobalBuild = /global/.test(format);
 
   if (isGlobalBuild) {
     output.name = packageOptions.name;
@@ -170,7 +170,7 @@ function createConfig(format, output, plugins = []) {
         isProductionBuild,
         isBundlerESMBuild,
         // isBrowserBuild?
-        (isGlobalBuild || isRawESMBuild || isBundlerESMBuild) &&
+        (isGlobalBuild || isBrowserESMBuild || isBundlerESMBuild) &&
           !packageOptions.enableNonBrowserBranches,
         isNodeBuild
       )
@@ -203,7 +203,7 @@ function createConfig(format, output, plugins = []) {
   const entryFile = `src/index.${fileExt}`;
 
   const external =
-    isGlobalBuild || isRawESMBuild
+    isGlobalBuild || isBrowserESMBuild
       ? []
       : knownExternals.concat(Object.keys(pkg.dependencies || []));
 
@@ -251,15 +251,6 @@ function createReplacePlugin(
     __BUNDLER__: isBundlerESMBuild,
     // is targeting Node (SSR)?
     __NODE_JS__: isNodeBuild,
-    // support options?
-    // the lean build drops options related code with buildOptions.lean: true
-    __FEATURE_OPTIONS__: !packageOptions.lean && !process.env.LEAN,
-    ...(isProduction && isBrowserBuild
-      ? {
-          // 'createNamespace(' : '/*#__PURE__*/ createNamespace(',
-          // 'createComponent(' : '/*#__PURE__*/ createComponent(',
-        }
-      : {}),
   };
   // allow inline overrides like
   // __RUNTIME_COMPILE__=true yarn build runtime-core

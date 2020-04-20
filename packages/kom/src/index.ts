@@ -38,8 +38,8 @@ declare module 'vue/types/vue' {
   }
 }
 
-type ObjectState = { [key: string]: string | ((store: Vue) => any) };
-type ArrayState = string[];
+export type ObjectState = { [key: string]: string | ((store: Vue) => any) };
+export type ArrayState = string[];
 
 export type StoreMap = {
   ns?: string;

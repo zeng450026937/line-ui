@@ -630,6 +630,9 @@ html.plt-mobile .line-app {
 }
 
 .line-button--outline.line-color .line-button__content {
+  --color-hover: var(--line-color-base);
+  --color-activated: var(--line-color-base);
+  --color-focused: var(--line-color-base);
   border-color: var(--line-color-base);
   background: transparent;
   color: var(--line-color-base);
@@ -647,6 +650,9 @@ html.plt-mobile .line-app {
 }
 
 .line-button--clear.line-color .line-button__content {
+  --color-hover: var(--line-color-base);
+  --color-activated: var(--line-color-base);
+  --color-focused: var(--line-color-base);
   background: transparent;
   color: var(--line-color-base);
 }
@@ -3706,9 +3712,11 @@ html.plt-mobile .line-app {
   touch-action: none;
   z-index: 2;
 }
+
 .line-overlay--hide {
   background: transparent;
 }
+
 .line-overlay--no-tappable {
   cursor: auto;
 }

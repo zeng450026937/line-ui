@@ -4,6 +4,8 @@
   "description": "@line-ui/kom",
   "main": "index.js",
   "module": "dist/kom.esm-bundler.js",
+  "unpkg": "dist/kom.global.js",
+  "jsdelivr": "dist/kom.global.js",
   "files": [
     "index.js",
     "dist"
@@ -16,9 +18,9 @@
     "name": "Kom",
     "formats": [
       "esm-bundler",
+      "esm-browser",
       "cjs",
-      "global",
-      "esm"
+      "global"
     ]
   },
   "author": "LINE-UI Team",

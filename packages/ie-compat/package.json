@@ -4,6 +4,8 @@
   "description": "@line-ui/ie-compat",
   "main": "index.js",
   "module": "dist/ie-compat.esm-bundler.js",
+  "unpkg": "dist/ie-compat.global.js",
+  "jsdelivr": "dist/ie-compat.global.js",
   "files": [
     "index.js",
     "dist"
@@ -16,9 +18,9 @@
   "buildOptions": {
     "name": "IECompat",
     "formats": [
-      "cjs",
-      "global",
-      "esm"
+      "esm-bundler",
+      "esm-browser",
+      "global"
     ],
     "typescript": false,
     "buble": true

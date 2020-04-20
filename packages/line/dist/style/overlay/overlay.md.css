@@ -12,9 +12,11 @@
   touch-action: none;
   z-index: 2;
 }
+
 .line-overlay--hide {
   background: transparent;
 }
+
 .line-overlay--no-tappable {
   cursor: auto;
 }

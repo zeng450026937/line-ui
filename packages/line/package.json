@@ -5,6 +5,7 @@
   "main": "index.js",
   "module": "dist/line.esm-bundler.js",
   "unpkg": "dist/line.global.js",
+  "jsdelivr": "dist/line.global.js",
   "files": [
     "dist",
     "scripts",
@@ -23,9 +24,9 @@
     "name": "Line",
     "formats": [
       "esm-bundler",
+      "esm-browser",
       "cjs",
-      "global",
-      "esm"
+      "global"
     ],
     "prepare": [
       "scripts/components.js",
