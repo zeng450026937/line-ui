@@ -10,7 +10,7 @@ module.exports = (_, options) => {
     importName = isFullImport ? 'line' : importName;
 
     const effects = themes
-      .map((theme) => inspect.dependence(inspect, theme))
+      .map((theme) => inspect.dependence(importName, theme))
       .reduce((effects, val) => effects.concat(val), []);
 
     return inspect.dedupe(effects);

@@ -1,6 +1,8 @@
 const fs = require('fs');
 
 module.exports = (api, options) => {
+  require('@line-ui/vue-cli-plugin-line')(api, options);
+
   api.chainWebpack((config) => {
     // disable typescipt checker if you think it's ignoring
     // we will fix it out later
@@ -57,10 +59,6 @@ module.exports = (api, options) => {
       if (fs.existsSync(publicDir)) {
         tapCopy();
       }
-
-      const cli = require('@line-ui/vue-cli-plugin-line');
-
-      cli(api, options);
     }
   });
 };
