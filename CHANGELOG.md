@@ -1,3 +1,19 @@
+# [1.0.0-alpha.3](http://gitcode.yealink.com/server/client/web_app/line-ui/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2020-04-20)
+
+
+### Bug Fixes
+
+* **button:** fix button color error ([b54376c](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/b54376c6eaaf99a0ab9efeba80715c7448a11472))
+* **cli:** support config from cwd/line.config.js ([6e22cab](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/6e22cabf291cdd52710815d4538ce034717289f4))
+* **effects:** collect components dependencies & add dependencies effects ([a7b8970](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/a7b8970a560c74509d5f5116178601a07e053f3e))
+
+
+### Features
+
+* **config:** graduate from prototype ([bb85dc2](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/bb85dc2820b499be11653a70dfe949a8dd7acf2b))
+
+
+
 # [1.0.0-alpha.2](http://gitcode.yealink.com/server/client/web_app/line-ui/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2020-04-16)
 
 

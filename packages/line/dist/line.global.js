@@ -28471,7 +28471,7 @@ var Line = (function (exports, Vue) {
 
   const Line = {
       install,
-      version: "1.0.0-alpha.2",
+      version: "1.0.0-alpha.3",
   };
   function defaulExport() {
       // auto install for umd build
@@ -28493,7 +28493,7 @@ var Line = (function (exports, Vue) {
           directives,
           controllers,
           mixins,
-          version: "1.0.0-alpha.2",
+          version: "1.0.0-alpha.3",
       };
   }
   var index$1 = /*#__PURE__*/ defaulExport();

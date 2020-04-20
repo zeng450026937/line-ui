@@ -28468,7 +28468,7 @@ var mixins = /*#__PURE__*/Object.freeze({
 
 const Line = {
     install,
-    version: "1.0.0-alpha.2",
+    version: "1.0.0-alpha.3",
 };
 function defaulExport() {
     // auto install for umd build
@@ -28490,7 +28490,7 @@ function defaulExport() {
         directives,
         controllers,
         mixins,
-        version: "1.0.0-alpha.2",
+        version: "1.0.0-alpha.3",
     };
 }
 var index$1 = /*#__PURE__*/ defaulExport();

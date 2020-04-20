@@ -3,7 +3,7 @@ import { ThisTypedComponentOptionsWithRecordProps } from 'vue/types/options';
 import { default as Vue_2 } from 'vue';
 import { VueConstructor } from 'vue';
 
-declare type ArrayState = string[];
+export declare type ArrayState = string[];
 
 export declare function compose<T>(middleware: MiddlewareFn[]): ComposedMiddlewareFn<T>;
 
@@ -121,7 +121,7 @@ export declare const nextTick: {
     (): Promise<void>;
 };
 
-declare type ObjectState = {
+export declare type ObjectState = {
     [key: string]: string | ((store: Vue_2) => any);
 };
 

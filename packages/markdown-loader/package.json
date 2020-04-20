@@ -1,6 +1,6 @@
 {
   "name": "@line-ui/markdown-loader",
-  "version": "1.0.0-alpha.2",
+  "version": "1.0.0-alpha.3",
   "description": "Simple and fast vue markdown loader",
   "main": "src/index.js",
   "publishConfig": {
