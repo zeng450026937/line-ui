@@ -13,6 +13,7 @@
   "scripts": {
     "bootstrap": "node scripts/bootstrap.js",
     "build": "node scripts/build.js",
+    "test": "jest",
     "release": "node scripts/release.js",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "serve": "vue-cli-service serve",

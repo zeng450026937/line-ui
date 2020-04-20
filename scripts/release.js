@@ -9,7 +9,7 @@ const execa = require('execa');
 
 const preId = args.preid || semver.prerelease(currentVersion)[0] || 'alpha';
 const isDryRun = args.dry;
-const { skipTests = true } = args;
+const { skipTests } = args;
 const { skipBuild } = args;
 const { skipTsd = true } = args;
 const packages = fs
