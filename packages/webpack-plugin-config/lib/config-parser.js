@@ -35,6 +35,7 @@ class ConfigParser {
       method = '$config',
       runtime = '@line-ui/webpack-plugin-config/runtime',
       vue = true,
+      vueobject = '_vm',
     } = this.options;
 
     const usages = new Map();
@@ -65,10 +66,9 @@ class ConfigParser {
         if (!dirty) {
           dirty = !isEqual(seen, changed);
         }
-        // update seen configs
-        seens.set(module, changed);
-
         const final = changed || seen;
+        // update seen configs
+        seens.set(module, final);
         // add usage
         if (final) {
           usages.set(module, final);
@@ -349,7 +349,7 @@ class ConfigParser {
           const { object, property } = expression;
 
           if (!object || !property) return;
-          if (object.name !== '_vm') return;
+          if (object.name !== `${vueobject}`) return;
           if (property.name !== method) return;
 
           const exprName = parser.getNameForExpression(expression);
@@ -361,6 +361,7 @@ class ConfigParser {
             .setExpression(expression);
         };
         parser.hooks.evaluate.for('MemberExpression').tap(NS, member);
+        parser.hooks.call.for(`${vueobject}.${method}`).tap(NS, call);
       };
 
       factory.hooks.parser.for('javascript/auto').tap(NS, handler);

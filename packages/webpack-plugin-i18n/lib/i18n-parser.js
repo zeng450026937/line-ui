@@ -35,6 +35,7 @@ class I18NParser {
       method = '$tr',
       runtime = '@line-ui/webpack-plugin-i18n/runtime',
       vue = true,
+      vueobject = '_vm',
     } = this.options;
 
     const usages = new Map();
@@ -65,10 +66,9 @@ class I18NParser {
         if (!dirty) {
           dirty = !isEqual(seen, changed);
         }
-        // update seen configs
-        seens.set(module, changed);
-
         const final = changed || seen;
+        // update seen configs
+        seens.set(module, final);
         // add usage
         if (final) {
           usages.set(module, final);
@@ -295,7 +295,7 @@ class I18NParser {
           const { object, property } = expression;
 
           if (!object || !property) return;
-          if (object.name !== '_vm') return;
+          if (object.name !== `${vueobject}`) return;
           if (property.name !== method) return;
 
           const exprName = parser.getNameForExpression(expression);
@@ -307,6 +307,7 @@ class I18NParser {
             .setExpression(expression);
         };
         parser.hooks.evaluate.for('MemberExpression').tap(NS, member);
+        parser.hooks.call.for(`${vueobject}.${method}`).tap(NS, call);
       };
 
       factory.hooks.parser.for('javascript/auto').tap(NS, handler);
