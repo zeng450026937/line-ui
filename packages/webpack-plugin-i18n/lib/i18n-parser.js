@@ -269,6 +269,11 @@ class I18NParser {
           // if is vue template, no runtime is needed
           if (isVueTemplate(resource)) return;
 
+          variable();
+        };
+        parser.hooks.call.for(method).tap(NS, call);
+
+        const variable = () => {
           // inject runtime
           const request = [].concat(isFunction(runtime) ? runtime() : runtime);
           let requestExpr = `require(${JSON.stringify(request[0])})`;
@@ -280,9 +285,10 @@ class I18NParser {
               .map((r) => `[${JSON.stringify(r)}]`)
               .join('');
           }
+
           helper.addParsedVariableToModule(parser, method, requestExpr);
         };
-        parser.hooks.call.for(method).tap(NS, call);
+        parser.hooks.expression.for(method).tap(NS, variable);
 
         // should we check vue template
         if (!vue) return;
