@@ -69,6 +69,7 @@ export class Model extends Layer<ModelContext> {
   events: { [key: string]: (() => any)[] };
 
   store?: Vue;
+  options?: object;
 
   d: { [key: string]: any };
 
@@ -220,6 +221,8 @@ export class Model extends Layer<ModelContext> {
     const model = this;
 
     return new Vue({
+      ...this.options,
+
       parent,
       mixins: this.mixins,
       data: this.data,
@@ -239,8 +242,10 @@ export class Model extends Layer<ModelContext> {
     });
   }
 
-  init() {
+  init(options?: object) {
     if (this.initialized()) return this;
+
+    this.options = options;
 
     const submodels = Object.keys(this.submodel);
 

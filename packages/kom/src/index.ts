@@ -106,8 +106,10 @@ export const install = (target: VueConstructor = Vue) => {
         console.warn('invalid kom.');
         return;
       }
+      const router =
+        options.router || (options.parent && options.parent.$router);
 
-      kom.init();
+      kom.init({ router });
 
       this.$kom = kom;
       this.$model = kom;
