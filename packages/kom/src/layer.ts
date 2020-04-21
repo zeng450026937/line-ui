@@ -25,10 +25,12 @@ export const SEPARATOR = '/';
 export class Layer<T extends LayerContext = LayerContext> {
   ns: string;
   middleware: MiddlewareFn<T>[];
+  context: object;
 
   constructor(ns: string = '') {
     this.ns = ns;
     this.middleware = [];
+    this.context = {};
   }
 
   use(pathOrFn: string | MiddlewareFn<T>, fn?: MiddlewareFn<T>, thisArg?: any) {
@@ -86,8 +88,10 @@ export class Layer<T extends LayerContext = LayerContext> {
     return this.callback()(ctx);
   }
 
-  createContext(ns: string = this.ns): T {
-    return { ns } as any;
+  createContext(): T {
+    const context = Object.create(this.context);
+    context.ns = this.ns;
+    return context;
   }
 }
 
