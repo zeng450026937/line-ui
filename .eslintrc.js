@@ -8,6 +8,8 @@ module.exports = {
     __TEST__: 'readonly',
     __BROWSER__: 'readonly',
     __BUNDLER__: 'readonly',
+    __ESM_BROWSER__: 'readonly',
+    __ESM_BUNDLER__: 'readonly',
     __GLOBAL__: 'readonly',
     __NODE_JS__: 'readonly',
     __COMMIT__: 'readonly',
