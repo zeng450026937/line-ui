@@ -8,8 +8,19 @@ export interface RemoteOptions {
 }
 
 export function createRemote(el: HTMLElement, options: RemoteOptions) {
-  const { container = '' } = options;
-  const containerEl = isString(container) ? getApp(el, container) : container;
+  const { container } = options;
+  const containerEl = !container
+    ? getApp(el)
+    : isString(container)
+    ? document.querySelector(container)
+    : container;
+  if (!containerEl) {
+    __DEV__ &&
+      console.warn(
+        `v-remote: can not find remote container element(${container})`
+      );
+    return;
+  }
 
   const { parentElement: originParent, nextElementSibling: originSibling } = el;
 
