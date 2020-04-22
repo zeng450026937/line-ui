@@ -32,7 +32,7 @@ module.exports = (api, options) => {
       let renderer;
 
       const template = await fs.readFile(
-        api.resolve('public/ssr.index.html'),
+        api.resolve('public/index.ssr.html'),
         'utf-8'
       );
 
@@ -56,7 +56,7 @@ module.exports = (api, options) => {
       const ssrServer = async () => {
         const config = api.resolveChainableWebpackConfig();
 
-        config.entry('app').clear().add(api.resolve('src/app.ssr.ts'));
+        config.entry('app').clear().add(api.resolve('src/main.ssr.ts'));
 
         config.target('node');
 
@@ -69,6 +69,7 @@ module.exports = (api, options) => {
             whitelist: [
               /\.css$/,
               dev ? /^@line-ui\/line/ : '',
+              dev ? /^@line-ui\/kom/ : '',
               dev ? /^swiper/ : '',
               dev ? /^dom7/ : '',
               dev ? /^ssr-window/ : '',
@@ -175,7 +176,7 @@ module.exports = (api, options) => {
 
       const ssrClient = async () => {
         api.chainWebpack((config) => {
-          config.entry('app').clear().add(api.resolve('src/app.ts'));
+          config.entry('app').clear().add(api.resolve('src/main.ts'));
 
           config
             .plugin('vue-ssr-server')

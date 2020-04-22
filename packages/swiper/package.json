@@ -4,6 +4,8 @@
   "description": "@line-ui/swiper",
   "main": "index.js",
   "module": "dist/swiper.esm-bundler.js",
+  "unpkg": "dist/swiper.global.js",
+  "jsdelivr": "dist/swiper.global.js",
   "files": [
     "index.js",
     "dist"
@@ -12,7 +14,22 @@
   "keywords": [
     "line-ui"
   ],
+  "buildOptions": {
+    "name": "Swiper",
+    "formats": [
+      "esm-bundler",
+      "esm-browser",
+      "global"
+    ],
+    "typescript": false
+  },
   "private": true,
   "author": "LINE-UI Team",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "swiper": "^5.3.6"
+  },
+  "devDependencies": {
+    "@types/swiper": "^5.2.1"
+  }
 }

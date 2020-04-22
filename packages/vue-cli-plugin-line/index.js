@@ -8,10 +8,10 @@ module.exports = (api, options) => {
     }
     const {
       autoimport = true,
-      svgsprite = true,
+      svgsprite = {},
       svgcomponent = false,
-      i18n: i18nParser = true,
-      config: configParser = true,
+      i18n: i18nParser = {},
+      config: configParser = {},
     } = configuration;
 
     if (autoimport) {
@@ -36,7 +36,7 @@ module.exports = (api, options) => {
 
       config
         .plugin('svg-sprite')
-        .use(require('@line-ui/webpack-plugin-svg-sprite'));
+        .use(require('@line-ui/webpack-plugin-svg-sprite'), [svgsprite]);
     } else if (svgcomponent) {
       if (api.hasPlugin('babel')) {
         config.module.rules.delete('svg');
@@ -54,11 +54,29 @@ module.exports = (api, options) => {
       }
     }
 
+    const fs = require('fs');
+
     if (i18nParser) {
-      config.plugin('i18n').use(require('@line-ui/webpack-plugin-i18n'));
+      const ext = api.hasPlugin('typescript') ? 'ts' : 'js';
+      const runtime = api.resolve(`src/i18n-runtime.${ext}`);
+      const hasRuntime = fs.existsSync(runtime);
+      const options = hasRuntime
+        ? { runtime, ...i18nParser }
+        : { ...i18nParser };
+      config
+        .plugin('i18n')
+        .use(require('@line-ui/webpack-plugin-i18n'), [options]);
     }
     if (configParser) {
-      config.plugin('config').use(require('@line-ui/webpack-plugin-config'));
+      const ext = api.hasPlugin('typescript') ? 'ts' : 'js';
+      const runtime = api.resolve(`src/config-runtime.${ext}`);
+      const hasRuntime = fs.existsSync(runtime);
+      const options = hasRuntime
+        ? { runtime, ...configParser }
+        : { ...configParser };
+      config
+        .plugin('config')
+        .use(require('@line-ui/webpack-plugin-config'), [options]);
     }
   });
 };

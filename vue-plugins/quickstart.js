@@ -17,7 +17,7 @@ module.exports = (api, options) => {
       process.env.LINE_DEV = true;
 
       api.chainWebpack((config) => {
-        config.entry('app').clear().add(`${packageDir}/src/index.ts`);
+        config.entry('app').clear().add(`${packageDir}/src/main.ts`);
       });
 
       api.service.run('serve', args, rawArgs);

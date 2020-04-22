@@ -145,6 +145,12 @@ module.exports = class SpriteCompiler {
               // generator.bgSizeWidth(request, position),
 
               // generator.bgSizeHeight(request, position),
+
+              config.publicPath &&
+                new generator.Replacement(
+                  config.publicPath,
+                  compilation.getPath(config.publicPath)
+                ),
             ].filter((replacement) => replacement && replacement.replaceTo);
           });
 

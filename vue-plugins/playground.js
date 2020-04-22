@@ -7,23 +7,19 @@ module.exports = (api, options) => {
       details: 'TBD',
     },
     (args, rawArgs) => {
+      const target = 'playground';
+      const packagesDir = api.resolve('packages');
+      const packageDir = `${packagesDir}/${target}`;
+
       options.pages = {
-        index: './packages/playground/app.ts',
+        index: `${packageDir}/src/main.ts`,
         mobile: {
-          entry: './packages/playground/src/device/index.ts',
+          entry: `${packageDir}/src/device/index.ts`,
           template: 'public/index.html',
           title: 'Mobile',
           filename: 'mobile.html',
         },
       };
-      api.chainWebpack((config) => {
-        // config.entry('app')
-        //   .clear()
-        //   .add(api.resolve('packages/playground/app.ts'));
-
-        // for development, set 'line' alias to source code
-        config.resolve.alias.set('line', api.resolve('packages/line'));
-      });
 
       api.service.run('serve', args, rawArgs);
     }
@@ -38,12 +34,20 @@ module.exports = (api, options) => {
     },
     (args, rawArgs) => {
       api.chainWebpack((config) => {
-        config
-          .entry('app')
-          .clear()
-          .add(api.resolve('packages/playground/app.ts'));
+        const target = 'playground';
+        const packagesDir = api.resolve('packages');
+        const packageDir = `${packagesDir}/${target}`;
 
-        // for production, 'line' is external
+        options.pages = {
+          index: `${packageDir}/src/main.ts`,
+          mobile: {
+            entry: `${packageDir}/src/device/index.ts`,
+            template: 'public/index.html',
+            title: 'Mobile',
+            filename: 'mobile.html',
+          },
+        };
+
         config.externals({
           '@line-ui/line': {
             commonjs: '@line-ui/line',

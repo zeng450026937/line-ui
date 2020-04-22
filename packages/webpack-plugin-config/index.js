@@ -15,9 +15,8 @@ class ConfigPlugin {
     const provide = new ConfigProvide(options);
     const parser = new ConfigParser(options);
 
-    provide.apply(compiler);
-    // come after provide to jump provide optimize phase
     parser.apply(compiler);
+    provide.apply(compiler);
 
     compiler.hooks.compilation.tap(NS, (compilation) => {
       const hooks = ConfigParser.getHooks(compilation);
