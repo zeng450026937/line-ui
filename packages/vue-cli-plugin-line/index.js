@@ -8,10 +8,10 @@ module.exports = (api, options) => {
     }
     const {
       autoimport = true,
-      svgsprite = {},
+      svgsprite: spritePluginOptions = {},
       svgcomponent = false,
-      i18n: i18nParser = {},
-      config: configParser = {},
+      i18n: i18nPluginOptions = {},
+      config: configPluginOptions = {},
     } = configuration;
 
     if (autoimport) {
@@ -23,7 +23,7 @@ module.exports = (api, options) => {
         .after('vue-loader');
     }
 
-    if (svgsprite) {
+    if (spritePluginOptions) {
       config.module.rules.delete('svg');
 
       config.module
@@ -34,9 +34,12 @@ module.exports = (api, options) => {
           require.resolve('@line-ui/webpack-plugin-svg-sprite/lib/loader')
         );
 
+      const userOptions =
+        typeof spritePluginOptions === 'object' ? spritePluginOptions : {};
+
       config
         .plugin('svg-sprite')
-        .use(require('@line-ui/webpack-plugin-svg-sprite'), [svgsprite]);
+        .use(require('@line-ui/webpack-plugin-svg-sprite'), [userOptions]);
     } else if (svgcomponent) {
       if (api.hasPlugin('babel')) {
         config.module.rules.delete('svg');
@@ -56,27 +59,31 @@ module.exports = (api, options) => {
 
     const fs = require('fs');
 
-    if (i18nParser) {
+    if (i18nPluginOptions) {
+      const userOptions =
+        typeof i18nPluginOptions === 'object' ? i18nPluginOptions : {};
       const ext = api.hasPlugin('typescript') ? 'ts' : 'js';
       const runtime = api.resolve(`src/i18n-runtime.${ext}`);
       const hasRuntime = fs.existsSync(runtime);
-      const options = hasRuntime
-        ? { runtime, ...i18nParser }
-        : { ...i18nParser };
+      const finalOptions = hasRuntime
+        ? { runtime, ...userOptions }
+        : { ...userOptions };
       config
         .plugin('i18n')
-        .use(require('@line-ui/webpack-plugin-i18n'), [options]);
+        .use(require('@line-ui/webpack-plugin-i18n'), [finalOptions]);
     }
-    if (configParser) {
+    if (configPluginOptions) {
+      const userOptions =
+        typeof configPluginOptions === 'object' ? configPluginOptions : {};
       const ext = api.hasPlugin('typescript') ? 'ts' : 'js';
       const runtime = api.resolve(`src/config-runtime.${ext}`);
       const hasRuntime = fs.existsSync(runtime);
-      const options = hasRuntime
-        ? { runtime, ...configParser }
-        : { ...configParser };
+      const finalOptions = hasRuntime
+        ? { runtime, ...userOptions }
+        : { ...userOptions };
       config
         .plugin('config')
-        .use(require('@line-ui/webpack-plugin-config'), [options]);
+        .use(require('@line-ui/webpack-plugin-config'), [finalOptions]);
     }
   });
 };
