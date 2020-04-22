@@ -1,7 +1,7 @@
 <template>
   <line-app>
     <line-header>
-      <line-toolbar>
+      <line-toolbar style="padding: 12px;">
         <template #start>
           <line-button size="small">ICONS EXPLORER</line-button>
         </template>
@@ -10,7 +10,7 @@
             <line-input
               clear-input
               auto-focus
-              placeholder="search"
+              placeholder="Search icons..."
               v-model="keyword"
             ></line-input>
           </div>
@@ -122,25 +122,26 @@ export default Vue.extend({
 }
 
 .input-area {
-  margin: 0 16px;
+  height: 40px;
+
+  margin: 0 30px;
 
   padding: 0 16px;
 
   transition: box-shadow 250ms ease-out;
 
-  border-radius: 64px;
+  border-radius: 6px;
 
   background-color: #f4f4f4;
 
   &:focus-within {
-    border: 1px solid #e4e4e4;
-
-    box-shadow: 0 4px 16px -8px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.08);
   }
 
   > .line-input {
-    --padding-top: 4px;
-    --padding-bottom: 4px;
+    --padding-top: 10px;
+    --padding-bottom: 10px;
+    --background: #f6f7f9;
   }
 }
 
@@ -187,8 +188,10 @@ export default Vue.extend({
   }
 
   &:hover {
-    border: 2px solid #4177f6;
-    border-radius: 2px;
+    // border: 2px solid #4177f6;
+    border-radius: 8px;
+
+    box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.1), 0 1px 3px 0 rgba(0, 0, 0, 0.08);
   }
 }
 </style>
