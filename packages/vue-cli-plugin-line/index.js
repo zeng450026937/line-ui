@@ -12,6 +12,7 @@ module.exports = (api, options) => {
       svgcomponent = false,
       i18n: i18nPluginOptions = {},
       config: configPluginOptions = {},
+      tag = true,
     } = configuration;
 
     if (autoimport) {
@@ -84,6 +85,15 @@ module.exports = (api, options) => {
       config
         .plugin('config')
         .use(require('@line-ui/webpack-plugin-config'), [finalOptions]);
+    }
+
+    if (tag) {
+      config
+        .plugin('tag')
+        .use(require('@line-ui/webpack-plugin-tag'))
+        .before('vue-loader');
+
+      config.plugin('vue-loader').after('html');
     }
   });
 };
