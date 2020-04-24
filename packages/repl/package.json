@@ -1,0 +1,22 @@
+{
+  "name": "@line-ui/repl",
+  "version": "1.0.0-alpha.3",
+  "description": "@line-ui/repl",
+  "main": "index.js",
+  "module": "dist/repl.esm-bundler.js",
+  "files": [
+    "index.js",
+    "dist"
+  ],
+  "types": "dist/repl.d.ts",
+  "keywords": [
+    "line-ui"
+  ],
+  "author": "LINE-UI Team",
+  "license": "MIT",
+  "dependencies": {
+    "monaco-editor": "^0.20.0",
+    "vue": "^2.6.11",
+    "vue-router": "^3.1.5"
+  }
+}

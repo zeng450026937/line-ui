@@ -4,9 +4,6 @@
       <line-button>
         {{ msg }}
       </line-button>
-      <line-button>
-        {{ msg }}
-      </line-button>
     </line-content>
   </line-app>
 </template>
