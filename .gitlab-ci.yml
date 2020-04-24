@@ -1,6 +1,7 @@
 # .gitlab-ci.yml
 image: node:latest
 
+
 package line:
   image: cr.yealinkops.com/common/yarn:1.22.4
   stage: build
@@ -20,7 +21,8 @@ package line:
   only:
     - master
 
-pages:
+
+package template-explorer:
   image: cr.yealinkops.com/common/yarn:1.22.4
   stage: deploy
   tags:
@@ -32,12 +34,53 @@ pages:
   script:
     - yarn install -f
     - yarn run build template-explorer
-    - mv packages/template-explorer public/template-explorer
-    # copy line
+  artifacts:
+    paths:
+      - packages/template-explorer
+    expire_in: 3 days
+  only:
+    - master
+
+
+package icons-explorer:
+  image: cr.yealinkops.com/common/yarn:1.22.4
+  stage: deploy
+  tags:
+    - devops_docker_runner
+  cache:
+    paths:
+      - node_modules/
+      - yarn.lock
+  script:
+    - yarn install -f
+    - yarn run build icons-explorer
+    - mv dist packages/icons-explorer/dist
+  artifacts:
+    paths:
+      - packages/icons-explorer/dist
+    expire_in: 3 days
+  only:
+    - master
+
+pages:
+  image: cr.yealinkops.com/common/yarn:1.22.4
+  stage: deploy
+  tags:
+    - devops_docker_runner
+  cache:
+    paths:
+      - node_modules/
+      - yarn.lock
+  script:
+    # line 
     - mkdir -p public/line
     - mv packages/line/dist public/line/dist
-#    - mv public public-bak # GitLab Pages 的钩子设置在 public 文件夹
-#    - mv dist/website public # 重命名 dist 文件夹 (yarn run build:website 之后的输出位置)
+
+    # template-explorer 
+    - mv packages/template-explorer public/template-explorer
+
+    # icons-explorer 
+    - mv packages/icons-explorer/dist public/icons-explorer
   artifacts:
     paths:
       - public # artifact path 一定要在 /public , 这样 GitLab Pages 才能获取
