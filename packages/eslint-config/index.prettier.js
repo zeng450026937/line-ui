@@ -58,6 +58,8 @@ module.exports = {
   ],
 
   rules: {
+    radix: 0,
+
     'no-bitwise': 0,
     'no-await-in-loop': 0,
     'no-shadow': 0,
