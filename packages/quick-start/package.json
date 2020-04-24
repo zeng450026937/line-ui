@@ -2,9 +2,12 @@
   "name": "@line-ui/quick-start",
   "version": "1.0.0-alpha.3",
   "description": "line-ui quick-start",
-  "publishConfig": {
-    "access": "public"
-  },
+  "files": [
+    "dist"
+  ],
+  "keywords": [
+    "line-ui"
+  ],
   "private": true,
   "license": "MIT",
   "dependencies": {

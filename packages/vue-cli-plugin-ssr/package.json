@@ -1,0 +1,15 @@
+{
+  "name": "@line-ui/vue-cli-plugin-ssr",
+  "version": "1.0.0-alpha.3",
+  "description": "@line-ui/vue-cli-plugin-ssr",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "line-ui"
+  ],
+  "private": true,
+  "author": "LINE-UI Team",
+  "license": "MIT"
+}
