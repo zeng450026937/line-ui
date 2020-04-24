@@ -11,6 +11,8 @@ module.exports = (api, options) => {
       const packagesDir = api.resolve('packages');
       const packageDir = `${packagesDir}/${target}`;
 
+      process.env.TARGET = 'playground';
+
       options.pages = {
         index: `${packageDir}/src/main.ts`,
         mobile: {
@@ -37,6 +39,8 @@ module.exports = (api, options) => {
         const target = 'playground';
         const packagesDir = api.resolve('packages');
         const packageDir = `${packagesDir}/${target}`;
+
+        process.env.TARGET = 'playground';
 
         options.pages = {
           index: `${packageDir}/src/main.ts`,

@@ -1,13 +1,13 @@
 module.exports = (api, options) => {
   api.registerCommand(
-    'icons-explorer',
+    'quick-start',
     {
-      description: 'serve icons-explorer',
-      usage: 'vue-cli-service icons-explorer',
+      description: 'serve quick-start',
+      usage: 'vue-cli-service quick-start',
       details: 'TBD',
     },
     (args, rawArgs) => {
-      process.env.TARGET = 'icons-explorer';
+      process.env.TARGET = 'quick-start';
 
       const { build } = args;
       const command = build ? 'build' : 'serve';
@@ -17,5 +17,5 @@ module.exports = (api, options) => {
 };
 
 module.exports.defaultModes = {
-  quickstart: 'development',
+  'quick-start': 'development',
 };
