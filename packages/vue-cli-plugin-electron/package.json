@@ -1,0 +1,28 @@
+{
+  "name": "@line-ui/vue-cli-plugin-electron",
+  "version": "1.0.0-alpha.3",
+  "description": "@line-ui/vue-cli-plugin-electron",
+  "main": "index.js",
+  "files": [
+    "generator",
+    "hmr-client.js",
+    "hmr-server.js",
+    "index.js",
+    "main-hmr.js",
+    "prompts.js"
+  ],
+  "keywords": [
+    "line-ui"
+  ],
+  "private": true,
+  "author": "LINE-UI Team",
+  "license": "MIT",
+  "dependencies": {
+    "async-exit-hook": "^2.0.1",
+    "crocket": "^0.9.11",
+    "electron-builder": "^22.5.1",
+    "electron-packager": "^14.2.1",
+    "electron-winstaller": "^4.0.0",
+    "semver": "^7.3.2"
+  }
+}

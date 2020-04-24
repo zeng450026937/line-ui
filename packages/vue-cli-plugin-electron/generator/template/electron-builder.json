@@ -1,0 +1,27 @@
+{
+  "appId": "com.ylyun.meeting.apollovc",
+  "generateUpdatesFilesForAllChannels": true,
+  "publish": {
+    "provider": "generic",
+    "url": "http://cn.download.yealinkvc.com/apollovc/"
+  },
+  "win": {
+    "target": [
+      "nsis"
+    ],
+    "verifyUpdateCodeSignature": false
+  },
+  "mac": {
+    "target": [
+      "zip",
+      "dmg"
+    ],
+    "category": "public.app-category.video"
+  },
+  "linux": {
+    "target": [
+      "AppImage"
+    ],
+    "category": "Video"
+  }
+}
