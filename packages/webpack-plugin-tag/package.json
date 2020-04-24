@@ -1,0 +1,18 @@
+{
+  "name": "@line-ui/webpack-plugin-tag",
+  "version": "1.0.0-alpha.3",
+  "description": "@line-ui/webpack-plugin-tag",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "lib"
+  ],
+  "keywords": [
+    "line-ui"
+  ],
+  "author": "LINE-UI Team",
+  "license": "MIT",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3"
+  }
+}
