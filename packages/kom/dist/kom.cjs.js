@@ -32,6 +32,7 @@ class Layer {
     constructor(ns = '') {
         this.ns = ns;
         this.middleware = [];
+        this.context = {};
     }
     use(pathOrFn, fn, thisArg) {
         const handler = fn
@@ -77,8 +78,10 @@ class Layer {
         };
         return this.callback()(ctx);
     }
-    createContext(ns = this.ns) {
-        return { ns };
+    createContext() {
+        const context = Object.create(this.context);
+        context.ns = this.ns;
+        return context;
     }
 }
 const createHandler = (name, fn, thisArg) => {
@@ -218,6 +221,7 @@ class Model extends Layer {
     genVM(parent) {
         const model = this;
         return new Vue({
+            ...this.options,
             parent,
             mixins: this.mixins,
             data: this.data,
@@ -235,9 +239,10 @@ class Model extends Layer {
             },
         });
     }
-    init() {
+    init(options) {
         if (this.initialized())
             return this;
+        this.options = options;
         const submodels = Object.keys(this.submodel);
         submodels.forEach((key) => {
             // submodel placeholder
@@ -349,7 +354,8 @@ const install = (target = Vue) => {
                 console.warn('invalid kom.');
                 return;
             }
-            kom.init();
+            const router = options.router || (options.parent && options.parent.$router);
+            kom.init({ router });
             this.$kom = kom;
             this.$model = kom;
             this.$store = kom.store;

@@ -592,6 +592,16 @@ const getClientHeight = () => {
     return Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
 };
 
+function append(target, node) {
+    target.appendChild(node);
+}
+function detach(node) {
+    node.parentNode.removeChild(node);
+}
+function element(name) {
+    return document.createElement(name);
+}
+
 // eslint-disable-next-line import/no-mutable-exports
 let supportsPassive;
 const isSupportsPassive = (node) => {
@@ -652,6 +662,94 @@ const raf = (h) => {
     return setTimeout(h);
 };
 
+function addResizeListener(node, fn) {
+    if (getComputedStyle(node).position === 'static') {
+        node.style.position = 'relative';
+    }
+    const object = element('object');
+    object.setAttribute('style', 'display: block; position: absolute; top: 0; left: 0; height: 100%; width: 100%; overflow: hidden; pointer-events: none; z-index: -1;');
+    object.setAttribute('aria-hidden', 'true');
+    object.type = 'text/html';
+    object.tabIndex = -1;
+    let off;
+    object.onload = () => {
+        off = on(object.contentDocument.defaultView, 'resize', fn);
+    };
+    if (/Trident/.test(navigator.userAgent)) {
+        append(node, object);
+        object.data = 'about:blank';
+    }
+    else {
+        object.data = 'about:blank';
+        append(node, object);
+    }
+    return () => {
+        detach(object);
+        off && off();
+    };
+}
+// TBD
+// support crossorigin
+/*
+let crossorigin: boolean | undefined;
+
+export function isCrossorigin() {
+  if (crossorigin === undefined) {
+    crossorigin = false;
+
+    try {
+      if (typeof window !== 'undefined' && window.parent) {
+        // eslint-disable-next-line
+        void window.parent.document;
+      }
+    } catch (error) {
+      crossorigin = true;
+    }
+  }
+
+  return crossorigin;
+}
+
+export function addResizeListener(node: HTMLElement, fn: () => void) {
+  const computedStyle = getComputedStyle(node);
+  const zIndex = (parseInt(computedStyle.zIndex) || 0) - 1;
+
+  if (computedStyle.position === 'static') {
+    node.style.position = 'relative';
+  }
+
+  const iframe = element('iframe');
+  iframe.setAttribute(
+    'style',
+    `display: block; position: absolute; top: 0; left: 0; width: 100%; height: 100%; ` +
+      `overflow: hidden; border: 0; opacity: 0; pointer-events: none; z-index: ${zIndex};`
+  );
+  iframe.setAttribute('aria-hidden', 'true');
+  iframe.tabIndex = -1;
+
+  let off: () => void;
+
+  if (isCrossorigin()) {
+    iframe.src = `data:text/html,<script>onresize=function(){parent.postMessage(0,'*')}</script>`;
+    off = on(window, 'message', (event: Event) => {
+      if ((event as MessageEvent).source === iframe.contentWindow) fn();
+    });
+  } else {
+    iframe.src = 'about:blank';
+    iframe.onload = () => {
+      off = on(iframe.contentWindow!, 'resize', fn);
+    };
+  }
+
+  append(node, iframe);
+
+  return () => {
+    detach(iframe);
+    if (off) off();
+  };
+}
+*/
+
 const getScrollParent = (element) => {
     if (!element) {
         return document.body;
@@ -691,8 +789,15 @@ const getApp = (el, selector = APP_SELECTOR) => {
 };
 
 function createRemote(el, options) {
-    const { container = '' } = options;
-    const containerEl = isString(container) ? getApp(el, container) : container;
+    const { container } = options;
+    const containerEl = !container
+        ? getApp(el)
+        : isString(container)
+            ? document.querySelector(container)
+            : container;
+    if (!containerEl) {
+        return;
+    }
     const { parentElement: originParent, nextElementSibling: originSibling } = el;
     const destroy = () => {
         const { parentElement } = el;
@@ -17486,17 +17591,30 @@ const vClickOutside = /*#__PURE__*/ defineDirective({
     update: update$5,
 });
 
+function createDimension(el, options) {
+    const { callback } = options;
+    const destroy = addResizeListener(el, () => callback(el));
+    callback(el);
+    return {
+        destroy,
+    };
+}
 function inserted$6(el, binding) {
-    if (!binding.value)
+    const { value: callback, modifiers: options } = binding;
+    if (!callback)
         return;
-    el.vGesture = createGesture({ ...binding.value, el });
+    el.vDimension = createDimension(el, {
+        callback,
+        passive: true,
+        ...options,
+    });
 }
 function unbind$6(el) {
-    const { vGesture } = el;
-    if (!vGesture)
+    const { vDimension } = el;
+    if (!vDimension)
         return;
-    vGesture.destroy();
-    delete el.vGesture;
+    vDimension.destroy();
+    delete el.vDimension;
 }
 function update$6(el, binding) {
     const { value, oldValue } = binding;
@@ -17508,11 +17626,101 @@ function update$6(el, binding) {
     }
     inserted$6(el, binding);
 }
-const vGesture = /*#__PURE__*/ defineDirective({
-    name: 'gesture',
+const vDimension = /*#__PURE__*/ defineDirective({
+    name: 'dimension',
     inserted: inserted$6,
     unbind: unbind$6,
     update: update$6,
+});
+
+function createDrag(el, options) {
+    const { callback } = options;
+    let dragging = false;
+    const mousedown = (ev) => {
+        if (ev.which !== 1)
+            return;
+        ev.preventDefault();
+        dragging = true;
+        const win = window;
+        const drag = (ev) => callback(dragging, ev);
+        const mouseup = (ev) => {
+            dragging = false;
+            drag(ev);
+            off(win, 'mousemove', drag);
+            off(win, 'mouseup', mouseup);
+        };
+        on(win, 'mousemove', drag, options);
+        on(win, 'mouseup', mouseup, options);
+    };
+    const mousedownOff = on(el, 'mousedown', mousedown, options);
+    const destroy = () => {
+        mousedownOff();
+    };
+    return {
+        options,
+        destroy,
+    };
+}
+function inserted$7(el, binding) {
+    const { value: callback, modifiers: options } = binding;
+    if (!callback)
+        return;
+    el.vDrag = createDrag(el, {
+        callback,
+        ...options,
+    });
+}
+function unbind$7(el) {
+    const { vDrag } = el;
+    if (!vDrag)
+        return;
+    vDrag.destroy();
+    delete el.vDrag;
+}
+function update$7(el, binding) {
+    const { value, oldValue } = binding;
+    if (value === oldValue) {
+        return;
+    }
+    if (oldValue) {
+        unbind$7(el);
+    }
+    inserted$7(el, binding);
+}
+const vDrag = /*#__PURE__*/ defineDirective({
+    name: 'drag',
+    inserted: inserted$7,
+    unbind: unbind$7,
+    update: update$7,
+});
+
+function inserted$8(el, binding) {
+    if (!binding.value)
+        return;
+    el.vGesture = createGesture({ ...binding.value, el });
+}
+function unbind$8(el) {
+    const { vGesture } = el;
+    if (!vGesture)
+        return;
+    vGesture.destroy();
+    delete el.vGesture;
+}
+function update$8(el, binding) {
+    const { value, oldValue } = binding;
+    if (value === oldValue) {
+        return;
+    }
+    if (oldValue) {
+        unbind$8(el);
+    }
+    inserted$8(el, binding);
+}
+const vGesture = /*#__PURE__*/ defineDirective({
+    name: 'gesture',
+    inserted: inserted$8,
+    unbind: unbind$8,
+    update: update$8,
 });
 
 function createIntersect(el, options) {
@@ -17549,7 +17757,7 @@ function createIntersect(el, options) {
         destroy,
     };
 }
-function inserted$7(el, binding) {
+function inserted$9(el, binding) {
     const { value, arg, modifiers } = binding;
     if (!value || !arg)
         return;
@@ -17562,28 +17770,28 @@ function inserted$7(el, binding) {
         root: arg || options.root,
     });
 }
-function unbind$7(el) {
+function unbind$9(el) {
     const { vIntersect } = el;
     if (!vIntersect)
         return;
     vIntersect.destroy();
     delete el.vIntersect;
 }
-function update$7(el, binding) {
+function update$9(el, binding) {
     const { value, oldValue } = binding;
     if (value === oldValue) {
         return;
     }
     if (oldValue) {
-        unbind$7(el);
+        unbind$9(el);
     }
-    inserted$7(el, binding);
+    inserted$9(el, binding);
 }
 const vIntersect = /*#__PURE__*/ defineDirective({
     name: 'intersect',
-    inserted: inserted$7,
-    update: update$7,
-    unbind: unbind$7,
+    inserted: inserted$9,
+    update: update$9,
+    unbind: unbind$9,
 });
 
 function createMutate(el, options) {
@@ -17612,7 +17820,7 @@ function createMutate(el, options) {
         destroy,
     };
 }
-function inserted$8(el, binding) {
+function inserted$a(el, binding) {
     const { value, modifiers } = binding;
     if (!value)
         return;
@@ -17630,28 +17838,28 @@ function inserted$8(el, binding) {
         ...options,
     });
 }
-function unbind$8(el) {
+function unbind$a(el) {
     const { vMutate } = el;
     if (!vMutate)
         return;
     vMutate.destroy();
     delete el.vMutate;
 }
-function update$8(el, binding) {
+function update$a(el, binding) {
     const { value, oldValue } = binding;
     if (value === oldValue) {
         return;
     }
     if (oldValue) {
-        unbind$8(el);
+        unbind$a(el);
     }
-    inserted$8(el, binding);
+    inserted$a(el, binding);
 }
 const vMutate = /*#__PURE__*/ defineDirective({
     name: 'mutate',
-    inserted: inserted$8,
-    unbind: unbind$8,
-    update: update$8,
+    inserted: inserted$a,
+    unbind: unbind$a,
+    update: update$a,
 });
 
 function createResize(options) {
@@ -17669,7 +17877,7 @@ function createResize(options) {
         destroy,
     };
 }
-function inserted$9(el, binding) {
+function inserted$b(el, binding) {
     const { value, modifiers } = binding;
     if (!value)
         return;
@@ -17678,28 +17886,28 @@ function inserted$9(el, binding) {
         callback: value,
     });
 }
-function unbind$9(el) {
+function unbind$b(el) {
     const { vResize } = el;
     if (!vResize)
         return;
     vResize.destroy();
     delete el.vResize;
 }
-function update$9(el, binding) {
+function update$b(el, binding) {
     const { value, oldValue } = binding;
     if (value === oldValue) {
         return;
     }
     if (oldValue) {
-        unbind$9(el);
+        unbind$b(el);
     }
-    inserted$9(el, binding);
+    inserted$b(el, binding);
 }
 const vResize = /*#__PURE__*/ defineDirective({
     name: 'resize',
-    inserted: inserted$9,
-    unbind: unbind$9,
-    update: update$9,
+    inserted: inserted$b,
+    unbind: unbind$b,
+    update: update$b,
 });
 
 function createScroll(options) {
@@ -17718,7 +17926,7 @@ function createScroll(options) {
         destroy,
     };
 }
-function inserted$a(el, binding) {
+function inserted$c(el, binding) {
     const { value, arg, modifiers } = binding;
     if (!value)
         return;
@@ -17729,28 +17937,28 @@ function inserted$a(el, binding) {
         callback: value,
     });
 }
-function unbind$a(el) {
+function unbind$c(el) {
     const { vScroll } = el;
     if (!vScroll)
         return;
     vScroll.destroy();
     delete el.vScroll;
 }
-function update$a(el, binding) {
+function update$c(el, binding) {
     const { value, oldValue } = binding;
     if (value === oldValue) {
         return;
     }
     if (oldValue) {
-        unbind$a(el);
+        unbind$c(el);
     }
-    inserted$a(el, binding);
+    inserted$c(el, binding);
 }
 const vScroll = /*#__PURE__*/ defineDirective({
     name: 'scroll',
-    inserted: inserted$a,
-    unbind: unbind$a,
-    update: update$a,
+    inserted: inserted$c,
+    unbind: unbind$c,
+    update: update$c,
 });
 
 const clamp$6 = (num, min, max) => {
@@ -17803,35 +18011,35 @@ const createSwipeBackGesture = (el, canStartHandler, onStartHandler, onMoveHandl
     });
 };
 
-function inserted$b(el, binding) {
+function inserted$d(el, binding) {
     const { value } = binding;
     if (!value)
         return;
     const { canStartHandler = NO, onStartHandler = NOOP, onMoveHandler = NOOP, onEndHandler = NOOP, } = value;
     el.vSwipeBack = createSwipeBackGesture(el, canStartHandler, onStartHandler, onMoveHandler, onEndHandler);
 }
-function unbind$b(el) {
+function unbind$d(el) {
     const { vSwipeBack } = el;
     if (!vSwipeBack)
         return;
     vSwipeBack.destroy();
     delete el.vSwipeBack;
 }
-function update$b(el, binding) {
+function update$d(el, binding) {
     const { value, oldValue } = binding;
     if (value === oldValue) {
         return;
     }
     if (oldValue) {
-        unbind$b(el);
+        unbind$d(el);
     }
-    inserted$b(el, binding);
+    inserted$d(el, binding);
 }
 const vSwipeBack = /*#__PURE__*/ defineDirective({
     name: 'swipe-back',
-    inserted: inserted$b,
-    unbind: unbind$b,
-    update: update$b,
+    inserted: inserted$d,
+    unbind: unbind$d,
+    update: update$d,
 });
 
 function createTooltip(el, options) {
@@ -17856,7 +18064,7 @@ function createTooltip(el, options) {
         destroy,
     };
 }
-function inserted$c(el, binding) {
+function inserted$e(el, binding) {
     const { value = '', modifiers } = binding;
     if (value === false)
         return;
@@ -17866,20 +18074,20 @@ function inserted$c(el, binding) {
         ...options,
     });
 }
-function unbind$c(el) {
+function unbind$e(el) {
     const { vTooltip } = el;
     if (!vTooltip)
         return;
     vTooltip.destroy();
     delete el.vTooltip;
 }
-function update$c(el, binding) {
+function update$e(el, binding) {
     const { value, oldValue } = binding;
     if (value === oldValue) {
         return;
     }
     if (value === false) {
-        unbind$c(el);
+        unbind$e(el);
         return;
     }
     const { vTooltip } = el;
@@ -17887,9 +18095,9 @@ function update$c(el, binding) {
 }
 const vTooltip = /*#__PURE__*/ defineDirective({
     name: 'tooltip',
-    inserted: inserted$c,
-    unbind: unbind$c,
-    update: update$c,
+    inserted: inserted$e,
+    unbind: unbind$e,
+    update: update$e,
 });
 
 const DIR_RATIO = 0.5;
@@ -17972,34 +18180,34 @@ function createTouch(el, options) {
         destroy,
     };
 }
-function inserted$d(el, binding) {
+function inserted$f(el, binding) {
     const { value } = binding;
     if (!value)
         return;
     el.vTouch = createTouch(el, value);
 }
-function unbind$d(el) {
+function unbind$f(el) {
     const { vTouch } = el;
     if (!vTouch)
         return;
     vTouch.destroy();
     delete el.vTouch;
 }
-function update$d(el, binding) {
+function update$f(el, binding) {
     const { value, oldValue } = binding;
     if (value === oldValue) {
         return;
     }
     if (oldValue) {
-        unbind$d(el);
+        unbind$f(el);
     }
-    inserted$d(el, binding);
+    inserted$f(el, binding);
 }
 const vTouch = /*#__PURE__*/ defineDirective({
     name: 'touch',
-    inserted: inserted$d,
-    unbind: unbind$d,
-    update: update$d,
+    inserted: inserted$f,
+    unbind: unbind$f,
+    update: update$f,
 });
 
 function getScrollTop(el) {
@@ -18064,7 +18272,7 @@ function createWaterfall(el, options) {
         destroy,
     };
 }
-function inserted$e(el, binding) {
+function inserted$g(el, binding) {
     const { value, modifiers } = binding;
     if (!value)
         return;
@@ -18077,28 +18285,28 @@ function inserted$e(el, binding) {
     });
     el.vWaterfall = vWaterfall;
 }
-function unbind$e(el) {
+function unbind$g(el) {
     const { vWaterfall } = el;
     if (!vWaterfall)
         return;
     vWaterfall.destroy();
     delete el.vWaterfall;
 }
-function update$e(el, binding) {
+function update$g(el, binding) {
     const { value, oldValue } = binding;
     if (value === oldValue) {
         return;
     }
     if (oldValue) {
-        unbind$e(el);
+        unbind$g(el);
     }
-    inserted$e(el, binding);
+    inserted$g(el, binding);
 }
 const vWaterfall = /*#__PURE__*/ defineDirective({
     name: 'waterfall',
-    inserted: inserted$e,
-    unbind: unbind$e,
-    update: update$e,
+    inserted: inserted$g,
+    unbind: unbind$g,
+    update: update$g,
 });
 
 // Auto Generated
@@ -18111,6 +18319,10 @@ var directives = /*#__PURE__*/Object.freeze({
   vAutoRepeat: vAutoRepeat,
   createClickOutside: createClickOutside,
   vClickOutside: vClickOutside,
+  createDimension: createDimension,
+  vDimension: vDimension,
+  createDrag: createDrag,
+  vDrag: vDrag,
   vGesture: vGesture,
   createHover: createHover,
   vHover: vHover,
@@ -18242,7 +18454,7 @@ var mixins = /*#__PURE__*/Object.freeze({
 
 const Line = {
     install,
-    version: "1.0.0-alpha.3",
+    version: "1.0.0-alpha.4",
 };
 function defaulExport() {
     // auto install for umd build
@@ -18264,7 +18476,7 @@ function defaulExport() {
         directives,
         controllers,
         mixins,
-        version: "1.0.0-alpha.3",
+        version: "1.0.0-alpha.4",
     };
 }
 var index = /*#__PURE__*/ defaulExport();
@@ -18378,6 +18590,8 @@ exports.createAutoRepeat = createAutoRepeat;
 exports.createBEM = createBEM;
 exports.createClickOutside = createClickOutside;
 exports.createColorClasses = createColorClasses;
+exports.createDimension = createDimension;
+exports.createDrag = createDrag;
 exports.createHover = createHover;
 exports.createIntersect = createIntersect;
 exports.createModeClasses = createModeClasses;
@@ -18425,6 +18639,8 @@ exports.useTrigger = useTrigger;
 exports.vActivatable = vActivatable;
 exports.vAutoRepeat = vAutoRepeat;
 exports.vClickOutside = vClickOutside;
+exports.vDimension = vDimension;
+exports.vDrag = vDrag;
 exports.vGesture = vGesture;
 exports.vHover = vHover;
 exports.vIntersect = vIntersect;

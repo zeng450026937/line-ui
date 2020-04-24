@@ -29,6 +29,7 @@ var Kom = (function (exports, Vue) {
       constructor(ns = '') {
           this.ns = ns;
           this.middleware = [];
+          this.context = {};
       }
       use(pathOrFn, fn, thisArg) {
           const handler = fn
@@ -74,8 +75,10 @@ var Kom = (function (exports, Vue) {
           };
           return this.callback()(ctx);
       }
-      createContext(ns = this.ns) {
-          return { ns };
+      createContext() {
+          const context = Object.create(this.context);
+          context.ns = this.ns;
+          return context;
       }
   }
   const createHandler = (name, fn, thisArg) => {
@@ -215,6 +218,7 @@ var Kom = (function (exports, Vue) {
       genVM(parent) {
           const model = this;
           return new Vue({
+              ...this.options,
               parent,
               mixins: this.mixins,
               data: this.data,
@@ -232,9 +236,10 @@ var Kom = (function (exports, Vue) {
               },
           });
       }
-      init() {
+      init(options) {
           if (this.initialized())
               return this;
+          this.options = options;
           const submodels = Object.keys(this.submodel);
           submodels.forEach((key) => {
               // submodel placeholder
@@ -346,7 +351,8 @@ var Kom = (function (exports, Vue) {
                   console.warn('invalid kom.');
                   return;
               }
-              kom.init();
+              const router = options.router || (options.parent && options.parent.$router);
+              kom.init({ router });
               this.$kom = kom;
               this.$model = kom;
               this.$store = kom.store;

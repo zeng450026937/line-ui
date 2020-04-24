@@ -1,6 +1,6 @@
 {
   "name": "@line-ui/ts-auto-import",
-  "version": "1.0.0-alpha.3",
+  "version": "1.0.0-alpha.4",
   "description": "@line-ui/ts-auto-import",
   "main": "index.js",
   "module": "dist/ts-auto-import.esm-bundler.js",

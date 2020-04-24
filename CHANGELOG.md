@@ -1,3 +1,27 @@
+# [1.0.0-alpha.4](http://gitcode.yealink.com/server/client/web_app/line-ui/compare/v1.0.0-alpha.3...v1.0.0-alpha.4) (2020-04-24)
+
+
+### Bug Fixes
+
+* **auto-import:** match directive name with 'v-' prefixed ([5f5c817](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/5f5c81706753ac85b86da608bf1cc30c836385c0))
+* **i18n-plugin:** fix uncorrect seal for seen i18n & vue template parsing ([95c11d1](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/95c11d16b02fd70d9230cdcf3890c833b0e30ec4))
+* **preset-line:** typo ([c61a776](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/c61a776ee3073b6203213d6fd57193b5ac725091))
+* **v-remote:** fix container element ([f3bb991](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/f3bb9914ae31f87807dab7b8775f96925f4434c1))
+* **vue-cli:** support boolean as plugin options ([a0af72b](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/a0af72b8a1ff20488a4d27e397cc8e47a4d34bd5))
+
+
+### Features
+
+* **cli-plugin:** support plugin options ([274270e](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/274270eb6bcfa4b5125f23c890736485acaa0bfe))
+* **cli-plugin:** support tag plugin ([99d0abe](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/99d0abe109e8fd8578f71dcd67ad6efc9bdea896))
+* **i18n-plugin:** $tr / $config expression is provided as runtime ([c78ac1f](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/c78ac1fa044fde4e7eae570c8c8251c19a5750d6))
+* **kom:** inheits router options ([d85fb4d](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/d85fb4d51ece056020ba9c705c14c640233d6398))
+* **kom:** support context injection ([7508dcf](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/7508dcf90a707aa513d9b4cdeace1e9eb1ea25b4))
+* **tag-plugin:** support head / body tags in vue template file, all tags is inject into final html. alpha state ([1b5f284](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/1b5f2842f3a14f4c0b8fada7ff6d5db7d8994c8b))
+* **v-drag:** initial ([94c77d6](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/94c77d6c41ed90abf88b39976b38697f8f4d75fe))
+
+
+
 # [1.0.0-alpha.3](http://gitcode.yealink.com/server/client/web_app/line-ui/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2020-04-20)
 
 

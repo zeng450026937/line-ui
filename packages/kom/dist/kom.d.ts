@@ -19,11 +19,12 @@ export declare const install: (target?: VueConstructor<Vue_2>) => void;
 export declare class Layer<T extends LayerContext = LayerContext> {
     ns: string;
     middleware: MiddlewareFn<T>[];
+    context: object;
     constructor(ns?: string);
     use(pathOrFn: string | MiddlewareFn<T>, fn?: MiddlewareFn<T>, thisArg?: any): this;
     callback(): ComposedMiddlewareFn<T>;
     dispatch<R = any, P extends Payload = Payload>(path: string, payload?: P): Promise<R>;
-    createContext(ns?: string): T;
+    createContext(): T;
 }
 
 export declare interface LayerContext<P extends Payload = Payload> {
@@ -60,6 +61,7 @@ export declare class Model extends Layer<ModelContext> {
         [key: string]: (() => any)[];
     };
     store?: Vue_2;
+    options?: object;
     d: {
         [key: string]: any;
     };
@@ -80,7 +82,7 @@ export declare class Model extends Layer<ModelContext> {
     setNS(ns?: string): void;
     setParent(parent?: Model): void;
     genVM(parent?: Vue_2): Vue_2;
-    init(): this;
+    init(options?: object): this;
     destroy(): void;
     createContext(): ModelContext;
 }
