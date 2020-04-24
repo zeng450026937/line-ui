@@ -16,7 +16,7 @@
   "license": "MIT",
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.12.1",
-    "@mdi/svg": "^4.9.95",
+    "@mdi/svg": "^5.1.45",
     "cheerio": "^1.0.0-rc.3",
     "eva-icons": "^1.1.2",
     "find-up": "^4.1.0",
