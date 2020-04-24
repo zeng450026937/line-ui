@@ -1,10 +1,12 @@
 export * from './client-area';
+export * from './dom';
 export * from './element-proxy';
 export * from './event-listener';
 export * from './event-modifier';
 export * from './offset-parent';
 export * from './pointer-coord';
 export * from './raf';
+export * from './resize-listerner';
 export * from './scroll-parent';
 
 export const hasDocument = typeof document !== 'undefined';
