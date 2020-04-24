@@ -1,5 +1,3 @@
-const qs = require('querystring');
-
 module.exports = (api, options) => {
   api.registerCommand(
     'icons-explorer',
@@ -14,13 +12,14 @@ module.exports = (api, options) => {
       const packageDir = `${packagesDir}/${target}`;
 
       process.env.TARGET = target;
-      process.env.LINE_DEV = true;
 
       api.chainWebpack((config) => {
         config.entry('app').clear().add(`${packageDir}/src/main.ts`);
       });
 
-      api.service.run('serve', args, rawArgs);
+      const { build } = args;
+      const command = build ? 'build' : 'serve';
+      api.service.run(command, args, rawArgs);
     }
   );
 };

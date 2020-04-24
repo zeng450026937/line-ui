@@ -1,8 +1,8 @@
 module.exports = (api, options) => {
-  api.registerCommand('spa', async (args, rawArgs) => {
+  api.registerCommand('spa', (args, rawArgs) => {
     const { build } = args;
     const command = build ? 'build' : 'serve';
-    await api.service.run(command, args, rawArgs);
+    api.service.run(command, args, rawArgs);
   });
 };
 

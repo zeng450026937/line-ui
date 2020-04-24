@@ -1,5 +1,3 @@
-const qs = require('querystring');
-
 module.exports = (api, options) => {
   api.registerCommand(
     'quick-start',
