@@ -14,7 +14,6 @@
   "keywords": [
     "line-ui"
   ],
-  "sideEffects": false,
   "buildOptions": {
     "name": "IECompat",
     "formats": [

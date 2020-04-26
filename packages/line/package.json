@@ -19,7 +19,7 @@
   "keywords": [
     "line"
   ],
-  "sideEffects": false,
+  "sideEffects": true,
   "buildOptions": {
     "name": "Line",
     "formats": [

@@ -5811,12 +5811,15 @@ var Line = (function (exports, Vue) {
       return element;
     }
 
-    return element.parentNode || // DOM Element detected
-    // $FlowFixMe: need a better way to handle this...
-    element.host || // ShadowRoot detected
-    document.ownerDocument || // Fallback to ownerDocument if available
-    document.documentElement // Or to documentElement if everything else fails
-    ;
+    return (// $FlowFixMe: this is a quicker (but less type safe) way to save quite some bytes from the bundle
+      element.assignedSlot || // step into the shadow DOM of the parent of a slotted node
+      element.parentNode || // DOM Element detected
+      // $FlowFixMe: need a better way to handle this...
+      element.host || // ShadowRoot detected
+      // $FlowFixMe: HTMLElement is a Node
+      getDocumentElement(element) // fallback
+
+    );
   }
 
   function getComputedStyle$1(element) {
@@ -5851,7 +5854,8 @@ var Line = (function (exports, Vue) {
 
     var scrollParent = getScrollParent$1(element);
     var isBody = getNodeName(scrollParent) === 'body';
-    var target = isBody ? getWindow(scrollParent) : scrollParent;
+    var win = getWindow(scrollParent);
+    var target = isBody ? [win].concat(win.visualViewport || []) : scrollParent;
     var updatedList = list.concat(target);
     return isBody ? updatedList : // $FlowFixMe: isBody tells us target will be an HTMLElement here
     updatedList.concat(listScrollParents(getParentNode(target)));
@@ -5861,19 +5865,13 @@ var Line = (function (exports, Vue) {
     return ['table', 'td', 'th'].indexOf(getNodeName(element)) >= 0;
   }
 
-  var isFirefox = function isFirefox() {
-    return typeof window.InstallTrigger !== 'undefined';
-  };
-
   function getTrueOffsetParent(element) {
-    var offsetParent;
-
-    if (!isHTMLElement(element) || !(offsetParent = element.offsetParent) || // https://github.com/popperjs/popper-core/issues/837
-    isFirefox() && getComputedStyle$1(offsetParent).position === 'fixed') {
+    if (!isHTMLElement(element) || // https://github.com/popperjs/popper-core/issues/837
+    getComputedStyle$1(element).position === 'fixed') {
       return null;
     }
 
-    return offsetParent;
+    return element.offsetParent;
   }
 
   function getOffsetParent(element) {
@@ -5903,14 +5901,10 @@ var Line = (function (exports, Vue) {
   var viewport = 'viewport';
   var popper = 'popper';
   var reference = 'reference';
-  var variationPlacements =
-  /*#__PURE__*/
-  basePlacements.reduce(function (acc, placement) {
+  var variationPlacements = /*#__PURE__*/basePlacements.reduce(function (acc, placement) {
     return acc.concat([placement + "-" + start, placement + "-" + end]);
   }, []);
-  var placements =
-  /*#__PURE__*/
-  [].concat(basePlacements, [auto]).reduce(function (acc, placement) {
+  var placements = /*#__PURE__*/[].concat(basePlacements, [auto]).reduce(function (acc, placement) {
     return acc.concat([placement, placement + "-" + start, placement + "-" + end]);
   }, []); // modifiers that need to read the DOM
 
@@ -6155,7 +6149,7 @@ var Line = (function (exports, Vue) {
           cleanupModifierEffects();
           state.options = Object.assign({}, defaultOptions, {}, state.options, {}, options);
           state.scrollParents = {
-            reference: isElement(reference) ? listScrollParents(reference) : [],
+            reference: isElement(reference) ? listScrollParents(reference) : reference.contextElement ? listScrollParents(reference.contextElement) : [],
             popper: listScrollParents(popper)
           }; // Orders the modifiers based on their dependencies and `phase`
           // properties
@@ -6380,7 +6374,8 @@ var Line = (function (exports, Vue) {
         window.removeEventListener('resize', instance.update, passive);
       }
     };
-  }
+  } // eslint-disable-next-line import/no-unused-modules
+
 
   var eventListeners = {
     name: 'eventListeners',
@@ -6477,7 +6472,8 @@ var Line = (function (exports, Vue) {
       strategy: 'absolute',
       placement: state.placement
     });
-  }
+  } // eslint-disable-next-line import/no-unused-modules
+
 
   var popperOffsets$1 = {
     name: 'popperOffsets',
@@ -6573,8 +6569,7 @@ var Line = (function (exports, Vue) {
         adaptive = _options$adaptive === void 0 ? true : _options$adaptive;
 
     if (process.env.NODE_ENV !== "production") {
-      var _getComputedStyle = getComputedStyle$1(state.elements.popper),
-          transitionProperty = _getComputedStyle.transitionProperty;
+      var transitionProperty = getComputedStyle$1(state.elements.popper).transitionProperty || '';
 
       if (adaptive && ['transform', 'top', 'right', 'bottom', 'left'].some(function (property) {
         return transitionProperty.indexOf(property) >= 0;
@@ -6588,13 +6583,15 @@ var Line = (function (exports, Vue) {
       popper: state.elements.popper,
       popperRect: state.rects.popper,
       gpuAcceleration: gpuAcceleration
-    }; // popper offsets are always available
+    };
 
-    state.styles.popper = Object.assign({}, state.styles.popper, {}, mapToStyles(Object.assign({}, commonStyles, {
-      offsets: state.modifiersData.popperOffsets,
-      position: state.options.strategy,
-      adaptive: adaptive
-    }))); // arrow offsets may not be available
+    if (state.modifiersData.popperOffsets != null) {
+      state.styles.popper = Object.assign({}, state.styles.popper, {}, mapToStyles(Object.assign({}, commonStyles, {
+        offsets: state.modifiersData.popperOffsets,
+        position: state.options.strategy,
+        adaptive: adaptive
+      })));
+    }
 
     if (state.modifiersData.arrow != null) {
       state.styles.arrow = Object.assign({}, state.styles.arrow, {}, mapToStyles(Object.assign({}, commonStyles, {
@@ -6607,7 +6604,8 @@ var Line = (function (exports, Vue) {
     state.attributes.popper = Object.assign({}, state.attributes.popper, {
       'data-popper-placement': state.placement
     });
-  }
+  } // eslint-disable-next-line import/no-unused-modules
+
 
   var computeStyles$1 = {
     name: 'computeStyles',
@@ -6650,7 +6648,7 @@ var Line = (function (exports, Vue) {
     var state = _ref2.state;
     var initialStyles = {
       popper: {
-        position: 'absolute',
+        position: state.options.strategy,
         left: '0',
         top: '0',
         margin: '0'
@@ -6690,7 +6688,8 @@ var Line = (function (exports, Vue) {
         });
       });
     };
-  }
+  } // eslint-disable-next-line import/no-unused-modules
+
 
   var applyStyles$1 = {
     name: 'applyStyles',
@@ -6735,10 +6734,15 @@ var Line = (function (exports, Vue) {
     var _data$state$placement = data[state.placement],
         x = _data$state$placement.x,
         y = _data$state$placement.y;
-    state.modifiersData.popperOffsets.x += x;
-    state.modifiersData.popperOffsets.y += y;
+
+    if (state.modifiersData.popperOffsets != null) {
+      state.modifiersData.popperOffsets.x += x;
+      state.modifiersData.popperOffsets.y += y;
+    }
+
     state.modifiersData[name] = data;
-  }
+  } // eslint-disable-next-line import/no-unused-modules
+
 
   var offset$1 = {
     name: 'offset',
@@ -6772,9 +6776,20 @@ var Line = (function (exports, Vue) {
 
   function getViewportRect(element) {
     var win = getWindow(element);
+    var visualViewport = win.visualViewport;
+    var width = win.innerWidth;
+    var height = win.innerHeight; // We don't know which browsers have buggy or odd implementations of this, so
+    // for now we're only applying it to iOS to fix the keyboard issue.
+    // Investigation required
+
+    if (visualViewport && /iPhone|iPod|iPad/.test(navigator.platform)) {
+      width = visualViewport.width;
+      height = visualViewport.height;
+    }
+
     return {
-      width: win.innerWidth,
-      height: win.innerHeight,
+      width: width,
+      height: height,
       x: 0,
       y: 0
     };
@@ -6954,7 +6969,7 @@ var Line = (function (exports, Vue) {
     var referenceElement = state.elements.reference;
     var popperRect = state.rects.popper;
     var element = state.elements[altBoundary ? altContext : elementContext];
-    var clippingClientRect = getClippingRect(isElement(element) ? element : getDocumentElement(state.elements.popper), boundary, rootBoundary);
+    var clippingClientRect = getClippingRect(isElement(element) ? element : element.contextElement || getDocumentElement(state.elements.popper), boundary, rootBoundary);
     var referenceClientRect = getBoundingClientRect(referenceElement);
     var popperOffsets = computeOffsets({
       reference: referenceClientRect,
@@ -6986,6 +7001,9 @@ var Line = (function (exports, Vue) {
     return overflowOffsets;
   }
 
+  /*:: type OverflowsMap = { [ComputedPlacement]: number }; */
+
+  /*;; type OverflowsMap = { [key in ComputedPlacement]: number }; */
   function computeAutoPlacement(state, options) {
     if (options === void 0) {
       options = {};
@@ -6996,13 +7014,17 @@ var Line = (function (exports, Vue) {
         boundary = _options.boundary,
         rootBoundary = _options.rootBoundary,
         padding = _options.padding,
-        flipVariations = _options.flipVariations;
+        flipVariations = _options.flipVariations,
+        _options$allowedAutoP = _options.allowedAutoPlacements,
+        allowedAutoPlacements = _options$allowedAutoP === void 0 ? placements : _options$allowedAutoP;
     var variation = getVariation(placement);
-    var placements = variation ? flipVariations ? variationPlacements : variationPlacements.filter(function (placement) {
+    var placements$1 = (variation ? flipVariations ? variationPlacements : variationPlacements.filter(function (placement) {
       return getVariation(placement) === variation;
-    }) : basePlacements; // $FlowFixMe: Flow seems to have problems with two array unions...
+    }) : basePlacements).filter(function (placement) {
+      return allowedAutoPlacements.indexOf(placement) >= 0;
+    }); // $FlowFixMe: Flow seems to have problems with two array unions...
 
-    var overflows = placements.reduce(function (acc, placement) {
+    var overflows = placements$1.reduce(function (acc, placement) {
       acc[placement] = detectOverflow(state, {
         placement: placement,
         boundary: boundary,
@@ -7040,7 +7062,8 @@ var Line = (function (exports, Vue) {
         rootBoundary = options.rootBoundary,
         altBoundary = options.altBoundary,
         _options$flipVariatio = options.flipVariations,
-        flipVariations = _options$flipVariatio === void 0 ? true : _options$flipVariatio;
+        flipVariations = _options$flipVariatio === void 0 ? true : _options$flipVariatio,
+        allowedAutoPlacements = options.allowedAutoPlacements;
     var preferredPlacement = state.options.placement;
     var basePlacement = getBasePlacement(preferredPlacement);
     var isBasePlacement = basePlacement === preferredPlacement;
@@ -7051,7 +7074,8 @@ var Line = (function (exports, Vue) {
         boundary: boundary,
         rootBoundary: rootBoundary,
         padding: padding,
-        flipVariations: flipVariations
+        flipVariations: flipVariations,
+        allowedAutoPlacements: allowedAutoPlacements
       }) : placement);
     }, []);
     var referenceRect = state.rects.reference;
@@ -7128,7 +7152,8 @@ var Line = (function (exports, Vue) {
       state.placement = firstFittingPlacement;
       state.reset = true;
     }
-  }
+  } // eslint-disable-next-line import/no-unused-modules
+
 
   var flip$1 = {
     name: 'flip',
@@ -7187,6 +7212,10 @@ var Line = (function (exports, Vue) {
       y: 0
     };
 
+    if (!popperOffsets) {
+      return;
+    }
+
     if (checkMainAxis) {
       var mainSide = mainAxis === 'y' ? top : left;
       var altSide = mainAxis === 'y' ? bottom : right;
@@ -7238,12 +7267,13 @@ var Line = (function (exports, Vue) {
 
       var _preventedOffset = within(_min, _offset, _max);
 
-      state.modifiersData.popperOffsets[altAxis] = _preventedOffset;
+      popperOffsets[altAxis] = _preventedOffset;
       data[altAxis] = _preventedOffset - _offset;
     }
 
     state.modifiersData[name] = data;
-  }
+  } // eslint-disable-next-line import/no-unused-modules
+
 
   var preventOverflow$1 = {
     name: 'preventOverflow',
@@ -7265,7 +7295,7 @@ var Line = (function (exports, Vue) {
     var isVertical = [left, right].indexOf(basePlacement) >= 0;
     var len = isVertical ? 'height' : 'width';
 
-    if (!arrowElement) {
+    if (!arrowElement || !popperOffsets) {
       return;
     }
 
@@ -7276,14 +7306,17 @@ var Line = (function (exports, Vue) {
     var endDiff = state.rects.reference[len] + state.rects.reference[axis] - popperOffsets[axis] - state.rects.popper[len];
     var startDiff = popperOffsets[axis] - state.rects.reference[axis];
     var arrowOffsetParent = state.elements.arrow && getOffsetParent(state.elements.arrow);
-    var clientOffset = arrowOffsetParent ? axis === 'y' ? arrowOffsetParent.clientLeft || 0 : arrowOffsetParent.clientTop || 0 : 0;
-    var centerToReference = endDiff / 2 - startDiff / 2 - clientOffset; // Make sure the arrow doesn't overflow the popper if the center point is
+    var clientSize = arrowOffsetParent ? axis === 'y' ? arrowOffsetParent.clientHeight || 0 : arrowOffsetParent.clientWidth || 0 : 0;
+    var centerToReference = endDiff / 2 - startDiff / 2; // Make sure the arrow doesn't overflow the popper if the center point is
     // outside of the popper bounds
 
-    var center = within(paddingObject[minProp], state.rects.popper[len] / 2 - arrowRect[len] / 2 + centerToReference, state.rects.popper[len] - arrowRect[len] - paddingObject[maxProp]); // Prevents breaking syntax highlighting...
+    var min = paddingObject[minProp];
+    var max = clientSize - arrowRect[len] - paddingObject[maxProp];
+    var center = clientSize / 2 - arrowRect[len] / 2 + centerToReference;
+    var offset = within(min, center, max); // Prevents breaking syntax highlighting...
 
     var axisProp = axis;
-    state.modifiersData[name] = (_state$modifiersData$ = {}, _state$modifiersData$[axisProp] = center, _state$modifiersData$);
+    state.modifiersData[name] = (_state$modifiersData$ = {}, _state$modifiersData$[axisProp] = offset, _state$modifiersData$.centerOffset = offset - center, _state$modifiersData$);
   }
 
   function effect$2(_ref2) {
@@ -7293,7 +7326,12 @@ var Line = (function (exports, Vue) {
     var _options$element = options.element,
         arrowElement = _options$element === void 0 ? '[data-popper-arrow]' : _options$element,
         _options$padding = options.padding,
-        padding = _options$padding === void 0 ? 0 : _options$padding; // CSS selector
+        padding = _options$padding === void 0 ? 0 : _options$padding;
+
+    if (arrowElement == null) {
+      return;
+    } // CSS selector
+
 
     if (typeof arrowElement === 'string') {
       arrowElement = state.elements.popper.querySelector(arrowElement);
@@ -7315,7 +7353,8 @@ var Line = (function (exports, Vue) {
     state.modifiersData[name + "#persistent"] = {
       padding: mergePaddingObject(typeof padding !== 'number' ? padding : expandToHashMap(padding, basePlacements))
     };
-  }
+  } // eslint-disable-next-line import/no-unused-modules
+
 
   var arrow$1 = {
     name: 'arrow',
@@ -7375,7 +7414,8 @@ var Line = (function (exports, Vue) {
       'data-popper-reference-hidden': isReferenceHidden,
       'data-popper-escaped': hasPopperEscaped
     });
-  }
+  } // eslint-disable-next-line import/no-unused-modules
+
 
   var hide$1 = {
     name: 'hide',
@@ -7386,9 +7426,7 @@ var Line = (function (exports, Vue) {
   };
 
   var defaultModifiers = [eventListeners, popperOffsets$1, computeStyles$1, applyStyles$1, offset$1, flip$1, preventOverflow$1, arrow$1, hide$1];
-  var createPopper =
-  /*#__PURE__*/
-  popperGenerator({
+  var createPopper = /*#__PURE__*/popperGenerator({
     defaultModifiers: defaultModifiers
   }); // eslint-disable-next-line import/no-unused-modules
 
@@ -18694,7 +18732,7 @@ var Line = (function (exports, Vue) {
   }
 
   /**
-   * Swiper 5.3.6
+   * Swiper 5.3.7
    * Most modern mobile touch slider and framework with hardware accelerated transitions
    * http://swiperjs.com
    *
@@ -18702,7 +18740,7 @@ var Line = (function (exports, Vue) {
    *
    * Released under the MIT License
    *
-   * Released on: February 29, 2020
+   * Released on: April 10, 2020
    */
 
   const Methods = {
@@ -19415,8 +19453,11 @@ var Line = (function (exports, Vue) {
     }
     // Find slides currently in view
     if (swiper.params.slidesPerView !== 'auto' && swiper.params.slidesPerView > 1) {
-      if (swiper.params.centeredSlides) activeSlides.push(...swiper.visibleSlides);
-      else {
+      if (swiper.params.centeredSlides) {
+        swiper.visibleSlides.each((index, slide) => {
+          activeSlides.push(slide);
+        });
+      } else {
         for (i = 0; i < Math.ceil(swiper.params.slidesPerView); i += 1) {
           const index = swiper.activeIndex + i;
           if (index > swiper.slides.length) break;
@@ -19650,7 +19691,7 @@ var Line = (function (exports, Vue) {
     if (previousRealIndex !== realIndex) {
       swiper.emit('realIndexChange');
     }
-    if (swiper.initialized || swiper.runCallbacksOnInit) {
+    if (swiper.initialized || swiper.params.runCallbacksOnInit) {
       swiper.emit('slideChange');
     }
   }
@@ -19996,17 +20037,21 @@ var Line = (function (exports, Vue) {
     }
     if (params.cssMode) {
       const isH = swiper.isHorizontal();
+      let t = -translate;
+      if (rtl) {
+        t = wrapperEl.scrollWidth - wrapperEl.offsetWidth - t;
+      }
       if (speed === 0) {
-        wrapperEl[isH ? 'scrollLeft' : 'scrollTop'] = -translate;
+        wrapperEl[isH ? 'scrollLeft' : 'scrollTop'] = t;
       } else {
         // eslint-disable-next-line
         if (wrapperEl.scrollTo) {
           wrapperEl.scrollTo({
-            [isH ? 'left' : 'top']: -translate,
+            [isH ? 'left' : 'top']: t,
             behavior: 'smooth',
           });
         } else {
-          wrapperEl[isH ? 'scrollLeft' : 'scrollTop'] = -translate;
+          wrapperEl[isH ? 'scrollLeft' : 'scrollTop'] = t;
         }
       }
       return true;
@@ -21215,9 +21260,17 @@ var Line = (function (exports, Vue) {
 
   function onScroll () {
     const swiper = this;
-    const { wrapperEl } = swiper;
+    const { wrapperEl, rtlTranslate } = swiper;
     swiper.previousTranslate = swiper.translate;
-    swiper.translate = swiper.isHorizontal() ? -wrapperEl.scrollLeft : -wrapperEl.scrollTop;
+    if (swiper.isHorizontal()) {
+      if (rtlTranslate) {
+        swiper.translate = ((wrapperEl.scrollWidth - wrapperEl.offsetWidth) - wrapperEl.scrollLeft);
+      } else {
+        swiper.translate = -wrapperEl.scrollLeft;
+      }
+    } else {
+      swiper.translate = -wrapperEl.scrollTop;
+    }
     // eslint-disable-next-line
     if (swiper.translate === -0) swiper.translate = 0;
 
@@ -21232,7 +21285,7 @@ var Line = (function (exports, Vue) {
       newProgress = (swiper.translate - swiper.minTranslate()) / (translatesDiff);
     }
     if (newProgress !== swiper.progress) {
-      swiper.updateProgress(swiper.translate);
+      swiper.updateProgress(rtlTranslate ? -swiper.translate : swiper.translate);
     }
 
     swiper.emit('setTranslate', swiper.translate, false);
@@ -24136,7 +24189,9 @@ var Line = (function (exports, Vue) {
           return;
         }
       }
-      gesture.$imageEl.transition(0);
+      if (gesture.$imageEl) {
+        gesture.$imageEl.transition(0);
+      }
       swiper.zoom.isScaling = true;
     },
     onGestureChange(e) {
@@ -24333,8 +24388,12 @@ var Line = (function (exports, Vue) {
       const zoom = swiper.zoom;
       const { gesture } = zoom;
       if (gesture.$slideEl && swiper.previousIndex !== swiper.activeIndex) {
-        gesture.$imageEl.transform('translate3d(0,0,0) scale(1)');
-        gesture.$imageWrapEl.transform('translate3d(0,0,0)');
+        if (gesture.$imageEl) {
+          gesture.$imageEl.transform('translate3d(0,0,0) scale(1)');
+        }
+        if (gesture.$imageWrapEl) {
+          gesture.$imageWrapEl.transform('translate3d(0,0,0)');
+        }
 
         zoom.scale = 1;
         zoom.currentScale = 1;
@@ -24365,7 +24424,11 @@ var Line = (function (exports, Vue) {
       const { gesture, image } = zoom;
 
       if (!gesture.$slideEl) {
-        gesture.$slideEl = swiper.slides.eq(swiper.activeIndex);
+        if (swiper.params.virtual && swiper.params.virtual.enabled && swiper.virtual) {
+          gesture.$slideEl = swiper.$wrapperEl.children(`.${swiper.params.slideActiveClass}`);
+        } else {
+          gesture.$slideEl = swiper.slides.eq(swiper.activeIndex);
+        }
         gesture.$imageEl = gesture.$slideEl.find('img, svg, canvas, picture, .swiper-zoom-target');
         gesture.$imageWrapEl = gesture.$imageEl.parent(`.${params.containerClass}`);
       }
@@ -24451,7 +24514,11 @@ var Line = (function (exports, Vue) {
       const { gesture } = zoom;
 
       if (!gesture.$slideEl) {
-        gesture.$slideEl = swiper.slides.eq(swiper.activeIndex);
+        if (swiper.params.virtual && swiper.params.virtual.enabled && swiper.virtual) {
+          gesture.$slideEl = swiper.$wrapperEl.children(`.${swiper.params.slideActiveClass}`);
+        } else {
+          gesture.$slideEl = swiper.slides.eq(swiper.activeIndex);
+        }
         gesture.$imageEl = gesture.$slideEl.find('img, svg, canvas, picture, .swiper-zoom-target');
         gesture.$imageWrapEl = gesture.$imageEl.parent(`.${params.containerClass}`);
       }

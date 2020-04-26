@@ -31,5 +31,12 @@
   "[vue]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "eslint.enable": true
+  "eslint.enable": true,
+  "vetur.grammar.customBlocks": {
+    "tag": "html",
+    "head": "html",
+    "body": "html"
+  },
+  "vetur.validation.script": false,
+  "vetur.validation.style": false,
 }

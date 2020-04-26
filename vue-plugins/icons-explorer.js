@@ -17,5 +17,5 @@ module.exports = (api, options) => {
 };
 
 module.exports.defaultModes = {
-  quickstart: 'development',
+  'icons-explorer': 'development',
 };

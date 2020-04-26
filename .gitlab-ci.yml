@@ -53,7 +53,7 @@ package icons-explorer:
       - yarn.lock
   script:
     - yarn install -f
-    - yarn run build icons-explorer
+    - yarn run icons-explorer --build --mode=production
     - mv dist packages/icons-explorer/dist
   artifacts:
     paths:

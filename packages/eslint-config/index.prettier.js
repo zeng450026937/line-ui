@@ -26,7 +26,7 @@ module.exports = {
       },
     },
     {
-      files: ['*.ts', '*.tsx'],
+      files: ['*.ts', '*.tsx', '*.vue'],
       rules: {
         '@typescript-eslint/no-explicit-any': 0,
         '@typescript-eslint/no-inferrable-types': 0,
@@ -37,7 +37,7 @@ module.exports = {
       },
     },
     {
-      files: ['*.js'],
+      files: ['*.js', '*.vue'],
       rules: {
         // The core 'no-unused-vars' rules (in the eslint:recommeded ruleset)
         // does not work with type definitions
