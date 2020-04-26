@@ -31,6 +31,14 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "REPL",
+      "skipFiles": ["<node_internals>/**"],
+      "program": "${workspaceFolder}/node_modules/@vue/cli-service/bin/vue-cli-service.js",
+      "args": ["repl"]
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Quick Start",
       "skipFiles": ["<node_internals>/**"],
       "program": "${workspaceFolder}/node_modules/@vue/cli-service/bin/vue-cli-service.js",

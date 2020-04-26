@@ -4,7 +4,7 @@ const { getOptions } = require('loader-utils');
 module.exports = function tagLoader(content) {
   const loaderContext = this;
 
-  const { resourceQuery } = loaderContext;
+  const { resourceQuery, _module } = loaderContext;
 
   const rawQuery = resourceQuery.slice(1);
   const incomingQuery = qs.parse(rawQuery);
@@ -13,15 +13,26 @@ module.exports = function tagLoader(content) {
   const plugin = loaderContext['tag-plugin'];
 
   if (plugin) {
+    const tag = {
+      before: incomingQuery.before,
+      after: incomingQuery.after,
+      content: content.trim(),
+    };
+    if (tag.before && tag.after) {
+      console.warn(`can not set 'before' along with 'after'`);
+    }
     switch (incomingQuery.blockType) {
-      case 'head':
-        plugin.setHead(rawQuery, content.trim());
+      case 'tag':
+        tag.after = tag.after || 'head';
+        plugin.report(_module, tag);
         break;
+      case 'head':
       case 'body':
-        plugin.setBody(rawQuery, content.trim());
+        tag.after = tag.after || incomingQuery.blockType;
+        plugin.report(_module, tag);
         break;
       default:
-        console.log('unknown tag');
+        console.warn('unknown tag');
         break;
     }
   }

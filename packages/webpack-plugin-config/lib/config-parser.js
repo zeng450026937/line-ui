@@ -74,6 +74,8 @@ class ConfigParser {
           usages.set(module, final);
         }
       }
+      // clear changes
+      changes = new WeakMap();
     };
 
     // group configs by file
@@ -154,8 +156,7 @@ class ConfigParser {
         await hooks.beforeOptimize.promise(manifests, helper);
         await hooks.optimize.promise(manifests, helper);
         await hooks.afterOptimize.promise(manifests, helper);
-        // clear changes
-        changes = new WeakMap();
+        // mark no changes
         dirty = false;
       });
 
