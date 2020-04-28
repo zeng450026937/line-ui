@@ -18,7 +18,7 @@ module.exports = (api, options) => {
     if (autoimport) {
       config.module
         .rule('vue')
-        .use('line-auto-import')
+        .use('auto-import')
         .loader(require.resolve('@line-ui/webpack-loader-auto-import'))
         .options(require('@line-ui/line/import.config'))
         .after('vue-loader');

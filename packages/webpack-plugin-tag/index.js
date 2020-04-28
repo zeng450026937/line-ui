@@ -140,7 +140,6 @@ class TagPlugin {
       },
     ];
     const rawRules = compiler.options.module.rules;
-
     // replace original rules
     compiler.options.module.rules = [...rawRules, ...rules];
   }

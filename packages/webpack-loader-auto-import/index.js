@@ -4,6 +4,7 @@ const parse = require('./parse');
 const codegen = require('./codegen');
 
 const templateRE = /<template[\s\S]+<\/template>/g;
+const functionalRE = /<template functional>/;
 const commentRE = /<!--+[\S\s]+?--+>/g;
 
 module.exports = function autoImport(content) {
@@ -16,6 +17,16 @@ module.exports = function autoImport(content) {
   const options = getOptions(loaderContext);
 
   const trigger = '\n<import lang=js></import>\n';
+
+  /*
+   * IMPORTANT
+   * loader options which has custom import gen(aka function)
+   * can not be passed to child process.
+   * because we will gen js code for auto-import, and cli-plugin-babel(vue)
+   * use thread-loader in production by default(which use subprocess).
+   * as above, setting LINE_DEV=true won't work right in production,
+   * and always gen imports from line.esm.bundler
+   */
 
   if (!rawQuery) {
     // trigger vue-loader custom block process
@@ -34,7 +45,7 @@ module.exports = function autoImport(content) {
   }
 
   // functional
-  if (/<template functional>/.test(content)) {
+  if (functionalRE.test(content)) {
     return content + trigger;
   }
 
