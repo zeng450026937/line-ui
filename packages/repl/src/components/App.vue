@@ -1,59 +1,58 @@
 <template>
   <line-app>
-    <line-content color="dark">
-      <div class="logo">line-ui</div>
+    <line-header>
+      <div id="header-wrapper">
+        <h4>
+          LINE-UI REPL <a :href="url" target="_blank">@{{ commit }}</a>
+        </h4>
+        <h6 id="options-wrapper">Line {{ version }} ↘</h6>
+      </div>
+    </line-header>
+    <line-content>
+      <repl></repl>
+      <line-toast :lazy="false" color="dark"></line-toast>
     </line-content>
   </line-app>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import Repl from './Repl/Repl.vue';
 
 export default Vue.extend({
   name: 'App',
+  components: { Repl },
+  data() {
+    const commit = __COMMIT__;
+    const version = __VERSION__;
+    const repo = 'http://gitcode.yealink.com/server/client/web_app/line-ui';
+    const url = `${repo}/tree/${__COMMIT__}`;
+    return {
+      commit,
+      version,
+      repo,
+      url,
+    };
+  },
 });
 </script>
 
 <style lang="scss">
-:root {
-  --code-fs: 1.3rem;
-  --h6: 1.4rem;
-  --h5: 1.6rem;
-  --h4: 1.8rem;
-  --h3: 2.6rem;
-  --h2: 3rem;
-  --h1: 3.2rem;
-  --linemax: 42em;
-  --lh: 1.5;
-  --back: #ffffff;
-  --back-light: #f6fafd;
-  --back-api: #eff8ff;
-  --prime: #ff3e00;
-  --second: #676778;
-  --flash: #40b3ff;
-  --heading: var(--second);
-  --text: #444;
-  --sidebar-text: rgba(255, 255, 255, 0.75);
-  --border-w: 0.3rem;
-  --border-r: 0.4rem;
-}
-
-.logo {
+#header-wrapper {
   display: flex;
-
+  flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
 
-  width: 100%;
-  height: 100%;
+  padding: 0 1.6em;
 
-  color: #fff;
+  border-bottom: 1px solid #333;
 
-  font-family: "Montserrat";
-  font-size: 50px;
-
-  line-height: 40px;
-
-  text-transform: uppercase;
+  a {
+    display: inline;
+    font-weight: 600;
+    font-size: 16px;
+    color: rgb(101, 163, 221);
+  }
 }
 </style>

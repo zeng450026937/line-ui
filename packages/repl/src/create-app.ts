@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import { createRouter } from './router';
 import { createModel } from './model';
-import App from './components/repl/Repl.vue';
+import App from './components/App.vue';
 
 Vue.mixin({
   beforeCreate() {
