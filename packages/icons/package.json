@@ -22,7 +22,7 @@
     "find-up": "^4.1.0",
     "gulp": "^4.0.2",
     "gulp-rename": "^2.0.0",
-    "gulp-svg-mixer": "^0.2.14",
+    "gulp-svg-mixer": "^0.2.18",
     "gulp-svgo": "^2.1.1",
     "ionicons": "^5.0.1",
     "material-design-icons": "^3.0.1",

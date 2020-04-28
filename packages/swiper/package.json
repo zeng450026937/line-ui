@@ -27,7 +27,7 @@
   "author": "LINE-UI Team",
   "license": "MIT",
   "dependencies": {
-    "swiper": "^5.3.6"
+    "swiper": "^5.3.8"
   },
   "devDependencies": {
     "@types/swiper": "^5.2.1"
