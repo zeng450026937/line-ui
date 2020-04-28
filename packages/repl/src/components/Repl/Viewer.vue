@@ -4,7 +4,9 @@
       ref="iframe"
       title="Template Explorer"
       :class="{ inited, 'greyed-out': error || pending || pendingImports }"
-      :sandbox="`allow-same-origin allow-popups-to-escape-sandbox allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals`"
+      :sandbox="`allow-popups-to-escape-sandbox allow-scripts allow-popups allow-forms allow-pointer-lock allow-top-navigation allow-modals ${
+        relaxed ? 'allow-same-origin' : ''
+      }`"
       :srcdoc="srcdoc"
     ></iframe>
   </div>

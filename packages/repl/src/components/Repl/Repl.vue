@@ -117,12 +117,6 @@ export default Vue.extend({
       REPL: this,
     };
   },
-
-  watch: {
-    sfc(val) {
-      console.log('sfc', val);
-    },
-  },
 });
 </script>
 

@@ -23,7 +23,7 @@ package line:
 
 package template-explorer:
   image: cr.yealinkops.com/common/yarn:1.22.4
-  stage: deploy
+  stage: build
   tags:
     - devops_docker_runner
   cache:
@@ -42,7 +42,7 @@ package template-explorer:
 
 package repl:
   image: cr.yealinkops.com/common/yarn:1.22.4
-  stage: deploy
+  stage: build
   tags:
     - devops_docker_runner
   cache:
@@ -62,7 +62,8 @@ package repl:
 
 package icons-explorer:
   image: cr.yealinkops.com/common/yarn:1.22.4
-  stage: deploy
+  stage: build
+  needs: ["package line"]
   tags:
     - devops_docker_runner
   cache:
