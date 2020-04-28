@@ -1,6 +1,11 @@
 # .gitlab-ci.yml
 image: node:latest
 
+stages:
+  - build
+  - pack
+  - test
+  - deploy
 
 package line:
   image: cr.yealinkops.com/common/yarn:1.22.4
@@ -23,7 +28,7 @@ package line:
 
 package template-explorer:
   image: cr.yealinkops.com/common/yarn:1.22.4
-  stage: build
+  stage: pack
   tags:
     - devops_docker_runner
   cache:
@@ -42,7 +47,7 @@ package template-explorer:
 
 package repl:
   image: cr.yealinkops.com/common/yarn:1.22.4
-  stage: build
+  stage: pack
   tags:
     - devops_docker_runner
   cache:
@@ -62,8 +67,7 @@ package repl:
 
 package icons-explorer:
   image: cr.yealinkops.com/common/yarn:1.22.4
-  stage: build
-  needs: ["package line"]
+  stage: pack
   tags:
     - devops_docker_runner
   cache:
