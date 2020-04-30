@@ -15,10 +15,10 @@
   z-index: $z-index-backdrop;
 }
 
-.line-overlay--hide {
+.line-overlay.line-overlay--hide {
   background: transparent;
 }
 
-.line-overlay--no-tappable {
+.line-overlay.line-overlay--no-tappable {
   cursor: auto;
 }
