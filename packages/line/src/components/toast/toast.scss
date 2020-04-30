@@ -51,6 +51,7 @@
   font-family: $font-family-base;
 
   contain: strict;
+  overflow: hidden;
   z-index: $z-index-overlay;
   pointer-events: none;
 }
