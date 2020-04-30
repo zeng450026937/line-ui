@@ -79,9 +79,7 @@ export default /*#__PURE__*/ createComponent({
             checked={checked}
             indeterminate={indeterminate}
             disabled={disabled}
-            width={26}
-            height={26}
-          ></CheckIndicator>
+          />
         )}
         {this.slots() || text}
         <button type="button" disabled={disabled}></button>

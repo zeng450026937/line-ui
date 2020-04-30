@@ -40,6 +40,7 @@ export default /*#__PURE__*/ createComponent({
           disabled,
         })}
         {...data}
+        viewBox="0 0 24 24"
       >
         {path}
       </svg>
