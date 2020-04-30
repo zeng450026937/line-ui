@@ -1,13 +1,10 @@
 <template>
-  <div class="template-editor" v-dimension="onDimension">
-    <div class="editor">
-      <div id="monaco-editor"></div>
-    </div>
-  </div>
+  <div class="template-editor" ref="container" v-dimension="onDimension"></div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import { useModel } from './use-model';
 
 function debounce<T extends (...args: any[]) => any>(
   fn: T,
@@ -26,99 +23,62 @@ function debounce<T extends (...args: any[]) => any>(
 }
 
 export default Vue.extend({
-  inject: ['REPL'],
+  mixins: [useModel('source')],
 
-  created() {
+  mounted() {
     /* eslint-disable-next-line */
     __non_webpack_require__(['vs/editor/editor.main'], () => {
       const { monaco } = window;
 
-      /* eslint-disable no-useless-escape */
-      const template = `
-<template>
-  <line-app></line-app>
-</template>
+      const template = this.source;
 
-<script>
-<\/script>
-
-<style>
-</style>
-      `.trim();
-      /* eslint-enable no-useless-escape */
-      const editor = monaco.editor.create(
-        document.getElementById('monaco-editor')!,
-        {
-          value: template,
-          language: 'html',
-          theme: 'vs',
-          fontSize: 14,
-          wordWrap: 'on',
-          scrollBeyondLastLine: false,
-          renderWhitespace: 'selection',
-          contextmenu: false,
-          minimap: {
-            enabled: false,
-          },
-        }
-      );
+      const editor = monaco.editor.create(this.$refs.container, {
+        value: template,
+        language: 'html',
+        theme: 'vs',
+        fontSize: 14,
+        wordWrap: 'on',
+        scrollBeyondLastLine: false,
+        renderWhitespace: 'selection',
+        contextmenu: false,
+        minimap: {
+          enabled: false,
+        },
+      });
 
       editor.getModel()!.updateOptions({
         tabSize: 2,
       });
 
-      // handle resize
-      window.addEventListener('resize', () => {
-        editor.layout();
-      });
-
       // update compile output when input changes
       editor.onDidChangeModelContent(
         debounce(() => {
-          this.REPL.source = editor.getValue();
+          this.source = editor.getValue();
         })
       );
 
       this.editor = editor;
-      this.REPL.source = template;
     });
   },
 
   methods: {
-    onDimension() {
-      this.editor && this.editor.layout();
+    onDimension(): void {
+      const { editor } = this;
+      if (editor) {
+        editor.layout();
+      }
     },
   },
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .template-editor {
-  display: flex;
+  position: relative;
 
-  flex-direction: column;
+  width: 100%;
+  height: 100%;
 
-  background: var(--back-light);
-
-  z-index: 5;
-
-  .editor {
-    flex: 1 1 auto;
-
-    height: 0;
-  }
-
-  #monaco-editor {
-    position: relative;
-
-    width: 100%;
-    height: 100%;
-
-    border: none;
-
-    line-height: 1.5;
-
-    overflow: hidden;
-  }
+  overflow: hidden;
 }
 </style>

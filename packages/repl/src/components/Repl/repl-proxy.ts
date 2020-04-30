@@ -1,7 +1,6 @@
 let uid = 1;
 
 export interface ReplProxyHandlers {
-  onFetchProgress: (remaining: number) => void;
   onError: (error: any) => void;
   onUnhandledRejection: (error: any) => void;
   onConsole: (data: any) => void;
@@ -75,14 +74,12 @@ export class ReplProxy {
   handleReplMessage(event: MessageEvent) {
     if (event.source !== this.iframe.contentWindow) return;
 
-    const { action, args } = event.data;
+    const { action } = event.data;
 
     switch (action) {
       case 'cmd_error':
       case 'cmd_ok':
         return this.handleCommandMessage(event.data);
-      case 'fetch_progress':
-        return this.handlers.onFetchProgress(args.remaining);
       case 'error':
         return this.handlers.onError(event.data);
       case 'unhandledrejection':

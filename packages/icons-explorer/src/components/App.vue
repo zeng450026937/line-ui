@@ -110,7 +110,7 @@ export default Vue.extend({
 
   methods: {
     getSource(name: string) {
-      return `/${name}.svg`;
+      return `${name}.svg`;
     },
   },
 });

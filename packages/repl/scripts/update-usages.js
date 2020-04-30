@@ -19,6 +19,7 @@ function main() {
 // This file is auto generated, do not modify directly.
 
 /* eslint-disable */
+// prettier-ignore
 export default {
   ${usages
     .map(

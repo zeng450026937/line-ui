@@ -1,18 +1,21 @@
 <template>
   <div class="split-pane" v-dimension="onDimension">
-    <div class="pane" :style="`${dimension}: ${pos}%;`">
+    <div class="pane" :style="`${dimension}: ${clampedPos}%;`">
       <slot name="start"></slot>
     </div>
-    <div class="pane" :style="`${dimension}: ${100 - pos}%;`">
+
+    <div class="pane" :style="`${dimension}: ${100 - clampedPos}%;`">
       <slot name="end"></slot>
     </div>
+
     <div
       v-if="!fixed"
-      :class="type"
       class="divider"
-      :style="`${side}: calc(${pos}% - 8px`"
+      :class="type"
+      :style="`${side}: calc(${clampedPos}% - 8px`"
       v-drag="onDrag"
     ></div>
+
     <div v-if="dragging" class="mousecatcher"></div>
   </div>
 </template>
@@ -22,7 +25,16 @@ import Vue from 'vue';
 
 export default Vue.extend({
   props: {
-    type: String,
+    // horizontal | vertical
+    type: {
+      type: String,
+      default: 'horizontal',
+    },
+    fixed: Boolean,
+    buffer: {
+      type: Number,
+      default: 344,
+    },
   },
 
   data() {
@@ -30,8 +42,6 @@ export default Vue.extend({
       w: 0,
       h: 0,
       pos: 75,
-      buffer: 42,
-      fixed: false,
       dragging: false,
     };
   },
@@ -51,6 +61,10 @@ export default Vue.extend({
     },
     dimension() {
       return this.type === 'horizontal' ? 'width' : 'height';
+    },
+
+    clampedPos() {
+      return Math.max(this.min, Math.min(this.pos, this.max));
     },
   },
 
@@ -76,7 +90,7 @@ export default Vue.extend({
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .split-pane {
   position: relative;
 
@@ -117,7 +131,7 @@ export default Vue.extend({
   .divider::after {
     position: absolute;
 
-    background-color: var(--second, #676778);
+    background-color: #ababab;
 
     /* stylelint-disable-next-line */
     content: '';

@@ -3,13 +3,18 @@
     <SplitPane type="horizontal">
       <template #start>
         <section>
-          <TemplateEditor></TemplateEditor>
+          <div class="repl-editor">
+            <TemplateEditor v-model="source"></TemplateEditor>
+            <Message v-if="error" :detail="error" kind="error"></Message>
+          </div>
         </section>
       </template>
 
       <template #end>
         <section>
-          <TemplateExplorer></TemplateExplorer>
+          <div class="repl-explorer">
+            <TemplateExplorer :source="compiled"></TemplateExplorer>
+          </div>
         </section>
       </template>
     </SplitPane>
@@ -21,14 +26,14 @@ import Vue from 'vue';
 import SplitPane from './SplitPane.vue';
 import TemplateEditor from './TemplateEditor.vue';
 import TemplateExplorer from './TemplateExplorer.vue';
-import * as compiler from 'vue-template-compiler';
-
-const templateRE = /(?<=<template>)[\s\S]+(?=<\/template>)/g;
-const scriptRE = /(?<=<script>)[\s\S]+(?=<\/script>)/g;
-const styleRE = /(?<=<style>)[\s\S]+(?=<\/style>)/g;
+import Message from './Message.vue';
+import { useModel } from './use-model';
+import { parseComponent } from 'vue-template-compiler';
 
 export default Vue.extend({
-  components: { SplitPane, TemplateEditor, TemplateExplorer },
+  components: { SplitPane, TemplateEditor, TemplateExplorer, Message },
+
+  mixins: [useModel('source')],
 
   data() {
     return {
@@ -37,26 +42,19 @@ export default Vue.extend({
   },
 
   computed: {
-    template() {
-      const matched = this.source.match(templateRE);
-      return matched && matched[0];
-    },
-    script() {
-      const matched = this.source.match(scriptRE);
-      return matched && matched[0];
-    },
-    style() {
-      const matched = this.source.match(styleRE);
-      return matched && matched[0];
-    },
-
     sfc() {
-      return compiler.parseComponent(this.source);
+      return parseComponent(this.source);
     },
 
-    result() {
-      const { template, script, styles } = this.sfc;
-      if (!template) {
+    error() {
+      return this.sfc.errors[0];
+    },
+
+    compiled() {
+      const { sfc, error } = this;
+      const { template, script, styles, errors } = sfc;
+      const hasTemplate = template && template.content;
+      if (!hasTemplate || error) {
         return '';
       }
       return `
@@ -92,10 +90,14 @@ export default Vue.extend({
         window.location.hash = '';
         
         const script = () => {
-          ${script.content
-            .trim()
-            .replace(/export\s+default/, 'return')
-            .replace(/module.exports\s+=/, 'return')}
+          ${
+            script
+              ? script.content
+                  .trim()
+                  .replace(/export\s+default\s+/, 'return ')
+                  .replace(/module.exports\s+=\s+/, 'return ')
+              : ''
+          }
         };
 
 				window.component = new Vue({
@@ -111,16 +113,10 @@ export default Vue.extend({
       `;
     },
   },
-
-  provide() {
-    return {
-      REPL: this,
-    };
-  },
 });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .repl {
   position: relative;
 
@@ -130,23 +126,18 @@ export default Vue.extend({
   section {
     position: relative;
 
+    width: 100%;
     height: 100%;
 
-    padding: 42px 0 0 0;
     box-sizing: border-box;
   }
 
-  section > *:first-child {
-    position: absolute;
-    top: 0;
-    left: 0;
+  .repl-editor,
+  .repl-explorer {
+    display: flex;
 
-    width: 100%;
-    height: 42px;
-    box-sizing: border-box;
-  }
+    flex-direction: column;
 
-  section > *:last-child {
     width: 100%;
     height: 100%;
   }
