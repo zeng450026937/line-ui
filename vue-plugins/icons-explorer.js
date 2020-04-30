@@ -9,6 +9,8 @@ module.exports = (api, options) => {
     (args, rawArgs) => {
       process.env.TARGET = 'icons-explorer';
 
+      options.publicPath = '';
+
       const { build } = args;
       const command = build ? 'build' : 'serve';
       api.service.run(command, args, rawArgs);

@@ -8,20 +8,22 @@
         <h6 id="options-wrapper">Line {{ version }} ↘</h6>
       </div>
     </line-header>
+
     <line-content>
-      <repl></repl>
-      <line-toast :lazy="false" color="dark"></line-toast>
+      <Menu></Menu>
+      <Repl></Repl>
     </line-content>
   </line-app>
 </template>
 
 <script lang="ts">
 import Vue from 'vue';
+import Menu from './Menu.vue';
 import Repl from './Repl/Repl.vue';
 
 export default Vue.extend({
   name: 'App',
-  components: { Repl },
+  components: { Menu, Repl },
   data() {
     const commit = __COMMIT__;
     const version = __VERSION__;
@@ -32,6 +34,8 @@ export default Vue.extend({
       version,
       repo,
       url,
+
+      menu: true,
     };
   },
 });

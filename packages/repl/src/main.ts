@@ -1,4 +1,5 @@
 import { createApp } from './create-app';
+import './usages';
 
 const { app, router } = createApp();
 

@@ -15,7 +15,8 @@
 <script lang="ts">
 import Vue from 'vue';
 import { ReplProxy } from './repl-proxy';
-import srcdoc from './srcdoc';
+/* eslint-disable-next-line */
+import srcdoc from '!!../../../string-loader/index.js!./srcdoc/index.html';
 
 export default Vue.extend({
   props: {
