@@ -5,7 +5,7 @@ import { Animation, createAnimation } from '@line-ui/line/src/utils/animation';
  */
 export const mdEnterAnimation = (
   baseEl: HTMLElement,
-  ev?: Event
+  targetEl?: HTMLElement
 ): Animation => {
   const POPOVER_MD_BODY_PADDING = 12;
   const doc = baseEl.ownerDocument as any;
@@ -25,8 +25,7 @@ export const mdEnterAnimation = (
   const bodyHeight = doc.defaultView.innerHeight;
 
   // If ev was passed, use that for target element
-  const targetDim =
-    ev && ev.target && (ev.target as HTMLElement).getBoundingClientRect();
+  const targetDim = targetEl && targetEl.getBoundingClientRect();
 
   // As per MD spec, by default position the popover below the target (trigger) element
   const targetTop =

@@ -7,7 +7,7 @@ const POPOVER_IOS_BODY_PADDING = 5;
 
 export const iosEnterAnimation = (
   baseEl: HTMLElement,
-  ev?: Event
+  targetEl?: HTMLElement
 ): Animation => {
   let originY = 'top';
   let originX = 'left';
@@ -23,8 +23,7 @@ export const iosEnterAnimation = (
   const bodyHeight = (baseEl.ownerDocument as any).defaultView.innerHeight;
 
   // If ev was passed, use that for target element
-  const targetDim =
-    ev && ev.target && (ev.target as HTMLElement).getBoundingClientRect();
+  const targetDim = targetEl && targetEl.getBoundingClientRect();
 
   const targetTop =
     targetDim != null && 'top' in targetDim

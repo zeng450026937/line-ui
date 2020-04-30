@@ -1,5 +1,6 @@
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
 import { usePopup } from '@line-ui/line/src/mixins/use-popup';
+import { useTrigger } from '@line-ui/line/src/mixins/use-trigger';
 import { Overlay } from '@line-ui/line/src/components/overlay';
 import { iosEnterAnimation } from '@line-ui/line/src/components/popover/animations/ios.enter';
 import { iosLeaveAnimation } from '@line-ui/line/src/components/popover/animations/ios.leave';
@@ -9,13 +10,14 @@ import { mdLeaveAnimation } from '@line-ui/line/src/components/popover/animation
 const { createComponent, bem } = /*#__PURE__*/ createNamespace('popover');
 
 export default /*#__PURE__*/ createComponent({
-  mixins: [/*#__PURE__*/ usePopup()],
+  mixins: [/*#__PURE__*/ usePopup(), /*#__PURE__*/ useTrigger()],
 
   beforeMount() {
     const { mode } = this;
+
     this.$on('animation-enter', (baseEl: HTMLElement, animate: Function) => {
       const builder = mode === 'md' ? mdEnterAnimation : iosEnterAnimation;
-      animate(builder(baseEl, this.event));
+      animate(builder(baseEl, this.$triggerEl));
     });
     this.$on('animation-leave', (baseEl: HTMLElement, animate: Function) => {
       const builder = mode === 'md' ? mdLeaveAnimation : iosLeaveAnimation;
