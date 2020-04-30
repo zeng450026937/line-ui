@@ -1,3 +1,24 @@
+# [1.0.0-alpha.5](http://gitcode.yealink.com/server/client/web_app/line-ui/compare/v1.0.0-alpha.4...v1.0.0-alpha.5) (2020-04-30)
+
+
+### Bug Fixes
+
+* **check-box:** indicator svg ([52f98ab](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/52f98ab71f095ee26f38d02303a5fa9ab856c247))
+* **combo-box:** enter animation ([7caabf1](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/7caabf1aee440e7ebe9f8ab2fa5e68d18b26b582))
+* **overlay:** fix style ([f65c38d](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/f65c38db4c96811d0ecb519a7c77992704246de1))
+* **repl:** remove unused ([c0d3f2d](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/c0d3f2d4e859edab5989741e42b76cab44eb170c))
+* **switch:** v-model ([401935f](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/401935f5f7db225ac71b77bea8f4853116bb30bb))
+* **tag-plugin:** support hmr ([21a99fe](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/21a99fe27da32d9a436c99e6239e0935e475d675))
+* **toast:** overflow style ([4ac4165](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/4ac4165c3ed46599d571914ed95456f898a8b61b))
+
+
+### Features
+
+* **popover:** add trigger ([741c812](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/741c8125c1cc1906e9d9100ff5b48e3e6a64f863))
+* **repl:** graduate from prototype ([f980a98](http://gitcode.yealink.com/server/client/web_app/line-ui/commits/f980a985b29f3ce9e5a22e7efee223228b9d8a13))
+
+
+
 # [1.0.0-alpha.4](http://gitcode.yealink.com/server/client/web_app/line-ui/compare/v1.0.0-alpha.3...v1.0.0-alpha.4) (2020-04-24)
 
 

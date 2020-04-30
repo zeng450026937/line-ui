@@ -4817,7 +4817,11 @@ var CheckIndicator = /*#__PURE__*/createComponent$i({
         indeterminate,
         disabled
       })
-    }, data]), [path]);
+    }, data, {
+      "attrs": {
+        "viewBox": "0 0 24 24"
+      }
+    }]), [path]);
   }
 
 });
@@ -4906,9 +4910,7 @@ var checkBox = /*#__PURE__*/createComponent$j({
       "attrs": {
         "checked": checked,
         "indeterminate": indeterminate,
-        "disabled": disabled,
-        "width": 26,
-        "height": 26
+        "disabled": disabled
       }
     }), this.slots() || text, h("button", {
       "attrs": {
@@ -5135,7 +5137,7 @@ const enterAnimation = (baseEl, paddingTop, paddingBottom) => {
     const baseAnimation = createAnimation();
     baseAnimation
         .addElement(baseEl)
-        .easing('ease-in-out')
+        .easing('ease')
         .duration(300)
         // .afterClearStyles(['height'])
         .fromTo('padding-top', '0px', `${paddingTop}px`)
@@ -5747,12 +5749,12 @@ var comboBox = /*#__PURE__*/createComponent$t({
     });
     this.$on('animation-enter', async (baseEl, animation) => {
       const {
-        showDuration = 250
+        showDuration = 200
       } = this;
       await this.$nextTick(); // update zIndex
 
       baseEl.style.zIndex = `${popupContext.getOverlayIndex()}`;
-      animation.easing('ease').duration(showDuration);
+      animation.easing('ease').duration(showDuration).fromTo('opacity', '0', '1');
     });
     this.$on('animation-leave', (baseEl, animation) => {
       const {
@@ -7197,7 +7199,7 @@ var Picker = /*#__PURE__*/createComponent$y({
  * iOS Popover Enter Animation
  */
 const POPOVER_IOS_BODY_PADDING = 5;
-const iosEnterAnimation$4 = (baseEl, ev) => {
+const iosEnterAnimation$4 = (baseEl, targetEl) => {
     let originY = 'top';
     let originX = 'left';
     const contentEl = baseEl.querySelector('.line-popover__content');
@@ -7207,7 +7209,7 @@ const iosEnterAnimation$4 = (baseEl, ev) => {
     const bodyWidth = baseEl.ownerDocument.defaultView.innerWidth;
     const bodyHeight = baseEl.ownerDocument.defaultView.innerHeight;
     // If ev was passed, use that for target element
-    const targetDim = ev && ev.target && ev.target.getBoundingClientRect();
+    const targetDim = targetEl && targetEl.getBoundingClientRect();
     const targetTop = targetDim != null && 'top' in targetDim
         ? targetDim.top
         : bodyHeight / 2 - contentHeight / 2;
@@ -7315,7 +7317,7 @@ const iosLeaveAnimation$4 = (baseEl) => {
 /**
  * Md Popover Enter Animation
  */
-const mdEnterAnimation$3 = (baseEl, ev) => {
+const mdEnterAnimation$3 = (baseEl, targetEl) => {
     const POPOVER_MD_BODY_PADDING = 12;
     const doc = baseEl.ownerDocument;
     const isRTL = doc.dir === 'rtl';
@@ -7328,7 +7330,7 @@ const mdEnterAnimation$3 = (baseEl, ev) => {
     const bodyWidth = doc.defaultView.innerWidth;
     const bodyHeight = doc.defaultView.innerHeight;
     // If ev was passed, use that for target element
-    const targetDim = ev && ev.target && ev.target.getBoundingClientRect();
+    const targetDim = targetEl && targetEl.getBoundingClientRect();
     // As per MD spec, by default position the popover below the target (trigger) element
     const targetTop = targetDim != null && 'bottom' in targetDim
         ? targetDim.bottom
@@ -7430,7 +7432,7 @@ const {
   bem: bem$x
 } = /*#__PURE__*/createNamespace('popover');
 var Popover = /*#__PURE__*/createComponent$z({
-  mixins: [/*#__PURE__*/usePopup()],
+  mixins: [/*#__PURE__*/usePopup(), /*#__PURE__*/useTrigger()],
 
   beforeMount() {
     const {
@@ -7438,7 +7440,7 @@ var Popover = /*#__PURE__*/createComponent$z({
     } = this;
     this.$on('animation-enter', (baseEl, animate) => {
       const builder = mode === 'md' ? mdEnterAnimation$3 : iosEnterAnimation$4;
-      animate(builder(baseEl, this.event));
+      animate(builder(baseEl, this.$triggerEl));
     });
     this.$on('animation-leave', (baseEl, animate) => {
       const builder = mode === 'md' ? mdLeaveAnimation$3 : iosLeaveAnimation$4;
@@ -16663,7 +16665,7 @@ const {
 } = /*#__PURE__*/createNamespace('switch');
 let gesture;
 var _switch = /*#__PURE__*/createComponent$1l({
-  mixins: [/*#__PURE__*/useCheckItem(NAMESPACE$f), /*#__PURE__*/useColor()],
+  mixins: [/*#__PURE__*/useCheckItemWithModel(NAMESPACE$f), /*#__PURE__*/useColor()],
 
   data() {
     return {
@@ -18512,7 +18514,7 @@ var mixins = /*#__PURE__*/Object.freeze({
 
 const Line = {
     install,
-    version: "1.0.0-alpha.4",
+    version: "1.0.0-alpha.5",
 };
 function defaulExport() {
     // auto install for umd build
@@ -18534,7 +18536,7 @@ function defaulExport() {
         directives,
         controllers,
         mixins,
-        version: "1.0.0-alpha.4",
+        version: "1.0.0-alpha.5",
     };
 }
 var index = /*#__PURE__*/ defaulExport();

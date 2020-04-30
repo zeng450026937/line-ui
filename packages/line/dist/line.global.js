@@ -4817,7 +4817,11 @@ var Line = (function (exports, Vue) {
           indeterminate,
           disabled
         })
-      }, data]), [path]);
+      }, data, {
+        "attrs": {
+          "viewBox": "0 0 24 24"
+        }
+      }]), [path]);
     }
 
   });
@@ -4906,9 +4910,7 @@ var Line = (function (exports, Vue) {
         "attrs": {
           "checked": checked,
           "indeterminate": indeterminate,
-          "disabled": disabled,
-          "width": 26,
-          "height": 26
+          "disabled": disabled
         }
       }), this.slots() || text, h("button", {
         "attrs": {
@@ -5135,7 +5137,7 @@ var Line = (function (exports, Vue) {
       const baseAnimation = createAnimation();
       baseAnimation
           .addElement(baseEl)
-          .easing('ease-in-out')
+          .easing('ease')
           .duration(300)
           // .afterClearStyles(['height'])
           .fromTo('padding-top', '0px', `${paddingTop}px`)
@@ -7509,12 +7511,12 @@ var Line = (function (exports, Vue) {
       });
       this.$on('animation-enter', async (baseEl, animation) => {
         const {
-          showDuration = 250
+          showDuration = 200
         } = this;
         await this.$nextTick(); // update zIndex
 
         baseEl.style.zIndex = `${popupContext.getOverlayIndex()}`;
-        animation.easing('ease').duration(showDuration);
+        animation.easing('ease').duration(showDuration).fromTo('opacity', '0', '1');
       });
       this.$on('animation-leave', (baseEl, animation) => {
         const {
@@ -8959,7 +8961,7 @@ var Line = (function (exports, Vue) {
    * iOS Popover Enter Animation
    */
   const POPOVER_IOS_BODY_PADDING = 5;
-  const iosEnterAnimation$4 = (baseEl, ev) => {
+  const iosEnterAnimation$4 = (baseEl, targetEl) => {
       let originY = 'top';
       let originX = 'left';
       const contentEl = baseEl.querySelector('.line-popover__content');
@@ -8969,7 +8971,7 @@ var Line = (function (exports, Vue) {
       const bodyWidth = baseEl.ownerDocument.defaultView.innerWidth;
       const bodyHeight = baseEl.ownerDocument.defaultView.innerHeight;
       // If ev was passed, use that for target element
-      const targetDim = ev && ev.target && ev.target.getBoundingClientRect();
+      const targetDim = targetEl && targetEl.getBoundingClientRect();
       const targetTop = targetDim != null && 'top' in targetDim
           ? targetDim.top
           : bodyHeight / 2 - contentHeight / 2;
@@ -9077,7 +9079,7 @@ var Line = (function (exports, Vue) {
   /**
    * Md Popover Enter Animation
    */
-  const mdEnterAnimation$3 = (baseEl, ev) => {
+  const mdEnterAnimation$3 = (baseEl, targetEl) => {
       const POPOVER_MD_BODY_PADDING = 12;
       const doc = baseEl.ownerDocument;
       const isRTL = doc.dir === 'rtl';
@@ -9090,7 +9092,7 @@ var Line = (function (exports, Vue) {
       const bodyWidth = doc.defaultView.innerWidth;
       const bodyHeight = doc.defaultView.innerHeight;
       // If ev was passed, use that for target element
-      const targetDim = ev && ev.target && ev.target.getBoundingClientRect();
+      const targetDim = targetEl && targetEl.getBoundingClientRect();
       // As per MD spec, by default position the popover below the target (trigger) element
       const targetTop = targetDim != null && 'bottom' in targetDim
           ? targetDim.bottom
@@ -9192,7 +9194,7 @@ var Line = (function (exports, Vue) {
     bem: bem$x
   } = /*#__PURE__*/createNamespace('popover');
   var Popover = /*#__PURE__*/createComponent$z({
-    mixins: [/*#__PURE__*/usePopup()],
+    mixins: [/*#__PURE__*/usePopup(), /*#__PURE__*/useTrigger()],
 
     beforeMount() {
       const {
@@ -9200,7 +9202,7 @@ var Line = (function (exports, Vue) {
       } = this;
       this.$on('animation-enter', (baseEl, animate) => {
         const builder = mode === 'md' ? mdEnterAnimation$3 : iosEnterAnimation$4;
-        animate(builder(baseEl, this.event));
+        animate(builder(baseEl, this.$triggerEl));
       });
       this.$on('animation-leave', (baseEl, animate) => {
         const builder = mode === 'md' ? mdLeaveAnimation$3 : iosLeaveAnimation$4;
@@ -18732,7 +18734,7 @@ var Line = (function (exports, Vue) {
   }
 
   /**
-   * Swiper 5.3.7
+   * Swiper 5.3.8
    * Most modern mobile touch slider and framework with hardware accelerated transitions
    * http://swiperjs.com
    *
@@ -18740,7 +18742,7 @@ var Line = (function (exports, Vue) {
    *
    * Released under the MIT License
    *
-   * Released on: April 10, 2020
+   * Released on: April 24, 2020
    */
 
   const Methods = {
@@ -21111,13 +21113,14 @@ var Line = (function (exports, Vue) {
           $wrapperEl.transitionEnd(() => {
             if (!swiper || swiper.destroyed || !data.allowMomentumBounce) return;
             swiper.emit('momentumBounce');
-
             swiper.setTransition(params.speed);
-            swiper.setTranslate(afterBouncePosition);
-            $wrapperEl.transitionEnd(() => {
-              if (!swiper || swiper.destroyed) return;
-              swiper.transitionEnd();
-            });
+            setTimeout(() => {
+              swiper.setTranslate(afterBouncePosition);
+              $wrapperEl.transitionEnd(() => {
+                if (!swiper || swiper.destroyed) return;
+                swiper.transitionEnd();
+              });
+            }, 0);
           });
         } else if (swiper.velocity) {
           swiper.updateProgress(newPosition);
@@ -25191,7 +25194,7 @@ var Line = (function (exports, Vue) {
           const $bulletEl = $(bulletEl);
           swiper.a11y.makeElFocusable($bulletEl);
           swiper.a11y.addElRole($bulletEl, 'button');
-          swiper.a11y.addElLabel($bulletEl, params.paginationBulletMessage.replace(/{{index}}/, $bulletEl.index() + 1));
+          swiper.a11y.addElLabel($bulletEl, params.paginationBulletMessage.replace(/\{\{index\}\}/, $bulletEl.index() + 1));
         });
       }
     },
@@ -26272,9 +26275,12 @@ var Line = (function (exports, Vue) {
         ? thumbsSwiper.slidesPerViewDynamic()
         : thumbsSwiper.params.slidesPerView;
 
-      if (swiper.realIndex !== thumbsSwiper.realIndex) {
+      const autoScrollOffset = swiper.params.thumbs.autoScrollOffset;
+      const useOffset = autoScrollOffset && !thumbsSwiper.params.loop;
+      if (swiper.realIndex !== thumbsSwiper.realIndex || useOffset) {
         let currentThumbsIndex = thumbsSwiper.activeIndex;
         let newThumbsIndex;
+        let direction;
         if (thumbsSwiper.params.loop) {
           if (thumbsSwiper.slides.eq(currentThumbsIndex).hasClass(thumbsSwiper.params.slideDuplicateClass)) {
             thumbsSwiper.loopFix();
@@ -26283,16 +26289,28 @@ var Line = (function (exports, Vue) {
             currentThumbsIndex = thumbsSwiper.activeIndex;
           }
           // Find actual thumbs index to slide to
-          const prevThumbsIndex = thumbsSwiper.slides.eq(currentThumbsIndex).prevAll(`[data-swiper-slide-index="${swiper.realIndex}"]`).eq(0).index();
-          const nextThumbsIndex = thumbsSwiper.slides.eq(currentThumbsIndex).nextAll(`[data-swiper-slide-index="${swiper.realIndex}"]`).eq(0).index();
+          const prevThumbsIndex = thumbsSwiper.slides
+            .eq(currentThumbsIndex)
+            .prevAll(`[data-swiper-slide-index="${swiper.realIndex}"]`).eq(0)
+            .index();
+          const nextThumbsIndex = thumbsSwiper.slides
+            .eq(currentThumbsIndex)
+            .nextAll(`[data-swiper-slide-index="${swiper.realIndex}"]`).eq(0)
+            .index();
           if (typeof prevThumbsIndex === 'undefined') newThumbsIndex = nextThumbsIndex;
           else if (typeof nextThumbsIndex === 'undefined') newThumbsIndex = prevThumbsIndex;
           else if (nextThumbsIndex - currentThumbsIndex === currentThumbsIndex - prevThumbsIndex) newThumbsIndex = currentThumbsIndex;
           else if (nextThumbsIndex - currentThumbsIndex < currentThumbsIndex - prevThumbsIndex) newThumbsIndex = nextThumbsIndex;
           else newThumbsIndex = prevThumbsIndex;
+          direction = swiper.activeIndex > swiper.previousIndex ? 'next' : 'prev';
         } else {
           newThumbsIndex = swiper.realIndex;
+          direction = newThumbsIndex > swiper.previousIndex ? 'next' : 'prev';
         }
+        if (useOffset) {
+          newThumbsIndex += direction === 'next' ? autoScrollOffset : -1 * autoScrollOffset;
+        }
+
         if (thumbsSwiper.visibleSlidesIndexes && thumbsSwiper.visibleSlidesIndexes.indexOf(newThumbsIndex) < 0) {
           if (thumbsSwiper.params.centeredSlides) {
             if (newThumbsIndex > currentThumbsIndex) {
@@ -26337,8 +26355,9 @@ var Line = (function (exports, Vue) {
     name: 'thumbs',
     params: {
       thumbs: {
-        multipleActiveThumbs: true,
         swiper: null,
+        multipleActiveThumbs: true,
+        autoScrollOffset: 0,
         slideThumbActiveClass: 'swiper-slide-thumb-active',
         thumbsContainerClass: 'swiper-container-thumbs',
       },
@@ -26903,7 +26922,7 @@ var Line = (function (exports, Vue) {
   } = /*#__PURE__*/createNamespace('switch');
   let gesture;
   var _switch = /*#__PURE__*/createComponent$1l({
-    mixins: [/*#__PURE__*/useCheckItem(NAMESPACE$f), /*#__PURE__*/useColor()],
+    mixins: [/*#__PURE__*/useCheckItemWithModel(NAMESPACE$f), /*#__PURE__*/useColor()],
 
     data() {
       return {
@@ -28752,7 +28771,7 @@ var Line = (function (exports, Vue) {
 
   const Line = {
       install,
-      version: "1.0.0-alpha.4",
+      version: "1.0.0-alpha.5",
   };
   function defaulExport() {
       // auto install for umd build
@@ -28774,7 +28793,7 @@ var Line = (function (exports, Vue) {
           directives,
           controllers,
           mixins,
-          version: "1.0.0-alpha.4",
+          version: "1.0.0-alpha.5",
       };
   }
   var index$1 = /*#__PURE__*/ defaulExport();

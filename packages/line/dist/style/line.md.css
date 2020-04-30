@@ -5265,11 +5265,11 @@ html.plt-mobile .line-app {
   z-index: 2;
 }
 
-.line-overlay--hide {
+.line-overlay.line-overlay--hide {
   background: transparent;
 }
 
-.line-overlay--no-tappable {
+.line-overlay.line-overlay--no-tappable {
   cursor: auto;
 }
 
@@ -8380,6 +8380,7 @@ html.plt-mobile .line-app {
   color: var(--color);
   font-family: var(--line-font-family, inherit);
   contain: strict;
+  overflow: hidden;
   z-index: 1001;
   pointer-events: none;
 }

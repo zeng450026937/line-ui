@@ -41,6 +41,7 @@
   color: var(--color);
   font-family: var(--line-font-family, inherit);
   contain: strict;
+  overflow: hidden;
   z-index: 1001;
   pointer-events: none;
 }

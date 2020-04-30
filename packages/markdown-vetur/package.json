@@ -1,6 +1,6 @@
 {
   "name": "@line-ui/markdown-vetur",
-  "version": "1.0.0-alpha.4",
+  "version": "1.0.0-alpha.5",
   "description": "simple parse markdown to vue component description for vetur auto-completion",
   "main": "lib/index.js",
   "publishConfig": {
