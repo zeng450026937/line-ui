@@ -1,12 +1,6 @@
 # .gitlab-ci.yml
 image: node:latest
 
-stages:
-  - build
-  - pack
-  - test
-  - deploy
-
 package line:
   image: cr.yealinkops.com/common/yarn:1.22.4
   stage: build
@@ -18,69 +12,22 @@ package line:
       - yarn.lock
   script:
     - yarn install -f
+    # line 
     - yarn run build line --release
-  artifacts:
-    paths:
-      - packages/line/dist
-    expire_in: 3 days
-  only:
-    - master
-
-package template-explorer:
-  image: cr.yealinkops.com/common/yarn:1.22.4
-  stage: pack
-  tags:
-    - devops_docker_runner
-  cache:
-    paths:
-      - node_modules/
-      - yarn.lock
-  script:
-    - yarn install -f
+    # template-explorer 
     - yarn run build template-explorer
-  artifacts:
-    paths:
-      - packages/template-explorer
-    expire_in: 3 days
-  only:
-    - master
-
-package repl:
-  image: cr.yealinkops.com/common/yarn:1.22.4
-  stage: pack
-  tags:
-    - devops_docker_runner
-  cache:
-    paths:
-      - node_modules/
-      - yarn.lock
-  script:
-    - yarn install -f
+    # icons-explorer 
+    - yarn run icons-explorer --build --mode=production
+    - mv dist packages/icons-explorer/dist
+    # repl
     - yarn run repl --build --mode=production
     - mv dist packages/repl/dist
   artifacts:
     paths:
-      - packages/repl/dist
-    expire_in: 3 days
-  only:
-    - master
-
-package icons-explorer:
-  image: cr.yealinkops.com/common/yarn:1.22.4
-  stage: pack
-  tags:
-    - devops_docker_runner
-  cache:
-    paths:
-      - node_modules/
-      - yarn.lock
-  script:
-    - yarn install -f
-    - yarn run icons-explorer --build --mode=production
-    - mv dist packages/icons-explorer/dist
-  artifacts:
-    paths:
+      - packages/line/dist
+      - packages/template-explorer
       - packages/icons-explorer/dist
+      - packages/repl/dist
     expire_in: 3 days
   only:
     - master
@@ -98,15 +45,12 @@ pages:
     # line 
     - mkdir -p public/line
     - mv packages/line/dist public/line/dist
-
     # template-explorer 
     - mv packages/template-explorer public/template-explorer
-
-    # repl
-    - mv packages/repl/dist public/repl
-
     # icons-explorer 
     - mv packages/icons-explorer/dist public/icons-explorer
+    # repl
+    - mv packages/repl/dist public/repl
   artifacts:
     paths:
       - public # artifact path 一定要在 /public , 这样 GitLab Pages 才能获取
