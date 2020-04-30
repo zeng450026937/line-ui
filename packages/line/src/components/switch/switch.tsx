@@ -1,6 +1,6 @@
 // import SwitchIndicator from '@line-ui/line/src/components/switch/switch-indicator';
 import { useColor } from '@line-ui/line/src/mixins/use-color';
-import { useCheckItem } from '@line-ui/line/src/mixins/use-check-item';
+import { useCheckItemWithModel } from '@line-ui/line/src/mixins/use-check-item';
 import { createNamespace } from '@line-ui/line/src/utils/namespace';
 import {
   createGesture,
@@ -14,7 +14,10 @@ const { createComponent, bem } = /*#__PURE__*/ createNamespace('switch');
 let gesture: Gesture | undefined;
 
 export default /*#__PURE__*/ createComponent({
-  mixins: [/*#__PURE__*/ useCheckItem(NAMESPACE), /*#__PURE__*/ useColor()],
+  mixins: [
+    /*#__PURE__*/ useCheckItemWithModel(NAMESPACE),
+    /*#__PURE__*/ useColor(),
+  ],
 
   data() {
     return {

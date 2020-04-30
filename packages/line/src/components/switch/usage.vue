@@ -11,11 +11,7 @@
         <line-item>
           <line-label>Blueberry</line-label>
           <template #start>
-            <line-switch
-              :checked="value"
-              color="primary"
-              @toggled="toggled"
-            ></line-switch>
+            <line-switch v-model="value" color="primary"></line-switch>
           </template>
         </line-item>
         <line-item>
@@ -79,6 +75,12 @@ export default Vue.extend({
   methods: {
     toggled(value) {
       this.value = value;
+    },
+  },
+
+  watch: {
+    value(value) {
+      console.log('value', value);
     },
   },
 });
