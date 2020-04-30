@@ -94,14 +94,17 @@ export default /*#__PURE__*/ createComponent({
     this.$on(
       'animation-enter',
       async (baseEl: HTMLElement, animation: Animation) => {
-        const { showDuration = 250 } = this;
+        const { showDuration = 200 } = this;
 
         await this.$nextTick();
 
         // update zIndex
         baseEl.style.zIndex = `${popupContext.getOverlayIndex()}`;
 
-        animation.easing('ease').duration(showDuration);
+        animation
+          .easing('ease')
+          .duration(showDuration)
+          .fromTo('opacity', '0', '1');
       }
     );
 

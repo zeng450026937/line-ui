@@ -13,7 +13,7 @@ export const enterAnimation = (
 
   baseAnimation
     .addElement(baseEl)
-    .easing('ease-in-out')
+    .easing('ease')
     .duration(300)
     // .afterClearStyles(['height'])
     .fromTo('padding-top', '0px', `${paddingTop}px`)
