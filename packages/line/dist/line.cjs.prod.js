@@ -471,6 +471,7 @@ const DEFAULT_VALUE = 'value';
 function useLazy(value = DEFAULT_VALUE) {
     return createMixins({
         props: {
+            [value]: null,
             lazy: {
                 type: Boolean,
                 default: true,
@@ -9703,17 +9704,13 @@ var checkItem = /*#__PURE__*/createComponent$M({
 });
 
 const {
-  createComponent: createComponent$N,
-  bem: bem$L
+  createComponent: createComponent$N
 } = /*#__PURE__*/createNamespace('lazy');
 var lazy = /*#__PURE__*/createComponent$N({
   mixins: [/*#__PURE__*/useLazy()],
 
   render() {
-    const h = arguments[0];
-    return h("div", {
-      "class": bem$L()
-    }, [this.slots()]);
+    return this.slots();
   }
 
 });
@@ -9808,7 +9805,7 @@ function useTreeItem(name) {
 
 const {
   createComponent: createComponent$O,
-  bem: bem$M
+  bem: bem$L
 } = /*#__PURE__*/createNamespace('tree-item');
 var treeItem = /*#__PURE__*/createComponent$O({
   mixins: [/*#__PURE__*/useTreeItem('Tree')],
@@ -9823,7 +9820,7 @@ var treeItem = /*#__PURE__*/createComponent$O({
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$M(),
+      "class": bem$L(),
       "on": {
         "click": this.onClick
       }
@@ -9834,7 +9831,7 @@ var treeItem = /*#__PURE__*/createComponent$O({
 
 const {
   createComponent: createComponent$P,
-  bem: bem$N
+  bem: bem$M
 } = /*#__PURE__*/createNamespace('img');
 var image = /*#__PURE__*/createComponent$P({
   props: {
@@ -9919,7 +9916,7 @@ var image = /*#__PURE__*/createComponent$P({
   render() {
     const h = arguments[0];
     return h("div", helper([{
-      "class": bem$N()
+      "class": bem$M()
     }, {
       "on": this.$listeners
     }]), [h("img", {
@@ -9939,7 +9936,7 @@ var image = /*#__PURE__*/createComponent$P({
 
 const {
   createComponent: createComponent$Q,
-  bem: bem$O
+  bem: bem$N
 } = /*#__PURE__*/createNamespace('infinite-scroll');
 var infiniteScroll = /*#__PURE__*/createComponent$Q({
   inject: {
@@ -10156,7 +10153,7 @@ var infiniteScroll = /*#__PURE__*/createComponent$Q({
       isLoading
     } = this;
     return h("div", {
-      "class": [bem$O({
+      "class": [bem$N({
         loading: isLoading,
         enabled: !disabled
       })]
@@ -10167,7 +10164,7 @@ var infiniteScroll = /*#__PURE__*/createComponent$Q({
 
 const {
   createComponent: createComponent$R,
-  bem: bem$P
+  bem: bem$O
 } = /*#__PURE__*/createNamespace('infinite-scroll-content');
 var infiniteScrollContent = /*#__PURE__*/createComponent$R({
   props: {
@@ -10202,7 +10199,7 @@ var infiniteScrollContent = /*#__PURE__*/createComponent$R({
       spinner
     } = this;
     return h("div", {
-      "class": [bem$P(), // Used internally for styling
+      "class": [bem$O(), // Used internally for styling
       `line-infinite-scroll-content-${mode}`]
     }, [h("div", {
       "class": "infinite-loading"
@@ -10221,7 +10218,7 @@ var infiniteScrollContent = /*#__PURE__*/createComponent$R({
 
 const {
   createComponent: createComponent$S,
-  bem: bem$Q
+  bem: bem$P
 } = /*#__PURE__*/createNamespace('input');
 
 const findItemLabel$1 = componentEl => {
@@ -10470,7 +10467,7 @@ var input = /*#__PURE__*/createComponent$S({
     }
 
     return h("div", helper([{
-      "class": [bem$Q({
+      "class": [bem$P({
         suffix: this.slots('suffix')
       }), {
         'has-value': nativeValue && nativeValue.length,
@@ -10479,7 +10476,7 @@ var input = /*#__PURE__*/createComponent$S({
     }, {
       "on": this.$listeners
     }]), [h("input", {
-      "class": bem$Q('content'),
+      "class": bem$P('content'),
       "ref": "nativeInput",
       "attrs": {
         "accept": accept,
@@ -10523,7 +10520,7 @@ var input = /*#__PURE__*/createComponent$S({
 
 const {
   createComponent: createComponent$T,
-  bem: bem$R
+  bem: bem$Q
 } = /*#__PURE__*/createNamespace('item');
 var item = /*#__PURE__*/createComponent$T({
   mixins: [/*#__PURE__*/useColor()],
@@ -10653,7 +10650,7 @@ var item = /*#__PURE__*/createComponent$T({
       "attrs": {
         "aria-disabled": disabled ? 'true' : null
       },
-      "class": [bem$R({
+      "class": [bem$Q({
         disabled
       }), { ...childStyles,
         [`item-lines-${lines}`]: isDef(lines),
@@ -10689,7 +10686,7 @@ var item = /*#__PURE__*/createComponent$T({
 
 const {
   createComponent: createComponent$U,
-  bem: bem$S
+  bem: bem$R
 } = /*#__PURE__*/createNamespace('item-divider');
 var itemDivider = /*#__PURE__*/createComponent$U({
   mixins: [/*#__PURE__*/useColor()],
@@ -10703,15 +10700,15 @@ var itemDivider = /*#__PURE__*/createComponent$U({
       sticky = false
     } = this;
     return h("div", helper([{
-      "class": bem$S({
+      "class": bem$R({
         sticky
       })
     }, {
       "on": this.$listeners
     }]), [this.slots('start'), h("div", {
-      "class": bem$S('inner')
+      "class": bem$R('inner')
     }, [h("div", {
-      "class": bem$S('wrapper')
+      "class": bem$R('wrapper')
     }, [this.slots()]), this.slots('end')])]);
   }
 
@@ -10719,7 +10716,7 @@ var itemDivider = /*#__PURE__*/createComponent$U({
 
 const {
   createComponent: createComponent$V,
-  bem: bem$T
+  bem: bem$S
 } = /*#__PURE__*/createNamespace('item-group');
 var itemGroup = /*#__PURE__*/createComponent$V({
   render() {
@@ -10728,7 +10725,7 @@ var itemGroup = /*#__PURE__*/createComponent$V({
       mode
     } = this;
     return h("div", {
-      "class": [bem$T({
+      "class": [bem$S({
         // Used internally for styling
         [`${mode}`]: true
       })]
@@ -10739,7 +10736,7 @@ var itemGroup = /*#__PURE__*/createComponent$V({
 
 const {
   createComponent: createComponent$W,
-  bem: bem$U
+  bem: bem$T
 } = /*#__PURE__*/createNamespace('item-option');
 var itemOption = /*#__PURE__*/createComponent$W({
   mixins: [/*#__PURE__*/useColor()],
@@ -10786,7 +10783,7 @@ var itemOption = /*#__PURE__*/createComponent$W({
       target
     };
     return h("div", {
-      "class": [bem$U({
+      "class": [bem$T({
         disabled,
         expandable
       }), 'line-activatable'],
@@ -10794,12 +10791,12 @@ var itemOption = /*#__PURE__*/createComponent$W({
         "click": this.onClick
       }
     }, [h(TagType, helper([{}, attrs, {
-      "class": bem$U('button-native'),
+      "class": bem$T('button-native'),
       "attrs": {
         "disabled": disabled
       }
     }]), [h("span", {
-      "class": bem$U('button-inner')
+      "class": bem$T('button-inner')
     }, [this.slots('top'), h("div", {
       "class": "horizontal-wrapper"
     }, [this.slots('start'), this.slots('icon-only'), this.slots(), this.slots('end')]), this.slots('bottom')]), mode === 'md' && h("line-ripple-effect")])]);
@@ -10809,7 +10806,7 @@ var itemOption = /*#__PURE__*/createComponent$W({
 
 const {
   createComponent: createComponent$X,
-  bem: bem$V
+  bem: bem$U
 } = /*#__PURE__*/createNamespace('item-options');
 
 const isEndSide = side => {
@@ -10862,7 +10859,7 @@ var itemOptions = /*#__PURE__*/createComponent$X({
     } = this;
     const isEnd = isEndSide(side);
     return h("div", {
-      "class": bem$V({
+      "class": bem$U({
         [mode]: true,
         start: !isEnd,
         end: isEnd
@@ -10874,7 +10871,7 @@ var itemOptions = /*#__PURE__*/createComponent$X({
 
 const {
   createComponent: createComponent$Y,
-  bem: bem$W
+  bem: bem$V
 } = /*#__PURE__*/createNamespace('item-sliding');
 const SWIPE_MARGIN = 30;
 const ELASTIC_FACTOR = 0.55;
@@ -11328,7 +11325,7 @@ var itemSliding = /*#__PURE__*/createComponent$Y({
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$W({
+      "class": bem$V({
         'active-slide': this.state !== 2
         /* Disabled */
         ,
@@ -11352,7 +11349,7 @@ var itemSliding = /*#__PURE__*/createComponent$Y({
 
 const {
   createComponent: createComponent$Z,
-  bem: bem$X
+  bem: bem$W
 } = /*#__PURE__*/createNamespace('label');
 var label = /*#__PURE__*/createComponent$Z({
   mixins: [/*#__PURE__*/useColor()],
@@ -11401,7 +11398,7 @@ var label = /*#__PURE__*/createComponent$Z({
     } = this; // this.noAnimate = (position === 'floating');
 
     return h("div", helper([{
-      "class": bem$X({
+      "class": bem$W({
         [position]: isDef(position),
         'no-animate': this.noAnimate
       })
@@ -11414,7 +11411,7 @@ var label = /*#__PURE__*/createComponent$Z({
 
 const {
   createComponent: createComponent$_,
-  bem: bem$Y
+  bem: bem$X
 } = /*#__PURE__*/createNamespace('list');
 var list = /*#__PURE__*/createComponent$_({
   props: {
@@ -11430,7 +11427,7 @@ var list = /*#__PURE__*/createComponent$_({
       inset = false
     } = this;
     return h("div", helper([{
-      "class": bem$Y({
+      "class": bem$X({
         [`lines-${lines}`]: isDef(lines),
         inset
       })
@@ -11443,7 +11440,7 @@ var list = /*#__PURE__*/createComponent$_({
 
 const {
   createComponent: createComponent$$,
-  bem: bem$Z
+  bem: bem$Y
 } = /*#__PURE__*/createNamespace('list-header');
 var listHeader = /*#__PURE__*/createComponent$$({
   mixins: [/*#__PURE__*/useColor()],
@@ -11458,7 +11455,7 @@ var listHeader = /*#__PURE__*/createComponent$$({
       lines
     } = this;
     return h("div", helper([{
-      "class": bem$Z({
+      "class": bem$Y({
         [`lines-${lines}`]: isDef(lines)
       })
     }, {
@@ -11473,7 +11470,7 @@ var listHeader = /*#__PURE__*/createComponent$$({
 const NAMESPACE$8 = 'ListView';
 const {
   createComponent: createComponent$10,
-  bem: bem$_
+  bem: bem$Z
 } = /*#__PURE__*/createNamespace('list-item');
 var ListItem = /*#__PURE__*/createComponent$10({
   inject: [NAMESPACE$8],
@@ -11529,7 +11526,7 @@ var ListItem = /*#__PURE__*/createComponent$10({
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$_()
+      "class": bem$Z()
     }, [this.cachedNode]);
   }
 
@@ -12105,7 +12102,7 @@ function exponentialSearch(array = [], wanted, compare, from, to, bound) {
 const NAMESPACE$9 = 'ListView';
 const {
   createComponent: createComponent$11,
-  bem: bem$$
+  bem: bem$_
 } = /*#__PURE__*/createNamespace('list-view');
 var listView = /*#__PURE__*/createComponent$11({
   provide() {
@@ -12634,13 +12631,13 @@ var listView = /*#__PURE__*/createComponent$11({
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$$(),
+      "class": bem$_(),
       "ref": "viewport",
       "on": {
         "scroll": this.onScroll
       }
     }, [h("div", {
-      "class": bem$$('spacer'),
+      "class": bem$_('spacer'),
       "style": {
         width: `${this.layout.geometry.width}px`,
         height: `${this.layout.geometry.height}px`
@@ -12649,7 +12646,7 @@ var listView = /*#__PURE__*/createComponent$11({
       "attrs": {
         "tag": 'div'
       },
-      "class": bem$$('content')
+      "class": bem$_('content')
     }, [Object.keys(this.views).map(index => {
       const view = this.views[index];
       return h(ListItem, {
@@ -12790,7 +12787,7 @@ const menuController = /* @__PURE__ */ createMenuController();
 
 const {
   createComponent: createComponent$12,
-  bem: bem$10
+  bem: bem$$
 } = /*#__PURE__*/createNamespace('menu');
 const iosEasing = 'cubic-bezier(0.32,0.72,0,1)';
 const iosEasingReverse = 'cubic-bezier(1, 0, 0.68, 0.28)';
@@ -13313,7 +13310,7 @@ var menu = /*#__PURE__*/createComponent$12({
       visible
     } = this;
     return h("div", {
-      "class": [bem$10({
+      "class": [bem$$({
         [`type-${type}`]: true,
         enabled: !disabled,
         'side-end': isEndSide,
@@ -13323,10 +13320,10 @@ var menu = /*#__PURE__*/createComponent$12({
         'show-menu': visible
       }]
     }, [h("div", {
-      "class": bem$10('inner'),
+      "class": bem$$('inner'),
       "ref": "menuInnerEl"
     }, [this.slots()]), h(Overlay, {
-      "class": bem$10('backdrop'),
+      "class": bem$$('backdrop'),
       "ref": "backdropEl",
       "attrs": {
         "tappable": false,
@@ -13339,7 +13336,7 @@ var menu = /*#__PURE__*/createComponent$12({
 
 const {
   createComponent: createComponent$13,
-  bem: bem$11
+  bem: bem$10
 } = /*#__PURE__*/createNamespace('note');
 var note = /*#__PURE__*/createComponent$13({
   functional: true,
@@ -13356,7 +13353,7 @@ var note = /*#__PURE__*/createComponent$13({
       color
     } = props;
     return h("div", helper([{
-      "class": [bem$11(), createColorClasses(color)]
+      "class": [bem$10(), createColorClasses(color)]
     }, data]), [slots()]);
   }
 
@@ -13364,7 +13361,7 @@ var note = /*#__PURE__*/createComponent$13({
 
 const {
   createComponent: createComponent$14,
-  bem: bem$12
+  bem: bem$11
 } = /*#__PURE__*/createNamespace('progress-bar');
 
 const clamp$3 = (min, n, max) => {
@@ -13436,7 +13433,7 @@ var progressBar = /*#__PURE__*/createComponent$14({
         "aria-valuemin": "0",
         "aria-valuemax": "1"
       },
-      "class": [bem$12(), {
+      "class": [bem$11(), {
         [`progress-bar-${type}`]: true,
         'progress-paused': paused,
         'progress-bar-reversed': document.dir === 'rtl' ? !reversed : reversed
@@ -13449,7 +13446,7 @@ var progressBar = /*#__PURE__*/createComponent$14({
 const NAMESPACE$a = 'RadioGroup';
 const {
   createComponent: createComponent$15,
-  bem: bem$13
+  bem: bem$12
 } = /*#__PURE__*/createNamespace('radio-group');
 var radioGroup = /*#__PURE__*/createComponent$15({
   mixins: [/*#__PURE__*/useCheckGroupWithModel(NAMESPACE$a)],
@@ -13463,7 +13460,7 @@ var radioGroup = /*#__PURE__*/createComponent$15({
   render() {
     const h = arguments[0];
     return h("div", helper([{
-      "class": bem$13()
+      "class": bem$12()
     }, {
       "on": this.$listeners
     }]), [this.slots()]);
@@ -13473,7 +13470,7 @@ var radioGroup = /*#__PURE__*/createComponent$15({
 
 const {
   createComponent: createComponent$16,
-  bem: bem$14
+  bem: bem$13
 } = /*#__PURE__*/createNamespace('radio-indicator');
 var RadioIndicator = /*#__PURE__*/createComponent$16({
   functional: true,
@@ -13491,12 +13488,12 @@ var RadioIndicator = /*#__PURE__*/createComponent$16({
       disabled
     } = props;
     return h("div", helper([{
-      "class": bem$14({
+      "class": bem$13({
         checked,
         disabled
       })
     }, data]), [h("div", {
-      "class": bem$14('inner')
+      "class": bem$13('inner')
     })]);
   }
 
@@ -13505,7 +13502,7 @@ var RadioIndicator = /*#__PURE__*/createComponent$16({
 const NAMESPACE$b = 'RadioGroup';
 const {
   createComponent: createComponent$17,
-  bem: bem$15
+  bem: bem$14
 } = /*#__PURE__*/createNamespace('radio');
 var radio = /*#__PURE__*/createComponent$17({
   mixins: [/*#__PURE__*/useCheckItemWithModel(NAMESPACE$b), /*#__PURE__*/useRipple(), /*#__PURE__*/useColor()],
@@ -13571,7 +13568,7 @@ var radio = /*#__PURE__*/createComponent$17({
       inItem
     } = this;
     return h("div", helper([{
-      "class": [bem$15({
+      "class": [bem$14({
         checked,
         disabled
       }), {
@@ -13602,7 +13599,7 @@ var radio = /*#__PURE__*/createComponent$17({
 
 const {
   createComponent: createComponent$18,
-  bem: bem$16
+  bem: bem$15
 } = /*#__PURE__*/createNamespace('range');
 
 function clamp$4(value, min, max) {
@@ -13631,7 +13628,7 @@ const renderKnob = (h, isRTL, {
   };
 
   return h("div", {
-    "class": [bem$16('knob-handle', {
+    "class": [bem$15('knob-handle', {
       min: value === min,
       max: value === max
     }), {
@@ -13666,12 +13663,12 @@ const renderKnob = (h, isRTL, {
       "aria-valuenow": value
     }
   }, [pin && h("div", {
-    "class": bem$16('pin'),
+    "class": bem$15('pin'),
     "attrs": {
       "role": "presentation"
     }
   }, [Math.round(value)]), h("div", {
-    "class": bem$16('knob'),
+    "class": bem$15('knob'),
     "attrs": {
       "role": "presentation"
     }
@@ -14043,7 +14040,7 @@ var range = /*#__PURE__*/createComponent$18({
 
 
     return h("div", {
-      "class": bem$16({
+      "class": bem$15({
         disabled,
         pressed: pressedKnob !== undefined,
         'has-pin': pin
@@ -14053,23 +14050,23 @@ var range = /*#__PURE__*/createComponent$18({
         "blur": this.onBlur
       }
     }, [this.slots('start'), h("div", {
-      "class": bem$16('slider'),
+      "class": bem$15('slider'),
       "ref": "rangeSlider"
     }, [ticks.map(tick => h("div", {
       "style": tickStyle(tick),
       "attrs": {
         "role": "presentation"
       },
-      "class": bem$16('tick', {
+      "class": bem$15('tick', {
         active: tick.active
       })
     })), h("div", {
-      "class": bem$16('bar'),
+      "class": bem$15('bar'),
       "attrs": {
         "role": "presentation"
       }
     }), h("div", {
-      "class": bem$16('bar', {
+      "class": bem$15('bar', {
         active: true
       }),
       "attrs": {
@@ -14280,7 +14277,7 @@ const translateElement = (el, value) => {
 
 const {
   createComponent: createComponent$19,
-  bem: bem$17
+  bem: bem$16
 } = /*#__PURE__*/createNamespace('refresher');
 
 const clamp$5 = (min, n, max) => {
@@ -14960,7 +14957,7 @@ var refresher = /*#__PURE__*/createComponent$19({
       mode
     } = this;
     return h("div", {
-      "class": [bem$17(), {
+      "class": [bem$16(), {
         // Used internally for styling
         [`refresher-${mode}`]: true,
         'refresher-native': this.nativeRefresher,
@@ -15101,7 +15098,7 @@ const blockedTags = ['script', 'style', 'iframe', 'meta', 'link', 'object', 'emb
 
 const {
   createComponent: createComponent$1a,
-  bem: bem$18
+  bem: bem$17
 } = /*#__PURE__*/createNamespace('refresher-content');
 var refresherContent = /*#__PURE__*/createComponent$1a({
   props: {
@@ -15151,7 +15148,7 @@ var refresherContent = /*#__PURE__*/createComponent$1a({
     } = this;
     const hasSpinner = pullingIcon != null && SPINNERS[pullingIcon] !== undefined;
     return h("div", {
-      "class": bem$18()
+      "class": bem$17()
     }, [h("div", {
       "class": "refresher-pulling"
     }, [pullingIcon && hasSpinner && h("div", {
@@ -15201,7 +15198,7 @@ var refresherContent = /*#__PURE__*/createComponent$1a({
 
 const {
   createComponent: createComponent$1b,
-  bem: bem$19
+  bem: bem$18
 } = /*#__PURE__*/createNamespace('reorder');
 var reorder = /*#__PURE__*/createComponent$1b({
   data() {
@@ -15214,9 +15211,9 @@ var reorder = /*#__PURE__*/createComponent$1b({
     const h = arguments[0];
     const reorderIcon = 'menu';
     return h("div", {
-      "class": bem$19()
+      "class": bem$18()
     }, [this.slots() || h("line-icon", {
-      "class": bem$19('icon'),
+      "class": bem$18('icon'),
       "attrs": {
         "size": "small",
         "name": reorderIcon,
@@ -15229,7 +15226,7 @@ var reorder = /*#__PURE__*/createComponent$1b({
 
 const {
   createComponent: createComponent$1c,
-  bem: bem$1a
+  bem: bem$19
 } = /*#__PURE__*/createNamespace('reorder-group');
 
 const indexForItem = element => {
@@ -15589,7 +15586,7 @@ var reorderGroup = /*#__PURE__*/createComponent$1c({
       state
     } = this;
     return h("div", {
-      "class": bem$1a({
+      "class": bem$19({
         enabled: !disabled,
         'list-active': state !== 0
         /* Idle */
@@ -15602,7 +15599,7 @@ var reorderGroup = /*#__PURE__*/createComponent$1c({
 
 const {
   createComponent: createComponent$1d,
-  bem: bem$1b
+  bem: bem$1a
 } = /*#__PURE__*/createNamespace('row');
 var row = /*#__PURE__*/createComponent$1d({
   functional: true,
@@ -15612,7 +15609,7 @@ var row = /*#__PURE__*/createComponent$1d({
     slots
   }) {
     return h("div", helper([{
-      "class": bem$1b()
+      "class": bem$1a()
     }, data]), [slots()]);
   }
 
@@ -15621,7 +15618,7 @@ var row = /*#__PURE__*/createComponent$1d({
 const NAMESPACE$c = 'Segment';
 const {
   createComponent: createComponent$1e,
-  bem: bem$1c
+  bem: bem$1b
 } = /*#__PURE__*/createNamespace('segment');
 var segment = /*#__PURE__*/createComponent$1e({
   mixins: [/*#__PURE__*/useCheckGroupWithModel(NAMESPACE$c), /*#__PURE__*/useColor()],
@@ -15960,7 +15957,7 @@ var segment = /*#__PURE__*/createComponent$1e({
       scrollable
     } = this;
     return h("div", {
-      "class": [bem$1c({
+      "class": [bem$1b({
         activated,
         disabled,
         scrollable
@@ -15979,7 +15976,7 @@ var segment = /*#__PURE__*/createComponent$1e({
 const NAMESPACE$d = 'Segment';
 const {
   createComponent: createComponent$1f,
-  bem: bem$1d
+  bem: bem$1c
 } = /*#__PURE__*/createNamespace('segment-button');
 var segmentButton = /*#__PURE__*/createComponent$1f({
   mixins: [/*#__PURE__*/useCheckItemWithModel(NAMESPACE$d)],
@@ -16048,7 +16045,7 @@ var segmentButton = /*#__PURE__*/createComponent$1f({
       "attrs": {
         "aria-disabled": disabled ? 'true' : null
       },
-      "class": [bem$1d({
+      "class": [bem$1c({
         'has-label': hasLabel,
         'has-icon': hasIcon,
         'has-label-only': hasLabel && !hasIcon,
@@ -16073,14 +16070,14 @@ var segmentButton = /*#__PURE__*/createComponent$1f({
         "aria-pressed": checked ? 'true' : null,
         "disabled": disabled
       },
-      "class": bem$1d('button-native')
+      "class": bem$1c('button-native')
     }, [h("span", {
-      "class": bem$1d('button-inner')
+      "class": bem$1c('button-inner')
     }, [this.slots()]), mode === 'md' && h("line-ripple-effect")]), h("div", {
       "attrs": {
         "part": "indicator"
       },
-      "class": bem$1d('indicator', {
+      "class": bem$1c('indicator', {
         animated: true
       }),
       "ref": "indicatorEl"
@@ -16088,7 +16085,7 @@ var segmentButton = /*#__PURE__*/createComponent$1f({
       "attrs": {
         "part": "indicator-background"
       },
-      "class": bem$1d('indicator-background')
+      "class": bem$1c('indicator-background')
     })])]);
   }
 
@@ -16096,7 +16093,7 @@ var segmentButton = /*#__PURE__*/createComponent$1f({
 
 const {
   createComponent: createComponent$1g,
-  bem: bem$1e
+  bem: bem$1d
 } = /*#__PURE__*/createNamespace('skeleton-text');
 var skeletonText = /*#__PURE__*/createComponent$1g({
   props: {
@@ -16108,7 +16105,7 @@ var skeletonText = /*#__PURE__*/createComponent$1g({
     const animated = this.animated && config.getBoolean('animated', true);
     const inMedia = this.$el && (this.$el.closest('.line-avatar') || this.$el.closest('.line-thumbnail'));
     return h("div", {
-      "class": [bem$1e({
+      "class": [bem$1d({
         animated
       }), {
         'in-media': inMedia
@@ -16120,7 +16117,7 @@ var skeletonText = /*#__PURE__*/createComponent$1g({
 
 const {
   createComponent: createComponent$1h,
-  bem: bem$1f
+  bem: bem$1e
 } = /*#__PURE__*/createNamespace('slide');
 var slide = /*#__PURE__*/createComponent$1h({
   functional: true,
@@ -16130,7 +16127,7 @@ var slide = /*#__PURE__*/createComponent$1h({
     slots
   }) {
     return h("div", helper([{
-      "class": [bem$1f(), {
+      "class": [bem$1e(), {
         'swiper-slide': true,
         'swiper-zoom-container': true
       }]
@@ -16141,7 +16138,7 @@ var slide = /*#__PURE__*/createComponent$1h({
 
 const {
   createComponent: createComponent$1i,
-  bem: bem$1g
+  bem: bem$1f
 } = /*#__PURE__*/createNamespace('slides');
 var slides = /*#__PURE__*/createComponent$1i({
   props: {
@@ -16536,7 +16533,7 @@ var slides = /*#__PURE__*/createComponent$1i({
       mode
     } = this;
     return h("div", {
-      "class": [bem$1g(), {
+      "class": [bem$1f(), {
         // Used internally for styling
         [`slides-${mode}`]: true,
         'swiper-container': true
@@ -16557,7 +16554,7 @@ var slides = /*#__PURE__*/createComponent$1i({
 const NAMESPACE$e = 'SwitchGroup';
 const {
   createComponent: createComponent$1j,
-  bem: bem$1h
+  bem: bem$1g
 } = /*#__PURE__*/createNamespace('switch-group');
 var switchGroup = /*#__PURE__*/createComponent$1j({
   mixins: [/*#__PURE__*/useGroup(NAMESPACE$e)],
@@ -16565,7 +16562,7 @@ var switchGroup = /*#__PURE__*/createComponent$1j({
   render() {
     const h = arguments[0];
     return h("div", {
-      "class": bem$1h()
+      "class": bem$1g()
     }, [this.slots()]);
   }
 
@@ -16573,7 +16570,7 @@ var switchGroup = /*#__PURE__*/createComponent$1j({
 
 const {
   createComponent: createComponent$1k,
-  bem: bem$1i
+  bem: bem$1h
 } = /*#__PURE__*/createNamespace('switch-indicator');
 var switchIndicator = /*#__PURE__*/createComponent$1k({
   functional: true,
@@ -16589,12 +16586,12 @@ var switchIndicator = /*#__PURE__*/createComponent$1k({
   }) {
     const Tag = 'div';
     return h(Tag, helper([{
-      "class": bem$1i({
+      "class": bem$1h({
         'is-checked': props.checked,
         'is-disabled': props.disabled
       })
     }, data]), [h("div", {
-      "class": bem$1i('thumb')
+      "class": bem$1h('thumb')
     }, [slots()])]);
   }
 
@@ -16603,7 +16600,7 @@ var switchIndicator = /*#__PURE__*/createComponent$1k({
 const NAMESPACE$f = 'SwitchGroup';
 const {
   createComponent: createComponent$1l,
-  bem: bem$1j
+  bem: bem$1i
 } = /*#__PURE__*/createNamespace('switch');
 let gesture;
 var _switch = /*#__PURE__*/createComponent$1l({
@@ -16721,7 +16718,7 @@ var _switch = /*#__PURE__*/createComponent$1l({
       "attrs": {
         "role": "checkbox"
       },
-      "class": bem$1j({
+      "class": bem$1i({
         disabled,
         checked,
         activated
@@ -16732,9 +16729,9 @@ var _switch = /*#__PURE__*/createComponent$1l({
     }, {
       "on": this.$listeners
     }]), [h("div", {
-      "class": bem$1j('icon')
+      "class": bem$1i('icon')
     }, [h("div", {
-      "class": bem$1j('inner')
+      "class": bem$1i('inner')
     })]), h("button", {
       "attrs": {
         "type": "button",
@@ -16749,7 +16746,7 @@ var _switch = /*#__PURE__*/createComponent$1l({
 const NAMESPACE$g = 'TabBar';
 const {
   createComponent: createComponent$1m,
-  bem: bem$1k
+  bem: bem$1j
 } = /*#__PURE__*/createNamespace('tab-bar');
 var tabBar = /*#__PURE__*/createComponent$1m({
   mixins: [/*#__PURE__*/useCheckGroupWithModel(NAMESPACE$g), /*#__PURE__*/useColor()],
@@ -16758,7 +16755,6 @@ var tabBar = /*#__PURE__*/createComponent$1m({
       type: Boolean,
       default: true
     },
-    value: String,
     translucent: Boolean,
     keyboardVisible: Boolean,
     selectedTab: String
@@ -16791,7 +16787,7 @@ var tabBar = /*#__PURE__*/createComponent$1m({
       keyboardVisible
     } = this;
     return h("div", helper([{
-      "class": bem$1k({
+      "class": bem$1j({
         translucent,
         hidden: keyboardVisible
       })
@@ -16805,7 +16801,7 @@ var tabBar = /*#__PURE__*/createComponent$1m({
 const NAMESPACE$h = 'TabBar';
 const {
   createComponent: createComponent$1n,
-  bem: bem$1l
+  bem: bem$1k
 } = /*#__PURE__*/createNamespace('tab-button');
 var tabButton = /*#__PURE__*/createComponent$1n({
   mixins: [/*#__PURE__*/useCheckItemWithModel(NAMESPACE$h), /*#__PURE__*/useRipple()],
@@ -16847,7 +16843,7 @@ var tabButton = /*#__PURE__*/createComponent$1n({
       mode
     } = this;
     return h("div", helper([{
-      "class": [bem$1l({
+      "class": [bem$1k({
         'has-label': hasLabel,
         'has-icon': hasIcon,
         'has-label-only': hasLabel && !hasIcon,
@@ -16883,7 +16879,7 @@ var tabButton = /*#__PURE__*/createComponent$1n({
 const NAMESPACE$i = 'Tabs';
 const {
   createComponent: createComponent$1o,
-  bem: bem$1m
+  bem: bem$1l
 } = /*#__PURE__*/createNamespace('tab');
 var tab = /*#__PURE__*/createComponent$1o({
   mixins: [/*#__PURE__*/useCheckItemWithModel(NAMESPACE$i)],
@@ -16892,37 +16888,23 @@ var tab = /*#__PURE__*/createComponent$1o({
     tab: String
   },
 
-  data() {
-    return {};
-  },
-
-  methods: {
-    onClick() {
-      if (this.checked) {
-        return;
-      }
-
-      if (this.checkable && !this.disabled) {
-        this.checked = true;
-      }
-    }
-
-  },
-
   render() {
     const h = arguments[0];
     const {
       checked,
-      tab
+      tab,
+      modelValue
     } = this;
     return h("div", helper([{
-      "class": [bem$1m({
+      "class": [bem$1l({
         hidden: !checked
-      })],
+      }), {
+        'line-page': this.hasSlot()
+      }],
       "attrs": {
         "role": "tabpanel",
         "aria-hidden": !checked ? 'true' : null,
-        "aria-labelledby": `tab-button-${tab}`
+        "aria-labelledby": `tab-button-${tab || modelValue}`
       }
     }, {
       "on": this.$listeners
@@ -16934,7 +16916,7 @@ var tab = /*#__PURE__*/createComponent$1o({
 const NAMESPACE$j = 'Tabs';
 const {
   createComponent: createComponent$1p,
-  bem: bem$1n
+  bem: bem$1m
 } = /*#__PURE__*/createNamespace('tabs');
 var tabs = /*#__PURE__*/createComponent$1p({
   mixins: [/*#__PURE__*/useCheckGroupWithModel(NAMESPACE$j)],
@@ -16948,11 +16930,11 @@ var tabs = /*#__PURE__*/createComponent$1p({
   render() {
     const h = arguments[0];
     return h("div", helper([{
-      "class": bem$1n()
+      "class": bem$1m()
     }, {
       "on": this.$listeners
     }]), [this.slots('top'), h("div", {
-      "class": bem$1n('inner')
+      "class": bem$1m('inner')
     }, [this.slots()]), this.slots('bottom')]);
   }
 
@@ -16960,7 +16942,7 @@ var tabs = /*#__PURE__*/createComponent$1p({
 
 const {
   createComponent: createComponent$1q,
-  bem: bem$1o
+  bem: bem$1n
 } = /*#__PURE__*/createNamespace('textarea');
 
 const findItemLabel$2 = componentEl => {
@@ -17171,7 +17153,7 @@ var textarea = /*#__PURE__*/createComponent$1q({
     }
 
     return h("div", helper([{
-      "class": [bem$1o()]
+      "class": [bem$1n()]
     }, {
       "on": this.$listeners
     }]), [h("textarea", {
@@ -17203,7 +17185,7 @@ var textarea = /*#__PURE__*/createComponent$1q({
 
 const {
   createComponent: createComponent$1r,
-  bem: bem$1p
+  bem: bem$1o
 } = /*#__PURE__*/createNamespace('thumbnail');
 var thumbnail = /*#__PURE__*/createComponent$1r({
   functional: true,
@@ -17213,7 +17195,7 @@ var thumbnail = /*#__PURE__*/createComponent$1r({
     slots
   }) {
     return h("div", helper([{
-      "class": bem$1p()
+      "class": bem$1o()
     }, data]), [slots()]);
   }
 
@@ -17221,7 +17203,7 @@ var thumbnail = /*#__PURE__*/createComponent$1r({
 
 const {
   createComponent: createComponent$1s,
-  bem: bem$1q
+  bem: bem$1p
 } = /*#__PURE__*/createNamespace('toolbar');
 var toolbar = /*#__PURE__*/createComponent$1s({
   functional: true,
@@ -17238,13 +17220,13 @@ var toolbar = /*#__PURE__*/createComponent$1s({
       color
     } = props;
     return h("div", helper([{
-      "class": [bem$1q(), createColorClasses(color)]
+      "class": [bem$1p(), createColorClasses(color)]
     }, data]), [h("div", {
-      "class": bem$1q('background')
+      "class": bem$1p('background')
     }), h("div", {
-      "class": bem$1q('container')
+      "class": bem$1p('container')
     }, [slots('start'), slots('secondary'), h("div", {
-      "class": bem$1q('content')
+      "class": bem$1p('content')
     }, [slots()]), slots('primary'), slots('end')])]);
   }
 
@@ -17252,7 +17234,7 @@ var toolbar = /*#__PURE__*/createComponent$1s({
 
 const {
   createComponent: createComponent$1t,
-  bem: bem$1r
+  bem: bem$1q
 } = /*#__PURE__*/createNamespace('title');
 var title = /*#__PURE__*/createComponent$1t({
   mixins: [/*#__PURE__*/useColor()],
@@ -17267,13 +17249,13 @@ var title = /*#__PURE__*/createComponent$1t({
       size
     } = this;
     return h("div", helper([{
-      "class": bem$1r({
+      "class": bem$1q({
         [size]: isDef(size)
       })
     }, {
       "on": this.$listeners
     }]), [h("div", {
-      "class": bem$1r('inner')
+      "class": bem$1q('inner')
     }, [this.slots()])]);
   }
 
@@ -17594,9 +17576,16 @@ const vClickOutside = /*#__PURE__*/ defineDirective({
 });
 
 function createDimension(el, options) {
-    const { callback } = options;
-    const destroy = addResizeListener(el, () => callback(el));
-    callback(el);
+    const { callback, quiet, once } = options;
+    const destroy = addResizeListener(el, () => {
+        callback(el);
+        if (once) {
+            destroy();
+        }
+    });
+    if (!quiet) {
+        callback(el);
+    }
     return {
         destroy,
     };
@@ -17733,7 +17722,7 @@ function createIntersect(el, options) {
         // initted, invoke the user handler
         if (handler && (!quiet || inited)) {
             const isIntersecting = entries.some((entry) => entry.isIntersecting);
-            handler(entries, observer, isIntersecting);
+            handler(entries, observer, isIntersecting, el);
         }
         // If has already been initted and
         // has the once modifier, unbind
@@ -17761,7 +17750,7 @@ function createIntersect(el, options) {
 }
 function inserted$9(el, binding) {
     const { value, arg, modifiers } = binding;
-    if (!value || !arg)
+    if (!value)
         return;
     const options = isObject(value)
         ? value

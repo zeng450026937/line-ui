@@ -328,6 +328,6 @@
   margin-top: 0;
   margin-bottom: 0;
 }
-.line-ripple-effect {
+.line-item .line-ripple-effect {
   color: var(--ripple-color);
 }

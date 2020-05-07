@@ -75,7 +75,7 @@ export default Vue.extend({
 
     .item-detail-icon {
       /* prettier-ignore */
-      font-family: "MaterialIcons-Regular";
+      font-family: "MaterialIcons-Icons";
       font-style: normal;
 
       text-transform: none;

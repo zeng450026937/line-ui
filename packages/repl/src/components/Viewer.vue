@@ -1,34 +1,36 @@
 <template>
   <div class="viewer">
-    <line-spinner type="dots" v-show="loading"></line-spinner>
+    <line-spinner type="dots" v-show="loading || !resource"></line-spinner>
 
-    <line-tabs :value="tab" v-show="!loading">
-      <line-tab model-value="readme">
-        <Readme :html="readme"></Readme>
-      </line-tab>
-      <line-tab model-value="usage">
-        <line-lazy :value="tab === 'usage'">
-          <Repl :value="source"></Repl>
-        </line-lazy>
-      </line-tab>
+    <template v-if="resource">
+      <line-tabs :value="tab" v-show="!loading">
+        <line-tab model-value="readme">
+          <Readme :html="readme"></Readme>
+        </line-tab>
+        <line-tab model-value="usage">
+          <line-lazy :value="tab === 'usage'">
+            <Repl :value="source"></Repl>
+          </line-lazy>
+        </line-tab>
 
-      <template #top>
-        <line-tab-bar
-          v-model="select"
-          translucent
-          style="text-transform: capitalize;"
-        >
-          <line-tab-button model-value="readme">
-            Readme
-          </line-tab-button>
-          <template v-for="(key, index) in resource.usage.keys">
-            <line-tab-button :key="index" :model-value="key">
-              {{ key === 'index' ? 'Usage' : key }}
+        <template #top>
+          <line-tab-bar
+            v-model="select"
+            translucent
+            style="text-transform: capitalize;"
+          >
+            <line-tab-button model-value="readme">
+              Readme
             </line-tab-button>
-          </template>
-        </line-tab-bar>
-      </template>
-    </line-tabs>
+            <template v-for="(key, index) in resource.usage.keys">
+              <line-tab-button :key="index" :model-value="key">
+                {{ key === 'index' ? 'Usage' : key }}
+              </line-tab-button>
+            </template>
+          </line-tab-bar>
+        </template>
+      </line-tabs>
+    </template>
   </div>
 </template>
 

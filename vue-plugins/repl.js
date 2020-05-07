@@ -38,6 +38,13 @@ module.exports = (api, options) => {
         }
       });
 
+      const execa = require('execa');
+
+      execa.sync('node', ['scripts/update-usages.js'], {
+        stdio: 'inherit',
+        cwd: api.resolve(`packages/${process.env.TARGET}`),
+      });
+
       const { build } = args;
       const command = build ? 'build' : 'serve';
       api.service.run(command, args, rawArgs);

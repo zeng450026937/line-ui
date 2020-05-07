@@ -3204,6 +3204,7 @@ html.plt-mobile .line-app {
 
 .line-font-icon {
   font-size: 24px;
+  font-style: normal;
   user-select: none;
 }
 
@@ -3228,6 +3229,7 @@ html.plt-mobile .line-app {
 
 .line-font-icon {
   font-size: 24px;
+  font-style: normal;
   user-select: none;
 }
 
@@ -4446,7 +4448,7 @@ html.plt-mobile .line-app {
   margin-top: 0;
   margin-bottom: 0;
 }
-.line-ripple-effect {
+.line-item .line-ripple-effect {
   color: var(--ripple-color);
 }
 
