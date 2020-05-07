@@ -5,7 +5,8 @@ import { isObject, isString } from '@line-ui/line/src/utils/helpers';
 export type IntersectHandler = (
   entries: IntersectionObserverEntry[],
   observer: IntersectionObserver,
-  isIntersecting: boolean
+  isIntersecting: boolean,
+  el: Element
 ) => void;
 
 export interface IntersectOptions {
@@ -32,7 +33,7 @@ export function createIntersect(el: HTMLElement, options: IntersectOptions) {
       if (handler && (!quiet || inited)) {
         const isIntersecting = entries.some((entry) => entry.isIntersecting);
 
-        handler(entries, observer, isIntersecting);
+        handler(entries, observer, isIntersecting, el);
       }
 
       // If has already been initted and
@@ -72,7 +73,7 @@ export interface ObserveVNodeDirective extends VNodeDirective {
 function inserted(el: HTMLElement, binding: ObserveVNodeDirective) {
   const { value, arg, modifiers } = binding;
 
-  if (!value || !arg) return;
+  if (!value) return;
 
   const options = isObject(value)
     ? (value as IntersectOptions)

@@ -1,21 +1,22 @@
 <template>
   <div class="menu-wrapper">
-    <template v-for="res in resources">
-      <!-- <line-item :key="res.name" lines="none">
-          {{ res.name.replace('-', ' ') }}
-        </line-item> -->
-      <line-list :key="res.name">
-        <line-list-header>
-          {{ res.name.replace('-', ' ') }}
-        </line-list-header>
-
-        <template v-for="(usage, index) in res.usage.keys">
-          <line-item :key="index" lines="none">
-            <div>{{ usage }}</div>
-          </line-item>
-        </template>
-      </line-list>
-    </template>
+    <line-list>
+      <template v-for="res in resources">
+        <line-item
+          :key="res.name"
+          button
+          lines="none"
+          :detail="false"
+          :class="{ 'has-focus': res.name === component }"
+          @click="go(`/${res.name}`)"
+        >
+          <template #start>
+            <div class="item-indicator"></div>
+          </template>
+          <line-label>{{ res.name.replace(/-/g, ' ') }}</line-label>
+        </line-item>
+      </template>
+    </line-list>
   </div>
 </template>
 
@@ -24,10 +25,21 @@ import Vue from 'vue';
 
 export default Vue.extend({
   store: {
-    state: {
-      resources(store) {
-        return store.resources.filter((res) => res.usage.keys.length);
-      },
+    state: ['resources'],
+  },
+
+  computed: {
+    component() {
+      return this.$route.params.component;
+    },
+    usage() {
+      return this.$route.params.usage;
+    },
+  },
+
+  methods: {
+    go(to) {
+      this.$router.push(to).catch(() => {});
     },
   },
 });
@@ -35,11 +47,7 @@ export default Vue.extend({
 
 <style lang="scss">
 .menu-wrapper {
-  display: flex;
   position: relative;
-
-  flex-direction: column;
-  justify-content: flex-start;
 
   width: 304px;
   height: 100%;
@@ -49,27 +57,51 @@ export default Vue.extend({
 
   overflow-y: auto;
 
-  .line-list,
-  .line-list-header,
-  .line-item {
-    --background: rgba(230, 230, 230, 0.5);
-    --background-focused: #e6e6e6;
-    backdrop-filter: saturate(180%) blur(20px);
+  .line-list {
+    --line-item-background: transparent;
   }
 
-  .line-list-header {
+  .line-item {
+    --min-height: 50px;
+    --padding-start: 28px;
+    --background-hover: rgba(212, 212, 212, 0.5);
+    --background-activated: rgba(212, 212, 212, 1);
+
     font-size: 1em;
 
     text-transform: capitalize;
-  }
-
-  .line-item {
-    --min-height: 32px;
-    font-size: 0.9em;
-
-    text-transform: lowercase;
 
     cursor: pointer;
+
+    .item-detail-icon {
+      /* prettier-ignore */
+      font-family: "MaterialIcons-Regular";
+      font-style: normal;
+
+      text-transform: none;
+    }
+
+    .item-indicator {
+      position: absolute;
+
+      left: 0;
+
+      width: 4px;
+      height: 1.5em;
+
+      transition: opacity 200ms ease;
+
+      background: #0078d7;
+
+      opacity: 0;
+    }
+  }
+  .line-item.has-focus {
+    --background: rgba(212, 212, 212, 0.5);
+
+    .item-indicator {
+      opacity: 1;
+    }
   }
 }
 </style>

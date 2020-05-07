@@ -5,14 +5,23 @@ import { addResizeListener } from '@line-ui/line/src/utils/dom';
 export interface DimensionOptions {
   callback: (el: HTMLElement) => void;
   passive?: boolean;
+  quiet?: boolean;
+  once?: boolean;
 }
 
 export function createDimension(el: HTMLElement, options: DimensionOptions) {
-  const { callback } = options;
+  const { callback, quiet, once } = options;
 
-  const destroy = addResizeListener(el, () => callback(el));
+  const destroy = addResizeListener(el, () => {
+    callback(el);
+    if (once) {
+      destroy();
+    }
+  });
 
-  callback(el);
+  if (!quiet) {
+    callback(el);
+  }
 
   return {
     destroy,

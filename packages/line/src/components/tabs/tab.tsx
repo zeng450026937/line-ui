@@ -12,33 +12,15 @@ export default /*#__PURE__*/ createComponent({
     tab: String,
   },
 
-  data() {
-    return {};
-  },
-
-  methods: {
-    onClick() {
-      if (this.checked) {
-        return;
-      }
-      if (this.checkable && !this.disabled) {
-        this.checked = true;
-      }
-    },
-  },
-
   render() {
-    const { checked, tab } = this;
+    const { checked, tab, modelValue } = this;
 
     return (
       <div
-        class={[
-          bem({ hidden: !checked }),
-          // { 'line-page': component === undefined },
-        ]}
+        class={[bem({ hidden: !checked }), { 'line-page': this.hasSlot() }]}
         role="tabpanel"
         aria-hidden={!checked ? 'true' : null}
-        aria-labelledby={`tab-button-${tab}`}
+        aria-labelledby={`tab-button-${tab || modelValue}`}
         on={this.$listeners}
       >
         {this.slots()}

@@ -16,7 +16,6 @@ export default /*#__PURE__*/ createComponent({
       type: Boolean,
       default: true,
     },
-    value: String,
     translucent: Boolean,
     keyboardVisible: Boolean,
     selectedTab: String,

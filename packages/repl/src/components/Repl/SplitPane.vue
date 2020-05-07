@@ -1,5 +1,5 @@
 <template>
-  <div class="split-pane" v-dimension="onDimension">
+  <div class="split-pane" v-dimension="layout" v-intersect.once="onIntersect">
     <div class="pane" :style="`${dimension}: ${clampedPos}%;`">
       <slot name="start"></slot>
     </div>
@@ -68,11 +68,25 @@ export default Vue.extend({
     },
   },
 
+  watch: {
+    async clampedPos(val) {
+      await this.$nextTick();
+      this.$emit('layout', val);
+    },
+  },
+
   methods: {
-    onDimension(el: Element) {
+    layout() {
+      const el = this.$el;
       this.w = el.clientWidth;
       this.h = el.clientHeight;
     },
+    onIntersect(entries, observer, visible) {
+      if (visible) {
+        this.layout();
+      }
+    },
+
     onDrag(dragging: true, ev: MouseEvent) {
       this.dragging = dragging;
       this.setPos(ev);

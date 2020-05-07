@@ -82,8 +82,8 @@ const parseTag = (content) => {
   return new Set(tags.filter((tag) => !htmlTagSet.has(tag)));
 };
 
-// const dirRE = /(?<=\sv-)[^/>=\s]+/g;
-const dirRE = /(?<=\s)v-[^/>=\s]+/g;
+// const dirRE = /(?<=\sv-)[^/>=\s.]+/g;
+const dirRE = /(?<=\s)v-[^/>=\s.]+/g;
 const parseDir = (content) => {
   const tags = content.match(dirRE) || [];
   return new Set(tags);

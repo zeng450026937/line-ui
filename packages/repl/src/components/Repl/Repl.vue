@@ -1,10 +1,10 @@
 <template>
   <div class="repl">
-    <SplitPane type="horizontal">
+    <SplitPane type="horizontal" @layout="onLayout">
       <template #start>
         <section>
           <div class="repl-editor">
-            <TemplateEditor v-model="source"></TemplateEditor>
+            <TemplateEditor v-model="source" ref="editor"></TemplateEditor>
             <Message v-if="error" :detail="error" kind="error"></Message>
           </div>
         </section>
@@ -111,6 +111,13 @@ export default Vue.extend({
         });
         window.component.$mount();
       `;
+    },
+  },
+
+  methods: {
+    onLayout(val) {
+      const { editor } = this.$refs;
+      editor.layout();
     },
   },
 });

@@ -4,7 +4,7 @@ const createReadmeLoader = (name: keyof typeof usages) => {
   const load = async () => {
     const item = await import(
       /* webpackChunkName: "readme/[index]" */
-      `!!../string-loader/index.js!../../line/src/components/${name}/readme.md`
+      `../../line/src/components/${name}/readme.md`
     );
     return item.default;
   };

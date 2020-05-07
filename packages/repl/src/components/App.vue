@@ -6,8 +6,8 @@
 
     <line-content>
       <div class="container">
-        <Menu></Menu>
-        <Repl></Repl>
+        <Menu style="flex-shrink: 0;"></Menu>
+        <Viewer style="flex-grow: 1;"></Viewer>
       </div>
     </line-content>
   </line-app>
@@ -17,10 +17,10 @@
 import Vue from 'vue';
 import Header from './Header.vue';
 import Menu from './Menu.vue';
-import Repl from './Repl/Repl.vue';
+import Viewer from './Viewer.vue';
 
 export default Vue.extend({
-  components: { Header, Menu, Repl },
+  components: { Header, Menu, Viewer },
   mounted() {
     window.addEventListener(
       'keydown',

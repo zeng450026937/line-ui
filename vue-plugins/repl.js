@@ -11,7 +11,6 @@ module.exports = (api, options) => {
       process.env.LINE_DEV = true;
 
       options['line-ui'] = { autoimport: false };
-      options.publicPath = '';
 
       api.chainWebpack((config) => {
         config.externals({

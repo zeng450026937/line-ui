@@ -79,6 +79,19 @@ module.exports = (api, options) => {
       if (fs.existsSync(publicDir)) {
         tapCopy();
       }
+
+      const tapMarkdown = () => {
+        config.module
+          .rule('markdown')
+          .test(/\.md$/)
+          // .use('vue-loader')
+          // .loader('vue-loader')
+          // .end()
+          .use('markdown-loader')
+          .loader(require.resolve('@line-ui/markdown-loader'));
+      };
+
+      tapMarkdown();
     }
   });
 };

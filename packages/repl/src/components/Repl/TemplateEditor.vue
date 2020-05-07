@@ -1,5 +1,5 @@
 <template>
-  <div class="template-editor" ref="container" v-dimension="onDimension"></div>
+  <div class="template-editor" ref="container"></div>
 </template>
 
 <script lang="ts">
@@ -57,12 +57,21 @@ export default Vue.extend({
         })
       );
 
+      // initial layout
+      editor.layout();
+
       this.editor = editor;
     });
   },
 
+  beforeDestroy() {
+    if (this.editor) {
+      this.editor.dispose();
+    }
+  },
+
   methods: {
-    onDimension(): void {
+    layout() {
       const { editor } = this;
       if (editor) {
         editor.layout();
