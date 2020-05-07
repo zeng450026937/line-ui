@@ -7,6 +7,8 @@ module.exports = {
   // disable eslint-loader in production env
   lintOnSave: process.env.NODE_ENV !== 'production',
 
+  publicPath: process.env.PUBLIC_PATH || '/',
+
   chainWebpack: (config) => {
     const masterVersion = require(path.resolve('package.json')).version;
 
