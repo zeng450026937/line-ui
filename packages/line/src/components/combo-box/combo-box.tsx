@@ -143,7 +143,7 @@ export default /*#__PURE__*/ createComponent({
   },
 
   render() {
-    const { visible, options } = this;
+    const { visible, options = [] } = this;
 
     return (
       <div class={bem()} vShow={visible} on={this.$listeners}>
