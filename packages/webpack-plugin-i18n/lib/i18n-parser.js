@@ -238,15 +238,15 @@ class I18NParser {
             // and fire warning, as only string key is allowed in object
             if (!evaluated.isString()) {
               console.warn(
-                `it is recommended alawys using string key for i18n: ${key.name}`
+                `It is recommended alawys using string key for i18n @${file}: ${expr.start}~${expr.end}`
               );
               return;
             }
             return evaluated.string;
           };
 
-          const key = parse(arg1);
           const file = relative(resource);
+          const key = parse(arg1);
           // if no config key
           if (!key) return;
 
