@@ -164,7 +164,7 @@ const lookup = {
       Tooltip: ['Overlay'],
       // ---- //
       Button: ['vRipple'],
-      CheckBox: ['vRipple'],
+      CheckBox: ['vRipple', 'CheckIndicator'],
       Chip: ['vRipple'],
       CollapseItem: ['Icon'],
       ComboBox: ['ComboBoxItem'],
