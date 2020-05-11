@@ -37,6 +37,14 @@ exports.hyphenate = (str) => {
   return str.replace(hyphenateRE, '-$1').toLowerCase();
 };
 
+exports.uncapitalize = (str) => {
+  return str.charAt(0).toLowerCase() + str.slice(1);
+};
+
+exports.capitalize = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+};
+
 // stable stringify with alphabetically
 exports.stringifyJSON = (obj, ...args) => {
   const keys = [];
@@ -64,4 +72,14 @@ exports.debounce = (fn, delay = 1000) => {
       prevTimer = null;
     }, delay);
   };
+};
+
+exports.slice = (array, size) => {
+  const result = [];
+  for (let index = 0; index < Math.ceil(array.length / size); index++) {
+    const start = index * size;
+    const end = start + size;
+    result.push(array.slice(start, end));
+  }
+  return result;
 };

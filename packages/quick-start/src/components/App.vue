@@ -26,7 +26,8 @@ export default Vue.extend({
 
   color: #fff;
 
-  font-family: 'Montserrat';
+  // prettier-ignore
+  font-family: "Montserrat";
   font-size: 50px;
 
   line-height: 40px;

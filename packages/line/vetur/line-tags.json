@@ -1,0 +1,276 @@
+{
+  "line-action-sheet": {
+    "attributes": [],
+    "description": "An Action Sheet is a dialog that displays a set of options. It appears on top of the app's content, and must be manually dismissed by the user before they can resume interaction with the app. Destructive options are made obvious in ios mode. There are multiple ways to dismiss the action sheet, including tapping the backdrop or hitting the escape key on desktop."
+  },
+  "line-alert": {
+    "attributes": [],
+    "description": "An Alert is a dialog that presents users with information or collects information from the user using inputs. An alert appears on top of the app's content, and must be manually dismissed by the user before they can resume interaction with the app. It can also optionally have a header, subHeader and message."
+  },
+  "line-app": {
+    "attributes": [
+      "id"
+    ],
+    "description": "App is a container element for an Ionic application. There should only be one <line-app> element per project. An app can have many line-ui components including menus, headers, content, and footers. The overlay components get appended to the <line-app> when they are presented."
+  },
+  "line-avatar": {
+    "attributes": [],
+    "description": "Avatars are circular components that usually wrap an image or icon. They can be used to represent a person or an object.\nAvatars can be used by themselves or inside of any element. If placed inside of an line-chip or line-item, the avatar will resize to fit the parent component. To position an avatar on the left or right side of an item, set the slot to start or end, respectively."
+  },
+  "line-badge": {
+    "attributes": [],
+    "description": "Badges are inline block elements that usually appear near another element. Typically they contain a number or other characters. They can be used as a notification that there are additional items associated with an element and indicate how many items there are."
+  },
+  "line-busy-indicator": {
+    "attributes": [],
+    "description": ""
+  },
+  "line-button": {
+    "attributes": [],
+    "description": "Buttons provide a clickable element, which can be used in forms, or anywhere that needs simple, standard button functionality. They may display text, icons, or both. Buttons can be styled with several attributes to look a specific way."
+  },
+  "line-card": {
+    "attributes": [],
+    "description": "Cards are a standard piece of UI that serves as an entry point to more detailed\ninformation. A card can be a single component, but is often made up of some\nheader, title, subtitle, and content. line-card is broken up into several\nsub-components to reflect this. Please see line-card-content,\nline-card-header, line-card-title, line-card-subtitle."
+  },
+  "line-check-box": {
+    "attributes": [],
+    "description": "Checkboxes allow the selection of multiple options from a set of options. They appear as checked (ticked) when activated. Clicking on a checkbox will toggle the checked property. They can also be checked programmatically by setting the checked property."
+  },
+  "line-chip": {
+    "attributes": [],
+    "description": "Chips represent complex entities in small blocks, such as a contact. A chip can contain several different elements such as avatars, text, and icons."
+  },
+  "line-col": {
+    "attributes": [],
+    "description": "Columns are cellular components of the grid system and go inside of a row.\nThey will expand to fill their row. All content within a grid should go inside of a column."
+  },
+  "line-collapse": {
+    "attributes": [],
+    "description": ""
+  },
+  "line-combo-box": {
+    "attributes": [],
+    "description": ""
+  },
+  "line-content": {
+    "attributes": [],
+    "description": "The content component provides an easy to use content area with some useful methods\nto control the scrollable area. There should only be one content in a single\nview.\nContent, along with many other Ionic components, can be customized to modify its padding, margin, and more using the global styles provided in the CSS Utilities or by individually styling it using CSS and the available CSS Custom Properties."
+  },
+  "line-datetime": {
+    "attributes": [],
+    "description": "Datetimes present a picker interface from the bottom of a page, making it easy for\nusers to select dates and times. The picker displays scrollable columns that can be\nused to individually select years, months, days, hours and minute values. Datetimes\nare similar to the native input elements of type datetime-local, however, Ionic's\nDatetime component makes it easy to display the date and time in a preferred format,\nand manage the datetime values."
+  },
+  "line-fab": {
+    "attributes": [],
+    "description": "Fabs are container elements that contain one or more fab buttons. They should be placed in a fixed position that does not scroll with the content. Fab should have one main fab-button. Fabs can also contain fab-lists which contain related buttons that show when the main fab button is clicked. The same fab container can contain several fab-group elements with different side values."
+  },
+  "line-fab-button": {
+    "attributes": [],
+    "description": "Floating Action Buttons (FABs) represent the primary action in an application. By default, they have a circular shape. When pressed, the button may open more related actions. As the name suggests, FABs generally float over the content in a fixed position. This is not achieved exclusively by using an <line-fab-button>FAB</line-fab-button>. They need to be wrapped with an <line-fab> component in order to be fixed over the content.\nIf the FAB button is not wrapped with <line-fab>, it will scroll with the content. FAB buttons have a default size, a mini size and can accept different colors."
+  },
+  "line-fab-group": {
+    "attributes": [],
+    "description": "The line-fab-list element is a container for multiple fab buttons. This collection of fab buttons contains actions related to the main fab button and is flung out on click. To specify what side the buttons should appear on, set the side property to 'start', 'end', 'top', 'bottom'"
+  },
+  "line-footer": {
+    "attributes": [],
+    "description": "Footer is a root component of a page that sits at the bottom of the page.\nFooter can be a wrapper for line-toolbar to make sure the content area is sized correctly."
+  },
+  "line-grid": {
+    "attributes": [],
+    "description": "The grid is a powerful mobile-first flexbox system for building custom layouts.\nIt is composed of three units — a grid, row and column. Columns will expand to fill the row, and will resize to fit additional columns. It is based on a 12 column layout with different breakpoints based on the screen size. The number of columns can be customized using CSS."
+  },
+  "line-header": {
+    "attributes": [],
+    "description": "Header is a parent component that holds the toolbar component.\nIt's important to note that ion-header needs to be the one of the three root elements of a page"
+  },
+  "line-icon": {
+    "attributes": [],
+    "description": ""
+  },
+  "line-image": {
+    "attributes": [],
+    "description": "Img is a tag that will lazily load an image when ever the tag is in the viewport. This is extremely useful when generating a large list as images are only loaded when they're visible. The component uses Intersection Observer internally, which is supported in most modern browser, but falls back to a setTimeout when it is not supported."
+  },
+  "line-infinite-scroll": {
+    "attributes": [],
+    "description": "The Infinite Scroll component calls an action to be performed when the user scrolls a specified distance from the bottom or top of the page.\nThe expression assigned to the line-infinite event is called when the user reaches that defined distance. When this expression has finished any and all tasks, it should call the complete() method on the infinite scroll instance."
+  },
+  "line-infinite-scroll-content": {
+    "attributes": [],
+    "description": "The line-infinite-scroll-content component is the default child used by the line-infinite-scroll. It displays an infinite scroll spinner that looks best based on the platform and changes the look depending on the infinite scroll's state. The default spinner can be changed and text can be added by setting the loadingSpinner and loadingText properties."
+  },
+  "line-input": {
+    "attributes": [],
+    "description": "The input component is a wrapper to the HTML input element with custom styling and additional functionality. It accepts most of the same properties as the HTML input, but works great on desktop devices and integrates with the keyboard on mobile devices.\nIt is meant for text type inputs only, such as \"text\", \"password\", \"email\", \"number\", \"search\", \"tel\", and \"url\". It supports all standard text input events including keyup, keydown, keypress, and more."
+  },
+  "line-item": {
+    "attributes": [],
+    "description": "Items are elements that can contain text, icons, avatars, images, inputs, and any other native or custom elements. Generally they are placed in a list with other items. Items can be swiped, deleted, reordered, edited, and more."
+  },
+  "line-item-divider": {
+    "attributes": [],
+    "description": "Item Dividers are block elements that can be used to separate items in a list. They are similar to list headers, but instead of being placed at the top of a list, they should go in between groups of items."
+  },
+  "line-item-group": {
+    "attributes": [],
+    "description": "Item groups are containers that organize similar items together. They can contain item dividers to divide the items into multiple sections. They can also be used to group sliding items."
+  },
+  "line-item-option": {
+    "attributes": [],
+    "description": "The option button for an line-item-sliding. Must be placed inside of an <line-item-options>.\nYou can combine the swipe event and the expandable directive to create a full swipe\naction for the item."
+  },
+  "line-item-options": {
+    "attributes": [],
+    "description": "The option buttons for an line-item-sliding. These buttons can be placed either on the start or end side.\nYou can combine the swipe event plus the expandable directive to create a full swipe action for the item."
+  },
+  "line-item-sliding": {
+    "attributes": [],
+    "description": "A sliding item contains an item that can be dragged to reveal buttons. It requires an item component as a child. All options to reveal should be placed in the item element."
+  },
+  "line-label": {
+    "attributes": [],
+    "description": "Label is a wrapper element that can be used in combination with line-item, line-input, line-toggle, and more. The position of the label inside of an item can be inline, fixed, stacked, or floating."
+  },
+  "line-list": {
+    "attributes": [],
+    "description": "Lists are made up of multiple rows of items which can contain text, buttons, toggles,\nicons, thumbnails, and much more. Lists generally contain items with similar data content, such as images and text.\nLists support several interactions including swiping items to reveal options, dragging to reorder items within the list, and deleting items."
+  },
+  "line-list-header": {
+    "attributes": [],
+    "description": "ListHeader a header component for a list.\nUnlike ItemDivider, ListHeaders are styled to be stand-out from the rest of the list items."
+  },
+  "line-list-view": {
+    "attributes": [],
+    "description": ""
+  },
+  "line-loading": {
+    "attributes": [],
+    "description": "An overlay that can be used to indicate activity while blocking user interaction. The loading indicator appears on top of the app's content, and can be dismissed by the app to resume user interaction with the app. It includes an optional backdrop, which can be disabled by setting showBackdrop: false upon creation."
+  },
+  "line-menu": {
+    "attributes": [],
+    "description": "The Menu component is a navigation drawer that slides in from the side of the current view.\nBy default, it slides in from the left, but the side can be overridden.\nThe menu will be displayed differently based on the mode, however the display type can be changed to any of the available menu types.\nThe menu element should be a sibling to the root content element.\nThere can be any number of menus attached to the content.\nThese can be controlled from the templates, or programmatically using the MenuController."
+  },
+  "line-note": {
+    "attributes": [],
+    "description": "Notes are text elements generally used as subtitles that provide more information. Notes are styled to appear grey by default. Notes can be used in an item as metadata text."
+  },
+  "line-overlay": {
+    "attributes": [],
+    "description": "Overlay are full screen components that overlay other components. They are useful behind components that transition in on top of other content and can be used to dismiss that component."
+  },
+  "line-picker": {
+    "attributes": [],
+    "description": "A Picker is a dialog that displays a row of buttons and columns underneath. It appears on top of the app's content, and at the bottom of the viewport."
+  },
+  "line-picker-column": {
+    "attributes": [],
+    "description": ""
+  },
+  "line-popover": {
+    "attributes": [],
+    "description": "A Popover is a dialog that appears on top of the current page. It can be used for anything, but generally it is used for overflow actions that don't fit in the navigation bar."
+  },
+  "line-popup": {
+    "attributes": [],
+    "description": "A Popup is a dialog that appears on top of the app's content, and must be dismissed by the app before interaction can resume. It is useful as a select component when there are a lot of options to choose from, or when filtering items in a list, as well as many other use cases."
+  },
+  "line-progress-bar": {
+    "attributes": [],
+    "description": "line-progress-bar is a horizontal progress bar to visualize the progression of an operation and activity. You can choose between two types: determinate and indeterminate."
+  },
+  "line-radio": {
+    "attributes": [],
+    "description": "Radios should be used inside of an line-radio-group. Pressing on a radio will check it. They can also be checked programmatically by setting the value property of the parent line-radio-group to the value of the radio.\nWhen radios are inside of a radio group, only one radio in the group will be checked at any time. Pressing a radio will check it and uncheck the previously selected radio, if there is one. If a radio is not in a group with another radio, then both radios will have the ability to be checked at the same time."
+  },
+  "line-range": {
+    "attributes": [],
+    "description": "The Range slider lets users select from a range of values by moving\nthe slider knob. It can accept dual knobs, but by default one knob\ncontrols the value of the range."
+  },
+  "line-refresher": {
+    "attributes": [],
+    "description": "The refresher provides pull-to-refresh functionality on a content component.\nThe pull-to-refresh pattern lets a user pull down on a list of data using touch\nin order to retrieve more data.\nData should be modified during the refresher's output events. Once the async\noperation has completed and the refreshing should end, call complete() on the\nrefresher."
+  },
+  "line-refresher-content": {
+    "attributes": [],
+    "description": "The refresher content contains the text, icon and spinner to display during a pull-to-refresh. Ionic provides the pulling icon and refreshing spinner based on the platform. However, the default icon, spinner, and text can be customized based on the state of the refresher."
+  },
+  "line-reorder": {
+    "attributes": [],
+    "description": "Reorder is a component that allows an item in a group of items to be dragged to change its order within that group. It must be used within an line-reorder-group to provide a visual drag and drop interface.\nline-reorder is the anchor used to drag and drop the items inside of the line-reorder-group. See the Reorder Group for more information on how to complete the reorder operation."
+  },
+  "line-reorder-group": {
+    "attributes": [],
+    "description": "The reorder group is a wrapper component for items using the line-reorder component. See the Reorder for further information about the anchor component that is used to drag items within the line-reorder-group.\nOnce the user drags an item and drops it in a new position, the reorder event is dispatched. A handler for it should be implemented that calls the complete() method.\nThe detail property of the reorder event includes all of the relevant information about the reorder operation, including the from and to indexes. In the context of reordering, an item moves from an index to a new index."
+  },
+  "line-row": {
+    "attributes": [],
+    "description": "Rows are horizontal components of the grid system and contain varying numbers of\ncolumns. They ensure the columns are positioned properly.\nSee Grid Layout for more information."
+  },
+  "line-segment": {
+    "attributes": [],
+    "description": "Segments display a group of related buttons, sometimes known as segmented controls, in a horizontal row. They can be displayed inside of a toolbar or the main content.\nTheir functionality is similar to tabs, where selecting one will deselect all others. Segments are useful for toggling between different views inside of the content. Tabs should be used instead of a segment when clicking on a control should navigate between pages."
+  },
+  "line-segment-button": {
+    "attributes": [],
+    "description": "Segment buttons are groups of related buttons inside of a Segment. They are displayed in a horizontal row. A segment button can be checked by default by adding the checked attribute or by setting the value of the segment to the value of the segment button. Only one segment button should be selected at a time."
+  },
+  "line-skeleton-text": {
+    "attributes": [],
+    "description": "Skeleton Text is a component for rendering placeholder content. The element will render a gray block at the specified width."
+  },
+  "line-slide": {
+    "attributes": [],
+    "description": "The Slide component is a child component of Slides. The template\nshould be written as line-slide. Any slide content should be written\nin this component and it should be used in conjunction with `Slides.\nSee the Slides API Docs for more usage information."
+  },
+  "line-slides": {
+    "attributes": [],
+    "description": "The Slides component is a multi-section container. Each section can be swiped\nor dragged between. It contains any number of Slide components.\nAdopted from Swiper.js:\nThe most modern mobile touch slider and framework with hardware accelerated transitions.\nhttp://www.idangero.us/swiper/\nCopyright 2016, Vladimir Kharlampidi\nThe iDangero.us\nhttp://www.idangero.us/\nLicensed under MIT"
+  },
+  "line-spiner": {
+    "attributes": [],
+    "description": "The Spinner component provides a variety of animated SVG spinners. Spinners are visual indicators that the app is loading content or performing another process that the user needs to wait on.\nThe default spinner to use is based on the platform. The default spinner for ios is \"lines\", and the default for android is \"crescent\". If the platform is not ios or android, the spinner will default to crescent. If the name property is set, then that spinner will be used instead of the platform specific spinner."
+  },
+  "line-switch": {
+    "attributes": [],
+    "description": ""
+  },
+  "line-tab-bar": {
+    "attributes": [],
+    "description": "The tab bar is a UI component that contains a set of tab buttons. A tab bar must be provided inside of tabs to communicate with each tab."
+  },
+  "line-tab-button": {
+    "attributes": [],
+    "description": "A tab button is a UI component that is placed inside of a tab bar. The tab button can specify the layout of the icon and label and connect to a tab view.\nSee the tabs documentation for more details on configuring tabs."
+  },
+  "line-tabs": {
+    "attributes": [],
+    "description": "Tabs are a top level navigation component to implement a tab-based navigation.\nThe component is a container of individual Tab components.\nThe line-tabs component does not have any styling and works as a router outlet in order to handle navigation. It does not provide any UI feedback or mechanism to switch between tabs. In order to do so, an line-tab-bar should be provided as a direct child of line-tabs.\nBoth line-tabs and line-tab-bar can be used as standalone elements. They don’t depend on each other to work, but they are usually used together in order to implement a tab-based navigation that behaves like a native app.\nThe line-tab-bar needs a slot defined in order to be projected to the right place in an line-tabs component."
+  },
+  "line-text-area": {
+    "attributes": [],
+    "description": "The textarea component is used for multi-line text input. A native textarea element is rendered inside of the component. The user experience and interactivity of the textarea component is improved by having control over the native textarea.\nUnlike the native textarea element, the Ionic textarea does not support loading its value from the inner content. The textarea value should be set in the value attribute.\nThe textarea component accepts the native textarea attributes in addition to the Ionic properties."
+  },
+  "line-thumbnail": {
+    "attributes": [],
+    "description": "Thumbnails are square components that usually wrap an image or icon. They can be used to make it easier to display a group of larger images or provide a preview of the full-size image.\nThumbnails can be used by themselves or inside of any element. If placed inside of an line-item, the thumbnail will resize to fit the parent component. To position a thumbnail on the left or right side of an item, set the slot to start or end, respectively."
+  },
+  "line-title": {
+    "attributes": [],
+    "description": "line-title is a component that sets the title of the Toolbar."
+  },
+  "line-toast": {
+    "attributes": [],
+    "description": "A Toast is a subtle notification commonly used in modern applications. It can be used to provide feedback about an operation or to display a system message. The toast appears on top of the app's content, and can be dismissed by the app to resume user interaction with the app."
+  },
+  "line-toolbar": {
+    "attributes": [],
+    "description": "Toolbars are positioned above or below content. When a toolbar is placed in an <line-header> it will appear fixed at the top of the content, and when it is in an <line-footer> it will appear fixed at the bottom. Fullscreen content will scroll behind a toolbar in a header or footer. When placed within an <line-content>, toolbars will scroll with the content."
+  },
+  "line-tooltip": {
+    "attributes": [],
+    "description": ""
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "line-app/id": {
+    "type": "string",
+    "description": "application id"
+  }
+}

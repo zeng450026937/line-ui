@@ -27,7 +27,7 @@ export default Vue.extend({
     margin: 0 auto;
 
     h1 {
-      text-transform: uppercase;
+      text-transform: capitalize;
     }
   }
 }

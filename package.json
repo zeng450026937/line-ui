@@ -108,9 +108,5 @@
     "service": [
       "vue.plugin.js"
     ]
-  },
-  "vetur": {
-    "tags": "",
-    "attributes": ""
   }
 }
