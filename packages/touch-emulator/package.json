@@ -1,6 +1,6 @@
 {
   "name": "@line-ui/touch-emulator",
-  "version": "1.0.0-alpha.5",
+  "version": "1.0.0-alpha.6",
   "description": "line-ui touch emulator",
   "main": "index.js",
   "publishConfig": {

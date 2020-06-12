@@ -1,6 +1,6 @@
 {
   "name": "@line-ui/babel-preset-line",
-  "version": "1.0.0-alpha.5",
+  "version": "1.0.0-alpha.6",
   "description": "@line-ui/babel-preset-line",
   "main": "index.js",
   "files": [
@@ -12,6 +12,6 @@
   "author": "LINE-UI Team",
   "license": "MIT",
   "dependencies": {
-    "@line-ui/babel-plugin-effect": "1.0.0-alpha.5"
+    "@line-ui/babel-plugin-effect": "1.0.0-alpha.6"
   }
 }

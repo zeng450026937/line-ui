@@ -1,6 +1,6 @@
 {
   "name": "@line-ui/webpack-plugin-tag",
-  "version": "1.0.0-alpha.5",
+  "version": "1.0.0-alpha.6",
   "description": "@line-ui/webpack-plugin-tag",
   "main": "index.js",
   "files": [

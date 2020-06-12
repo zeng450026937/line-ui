@@ -1887,8 +1887,11 @@ const generateKeyframeName = (keyframeRules) => {
     return `line-animation-${index}`;
 };
 const getStyleContainer = (element) => {
+    if (!element.getRootNode) {
+        return document.head;
+    }
     const rootNode = element.getRootNode();
-    return (rootNode.head || rootNode);
+    return rootNode.head || rootNode;
 };
 const createKeyframeStylesheet = (keyframeName, keyframeRules, element) => {
     const styleContainer = getStyleContainer(element);
@@ -5799,7 +5802,7 @@ var comboBox = /*#__PURE__*/createComponent$t({
     const h = arguments[0];
     const {
       visible,
-      options
+      options = []
     } = this;
     return h("div", helper([{
       "class": bem$r(),
@@ -10370,17 +10373,22 @@ var input = /*#__PURE__*/createComponent$S({
 
     setInputValue() {
       const {
-        input
-      } = this.$refs;
-      if (input.value === this.inputValue || !input) return;
-      input.value = this.inputValue;
+        nativeInput
+      } = this;
+      if (nativeInput.value === this.value || !nativeInput) return;
+      nativeInput.value = this.value || '';
+      this.nativeValue = this.value || '';
     },
 
     onInput(ev) {
       const input = ev.target;
 
       if (input) {
-        this.nativeValue = input.value || '';
+        const {
+          value
+        } = input;
+        this.$emit('inputChange', value);
+        this.$nextTick(this.setInputValue);
       }
     },
 
@@ -10465,6 +10473,7 @@ var input = /*#__PURE__*/createComponent$S({
       nativeInput
     } = this.$refs;
     this.nativeInput = nativeInput;
+    this.setInputValue();
   },
 
   watch: {
@@ -10474,6 +10483,14 @@ var input = /*#__PURE__*/createComponent$S({
 
     nativeValue() {
       this.emitStyle();
+    },
+
+    inputmode() {
+      this.$nextTick(this.setInputValue);
+    },
+
+    value() {
+      this.$nextTick(this.setInputValue);
     }
 
   },
@@ -10530,9 +10547,6 @@ var input = /*#__PURE__*/createComponent$S({
         "autocomplete": autocomplete,
         "autoFocus": autoFocus,
         "disabled": disabled
-      },
-      "domProps": {
-        "value": nativeValue
       },
       "on": {
         "input": this.onInput,
@@ -18508,7 +18522,7 @@ var mixins = /*#__PURE__*/Object.freeze({
 
 const Line = {
     install,
-    version: "1.0.0-alpha.5",
+    version: "1.0.0-alpha.6",
 };
 function defaulExport() {
     // auto install for umd build
@@ -18530,7 +18544,7 @@ function defaulExport() {
         directives,
         controllers,
         mixins,
-        version: "1.0.0-alpha.5",
+        version: "1.0.0-alpha.6",
     };
 }
 var index = /*#__PURE__*/ defaulExport();

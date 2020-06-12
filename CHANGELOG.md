@@ -1,3 +1,15 @@
+# [1.0.0-alpha.6](http://gitcode.yealink.com/yl1678/line-ui/compare/v1.0.0-alpha.5...v1.0.0-alpha.6) (2020-06-12)
+
+
+### Bug Fixes
+
+* **animation:** getRootNode ([88e0ea2](http://gitcode.yealink.com/yl1678/line-ui/commits/88e0ea21c34286b0f390db34fe2ed3df3c145c08))
+* **combo-box:** fix error ([caff548](http://gitcode.yealink.com/yl1678/line-ui/commits/caff54858b406ea4e1bc6dcf5eddeac9ab6d9524))
+* **i18n:** fix key error ([309d91f](http://gitcode.yealink.com/yl1678/line-ui/commits/309d91fff5d03bf0893abdcb412ede77010441c3))
+* **input:** v-model.tirm ([cdf2df8](http://gitcode.yealink.com/yl1678/line-ui/commits/cdf2df8caba3445de31468837f5ec09724859071))
+
+
+
 # [1.0.0-alpha.5](http://gitcode.yealink.com/server/client/web_app/line-ui/compare/v1.0.0-alpha.4...v1.0.0-alpha.5) (2020-04-30)
 
 

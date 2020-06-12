@@ -1,6 +1,6 @@
 {
   "name": "@line-ui/parallel",
-  "version": "1.0.0-alpha.5",
+  "version": "1.0.0-alpha.6",
   "description": "@line-ui/parallel",
   "main": "index.js",
   "module": "dist/parallel.esm-bundler.js",

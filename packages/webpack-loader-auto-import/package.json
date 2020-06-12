@@ -1,6 +1,6 @@
 {
   "name": "@line-ui/webpack-loader-auto-import",
-  "version": "1.0.0-alpha.5",
+  "version": "1.0.0-alpha.6",
   "description": "@line-ui/webpack-loader-auto-import",
   "main": "index.js",
   "files": [

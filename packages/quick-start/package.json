@@ -1,6 +1,6 @@
 {
   "name": "@line-ui/quick-start",
-  "version": "1.0.0-alpha.5",
+  "version": "1.0.0-alpha.6",
   "description": "line-ui quick-start",
   "files": [
     "dist"
@@ -11,9 +11,9 @@
   "private": true,
   "license": "MIT",
   "dependencies": {
-    "@line-ui/kom": "1.0.0-alpha.5",
-    "@line-ui/line": "1.0.0-alpha.5",
-    "@line-ui/vue-cli-plugin-line": "1.0.0-alpha.5",
+    "@line-ui/kom": "1.0.0-alpha.6",
+    "@line-ui/line": "1.0.0-alpha.6",
+    "@line-ui/vue-cli-plugin-line": "1.0.0-alpha.6",
     "vue": "^2.6.11",
     "vue-router": "^3.1.5"
   }

@@ -1,6 +1,6 @@
 {
   "name": "@line-ui/webpack-plugin-svg-sprite",
-  "version": "1.0.0-alpha.5",
+  "version": "1.0.0-alpha.6",
   "description": "@line-ui/webpack-plugin-svg-sprite",
   "main": "lib/plugin.js",
   "files": [
