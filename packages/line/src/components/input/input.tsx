@@ -114,16 +114,20 @@ export default /*#__PURE__*/ createComponent({
     },
 
     setInputValue(): void {
-      const { input } = this.$refs;
-      if ((input as HTMLInputElement).value === this.inputValue || !input)
-        return;
-      (input as HTMLInputElement).value = this.inputValue;
+      const { nativeInput } = this;
+      if (nativeInput.value === this.value || !nativeInput) return;
+      nativeInput.value = this.value || '';
+      this.nativeValue = this.value || '';
     },
 
     onInput(ev: Event): void {
       const input = ev.target as HTMLInputElement | null;
+
       if (input) {
-        this.nativeValue = input.value || '';
+        const { value } = input;
+        this.$emit('inputChange', value);
+
+        this.$nextTick(this.setInputValue);
       }
     },
 
@@ -209,6 +213,7 @@ export default /*#__PURE__*/ createComponent({
   mounted() {
     const { nativeInput } = this.$refs;
     this.nativeInput = nativeInput;
+    this.setInputValue();
   },
 
   watch: {
@@ -218,6 +223,14 @@ export default /*#__PURE__*/ createComponent({
 
     nativeValue() {
       this.emitStyle();
+    },
+
+    inputmode() {
+      this.$nextTick(this.setInputValue);
+    },
+
+    value() {
+      this.$nextTick(this.setInputValue);
     },
   },
 
@@ -265,7 +278,6 @@ export default /*#__PURE__*/ createComponent({
           ref="nativeInput"
           accept={accept}
           type={type}
-          value={nativeValue}
           size={size}
           maxlength={maxlength}
           max={max}
