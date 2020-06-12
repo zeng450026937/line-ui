@@ -112,8 +112,11 @@ export const generateKeyframeName = (keyframeRules: string) => {
 };
 
 export const getStyleContainer = (element: HTMLElement) => {
-  const rootNode = (element.getRootNode() as any);
-  return (rootNode.head || rootNode);
+  if (!element.getRootNode) {
+    return document.head;
+  }
+  const rootNode = element.getRootNode() as any;
+  return rootNode.head || rootNode;
 };
 
 export const createKeyframeStylesheet = (keyframeName: string, keyframeRules: string, element: HTMLElement): HTMLElement => {
