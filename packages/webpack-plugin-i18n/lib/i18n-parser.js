@@ -238,7 +238,8 @@ class I18NParser {
             // and fire warning, as only string key is allowed in object
             if (!evaluated.isString()) {
               console.warn(
-                `It is recommended alawys using string key for i18n @${file}: ${expr.start}~${expr.end}`
+                `It is recommended using string key for i18n @${file}: ${expr.start}~${expr.end}` +
+                  `non-string key is consider dynamic keys and ignored`
               );
               return;
             }
