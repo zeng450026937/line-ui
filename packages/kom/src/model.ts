@@ -145,7 +145,7 @@ export class Model extends Layer<ModelContext> {
     val?: any
   ) {
     if (key && !val) {
-      this.mixins.push(key as ModelDefines<Data, Computed, Methods, Props>);
+      this.mixins.push(key as ComponentOptions<Vue>);
       key = '';
     }
 
