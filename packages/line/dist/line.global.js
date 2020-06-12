@@ -2826,8 +2826,8 @@ var Line = (function (exports, Vue) {
       const { disableScroll = true } = options || {};
       return createMixins({
           mixins: [
+              useLazy(),
               useModel('visible'),
-              useLazy('visible'),
               useRemote(),
               // Popup lifecycle events depend on Transition mechanism
               // Transition should not be disabled
@@ -11140,7 +11140,7 @@ var Line = (function (exports, Vue) {
     bem: bem$D
   } = /*#__PURE__*/createNamespace('fab-group');
   var FabGroup = /*#__PURE__*/createComponent$F({
-    mixins: [/*#__PURE__*/useGroup(NAMESPACE$6), /*#__PURE__*/useLazy('visible'), /*#__PURE__*/useModel('visible')],
+    mixins: [/*#__PURE__*/useGroup(NAMESPACE$6), /*#__PURE__*/useLazy(), /*#__PURE__*/useModel('visible')],
     props: {
       // string | object | false
       transition: null,
@@ -28774,7 +28774,7 @@ var Line = (function (exports, Vue) {
 
   const Line = {
       install,
-      version: "1.0.0-alpha.6",
+      version: "1.0.0-alpha.7",
   };
   function defaulExport() {
       // auto install for umd build
@@ -28796,7 +28796,7 @@ var Line = (function (exports, Vue) {
           directives,
           controllers,
           mixins,
-          version: "1.0.0-alpha.6",
+          version: "1.0.0-alpha.7",
       };
   }
   var index$1 = /*#__PURE__*/ defaulExport();

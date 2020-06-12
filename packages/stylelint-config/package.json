@@ -1,6 +1,6 @@
 {
   "name": "@line-ui/stylelint-config",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "description": "stylelint config of line-ui.",
   "main": "index.yml",
   "files": [

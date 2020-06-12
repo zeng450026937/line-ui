@@ -1,3 +1,12 @@
+# [1.0.0-alpha.7](http://gitcode.yealink.com/yl1678/line-ui/compare/v1.0.0-alpha.6...v1.0.0-alpha.7) (2020-06-12)
+
+
+### Bug Fixes
+
+* **useLazy:** props value ([6d66af1](http://gitcode.yealink.com/yl1678/line-ui/commits/6d66af111b6fc89792c0bae0328105163883edf8))
+
+
+
 # [1.0.0-alpha.6](http://gitcode.yealink.com/yl1678/line-ui/compare/v1.0.0-alpha.5...v1.0.0-alpha.6) (2020-06-12)
 
 

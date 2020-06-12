@@ -1,6 +1,6 @@
 {
   "name": "@line-ui/tooltip",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "description": "@line-ui/tooltip",
   "main": "index.js",
   "module": "dist/tooltip.esm-bundler.js",

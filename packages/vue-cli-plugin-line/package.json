@@ -1,6 +1,6 @@
 {
   "name": "@line-ui/vue-cli-plugin-line",
-  "version": "1.0.0-alpha.6",
+  "version": "1.0.0-alpha.7",
   "description": "@line-ui/vue-cli-plugin-line",
   "main": "index.js",
   "files": [
@@ -12,12 +12,12 @@
   "author": "LINE-UI Team",
   "license": "MIT",
   "dependencies": {
-    "@line-ui/babel-preset-line": "1.0.0-alpha.6",
-    "@line-ui/webpack-loader-auto-import": "1.0.0-alpha.6",
-    "@line-ui/webpack-loader-svg-component": "1.0.0-alpha.6",
-    "@line-ui/webpack-plugin-config": "1.0.0-alpha.6",
-    "@line-ui/webpack-plugin-i18n": "1.0.0-alpha.6",
-    "@line-ui/webpack-plugin-svg-sprite": "1.0.0-alpha.6",
-    "@line-ui/webpack-plugin-tag": "1.0.0-alpha.6"
+    "@line-ui/babel-preset-line": "1.0.0-alpha.7",
+    "@line-ui/webpack-loader-auto-import": "1.0.0-alpha.7",
+    "@line-ui/webpack-loader-svg-component": "1.0.0-alpha.7",
+    "@line-ui/webpack-plugin-config": "1.0.0-alpha.7",
+    "@line-ui/webpack-plugin-i18n": "1.0.0-alpha.7",
+    "@line-ui/webpack-plugin-svg-sprite": "1.0.0-alpha.7",
+    "@line-ui/webpack-plugin-tag": "1.0.0-alpha.7"
   }
 }
