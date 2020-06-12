@@ -18,8 +18,8 @@ export function usePopup(options?: PopupOptions) {
 
   return createMixins({
     mixins: [
+      useLazy(),
       useModel('visible'),
-      useLazy('visible'),
       useRemote(),
       // Popup lifecycle events depend on Transition mechanism
       // Transition should not be disabled
