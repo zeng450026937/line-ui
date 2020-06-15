@@ -165,7 +165,6 @@ class ConfigParser {
         if (!emit) return;
         // gen assets and pass them with hooks
         const files = [];
-        const { publicPath } = compilation.outputOptions;
 
         // gen manifest
         let assets;
@@ -197,7 +196,7 @@ class ConfigParser {
           const { name, configs } = file;
           if (!name) return;
           const content = JSON.stringify(configs, null, 2);
-          compilation.assets[resolvePath(publicPath, name)] = {
+          compilation.assets[resolvePath(name)] = {
             source: () => content,
             size: () => content.length,
           };
