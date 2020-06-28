@@ -106,3 +106,7 @@ export const safeCall = (handler: any, arg?: any) => {
   }
   return undefined;
 };
+
+export const isProxySupported = (): boolean => {
+  return typeof Proxy === 'function' && /native code/.test(Proxy.toString());
+};
