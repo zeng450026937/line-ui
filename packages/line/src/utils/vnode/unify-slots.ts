@@ -8,7 +8,11 @@ import {
 } from 'vue/types/vnode';
 
 import { mergeData } from '@line-ui/line/src/utils/vnode/merge-data';
-import { hasOwn, isFunction } from '@line-ui/line/src/utils/helpers';
+import {
+  hasOwn,
+  isFunction,
+  isProxySupported,
+} from '@line-ui/line/src/utils/helpers';
 
 type UnifyContext = RenderContext | Vue;
 
@@ -90,14 +94,19 @@ export function createSlots<T extends UnifyContext>(
 export function unifySlots<T extends RenderContext>(context: T): T {
   const injections = createSlots(context);
 
-  return new Proxy(context, {
-    get(target: T, key: string | symbol, receiver: object) {
-      if (hasOwn(injections, key)) {
-        return injections[key];
-      }
-      return Reflect.get(target, key, receiver);
-    },
-  });
+  return isProxySupported()
+    ? new Proxy(context, {
+        get(target: T, key: string | symbol, receiver: object) {
+          if (hasOwn(injections, key)) {
+            return injections[key];
+          }
+          return Reflect.get(target, key, receiver);
+        },
+      })
+    : {
+        ...context,
+        ...injections,
+      };
 }
 
 type Slots = {
