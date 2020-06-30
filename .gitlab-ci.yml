@@ -15,14 +15,14 @@ package line:
     # line 
     - yarn run build line --release
     # template-explorer 
-    - export PUBLIC_PATH=/client/web_app/line-ui/template-explorer/
+    - export PUBLIC_PATH=/line-ui/template-explorer/
     - yarn run build template-explorer
     # icons-explorer 
-    - export PUBLIC_PATH=/client/web_app/line-ui/icons-explorer/
+    - export PUBLIC_PATH=/line-ui/icons-explorer/
     - yarn run icons-explorer --build --mode=production
     - mv dist packages/icons-explorer/dist
     # repl
-    - export PUBLIC_PATH=/client/web_app/line-ui/repl/
+    - export PUBLIC_PATH=/line-ui/repl/
     - yarn run repl --build --mode=production
     - mv dist packages/repl/dist
   artifacts:
