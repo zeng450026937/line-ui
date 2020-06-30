@@ -46,6 +46,9 @@ const safeCall = (handler, arg) => {
     }
     return undefined;
 };
+const isProxySupported = () => {
+    return typeof Proxy === 'function' && /native code/.test(Proxy.toString());
+};
 
 function install(Vue, opts = {}) {
     const { components, directives } = opts;
@@ -264,14 +267,19 @@ function createSlots(context, functional = true) {
 }
 function unifySlots(context) {
     const injections = createSlots(context);
-    return new Proxy(context, {
-        get(target, key, receiver) {
-            if (hasOwn(injections, key)) {
-                return injections[key];
-            }
-            return Reflect.get(target, key, receiver);
-        },
-    });
+    return isProxySupported()
+        ? new Proxy(context, {
+            get(target, key, receiver) {
+                if (hasOwn(injections, key)) {
+                    return injections[key];
+                }
+                return Reflect.get(target, key, receiver);
+            },
+        })
+        : {
+            ...context,
+            ...injections,
+        };
 }
 
 /* eslint-disable import/extensions */
@@ -528,18 +536,20 @@ function useModel(proxy, options = {}, defined = false) {
 }
 
 function createElementProxy(element) {
-    return new Proxy({}, {
-        get(target, key, receiver) {
-            if (key in target) {
+    return isProxySupported()
+        ? new Proxy({}, {
+            get(target, key, receiver) {
+                if (key in target) {
+                    return Reflect.get(target, key, receiver);
+                }
+                if (key in element) {
+                    const value = Reflect.get(element, key);
+                    Reflect.set(target, key, isFunction(value) ? value.bind(element) : value);
+                }
                 return Reflect.get(target, key, receiver);
-            }
-            if (key in element) {
-                const value = Reflect.get(element, key);
-                Reflect.set(target, key, isFunction(value) ? value.bind(element) : value);
-            }
-            return Reflect.get(target, key, receiver);
-        },
-    });
+            },
+        })
+        : element;
 }
 
 function createDirective(directive, element, binding) {
@@ -18459,7 +18469,7 @@ var mixins = /*#__PURE__*/Object.freeze({
 
 const Line = {
     install,
-    version: "1.0.0-alpha.7",
+    version: "1.0.0-alpha.8",
 };
 function defaulExport() {
     // auto install for umd build
@@ -18481,7 +18491,7 @@ function defaulExport() {
         directives,
         controllers,
         mixins,
-        version: "1.0.0-alpha.7",
+        version: "1.0.0-alpha.8",
     };
 }
 var index = /*#__PURE__*/ defaulExport();

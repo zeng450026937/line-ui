@@ -1,3 +1,19 @@
+# [1.0.0-alpha.8](http://gitcode.yealink.com/yl1678/line-ui/compare/v1.0.0-alpha.7...v1.0.0-alpha.8) (2020-06-30)
+
+
+### Bug Fixes
+
+* **dom:** compatible with IE ([5f3fac7](http://gitcode.yealink.com/yl1678/line-ui/commits/5f3fac724e66cfbc313d9fed4887d7f52266ed72))
+* **i18n/config:** fix output path ([c04f92e](http://gitcode.yealink.com/yl1678/line-ui/commits/c04f92e3e2c6df2b9f50a9eb1690ee30a8a7ea06))
+* **vnode:** compatible with IE ([acdfb91](http://gitcode.yealink.com/yl1678/line-ui/commits/acdfb91abd1ee240d29027ff2d821a69191b583f))
+
+
+### Features
+
+* **helper:** isProxySupported ([d1069e4](http://gitcode.yealink.com/yl1678/line-ui/commits/d1069e447d91b56d5379f2eb1b2177d1280c5e04))
+
+
+
 # [1.0.0-alpha.7](http://gitcode.yealink.com/yl1678/line-ui/compare/v1.0.0-alpha.6...v1.0.0-alpha.7) (2020-06-12)
 
 

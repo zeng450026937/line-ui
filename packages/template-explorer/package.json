@@ -1,6 +1,6 @@
 {
   "name": "@line-ui/template-explorer",
-  "version": "1.0.0-alpha.7",
+  "version": "1.0.0-alpha.8",
   "description": "@line-ui/template-explorer",
   "files": [
     "index.js",

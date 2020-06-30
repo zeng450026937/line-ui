@@ -1,6 +1,6 @@
 {
   "name": "@line-ui/tree-shaking",
-  "version": "1.0.0-alpha.7",
+  "version": "1.0.0-alpha.8",
   "description": "@line-ui/tree-shaking",
   "main": "index.js",
   "module": "dist/tree-shaking.esm-bundler.js",

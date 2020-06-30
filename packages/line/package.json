@@ -1,6 +1,6 @@
 {
   "name": "@line-ui/line",
-  "version": "1.0.0-alpha.7",
+  "version": "1.0.0-alpha.8",
   "description": "@line-ui/line",
   "main": "index.js",
   "module": "dist/line.esm-bundler.js",
