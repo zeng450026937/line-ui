@@ -15,7 +15,7 @@ export {
 declare module 'vue/types/options' {
   type StoreMap = {
     ns?: string;
-    state: { [key: string]: string | ((store: Vue) => any) };
+    state: { [key: string]: string | ((store: Vue) => any) } | string[];
   };
 
   interface ComponentOptions<V extends Vue> {
