@@ -13,10 +13,12 @@ export {
 } from './model';
 
 declare module 'vue/types/options' {
-  type StoreMap = {
-    ns?: string;
-    state: { [key: string]: string | ((store: Vue) => any) } | string[];
-  };
+  type StoreMap =
+    | {
+        ns: string;
+        state: { [key: string]: string | ((store: Vue) => any) } | string[];
+      }
+    | string;
 
   interface ComponentOptions<V extends Vue> {
     kom?: Model;
@@ -41,10 +43,13 @@ declare module 'vue/types/vue' {
 export type ObjectState = { [key: string]: string | ((store: Vue) => any) };
 export type ArrayState = string[];
 
-export type StoreMap = {
-  ns?: string;
-  state: ObjectState | ArrayState;
-};
+export type StoreMap =
+  | {
+      ns: string;
+      state?: ObjectState | ArrayState;
+      exportNS?: boolean;
+    }
+  | string;
 
 const normalizeState = (state: ObjectState | ArrayState): ObjectState => {
   if (Array.isArray(state)) {
@@ -56,38 +61,43 @@ const normalizeState = (state: ObjectState | ArrayState): ObjectState => {
   return state;
 };
 
-export const mapStore = (
-  store: StoreMap | StoreMap[],
-  exportNS: boolean = false
-) => {
+export const mapStore = (store: StoreMap | StoreMap[]) => {
   const computed: ComponentOptions<Vue>['computed'] = {};
   if (!Array.isArray(store)) {
     store = [store];
   }
   store.forEach((s) => {
-    const { ns, state: rawState } = s;
-    if (exportNS && ns) {
+    if (typeof s === 'string') {
+      s = { ns: s };
+    }
+    const { ns, state: rawState, exportNS = ns && !rawState } = s;
+    if (exportNS) {
       computed[ns] = function nsGetter(this: Vue) {
         return this.$getStore(ns)!;
       };
     }
-    const state = normalizeState(rawState);
-    keys(state).forEach((key) => {
-      if (__DEV__ && computed[key]) {
-        console.warn(`state was definded: ${key}`);
-      }
-      const val = state[key];
-      computed[key] = {
-        get(this: Vue) {
-          const store = this.$getStore(ns)!;
-          return typeof val === 'function' ? val.call(this, store) : store[val];
-        },
-        set(this: Vue, val: any) {
-          const store = this.$getStore(ns)!;
-          store[key] = val;
-        },
-      };
-    });
+    if (rawState) {
+      const state = normalizeState(rawState);
+      keys(state).forEach((key) => {
+        if (__DEV__ && computed[key]) {
+          console.warn(`state was definded: ${key}`);
+        }
+        const val = state[key];
+        let store: Vue | undefined;
+        computed[key] = {
+          get(this: Vue) {
+            store = store || this.$getStore(ns)!;
+            return typeof val === 'function'
+              ? val.call(this, store)
+              : store[val];
+          },
+          set(this: Vue, val: any) {
+            store = store || this.$getStore(ns)!;
+            store[key] = val;
+          },
+        };
+      });
+    }
   });
   return computed;
 };
