@@ -62,7 +62,7 @@ export default Vue.extend({
       return this.$route.params.component;
     },
     usage() {
-      return this.$route.params.usage;
+      return this.$route.params.usage || 'index';
     },
     resource() {
       return this.resources.find((res) => res.name === this.component);
@@ -97,7 +97,6 @@ export default Vue.extend({
         this.source = await this.resource.usage
           .load(this.usage)
           .catch(() => '');
-        this.select = this.usage;
       }
 
       this.loading = false;
